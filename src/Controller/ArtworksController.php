@@ -193,7 +193,6 @@ class ArtworksController extends ArtStackController
 
 		$result = $this->ArtworkStack->stackQuery();
 		
-		$this->commonHelpers();
 		$this->set($artwork_variable, $result);
     }
 	
