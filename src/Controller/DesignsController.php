@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Form\DispositionForm;
 
 /**
  * Designs Controller
@@ -102,4 +103,32 @@ class DesignsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+	
+	public function newEvent($type = '') {
+		$disposition = New DispositionForm();
+		$this->request->data = [
+			'multiple_venues' => FALSE,
+			'venues' => '',
+			'return_to' => '',
+			'storage' => '',
+			'multiple_pieces' => FALSE,
+			'pieces' => '',
+			'documents' => '',
+			'destination' => '',
+			'review' => '',
+		];
+		
+		$storages = ['storage one', 'storage two'];
+		$return_to = ['Home', 'Storage', 'Review'];
+		$venues = ['venue one', 'venue two'];
+		$pieces = ['piece one', 'piece two'];
+		$documents = ['documnent 1', 'document 2'];
+		$destination = '';
+		$review = '';
+		
+		$this->set(compact([
+			'storages', 'return_to', 'venues', 'documents', 
+			'pieces', 'destination', 'review', 'disposition' 
+		]));
+	}
 }
