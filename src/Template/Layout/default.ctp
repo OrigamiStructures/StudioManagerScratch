@@ -28,6 +28,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('cake.css') ?>
+    <?= $this->Html->css('app.css') ?>
+    <?= $this->Html->css('glyphicon.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
