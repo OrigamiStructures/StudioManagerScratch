@@ -2,6 +2,10 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Table\EditionsTable;
+use App\Model\Table\FormatsTable;
+use App\Model\Table\PiecesTable;
+use Cake\ORM\TableRegistry;
 
 /**
  * Artworks Controller
@@ -50,14 +54,38 @@ class ArtworksController extends AppController
     {
         $artwork = $this->Artworks->newEntity();
         if ($this->request->is('post')) {
+			$Editions = TableRegistry::get('Editions');
+			$Formats = TableRegistry::get('Formats');
+			$Pieces = TableRegistry::get('Pieces');
             $artwork = $this->Artworks->patchEntity($artwork, $this->request->data);
+			
             if ($this->Artworks->save($artwork)) {
+				
+				$edition = $Editions->newEntity([
+					'quantity' => '1', 'type' => 'unique', 
+					'user_id' => '1', 'artwork_id' => $artwork->id
+				]);
+				$Editions->save($edition);
+				
+				$format = $Formats->newEntity([
+					'description' => '24" x 36" oil on canvas', 
+					'user_id' => '1', 'edition_id' => $edition->id
+				]);
+				$Formats->save($format);
+				
+				$piece = $Pieces->newEntity([
+					'edition_id' => $edition->id, 'format_id' => $format->id, 
+					'user_id' => '1', 'number' => '1', 'quantity' => '1'
+				]);
+				$Pieces->save($piece);
+				
                 $this->Flash->success(__('The artwork has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
+		$this->request->data('user_id', '1');
         $users = $this->Artworks->Users->find('list', ['limit' => 200]);
         $this->set(compact('artwork', 'users'));
         $this->set('_serialize', ['artwork']);

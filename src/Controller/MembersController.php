@@ -18,6 +18,7 @@ class MembersController extends AppController
      */
     public function index()
     {
+		debug($this->paginate($this->Members)->toArray());
         $this->set('members', $this->paginate($this->Members));
         $this->set('_serialize', ['members']);
     }
