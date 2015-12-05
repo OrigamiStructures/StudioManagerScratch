@@ -16,12 +16,6 @@
     </ul>
 </nav>
 <div class="editions view large-9 medium-8 columns content">
-    <h3><i class="glyphicon icon-duplicate"></i><?= h($edition->name) ?></h3>
-	<div class="row">
-		<p class="columns large-3">3 columns</p>
-		<p class="columns large-6">6 columns</p>
-		<p class="columns large-3">3 columns</p>
-	</div>
     <table class="vertical-table">
         <tr>
             <th><?= __('User') ?></th>
