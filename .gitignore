@@ -4,3 +4,4 @@ vendor
 /nbproject/private/
 tmp
 config/app.php
+logs
