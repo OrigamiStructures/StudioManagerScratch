@@ -201,3 +201,5 @@ DispatcherFactory::add('ControllerFactory');
  */
 Type::build('date')->useLocaleParser();
 Type::build('datetime')->useLocaleParser();
+
+Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);

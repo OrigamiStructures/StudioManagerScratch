@@ -26,6 +26,7 @@ class ArtworksController extends AppController
             'contain' => ['Users']
         ];
         $this->set('artworks', $this->paginate($this->Artworks));
+        osd("This is a test");
         $this->set('_serialize', ['artworks']);
     }
 
