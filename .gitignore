@@ -2,3 +2,5 @@
 config/.DS_Store
 vendor
 /nbproject/private/
+tmp
+config/app.php
