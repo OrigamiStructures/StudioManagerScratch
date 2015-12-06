@@ -10,7 +10,7 @@
 </nav>
 <div class="artworks index large-9 medium-8 columns content">
     <h3><?= __('Artworks') ?></h3>
-    <table cellpadding="0" cellspacing="0">
+<table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
@@ -28,7 +28,15 @@
                 <td><?= h($artwork->created) ?></td>
                 <td><?= h($artwork->modified) ?></td>
                 <td><?= $artwork->has('user') ? $this->Html->link($artwork->user->id, ['controller' => 'Users', 'action' => 'view', $artwork->user->id]) : '' ?></td>
-                <td><?= h($artwork->title) ?></td>
+                <td>
+					<i class="glyphicon icon-asterisk" data-dropdown="hover<?= $artwork->id;?>" data-options="is_hover:true; hover_timeout:5000"> </i> <?= h($artwork->title) ?>
+
+					<ul id="hover<?= $artwork->id;?>" class="f-dropdown" data-dropdown-content>
+					  <li><a href="#">Add an Edition (non-functioning)</a></li>
+<!--					  <li><a href="#">This is another</a></li>
+					  <li><a href="#">Yet another</a></li>-->
+					</ul>
+				</td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $artwork->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $artwork->id]) ?>

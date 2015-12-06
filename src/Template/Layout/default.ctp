@@ -26,7 +26,12 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css('base.css') ?>
+	<script src="../bower_components/foundation/js/vendor/jquery.js"></script>
+	<script src="../bower_components/foundation/js/foundation/foundation.js"></script>
+	<script src="../bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
+	<?= $this->Html->script('testing') ?>
+	
+	<?= $this->Html->css('base.css') ?>
     <?= $this->Html->css('cake.css') ?>
     <?= $this->Html->css('app.css') ?>
     <?= $this->Html->css('glyphicon.css') ?>
