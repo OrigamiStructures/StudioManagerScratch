@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACC,iBAAE;EACD,WAAW,EAAE,MAAM;EACnB,MAAM,EAAE,CAAC;EACT,OAAO,EAAE,CAAC;AAEX,mBAAI;EACH,UAAU,EAAE,KAAK",
+"sources": ["../scss/artwork.scss"],
+"names": [],
+"file": "artwork.css"
+}

@@ -1,7 +1,13 @@
+<?php
+$this->append('css');
+echo $this->Html->css('artwork') . "\n";
+$this->end();
+?>
+
 <section class="artwork">
 	<details class="row">
 		<div class="columns small-12 medium-3">
-			<image src="" />
+			<?= $this->Html->image('DSC04016.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
 		<h1>Half Dome</h1>
@@ -30,7 +36,7 @@
 	</details>
 	<details class="row">
 		<div class="columns small-12 medium-3">
-			<image src="" />
+			<?= $this->Html->image('DSC04022.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
 		<h1>Elementary Geography</h1>
@@ -47,7 +53,7 @@
 	</details>
 	<details class="row">
 		<div class="columns small-12 medium-3">
-			<image src="" />
+			<?= $this->Html->image('DSC04039.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
 		<h1>Crystal Day</h1>
@@ -63,7 +69,7 @@
 	</details>
 	<details class="row">
 		<div class="columns small-12 medium-3">
-			<image src="" />
+			<?= $this->Html->image('DSC04517.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
 		<h1>Forecast</h1>
@@ -79,7 +85,7 @@
 	</details>
 	<details class="row">
 		<div class="columns small-12 medium-3">
-			<image src="" />
+			<?= $this->Html->image('IMG_0089_2.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
 		<h1>Wild Geese</h1>
