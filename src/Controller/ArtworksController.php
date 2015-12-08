@@ -136,4 +136,8 @@ class ArtworksController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+	
+	public function sample() {
+		
+	}
 }
