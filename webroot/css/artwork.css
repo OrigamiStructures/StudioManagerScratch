@@ -1,8 +1,18 @@
+section.artwork details.row:nth-of-type(2n) {
+  background-color: linen; }
 section.artwork p {
   line-height: normal;
   margin: 0;
   padding: 0; }
 section.artwork img {
   margin-top: 0.8em; }
+@media only screen and (min-width: 40.063em) {
+  section.artwork {
+    /*		h1, h2, h3, h4, h5, h6 {
+    			line-height: 1.4;
+    		}*/ }
+    section.artwork h2 {
+      font-size: 1.5rem;
+      margin: 1rem 0 0; } }
 
 /*# sourceMappingURL=artwork.css.map */
