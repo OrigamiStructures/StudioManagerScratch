@@ -1,5 +1,7 @@
 section.artwork details.row:nth-of-type(2n) {
   background-color: linen; }
+section.artwork details.row {
+  padding: 1em 0; }
 section.artwork p {
   line-height: normal;
   margin: 0;
