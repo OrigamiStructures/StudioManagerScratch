@@ -2923,7 +2923,7 @@ fieldset {
   padding: 1.25rem; }
   fieldset legend {
     background: #F6F6F6;
-    font-weight: bold;
+    font-weight: 400;
     margin-left: -0.1875rem;
     margin: 0;
     padding: 0 0.1875rem; }
@@ -3305,7 +3305,7 @@ label.error {
 .joyride-tip-guide h5,
 .joyride-tip-guide h6 {
   color: #F6F6F6;
-  font-weight: bold;
+  font-weight: 400;
   line-height: 1.25;
   margin: 0; }
 
@@ -3718,7 +3718,7 @@ ul.pagination {
       background: #27587f;
       color: #F6F6F6;
       cursor: default;
-      font-weight: bold; }
+      font-weight: 400; }
       ul.pagination li.current a:hover, ul.pagination li.current a:focus, ul.pagination li.current button:hover, ul.pagination li.current button:focus {
         background: #27587f; }
   ul.pagination li {
@@ -4043,7 +4043,7 @@ ul.pagination {
     color: #AAAAAA;
     cursor: pointer;
     font-size: 2.5rem;
-    font-weight: bold;
+    font-weight: 400;
     line-height: 1;
     position: absolute;
     top: 0.625rem;
@@ -4339,7 +4339,7 @@ table {
     table thead tr td {
       color: #222222;
       font-size: 0.875rem;
-      font-weight: bold;
+      font-weight: 400;
       padding: 0.5rem 0.625rem 0.625rem; }
   table tfoot {
     background: #F5F5F5; }
@@ -4347,7 +4347,7 @@ table {
     table tfoot tr td {
       color: #222222;
       font-size: 0.875rem;
-      font-weight: bold;
+      font-weight: 400;
       padding: 0.5rem 0.625rem 0.625rem; }
   table tr th,
   table tr td {
@@ -4473,7 +4473,7 @@ table {
   border-bottom: dotted 1px #CCCCCC;
   color: #333333;
   cursor: help;
-  font-weight: bold; }
+  font-weight: 400; }
   .has-tip:hover, .has-tip:focus {
     border-bottom: dotted 1px #122839;
     color: #27587f; }
@@ -4630,7 +4630,7 @@ meta.foundation-mq-topbar {
       color: #F6F6F6;
       display: block;
       font-size: 0.8125rem;
-      font-weight: bold;
+      font-weight: 400;
       height: 2.8125rem;
       line-height: 2.8125rem;
       padding: 0 0.9375rem;
@@ -4882,7 +4882,7 @@ meta.foundation-mq-topbar {
     .top-bar-section .dropdown label {
       color: #777777;
       font-size: 0.625rem;
-      font-weight: bold;
+      font-weight: 400;
       margin-bottom: 0;
       padding: 8px 0.9375rem 2px;
       text-transform: uppercase; }
@@ -5252,9 +5252,9 @@ p {
 /* Default header styles */
 h1, h2, h3, h4, h5, h6 {
   color: #1b3d58;
-  font-family: "Titillium Web", sans-serif;
+  font-family: "Lato", sans-serif;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 400;
   line-height: 1.4;
   margin-bottom: 0.5rem;
   margin-top: 0.2rem;
@@ -5304,7 +5304,7 @@ i {
 
 strong,
 b {
-  font-weight: bold;
+  font-weight: 400;
   line-height: inherit; }
 
 small {
@@ -5325,7 +5325,7 @@ code {
 ul,
 ol,
 dl {
-  font-family: "Titillium Web", sans-serif;
+  font-family: "Lato", sans-serif;
   font-size: 1.15rem;
   line-height: 1.6;
   list-style-position: outside;
@@ -5371,7 +5371,7 @@ ol {
 /* Definition Lists */
 dl dt {
   margin-bottom: 0.3rem;
-  font-weight: bold; }
+  font-weight: 400; }
 dl dd {
   margin-bottom: 0.75rem; }
 
@@ -5418,15 +5418,15 @@ blockquote p {
     margin: 0;
     display: block; }
   .vcard .fn {
-    font-weight: bold;
+    font-weight: 400;
     font-size: 0.9375rem; }
 
 .vevent .summary {
-  font-weight: bold; }
+  font-weight: 400; }
 .vevent abbr {
   cursor: default;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 400;
   border: none;
   padding: 0 0.0625rem; }
 
@@ -5483,7 +5483,7 @@ blockquote p {
   position: relative; }
   .tab-bar h1, .tab-bar h2, .tab-bar h3, .tab-bar h4, .tab-bar h5, .tab-bar h6 {
     color: #F6F6F6;
-    font-weight: bold;
+    font-weight: 400;
     line-height: 2.8125rem;
     margin: 0; }
   .tab-bar h1, .tab-bar h2, .tab-bar h3, .tab-bar h4 {
@@ -5606,7 +5606,7 @@ ul.off-canvas-list {
     color: #999999;
     display: block;
     font-size: 0.75rem;
-    font-weight: bold;
+    font-weight: 400;
     margin: 0;
     padding: 0.3rem 0.9375rem;
     text-transform: uppercase; }
@@ -5787,7 +5787,7 @@ ul.off-canvas-list {
     border-bottom: none;
     border-top: 1px solid #5e5e5e;
     color: #999999;
-    font-weight: bold;
+    font-weight: 400;
     padding: 0.3rem 0.9375rem;
     text-transform: uppercase;
     margin: 0; }
@@ -5839,7 +5839,7 @@ ul.off-canvas-list {
     border-bottom: none;
     border-top: 1px solid #5e5e5e;
     color: #999999;
-    font-weight: bold;
+    font-weight: 400;
     padding: 0.3rem 0.9375rem;
     text-transform: uppercase;
     margin: 0; }

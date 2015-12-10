@@ -93,7 +93,7 @@ $include-html-global-classes: $include-html-classes;
 
 // We use these to define default font weights
 // $font-weight-normal: normal;
-$font-weight-bold: bold;
+$font-weight-bold: 400;
 
 $white       : #F6F6F6;
 // $ghost       : #FAFAFA;
@@ -215,7 +215,7 @@ $body-font-color: $dk_green;
 // $include-html-type-classes: $include-html-classes;
 
 // We use these to control header font styles
-$header-font-family: 'Titillium Web', sans-serif;
+$header-font-family: 'Lato', sans-serif;
 $header-font-weight: $font-weight-bold;
 // $header-font-weight: $font-weight-normal;
 // $header-font-style: normal;

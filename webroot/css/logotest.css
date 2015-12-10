@@ -15,12 +15,15 @@ section.logotest {
     font-size: 1.5rem; }
     section.logotest p span.lato {
       font-family: 'Lato', sans-serif;
-      font-weight: 100; }
+      font-weight: 300; }
     section.logotest p span.opensans {
       font-family: 'Open Sans', sans-serif;
       font-weight: 100; }
     section.logotest p span.roboto {
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 300; }
+
+body {
+  /*background-image: url('../img/IMG_0041_2.jpg');*/ }
 
 /*# sourceMappingURL=logotest.css.map */
