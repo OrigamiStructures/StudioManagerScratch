@@ -140,4 +140,9 @@ class ArtworksController extends AppController
 	public function sample() {
 		
 	}
+	
+	public function spec() {
+		$artwork_element = $edition_element = $format_element = 'spec';
+		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
+	}
 }

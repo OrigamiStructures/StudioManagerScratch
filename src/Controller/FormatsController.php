@@ -113,4 +113,10 @@ class FormatsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+	public function spec() {
+		$artwork_element = $edition_element = 'choose';
+		$format_element = 'spec';
+		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
+		$this->render('/Artworks/spec');
+	}
 }

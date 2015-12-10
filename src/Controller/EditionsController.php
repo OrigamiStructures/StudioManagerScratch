@@ -111,4 +111,11 @@ class EditionsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+	
+	public function spec() {
+		$artwork_element = 'choose';
+		$edition_element = $format_element = 'spec';
+		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
+		$this->render('/Artworks/spec');
+	}
 }
