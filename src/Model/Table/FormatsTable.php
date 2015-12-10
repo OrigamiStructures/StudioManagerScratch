@@ -11,7 +11,9 @@ use Cake\Validation\Validator;
  * Formats Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Association\BelongsTo $Images
  * @property \Cake\ORM\Association\BelongsTo $Editions
+ * @property \Cake\ORM\Association\BelongsTo $Subscriptions
  * @property \Cake\ORM\Association\HasMany $Pieces
  */
 class FormatsTable extends Table
@@ -36,8 +38,14 @@ class FormatsTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
+        $this->belongsTo('Images', [
+            'foreignKey' => 'image_id'
+        ]);
         $this->belongsTo('Editions', [
             'foreignKey' => 'edition_id'
+        ]);
+        $this->belongsTo('Subscriptions', [
+            'foreignKey' => 'subscription_id'
         ]);
         $this->hasMany('Pieces', [
             'foreignKey' => 'format_id'
@@ -62,6 +70,18 @@ class FormatsTable extends Table
         $validator
             ->allowEmpty('description');
 
+        $validator
+            ->add('range_flag', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('range_flag');
+
+        $validator
+            ->add('range_start', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('range_start');
+
+        $validator
+            ->add('range_end', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('range_end');
+
         return $validator;
     }
 
@@ -75,7 +95,9 @@ class FormatsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['image_id'], 'Images'));
         $rules->add($rules->existsIn(['edition_id'], 'Editions'));
+        $rules->add($rules->existsIn(['subscription_id'], 'Subscriptions'));
         return $rules;
     }
 }

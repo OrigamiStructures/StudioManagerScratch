@@ -21,7 +21,12 @@ class LocationsTableTest extends TestCase
         'app.users',
         'app.members',
         'app.dispositions',
-        'app.pieces'
+        'app.pieces',
+        'app.editions',
+        'app.artworks',
+        'app.formats',
+        'app.groups',
+        'app.groups_members'
     ];
 
     /**

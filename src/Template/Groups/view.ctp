@@ -45,6 +45,7 @@
                 <th><?= __('Modified') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('User Id') ?></th>
+                <th><?= __('Image Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($group->members as $members): ?>
@@ -54,6 +55,7 @@
                 <td><?= h($members->modified) ?></td>
                 <td><?= h($members->name) ?></td>
                 <td><?= h($members->user_id) ?></td>
+                <td><?= h($members->image_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Members', 'action' => 'view', $members->id]) ?>
 

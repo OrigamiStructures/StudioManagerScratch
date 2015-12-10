@@ -6,6 +6,8 @@
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Artworks'), ['controller' => 'Artworks', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Artwork'), ['controller' => 'Artworks', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Series'), ['controller' => 'Series', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Series'), ['controller' => 'Series', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Formats'), ['controller' => 'Formats', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Format'), ['controller' => 'Formats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?></li>
@@ -21,7 +23,7 @@
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('user_id') ?></th>
-                <th><?= $this->Paginator->sort('name') ?></th>
+                <th><?= $this->Paginator->sort('title') ?></th>
                 <th><?= $this->Paginator->sort('type') ?></th>
                 <th><?= $this->Paginator->sort('quantity') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
@@ -34,7 +36,7 @@
                 <td><?= h($edition->created) ?></td>
                 <td><?= h($edition->modified) ?></td>
                 <td><?= $edition->has('user') ? $this->Html->link($edition->user->id, ['controller' => 'Users', 'action' => 'view', $edition->user->id]) : '' ?></td>
-                <td><?= h($edition->name) ?></td>
+                <td><?= h($edition->title) ?></td>
                 <td><?= h($edition->type) ?></td>
                 <td><?= $this->Number->format($edition->quantity) ?></td>
                 <td class="actions">

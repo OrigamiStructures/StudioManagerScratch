@@ -19,9 +19,14 @@ class FormatsTableTest extends TestCase
     public $fixtures = [
         'app.formats',
         'app.users',
+        'app.members',
+        'app.dispositions',
+        'app.locations',
+        'app.pieces',
         'app.editions',
         'app.artworks',
-        'app.pieces'
+        'app.groups',
+        'app.groups_members'
     ];
 
     /**

@@ -18,9 +18,17 @@ class EditionsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.editions',
         'app.users',
+        'app.members',
+        'app.images',
         'app.artworks',
         'app.formats',
-        'app.pieces'
+        'app.subscriptions',
+        'app.pieces',
+        'app.dispositions',
+        'app.locations',
+        'app.groups',
+        'app.groups_members',
+        'app.series'
     ];
 
     /**

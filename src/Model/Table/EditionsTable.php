@@ -12,6 +12,7 @@ use Cake\Validation\Validator;
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\BelongsTo $Artworks
+ * @property \Cake\ORM\Association\BelongsTo $Series
  * @property \Cake\ORM\Association\HasMany $Formats
  * @property \Cake\ORM\Association\HasMany $Pieces
  */
@@ -40,6 +41,9 @@ class EditionsTable extends Table
         $this->belongsTo('Artworks', [
             'foreignKey' => 'artwork_id'
         ]);
+        $this->belongsTo('Series', [
+            'foreignKey' => 'series_id'
+        ]);
         $this->hasMany('Formats', [
             'foreignKey' => 'edition_id'
         ]);
@@ -61,7 +65,7 @@ class EditionsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('name');
+            ->allowEmpty('title');
 
         $validator
             ->allowEmpty('type');
@@ -84,6 +88,7 @@ class EditionsTable extends Table
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['artwork_id'], 'Artworks'));
+        $rules->add($rules->existsIn(['series_id'], 'Series'));
         return $rules;
     }
 }

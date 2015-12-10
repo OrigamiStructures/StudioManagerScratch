@@ -11,11 +11,12 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $modified
  * @property int $user_id
  * @property \App\Model\Entity\User $user
- * @property string $name
+ * @property string $title
  * @property string $type
  * @property int $quantity
  * @property int $artwork_id
  * @property \App\Model\Entity\Artwork $artwork
+ * @property int $series_id
  * @property \App\Model\Entity\Format[] $formats
  * @property \App\Model\Entity\Piece[] $pieces
  */

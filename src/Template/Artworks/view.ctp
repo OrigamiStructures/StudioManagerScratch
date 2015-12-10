@@ -7,6 +7,8 @@
         <li><?= $this->Html->link(__('New Artwork'), ['action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Images'), ['controller' => 'Images', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Image'), ['controller' => 'Images', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Editions'), ['controller' => 'Editions', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Edition'), ['controller' => 'Editions', 'action' => 'add']) ?> </li>
     </ul>
@@ -17,6 +19,10 @@
         <tr>
             <th><?= __('User') ?></th>
             <td><?= $artwork->has('user') ? $this->Html->link($artwork->user->id, ['controller' => 'Users', 'action' => 'view', $artwork->user->id]) : '' ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Image') ?></th>
+            <td><?= $artwork->has('image') ? $this->Html->link($artwork->image->title, ['controller' => 'Images', 'action' => 'view', $artwork->image->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Title') ?></th>
@@ -48,10 +54,11 @@
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th><?= __('User Id') ?></th>
-                <th><?= __('Name') ?></th>
+                <th><?= __('Title') ?></th>
                 <th><?= __('Type') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Artwork Id') ?></th>
+                <th><?= __('Series Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($artwork->editions as $editions): ?>
@@ -60,10 +67,11 @@
                 <td><?= h($editions->created) ?></td>
                 <td><?= h($editions->modified) ?></td>
                 <td><?= h($editions->user_id) ?></td>
-                <td><?= h($editions->name) ?></td>
+                <td><?= h($editions->title) ?></td>
                 <td><?= h($editions->type) ?></td>
                 <td><?= h($editions->quantity) ?></td>
                 <td><?= h($editions->artwork_id) ?></td>
+                <td><?= h($editions->series_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Editions', 'action' => 'view', $editions->id]) ?>
 

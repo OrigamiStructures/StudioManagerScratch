@@ -42,8 +42,8 @@ class DispositionsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'created' => '2015-12-05 02:30:01',
-            'modified' => '2015-12-05 02:30:01',
+            'created' => '2015-12-10 21:28:23',
+            'modified' => '2015-12-10 21:28:23',
             'user_id' => 1,
             'member_id' => 1,
             'location_id' => 1,

@@ -7,8 +7,12 @@
         <li><?= $this->Html->link(__('New Format'), ['action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Images'), ['controller' => 'Images', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Image'), ['controller' => 'Images', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Editions'), ['controller' => 'Editions', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Edition'), ['controller' => 'Editions', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Subscriptions'), ['controller' => 'Subscriptions', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Subscription'), ['controller' => 'Subscriptions', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Piece'), ['controller' => 'Pieces', 'action' => 'add']) ?> </li>
     </ul>
@@ -21,16 +25,36 @@
             <td><?= $format->has('user') ? $this->Html->link($format->user->id, ['controller' => 'Users', 'action' => 'view', $format->user->id]) : '' ?></td>
         </tr>
         <tr>
-            <th><?= __('Edition') ?></th>
-            <td><?= $format->has('edition') ? $this->Html->link($format->edition->name, ['controller' => 'Editions', 'action' => 'view', $format->edition->id]) : '' ?></td>
-        </tr>
-        <tr>
             <th><?= __('Title') ?></th>
             <td><?= h($format->title) ?></td>
         </tr>
         <tr>
+            <th><?= __('Image') ?></th>
+            <td><?= $format->has('image') ? $this->Html->link($format->image->title, ['controller' => 'Images', 'action' => 'view', $format->image->id]) : '' ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Edition') ?></th>
+            <td><?= $format->has('edition') ? $this->Html->link($format->edition->name, ['controller' => 'Editions', 'action' => 'view', $format->edition->id]) : '' ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Subscription') ?></th>
+            <td><?= $format->has('subscription') ? $this->Html->link($format->subscription->title, ['controller' => 'Subscriptions', 'action' => 'view', $format->subscription->id]) : '' ?></td>
+        </tr>
+        <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($format->id) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Range Flag') ?></th>
+            <td><?= $this->Number->format($format->range_flag) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Range Start') ?></th>
+            <td><?= $this->Number->format($format->range_start) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Range End') ?></th>
+            <td><?= $this->Number->format($format->range_end) ?></td>
         </tr>
         <tr>
             <th><?= __('Created') ?></th>
@@ -54,11 +78,11 @@
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th><?= __('User Id') ?></th>
-                <th><?= __('Edition Id') ?></th>
-                <th><?= __('Format Id') ?></th>
                 <th><?= __('Number') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Made') ?></th>
+                <th><?= __('Edition Id') ?></th>
+                <th><?= __('Format Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($format->pieces as $pieces): ?>
@@ -67,11 +91,11 @@
                 <td><?= h($pieces->created) ?></td>
                 <td><?= h($pieces->modified) ?></td>
                 <td><?= h($pieces->user_id) ?></td>
-                <td><?= h($pieces->edition_id) ?></td>
-                <td><?= h($pieces->format_id) ?></td>
                 <td><?= h($pieces->number) ?></td>
                 <td><?= h($pieces->quantity) ?></td>
                 <td><?= h($pieces->made) ?></td>
+                <td><?= h($pieces->edition_id) ?></td>
+                <td><?= h($pieces->format_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Pieces', 'action' => 'view', $pieces->id]) ?>
 

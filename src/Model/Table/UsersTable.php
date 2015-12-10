@@ -17,9 +17,12 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Formats
  * @property \Cake\ORM\Association\HasMany $Groups
  * @property \Cake\ORM\Association\HasMany $GroupsMembers
+ * @property \Cake\ORM\Association\HasMany $Images
  * @property \Cake\ORM\Association\HasMany $Locations
  * @property \Cake\ORM\Association\HasMany $Members
  * @property \Cake\ORM\Association\HasMany $Pieces
+ * @property \Cake\ORM\Association\HasMany $Series
+ * @property \Cake\ORM\Association\HasMany $Subscriptions
  */
 class UsersTable extends Table
 {
@@ -61,6 +64,9 @@ class UsersTable extends Table
         $this->hasMany('GroupsMembers', [
             'foreignKey' => 'user_id'
         ]);
+        $this->hasMany('Images', [
+            'foreignKey' => 'user_id'
+        ]);
         $this->hasMany('Locations', [
             'foreignKey' => 'user_id'
         ]);
@@ -68,6 +74,12 @@ class UsersTable extends Table
             'foreignKey' => 'user_id'
         ]);
         $this->hasMany('Pieces', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Series', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Subscriptions', [
             'foreignKey' => 'user_id'
         ]);
     }

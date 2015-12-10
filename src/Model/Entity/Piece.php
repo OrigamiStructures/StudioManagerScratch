@@ -11,13 +11,13 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $modified
  * @property int $user_id
  * @property \App\Model\Entity\User $user
+ * @property int $number
+ * @property int $quantity
+ * @property bool $made
  * @property int $edition_id
  * @property \App\Model\Entity\Edition $edition
  * @property int $format_id
  * @property \App\Model\Entity\Format $format
- * @property int $number
- * @property int $quantity
- * @property bool $made
  * @property \App\Model\Entity\Disposition[] $dispositions
  */
 class Piece extends Entity

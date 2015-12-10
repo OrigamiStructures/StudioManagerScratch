@@ -24,11 +24,11 @@
         <legend><?= __('Edit Piece') ?></legend>
         <?php
             echo $this->Form->input('user_id', ['options' => $users, 'empty' => true]);
-            echo $this->Form->input('edition_id', ['options' => $editions, 'empty' => true]);
-            echo $this->Form->input('format_id', ['options' => $formats, 'empty' => true]);
             echo $this->Form->input('number');
             echo $this->Form->input('quantity');
             echo $this->Form->input('made');
+            echo $this->Form->input('edition_id', ['options' => $editions, 'empty' => true]);
+            echo $this->Form->input('format_id', ['options' => $formats, 'empty' => true]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

@@ -18,9 +18,17 @@ class FormatsControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.formats',
         'app.users',
-        'app.editions',
+        'app.members',
+        'app.images',
         'app.artworks',
-        'app.pieces'
+        'app.editions',
+        'app.series',
+        'app.pieces',
+        'app.dispositions',
+        'app.locations',
+        'app.groups',
+        'app.groups_members',
+        'app.subscriptions'
     ];
 
     /**

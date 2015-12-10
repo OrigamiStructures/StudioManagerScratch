@@ -11,6 +11,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $modified
  * @property int $user_id
  * @property \App\Model\Entity\User $user
+ * @property int $image_id
  * @property string $title
  * @property string $description
  * @property \App\Model\Entity\Edition[] $editions

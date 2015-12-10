@@ -19,7 +19,14 @@ class ArtworksTableTest extends TestCase
     public $fixtures = [
         'app.artworks',
         'app.users',
-        'app.editions'
+        'app.members',
+        'app.dispositions',
+        'app.locations',
+        'app.pieces',
+        'app.editions',
+        'app.formats',
+        'app.groups',
+        'app.groups_members'
     ];
 
     /**

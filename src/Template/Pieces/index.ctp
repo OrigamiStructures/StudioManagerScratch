@@ -21,9 +21,9 @@
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('user_id') ?></th>
-                <th><?= $this->Paginator->sort('edition_id') ?></th>
-                <th><?= $this->Paginator->sort('format_id') ?></th>
                 <th><?= $this->Paginator->sort('number') ?></th>
+                <th><?= $this->Paginator->sort('quantity') ?></th>
+                <th><?= $this->Paginator->sort('made') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -34,9 +34,9 @@
                 <td><?= h($piece->created) ?></td>
                 <td><?= h($piece->modified) ?></td>
                 <td><?= $piece->has('user') ? $this->Html->link($piece->user->id, ['controller' => 'Users', 'action' => 'view', $piece->user->id]) : '' ?></td>
-                <td><?= $piece->has('edition') ? $this->Html->link($piece->edition->name, ['controller' => 'Editions', 'action' => 'view', $piece->edition->id]) : '' ?></td>
-                <td><?= $piece->has('format') ? $this->Html->link($piece->format->title, ['controller' => 'Formats', 'action' => 'view', $piece->format->id]) : '' ?></td>
                 <td><?= $this->Number->format($piece->number) ?></td>
+                <td><?= $this->Number->format($piece->quantity) ?></td>
+                <td><?= h($piece->made) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $piece->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $piece->id]) ?>

@@ -19,6 +19,15 @@ class GroupsControllerTest extends IntegrationTestCase
         'app.groups',
         'app.users',
         'app.members',
+        'app.images',
+        'app.artworks',
+        'app.editions',
+        'app.series',
+        'app.formats',
+        'app.subscriptions',
+        'app.pieces',
+        'app.dispositions',
+        'app.locations',
         'app.groups_members'
     ];
 

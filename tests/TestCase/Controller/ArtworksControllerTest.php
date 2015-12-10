@@ -18,7 +18,17 @@ class ArtworksControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.artworks',
         'app.users',
-        'app.editions'
+        'app.members',
+        'app.images',
+        'app.formats',
+        'app.editions',
+        'app.series',
+        'app.pieces',
+        'app.dispositions',
+        'app.locations',
+        'app.subscriptions',
+        'app.groups',
+        'app.groups_members'
     ];
 
     /**

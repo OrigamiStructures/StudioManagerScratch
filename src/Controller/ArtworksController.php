@@ -23,10 +23,9 @@ class ArtworksController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Images']
         ];
         $this->set('artworks', $this->paginate($this->Artworks));
-        osd("This is a test");
         $this->set('_serialize', ['artworks']);
     }
 
@@ -40,7 +39,7 @@ class ArtworksController extends AppController
     public function view($id = null)
     {
         $artwork = $this->Artworks->get($id, [
-            'contain' => ['Users', 'Editions']
+            'contain' => ['Users', 'Images', 'Editions']
         ]);
         $this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
@@ -59,7 +58,6 @@ class ArtworksController extends AppController
 			$Formats = TableRegistry::get('Formats');
 			$Pieces = TableRegistry::get('Pieces');
             $artwork = $this->Artworks->patchEntity($artwork, $this->request->data);
-			
             if ($this->Artworks->save($artwork)) {
 				
 				$edition = $Editions->newEntity([
@@ -88,7 +86,8 @@ class ArtworksController extends AppController
         }
 		$this->request->data('user_id', '1');
         $users = $this->Artworks->Users->find('list', ['limit' => 200]);
-        $this->set(compact('artwork', 'users'));
+        $images = $this->Artworks->Images->find('list', ['limit' => 200]);
+        $this->set(compact('artwork', 'users', 'images'));
         $this->set('_serialize', ['artwork']);
     }
 
@@ -114,7 +113,8 @@ class ArtworksController extends AppController
             }
         }
         $users = $this->Artworks->Users->find('list', ['limit' => 200]);
-        $this->set(compact('artwork', 'users'));
+        $images = $this->Artworks->Images->find('list', ['limit' => 200]);
+        $this->set(compact('artwork', 'users', 'images'));
         $this->set('_serialize', ['artwork']);
     }
 

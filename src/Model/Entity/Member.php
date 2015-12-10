@@ -11,6 +11,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $modified
  * @property string $name
  * @property int $user_id
+ * @property int $image_id
  * @property \App\Model\Entity\User[] $users
  * @property \App\Model\Entity\Disposition[] $dispositions
  * @property \App\Model\Entity\Location[] $locations

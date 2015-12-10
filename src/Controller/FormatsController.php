@@ -19,7 +19,7 @@ class FormatsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Editions']
+            'contain' => ['Users', 'Images', 'Editions', 'Subscriptions']
         ];
         $this->set('formats', $this->paginate($this->Formats));
         $this->set('_serialize', ['formats']);
@@ -35,7 +35,7 @@ class FormatsController extends AppController
     public function view($id = null)
     {
         $format = $this->Formats->get($id, [
-            'contain' => ['Users', 'Editions', 'Pieces']
+            'contain' => ['Users', 'Images', 'Editions', 'Subscriptions', 'Pieces']
         ]);
         $this->set('format', $format);
         $this->set('_serialize', ['format']);
@@ -59,8 +59,10 @@ class FormatsController extends AppController
             }
         }
         $users = $this->Formats->Users->find('list', ['limit' => 200]);
+        $images = $this->Formats->Images->find('list', ['limit' => 200]);
         $editions = $this->Formats->Editions->find('list', ['limit' => 200]);
-        $this->set(compact('format', 'users', 'editions'));
+        $subscriptions = $this->Formats->Subscriptions->find('list', ['limit' => 200]);
+        $this->set(compact('format', 'users', 'images', 'editions', 'subscriptions'));
         $this->set('_serialize', ['format']);
     }
 
@@ -86,8 +88,10 @@ class FormatsController extends AppController
             }
         }
         $users = $this->Formats->Users->find('list', ['limit' => 200]);
+        $images = $this->Formats->Images->find('list', ['limit' => 200]);
         $editions = $this->Formats->Editions->find('list', ['limit' => 200]);
-        $this->set(compact('format', 'users', 'editions'));
+        $subscriptions = $this->Formats->Subscriptions->find('list', ['limit' => 200]);
+        $this->set(compact('format', 'users', 'images', 'editions', 'subscriptions'));
         $this->set('_serialize', ['format']);
     }
 

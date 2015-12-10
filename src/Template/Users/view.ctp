@@ -19,10 +19,16 @@
         <li><?= $this->Html->link(__('New Group'), ['controller' => 'Groups', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Groups Members'), ['controller' => 'GroupsMembers', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Groups Member'), ['controller' => 'GroupsMembers', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Images'), ['controller' => 'Images', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Image'), ['controller' => 'Images', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Piece'), ['controller' => 'Pieces', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Series'), ['controller' => 'Series', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Series'), ['controller' => 'Series', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Subscriptions'), ['controller' => 'Subscriptions', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Subscription'), ['controller' => 'Subscriptions', 'action' => 'add']) ?> </li>
     </ul>
 </nav>
 <div class="users view large-9 medium-8 columns content">
@@ -63,6 +69,7 @@
                 <th><?= __('Modified') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('User Id') ?></th>
+                <th><?= __('Image Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($user->members as $members): ?>
@@ -72,6 +79,7 @@
                 <td><?= h($members->modified) ?></td>
                 <td><?= h($members->name) ?></td>
                 <td><?= h($members->user_id) ?></td>
+                <td><?= h($members->image_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Members', 'action' => 'view', $members->id]) ?>
 
@@ -94,6 +102,7 @@
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th><?= __('User Id') ?></th>
+                <th><?= __('Image Id') ?></th>
                 <th><?= __('Title') ?></th>
                 <th><?= __('Description') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
@@ -104,6 +113,7 @@
                 <td><?= h($artworks->created) ?></td>
                 <td><?= h($artworks->modified) ?></td>
                 <td><?= h($artworks->user_id) ?></td>
+                <td><?= h($artworks->image_id) ?></td>
                 <td><?= h($artworks->title) ?></td>
                 <td><?= h($artworks->description) ?></td>
                 <td class="actions">
@@ -164,10 +174,11 @@
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th><?= __('User Id') ?></th>
-                <th><?= __('Name') ?></th>
+                <th><?= __('Title') ?></th>
                 <th><?= __('Type') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Artwork Id') ?></th>
+                <th><?= __('Series Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($user->editions as $editions): ?>
@@ -176,10 +187,11 @@
                 <td><?= h($editions->created) ?></td>
                 <td><?= h($editions->modified) ?></td>
                 <td><?= h($editions->user_id) ?></td>
-                <td><?= h($editions->name) ?></td>
+                <td><?= h($editions->title) ?></td>
                 <td><?= h($editions->type) ?></td>
                 <td><?= h($editions->quantity) ?></td>
                 <td><?= h($editions->artwork_id) ?></td>
+                <td><?= h($editions->series_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Editions', 'action' => 'view', $editions->id]) ?>
 
@@ -202,9 +214,14 @@
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th><?= __('User Id') ?></th>
-                <th><?= __('Edition Id') ?></th>
                 <th><?= __('Title') ?></th>
                 <th><?= __('Description') ?></th>
+                <th><?= __('Range Flag') ?></th>
+                <th><?= __('Range Start') ?></th>
+                <th><?= __('Range End') ?></th>
+                <th><?= __('Image Id') ?></th>
+                <th><?= __('Edition Id') ?></th>
+                <th><?= __('Subscription Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($user->formats as $formats): ?>
@@ -213,9 +230,14 @@
                 <td><?= h($formats->created) ?></td>
                 <td><?= h($formats->modified) ?></td>
                 <td><?= h($formats->user_id) ?></td>
-                <td><?= h($formats->edition_id) ?></td>
                 <td><?= h($formats->title) ?></td>
                 <td><?= h($formats->description) ?></td>
+                <td><?= h($formats->range_flag) ?></td>
+                <td><?= h($formats->range_start) ?></td>
+                <td><?= h($formats->range_end) ?></td>
+                <td><?= h($formats->image_id) ?></td>
+                <td><?= h($formats->edition_id) ?></td>
+                <td><?= h($formats->subscription_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Formats', 'action' => 'view', $formats->id]) ?>
 
@@ -296,6 +318,56 @@
     <?php endif; ?>
     </div>
     <div class="related">
+        <h4><?= __('Related Images') ?></h4>
+        <?php if (!empty($user->images)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th><?= __('Id') ?></th>
+                <th><?= __('Modified') ?></th>
+                <th><?= __('Created') ?></th>
+                <th><?= __('User Id') ?></th>
+                <th><?= __('Image') ?></th>
+                <th><?= __('Image Dir') ?></th>
+                <th><?= __('Mimetype') ?></th>
+                <th><?= __('Filesize') ?></th>
+                <th><?= __('Width') ?></th>
+                <th><?= __('Height') ?></th>
+                <th><?= __('Title') ?></th>
+                <th><?= __('Date') ?></th>
+                <th><?= __('Alt') ?></th>
+                <th><?= __('Upload') ?></th>
+                <th class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($user->images as $images): ?>
+            <tr>
+                <td><?= h($images->id) ?></td>
+                <td><?= h($images->modified) ?></td>
+                <td><?= h($images->created) ?></td>
+                <td><?= h($images->user_id) ?></td>
+                <td><?= h($images->image) ?></td>
+                <td><?= h($images->image_dir) ?></td>
+                <td><?= h($images->mimetype) ?></td>
+                <td><?= h($images->filesize) ?></td>
+                <td><?= h($images->width) ?></td>
+                <td><?= h($images->height) ?></td>
+                <td><?= h($images->title) ?></td>
+                <td><?= h($images->date) ?></td>
+                <td><?= h($images->alt) ?></td>
+                <td><?= h($images->upload) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Images', 'action' => 'view', $images->id]) ?>
+
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Images', 'action' => 'edit', $images->id]) ?>
+
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Images', 'action' => 'delete', $images->id], ['confirm' => __('Are you sure you want to delete # {0}?', $images->id)]) ?>
+
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+    </div>
+    <div class="related">
         <h4><?= __('Related Locations') ?></h4>
         <?php if (!empty($user->locations)): ?>
         <table cellpadding="0" cellspacing="0">
@@ -338,11 +410,11 @@
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th><?= __('User Id') ?></th>
-                <th><?= __('Edition Id') ?></th>
-                <th><?= __('Format Id') ?></th>
                 <th><?= __('Number') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Made') ?></th>
+                <th><?= __('Edition Id') ?></th>
+                <th><?= __('Format Id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
             <?php foreach ($user->pieces as $pieces): ?>
@@ -351,17 +423,91 @@
                 <td><?= h($pieces->created) ?></td>
                 <td><?= h($pieces->modified) ?></td>
                 <td><?= h($pieces->user_id) ?></td>
-                <td><?= h($pieces->edition_id) ?></td>
-                <td><?= h($pieces->format_id) ?></td>
                 <td><?= h($pieces->number) ?></td>
                 <td><?= h($pieces->quantity) ?></td>
                 <td><?= h($pieces->made) ?></td>
+                <td><?= h($pieces->edition_id) ?></td>
+                <td><?= h($pieces->format_id) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller' => 'Pieces', 'action' => 'view', $pieces->id]) ?>
 
                     <?= $this->Html->link(__('Edit'), ['controller' => 'Pieces', 'action' => 'edit', $pieces->id]) ?>
 
                     <?= $this->Form->postLink(__('Delete'), ['controller' => 'Pieces', 'action' => 'delete', $pieces->id], ['confirm' => __('Are you sure you want to delete # {0}?', $pieces->id)]) ?>
+
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+    </div>
+    <div class="related">
+        <h4><?= __('Related Series') ?></h4>
+        <?php if (!empty($user->series)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th><?= __('Id') ?></th>
+                <th><?= __('Created') ?></th>
+                <th><?= __('Modified') ?></th>
+                <th><?= __('User Id') ?></th>
+                <th><?= __('Title') ?></th>
+                <th><?= __('Description') ?></th>
+                <th class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($user->series as $series): ?>
+            <tr>
+                <td><?= h($series->id) ?></td>
+                <td><?= h($series->created) ?></td>
+                <td><?= h($series->modified) ?></td>
+                <td><?= h($series->user_id) ?></td>
+                <td><?= h($series->title) ?></td>
+                <td><?= h($series->description) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Series', 'action' => 'view', $series->id]) ?>
+
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Series', 'action' => 'edit', $series->id]) ?>
+
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Series', 'action' => 'delete', $series->id], ['confirm' => __('Are you sure you want to delete # {0}?', $series->id)]) ?>
+
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+    </div>
+    <div class="related">
+        <h4><?= __('Related Subscriptions') ?></h4>
+        <?php if (!empty($user->subscriptions)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th><?= __('Id') ?></th>
+                <th><?= __('Created') ?></th>
+                <th><?= __('Modified') ?></th>
+                <th><?= __('User Id') ?></th>
+                <th><?= __('Title') ?></th>
+                <th><?= __('Description') ?></th>
+                <th><?= __('Range Flag') ?></th>
+                <th><?= __('Range Start') ?></th>
+                <th><?= __('Range End') ?></th>
+                <th class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($user->subscriptions as $subscriptions): ?>
+            <tr>
+                <td><?= h($subscriptions->id) ?></td>
+                <td><?= h($subscriptions->created) ?></td>
+                <td><?= h($subscriptions->modified) ?></td>
+                <td><?= h($subscriptions->user_id) ?></td>
+                <td><?= h($subscriptions->title) ?></td>
+                <td><?= h($subscriptions->description) ?></td>
+                <td><?= h($subscriptions->range_flag) ?></td>
+                <td><?= h($subscriptions->range_start) ?></td>
+                <td><?= h($subscriptions->range_end) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Subscriptions', 'action' => 'view', $subscriptions->id]) ?>
+
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Subscriptions', 'action' => 'edit', $subscriptions->id]) ?>
+
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Subscriptions', 'action' => 'delete', $subscriptions->id], ['confirm' => __('Are you sure you want to delete # {0}?', $subscriptions->id)]) ?>
 
                 </td>
             </tr>

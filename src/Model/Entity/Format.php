@@ -11,10 +11,15 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\Time $modified
  * @property int $user_id
  * @property \App\Model\Entity\User $user
- * @property int $edition_id
- * @property \App\Model\Entity\Edition $edition
  * @property string $title
  * @property string $description
+ * @property int $range_flag
+ * @property int $range_start
+ * @property int $range_end
+ * @property int $image_id
+ * @property int $edition_id
+ * @property \App\Model\Entity\Edition $edition
+ * @property int $subscription_id
  * @property \App\Model\Entity\Piece[] $pieces
  */
 class Format extends Entity

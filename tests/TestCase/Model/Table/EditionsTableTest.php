@@ -19,9 +19,14 @@ class EditionsTableTest extends TestCase
     public $fixtures = [
         'app.editions',
         'app.users',
-        'app.artworks',
+        'app.members',
+        'app.dispositions',
+        'app.locations',
+        'app.pieces',
         'app.formats',
-        'app.pieces'
+        'app.groups',
+        'app.groups_members',
+        'app.artworks'
     ];
 
     /**

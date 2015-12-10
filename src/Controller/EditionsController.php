@@ -19,7 +19,7 @@ class EditionsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Artworks']
+            'contain' => ['Users', 'Artworks', 'Series']
         ];
         $this->set('editions', $this->paginate($this->Editions));
         $this->set('_serialize', ['editions']);
@@ -35,7 +35,7 @@ class EditionsController extends AppController
     public function view($id = null)
     {
         $edition = $this->Editions->get($id, [
-            'contain' => ['Users', 'Artworks', 'Formats', 'Pieces']
+            'contain' => ['Users', 'Artworks', 'Series', 'Formats', 'Pieces']
         ]);
         $this->set('edition', $edition);
         $this->set('_serialize', ['edition']);
@@ -60,7 +60,8 @@ class EditionsController extends AppController
         }
         $users = $this->Editions->Users->find('list', ['limit' => 200]);
         $artworks = $this->Editions->Artworks->find('list', ['limit' => 200]);
-        $this->set(compact('edition', 'users', 'artworks'));
+        $series = $this->Editions->Series->find('list', ['limit' => 200]);
+        $this->set(compact('edition', 'users', 'artworks', 'series'));
         $this->set('_serialize', ['edition']);
     }
 
@@ -87,7 +88,8 @@ class EditionsController extends AppController
         }
         $users = $this->Editions->Users->find('list', ['limit' => 200]);
         $artworks = $this->Editions->Artworks->find('list', ['limit' => 200]);
-        $this->set(compact('edition', 'users', 'artworks'));
+        $series = $this->Editions->Series->find('list', ['limit' => 200]);
+        $this->set(compact('edition', 'users', 'artworks', 'series'));
         $this->set('_serialize', ['edition']);
     }
 

@@ -5,6 +5,8 @@
         <li><?= $this->Form->postLink(__('Delete Member'), ['action' => 'delete', $member->id], ['confirm' => __('Are you sure you want to delete # {0}?', $member->id)]) ?> </li>
         <li><?= $this->Html->link(__('List Members'), ['action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Member'), ['action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Images'), ['controller' => 'Images', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Image'), ['controller' => 'Images', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Dispositions'), ['controller' => 'Dispositions', 'action' => 'index']) ?> </li>
@@ -21,6 +23,10 @@
         <tr>
             <th><?= __('Name') ?></th>
             <td><?= h($member->name) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Image') ?></th>
+            <td><?= $member->has('image') ? $this->Html->link($member->image->title, ['controller' => 'Images', 'action' => 'view', $member->image->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>

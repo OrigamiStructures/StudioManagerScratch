@@ -21,6 +21,11 @@ class DispositionsTableTest extends TestCase
         'app.users',
         'app.members',
         'app.locations',
+        'app.groups',
+        'app.groups_members',
+        'app.artworks',
+        'app.editions',
+        'app.formats',
         'app.pieces'
     ];
 

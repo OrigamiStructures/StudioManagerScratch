@@ -41,8 +41,8 @@ class LocationsFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'created' => '2015-12-05 02:31:21',
-            'modified' => '2015-12-05 02:31:21',
+            'created' => '2015-12-10 21:30:19',
+            'modified' => '2015-12-10 21:30:19',
             'user_id' => 1,
             'member_id' => 1,
             'name' => 'Lorem ipsum dolor sit amet'

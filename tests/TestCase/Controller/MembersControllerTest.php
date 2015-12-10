@@ -18,9 +18,15 @@ class MembersControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.members',
         'app.users',
+        'app.artworks',
+        'app.images',
+        'app.formats',
+        'app.editions',
+        'app.series',
+        'app.pieces',
         'app.dispositions',
         'app.locations',
-        'app.pieces',
+        'app.subscriptions',
         'app.groups',
         'app.groups_members'
     ];

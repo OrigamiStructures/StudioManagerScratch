@@ -18,7 +18,9 @@ class MembersController extends AppController
      */
     public function index()
     {
-		debug($this->paginate($this->Members)->toArray());
+        $this->paginate = [
+            'contain' => ['Images']
+        ];
         $this->set('members', $this->paginate($this->Members));
         $this->set('_serialize', ['members']);
     }
@@ -33,7 +35,7 @@ class MembersController extends AppController
     public function view($id = null)
     {
         $member = $this->Members->get($id, [
-            'contain' => ['Groups', 'Users', 'Dispositions', 'Locations']
+            'contain' => ['Images', 'Groups', 'Users', 'Dispositions', 'Locations']
         ]);
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
@@ -56,8 +58,9 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
+        $images = $this->Members->Images->find('list', ['limit' => 200]);
         $groups = $this->Members->Groups->find('list', ['limit' => 200]);
-        $this->set(compact('member', 'groups'));
+        $this->set(compact('member', 'images', 'groups'));
         $this->set('_serialize', ['member']);
     }
 
@@ -82,8 +85,9 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
+        $images = $this->Members->Images->find('list', ['limit' => 200]);
         $groups = $this->Members->Groups->find('list', ['limit' => 200]);
-        $this->set(compact('member', 'groups'));
+        $this->set(compact('member', 'images', 'groups'));
         $this->set('_serialize', ['member']);
     }
 

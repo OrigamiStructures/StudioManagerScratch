@@ -11,6 +11,7 @@ use Cake\Validation\Validator;
  * Artworks Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Association\BelongsTo $Images
  * @property \Cake\ORM\Association\HasMany $Editions
  */
 class ArtworksTable extends Table
@@ -34,6 +35,9 @@ class ArtworksTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
+        ]);
+        $this->belongsTo('Images', [
+            'foreignKey' => 'image_id'
         ]);
         $this->hasMany('Editions', [
             'foreignKey' => 'artwork_id'
@@ -71,6 +75,7 @@ class ArtworksTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['image_id'], 'Images'));
         return $rules;
     }
 }

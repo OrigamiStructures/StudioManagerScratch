@@ -19,8 +19,16 @@ class LocationsControllerTest extends IntegrationTestCase
         'app.locations',
         'app.users',
         'app.members',
+        'app.images',
+        'app.artworks',
+        'app.editions',
+        'app.series',
+        'app.formats',
+        'app.subscriptions',
+        'app.pieces',
         'app.dispositions',
-        'app.pieces'
+        'app.groups',
+        'app.groups_members'
     ];
 
     /**

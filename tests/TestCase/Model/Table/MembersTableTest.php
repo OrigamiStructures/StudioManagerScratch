@@ -19,9 +19,12 @@ class MembersTableTest extends TestCase
     public $fixtures = [
         'app.members',
         'app.users',
+        'app.artworks',
+        'app.editions',
+        'app.formats',
+        'app.pieces',
         'app.dispositions',
         'app.locations',
-        'app.pieces',
         'app.groups',
         'app.groups_members'
     ];

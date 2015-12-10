@@ -20,6 +20,12 @@ class GroupsTableTest extends TestCase
         'app.groups',
         'app.users',
         'app.members',
+        'app.dispositions',
+        'app.locations',
+        'app.pieces',
+        'app.editions',
+        'app.artworks',
+        'app.formats',
         'app.groups_members'
     ];
 
