@@ -1,0 +1,26 @@
+/*
+Copyright 2015 Origami Structures
+*/
+/* 
+    Created on : Dec 10, 2015, 11:52:21 AM
+    Author     : jasont
+*/
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web|Unna);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900italic,900);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,400italic,700,700italic,300italic);
+section.logotest {
+  padding: 3rem; }
+  section.logotest p {
+    font-size: 1.5rem; }
+    section.logotest p span.lato {
+      font-family: 'Lato', sans-serif;
+      font-weight: 100; }
+    section.logotest p span.opensans {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 100; }
+    section.logotest p span.roboto {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 300; }
+
+/*# sourceMappingURL=logotest.css.map */

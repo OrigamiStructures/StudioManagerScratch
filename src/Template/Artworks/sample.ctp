@@ -1,11 +1,17 @@
 <?php
 $this->append('css');
 echo $this->Html->css('artwork') . "\n";
+echo $this->Html->css('logotest') . "\n";
 $this->end();
 ?>
 
+<section class="logotest">
+    <p><span class="opensans">ClearStudio</span></p>
+    <p><span class="lato">ClearStudio</span></p>
+    <p><span class="roboto">ClearStudio</span></p>
+</section>
 <section class="artwork">
-	<details class="row">
+	<div class="row">
 		<div class="columns small-12 medium-3">
 			<?= $this->Html->image('DSC04016.JPG'); ?>
 		</div>
@@ -33,8 +39,8 @@ $this->end();
 				<p class="format">Use in Saphire Blue Vodka ad</p>
 				<a href="#" class="disposition">Rights details</a>
 		</div>
-	</details>
-	<details class="row">
+	</div>
+	<div class="row">
 		<div class="columns small-12 medium-3">
 			<?= $this->Html->image('DSC04022.JPG'); ?>
 		</div>
@@ -50,8 +56,8 @@ $this->end();
 				<p class="format">4 x 6 Paperback Edition</p>
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
-	</details>
-	<details class="row">
+	</div>
+	<div class="row">
 		<div class="columns small-12 medium-3">
 			<?= $this->Html->image('DSC04039.JPG'); ?>
 		</div>
@@ -66,8 +72,8 @@ $this->end();
 				<p class="format">4 x 6 Paperback Edition</p>
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
-	</details>
-	<details class="row">
+	</div>
+	<div class="row">
 		<div class="columns small-12 medium-3">
 			<?= $this->Html->image('DSC04517.JPG'); ?>
 		</div>
@@ -82,8 +88,8 @@ $this->end();
 				<p class="format">4 x 6 Paperback Edition</p>
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
-	</details>
-	<details class="row">
+	</div>
+	<div class="row">
 		<div class="columns small-12 medium-3">
 			<?= $this->Html->image('IMG_0089_2.JPG'); ?>
 		</div>
@@ -98,5 +104,5 @@ $this->end();
 				<p class="format">4 x 6 Paperback Edition</p>
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
-	</details>
+	</div>
 </div>
