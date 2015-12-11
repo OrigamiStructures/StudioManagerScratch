@@ -31,12 +31,21 @@ class ArtworkStackComponent extends Component {
 	 * @return array
 	 */
 	public function layerChoices() {
+		//
+		//
+		// THESE RESULTS NEED TO BE CACHED TO CUT DOWN ON OVERHEAD
+		//
+		//
 		$artist_id = $this->controller->artistId();
 		$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		
+		// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
 		$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		
 		$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		$series = $this->Series->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		$subscriptions = $this->Subscriptions->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		
 		$this->controller->set(compact('artworks', 'editions', 'formats', 'series', 'subscriptions'));
 		return [$artworks, $editions, $formats, $series, $subscriptions];
 	}
