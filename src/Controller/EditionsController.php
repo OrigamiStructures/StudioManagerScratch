@@ -10,8 +10,10 @@ use App\Controller\AppController;
  */
 class EditionsController extends AppController
 {
+	
+	public $components = ['ArtworkStack'];
 
-    /**
+	/**
      * Index method
      *
      * @return void
@@ -112,10 +114,12 @@ class EditionsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function spec() {
+	public function spec($artwork_id = NULL) {
 		$artwork_element = 'choose';
 		$edition_element = $format_element = 'spec';
+		$this->ArtworkStack->layerChoices();
 		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
 		$this->render('/Artworks/spec');
 	}
+	
 }

@@ -91,4 +91,17 @@ class EditionsTable extends Table
         $rules->add($rules->existsIn(['series_id'], 'Series'));
         return $rules;
     }
+	
+	/**
+	 * Get the current select list
+	 * 
+	 * @param Query $query
+	 * @param string $artist_id
+	 * @return query result object
+	 */
+	public function findChoiceList(Query $query, $options) {
+		$this->displayField('display_title');
+		return $query->where(['user_id' => $options['artist_id']])->find('list');
+	}
+	
 }

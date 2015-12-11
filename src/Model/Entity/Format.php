@@ -38,4 +38,15 @@ class Format extends Entity
         '*' => true,
         'id' => false,
     ];
+	
+	/**
+	 * Fully detailed descriptive label for the edition
+	 * 
+	 * @return string
+	 */
+	public function _getDisplayTitle() {
+		$title = empty($this->_properties['type']) ? $this->_properties['description'] : $this->_properties['type'];
+		return "$title {$this->_properties['user_id']}";
+	}
+	
 }

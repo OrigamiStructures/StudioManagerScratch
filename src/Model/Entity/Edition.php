@@ -36,4 +36,18 @@ class Edition extends Entity
         '*' => true,
         'id' => false,
     ];
+	
+	/**
+	 * Fully detailed descriptive label for the edition
+	 * 
+	 * @return string
+	 */
+	public function _getDisplayTitle() {
+		$type = strtolower($this->_properties['type']) === 'unique' 
+				? 'Edition of 1' 
+				: ucwords($this->_properties['type']) . " ({$this->_properties['quantity']})";
+		$title = empty($this->_properties['title']) ? $this->_properties['title'] : "{$this->_properties['title']}, ";
+		return  $title . $type;
+	}
+	
 }

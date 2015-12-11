@@ -59,4 +59,16 @@ class AppController extends Controller
             $this->set('_serialize', true);
         }
     }
+	
+	/**
+	 * Get the logged in artist's ID or the ID of the artist we're mocking
+	 * 
+	 * Admins (and possibly gallery owners in a later phase) will be able to 
+	 * 'act as' an artist rather than only seeing thier own artworks. 
+	 * 
+	 * @return string
+	 */
+	public function artistId() {
+		return '1';
+	}
 }

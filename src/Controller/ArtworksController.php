@@ -145,4 +145,5 @@ class ArtworksController extends AppController
 		$artwork_element = $edition_element = $format_element = 'spec';
 		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
 	}
+	
 }

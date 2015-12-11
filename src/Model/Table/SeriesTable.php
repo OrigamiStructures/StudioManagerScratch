@@ -73,4 +73,16 @@ class SeriesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
+	
+	/**
+	 * Get the current select list
+	 * 
+	 * @param Query $query
+	 * @param string $artist_id
+	 * @return query result object
+	 */
+	public function findChoiceList(Query $query, $options) {
+		return $query->where(['user_id' => $options['artist_id']])->find('list');
+	}
+	
 }

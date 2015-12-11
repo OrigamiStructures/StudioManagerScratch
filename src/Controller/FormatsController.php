@@ -11,6 +11,8 @@ use App\Controller\AppController;
 class FormatsController extends AppController
 {
 
+	public $components = ['ArtworkStack'];
+
     /**
      * Index method
      *
@@ -113,11 +115,14 @@ class FormatsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
-	public function spec() {
-		$artwork_element = false;
-		$edition_element = 'choose';
+	
+	public function spec($edition_id = NULL) {
+		$this->request->data('edition', '2');
+		$artwork_element = $edition_element = 'choose';
 		$format_element = 'spec';
+		$this->ArtworkStack->layerChoices();
 		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
 		$this->render('/Artworks/spec');
 	}
+	
 }
