@@ -40,6 +40,7 @@ class ArtworkStackComponent extends Component {
 		$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
 		// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
+		// ALSO FILTER OUT FULLY COMMITED EDTIONS (NO CANDIDATE PIECES)
 		$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
 		$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
