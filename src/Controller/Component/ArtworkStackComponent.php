@@ -30,7 +30,7 @@ class ArtworkStackComponent extends Component {
 	 * 
 	 * @return array
 	 */
-	public function layerChoices() {
+	public function layerChoiceLists() {
 		//
 		//
 		// THESE RESULTS NEED TO BE CACHED TO CUT DOWN ON OVERHEAD
@@ -44,7 +44,10 @@ class ArtworkStackComponent extends Component {
 		$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
 		$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		
+		// ONLY THE SERIES NOT ALREADY IMPLEMENTED BY THE ARTWORK
 		$series = $this->Series->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		$series = ['n' => 'New Series'] + $series;
 		$subscriptions = $this->Subscriptions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
 		$this->controller->set(compact('artworks', 'editions', 'formats', 'series', 'subscriptions'));

@@ -120,7 +120,7 @@ class FormatsController extends AppController
 		$this->request->data('edition', '2');
 		$artwork_element = $edition_element = 'choose';
 		$format_element = 'spec';
-		$this->ArtworkStack->layerChoices();
+		$this->ArtworkStack->layerChoiceLists();
 		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
 		$this->render('/Artworks/spec');
 	}

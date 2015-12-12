@@ -117,7 +117,7 @@ class EditionsController extends AppController
 	public function spec($artwork_id = NULL) {
 		$artwork_element = 'choose';
 		$edition_element = $format_element = 'spec';
-		$this->ArtworkStack->layerChoices();
+		$this->ArtworkStack->layerChoiceLists();
 		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
 		$this->render('/Artworks/spec');
 	}
