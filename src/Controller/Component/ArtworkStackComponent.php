@@ -27,6 +27,10 @@ class ArtworkStackComponent extends Component {
 	}
 	
 	/**
+	 * Prepare appropriate choice lists for all artwork stack tables
+	 * 
+	 * NEEDS TO BE 'STATE' AWARE TO GENERATE PROPERLY FILTERED AND 
+	 * CONSTRUCTED LISTS FOR 'CREATION' VS 'SELECTION' PROCESSES
 	 * 
 	 * @return array
 	 */
