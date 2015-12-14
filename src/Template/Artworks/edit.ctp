@@ -13,7 +13,7 @@
         <li><?= $this->Html->link(__('List Images'), ['controller' => 'Images', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Image'), ['controller' => 'Images', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Editions'), ['controller' => 'Editions', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Edition'), ['controller' => 'Editions', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('New Edition'), ['controller' => 'Editions', 'action' => 'spec', $artwork->id]) ?></li>
     </ul>
 </nav>
 <div class="artworks form large-9 medium-8 columns content">

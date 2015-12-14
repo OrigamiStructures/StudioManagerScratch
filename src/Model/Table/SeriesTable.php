@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Collection\Collection;
 
 /**
  * Series Model
@@ -83,6 +84,24 @@ class SeriesTable extends Table
 	 */
 	public function findChoiceList(Query $query, $options) {
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
+	}
+	
+	public function findUnimplemented(Query $query, $options) {
+		$options += ['artwork_id' => '', 'artist_id' => ''];
+		$editions = $this->Editions->find('list', [
+			'keyField' => 'series_id', 'valueField' => 'artwork_id'
+		])
+			->where(['artwork_id' => $options['artwork_id'], 'series_id >=' => '0'])
+			->toArray();
+		$all_series = new Collection($this->find('choiceList', $options));
+		$implemented = array_keys($editions);
+		$series = $all_series->filter(function($series_title, $series_id) use ($implemented) {
+			return !in_array($series_id, $implemented);
+		});
+		osd($series->toArray());
+		osd($options, 'options');
+		osd($editions);
+		osd($series->toArray());die;
 	}
 	
 }
