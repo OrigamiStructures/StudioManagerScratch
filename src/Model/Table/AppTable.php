@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use App\Lib\ControlBlock;
+use App\Lib\SystemState;
 
 
 /**
@@ -12,13 +12,13 @@ use App\Lib\ControlBlock;
 class AppTable extends Table {
 	
     public function __construct(array $config = []){
-        if (!empty($config['controlBlock'])) {
-            $this->registryAlias($config['controlBlock']);
+        if (!empty($config['SystemState'])) {
+            $this->registryAlias($config['SystemState']);
         }
 	}
 	
-	public function controlBlock(ControlBloc $control) {
-		$this->ControlBlock = $control;
+	public function SystemState(ControlBloc $control) {
+		$this->SystemState = $control;
 	}
 	
 }

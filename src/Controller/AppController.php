@@ -16,7 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
-use App\Lib\ControlBlock;
+use App\Lib\SystemState;
 
 /**
  * Application Controller
@@ -32,9 +32,9 @@ class AppController extends Controller
 	/**
 	 * Class providing system state and artist context
 	 *
-	 * @var ControlBlock
+	 * @var SystemState
 	 */
-	public $ControlBlock;
+	public $SystemState;
 
     /**
      * Initialization hook method.
@@ -51,9 +51,9 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-		$this->ControlBlock = new ControlBlock($this->request);
-		$this->{$this->modelClass}->ControlBlock = $this->ControlBlock;
-		$this->set('ControlBlock', $this->ControlBlock);
+		$this->SystemState = new SystemState($this->request);
+		$this->{$this->modelClass}->SystemState = $this->SystemState;
+		$this->set('SystemState', $this->SystemState);
     }
 
     /**
