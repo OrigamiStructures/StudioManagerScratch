@@ -14,16 +14,20 @@ use Cake\ORM\TableRegistry;
  * @author dondrake
  */
 class ArtworkStackComponent extends Component {
+	
+	public $ControlBlock;
 		
     public function initialize(array $config) 
 	{
 		$this->controller = $this->_registry->getController();
-		$this->Artworks = TableRegistry::get('Artworks');
+		$this->ControlBlock = $this->controller->ControlBlock;
+		$this->Artworks = TableRegistry::get('Artworks', ['controlBlock' => $this->ControlBlock]);
+		
 		$this->Editions = TableRegistry::get('Editions');
-		$this->Formats = TableRegistry::get('Formats');
-		$this->Pieces = TableRegistry::get('Pieces');
-		$this->Series = TableRegistry::get('Series');
-		$this->Subscriptions = TableRegistry::get('Subscriptions');
+		$this->Formats = TableRegistry::get('Formats', ['controlBlock' => $this->ControlBlock]);
+		$this->Pieces = TableRegistry::get('Pieces', ['controlBlock' => $this->ControlBlock]);
+		$this->Series = TableRegistry::get('Series', ['controlBlock' => $this->ControlBlock]);
+		$this->Subscriptions = TableRegistry::get('Subscriptions', ['controlBlock' => $this->ControlBlock]);
 	}
 	
 	/**

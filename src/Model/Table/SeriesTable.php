@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
+use App\Lib\ControlBlock;
 
 /**
  * Series Model
@@ -76,32 +77,35 @@ class SeriesTable extends Table
     }
 	
 	/**
-	 * Get the current select list
+	 * Get the full series list for an artist
+	 * 
+	 * For a select input, id => title
 	 * 
 	 * @param Query $query
 	 * @param string $artist_id
-	 * @return query result object
+	 * @return query result-object 
 	 */
 	public function findChoiceList(Query $query, $options) {
-		return $query->where(['user_id' => $options['artist_id']])->find('list');
+		return $query->where(['Series.user_id' => $options['artist_id']])->find('list');
 	}
 	
+	/**
+	 * Get the unimplemented series list for an artist's single artwork
+	 * 
+	 * For a select input, id => title
+	 * 
+	 * @param Query $query
+	 * @param array $options
+	 * @return query result-object 
+	 */
 	public function findUnimplemented(Query $query, $options) {
 		$options += ['artwork_id' => '', 'artist_id' => ''];
-		$editions = $this->Editions->find('list', [
-			'keyField' => 'series_id', 'valueField' => 'artwork_id'
-		])
-			->where(['artwork_id' => $options['artwork_id'], 'series_id >=' => '0'])
-			->toArray();
-		$all_series = new Collection($this->find('choiceList', $options));
-		$implemented = array_keys($editions);
-		$series = $all_series->filter(function($series_title, $series_id) use ($implemented) {
-			return !in_array($series_id, $implemented);
-		});
-		osd($series->toArray());
-		osd($options, 'options');
-		osd($editions);
-		osd($series->toArray());die;
+		
+		$query = $this->find('choiceList', $options)
+			->notMatching('Editions', function($q) use ($options) {
+				return $q->where(['artwork_id' => $options['artwork_id'], 'series_id >=' => '0']);
+			});
+		return $query;
 	}
 	
 }

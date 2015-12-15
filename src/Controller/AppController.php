@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use App\Lib\ControlBlock;
 
 /**
  * Application Controller
@@ -27,6 +28,13 @@ use Cake\Event\Event;
  */
 class AppController extends Controller
 {
+	
+	/**
+	 * Class providing system state and artist context
+	 *
+	 * @var ControlBlock
+	 */
+	public $ControlBlock;
 
     /**
      * Initialization hook method.
@@ -43,6 +51,9 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+		$this->ControlBlock = new ControlBlock($this->request);
+		$this->{$this->modelClass}->ControlBlock = $this->ControlBlock;
+		$this->set('ControlBlock', $this->ControlBlock);
     }
 
     /**
