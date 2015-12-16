@@ -2,13 +2,12 @@
 namespace App\Lib;
 class StateMap {
 	public $map = array (
-  'app' => 
+  'App' => 
   array (
     'initialize' => NULL,
     'beforeRender' => NULL,
-    'artistId' => NULL,
   ),
-  'artworks' => 
+  'Artworks' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -18,7 +17,7 @@ class StateMap {
     'sample' => NULL,
     'spec' => NULL,
   ),
-  'designs' => 
+  'Designs' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -26,7 +25,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'dispositions' => 
+  'Dispositions' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -34,16 +33,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'editions' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-    'spec' => NULL,
-  ),
-  'formats' => 
+  'Editions' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -52,7 +42,16 @@ class StateMap {
     'delete' => NULL,
     'spec' => NULL,
   ),
-  'groups' => 
+  'Formats' => 
+  array (
+    'index' => NULL,
+    'view' => NULL,
+    'add' => NULL,
+    'edit' => NULL,
+    'delete' => NULL,
+    'spec' => NULL,
+  ),
+  'Groups' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -60,7 +59,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'groupsmembers' => 
+  'GroupsMembers' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -68,7 +67,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'images' => 
+  'Images' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -76,7 +75,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'locations' => 
+  'Locations' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -84,7 +83,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'members' => 
+  'Members' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -92,11 +91,11 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'pages' => 
+  'Pages' => 
   array (
     'display' => NULL,
   ),
-  'pieces' => 
+  'Pieces' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -104,7 +103,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'series' => 
+  'Series' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -112,7 +111,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'subscriptions' => 
+  'Subscriptions' => 
   array (
     'index' => NULL,
     'view' => NULL,
@@ -120,7 +119,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-  'users' => 
+  'Users' => 
   array (
     'index' => NULL,
     'view' => NULL,

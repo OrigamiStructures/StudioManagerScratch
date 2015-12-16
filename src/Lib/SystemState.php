@@ -69,7 +69,7 @@ class SystemState {
 			
 		$classes->each(function($file_name, $index) use ($controller_path, &$currentEntryPoints) {
 			$file = fopen($controller_path . DS . $file_name, 'r');
-			$controller = strtolower(str_replace('Controller.php', '', $file_name));
+			$controller = (str_replace('Controller.php', '', $file_name));
 			
 			while ($line = fgets($file)) {
 				if (preg_match('/\t*public *function/', $line)) {

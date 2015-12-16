@@ -56,7 +56,7 @@ class AppController extends Controller
 		$this->{$this->modelClass}->SystemState = $this->SystemState;
 		$this->set('SystemState', $this->SystemState);
 		
-//		$this->SystemState->inventoryActions();
+		$this->SystemState->inventoryActions();
     }
 
     /**

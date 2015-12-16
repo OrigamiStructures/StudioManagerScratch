@@ -118,7 +118,7 @@ class EditionsController extends AppController
 		$this->ArtworkStack->layerChoiceLists();
 		if (!is_null($artwork_id)) {
 			$artwork = $this->Editions->Artworks->get($artwork_id);
-			$series = $this->Editions->Series->find('Unimplemented', ['artwork_id' => $artwork_id, 'artist_id' => $this->artistId()]);
+			$series = $this->Editions->Series->find('Unimplemented', ['artwork_id' => $artwork_id, 'artist_id' => $this->SystemState->artistId()]);
 		}
 		$artwork_element = 'choose';
 		$edition_element = $format_element = 'spec';
