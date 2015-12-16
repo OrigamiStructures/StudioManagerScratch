@@ -5,6 +5,7 @@ use Cake\Network\Request;
 use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Collection\Collection;
+use App\Lib\StateMap;
 
 /**
  * Description of SystemState
@@ -13,137 +14,40 @@ use Cake\Collection\Collection;
  */
 class SystemState {
 	
-	protected $map = array (
-  'app' => 
-  array (
-    'initialize' => NULL,
-    'beforeRender' => NULL,
-    'artistId' => NULL,
-  ),
-  'artworks' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-    'sample' => NULL,
-    'spec' => NULL,
-  ),
-  'designs' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'dispositions' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'editions' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-    'spec' => NULL,
-  ),
-  'formats' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-    'spec' => NULL,
-  ),
-  'groups' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'groupsmembers' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'images' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'locations' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'members' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'pages' => 
-  array (
-    'display' => NULL,
-  ),
-  'pieces' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'series' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'subscriptions' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-  'users' => 
-  array (
-    'index' => NULL,
-    'view' => NULL,
-    'add' => NULL,
-    'edit' => NULL,
-    'delete' => NULL,
-  ),
-);
-	
+	protected $map;
+	protected $request;
+	protected $_current_state;
+
+
 	public function __construct(Request $request) {
 		$this->request = $request;
+		$StateMap = new StateMap();
+		$this->map = $StateMap->map;
+		$this->_current_state = strtolower($this->map[$this->request->controller][$this->request->action]);
+	}
+	
+	public function is($state) {
+		return $this->_current_state == strtolower($state);
+	}
+	
+	public function now() {
+		return $this->_current_state;
+	}
+	
+	public function map() {
+		return $this->map;
+	}
+
+	/**
+	 * Get the logged in artist's ID or the ID of the artist we're mocking
+	 * 
+	 * Admins (and possibly gallery owners in a later phase) will be able to 
+	 * 'act as' an artist rather than only seeing thier own artworks. 
+	 * 
+	 * @return string
+	 */
+	public function artistId() {
+		return '1';
 	}
 	
 	/**
@@ -173,11 +77,20 @@ class SystemState {
 					$currentEntryPoints[$controller][$match[1]] = NULL;
 				}
 			}			
+			fclose($file);
 		});
 		
-		echo '<pre>';
-		var_export($this->map + $currentEntryPoints);
-		echo ';</pre>';
+		$array = var_export($this->map + $currentEntryPoints, TRUE);
+		$map_class_contents = <<<CLASS
+<?php
+namespace App\Lib;
+class StateMap {
+	public \$map = $array;
+}
+?>
+CLASS;
+		$map_class_file = fopen(APP . 'Lib' . DS . 'StateMap.php', 'w');
+		fwrite($map_class_file, $map_class_contents);
+		fclose($map_class_file);
 	}
-
 }

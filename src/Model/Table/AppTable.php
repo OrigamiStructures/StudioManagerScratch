@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Lib\SystemState;
+use Cake\ORM\Table;
 
 
 /**
@@ -11,14 +12,12 @@ use App\Lib\SystemState;
  */
 class AppTable extends Table {
 	
+	public $SystemState;
+	
     public function __construct(array $config = []){
         if (!empty($config['SystemState'])) {
-            $this->registryAlias($config['SystemState']);
+            $this->SystemState($config['SystemState']);
         }
-	}
-	
-	public function SystemState(ControlBloc $control) {
-		$this->SystemState = $control;
 	}
 	
 }

@@ -51,9 +51,12 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+		
 		$this->SystemState = new SystemState($this->request);
 		$this->{$this->modelClass}->SystemState = $this->SystemState;
 		$this->set('SystemState', $this->SystemState);
+		
+//		$this->SystemState->inventoryActions();
     }
 
     /**
@@ -71,15 +74,4 @@ class AppController extends Controller
         }
     }
 	
-	/**
-	 * Get the logged in artist's ID or the ID of the artist we're mocking
-	 * 
-	 * Admins (and possibly gallery owners in a later phase) will be able to 
-	 * 'act as' an artist rather than only seeing thier own artworks. 
-	 * 
-	 * @return string
-	 */
-	public function artistId() {
-		return '1';
-	}
 }

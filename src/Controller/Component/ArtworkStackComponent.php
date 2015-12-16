@@ -44,7 +44,7 @@ class ArtworkStackComponent extends Component {
 		// THESE RESULTS NEED TO BE CACHED TO CUT DOWN ON OVERHEAD
 		//
 		//
-		$artist_id = $this->controller->artistId();
+		$artist_id = $this->SystemState->artistId();
 		$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
 		// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
