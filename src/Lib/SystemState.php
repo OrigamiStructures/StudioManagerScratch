@@ -46,8 +46,9 @@ class SystemState {
 	 * 
 	 * Admins (and possibly gallery owners in a later phase) will be able to 
 	 * 'act as' an artist rather than only seeing thier own artworks. 
+	 * Must return false if not logged in
 	 * 
-	 * @return string
+	 * @return string|false
 	 */
 	public function artistId() {
 		return '1';

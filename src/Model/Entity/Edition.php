@@ -46,7 +46,7 @@ class Edition extends Entity
 		$type = strtolower($this->_properties['type']) === 'unique' 
 				? 'Edition of 1' 
 				: ucwords($this->_properties['type']) . " ({$this->_properties['quantity']})";
-		$title = empty($this->_properties['title']) ? $this->_properties['title'] : "{$this->_properties['title']}, ";
+		$title = empty($this->_properties['title']) ? ucwords($this->_properties['title']) : ucwords("{$this->_properties['title']}, ");
 		return  $title . $type;
 	}
 	

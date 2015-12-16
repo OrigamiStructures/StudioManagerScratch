@@ -15,7 +15,12 @@ use Cake\ORM\TableRegistry;
 class ArtworksController extends AppController
 {
 
-	public $components = ['ArtworkStack'];
+//	public $components = ['ArtworkStack'];
+	
+	public function initialize() {
+		parent::initialize();
+		$this->loadComponent('ArtworkStack');
+	}
 
     /**
      * Index method
@@ -43,6 +48,11 @@ class ArtworksController extends AppController
         $artwork = $this->Artworks->get($id, [
             'contain' => ['Users', 'Images', 'Editions']
         ]);
+
+		$editions = $this->ArtworkStack->testme($id, 'artwork');
+		
+//		$editions = $this->Artworks->Editions->choiceList($id, 'artwork');
+		osd($editions, 'edtions');
         $this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
     }

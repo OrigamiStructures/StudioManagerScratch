@@ -1,6 +1,6 @@
-section.artwork details.row:nth-of-type(2n) {
+section.artwork div.row:nth-of-type(2n) {
   background-color: linen; }
-section.artwork details.row {
+section.artwork div.row {
   padding: 1em 0; }
 section.artwork p {
   line-height: normal;

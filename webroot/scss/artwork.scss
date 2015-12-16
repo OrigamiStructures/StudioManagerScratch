@@ -1,9 +1,9 @@
 section.artwork {
-	details.row:nth-of-type(2n) {
+	div.row:nth-of-type(2n) {
 		background-color:linen;
 	}
 	
-	details.row {
+	div.row {
 		padding: 1em 0;
 	}
 	

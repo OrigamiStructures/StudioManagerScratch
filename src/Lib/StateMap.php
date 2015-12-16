@@ -9,7 +9,7 @@ class StateMap {
   ),
   'Artworks' => 
   array (
-    'index' => NULL,
+    'index' => 'find',
     'view' => NULL,
     'add' => NULL,
     'edit' => NULL,

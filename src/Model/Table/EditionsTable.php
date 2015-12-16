@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Behavior\FamilyBehavior;
 
 /**
  * Editions Model
@@ -16,7 +17,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Formats
  * @property \Cake\ORM\Association\HasMany $Pieces
  */
-class EditionsTable extends Table
+class EditionsTable extends AppTable
 {
 	/**
 	 * The allowable types of editions
@@ -43,6 +44,7 @@ class EditionsTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+		$this->addBehavior('Family');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -113,7 +115,14 @@ class EditionsTable extends Table
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
 	
-	/**
+	public function choiceList($id, $index_name, $options = []) {
+//		$this->displayField('displayTitle');
+		$options += ['id' => $id, 'index_name' => $index_name, 'valueField' => 'displayTitle'];
+//		osd($options, 'options');die;
+		return $this->find('memberList', $options)->toArray();
+	}
+
+		/**
 	 * 
 	 * @return array
 	 */

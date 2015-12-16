@@ -68,4 +68,9 @@ class ArtworkStackComponent extends Component {
 		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
 		return [$artworks, $editions, $formats, $series, $subscriptions];
 	}
+	
+	public function testme($id, $index_name) {
+		return $this->Editions->choiceList($id, 'artwork');
+
+	}
 }

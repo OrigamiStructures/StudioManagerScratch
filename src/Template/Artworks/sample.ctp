@@ -11,8 +11,8 @@ $this->end();
     <p><span class="roboto">ClearStudio</span></p>
 </section>
 <section class="artwork">
-	<div class="row">
-		<div class="columns small-12 medium-3">
+	<div class="row artwork">
+		<div class="columns small-12 medium-3 image">
 			<?= $this->Html->image('DSC04016.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
@@ -21,11 +21,23 @@ $this->end();
 				<p class="format">16x24 Platinum Print Matted and Framed</p>
 				<p class="disposition">Stored in Studio</p>
 			<h2>Limited 50, Edition of 50</h2>
-				<p class="unmade">19 pieces to be made</p>
-				<p class="format">10x12 Silver Print Matted</p>
-				<a href="#" class="disposition">Details of pieces</a>
-				<p class="format">8x10 Silver Print Matted</p>
-				<a href="#" class="disposition">Details of pieces</a>
+			<div class="row">
+				<div class="columns small-1">
+					<?= $this->Html->image('DSC04016.JPG'); ?>
+				</div>
+				<div class="columns small-11">
+					<p class="unmade">19 pieces to be made</p>
+					<p class="format">10x12 Silver Print Matted</p>
+					<a href="#" class="disposition">Details of pieces</a>
+				</div>
+				<div class="columns small-1">
+					<?= ''; ?>
+				</div>
+				<div class="columns small-11">
+					<p class="format">8x10 Silver Print Matted</p>
+					<a href="#" class="disposition">Details of pieces</a>	
+				</div>
+			</div>
 			<h2>Open Greeting Card, Open Edition (2500)</h2>
 				<p class="format">6x9 folded card with envelope</p>
 				<a href="#" class="disposition">Distribution details</a>
@@ -40,8 +52,8 @@ $this->end();
 				<a href="#" class="disposition">Rights details</a>
 		</div>
 	</div>
-	<div class="row">
-		<div class="columns small-12 medium-3">
+	<div class="row artwork">
+		<div class="columns small-12 medium-3 image">
 			<?= $this->Html->image('DSC04022.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
@@ -57,8 +69,8 @@ $this->end();
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
 	</div>
-	<div class="row">
-		<div class="columns small-12 medium-3">
+	<div class="row artwork">
+		<div class="columns small-12 medium-3 image">
 			<?= $this->Html->image('DSC04039.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
@@ -73,8 +85,8 @@ $this->end();
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
 	</div>
-	<div class="row">
-		<div class="columns small-12 medium-3">
+	<div class="row artwork">
+		<div class="columns small-12 medium-3 image">
 			<?= $this->Html->image('DSC04517.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
@@ -89,8 +101,8 @@ $this->end();
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
 	</div>
-	<div class="row">
-		<div class="columns small-12 medium-3">
+	<div class="row arwork">
+		<div class="columns small-12 medium-3 image">
 			<?= $this->Html->image('IMG_0089_2.JPG'); ?>
 		</div>
 		<div class="columns small-12 medium-9">
@@ -105,4 +117,4 @@ $this->end();
 				<a href="#" class="disposition">Details of pieces</a>
 		</div>
 	</div>
-</div>
+</section>
