@@ -8,6 +8,7 @@ use App\Model\Table\PiecesTable;
 use App\Model\Table\SubscriptionsTable;
 use App\Model\Table\SeriesTable;
 use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
 
 /**
  * CakePHP ArtworkStackComponent
@@ -16,18 +17,24 @@ use Cake\ORM\TableRegistry;
 class ArtworkStackComponent extends Component {
 	
 	public $SystemState;
+	
+	private $required_tables = [
+		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions'
+	];
 		
     public function initialize(array $config) 
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
-		$this->Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
 		
-		$this->Editions = TableRegistry::get('Editions');
-		$this->Formats = TableRegistry::get('Formats', ['SystemState' => $this->SystemState]);
-		$this->Pieces = TableRegistry::get('Pieces', ['SystemState' => $this->SystemState]);
-		$this->Series = TableRegistry::get('Series', ['SystemState' => $this->SystemState]);
-		$this->Subscriptions = TableRegistry::get('Subscriptions', ['SystemState' => $this->SystemState]);
+		$tables = new Collection($this->required_tables);
+		$tables->each(function($alias, $index) {
+			if (TableRegistry::exists($alias)) {
+				$this->$alias = TableRegistry::get($alias);
+			} else {
+				$this->$alias = TableRegistry::get($alias, ['SystemState' => $this->SystemState]);
+			}
+		});
 	}
 	
 	/**
@@ -53,8 +60,7 @@ class ArtworkStackComponent extends Component {
 		
 		$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
-		// ONLY THE SERIES NOT ALREADY IMPLEMENTED BY THE ARTWORK
-		$series = $this->Series->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		$series = $this->Series->choiceList(['artist_id' => $artist_id])->toArray();
 		$series = ['n' => 'New Series'] + $series;
 		$subscriptions = $this->Subscriptions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		

@@ -1,1 +1,1 @@
-<p>'choose' elements (artwork)</p>
+<p><?= $artwork->title; ?></p>

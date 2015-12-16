@@ -7,6 +7,9 @@ use Cake\Filesystem\File;
 use Cake\Collection\Collection;
 use App\Lib\StateMap;
 
+define('ARTWORK_CREATION', 1);
+define('ARTWORK_SELECTION', 2);
+
 /**
  * Description of SystemState
  *

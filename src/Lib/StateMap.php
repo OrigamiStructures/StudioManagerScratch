@@ -40,7 +40,7 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'spec' => NULL,
+    'spec' => ARTWORK_CREATION,
   ),
   'Formats' => 
   array (

@@ -15,7 +15,7 @@ use App\Lib\SystemState;
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\HasMany $Editions
  */
-class SeriesTable extends Table
+class SeriesTable extends AppTable
 {
 
     /**
@@ -76,7 +76,15 @@ class SeriesTable extends Table
         return $rules;
     }
 	
-	/**
+	public function choiceList($options) {
+		if ($this->SystemState->is(ARTWORK_CREATION)) {
+			return $this->find('unimplemented', $options);
+		} else {
+			return $this->find('choiceList', $options);
+		}
+	}
+
+		/**
 	 * Get the full series list for an artist
 	 * 
 	 * For a select input, id => title

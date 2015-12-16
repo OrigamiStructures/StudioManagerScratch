@@ -18,6 +18,11 @@ use Cake\Validation\Validator;
  */
 class EditionsTable extends Table
 {
+	
+	protected $types = [
+		'Unique', 'Limited Edition', 'Open Edition', 'Use', 'Portfolio'
+	];
+
 
     /**
      * Initialize method

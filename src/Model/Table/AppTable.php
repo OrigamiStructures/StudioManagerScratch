@@ -15,8 +15,9 @@ class AppTable extends Table {
 	public $SystemState;
 	
     public function __construct(array $config = []){
+		parent::__construct($config);
         if (!empty($config['SystemState'])) {
-            $this->SystemState($config['SystemState']);
+            $this->SystemState = $config['SystemState'];
         }
 	}
 	
