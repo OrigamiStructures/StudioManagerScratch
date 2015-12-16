@@ -18,9 +18,13 @@ use Cake\Validation\Validator;
  */
 class EditionsTable extends Table
 {
-	
+	/**
+	 * The allowable types of editions
+	 * 
+	 * @var array
+	 */
 	protected $types = [
-		'Unique', 'Limited Edition', 'Open Edition', 'Use', 'Portfolio'
+		1 => 'Unique', 'Limited Edition', 'Open Edition', 'Use', 'Portfolio'
 	];
 
 
@@ -107,6 +111,14 @@ class EditionsTable extends Table
 	public function findChoiceList(Query $query, $options) {
 		$this->displayField('display_title');
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
+	}
+	
+	/**
+	 * 
+	 * @return array
+	 */
+	public function typeList() {
+		return $this->types;
 	}
 	
 }

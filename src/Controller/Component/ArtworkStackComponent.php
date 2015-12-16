@@ -57,6 +57,7 @@ class ArtworkStackComponent extends Component {
 		// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
 		// ALSO FILTER OUT FULLY COMMITED EDTIONS (NO CANDIDATE PIECES)
 		$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
+		$types = $this->Editions->typeList();
 		
 		$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
@@ -64,7 +65,7 @@ class ArtworkStackComponent extends Component {
 		$series = ['n' => 'New Series'] + $series;
 		$subscriptions = $this->Subscriptions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
-		$this->controller->set(compact('artworks', 'editions', 'formats', 'series', 'subscriptions'));
+		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
 		return [$artworks, $editions, $formats, $series, $subscriptions];
 	}
 }

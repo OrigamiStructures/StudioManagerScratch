@@ -117,7 +117,13 @@ class EditionsController extends AppController
 	public function spec($artwork_id = NULL) {
 		$this->ArtworkStack->layerChoiceLists();
 		if (!is_null($artwork_id)) {
-			$artwork = $this->Editions->Artworks->get($artwork_id);
+			$artwork = $this->Editions->Artworks
+					->find('forDisplay', [
+						'artwork_id' => $artwork_id, 
+						'artist_id' => $this->SystemState->artistId()
+							])
+					->toArray()[0];
+//			$artwork = $this->Editions->Artworks->get($artwork_id);
 			$series = $this->Editions->Series->choiceList([
 				'artwork_id' => $artwork_id, 
 				'artist_id' => $this->SystemState->artistId()

@@ -89,4 +89,11 @@ class ArtworksTable extends Table
 	public function findChoiceList(Query $query, $options) {
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
+	
+	public function findForDisplay(Query $query, $options) {
+		return $query
+				->where(['user_id' => $options['artist_id'], 'id' => $options['artwork_id']])
+				->contain(['Editions' => ['Pieces', 'Series', 'Formats' => ['Pieces', 'Subscriptions']]])
+				->find('all');
+	}
 }
