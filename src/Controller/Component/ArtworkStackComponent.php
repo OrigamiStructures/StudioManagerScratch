@@ -27,6 +27,7 @@ class ArtworkStackComponent extends Component {
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
 		
+//		$mili = microtime();
 		$tables = new Collection($this->required_tables);
 		$tables->each(function($alias, $index) {
 			if (TableRegistry::exists($alias)) {
@@ -35,6 +36,7 @@ class ArtworkStackComponent extends Component {
 				$this->$alias = TableRegistry::get($alias, ['SystemState' => $this->SystemState]);
 			}
 		});
+//		osd(microtime() - $mili, 'make models');
 	}
 	
 	/**
@@ -51,6 +53,7 @@ class ArtworkStackComponent extends Component {
 		// THESE RESULTS NEED TO BE CACHED TO CUT DOWN ON OVERHEAD
 		//
 		//
+//		$mili = time()+  microtime();
 		$artist_id = $this->SystemState->artistId();
 		$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
@@ -66,6 +69,7 @@ class ArtworkStackComponent extends Component {
 		$subscriptions = $this->Subscriptions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 		
 		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
+//		osd((time()+  microtime()) - $mili, 'do queries');
 		return [$artworks, $editions, $formats, $series, $subscriptions];
 	}
 	

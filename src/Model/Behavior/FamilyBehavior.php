@@ -33,7 +33,7 @@ class FamilyBehavior extends Behavior {
 			throw new \BadFunctionCallException('id and index_id required');
 		}
 		
-		if (!$cache) {
+//		if (!$cache) {
 			if (!$options['group']) {
 				unset($options['group']);
 			}
@@ -42,7 +42,7 @@ class FamilyBehavior extends Behavior {
 			$query->find('list', $options)
 					->where([$index_field => $options['id'], 'user_id' => $artist_id]);
 			// cache query
-		}
+//		}
 		return $query;
 	}
 	
