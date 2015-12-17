@@ -57,6 +57,10 @@ class AppController extends Controller
 		$this->set('SystemState', $this->SystemState);
 		
 //		$this->SystemState->inventoryActions();
+        
+        //Menu setup
+        $Menus = \Cake\ORM\TableRegistry::get('Menus', ['SystemState' => $this->SystemState]);
+        $this->set('menus', $Menus->adminMenu);
     }
 
     /**
