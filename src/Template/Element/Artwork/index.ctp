@@ -2,15 +2,16 @@
 <section class="artwork">
 	<div class="row">
 		<div class="columns small-12 medium-3 image">
-            <?php
-                osd($artwork);
-                osd($artwork->image->fullPath);
-                die;
-            ?>
-            <?= $this->Html->image($artwork->image->fullPath); ?>
+            <?= $this->Html->image($artwork->image == NULL ? "NoImage.png" : $artwork->image->fullPath); ?>
 		</div>
 		<div class="columns small-12 medium-9 description">
 			<h1><?= $artwork->title; ?></h1>
+            <?php
+                if(!$artwork->editions == NULL){
+                    $edition_count = count($artwork->editions);
+                    echo $this->Html->tag('h4', "<span class=\"editionCount\">$edition_count</span> <span class=\"editionCountTag\">total Editions</span>");
+                }
+            ?>
 		</div>
 	</div>
 </section>

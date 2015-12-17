@@ -45,11 +45,19 @@ class Image extends Entity
     /**
      * Return the full path for the image helper based upon the existance of a directory
      * 
+     * Provide No Image default for a missing image
+     * 
      * @return string
      */
     public function _getFullPath() {
-        return empty($this->image_dir)
-            ? $this->image
-            : $this->image_dir . DS . $this->image;
+        $path = "";
+        $image = "NoImage.png";
+        if(!empty($this->image_dir)){
+            $path = $this->image_dir . DS;
+        }
+        if(!empty($this->image)){
+            $image = $this->image;
+        }
+        return $path . $image;
     }
 }

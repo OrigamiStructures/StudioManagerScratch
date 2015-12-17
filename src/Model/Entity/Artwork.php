@@ -33,7 +33,4 @@ class Artwork extends Entity
         'id' => false,
     ];
     
-    public function image() {
-        return $this->Artwork->Image->image_dir . DS . $this->Artwork->Image->image;
-    }
 }

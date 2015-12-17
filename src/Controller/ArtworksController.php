@@ -165,7 +165,7 @@ class ArtworksController extends AppController
     
     public function elementTest() {
         $this->paginate = [
-            'contain' => ['Users', 'Images']
+            'contain' => ['Users', 'Images', 'Editions']
         ];
         $this->set('artworks', $this->paginate($this->Artworks));
         $this->set('_serialize', ['artworks']);
