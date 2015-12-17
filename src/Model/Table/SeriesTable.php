@@ -33,6 +33,7 @@ class SeriesTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+		$this->addBehavior('Family');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'

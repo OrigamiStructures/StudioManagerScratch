@@ -34,6 +34,7 @@ class FormatsTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+		$this->addBehavior('Family');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
