@@ -92,6 +92,14 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
+    'Menus' =>
+    array(
+        'index' => NULL,
+        'view' => NULL,
+        'add' => NULL,
+        'edit' => NULL,
+        'delete' => NULL,
+    ),
   'Pages' => 
   array (
     'display' => NULL,
