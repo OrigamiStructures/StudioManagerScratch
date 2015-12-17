@@ -16,6 +16,7 @@ class StateMap {
     'delete' => NULL,
     'sample' => NULL,
     'spec' => NULL,
+	'elementTest' => NULL,
   ),
   'Designs' => 
   array (
@@ -40,7 +41,7 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'spec' => ARTWORK_CREATION,
+    'spec' => 1,
   ),
   'Formats' => 
   array (

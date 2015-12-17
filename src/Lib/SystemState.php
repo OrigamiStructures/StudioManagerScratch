@@ -64,6 +64,7 @@ class SystemState {
 	 * mapped (while avoiding a lot of hand work).
 	 */
 	public function inventoryActions() {
+		osd('setting up new state map');
 		$controller_path = APP . 'Controller';
 		$Folder = new Folder($controller_path);
 		list( , $contents) = $Folder->read();
@@ -94,7 +95,7 @@ class StateMap {
 ?>
 CLASS;
 		$map_class_file = fopen(APP . 'Lib' . DS . 'StateMap.php', 'w');
-		fwrite($map_class_file, $map_class_contents);
+		osd(fwrite($map_class_file, $map_class_contents), 'result of writing the new map');
 		fclose($map_class_file);
 	}
 }
