@@ -162,5 +162,13 @@ class ArtworksController extends AppController
 		$artwork_element = $edition_element = $format_element = 'spec';
 		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
 	}
+    
+    public function elementTest() {
+        $this->paginate = [
+            'contain' => ['Users', 'Images']
+        ];
+        $this->set('artworks', $this->paginate($this->Artworks));
+        $this->set('_serialize', ['artworks']);
+    }
 	
 }

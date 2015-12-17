@@ -1,6 +1,6 @@
 <?php
 namespace App\Model\Entity;
-
+use App\Model\Entity\Image;
 use Cake\ORM\Entity;
 
 /**
@@ -32,4 +32,8 @@ class Artwork extends Entity
         '*' => true,
         'id' => false,
     ];
+    
+    public function image() {
+        return $this->Artwork->Image->image_dir . DS . $this->Artwork->Image->image;
+    }
 }
