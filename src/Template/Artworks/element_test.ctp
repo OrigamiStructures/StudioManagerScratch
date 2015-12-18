@@ -39,3 +39,15 @@
         <p>This is detail or summary stuff on edition 2. It may be suppressed.</p>
     </section>
 </article>
+
+<article class="artwork row">
+    <figure class="column">This is the picture</figure>
+	<section class="column">
+		<header>
+			<h1>This is the name of the artwork</h1>
+		</header>
+		<section class="edition">
+		</section>
+		...
+	</section>
+</article>
