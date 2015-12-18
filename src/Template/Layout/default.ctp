@@ -25,13 +25,16 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
+	<?php
+	echo $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); 
+	echo $this->Html->script('../bower_components/foundation-sites/dist/foundation.min.js'); 
+	echo $this->Html->script('app.js');
+	echo $this->Html->script('testing');
+	?>
 
-	<script src="../bower_components/foundation/js/vendor/jquery.js"></script>
-	<script src="../bower_components/foundation/js/foundation/foundation.js"></script>
-	<script src="../bower_components/foundation/js/foundation/foundation.dropdown.js"></script>
-	<?= $this->Html->script('testing') ?>
+	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
 	
-	<?= $this->Html->css('base.css') ?>
+	<?= $this->Html->css('base.css'); ?>
     <?= $this->Html->css('cake.css') ?>
     <?= $this->Html->css('app.css') ?>
     <?= $this->Html->css('glyphicon.css') ?>
