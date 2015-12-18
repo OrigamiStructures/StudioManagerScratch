@@ -14,7 +14,22 @@ use App\Model\Table\AppTable;
  * @author jasont
  */
 class MenusTable extends AppTable{
-    public $adminMenu = [
+	
+    public $adminMenu;
+	
+	public function initialize(array $config) {
+		parent::initialize($config);
+		$this->adminMenu();
+	}
+	
+	/**
+	 * Define basic menus for administators
+	 * 
+	 * Doing this here allows methods to run in the array definition. 
+	 * Setting this in a property declaration would prevent menthods. 
+	 */
+	protected function adminMenu() {
+		$this->adminMenu = [
         'Account' => [
             'Login' => 'users/login',
             'Logout' => 'users/logout',
@@ -35,4 +50,5 @@ class MenusTable extends AppTable{
             'Logs' => 'admin/logs'
         ]
     ];
+	}
 }
