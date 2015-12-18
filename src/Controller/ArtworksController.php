@@ -164,9 +164,15 @@ class ArtworksController extends AppController
 	}
     
     public function elementTest() {
+        $element_management = [
+            'artwork' => 'full',
+            'edition' => 'summary',
+            'piece' => 'none'
+        ];
         $this->paginate = [
             'contain' => ['Users', 'Images', 'Editions']
         ];
+        $this->set('element_management', $element_management);
         $this->set('artworks', $this->paginate($this->Artworks));
         $this->set('_serialize', ['artworks']);
     }
