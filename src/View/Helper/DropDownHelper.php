@@ -4,7 +4,11 @@ namespace App\View\Helper;
 use Cake\View\Helper\HtmlHelper;
 
 /**
- * CakePHP NestedListHelper
+ * DropDownHelper overrides HtmlHelper's nestedList() to make Foundation DropDowns
+ * 
+ * 
+ * 
+ * CakePHP DropDownHelper
  * @author dondrake
  */
 class DropDownHelper extends HtmlHelper {
