@@ -1,2 +1,2 @@
 <?php
-echo $this->DropDown->nestedList($menus);
+echo $this->DropDown->menu($menus);

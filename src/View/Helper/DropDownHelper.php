@@ -2,6 +2,8 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper\HtmlHelper;
+use Cake\View\View;
+use Cake\Collection\Collection;
 
 /**
  * DropDownHelper overrides HtmlHelper's nestedList() to make Foundation DropDowns
@@ -15,14 +17,37 @@ class DropDownHelper extends HtmlHelper {
 	
 	private $level = 0;
 	
-	private $ul_template = [
-		'<ul class="dropdown menu" data-dropdown-menu>{{content}}</ul>',
-		'<ul{{attrs}}>{{content}}</ul>',
-//		'<ul class="submenu menu vertical" data-submenu>{{content}}</ul>'
+	private $dropdown_template = [
+		'ul-dropdown' => [
+			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['dropdown', 'menu']]],
+		'ul-sub-dropdown' => [
+			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['submenu', 'menu', 'vertical']]],
+		'li-has-submenu' => [
+			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
+			'attrs' => ['class' => ['has-submenu']]],
 		];
+	
+		protected $attributes;
 
+		public function __construct(\Cake\View\View $View, array $config = array()) {
+			parent::__construct($View, $config);
+			$t_coll = new Collection($this->dropdown_template);
+			$templates = [];
+			$attributes = [];
+			$t_coll->each(function($value, $key) use (&$templates, &$attributes) {
+				$templates[$key] = $value['template'];
+				$this->attributes[$key] = $value['attrs'];
+			});
+			$this->templater()->add($templates);
+		}
 
-
+    public function menu(array $list, array $options = [], array $itemOptions = [])
+	{
+		return $this->nestedList($list, $options, $itemOptions);
+	}
+	
 	/**
      * Build a nested list (UL/OL) out of an associative array.
      *
@@ -43,14 +68,19 @@ class DropDownHelper extends HtmlHelper {
      */
     public function nestedList(array $list, array $options = [], array $itemOptions = [])
     {
-		if($this->level < 2) {
-			$this->templates(['ul' => $this->ul_template[$this->level]]);
+		$first = '';
+		if ($this->level === 0) {
+			$options += ['tag' => 'ul-dropdown'];
+			$ul_options = $this->merge($options, $this->attributes['ul-dropdown']);
+		} else {
+			$options += ['tag' => 'ul-sub-dropdown'];
+			$ul_options = $this->merge($options, $this->attributes['ul-sub-dropdown']);
 		}
-        $options += ['tag' => 'ul'];
+//        $options += ['tag' => 'ul'];
         $items = $this->_nestedListItem($list, $options, $itemOptions);
-        return $this->formatTemplate($options['tag'], [
-            'attrs' => $this->templater()->formatAttributes($options, ['tag']),
-            'content' => $items
+        return $this->formatTemplate($ul_options['tag'], [
+            'attrs' => $this->templater()->formatAttributes($ul_options, ['tag']),
+            'content' => $first . $items
         ]);
     }
 
@@ -70,20 +100,51 @@ class DropDownHelper extends HtmlHelper {
         $index = 1;
         foreach ($items as $key => $item) {
             if (is_array($item)) {
+				$this->level++;
                 $item = $key . $this->nestedList($item, $options, $itemOptions);
+				$this->level--;
             }
             if (isset($itemOptions['even']) && $index % 2 === 0) {
                 $itemOptions['class'] = $itemOptions['even'];
             } elseif (isset($itemOptions['odd']) && $index % 2 !== 0) {
                 $itemOptions['class'] = $itemOptions['odd'];
             }
-            $out .= $this->formatTemplate('li', [
-                'attrs' => $this->templater()->formatAttributes($itemOptions, ['even', 'odd']),
-                'content' => "<a href=\"#\">$item</a>"
+			$nodes = preg_split('/</', $item);
+			$link = array_shift($nodes);
+			$item = !empty($nodes) ? '<' . implode('<', $nodes) : '';
+			if (!empty($item)) {
+//				osd('has sub chosen');
+				$template = 'li-has-submenu';
+				$li_options = $this->merge($itemOptions, $this->attributes['li-has-submenu']);
+			} else {
+//				osd('li chosen');
+				$template = 'li';
+				$li_options = $itemOptions;
+			}
+            $out .= $this->formatTemplate($template, [
+                'attrs' => $this->templater()->formatAttributes($li_options, ['even', 'odd']),
+                'content' => "<a href=\"#\">$link</a>$item"
             ]);
             $index++;
         }
         return $out;
     }
+	
+	protected function merge($options, $defaults){
+//		osd(func_get_args());
+		if (!isset($options['class'])) {
+			$options['class'] = implode(' ', $defaults['class']);
+		} else {
+			if (is_array($options['class'])) {
+				$class = $options['class'];
+			} else {
+				$class = array_flip(explode(' ', $options['class']));
+			}
+			$required = array_flip($defaults['class']);
+			$result = array_flip($class + $required);
+			$options['class'] = implode(' ', $result);
+		}
+		return $options;
+	}
 
 }
