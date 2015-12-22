@@ -31,17 +31,20 @@ class MenusTable extends AppTable{
 	protected function adminMenu() {
 		$this->adminMenu = [
         'Account' => [
-            'Login' => 'users/login',
-            'Logout' => 'users/logout',
-            'Edit My Profile' => 'users/editProfile',
-            'Update Payment Type' => 'users/updatePayment'
+            'Login' => '/users/login',
+            'Logout' => '/users/logout',
+            'Edit My Profile' => '/users/editProfile',
+            'Update Payment Type' => '/users/updatePayment'
         ],
         'Artwork' => [
-            'View All' => 'artworks/index',
-            'Create' => 'artworks/new'
+            'View All' => '/artworks/index',
+            'Create' => '/artworks/new'
         ],
         'Disposition' => [
-            'Go to Dispo' => 'disposition/index'
+            'Go to Dispo' => 'disposition/index',
+			'Phony' => [
+				'here' => 'artificially deep'
+			],
         ],
         'Admin' => [
             'Subscribers' => 'admin/subscribers',

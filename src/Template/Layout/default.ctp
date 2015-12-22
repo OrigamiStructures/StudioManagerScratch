@@ -26,6 +26,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
     <?= $this->Html->css('app.css') ?>
     <?= $this->Html->css('glyphicon.css') ?>
+    <?= $this->Html->css('prime.css') ?>
     <?= $this->fetch('css') ?>
 </head>
 <body>

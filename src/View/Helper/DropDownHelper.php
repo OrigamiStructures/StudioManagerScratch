@@ -18,12 +18,21 @@ class DropDownHelper extends HtmlHelper {
 	private $level = 0;
 	
 	private $dropdown_template = [
+//		'ul-dropdown' => [
+//			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
+//			'attrs' => ['class' => ['dropdown', 'menu']]],
+//		'ul-sub-dropdown' => [
+//			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
+//			'attrs' => ['class' => ['submenu', 'menu', 'vertical']]],
+//		'li-has-submenu' => [
+//			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
+//			'attrs' => ['class' => ['has-submenu']]],
 		'ul-dropdown' => [
-			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
-			'attrs' => ['class' => ['dropdown', 'menu']]],
+			'template' => "<ul{{attrs}} >\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['menu']]],
 		'ul-sub-dropdown' => [
-			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
-			'attrs' => ['class' => ['submenu', 'menu', 'vertical']]],
+			'template' => "<ul{{attrs}}>\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['nested', 'menu', 'vertical', 'hidden']]],
 		'li-has-submenu' => [
 			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
 			'attrs' => ['class' => ['has-submenu']]],
@@ -112,6 +121,8 @@ class DropDownHelper extends HtmlHelper {
 			$nodes = preg_split('/</', $item);
 			$link = array_shift($nodes);
 			$item = !empty($nodes) ? '<' . implode('<', $nodes) : '';
+//			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
+			
 			if (!empty($item)) {
 //				osd('has sub chosen');
 				$template = 'li-has-submenu';
@@ -123,14 +134,22 @@ class DropDownHelper extends HtmlHelper {
 			}
             $out .= $this->formatTemplate($template, [
                 'attrs' => $this->templater()->formatAttributes($li_options, ['even', 'odd']),
-                'content' => "<a href=\"#\">$link</a>$item"
+                'content' => $this->liContent($key, $link) . $item
             ]);
             $index++;
         }
         return $out;
     }
 	
-	protected function merge($options, $defaults){
+	protected function liContent($key, $link) {
+		if ($key == $link) {
+			return "<a href=\"#\">$key</a>"; //$key;
+		} else {
+			return "<a href=\"$link\">$key</a>";
+		}
+	}
+
+		protected function merge($options, $defaults){
 //		osd(func_get_args());
 		if (!isset($options['class'])) {
 			$options['class'] = implode(' ', $defaults['class']);
