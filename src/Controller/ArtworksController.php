@@ -167,7 +167,7 @@ class ArtworksController extends AppController
         $element_management = [
             'artwork' => 'full',
             'edition' => 'summary',
-            'piece' => 'none'
+            'format' => 'none'
         ];
         $this->paginate = [
             'contain' => ['Users', 'Images', 'Editions']
