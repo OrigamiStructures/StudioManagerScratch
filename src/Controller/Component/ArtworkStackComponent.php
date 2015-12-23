@@ -48,26 +48,33 @@ class ArtworkStackComponent extends Component {
 	 * @return array
 	 */
 	public function layerChoiceLists() {
-		//
-		//
+
+		$artworks = $editions = $formats = $series = $subscriptions = [];
+		if (6 == 9) {
+			//
+			//
 		// THESE RESULTS NEED TO BE CACHED TO CUT DOWN ON OVERHEAD
-		//
+			//
 		//
 //		$mili = time()+  microtime();
-		$artist_id = $this->SystemState->artistId();
-		$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
-		
-		// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
-		// ALSO FILTER OUT FULLY COMMITED EDTIONS (NO CANDIDATE PIECES)
-		$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
-		$types = $this->Editions->typeList();
-		
-		$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
-		
-		$series = $this->Series->choiceList(['artist_id' => $artist_id])->toArray();
-		$series = ['n' => 'New Series'] + $series;
-		$subscriptions = $this->Subscriptions->find('choiceList', ['artist_id' => $artist_id])->toArray();
-		
+			$artist_id = $this->SystemState->artistId();
+			$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
+
+
+			// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
+			// ALSO FILTER OUT FULLY COMMITED EDTIONS (NO CANDIDATE PIECES)
+			$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
+			$types = $this->Editions->typeList();
+
+
+			$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();
+
+
+			$series = $this->Series->choiceList(['artist_id' => $artist_id])->toArray();
+			$series = ['n' => 'New Series'] + $series;
+			$subscriptions = $this->Subscriptions->find('choiceList',
+							['artist_id' => $artist_id])->toArray();
+		}		
 		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
 //		osd((time()+  microtime()) - $mili, 'do queries');
 		return [$artworks, $editions, $formats, $series, $subscriptions];
