@@ -38,19 +38,22 @@ class MenusTable extends AppTable{
         ],
         'Artwork' => [
             'View All' => '/artworks/index',
-            'Create' => '/artworks/new'
+            'Create' => '/artworks/new',
+            'Sample' => '/artworks/sample',
+            'Element Test' => '/artworks/elementTest'
         ],
         'Disposition' => [
-            'Go to Dispo' => 'disposition/index',
+            'Go to Dispo' => '/disposition/index',
 			'Phony' => [
-				'here' => 'artificially deep'
+				'here' => '/artificially deep'
 			],
         ],
         'Admin' => [
-            'Subscribers' => 'admin/subscribers',
-            'CRUD' => 'admin/crud',
-            'Database' => 'phpmysql/index',
-            'Logs' => 'admin/logs'
+            'Subscribers' => '/admin/subscribers',
+            'CRUD' => '/admin/crud',
+            'Database' => '/phpmysql/index',
+            'Logs' => '/admin/logs',
+            'Element Test' => '/artworks/elementTest'
         ]
     ];
 	}
