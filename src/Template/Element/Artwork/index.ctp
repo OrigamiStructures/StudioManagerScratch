@@ -12,6 +12,11 @@
                     echo $this->Html->tag('h4', "<span class=\"editionCount\">$edition_count</span> <span class=\"editionCountTag\">total Editions</span>");
                 }
             ?>
+            <?= $this->Html->element('Edition/index', 
+                    [
+                        'artwork' => $artwork,
+                        'element_management' => $element_management
+                    ]); ?>
 		</div>
 	</div>
 </section>

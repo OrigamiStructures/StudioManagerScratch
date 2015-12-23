@@ -37,5 +37,6 @@ class AppView extends View
     public function initialize()
     {
 		$this->loadHelper('DropDown');
+        $this->loadHelper('Html');
     }
 }

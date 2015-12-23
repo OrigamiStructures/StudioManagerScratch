@@ -1,8 +1,14 @@
 <!-- Template/Artwork/elementTest.ctp -->
 
-<?php foreach ($artworks as $artwork): ?>
-    <?= $this->element('Artwork/index', ['artwork' => $artwork]); ?>
-<?php endforeach; ?>
+<?php 
+    foreach ($artworks as $artwork):
+    echo $this->element('Artwork/index', 
+        [
+            'artwork' => $artwork,
+            'element_management' => $element_management
+        ]);
+    endforeach;
+?>
 
 <!-- Dom standard -->
 <!-- As seen from the Artwork index page -->
