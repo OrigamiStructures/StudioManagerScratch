@@ -1,0 +1,7 @@
+ul.nested {
+	display: none;
+}
+
+li:hover > ul.nested {
+	display: block;
+}
