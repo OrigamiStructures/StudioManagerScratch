@@ -120,14 +120,9 @@ class DropDownHelper extends HtmlHelper {
             }
 			$nodes = preg_split('/</', $item);
 			$link = array_shift($nodes);
-<<<<<<< HEAD
 			$li_children = !empty($nodes) ? '<' . implode('<', $nodes) : '';
 //			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
 			$li_content = $this->liContent($key, $link);
-=======
-			$item = !empty($nodes) ? '<' . implode('<', $nodes) : '';
-//			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
->>>>>>> cb78daa48cc6278a8115742d7e43f3416768e09d
 			
 			if (!empty($li_children)) {
 //				osd('has sub chosen');
