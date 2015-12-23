@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "",
-"sources": [],
+"mappings": "AAAA,SAAU;EACT,OAAO,EAAE,IAAI;;AAGd,oBAAqB;EACpB,OAAO,EAAE,KAAK",
+"sources": ["../scss/prime.scss"],
 "names": [],
 "file": "prime.css"
 }

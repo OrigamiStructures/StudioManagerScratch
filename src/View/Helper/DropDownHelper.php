@@ -18,24 +18,24 @@ class DropDownHelper extends HtmlHelper {
 	private $level = 0;
 	
 	private $dropdown_template = [
-		'ul-dropdown' => [
-			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
-			'attrs' => ['class' => ['dropdown', 'menu']]],
-		'ul-sub-dropdown' => [
-			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
-			'attrs' => ['class' => ['nested', 'submenu', 'menu', 'vertical', 'hidden']]],
-		'li-has-submenu' => [
-			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
-			'attrs' => ['class' => ['has-submenu']]],
 //		'ul-dropdown' => [
-//			'template' => "<ul{{attrs}} >\n{{content}}</ul>\n",
-//			'attrs' => ['class' => ['menu']]],
+//			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
+//			'attrs' => ['class' => ['dropdown', 'menu']]],
 //		'ul-sub-dropdown' => [
-//			'template' => "<ul{{attrs}}>\n{{content}}</ul>\n",
-//			'attrs' => ['class' => ['nested', 'menu', 'vertical', 'hidden']]],
+//			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
+//			'attrs' => ['class' => ['nested', 'submenu', 'menu', 'vertical', 'hidden']]],
 //		'li-has-submenu' => [
 //			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
 //			'attrs' => ['class' => ['has-submenu']]],
+		'ul-dropdown' => [
+			'template' => "<ul{{attrs}} >\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['menu']]],
+		'ul-sub-dropdown' => [
+			'template' => "<ul{{attrs}}>\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['nested', 'menu', 'vertical']]],
+		'li-has-submenu' => [
+			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
+			'attrs' => ['class' => ['has-submenu']]],
 		];
 	
 		protected $attributes;
@@ -120,21 +120,31 @@ class DropDownHelper extends HtmlHelper {
             }
 			$nodes = preg_split('/</', $item);
 			$link = array_shift($nodes);
-			$item = !empty($nodes) ? '<' . implode('<', $nodes) : '';
-			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
+			$li_children = !empty($nodes) ? '<' . implode('<', $nodes) : '';
+//			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
+			$li_content = $this->liContent($key, $link);
 			
-			if (!empty($item)) {
+			if (!empty($li_children)) {
 //				osd('has sub chosen');
 				$template = 'li-has-submenu';
-				$li_options = $this->merge($itemOptions, $this->attributes['li-has-submenu']);
+				$attributes = ['class' => []];
+				if (!stristr($li_content, '<a ')) {
+					$attributes = $this->attributes['li-has-submenu'];
+					$attributes['class'][] = 'menu-text';
+				}
+				$li_options = $this->merge($itemOptions, $attributes);
 			} else {
 //				osd('li chosen');
 				$template = 'li';
-				$li_options = $itemOptions;
+				$attributes = ['class' => []];
+				if (!stristr($li_content, '<a ')) {
+					$attributes = ['class' => ['menu-text']];
+				}
+				$li_options = $this->merge($itemOptions, $attributes);
 			}
             $out .= $this->formatTemplate($template, [
                 'attrs' => $this->templater()->formatAttributes($li_options, ['even', 'odd']),
-                'content' => $this->liContent($key, $link) . $item
+                'content' => $li_content . $li_children
             ]);
             $index++;
         }
@@ -143,7 +153,7 @@ class DropDownHelper extends HtmlHelper {
 	
 	protected function liContent($key, $link) {
 		if ($key == $link) {
-			return "<a href=\"#\">$key</a>"; //$key;
+			return $key; // "<a href=\"#\">$key</a>"; //
 		} else {
 			return "<a href=\"$link\">$key</a>";
 		}

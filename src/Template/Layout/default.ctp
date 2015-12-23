@@ -18,7 +18,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
     <?= $this->fetch('meta') ?>
 	
 	<?= $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); ?> 
-	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.min.js'); ?> 
+	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.js'); ?> 
 	<?= $this->Html->script('app.js'); ?>
 	<?= $this->Html->script('testing'); ?>
     <?= $this->fetch('script') ?>
@@ -26,6 +26,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
     <?= $this->Html->css('app.css') ?>
     <?= $this->Html->css('glyphicon.css') ?>
+    <?= $this->Html->css('prime.css') ?>
     <?= $this->fetch('css') ?>
 </head>
 <body>
