@@ -2,7 +2,13 @@
 <section class="edtion">
 	<div class="row">
 		<div class="columns small-12 medium-9 description">
-            <h4>Hey, I'm an edition.</h4>
+            <?php
+                foreach ($editions as $edition) {
+                    echo $this->Html->tag('h4', $edition->displayTitle);
+                    $this->set('formats', $edition->formats);
+                    echo $this->element('Format/' . $element_management['format']);
+                }
+            ?>
 		</div>
 	</div>
 </section>

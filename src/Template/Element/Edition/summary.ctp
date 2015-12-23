@@ -1,4 +1,4 @@
-<!-- Element/Edition/view.ctp -->
+<!-- Element/Edition/summary.ctp -->
 <section class="edition">
 	<div class="row">
 		<div class="columns small-12 medium-9 description">

@@ -166,11 +166,11 @@ class ArtworksController extends AppController
     public function elementTest() {
         $element_management = [
             'artwork' => 'full',
-            'edition' => 'summary',
-            'format' => 'none'
+            'edition' => 'full',
+            'format' => 'full'
         ];
         $this->paginate = [
-            'contain' => ['Users', 'Images', 'Editions']
+            'contain' => ['Users', 'Images', 'Editions' => ['Formats']]
         ];
         $this->set('element_management', $element_management);
         $this->set('artworks', $this->paginate($this->Artworks));
