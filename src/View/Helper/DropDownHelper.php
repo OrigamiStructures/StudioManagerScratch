@@ -18,24 +18,24 @@ class DropDownHelper extends HtmlHelper {
 	private $level = 0;
 	
 	private $dropdown_template = [
-//		'ul-dropdown' => [
-//			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
-//			'attrs' => ['class' => ['dropdown', 'menu']]],
-//		'ul-sub-dropdown' => [
-//			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
-//			'attrs' => ['class' => ['submenu', 'menu', 'vertical']]],
-//		'li-has-submenu' => [
-//			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
-//			'attrs' => ['class' => ['has-submenu']]],
 		'ul-dropdown' => [
-			'template' => "<ul{{attrs}} >\n{{content}}</ul>\n",
-			'attrs' => ['class' => ['menu']]],
+			'template' => "<ul{{attrs}} data-dropdown-menu>\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['dropdown', 'menu']]],
 		'ul-sub-dropdown' => [
-			'template' => "<ul{{attrs}}>\n{{content}}</ul>\n",
-			'attrs' => ['class' => ['nested', 'menu', 'vertical', 'hidden']]],
+			'template' => "<ul{{attrs}} data-submenu>\n{{content}}</ul>\n",
+			'attrs' => ['class' => ['nested', 'submenu', 'menu', 'vertical', 'hidden']]],
 		'li-has-submenu' => [
 			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
 			'attrs' => ['class' => ['has-submenu']]],
+//		'ul-dropdown' => [
+//			'template' => "<ul{{attrs}} >\n{{content}}</ul>\n",
+//			'attrs' => ['class' => ['menu']]],
+//		'ul-sub-dropdown' => [
+//			'template' => "<ul{{attrs}}>\n{{content}}</ul>\n",
+//			'attrs' => ['class' => ['nested', 'menu', 'vertical', 'hidden']]],
+//		'li-has-submenu' => [
+//			'template' => "\t<li{{attrs}}>\n\t\t{{content}}\n\t</li>\n",
+//			'attrs' => ['class' => ['has-submenu']]],
 		];
 	
 		protected $attributes;
@@ -50,6 +50,7 @@ class DropDownHelper extends HtmlHelper {
 				$this->attributes[$key] = $value['attrs'];
 			});
 			$this->templater()->add($templates);
+//			osd($this->templater()->_compiled);
 		}
 
     public function menu(array $list, array $options = [], array $itemOptions = [])
@@ -77,7 +78,6 @@ class DropDownHelper extends HtmlHelper {
      */
     public function nestedList(array $list, array $options = [], array $itemOptions = [])
     {
-		$first = '';
 		if ($this->level === 0) {
 			$options += ['tag' => 'ul-dropdown'];
 			$ul_options = $this->merge($options, $this->attributes['ul-dropdown']);
@@ -89,7 +89,7 @@ class DropDownHelper extends HtmlHelper {
         $items = $this->_nestedListItem($list, $options, $itemOptions);
         return $this->formatTemplate($ul_options['tag'], [
             'attrs' => $this->templater()->formatAttributes($ul_options, ['tag']),
-            'content' => $first . $items
+            'content' => $items
         ]);
     }
 
@@ -121,7 +121,7 @@ class DropDownHelper extends HtmlHelper {
 			$nodes = preg_split('/</', $item);
 			$link = array_shift($nodes);
 			$item = !empty($nodes) ? '<' . implode('<', $nodes) : '';
-//			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
+			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
 			
 			if (!empty($item)) {
 //				osd('has sub chosen');
