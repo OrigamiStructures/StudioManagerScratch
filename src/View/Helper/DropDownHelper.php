@@ -121,7 +121,7 @@ class DropDownHelper extends HtmlHelper {
 			$nodes = preg_split('/</', $item);
 			$link = array_shift($nodes);
 			$item = !empty($nodes) ? '<' . implode('<', $nodes) : '';
-			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
+//			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
 			
 			if (!empty($item)) {
 //				osd('has sub chosen');

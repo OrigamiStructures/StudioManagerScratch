@@ -2,7 +2,7 @@
 
 <?php 
     foreach ($artworks as $artwork):
-    echo $this->element('Artwork/index', 
+    echo $this->element('Artwork/view', 
         [
             'artwork' => $artwork,
             'element_management' => $element_management
