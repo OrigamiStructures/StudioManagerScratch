@@ -1,8 +1,12 @@
 <!-- Element/Edition/view.ctp -->
-<section class="edtion">
+<section class="edition">
 	<div class="row">
 		<div class="columns small-12 medium-9 description">
-            <h4>Hey, I'm an edition.</h4>
+            <?php
+                $count = count($editions);
+                $word = ($count > 1) ? 'editions' : 'edition';
+                echo $this->Html->tag('h4', "contains $count $word" );
+            ?>
 		</div>
 	</div>
 </section>
