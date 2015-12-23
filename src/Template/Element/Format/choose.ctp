@@ -1,1 +1,0 @@
-<p>'choose' elements (format)</p>

@@ -1,1 +1,0 @@
-<p><?= $artwork->title; ?></p>
