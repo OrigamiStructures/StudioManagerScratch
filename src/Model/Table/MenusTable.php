@@ -38,7 +38,7 @@ class MenusTable extends AppTable{
         ],
         'Artwork' => [
             'View All' => '/artworks/index',
-            'Create' => '/artworks/new',
+            'Create' => '/artworks/create',
             'Sample' => '/artworks/sample',
             'Element Test' => '/artworks/elementTest'
         ],

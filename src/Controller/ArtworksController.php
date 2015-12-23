@@ -102,6 +102,32 @@ class ArtworksController extends AppController
         $this->set(compact('artwork', 'users', 'images'));
         $this->set('_serialize', ['artwork']);
     }
+    
+    /**
+     * Creates artwork records in element based state
+     * 
+     * @return void Redirects on successful add, renders view otherwise.
+     */
+    public function create() {
+        $element_management = [
+            'artwork' => 'fieldset',
+            'edition' => 'fieldset',
+            'format' => 'fieldset'
+        ];
+        $artwork = $this->Artworks->newEntity();
+        if ($this->request->is('post')) {
+            osd($this->request->data);die;
+            $edition = $this->Artworks->patchEntity($artwork, $this->request->data);
+            if ($this->Artworks->save($artwork)) {
+                $this->Flash->success(__('The edition has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The edition could not be saved. Please, try again.'));
+            }
+        }
+        $this->set(compact('artwork', 'element_management'));
+        $this->set('_serialize', ['artwork']);
+    }
 
     /**
      * Edit method

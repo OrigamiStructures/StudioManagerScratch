@@ -17,6 +17,7 @@ class StateMap {
     'sample' => NULL,
     'spec' => NULL,
 	'elementTest' => NULL,
+	'create' => NULL,
   ),
   'Designs' => 
   array (
