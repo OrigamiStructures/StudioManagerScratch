@@ -21,10 +21,4 @@ class AppTable extends Table {
         }
 	}
 	
-	public function newId($index) {
-		$id = $this->_newId($index);
-		osd($id);
-		return $id;
-	}
-	
 }

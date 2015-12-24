@@ -43,6 +43,27 @@ class ArtworkStackBehavior extends Behavior {
         parent::__construct($table, $config);
     }
     
+	/**
+	 * Save based on stadardized TRD stack
+	 * 
+	 * The data array is in the old CakePHP 2.x style 
+	 * <pre>
+	 * [
+	 *	'Artwork' => [column data],
+	 *	'Edition' => [column data],
+	 *	...
+	 * ]
+	 * </pre>
+	 * All the Entities are created from array data and other logic that 
+	 * controls Entity relationships. Then working from the list of Entities 
+	 * named in this->stack_members, the Entities are saved one at a time. 
+	 * After successful save of each Entity, downstream Entities are updated 
+	 * using new data in the just save object. Mostly, this is a matter of 
+	 * passing association keys down to link things together.
+	 * 
+	 * @param array $data this->request-data from the form
+	 * @return boolean Success or failure of the save process
+	 */
     public function saveStack($data) {
 		$this->success = TRUE;
         $this->setupEntities($data);
@@ -70,31 +91,64 @@ class ArtworkStackBehavior extends Behavior {
 	 * Generate the Entities represented in the data
 	 * 
 	 * $data must have top level indexes that match the names of Entity 
-	 * classes. The array found at each of these Entity levels will be 
-	 * passed to the new entity. The universal 'user_id' link field will 
-	 * be set and 'id' will be unset if empty (otherwise the id value 
-	 * generated on insert isn't passed back in the Entiy on save). go figure.
+	 * classes. We'll walk through those and do some preliminary adjustments 
+	 * to the data for each Entity. the universal 'user_id' link field will 
+	 * be set and 'id' will be unset if empty (otherwise the id value generated 
+	 * on insert isn't passed back in the Entiy on save). go figure. 
+	 * Once the data is ready, an Entity will be created from it.
+	 * Some Entities take control of the creation of others, so those cases 
+	 * are detected and handled.
 	 * 
 	 * @param array $data The raw request data
 	 */
     private function setupEntities($data) {
         foreach ($data as $entity => $columns) {
-            $entity = ucfirst($entity);
-            $name_spaced_entity = "App\Model\Entity\\" . $entity;
-			if (empty($columns['user_id'])) {
-				$columns['user_id'] = $this->_table->SystemState->artistId();
-			}
-			$this->created[$entity] = FALSE;
-			if (empty($columns['id'])) {
-				$this->created[$entity] = TRUE;
-				unset($columns['id']);
-			}
-            $this->$entity = new $name_spaced_entity($columns);
+			// if not created by earlier process
+			if (!$this->$entity) {
+				if (empty($columns['user_id'])) {
+					$columns['user_id'] = $this->_table->SystemState->artistId();
+				}
+
+				$this->created[$entity] = FALSE;
+				if (empty($columns['id'])) {
+					$this->created[$entity] = TRUE;
+					unset($columns['id']);
+				}
+
+				$entity_class = "App\Model\Entity\\" . $entity;
+				$this->$entity = new $entity_class($columns);
+				
+				$this->mediatedEntitySetup($entity);
+			}			
         }
     }
+	
+	/**
+	 * Factory to select an Entity Setup process
+	 * 
+	 * Some Entities are not simply created from TRD. Instead their creation 
+	 * is controlled by information or choices in other Entities. The main 
+	 * setup method always calls here to allow these special processes. 
+	 * 
+	 * @param string $entity_name
+	 */
+	private function mediatedEntitySetup($entity_name) {
+		if (in_array($entity_name, ['Series', 'Subscription', 'Edition'])) {
+			$setupMethod = 'setupUsing' . $entity_name;
+			$this->$setupMethod($entity_name);
+		}
+	}
     
+	/**
+	 * Factory to select an Entity Update process
+	 * 
+	 * Once a record is saved, it may aquire data (like an id) that is needed 
+	 * to link other pending records to it. This factory will select the 
+	 * appropriate post-save process to link up the layers of the Artwork stack. 
+	 * 
+	 * @param Table $table
+	 */
     private function updateAssociations($table) {
-		
 		$updateMethod = 'updateUsing' . $table->alias();
 		$this->$updateMethod($table);
         osd($table); //die;
@@ -137,7 +191,7 @@ class ArtworkStackBehavior extends Behavior {
 			// this is the place to make new Pieces (I'm pretty sure)
 			$piece = new Piece();
 			$piece->edition_id = $this->Edition->id;
-			$this->Piece = array_fill(0, (integer) '10' , clone $piece);
+			$this->Piece = array_fill(0, (integer) $this->Edition->quantity , clone $piece);
 		}
 		osd($this->Piece);
 	}
