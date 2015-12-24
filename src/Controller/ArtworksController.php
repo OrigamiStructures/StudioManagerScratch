@@ -111,18 +111,19 @@ class ArtworksController extends AppController
     public function create() {
         $element_management = [
             'artwork' => 'fieldset',
+//			'series' => 'fieldset',
             'edition' => 'fieldset',
             'format' => 'fieldset'
         ];
         $artwork = $this->Artworks->newEntity();
         if ($this->request->is('post')) {
             osd($this->request->data);
-            $this->Artworks->saveStack($this->request->data);
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data['Artwork']);
-            if ($this->Artworks->save($artwork)) {
-                $this->createEdition($this->request->data['Edition']);
-                $this->createFormat($this->request->data['Format']);
-                $this->Flash->success(__('The edition has been saved.'));
+            if ($this->Artworks->saveStack($this->request->data)) {
+//            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data['Artwork']);
+//            if ($this->Artworks->save($artwork)) {
+//                $this->createEdition($this->request->data['Edition']);
+//                $this->createFormat($this->request->data['Format']);
+//                $this->Flash->success(__('The edition has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));

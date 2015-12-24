@@ -5,6 +5,7 @@
             <?php
             echo $this->Form->create($artwork);
                 echo $this->element('Artwork/' . $element_management['artwork']);
+//                echo $this->element('Series/' . $element_management['series']);
                 echo $this->element('Edition/' . $element_management['edition']);
                 echo $this->element('Format/' . $element_management['format']);
                 echo $this->Form->submit();

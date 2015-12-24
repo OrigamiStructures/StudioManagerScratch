@@ -28,8 +28,9 @@ class ArtworkStackBehavior extends Behavior {
     public $Format = FALSE;
     public $Piece = FALSE;
     
-    public $operation_order = [
+    public $stack_members = [
         'Artwork' => ['Edition'],
+		'Series' => [],
         'Edition' => ['Format', 'Piece'],
         'Format' => ['Piece'],
         'Piece' => []
@@ -40,13 +41,21 @@ class ArtworkStackBehavior extends Behavior {
     }
     
     public function saveStack($data) {
+		$this->success = TRUE;
         $this->setupEntities($data);
-        foreach ($this->operation_order as $entity) {
-            $model = Inflector::pluralize($entity);
-            $alias = \Cake\ORM\TableRegistry::get($model);
-            $this->$alias->save($this->$entity);
-            $this->amendEntity($entity, $alias);
+		// start transaction
+        foreach ($this->stack_members as $entity => $dependencies) {
+            $alias = Inflector::pluralize($entity);
+            $table = \Cake\ORM\TableRegistry::get($alias);
+			
+			if ($this->success && $table->save($this->$entity)) {
+				$this->updateDependent($entity, $table);
+			} else {
+				// rollback transaction
+				// return false
+			}
         }
+		return true;
     }
     
     private function setupEntities($data) {
@@ -57,7 +66,7 @@ class ArtworkStackBehavior extends Behavior {
         }
     }
     
-    private function amendEntity($entity) {
+    private function updateDependent($entity) {
         
     }
 }
