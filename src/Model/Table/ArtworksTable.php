@@ -14,7 +14,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Images
  * @property \Cake\ORM\Association\HasMany $Editions
  */
-class ArtworksTable extends Table
+class ArtworksTable extends AppTable
 {
 
     /**

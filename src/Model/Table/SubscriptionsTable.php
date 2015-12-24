@@ -13,7 +13,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\HasMany $Formats
  */
-class SubscriptionsTable extends Table
+class SubscriptionsTable extends AppTable
 {
 
     /**

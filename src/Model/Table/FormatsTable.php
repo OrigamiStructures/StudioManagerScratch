@@ -16,7 +16,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Subscriptions
  * @property \Cake\ORM\Association\HasMany $Pieces
  */
-class FormatsTable extends Table
+class FormatsTable extends AppTable
 {
 
     /**

@@ -15,7 +15,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Formats
  * @property \Cake\ORM\Association\HasMany $Dispositions
  */
-class PiecesTable extends Table
+class PiecesTable extends AppTable
 {
 
     /**
