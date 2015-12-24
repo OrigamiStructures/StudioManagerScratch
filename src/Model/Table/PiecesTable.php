@@ -33,6 +33,7 @@ class PiecesTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+		$this->addBehavior('ArtworkStack');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'

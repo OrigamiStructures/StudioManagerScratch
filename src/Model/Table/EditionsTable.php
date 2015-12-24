@@ -45,6 +45,7 @@ class EditionsTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
+		$this->addBehavior('ArtworkStack');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'

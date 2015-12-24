@@ -35,6 +35,7 @@ class FormatsTable extends Table
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
+		$this->addBehavior('ArtworkStack');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'

@@ -116,9 +116,12 @@ class ArtworksController extends AppController
         ];
         $artwork = $this->Artworks->newEntity();
         if ($this->request->is('post')) {
-            osd($this->request->data);die;
-            $edition = $this->Artworks->patchEntity($artwork, $this->request->data);
+            osd($this->request->data);
+            $this->Artworks->saveStack($this->request->data);
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data['Artwork']);
             if ($this->Artworks->save($artwork)) {
+                $this->createEdition($this->request->data['Edition']);
+                $this->createFormat($this->request->data['Format']);
                 $this->Flash->success(__('The edition has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
