@@ -50,7 +50,7 @@ class ArtworkStackComponent extends Component {
 	public function layerChoiceLists() {
 
 		$artworks = $editions = $formats = $series = $subscriptions = [];
-		if (6 == 9) {
+		if (6 == 6) {
 			//
 			//
 		// THESE RESULTS NEED TO BE CACHED TO CUT DOWN ON OVERHEAD
@@ -65,6 +65,7 @@ class ArtworkStackComponent extends Component {
 			// ALSO FILTER OUT FULLY COMMITED EDTIONS (NO CANDIDATE PIECES)
 			$editions = $this->Editions->find('choiceList', ['artist_id' => $artist_id])->toArray();
 			$types = $this->Editions->typeList();
+//			osd($types);
 
 
 			$formats = $this->Formats->find('choiceList', ['artist_id' => $artist_id])->toArray();

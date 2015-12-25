@@ -67,7 +67,6 @@ class ArtworkStackBehavior extends Behavior {
     public function saveStack($data) {
 //		$this->success = TRUE;
         $this->setupEntities($data);
-		osd($this);
 		// start transaction
         foreach ($this->stack_members as $entity) {
             $alias = Inflector::pluralize($entity);
@@ -172,13 +171,15 @@ class ArtworkStackBehavior extends Behavior {
 		$artist_id = $this->_table->SystemState->artistId();
 		if (empty($Entity->id)) {
 			switch ($Entity->type) {
-				case 'Limited':
+				case 'Limited Edition':
+				case 'Portfolio':
 					$i = 0;
 					while ($i++ < $this->Edition->quantity) {
 						$this->Piece[$i-1] = new Piece(['number' => $i, 'user_id' => $artist_id]);
 					}
 					break;
-				case 'Open':
+				case 'Open Edition':
+				case 'Unique':
 				case 'Use':
 					$this->Piece = new Piece(['user_id' => $artist_id]);
 					break;
@@ -198,7 +199,6 @@ class ArtworkStackBehavior extends Behavior {
 		if (empty($this->Edition->artwork_id)) {
 			$this->Edition->artwork_id = $this->Artwork->id;
 		}	
-		osd($this->Edition);
 	}
 	
 	/**
@@ -224,8 +224,6 @@ class ArtworkStackBehavior extends Behavior {
 				$this->Piece->edition_id = $this->Edition->id;
 			} 
 		}
-		osd($this->Format);
-		osd($this->Piece);
 	}
 	
 	private function updateUsingFormats($table) {

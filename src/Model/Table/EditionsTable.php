@@ -128,7 +128,7 @@ class EditionsTable extends AppTable
 	 * @return array
 	 */
 	public function typeList() {
-		return $this->types;
+		return array_combine($this->types, $this->types);
 	}
 	
 }

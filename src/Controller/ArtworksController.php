@@ -115,9 +115,10 @@ class ArtworksController extends AppController
             'edition' => 'fieldset',
             'format' => 'fieldset'
         ];
+		$this->ArtworkStack->layerChoiceLists();
+
         $artwork = $this->Artworks->newEntity();
         if ($this->request->is('post')) {
-            osd($this->request->data);
             if ($this->Artworks->saveStack($this->request->data)) {
                 return $this->redirect(['action' => 'index']);
             } else {
