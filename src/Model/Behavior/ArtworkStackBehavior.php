@@ -65,25 +65,32 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return boolean Success or failure of the save process
 	 */
     public function saveStack($data) {
-		$this->success = TRUE;
+//		$this->success = TRUE;
         $this->setupEntities($data);
+		osd($this);
 		// start transaction
         foreach ($this->stack_members as $entity) {
             $alias = Inflector::pluralize($entity);
             $table = \Cake\ORM\TableRegistry::get($alias);
 			
-			// Getting an id might be better than saving because the 
-			// entity retains its unsaved settings. Edition especially 
-			// needs to retain this info so Pieces can be properly made.
-//			if ($this->success && $table->save($this->$entity)) {
-			if (true) {
-//				osd($this->$entity->id, 'id');
-				$this->updateAssociations($table);
+			if (is_array($this->$entity)) {
+				foreach ($this->$entity as $entity) {
+					if (!$table->save($entity)) {
+						// rollback transaction
+						return FALSE;
+					}
+				}
 			} else {
-				// rollback transaction
-				 return false;
+				if ($table->save($this->$entity)) {
+//				if (true) {
+					$this->updateAssociations($table);
+				} else {
+					// rollback transaction
+					 return false;
+				}
 			}
-        }
+		}
+		
 		return true;
     }
     
@@ -109,9 +116,7 @@ class ArtworkStackBehavior extends Behavior {
 					$columns['user_id'] = $this->_table->SystemState->artistId();
 				}
 
-				$this->created[$entity] = FALSE;
 				if (empty($columns['id'])) {
-					$this->created[$entity] = TRUE;
 					unset($columns['id']);
 				}
 
@@ -151,8 +156,38 @@ class ArtworkStackBehavior extends Behavior {
     private function updateAssociations($table) {
 		$updateMethod = 'updateUsing' . $table->alias();
 		$this->$updateMethod($table);
-        osd($table); //die;
+//        osd($table); //die;
     }
+	
+	private function setupUsingSeries($entity_name) {
+		
+	}
+	
+	private function setupUsingSubscription($entity_name) {
+		
+	}
+	
+	private function setupUsingEdition($entity_name) {
+		$Entity = $this->$entity_name;
+		$artist_id = $this->_table->SystemState->artistId();
+		if (empty($Entity->id)) {
+			switch ($Entity->type) {
+				case 'Limited':
+					$i = 0;
+					while ($i++ < $this->Edition->quantity) {
+						$this->Piece[$i-1] = new Piece(['number' => $i, 'user_id' => $artist_id]);
+					}
+					break;
+				case 'Open':
+				case 'Use':
+					$this->Piece = new Piece(['user_id' => $artist_id]);
+					break;
+			}
+		} elseif ($Entity->dirty('quantity')) {
+			// this would handle change of quantity for an existing Edition
+		}
+		
+	}
 	
 	/**
 	 * Set up Entities associated to the Artwork Entity
@@ -162,7 +197,8 @@ class ArtworkStackBehavior extends Behavior {
 	private function updateUsingArtworks($table) {
 		if (empty($this->Edition->artwork_id)) {
 			$this->Edition->artwork_id = $this->Artwork->id;
-		}		
+		}	
+		osd($this->Edition);
 	}
 	
 	/**
@@ -174,25 +210,21 @@ class ArtworkStackBehavior extends Behavior {
 	 * @param Table $table
 	 */
 	private function updateUsingEditions($table) {
-		$this->Edition->id = '12';
-		osd($this->Edition);
 		if (empty($this->Format->edition_id)) {
 			$this->Format->edition_id = $this->Edition->id;
 		} 
-		
-		if ($this->created['Edition']) {
-			
-			// Open Editions and Limited Editions act differently
-			// Unique don't need an array either
-			
-			// if Edition->quantity has changed, logic will have to determine 
-			// how to handle the things. Decreases are the big problem. 
-			
-			// this is the place to make new Pieces (I'm pretty sure)
-			$piece = new Piece();
-			$piece->edition_id = $this->Edition->id;
-			$this->Piece = array_fill(0, (integer) $this->Edition->quantity , clone $piece);
+		if (is_array($this->Piece)) {
+			$i = 0;
+			$count = count($this->Piece);
+			while ($i++ < $count) {
+				$this->Piece[$i-1]->edition_id = $this->Edition->id;
+			}
+		} else {
+			if (empty($this->Piece->edition_id)) {
+				$this->Piece->edition_id = $this->Edition->id;
+			} 
 		}
+		osd($this->Format);
 		osd($this->Piece);
 	}
 	
