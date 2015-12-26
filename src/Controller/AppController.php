@@ -35,6 +35,11 @@ class AppController extends Controller
 	 * @var SystemState
 	 */
 	public $SystemState;
+	
+	public function beforeFilter(Event $event) {
+		parent::beforeFilter($event);
+		\Cake\Routing\Router::parseNamedParams($this->request);
+	}
 
     /**
      * Initialization hook method.

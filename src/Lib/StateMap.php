@@ -16,8 +16,9 @@ class StateMap {
     'delete' => NULL,
     'sample' => NULL,
     'spec' => NULL,
-	'elementTest' => NULL,
-	'create' => NULL,
+    'elementTest' => NULL,
+    'create' => NULL,
+    'refine' => NULL,
   ),
   'Designs' => 
   array (
@@ -93,14 +94,14 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
   ),
-    'Menus' =>
-    array(
-        'index' => NULL,
-        'view' => NULL,
-        'add' => NULL,
-        'edit' => NULL,
-        'delete' => NULL,
-    ),
+  'Menus' => 
+  array (
+    'index' => NULL,
+    'view' => NULL,
+    'add' => NULL,
+    'edit' => NULL,
+    'delete' => NULL,
+  ),
   'Pages' => 
   array (
     'display' => NULL,
