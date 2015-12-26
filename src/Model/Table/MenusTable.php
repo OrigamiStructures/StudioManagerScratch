@@ -42,6 +42,7 @@ class MenusTable extends AppTable{
             'Sample' => '/artworks/sample',
             'Element Test' => '/artworks/elementTest'
         ],
+		'Edition' => [],
         'Disposition' => [
             'Go to Dispo' => '/disposition/index',
 			'Phony' => [

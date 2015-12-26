@@ -135,4 +135,20 @@ class EditionsController extends AppController
 		$this->render('/Artworks/spec');
 	}
 	
+	public function create() {
+		$id = $this->request->params['named']['artwork'];
+		$artwork = $this->Editions->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
+		$element_management = [
+			'artwork' => 'full',
+			'edition' => 'fieldset',
+			'format' => 'fieldset',
+		];
+		$this->set('element_management', $element_management);
+		$this->set('artworks', [$artwork]);
+		$this->set('artwork', $artwork);
+		$this->ArtworkStack->layerChoiceLists();
+		$this->render('/Artworks/create');
+//		osd($artwork);die;
+	}
+	
 }

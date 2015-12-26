@@ -44,6 +44,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
     'spec' => 1,
+	'create' => NULL,
   ),
   'Formats' => 
   array (
