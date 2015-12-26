@@ -1,7 +1,15 @@
-ul.nested {
-	display: none;
+ul.menu li {
+	width: 10rem;
 }
-
-li:hover > ul.nested {
+li.has-submenu {
+	border: thin solid black;
+	position: relative;
+	ul.nested {
+		display: none;
+	}
+}
+li.has-submenu:hover > ul.nested {
 	display: block;
+	position: absolute;
+	top: 2.25rem;
 }
