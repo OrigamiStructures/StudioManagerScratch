@@ -12,7 +12,7 @@ if (isset($editions)) {
 		function($editions) { return "/editions/refine/{$editions->id}"; }
 	);
 	$menus['Edition'] = [
-		'Create' => "/editions/create/artwork:{$editions[0]->id}",
+		'Create' => "/editions/create/artwork:{$editions[0]->artwork_id}",
 		'Edit' => $combined->toArray()];
 }
 echo $this->DropDown->menu($menus);
