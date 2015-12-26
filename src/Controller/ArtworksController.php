@@ -132,9 +132,10 @@ class ArtworksController extends AppController
 	public function refine() {
 		$id = $this->request->params['named']['artwork'];
 		$artwork = $this->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
+		$this->request->data = $artwork;
 		if (count($artwork['editions']) > 1) {
 			// many editions
-			$this->request->data['Artwork'] = $artwork;
+//			$this->request->data['Artwork'] = $artwork;
 			$element_management = [
 				'artwork' => 'fieldset',
 				'edition' => 'full',
@@ -144,9 +145,9 @@ class ArtworksController extends AppController
 			$this->set('editions', $artwork['editions']);
 		} else {
 			// single edition, simple flat artwork
-			$this->request->data['Artwork'] = $artwork;
-			$this->request->data['Edition'] = $artwork['editions'][0];
-			$this->request->data['Format'] = $artwork['editions'][0]['formats'][0];
+//			$this->request->data['Artwork'] = $artwork;
+//			$this->request->data['Edition'] = $artwork['editions'][0];
+//			$this->request->data['Format'] = $artwork['editions'][0]['formats'][0];
 			$element_management = [
 				'artwork' => 'fieldset',
 				'edition' => 'fieldset',

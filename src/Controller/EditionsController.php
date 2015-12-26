@@ -138,6 +138,7 @@ class EditionsController extends AppController
 	public function create() {
 		$id = $this->request->params['named']['artwork'];
 		$artwork = $this->Editions->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
+		osd($artwork);
 		$element_management = [
 			'artwork' => 'full',
 			'edition' => 'fieldset',
