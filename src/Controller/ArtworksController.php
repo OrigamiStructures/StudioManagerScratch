@@ -108,7 +108,15 @@ class ArtworksController extends AppController
      * 
      * @return void Redirects on successful add, renders view otherwise.
      */
-    public function create() {
+    public function create($id = NULL) {
+		if (!is_null($id)) {
+			$artwork = $this->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
+		$this->request->data['Artwork'] = $artwork;
+		$this->request->data['Edition'] = $artwork['editions'][0];
+		$this->request->data['Format'] = $artwork['editions'][0]['formats'][0];
+		} else {
+			$artwork = $this->Artworks->newEntity();
+		}
         $element_management = [
             'artwork' => 'fieldset',
 //			'series' => 'fieldset',
@@ -117,10 +125,10 @@ class ArtworksController extends AppController
         ];
 		$this->ArtworkStack->layerChoiceLists();
 
-        $artwork = $this->Artworks->newEntity();
+        
         if ($this->request->is('post')) {
             if ($this->Artworks->saveStack($this->request->data)) {
-                return $this->redirect(['action' => 'index']);
+                $this->redirect(['action' => 'elementTest']);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }

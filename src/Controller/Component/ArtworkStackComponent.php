@@ -49,7 +49,7 @@ class ArtworkStackComponent extends Component {
 	 */
 	public function layerChoiceLists() {
 
-		$artworks = $editions = $formats = $series = $subscriptions = [];
+//		$artworks = $editions = $formats = $series = $subscriptions = [];
 		if (6 == 6) {
 			//
 			//
@@ -58,7 +58,7 @@ class ArtworkStackComponent extends Component {
 		//
 //		$mili = time()+  microtime();
 			$artist_id = $this->SystemState->artistId();
-			$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
+//			$artworks = $this->Artworks->find('choiceList', ['artist_id' => $artist_id])->toArray();
 
 
 			// UNIQUE EDITIONS CAN'T GET NEW FORMATS... MODIFY THE QUERY? ALWAYS?
@@ -76,9 +76,11 @@ class ArtworkStackComponent extends Component {
 			$subscriptions = $this->Subscriptions->find('choiceList',
 							['artist_id' => $artist_id])->toArray();
 		}		
-		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
+//		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
+		$this->controller->set(compact('editions', 'types', 'formats', 'series', 'subscriptions'));
 //		osd((time()+  microtime()) - $mili, 'do queries');
-		return [$artworks, $editions, $formats, $series, $subscriptions];
+//		return [$artworks, $editions, $formats, $series, $subscriptions];
+		return [$editions, $formats, $series, $subscriptions];
 	}
 	
 	public function testme($id, $index_name) {
