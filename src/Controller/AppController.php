@@ -59,14 +59,14 @@ class AppController extends Controller
 		
 		$this->SystemState = new SystemState($this->request);
 		$this->{$this->modelClass}->SystemState = $this->SystemState;
-		$this->set('SystemState', $this->SystemState);
-		
-//		$this->SystemState->inventoryActions();
-        
-        //Menu setup
-        $Menus = \Cake\ORM\TableRegistry::get('Menus', ['SystemState' => $this->SystemState]);
-        $this->set('menus', $Menus->adminMenu);
-    }
+//		$this->set('SystemState', $this->SystemState);
+	}
+	
+	public function mapStates() {
+		$this->set('result', $this->SystemState->inventoryActions());
+		$this->set('map', $this->SystemState->map());
+		$this->render('/Artworks/mapStates');
+	}
 
     /**
      * Before render callback.
@@ -76,7 +76,7 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
-		$menu = \Cake\ORM\TableRegistry::get('Menus');
+		$menu = \Cake\ORM\TableRegistry::get('Menus', ['SystemState' => $this->SystemState]);
 		$this->set('menus', $menu->assemble());
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])

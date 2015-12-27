@@ -66,6 +66,7 @@ class MenusTable extends AppTable{
 		}
 		if ($this->SystemState->admin('system')){
 			$this->menu['Admin']['Logs'] = [];
+			$this->menu['Admin']['Remap States'] = '/artworks/map_states';
 		}
 		$this->menu['Account'] = [
 			'Login' => '/users/login',

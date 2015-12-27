@@ -6,6 +6,8 @@ class StateMap {
   array (
     'initialize' => NULL,
     'beforeRender' => NULL,
+    'beforeFilter' => NULL,
+    'mapStates' => NULL,
   ),
   'Artworks' => 
   array (
@@ -19,6 +21,8 @@ class StateMap {
     'elementTest' => NULL,
     'create' => NULL,
     'refine' => NULL,
+    'initialize' => NULL,
+    'mapStates' => NULL,
   ),
   'Designs' => 
   array (
@@ -44,7 +48,7 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
     'spec' => 1,
-	'create' => NULL,
+    'create' => NULL,
   ),
   'Formats' => 
   array (
