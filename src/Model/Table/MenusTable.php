@@ -15,81 +15,47 @@ use App\Model\Table\AppTable;
  */
 class MenusTable extends AppTable{
 	
-    public $menu;
+    public $adminMenu;
 	
 	public function initialize(array $config) {
 		parent::initialize($config);
+		$this->adminMenu();
 	}
 	
-	public function assemble() {
-		$this->artwork();
-		$this->members();
-		$this->disposition();
-		$this->account();
-		return $this->menu;
-	}
-	
-	protected function artwork() {
-		$this->menu['Artwork'] = [
-            'Sample' => '/artworks/sample',
-            'View All' => '/artworks/elementTest',
-//          'View All' => '/artworks/index',
+	/**
+	 * Define basic menus for administators
+	 * 
+	 * Doing this here allows methods to run in the array definition. 
+	 * Setting this in a property declaration would prevent menthods. 
+	 */
+	protected function adminMenu() {
+		$this->adminMenu = [
+        'Account' => [
+            'Login' => '/users/login',
+            'Logout' => '/users/logout',
+            'Edit My Profile' => '/users/editProfile',
+            'Update Payment Type' => '/users/updatePayment'
+        ],
+        'Artwork' => [
+            'View All' => '/artworks/index',
             'Create' => '/artworks/create',
-			'View Artwork' => [],
-			'Edit Artwork' => [],
-			'Edition' => [],
-			'Format' => [],
-        ];
-		// check state for master query to build more layers
+            'Sample' => '/artworks/sample',
+            'Element Test' => '/artworks/elementTest'
+        ],
+		'Edition' => [],
+        'Disposition' => [
+            'Go to Dispo' => '/disposition/index',
+			'Phony' => [
+				'here' => '/artificially deep'
+			],
+        ],
+        'Admin' => [
+            'Subscribers' => '/admin/subscribers',
+            'CRUD' => '/admin/crud',
+            'Database' => '/phpmysql/index',
+            'Logs' => '/admin/logs',
+            'Element Test' => '/artworks/elementTest'
+        ]
+    ];
 	}
-	
-	protected function members() {
-		$this->menu['Market'] = [
-			'Collectors' => [],
-			'Venues' => [],
-			'Representitives' => [],
-			'Groups' => [],
-		];
-	}
-	
-	protected function disposition() {
-		$this->menu['Dispostion'] = [
-			'Go to Dispo' => '/disposition/index',
-        ];
-	}
-	
-	protected function account() {
-		if ($this->SystemState->admin('artist')) {
-			$this->menu['Admin'] = [
-				'Artist' => [],
-			];
-		}
-		if ($this->SystemState->admin('system')){
-			$this->menu['Admin']['Logs'] = [];
-		}
-		$this->menu['Account'] = [
-			'Login' => '/users/login',
-			'Logout' => '/users/logout',
-			'Edit My Profile' => '/users/editProfile',
-			'Update Payment Type' => '/users/updatePayment'
-		];
-	}
-	
-//	if (isset($artworks)) {
-//	$combined = (new Cake\Collection\Collection($artworks))->combine(
-//		function($artworks) { return $artworks->title; }, 
-//		function($artworks) { return "/artworks/refine/artwork:{$artworks->id}"; }
-//	);
-//	$menus['Artwork']['Edit'] = $combined->toArray();
-//}
-//if (isset($editions)) {
-//	$combined = (new Cake\Collection\Collection($editions))->combine(
-//		function($editions) { return $editions->display_title; }, 
-//		function($editions) { return "/editions/refine/{$editions->id}"; }
-//	);
-//	$menus['Edition'] = [
-//		'Create' => "/editions/create/artwork:{$editions[0]->artwork_id}",
-//		'Edit' => $combined->toArray()];
-//}
-
 }
