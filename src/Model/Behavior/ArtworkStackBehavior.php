@@ -65,6 +65,22 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return boolean Success or failure of the save process
 	 */
     public function saveStack($data) {
+		osd($data);
+		unset($data['id']);
+		unset($data['editions'][0]['id']);
+		unset($data['editions'][0]['formats'][0]['id']);
+		$entity = new Artwork($data);
+		$ed = new Edition($data['editions'][0]);
+		$fo = new Format($data['editions'][0]['formats'][0]);
+		$entity['editions'][0] = $ed;
+		$entity['editions'][0]['formats'][0] = $fo;
+		osd($entity);
+		$Artworks = \Cake\ORM\TableRegistry::get('Artworks');
+		$Editions = \Cake\ORM\TableRegistry::get('Editions');
+		$Formats = \Cake\ORM\TableRegistry::get('Formats');
+		$Artworks->save($entity);
+		osd($entity);
+		die;
 //		$this->success = TRUE;
         $this->setupEntities($data);
 		// start transaction

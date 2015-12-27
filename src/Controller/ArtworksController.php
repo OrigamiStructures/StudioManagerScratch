@@ -116,7 +116,7 @@ class ArtworksController extends AppController
             'format' => 'fieldset'
         ];
 		$this->ArtworkStack->layerChoiceLists();
-
+		$artwork = new \App\Model\Entity\Artwork();
         
         if ($this->request->is('post')) {
             if ($this->Artworks->saveStack($this->request->data)) {
