@@ -54,6 +54,15 @@ class SystemState {
 		return '1';
 	}
 	
+	public function admin($type = NULL) {
+		// Very tentative implementation plan: 
+		// 
+		// needs to sent TRUE if user is and 'artist' admin, meaning 
+		// they need to act as an artist other than themselves. And needs 
+		// to return TRUE for both 'system' and 'artist' for developers
+		return TRUE;
+	}
+	
 	/**
 	 * Developer Utility to map controller actions
 	 * 
