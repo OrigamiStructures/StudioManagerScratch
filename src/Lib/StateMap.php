@@ -17,10 +17,9 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
     'sample' => NULL,
-    'spec' => NULL,
-    'elementTest' => NULL,
-    'create' => NULL,
-    'refine' => NULL,
+    'review' => ARTWORK_SELECTION,
+    'create' => ARTWORK_CREATION,
+    'refine' => ARTWORK_CREATION,
     'initialize' => NULL,
     'mapStates' => NULL,
   ),
@@ -47,7 +46,6 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'spec' => 1,
     'create' => NULL,
   ),
   'Formats' => 
@@ -57,7 +55,6 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'spec' => NULL,
   ),
   'Groups' => 
   array (

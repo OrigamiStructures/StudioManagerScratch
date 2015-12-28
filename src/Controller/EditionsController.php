@@ -114,27 +114,6 @@ class EditionsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function spec($artwork_id = NULL) {
-		$this->ArtworkStack->layerChoiceLists();
-		if (!is_null($artwork_id)) {
-			$artwork = $this->Editions->Artworks
-					->find('forDisplay', [
-						'artwork_id' => $artwork_id, 
-						'artist_id' => $this->SystemState->artistId()
-							])
-					->toArray()[0];
-//			$artwork = $this->Editions->Artworks->get($artwork_id);
-			$series = $this->Editions->Series->choiceList([
-				'artwork_id' => $artwork_id, 
-				'artist_id' => $this->SystemState->artistId()
-			]);
-		}
-		$artwork_element = 'choose';
-		$edition_element = $format_element = 'spec';
-		$this->set(compact('artwork_element', 'edition_element', 'format_element', 'series', 'artwork'));
-		$this->render('/Artworks/spec');
-	}
-	
 	public function create() {
 //		osd($this->request->data);
 		$id = $this->request->params['named']['artwork'];

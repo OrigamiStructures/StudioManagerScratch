@@ -116,13 +116,4 @@ class FormatsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function spec($edition_id = NULL) {
-		$this->request->data('edition', '2');
-		$artwork_element = $edition_element = 'choose';
-		$format_element = 'spec';
-		$this->ArtworkStack->layerChoiceLists();
-		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
-		$this->render('/Artworks/spec');
-	}
-	
 }

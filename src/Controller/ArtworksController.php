@@ -209,18 +209,8 @@ class ArtworksController extends AppController
 	public function sample() {
 		
 	}
-	
-	public function spec() {
-		if ($this->request->is('put') || $this->request->is('post')) {
-			osd($this->request->data, 'trd');
-			die;
-		}
-		$this->ArtworkStack->layerChoiceLists();
-		$artwork_element = $edition_element = $format_element = 'spec';
-		$this->set(compact('artwork_element', 'edition_element', 'format_element'));
-	}
     
-    public function elementTest() {
+    public function review() {
         $element_management = [
             'artwork' => 'full',
             'edition' => 'full',

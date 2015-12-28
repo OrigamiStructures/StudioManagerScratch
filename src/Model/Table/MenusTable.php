@@ -32,11 +32,11 @@ class MenusTable extends AppTable{
 	protected function artwork() {
 		$this->menu['Artwork'] = [
             'Sample' => '/artworks/sample',
-            'View All' => '/artworks/elementTest',
+            'View All' => '/artworks/review',
 //          'View All' => '/artworks/index',
             'Create' => '/artworks/create',
-			'View Artwork' => [],
-			'Edit Artwork' => [],
+			'Review Artwork' => [],
+			'Refine Artwork' => [],
 			'Edition' => [],
 			'Format' => [],
         ];
