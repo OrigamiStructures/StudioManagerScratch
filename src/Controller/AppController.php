@@ -63,7 +63,7 @@ class AppController extends Controller
 		
 		$this->SystemState = new SystemState($this->request);
 		$this->{$this->modelClass}->SystemState = $this->SystemState;
-//		$this->set('SystemState', $this->SystemState);
+		$this->set('SystemState', $this->SystemState);
 	}
 	
 	public function mapStates() {

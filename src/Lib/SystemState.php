@@ -63,6 +63,14 @@ class SystemState {
 		return TRUE;
 	}
 	
+	public function isKnown($name) {
+		return !is_null($this->request->query($name));
+	}
+	
+	public function queryArg($name) {
+		return $this->request->query($name);
+	}
+	
 	/**
 	 * Developer Utility to map controller actions
 	 * 

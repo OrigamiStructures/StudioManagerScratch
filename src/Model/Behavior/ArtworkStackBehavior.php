@@ -23,7 +23,9 @@ use Cake\Utility\Inflector;
  * @author jasont
  */
 class ArtworkStackBehavior extends Behavior {
-    public $Artwork = FALSE;
+	
+	protected $SystemState;
+	public $Artwork = FALSE;
     public $Edition = FALSE;
     public $Format = FALSE;
     public $Piece = FALSE;
@@ -108,7 +110,7 @@ class ArtworkStackBehavior extends Behavior {
 		
 		return true;
     }
-    
+	
 	/**
 	 * Generate the Entities represented in the data
 	 * 

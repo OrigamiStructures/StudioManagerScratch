@@ -30,7 +30,7 @@ class ArtworksController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Images']
+            'contain' => ['Users', 'Images'],
         ];
         $this->set('artworks', $this->paginate($this->Artworks));
         $this->set('_serialize', ['artworks']);
@@ -211,17 +211,26 @@ class ArtworksController extends AppController
 	}
     
     public function review() {
+		;
         $element_management = [
             'artwork' => 'full',
             'edition' => 'full',
             'format' => 'full'
         ];
-        $this->paginate = [
-            'contain' => ['Users', 'Images', 'Editions' => ['Formats']]
-        ];
+        $this->set('artworks', $this->ArtworkStack->stackQuery());
         $this->set('element_management', $element_management);
-        $this->set('artworks', $this->paginate($this->Artworks));
         $this->set('_serialize', ['artworks']);
     }
+	
+	
+	public function artworkPage() {
+        $this->paginate = [
+            'contain' => ['Users', 'Images', 'Editions' => ['Formats']],
+			'limit' => 2,
+        ];
+		$artworks = $this->paginate($this->Artworks);
+        $this->set('artworks', $artworks);
+		return $artworks;
+	}
 	
 }

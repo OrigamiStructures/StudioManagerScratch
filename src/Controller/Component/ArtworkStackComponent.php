@@ -18,6 +18,44 @@ class ArtworkStackComponent extends Component {
 	
 	public $SystemState;
 	
+	/**
+	 * Storage of the current page of Artworks if it's been fetched
+	 *
+	 * @var ResultSet
+	 */
+	protected $artworksPage = FALSE;
+	
+	/**
+	 *
+	 * @var Entity
+	 */
+	protected $knownArtwork = FALSE;
+	protected $key = NULL;
+
+	/**
+	 * Get a named Table instance
+	 * 
+	 * Lazy load Tables in the Artwork Stack
+	 * 
+	 * @param string $name
+	 * @return Table
+	 */
+	public function __get($name) {
+		parent::__get($name);
+		// 
+		if (!empty($this->$name)) {
+			return $this->$name;
+		} else if (in_array($name, $this->required_tables)) {
+			if (TableRegistry::exists($name)) {
+				$this->$name = TableRegistry::get($name);
+			} else {
+				$this->$name = TableRegistry::get($name, ['SystemState' => $this->SystemState]);
+			}
+			return $this->$name;
+		}
+	}
+
+
 	private $required_tables = [
 		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions'
 	];
@@ -26,19 +64,29 @@ class ArtworkStackComponent extends Component {
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
-		
-//		$mili = microtime();
-		$tables = new Collection($this->required_tables);
-		$tables->each(function($alias, $index) {
-			if (TableRegistry::exists($alias)) {
-				$this->$alias = TableRegistry::get($alias);
-			} else {
-				$this->$alias = TableRegistry::get($alias, ['SystemState' => $this->SystemState]);
-			}
-		});
-//		osd(microtime() - $mili, 'make models');
 	}
 	
+	public function stackQuery() {
+		if (!$this->SystemState->isKnown('artwork')) {
+			$artworks = $this->artworksPage = $this->controller->artworkPage();
+		} else {
+			$this->key('artwork', $this->SystemState->queryArg('artwork'));
+			$artworks[] = $this->knownArtwork = $this->Artworks->get($this->key('artwork'));
+		}
+		return $artworks;
+	}
+	
+	public function key($name = NULL, $value = NULL) {
+		if (!is_null($value)) {
+			$this->key[$name] = $value;
+		} else if (!is_null($name)) {
+			return isset($this->key[$name]) ? $this->key[$name] : NULL;
+		} else {
+			return $this->key;
+		}
+	}
+
+
 	/**
 	 * Prepare appropriate choice lists for all artwork stack tables
 	 * 
