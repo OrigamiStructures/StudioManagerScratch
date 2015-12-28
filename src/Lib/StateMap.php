@@ -8,6 +8,7 @@ class StateMap {
     'beforeRender' => NULL,
     'beforeFilter' => NULL,
     'mapStates' => NULL,
+    'afterFilter' => NULL,
   ),
   'Artworks' => 
   array (
@@ -17,9 +18,9 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
     'sample' => NULL,
-    'review' => ARTWORK_SELECTION,
-    'create' => ARTWORK_CREATION,
-    'refine' => ARTWORK_CREATION,
+    'review' => 2,
+    'create' => 1,
+    'refine' => 1,
     'initialize' => NULL,
     'mapStates' => NULL,
   ),

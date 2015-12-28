@@ -35,8 +35,8 @@ class MenusTable extends AppTable{
             'View All' => '/artworks/review',
 //          'View All' => '/artworks/index',
             'Create' => '/artworks/create',
-			'Review Artwork' => [],
-			'Refine Artwork' => [],
+			'Review Artwork' => ['thing' => 'thing', 'thing2' => 'thing', 'thing3' => 'thing'],
+			'Refine Artwork' => ['thing' => 'thing', 'thing4' => 'thing', 'thing5' => 'thing6', 'thing6' => 'thing'],
 			'Edition' => [],
 			'Format' => [],
         ];

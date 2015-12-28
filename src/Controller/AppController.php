@@ -40,6 +40,10 @@ class AppController extends Controller
 		parent::beforeFilter($event);
 		\Cake\Routing\Router::parseNamedParams($this->request);
 	}
+	
+	public function afterFilter(Event $event) {
+		parent::afterFilter($event);
+	}
 
     /**
      * Initialization hook method.

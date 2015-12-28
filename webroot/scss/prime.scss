@@ -11,8 +11,8 @@ li.has-submenu {
 li.has-submenu:hover > ul.nested {
 	display: block;
 	position: absolute;
-	top: .25rem;
-	left: 7rem;
+	top: .85rem;
+	left: 4rem;
 	z-index: 1000;
 }
 ul.nested:hover {
