@@ -20,7 +20,7 @@ class SystemState {
 	protected $map;
 	protected $request;
 	protected $_current_state;
-
+	protected $_viewVars;
 
 	public function __construct(Request $request) {
 		$this->request = $request;
@@ -29,7 +29,17 @@ class SystemState {
 		$this->_current_state = strtolower($this->map[$this->request->controller][$this->request->action]);
 	}
 	
-	public function is($state) {
+	/**
+	 * Make stored viewVars available
+	 * 
+	 * @param string $name a valid Hash path
+	 * @return mixed
+	 */
+	public function __get($name) {
+		return isset($this->_viewVars[$name]) ? $this->_viewVars[$name] : null;
+	}
+
+		public function is($state) {
 		return $this->_current_state == strtolower($state);
 	}
 	
@@ -40,20 +50,40 @@ class SystemState {
 	public function map() {
 		return $this->map;
 	}
-
+	
+	/**
+	 * Store the current passes viewVars
+	 * 
+	 * Controller and View override the normal ViewVars::set to also sent the 
+	 * full set of variable here. This makes them available more universally 
+	 * (for example, in Tables). Cell and Email classes don't have overrides 
+	 * written yet so they don't keep this class up to date.
+	 * 
+	 * @param array $variables
+	 */
+	public function storeVars($variables) {
+		unset($variables['SystemState']);
+		$this->_viewVars = $variables;
+	}
+	
 	/**
 	 * Get the logged in artist's ID or the ID of the artist we're mocking
 	 * 
 	 * Admins (and possibly gallery owners in a later phase) will be able to 
 	 * 'act as' an artist rather than only seeing thier own artworks. 
-	 * Must return false if not logged in
 	 * 
-	 * @return string|false
+	 * @return string
 	 */
 	public function artistId() {
 		return '1';
 	}
 	
+	/**
+	 * Determine the degree (if any) of admin access
+	 * 
+	 * @param string $type
+	 * @return boolean
+	 */
 	public function admin($type = NULL) {
 		// Very tentative implementation plan: 
 		// 
@@ -62,6 +92,7 @@ class SystemState {
 		// to return TRUE for both 'system' and 'artist' for developers
 		return TRUE;
 	}
+	
 	
 	public function isKnown($name) {
 		return !is_null($this->request->query($name));

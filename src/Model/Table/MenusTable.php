@@ -31,6 +31,8 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function artwork() {
+		$this->addArtworks();
+		
 		$this->menu['Artwork'] = array_merge_recursive($this->menu['Artwork'], [
             'Sample' => '/artworks/sample',
             'View All' => '/artworks/review',
@@ -77,7 +79,12 @@ class MenusTable extends AppTable{
 		];
 	}
 	
-	public function addArtworks($artworks) {
+	public function addArtworks() {
+		if (is_null($this->SystemState->artworks)) {
+			return;
+		} else {
+			$artworks = $this->SystemState->artworks;
+		}
 		$combined = (new Collection($artworks))->combine(
 			function($artworks) { return $artworks->title; }, 
 			function($artworks) { return "/artworks/refine?artwork={$artworks->id}"; }

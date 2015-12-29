@@ -89,4 +89,19 @@ class AppController extends Controller
         }
     }
 	
+	/**
+	 * Override native ViewVarsTrait::set()
+	 * 
+	 * Maintain a copy of all current variables in the SystemState object
+	 * 
+	 * @param mixed $name
+	 * @param mixed $value
+	 * @return object
+	 */
+    public function set($name, $value = null) {
+		$result = parent::set($name, $value);
+		$this->SystemState->storeVars($result->viewVars);
+		return $result;
+	}
+	
 }

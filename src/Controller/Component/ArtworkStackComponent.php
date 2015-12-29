@@ -70,16 +70,21 @@ class ArtworkStackComponent extends Component {
 		$this->SystemState = $this->controller->SystemState;
 	}
 	
+	/**
+	 * Call from anywhere in the ArtworkStack to get the proper result
+	 * 
+	 * @return Entity
+	 */
 	public function stackQuery() {
 		if (!$this->SystemState->isKnown('artwork')) {
-			$artworks = $this->Paginator->paginate($this->Artworks, [
+			return $this->Paginator->paginate($this->Artworks, [
 				'contain' => ['Users', 'Images', 'Editions' => ['Formats']]
 			]);
-			$this->Menus->addArtworks($artworks);
-			return $artworks;
 		} else {
 			$this->key('artwork', $this->SystemState->queryArg('artwork'));
-			return $this->knownArtwork = $this->Artworks->get($this->key('artwork'));
+			return $this->Artworks->get($this->key('artwork'), [
+				'contain' => ['Users', 'Images', 'Editions' => ['Formats' => ['Images']]]
+			]);
 		}
 	}
 	
