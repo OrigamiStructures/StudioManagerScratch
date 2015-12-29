@@ -8,6 +8,7 @@ namespace App\Model\Table;
 
 use Cake\ORM\Table;
 use App\Model\Table\AppTable;
+use Cake\Collection\Collection;
 
 /**
  * CakePHP MenusTable
@@ -15,7 +16,7 @@ use App\Model\Table\AppTable;
  */
 class MenusTable extends AppTable{
 	
-    public $menu;
+    public $menu = ['Artwork' => []];
 	
 	public function initialize(array $config) {
 		parent::initialize($config);
@@ -30,16 +31,16 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function artwork() {
-		$this->menu['Artwork'] = [
+		$this->menu['Artwork'] = array_merge_recursive($this->menu['Artwork'], [
             'Sample' => '/artworks/sample',
             'View All' => '/artworks/review',
 //          'View All' => '/artworks/index',
             'Create' => '/artworks/create',
-			'Review Artwork' => ['thing' => 'thing', 'thing2' => 'thing', 'thing3' => 'thing'],
-			'Refine Artwork' => ['thing' => 'thing', 'thing4' => 'thing', 'thing5' => 'thing6', 'thing6' => 'thing'],
+			'Review Artwork' => [],
+			'Refine Artwork' => [],
 			'Edition' => [],
 			'Format' => [],
-        ];
+        ]);
 		// check state for master query to build more layers
 	}
 	
@@ -76,21 +77,31 @@ class MenusTable extends AppTable{
 		];
 	}
 	
+	public function addArtworks($artworks) {
+		$combined = (new Collection($artworks))->combine(
+			function($artworks) { return $artworks->title; }, 
+			function($artworks) { return "/artworks/refine?artwork={$artworks->id}"; }
+		);
+		$this->menu['Artwork'] = ['Refine Artwork' => $combined->toArray()];
+		$combined = (new Collection($artworks))->combine(
+			function($artworks) { return $artworks->title; }, 
+			function($artworks) { return "/artworks/review?artwork={$artworks->id}"; }
+		);
+		$this->menu['Artwork']['Review Artwork'] = $combined->toArray();
+	}
+	
+	public function addArtwork($artwork){
+		$combined = (new Cake\Collection\Collection($editions))->combine(
+			function($editions) { return $editions->display_title; }, 
+			function($editions) { return "/editions/refine?edition={$editions->id}"; }
+		);
+		$menus['Artwork']['Edition'] = [
+			'Create' => "/editions/create?artwork={$editions[0]->artwork_id}",
+			'Refine' => $combined->toArray()];		
+	}
 //	if (isset($artworks)) {
-//	$combined = (new Cake\Collection\Collection($artworks))->combine(
-//		function($artworks) { return $artworks->title; }, 
-//		function($artworks) { return "/artworks/refine/artwork:{$artworks->id}"; }
-//	);
-//	$menus['Artwork']['Edit'] = $combined->toArray();
 //}
 //if (isset($editions)) {
-//	$combined = (new Cake\Collection\Collection($editions))->combine(
-//		function($editions) { return $editions->display_title; }, 
-//		function($editions) { return "/editions/refine/{$editions->id}"; }
-//	);
-//	$menus['Edition'] = [
-//		'Create' => "/editions/create/artwork:{$editions[0]->artwork_id}",
-//		'Edit' => $combined->toArray()];
 //}
 
 }

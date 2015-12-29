@@ -130,7 +130,7 @@ class ArtworksController extends AppController
     }
 
 	public function refine() {
-		$id = $this->request->params['named']['artwork'];
+		$id = $this->request->query('artwork');
 		$artwork = $this->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
 		$this->request->data = $artwork;
 		if (count($artwork['editions']) > 1) {
@@ -228,6 +228,7 @@ class ArtworksController extends AppController
             'contain' => ['Users', 'Images', 'Editions' => ['Formats']],
 			'limit' => 2,
         ];
+		osd($this->paginate);
 		$artworks = $this->paginate($this->Artworks);
         $this->set('artworks', $artworks);
 		return $artworks;

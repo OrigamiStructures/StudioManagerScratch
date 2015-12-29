@@ -9,6 +9,7 @@ use App\Model\Table\SubscriptionsTable;
 use App\Model\Table\SeriesTable;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+//use Cake\Controller\Component\PaginatorComponent;
 
 /**
  * CakePHP ArtworkStackComponent
@@ -16,6 +17,9 @@ use Cake\Collection\Collection;
  */
 class ArtworkStackComponent extends Component {
 	
+	public $components = ['Paginator'];
+
+
 	public $SystemState;
 	
 	/**
@@ -57,7 +61,7 @@ class ArtworkStackComponent extends Component {
 
 
 	private $required_tables = [
-		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions'
+		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions', 'Menus'
 	];
 		
     public function initialize(array $config) 
@@ -68,12 +72,15 @@ class ArtworkStackComponent extends Component {
 	
 	public function stackQuery() {
 		if (!$this->SystemState->isKnown('artwork')) {
-			$artworks = $this->artworksPage = $this->controller->artworkPage();
+			$artworks = $this->Paginator->paginate($this->Artworks, [
+				'contain' => ['Users', 'Images', 'Editions' => ['Formats']]
+			]);
+			$this->Menus->addArtworks($artworks);
+			return $artworks;
 		} else {
 			$this->key('artwork', $this->SystemState->queryArg('artwork'));
-			$artworks[] = $this->knownArtwork = $this->Artworks->get($this->key('artwork'));
+			return $this->knownArtwork = $this->Artworks->get($this->key('artwork'));
 		}
-		return $artworks;
 	}
 	
 	public function key($name = NULL, $value = NULL) {
