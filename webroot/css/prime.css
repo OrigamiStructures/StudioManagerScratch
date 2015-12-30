@@ -12,6 +12,9 @@ li:hover {
   li:hover > a {
     color: #a1ffff; }
 
+/*li.menu-text:hover {
+	color: #ddd;
+}*/
 li.disabled {
   color: #bbb; }
 
@@ -30,5 +33,29 @@ li.has-submenu:hover > ul.nested {
 ul.nested:hover {
   display: block;
   z-index: 1000; }
+
+section.artwork:nth-of-type(2n) {
+  background-color: linen; }
+
+section.artwork {
+  padding: 1rem 0; }
+  section.artwork div.row {
+    padding: 0; }
+  section.artwork p {
+    line-height: normal;
+    margin: 0;
+    padding: 0; }
+  section.artwork img {
+    margin-top: 0.8em; }
+  @media only screen and (min-width: 40.063em) {
+    section.artwork {
+      /*		h1, h2, h3, h4, h5, h6 {
+      			line-height: 1.4;
+      		}*/ }
+      section.artwork h2 {
+        font-size: 1.5rem;
+        margin: 1rem 0 0; }
+      section.artwork h1 {
+        margin-bottom: 0; } }
 
 /*# sourceMappingURL=prime.css.map */
