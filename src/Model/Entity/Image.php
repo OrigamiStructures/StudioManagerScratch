@@ -45,7 +45,9 @@ class Image extends Entity
     /**
      * Return the full path for the image helper based upon the existance of a directory
      * 
-     * Provide No Image default for a missing image
+     * Provide No Image default for a missing image. This no-image dodge only 
+	 * works if the record exists but the image does not. If there is no record, 
+	 * there will be no entity for the View to call to for the image.
      * 
      * @return string
      */
