@@ -14,6 +14,12 @@ li:hover {
 		color: #a1ffff;
 	}
 }
+li.disabled {
+	color: #bbb;
+}
+li.disabled:hover {
+	color: #666;
+}
 li.has-submenu:hover > ul.nested {
 	font-size: .75rem;
 	display: block;

@@ -124,6 +124,11 @@ class DropDownHelper extends HtmlHelper {
 //			osd([$key, $nodes, $link, $item], 'key, nodes, link and item');
 			$li_content = $this->liContent($key, $link);
 			
+			// don't include empty sub menus
+			if (stristr($li_children, "\" >\n</ul>")) {
+				$li_children = '';
+			}
+			
 			if (!empty($li_children)) {
 //				osd('has sub chosen');
 				$template = 'li-has-submenu';
@@ -138,7 +143,7 @@ class DropDownHelper extends HtmlHelper {
 				$template = 'li';
 				$attributes = ['class' => []];
 				if (!stristr($li_content, '<a ')) {
-					$attributes = ['class' => ['menu-text']];
+					$attributes = ['class' => ['menu-text', empty($li_children) ? ' disabled' : '']];
 				}
 				$li_options = $this->merge($itemOptions, $attributes);
 			}
