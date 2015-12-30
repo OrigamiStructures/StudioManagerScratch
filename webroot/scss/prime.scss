@@ -2,18 +2,26 @@ ul.menu li {
 	width: 10rem;
 }
 li.has-submenu {
-	border: thin solid black;
+	/*border: thin solid black;*/
 	position: relative;
 	ul.nested {
 		display: none;
 	}
 }
+li:hover {
+	background-color: gray;
+	> a {
+		color: #a1ffff;
+	}
+}
 li.has-submenu:hover > ul.nested {
+	font-size: .75rem;
 	display: block;
 	position: absolute;
-	top: .85rem;
+	top: .98rem;
 	left: 4rem;
 	z-index: 1000;
+	border: thin solid #ccc;
 }
 ul.nested:hover {
 	display: block;
