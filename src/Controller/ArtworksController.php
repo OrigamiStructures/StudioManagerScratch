@@ -183,8 +183,8 @@ class ArtworksController extends AppController
 		}
         $element_management = [
             'artwork' => $artwork_element,
-            'edition' => 'full',
-            'format' => 'full'
+            'edition' => 'many',
+            'format' => 'many'
         ];
         $this->set($artwork_variable, $this->ArtworkStack->stackQuery());
         $this->set('element_management', $element_management);

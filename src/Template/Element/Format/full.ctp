@@ -1,12 +1,11 @@
-<!-- Element/Format/full.ctp -->
-<section class="edtion">
-	<div class="row">
-		<div class="columns small-12 medium-9 description">
-            <?php
-                foreach ($formats as $format) {
-                    echo $this->Html->tag('p', $format->displayTitle, ['class' => 'format']);
-                }
-            ?>
-		</div>
-	</div>
-</section>
+
+						<!-- Element/Format/full.ctp -->
+						<section class="format">
+							<div class="columns small-12 medium-3 image">
+								<?= $this->element('Format/image') ?>
+							</div>
+							<div class="columns small-12 medium-9 description">
+								<?= $this->element('Format/text'); ?>
+							</div>
+						</section>
+						<!-- END Element/Format/full.ctp -->

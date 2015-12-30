@@ -78,12 +78,12 @@ class ArtworkStackComponent extends Component {
 	public function stackQuery() {
 		if (!$this->SystemState->isKnown('artwork')) {
 			return $this->Paginator->paginate($this->Artworks, [
-				'contain' => ['Users', 'Images', 'Editions' => ['Formats']]
+				'contain' => ['Users', 'Images', 'Editions' => ['Series', 'Pieces', 'Formats' => ['Images']]]
 			]);
 		} else {
 			$this->key('artwork', $this->SystemState->queryArg('artwork'));
 			return $this->Artworks->get($this->key('artwork'), [
-				'contain' => ['Users', 'Images', 'Editions' => ['Formats' => ['Images']]]
+				'contain' => ['Users', 'Images', 'Editions' => ['Series', 'Pieces', 'Formats' => ['Images']]]
 			]);
 		}
 	}
