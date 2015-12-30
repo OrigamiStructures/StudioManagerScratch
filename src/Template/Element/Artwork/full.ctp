@@ -1,8 +1,3 @@
-<!-- Element/Artwork/full.ctp -->
-<?php
-foreach ($artworks as $artwork): 
-	$this->set('artwork', $artwork);
-?>
 <section class="artwork">
 	<div class="row">
 		<div class="columns small-12 medium-3 image">
@@ -17,4 +12,3 @@ foreach ($artworks as $artwork):
 		</div>
 	</div>
 </section>
-<?php        endforeach;?>

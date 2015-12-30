@@ -32,11 +32,10 @@ class MenusTable extends AppTable{
 	
 	protected function artwork() {
 		$this->addArtworks();
-		
+		$this->addArtwork();
 		$this->menu['Artwork'] = array_merge_recursive($this->menu['Artwork'], [
             'Sample' => '/artworks/sample',
             'View All' => '/artworks/review',
-//          'View All' => '/artworks/index',
             'Create' => '/artworks/create',
 			'Review Artwork' => [],
 			'Refine Artwork' => [],
@@ -79,7 +78,7 @@ class MenusTable extends AppTable{
 		];
 	}
 	
-	public function addArtworks() {
+	protected function addArtworks() {
 		if (is_null($this->SystemState->artworks)) {
 			return;
 		} else {
@@ -97,14 +96,25 @@ class MenusTable extends AppTable{
 		$this->menu['Artwork']['Review Artwork'] = $combined->toArray();
 	}
 	
-	public function addArtwork($artwork){
-		$combined = (new Cake\Collection\Collection($editions))->combine(
+	protected function addArtwork(){
+		if (is_null($this->SystemState->artwork)) {
+			return;
+		} else {
+			$editions = $this->SystemState->artwork->editions;
+		}
+		$refine = (new Collection($editions))->combine(
 			function($editions) { return $editions->display_title; }, 
-			function($editions) { return "/editions/refine?edition={$editions->id}"; }
+			function($editions) { return "/editions/refine?artwork={$editions->artwork_id}&edition={$editions->id}"; }
 		);
-		$menus['Artwork']['Edition'] = [
-			'Create' => "/editions/create?artwork={$editions[0]->artwork_id}",
-			'Refine' => $combined->toArray()];		
+		$review = (new Collection($editions))->combine(
+			function($editions) { return $editions->display_title; }, 
+			function($editions) { return "/editions/review?artwork={$editions->artwork_id}&edition={$editions->id}"; }
+		);
+		$this->menu['Artwork']['Edition'] = [
+			'Create' => "/editions/create?artwork={$this->SystemState->artwork->id}",
+			'Refine' => $refine->toArray(),
+			'Review' => $review->toArray(),
+		];
 	}
 //	if (isset($artworks)) {
 //}
