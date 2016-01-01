@@ -79,10 +79,10 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function addArtworks() {
-		if (is_null($this->SystemState->artworks)) {
+		if (is_null($this->SystemState->menu_artworks)) {
 			return;
 		} else {
-			$artworks = $this->SystemState->artworks;
+			$artworks = $this->SystemState->menu_artworks;
 		}
 		$combined = (new Collection($artworks))->combine(
 			function($artworks) { return $artworks->title; }, 
@@ -97,10 +97,10 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function addArtwork(){
-		if (is_null($this->SystemState->artwork)) {
+		if (is_null($this->SystemState->menu_artwork)) {
 			return;
 		} else {
-			$editions = $this->SystemState->artwork->editions;
+			$editions = $this->SystemState->menu_artwork->editions;
 		}
 		$refine = (new Collection($editions))->combine(
 			function($editions) { return $editions->display_title; }, 
@@ -111,7 +111,7 @@ class MenusTable extends AppTable{
 			function($editions) { return "/editions/review?artwork={$editions->artwork_id}&edition={$editions->id}"; }
 		);
 		$this->menu['Artwork']['Edition'] = [
-			'Create' => "/editions/create?artwork={$this->SystemState->artwork->id}",
+			'Create' => "/editions/create?artwork={$this->SystemState->menu_artwork->id}",
 			'Refine' => $refine->toArray(),
 			'Review' => $review->toArray(),
 		];

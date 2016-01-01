@@ -13,89 +13,89 @@ class EditionsController extends AppController
 	
 	public $components = ['ArtworkStack'];
 	
+// <editor-fold defaultstate="collapsed" desc="BASIC CRUD">
 	/**
-     * Index method
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Users', 'Artworks', 'Series']
-        ];
-        $this->set('editions', $this->paginate($this->Editions));
-        $this->set('_serialize', ['editions']);
-    }
+	 * Index method
+	 *
+	 * @return void
+	     */
+	public function index()     {
+		$this->paginate = [
+			'contain' => ['Users', 'Artworks', 'Series']
+		];
+		$this->set('editions', $this->paginate($this->Editions));
+		$this->set('_serialize', ['editions']);
+	}
 
-    /**
-     * View method
-     *
-     * @param string|null $id Edition id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $edition = $this->Editions->get($id, [
-            'contain' => ['Users', 'Artworks', 'Series', 'Formats', 'Pieces']
-        ]);
-        $this->set('edition', $edition);
-        $this->set('_serialize', ['edition']);
-    }
+	/**
+	 * View method
+	 *
+	 * @param string|null $id Edition id.
+	 * @return void
+	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
+	     */
+	public function view($id = null)     {
+		$edition = $this->Editions->get($id,
+				[
+			'contain' => ['Users', 'Artworks', 'Series', 'Formats', 'Pieces']
+		]);
+		$this->set('edition', $edition);
+		$this->set('_serialize', ['edition']);
+	}
 
-    /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $edition = $this->Editions->newEntity();
-        if ($this->request->is('post')) {
-            $edition = $this->Editions->patchEntity($edition, $this->request->data);
-            if ($this->Editions->save($edition)) {
-                $this->Flash->success(__('The edition has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The edition could not be saved. Please, try again.'));
-            }
-        }
-        $users = $this->Editions->Users->find('list', ['limit' => 200]);
-        $artworks = $this->Editions->Artworks->find('list', ['limit' => 200]);
-        $series = $this->Editions->Series->find('list', ['limit' => 200]);
-        $this->set(compact('edition', 'users', 'artworks', 'series'));
-        $this->set('_serialize', ['edition']);
-    }
+	/**
+	 * Add method
+	 *
+	 * @return void Redirects on successful add, renders view otherwise.
+	     */
+	public function add()     {
+		$edition = $this->Editions->newEntity();
+		if ($this->request->is('post')) {
+			$edition = $this->Editions->patchEntity($edition, $this->request->data);
+			if ($this->Editions->save($edition)) {
+				$this->Flash->success(__('The edition has been saved.'));
+				return $this->redirect(['action' => 'index']);
+			} else {
+				$this->Flash->error(__('The edition could not be saved. Please, try again.'));
+			}
+		}
+		$users = $this->Editions->Users->find('list', ['limit' => 200]);
+		$artworks = $this->Editions->Artworks->find('list', ['limit' => 200]);
+		$series = $this->Editions->Series->find('list', ['limit' => 200]);
+		$this->set(compact('edition', 'users', 'artworks', 'series'));
+		$this->set('_serialize', ['edition']);
+	}
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Edition id.
-     * @return void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $edition = $this->Editions->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $edition = $this->Editions->patchEntity($edition, $this->request->data);
-            if ($this->Editions->save($edition)) {
-                $this->Flash->success(__('The edition has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The edition could not be saved. Please, try again.'));
-            }
-        }
-        $users = $this->Editions->Users->find('list', ['limit' => 200]);
-        $artworks = $this->Editions->Artworks->find('list', ['limit' => 200]);
-        $series = $this->Editions->Series->find('list', ['limit' => 200]);
-        $this->set(compact('edition', 'users', 'artworks', 'series'));
-        $this->set('_serialize', ['edition']);
-    }
+	/**
+	 * Edit method
+	 *
+	 * @param string|null $id Edition id.
+	 * @return void Redirects on successful edit, renders view otherwise.
+	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
+	     */
+	public function edit($id = null)     {
+		$edition = $this->Editions->get($id, [
+			'contain' => []
+		]);
+		if ($this->request->is(['patch', 'post', 'put'])) {
+			$edition = $this->Editions->patchEntity($edition, $this->request->data);
+			if ($this->Editions->save($edition)) {
+				$this->Flash->success(__('The edition has been saved.'));
+				return $this->redirect(['action' => 'index']);
+			} else {
+				$this->Flash->error(__('The edition could not be saved. Please, try again.'));
+			}
+		}
+		$users = $this->Editions->Users->find('list', ['limit' => 200]);
+		$artworks = $this->Editions->Artworks->find('list', ['limit' => 200]);
+		$series = $this->Editions->Series->find('list', ['limit' => 200]);
+		$this->set(compact('edition', 'users', 'artworks', 'series'));
+		$this->set('_serialize', ['edition']);
+	}
 
-    /**
+// </editor-fold>
+
+	/**
      * Delete method
      *
      * @param string|null $id Edition id.
@@ -114,10 +114,11 @@ class EditionsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function create() {
+	public function refine() {
 //		osd($this->request->data);
-		$id = $this->request->params['named']['artwork'];
-		$artwork = $this->Editions->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
+		$artwork = $this->ArtworkStack->stackQuery();
+//		$id = $this->SystemState->queryArg('artwork');
+//		$artwork = $this->Editions->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
 //		osd($artwork);
 		$element_management = [
 			'artwork' => 'describe',
@@ -125,11 +126,24 @@ class EditionsController extends AppController
 			'format' => 'fieldset',
 		];
 		$this->set('element_management', $element_management);
-		$this->set('artworks', [$artwork]);
+//		$this->set('artworks', [$artwork]);
 		$this->set('artwork', $artwork);
-		$this->ArtworkStack->layerChoiceLists();
+//		$this->ArtworkStack->layerChoiceLists();
 		$this->render('/Artworks/create');
 //		osd($artwork);die;
+	}
+	
+	public function create() {
+//		$this->ArtworkStack->layerChoiceLists();
+		$artwork = $this->ArtworkStack->stackQuery();
+		$element_management = [
+			'artwork' => 'describe',
+			'edition' => 'fieldset',
+			'format' => 'fieldset',
+		];
+		$this->set('element_management', $element_management);
+		$this->set('artwork', $artwork);
+		$this->render('/Artworks/create');		
 	}
 	
 }
