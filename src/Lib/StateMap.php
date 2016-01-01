@@ -9,10 +9,11 @@ class StateMap {
     'beforeFilter' => NULL,
     'mapStates' => NULL,
     'afterFilter' => NULL,
+    'set' => NULL,
   ),
   'Artworks' => 
   array (
-    'index' => 'find',
+    'index' => NULL,
     'view' => NULL,
     'add' => NULL,
     'edit' => NULL,
@@ -20,7 +21,7 @@ class StateMap {
     'sample' => NULL,
     'review' => 2,
     'create' => 1,
-    'refine' => 1,
+    'refine' => 4,
     'initialize' => NULL,
     'mapStates' => NULL,
   ),
@@ -47,7 +48,9 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'create' => NULL,
+    'review' => 2,
+    'create' => 1,
+    'refine' => 4,
   ),
   'Formats' => 
   array (
@@ -56,6 +59,9 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
+    'review' => 2,
+    'create' => 1,
+    'refine' => 4,
   ),
   'Groups' => 
   array (
