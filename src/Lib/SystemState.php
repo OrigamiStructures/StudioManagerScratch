@@ -7,8 +7,9 @@ use Cake\Filesystem\File;
 use Cake\Collection\Collection;
 use App\Lib\StateMap;
 
-define('ARTWORK_CREATION', 1);
-define('ARTWORK_SELECTION', 2);
+define('ARTWORK_CREATE', 1);
+define('ARTWORK_REVIEW', 2);
+define('ARTWORK_REFINE', 4);
 
 /**
  * Description of SystemState
@@ -17,6 +18,13 @@ define('ARTWORK_SELECTION', 2);
  */
 class SystemState {
 	
+//	protected $constant = [
+//		ARTWORK_CREATE => 'ARTWORK_CREATE',
+//		ARTWORK_REVIEW => 'ARTWORK_REVIEW',
+//		ARTWORK_REFINE => 'ARTWORK_REFINE',
+//		NULL => 'NULL',
+//	];
+
 	protected $map;
 	protected $request;
 	protected $_current_state;
@@ -26,7 +34,7 @@ class SystemState {
 		$this->request = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
-		$this->_current_state = strtolower($this->map[$this->request->controller][$this->request->action]);
+		$this->_current_state = $this->map[$this->request->controller][$this->request->action];
 	}
 	
 	/**
@@ -39,7 +47,7 @@ class SystemState {
 		return isset($this->_viewVars[$name]) ? $this->_viewVars[$name] : null;
 	}
 
-		public function is($state) {
+	public function is($state) {
 		return $this->_current_state == strtolower($state);
 	}
 	
