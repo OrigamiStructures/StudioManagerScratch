@@ -48,19 +48,24 @@ class EditionsTable extends AppTable
 		$this->addBehavior('ArtworkStack');
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Artworks', [
-            'foreignKey' => 'artwork_id'
+            'foreignKey' => 'artwork_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Series', [
-            'foreignKey' => 'series_id'
+            'foreignKey' => 'series_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Formats', [
-            'foreignKey' => 'edition_id'
+            'foreignKey' => 'edition_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Pieces', [
-            'foreignKey' => 'edition_id'
+            'foreignKey' => 'edition_id',
+			'SystemState' => $this->SystemState,
         ]);
     }
 

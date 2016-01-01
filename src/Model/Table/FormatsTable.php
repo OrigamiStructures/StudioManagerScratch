@@ -38,19 +38,24 @@ class FormatsTable extends AppTable
 		$this->addBehavior('ArtworkStack');
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Images', [
-            'foreignKey' => 'image_id'
+            'foreignKey' => 'image_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Editions', [
-            'foreignKey' => 'edition_id'
+            'foreignKey' => 'edition_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Subscriptions', [
-            'foreignKey' => 'subscription_id'
+            'foreignKey' => 'subscription_id',
+			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Pieces', [
-            'foreignKey' => 'format_id'
+            'foreignKey' => 'format_id',
+			'SystemState' => $this->SystemState,
         ]);
     }
 

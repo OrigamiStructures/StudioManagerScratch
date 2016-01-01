@@ -78,7 +78,8 @@ class SeriesTable extends AppTable
     }
 	
 	public function choiceList($options) {
-		if ($this->SystemState->is(ARTWORK_CREATION)) {
+//		debug(\Cake\Error\Debugger::trace());die;
+		if ($this->SystemState->is(ARTWORK_CREATE)) {
 			return $this->find('unimplemented', $options);
 		} else {
 			return $this->find('choiceList', $options);

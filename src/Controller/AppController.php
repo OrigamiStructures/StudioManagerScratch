@@ -17,6 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use App\Lib\SystemState;
+use App\Model\Table\CSTableLocator;
 
 /**
  * Application Controller
@@ -28,6 +29,18 @@ use App\Lib\SystemState;
  */
 class AppController extends Controller
 {
+	
+	public function __construct(\Cake\Network\Request $request = null,
+			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
+			$components = null) {
+		
+		$this->SystemState = new SystemState($request);
+		$this->set('SystemState', $this->SystemState);
+		$locator = new CSTableLocator($this->SystemState);
+		$this->tableLocator($locator);
+		
+		parent::__construct($request, $response, $name, $eventManager, $components);
+	}
 	
 	/**
 	 * Class providing system state and artist context
@@ -60,10 +73,6 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-		
-		$this->SystemState = new SystemState($this->request);
-		$this->{$this->modelClass}->SystemState = $this->SystemState;
-		$this->set('SystemState', $this->SystemState);
 	}
 	
 	public function mapStates() {
