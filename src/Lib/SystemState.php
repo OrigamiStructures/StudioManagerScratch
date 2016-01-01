@@ -101,11 +101,22 @@ class SystemState {
 		return TRUE;
 	}
 	
-	
+	/**
+	 * Is the value one of the URL query arguements?
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
 	public function isKnown($name) {
 		return !is_null($this->request->query($name));
 	}
 	
+	/**
+	 * Return one of the URL query arguements
+	 * 
+	 * @param string $name
+	 * @return string
+	 */
 	public function queryArg($name) {
 		return $this->request->query($name);
 	}

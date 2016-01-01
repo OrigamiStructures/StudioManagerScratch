@@ -114,6 +114,16 @@ class EditionsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
+	/**
+	 * Refine that data for a single Edition
+	 * 
+	 * The artwork will show as 'reference' info on the page. The fate of 
+	 * multiple Formats has not been resolved. The first will show in a 
+	 * fieldset for editing but subsiquent Formats are also in the data.
+	 * 
+	 * SAVE HAS NOT BEEN WRITTEN
+	 * 
+	 */
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
@@ -127,6 +137,14 @@ class EditionsController extends AppController
 		$this->render('/Artworks/create');
 	}
 	
+	/**
+	 * Create an new Edition and a single Format for it
+	 * 
+	 * The artwork will be shown as reference info on the page
+	 * 
+	 * SAVE HAS NOT BEEN WRITTEN
+	 * 
+	 */
 	public function create() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();

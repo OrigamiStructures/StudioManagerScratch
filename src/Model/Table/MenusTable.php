@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * MenuTable generates arrays that can be translated into nested navigation tools
+ * 
+ * Navigation lists are built from standing arrays and synthesized from values 
+ * stored in teh SystemState property. No data tables exist.
+ * 
  * Copyright 2015 Origami Structures
  */
 
@@ -22,14 +27,25 @@ class MenusTable extends AppTable{
 		parent::initialize($config);
 	}
 	
+	/**
+	 * Call point to get a main navigation menu
+	 * 
+	 * @return array
+	 */
 	public function assemble() {
 		$this->artwork();
 		$this->members();
 		$this->disposition();
 		$this->account();
+		$this->admin();
 		return $this->menu;
 	}
 	
+	/**
+	 * Makes an Artwork stack menu for the current context
+	 * 
+	 * THIS METHOD DOES NOT produce menus with a consistent order. FIX IT. 
+	 */
 	protected function artwork() {
 		$this->addArtworks();
 		$this->addArtwork();
@@ -61,6 +77,15 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function account() {
+		$this->menu['Account'] = [
+			'Login' => '/users/login',
+			'Logout' => '/users/logout',
+			'Edit My Profile' => '/users/editProfile',
+			'Update Payment Type' => '/users/updatePayment'
+		];
+	}
+	
+	protected function admin() {
 		if ($this->SystemState->admin('artist')) {
 			$this->menu['Admin'] = [
 				'Artist' => [],
@@ -70,14 +95,17 @@ class MenusTable extends AppTable{
 			$this->menu['Admin']['Logs'] = [];
 			$this->menu['Admin']['Remap States'] = '/artworks/map_states';
 		}
-		$this->menu['Account'] = [
-			'Login' => '/users/login',
-			'Logout' => '/users/logout',
-			'Edit My Profile' => '/users/editProfile',
-			'Update Payment Type' => '/users/updatePayment'
-		];
 	}
-	
+
+		/**
+	 * Generate navigation choices from a page of Artworks records
+	 * 
+	 * Will produce both a Refine and Review link for each Artwork 
+	 * 
+	 * COMBINE EVERYTHING INTO A SINGLE LOOP?
+	 * 
+	 * @return array
+	 */
 	protected function addArtworks() {
 		if (is_null($this->SystemState->menu_artworks)) {
 			return;
@@ -96,6 +124,15 @@ class MenusTable extends AppTable{
 		$this->menu['Artwork']['Review Artwork'] = $combined->toArray();
 	}
 	
+	/**
+	 * Generate navigation choices from a single Artwork record
+	 * 
+	 * Will produce both Refine and Review links for each Edition in the 
+	 * Arwork. SHOULD ALSO PRODUCE Refine and Review for the Artwork and 
+	 * Refine and Review for the Formats (? for the Formats)
+	 * 
+	 * @return array
+	 */
 	protected function addArtwork(){
 		if (is_null($this->SystemState->menu_artwork)) {
 			return;
@@ -116,9 +153,5 @@ class MenusTable extends AppTable{
 			'Review' => $review->toArray(),
 		];
 	}
-//	if (isset($artworks)) {
-//}
-//if (isset($editions)) {
-//}
 
 }

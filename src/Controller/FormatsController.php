@@ -116,25 +116,35 @@ class FormatsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
+	/**
+	 * Refine that data for a single Format
+	 * 
+	 * The artwork and edition will show as 'reference' info on the page.
+	 * 
+	 * SAVE HAS NOT BEEN WRITTEN
+	 * 
+	 */
 	public function refine() {
-//		osd($this->request->data);
 		$artwork = $this->ArtworkStack->stackQuery();
-//		$id = $this->SystemState->queryArg('artwork');
-//		$artwork = $this->Editions->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
-//		osd($artwork);
 		$element_management = [
 			'artwork' => 'describe',
 			'edition' => 'describe',
 			'format' => 'fieldset',
 		];
 		$this->set('element_management', $element_management);
-//		$this->set('artworks', [$artwork]);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
 		$this->render('/Artworks/create');
-//		osd($artwork);die;
 	}
 	
+	/**
+	 * Create an new Format
+	 * 
+	 * The artwork and edition will be shown as reference info on the page
+	 * 
+	 * SAVE HAS NOT BEEN WRITTEN
+	 * 
+	 */
 	public function create() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$element_management = [

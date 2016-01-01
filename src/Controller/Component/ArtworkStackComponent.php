@@ -19,15 +19,7 @@ class ArtworkStackComponent extends Component {
 	
 	public $components = ['Paginator'];
 
-
 	public $SystemState;
-	
-	/**
-	 * Storage of the current page of Artworks if it's been fetched
-	 *
-	 * @var ResultSet
-	 */
-	protected $artworksPage = FALSE;
 	
 	protected $full_containment = [
 		'Users', 'Images', 'Editions' => [
@@ -36,12 +28,16 @@ class ArtworkStackComponent extends Component {
 				]
 			]
 		];
-	/**
-	 *
-	 * @var Entity
-	 */
-	protected $knownArtwork = FALSE;
-	protected $key = NULL;
+
+	private $required_tables = [
+		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions', 'Menus'
+	];
+		
+    public function initialize(array $config) 
+	{
+		$this->controller = $this->_registry->getController();
+		$this->SystemState = $this->controller->SystemState;
+	}
 
 	/**
 	 * Get a named Table instance
@@ -57,25 +53,30 @@ class ArtworkStackComponent extends Component {
 		if (!empty($this->$name)) {
 			return $this->$name;
 		} else if (in_array($name, $this->required_tables)) {
+			/**
+			 * This entire if statement was an earlier attempt to get SystemState 
+			 * passed. It failed and so the hack described was added.
+			 */
 			if (TableRegistry::exists($name)) {
 				$this->$name = TableRegistry::get($name);
-				$this->$name->SystemState = $this->controller->SystemState;
+				/**
+				 * This line is a hack to resolve the problem that I couldn't find a 
+				 * way to get this property to automatically travel into the tables 
+				 * when a {Table}->get(id) call is made (which this->stackQuery() does). 
+				 * Setting the property in AppTable construct, overriding the 
+				 * Associtiation build calls in AppTable, addin the property to the 
+				 * Associtiation definitions in the the various tables, having the 
+				 * Controller use a different locateTable class that passes the value... 
+				 * NONE of these techniques worked. I didn't try a {Table}->find(). 
+				 * And I didn't look at any strategy that would worm the property down 
+				 * into a behavior (because all the tables don't share a behavior).
+				 */
+				$this->$name->SystemState = $this->controller->SystemState; // HACK
 			} else {
 				$this->$name = TableRegistry::get($name, ['SystemState' => $this->controller->SystemState]);
 			}
 			return $this->$name;
 		}
-	}
-
-
-	private $required_tables = [
-		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions', 'Menus'
-	];
-		
-    public function initialize(array $config) 
-	{
-		$this->controller = $this->_registry->getController();
-		$this->SystemState = $this->controller->SystemState;
 	}
 	
 	/**
@@ -84,18 +85,23 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	public function stackQuery() {
+		// no 'artwork' query value indicates a paginated page
 		if (!$this->SystemState->isKnown('artwork')) {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
 				'contain' => $this->full_containment
 			]);
+			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
 			return $artworks;
 		} else {
-			$this->key('artwork', $this->SystemState->queryArg('artwork'));
-			$artwork = $this->Artworks->get($this->key('artwork'), [
+			// There may be more keys known than just the 'artwork', but that's 
+			// all we need for the query.
+			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
 				'contain' => $this->full_containment
 			]);
+			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', clone $artwork);
+			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
 			}
@@ -115,8 +121,10 @@ class ArtworkStackComponent extends Component {
 	 */
 	protected function pruneEntities($artwork) {
 		$controller = strtolower($this->SystemState->request->controller);
-//		osd($this->SystemState->request->controller);
-//		osd($artwork->$controller);
+		/**
+		 * This code got more complicated than I expected. So this clumsy 
+		 * solution could be reviewed.
+		 */
 		if ($controller === 'Editions') {
 			$entity_class = get_class($artwork->{$controller}[0]);
 			$artwork->$controller = [new $entity_class()];
@@ -126,20 +134,8 @@ class ArtworkStackComponent extends Component {
 				$artwork->editions[$index]->$controller = [new $entity_class()];
 			}
 		}
-//		osd($artwork);die;
 		return $artwork;
 	}
-
-		public function key($name = NULL, $value = NULL) {
-		if (!is_null($value)) {
-			$this->key[$name] = $value;
-		} else if (!is_null($name)) {
-			return isset($this->key[$name]) ? $this->key[$name] : NULL;
-		} else {
-			return $this->key;
-		}
-	}
-
 
 	/**
 	 * Prepare appropriate choice lists for all artwork stack tables
@@ -185,8 +181,4 @@ class ArtworkStackComponent extends Component {
 		return [$formats, $series, $subscriptions];
 	}
 	
-	public function testme($id, $index_name) {
-		return $this->Editions->choiceList($id, 'artwork');
-
-	}
 }
