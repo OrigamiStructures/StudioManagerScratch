@@ -8,6 +8,7 @@
 $edition_count = isset($edition_count) ? $edition_count : 0 ; 
 ?>
 <fieldset>
+	<legend>Edition Details</legend>
     <?= $this->Form->input("editions.$edition_count.id"); ?>
     <?= $this->Form->input("editions.$edition_count.artwork_id", 
 			['type' => 'hidden']); ?>

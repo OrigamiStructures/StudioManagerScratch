@@ -46,6 +46,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
         <?= $this->fetch('content') ?>
     </section>
     <footer>
+		&nbsp;
     </footer>
 </body>
 </html>

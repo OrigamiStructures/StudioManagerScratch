@@ -10,6 +10,7 @@ $edition_count = isset($edition_count) ? $edition_count : 0 ;
 $format_count = isset($format_count) ? $format_count : 0 ; 
 ?>
 <fieldset>
+	<legend>Format Details</legend>
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.id"); ?>
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.edition_id", 
 			['type' => 'hidden']); ?>
