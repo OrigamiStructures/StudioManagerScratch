@@ -29,6 +29,13 @@ class ArtworkStackComponent extends Component {
 	 */
 	protected $artworksPage = FALSE;
 	
+	protected $full_containment = [
+		'Users', 'Images', 'Editions' => [
+			'Series', 'Pieces', 'Formats' => [
+				'Images', 'Pieces', 'Subscriptions'
+				]
+			]
+		];
 	/**
 	 *
 	 * @var Entity
@@ -77,18 +84,41 @@ class ArtworkStackComponent extends Component {
 	 */
 	public function stackQuery() {
 		if (!$this->SystemState->isKnown('artwork')) {
-			return $this->Paginator->paginate($this->Artworks, [
-				'contain' => ['Users', 'Images', 'Editions' => ['Series', 'Pieces', 'Formats' => ['Images']]]
+			$artworks = $this->Paginator->paginate($this->Artworks, [
+				'contain' => $this->full_containment
 			]);
+			$this->controller->set('menu_artworks', $artworks);
+			return $artworks;
 		} else {
 			$this->key('artwork', $this->SystemState->queryArg('artwork'));
-			return $this->Artworks->get($this->key('artwork'), [
-				'contain' => ['Users', 'Images', 'Editions' => ['Series', 'Pieces', 'Formats' => ['Images']]]
+			$artwork = $this->Artworks->get($this->key('artwork'), [
+				'contain' => $this->full_containment
 			]);
+			$this->controller->set('menu_artwork', $artwork);
+			if ($this->SystemState->is(ARTWORK_CREATE)) {
+				return $this->pruneEntities($artwork);
+			}
+			return $artwork;
 		}
 	}
 	
-	public function key($name = NULL, $value = NULL) {
+	/**
+	 * Prepare the entity for 'creation' of some layer
+	 * 
+	 * stackQuery pulls the whole, known artwork stack and passes it here if 
+	 * there is a Create request. In this case, we must insert empty Entities 
+	 * on the appropriate layers. These are deduced by Controller context. 
+	 * 
+	 * @param Entity $artwork
+	 * @return Entity
+	 */
+	protected function pruneEntities($artwork) {
+		$controller = strtolower($this->request->controller);
+		$artwork->$controller = NULL;
+		return $artwork;
+	}
+
+		public function key($name = NULL, $value = NULL) {
 		if (!is_null($value)) {
 			$this->key[$name] = $value;
 		} else if (!is_null($name)) {
