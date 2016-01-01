@@ -59,8 +59,9 @@ class ArtworkStackComponent extends Component {
 		} else if (in_array($name, $this->required_tables)) {
 			if (TableRegistry::exists($name)) {
 				$this->$name = TableRegistry::get($name);
+				$this->$name->SystemState = $this->controller->SystemState;
 			} else {
-				$this->$name = TableRegistry::get($name, ['SystemState' => $this->SystemState]);
+				$this->$name = TableRegistry::get($name, ['SystemState' => $this->controller->SystemState]);
 			}
 			return $this->$name;
 		}
@@ -87,14 +88,14 @@ class ArtworkStackComponent extends Component {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
 				'contain' => $this->full_containment
 			]);
-			$this->controller->set('menu_artworks', $artworks);
+			$this->controller->set('menu_artworks', clone $artworks);
 			return $artworks;
 		} else {
 			$this->key('artwork', $this->SystemState->queryArg('artwork'));
 			$artwork = $this->Artworks->get($this->key('artwork'), [
 				'contain' => $this->full_containment
 			]);
-			$this->controller->set('menu_artwork', $artwork);
+			$this->controller->set('menu_artwork', clone $artwork);
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
 			}
@@ -113,8 +114,19 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function pruneEntities($artwork) {
-		$controller = strtolower($this->request->controller);
-		$artwork->$controller = NULL;
+		$controller = strtolower($this->SystemState->request->controller);
+//		osd($this->SystemState->request->controller);
+//		osd($artwork->$controller);
+		if ($controller === 'Editions') {
+			$entity_class = get_class($artwork->{$controller}[0]);
+			$artwork->$controller = [new $entity_class()];
+		} else {
+			$entity_class = get_class($artwork->editions[0]->{$controller}[0]);
+			foreach ($artwork->editions as $index => $format) {
+				$artwork->editions[$index]->$controller = [new $entity_class()];
+			}
+		}
+//		osd($artwork);die;
 		return $artwork;
 	}
 

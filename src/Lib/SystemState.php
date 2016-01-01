@@ -26,7 +26,7 @@ class SystemState {
 //	];
 
 	protected $map;
-	protected $request;
+	public $request;
 	protected $_current_state;
 	protected $_viewVars;
 

@@ -15,10 +15,25 @@ class AppTable extends Table {
 	public $SystemState;
 	
     public function __construct(array $config = []){
-		parent::__construct($config);
         if (!empty($config['SystemState'])) {
             $this->SystemState = $config['SystemState'];
-        }
+		}
+		parent::__construct($config);
 	}
 	
+	public function belongsTo($associated, array $options = array()) {
+		return parent::belongsTo($associated, [$this->SystemState]);
+	}
+	
+	public function belongsToMany($associated, array $options = array()) {
+		return parent::belongsToMany($associated, [$this->SystemState]);
+	}
+	
+	public function hasMany($associated, array $options = array()) {
+		return parent::hasMany($associated, [$this->SystemState]);
+	}
+	
+	public function hasOne($associated, array $options = array()) {
+		parent::hasOne($associated, [$this->SystemState]);
+	}
 }

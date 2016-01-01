@@ -107,7 +107,7 @@ class MenusTable extends AppTable{
 			function($editions) { return "/editions/refine?artwork={$editions->artwork_id}&edition={$editions->id}"; }
 		);
 		$review = (new Collection($editions))->combine(
-			function($editions) { return $editions->display_title; }, 
+			function($editions) { return $editions->display_title; },
 			function($editions) { return "/editions/review?artwork={$editions->artwork_id}&edition={$editions->id}"; }
 		);
 		$this->menu['Artwork']['Edition'] = [

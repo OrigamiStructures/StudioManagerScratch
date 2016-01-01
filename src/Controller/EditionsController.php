@@ -115,27 +115,21 @@ class EditionsController extends AppController
     }
 	
 	public function refine() {
-//		osd($this->request->data);
 		$artwork = $this->ArtworkStack->stackQuery();
-//		$id = $this->SystemState->queryArg('artwork');
-//		$artwork = $this->Editions->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
-//		osd($artwork);
+		$this->ArtworkStack->layerChoiceLists();
 		$element_management = [
 			'artwork' => 'describe',
 			'edition' => 'fieldset',
 			'format' => 'fieldset',
 		];
 		$this->set('element_management', $element_management);
-//		$this->set('artworks', [$artwork]);
 		$this->set('artwork', $artwork);
-//		$this->ArtworkStack->layerChoiceLists();
 		$this->render('/Artworks/create');
-//		osd($artwork);die;
 	}
 	
 	public function create() {
-//		$this->ArtworkStack->layerChoiceLists();
 		$artwork = $this->ArtworkStack->stackQuery();
+		$this->ArtworkStack->layerChoiceLists();
 		$element_management = [
 			'artwork' => 'describe',
 			'edition' => 'fieldset',
