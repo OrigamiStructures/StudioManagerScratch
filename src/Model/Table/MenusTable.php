@@ -23,6 +23,35 @@ class MenusTable extends AppTable{
 	
     public $menu = ['Artwork' => []];
 	
+	protected $artwork = ['Artwork' => [
+            'Sample' => '/artworks/sample',
+            'View All' => '/artworks/review',
+            'Create' => '/artworks/create',
+			'Review Artwork' => [],
+			'Refine Artwork' => [],
+			'Edition' => [],
+			'Format' => [],
+        ]];
+	protected $member = ['Market' => [
+			'Collectors' => [],
+			'Venues' => [],
+			'Representitives' => [],
+			'Groups' => [],
+		]];
+	protected $disposition = ['Dispostion' => [
+			'Go to Dispo' => '/disposition/index',
+        ]];
+	protected $account = ['Account' => [
+			'Login' => '/users/login',
+			'Logout' => '/users/logout',
+			'Edit My Profile' => '/users/editProfile',
+			'Update Payment Type' => '/users/updatePayment'
+		]];
+	protected $admin = ['Admin' => [
+				'Artist' => [],
+			]];
+
+
 	public function initialize(array $config) {
 		parent::initialize($config);
 	}
@@ -33,6 +62,7 @@ class MenusTable extends AppTable{
 	 * @return array
 	 */
 	public function assemble() {
+		$this->template();
 		$this->artwork();
 		$this->members();
 		$this->disposition();
@@ -42,65 +72,45 @@ class MenusTable extends AppTable{
 	}
 	
 	/**
+	 * Establish the main menu keys and thier order
+	 */
+	protected function template() {
+		$this->menu = $this->artwork + 
+			$this->member + $this->disposition +
+			$this->account + $this->admin;
+	}
+
+		/**
 	 * Makes an Artwork stack menu for the current context
-	 * 
-	 * THIS METHOD DOES NOT produce menus with a consistent order. FIX IT. 
 	 */
 	protected function artwork() {
 		$this->addArtworks();
-		$this->addArtwork();
-		$this->menu['Artwork'] = array_merge_recursive($this->menu['Artwork'], [
-            'Sample' => '/artworks/sample',
-            'View All' => '/artworks/review',
-            'Create' => '/artworks/create',
-			'Review Artwork' => [],
-			'Refine Artwork' => [],
-			'Edition' => [],
-			'Format' => [],
-        ]);
-		// check state for master query to build more layers
+		$this->addEditions();
+		$this->addFormats();
 	}
 	
 	protected function members() {
-		$this->menu['Market'] = [
-			'Collectors' => [],
-			'Venues' => [],
-			'Representitives' => [],
-			'Groups' => [],
-		];
 	}
 	
 	protected function disposition() {
-		$this->menu['Dispostion'] = [
-			'Go to Dispo' => '/disposition/index',
-        ];
 	}
 	
 	protected function account() {
-		$this->menu['Account'] = [
-			'Login' => '/users/login',
-			'Logout' => '/users/logout',
-			'Edit My Profile' => '/users/editProfile',
-			'Update Payment Type' => '/users/updatePayment'
-		];
 	}
 	
 	protected function admin() {
-		if ($this->SystemState->admin('artist')) {
-			$this->menu['Admin'] = [
-				'Artist' => [],
-			];
-		}
 		if ($this->SystemState->admin('system')){
 			$this->menu['Admin']['Logs'] = [];
 			$this->menu['Admin']['Remap States'] = '/artworks/map_states';
 		}
 	}
 
-		/**
+	/**
 	 * Generate navigation choices from a page of Artworks records
 	 * 
-	 * Will produce both a Refine and Review link for each Artwork 
+	 * Will produce both a Refine and Review link for each Artwork.
+	 * Will work automatically for the standard $artworks array that is 
+	 * used to render views, or the $artwork variable if only one is known 
 	 * 
 	 * COMBINE EVERYTHING INTO A SINGLE LOOP?
 	 * 
@@ -108,7 +118,10 @@ class MenusTable extends AppTable{
 	 */
 	protected function addArtworks() {
 		if (is_null($this->SystemState->menu_artworks)) {
-			return;
+			if (is_null($this->SystemState->menu_artwork)) {
+					return;
+			}
+			$artworks = [$this->SystemState->menu_artwork];
 		} else {
 			$artworks = $this->SystemState->menu_artworks;
 		}
@@ -116,7 +129,7 @@ class MenusTable extends AppTable{
 			function($artworks) { return $artworks->title; }, 
 			function($artworks) { return "/artworks/refine?artwork={$artworks->id}"; }
 		);
-		$this->menu['Artwork'] = ['Refine Artwork' => $combined->toArray()];
+		$this->menu['Artwork']['Refine Artwork'] = $combined->toArray();
 		$combined = (new Collection($artworks))->combine(
 			function($artworks) { return $artworks->title; }, 
 			function($artworks) { return "/artworks/review?artwork={$artworks->id}"; }
@@ -128,17 +141,16 @@ class MenusTable extends AppTable{
 	 * Generate navigation choices from a single Artwork record
 	 * 
 	 * Will produce both Refine and Review links for each Edition in the 
-	 * Arwork. SHOULD ALSO PRODUCE Refine and Review for the Artwork and 
-	 * Refine and Review for the Formats (? for the Formats)
+	 * Arwork. SHOULD ALSO PRODUCE Refine and Review for the Formats?
 	 * 
 	 * @return array
 	 */
-	protected function addArtwork(){
+	protected function addEditions(){
 		if (is_null($this->SystemState->menu_artwork)) {
 			return;
-		} else {
-			$editions = $this->SystemState->menu_artwork->editions;
 		}
+		$editions = $this->SystemState->menu_artwork->editions;
+		
 		$refine = (new Collection($editions))->combine(
 			function($editions) { return $editions->display_title; }, 
 			function($editions) { return "/editions/refine?artwork={$editions->artwork_id}&edition={$editions->id}"; }
@@ -152,6 +164,39 @@ class MenusTable extends AppTable{
 			'Refine' => $refine->toArray(),
 			'Review' => $review->toArray(),
 		];
+	}
+	
+	protected function addFormats() {
+		if (is_null($this->SystemState->menu_artwork)) {
+			return;
+		}
+		$editions = $this->SystemState->menu_artwork->editions;
+		$many_editions = count($editions) > 1;
+		
+		foreach ($editions as $index => $edition) {
+			$formats = $edition->formats;
+			$query_args = "?artwork={$edition->artwork_id}&edition={$edition->id}";
+			
+			$refine = $review = [];
+			foreach ($edition->formats as $index => $format) {
+				$refine[$format->display_title] = "/formats/refine$query_args&format={$format->id}";
+				$review[$format->display_title] = "/formats/review$query_args&format={$format->id}";
+			}
+			
+			if ($many_editions) {
+				$this->menu['Artwork']['Format'][$edition->display_title] = [
+					'Create' => "/formats/create$query_args",
+					'Refine' => $refine,
+					'Review' => $review
+				];
+			} else {
+				$this->menu['Artwork']['Format'] = [
+					'Create' => "/formats/create$query_args",
+					'Refine' => $refine,
+					'Review' => $review
+			];
+			}
+		}
 	}
 
 }
