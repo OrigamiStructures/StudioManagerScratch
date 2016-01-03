@@ -100,7 +100,7 @@ class ArtworkStackComponent extends Component {
 				'contain' => $this->full_containment
 			]);
 			// menus need an untouched copy of the query for nav construction
-			$this->controller->set('menu_artwork', clone $artwork);
+			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
@@ -125,7 +125,7 @@ class ArtworkStackComponent extends Component {
 		 * This code got more complicated than I expected. So this clumsy 
 		 * solution could be reviewed.
 		 */
-		if ($controller === 'Editions') {
+		if ($controller == 'editions') {
 			$entity_class = get_class($artwork->{$controller}[0]);
 			$artwork->$controller = [new $entity_class()];
 		} else {
