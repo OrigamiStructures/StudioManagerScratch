@@ -159,19 +159,13 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function pruneEntities($artwork) {
+		$artwork = $this->filterEntities($artwork);
 		$controller = strtolower($this->SystemState->request->controller);
-		/**
-		 * This code got more complicated than I expected. So this clumsy 
-		 * solution could be reviewed.
-		 */
+
 		if ($controller == 'editions') {
-			$entity_class = get_class($artwork->{$controller}[0]);
-			$artwork->$controller = [new $entity_class()];
+			$artwork->editions = [new \App\Model\Entity\Edition()];
 		} else {
-			$entity_class = get_class($artwork->editions[0]->{$controller}[0]);
-			foreach ($artwork->editions as $index => $format) {
-				$artwork->editions[$index]->$controller = [new $entity_class()];
-			}
+			$artwork->editions[0]->formats = [new \App\Model\Entity\Format()];
 		}
 		return $artwork;
 	}
