@@ -111,15 +111,29 @@ class ArtworkStackComponent extends Component {
 		}
 	}
 	
+	/**
+	 * Use URL query arguments to filter the Entity
+	 * 
+	 * 'review' views target specifics memebers of the an Artwork stack. The 
+	 * URL arguments indicate which Edition and possibly which Format the 
+	 * artist wants to see. The query gets everything because that is also the 
+	 * source of data for the menus. This process reduces the Entity stack
+	 * so the view will only have the required information.
+	 * 
+	 * @param Entity $artwork
+	 * @return Entity
+	 */
 	protected function filterEntities($artwork) {
 		if ($this->SystemState->isKnown('edition')) {
 			$edition_id = $this->SystemState->queryArg('edition');
 			$format_id = $this->SystemState->isKnown('format') ? $this->SystemState->queryArg('format') : FALSE;
 			$editions = new Collection($artwork->editions);
+			
 			$edition_result = $editions->filter(function($edition) use ($edition_id, $format_id) {
 				if ($edition->id == $edition_id) {
 					if ($format_id) {
 						$formats = new Collection($edition->formats);
+						
 						$format_result = $formats->filter(function($format) use ($format_id) {
 							return $format->id == $format_id;
 						});
