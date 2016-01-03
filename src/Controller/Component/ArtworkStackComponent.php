@@ -30,7 +30,7 @@ class ArtworkStackComponent extends Component {
 		];
 
 	private $required_tables = [
-		'Artworks', 'Editions', 'Formats', 'Pieces', 'Series', 'Subscriptions', 'Menus'
+		'Artworks', 'Editions', 'Images', 'Formats', 'Pieces', 'Series', 'Subscriptions', 'Menus'
 	];
 		
     public function initialize(array $config) 

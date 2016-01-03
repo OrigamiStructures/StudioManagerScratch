@@ -193,18 +193,17 @@ class ArtworksController extends AppController
 	
 	public function refine() {
 		$id = $this->request->query('artwork');
-		$artwork = $this->Artworks->get($id, ['contain' => ['Editions' => ['Formats']]]);
-		$this->request->data = $artwork;
+		$artwork = $this->ArtworkStack->stackQuery();
 		if (count($artwork['editions']) > 1) {
 			// many editions
 //			$this->request->data['Artwork'] = $artwork;
-			$element_management = [
-				'artwork' => 'fieldset',
-				'edition' => 'full',
+		$element_management = [
+			'artwork' => 'fieldset',
+				'edition' => 'many',
 				'format' => 'none',
 			];
-			$template = 'create';
-			$this->set('editions', $artwork['editions']);
+//			$template = 'create';
+//			$this->set('editions', $artwork['editions']);
 		} else {
 			// single edition, simple flat artwork
 //			$this->request->data['Artwork'] = $artwork;
@@ -212,15 +211,15 @@ class ArtworksController extends AppController
 //			$this->request->data['Format'] = $artwork['editions'][0]['formats'][0];
 			$element_management = [
 				'artwork' => 'fieldset',
-				'edition' => 'fieldset',
-				'format' => 'fieldset',
-			];
-			$template = 'create';
+			'edition' => 'fieldset',
+			'format' => 'fieldset',
+		];
+//			$template = 'create';
 		}
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
 		$this->set('element_management', $element_management);
-		$this->render($template);
+		$this->render('create');
 	}
 	
     /**
