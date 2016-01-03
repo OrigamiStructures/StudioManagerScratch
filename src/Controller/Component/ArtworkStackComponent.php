@@ -104,9 +104,34 @@ class ArtworkStackComponent extends Component {
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
+			} else if ($this->SystemState->is(ARTWORK_REVIEW)) {
+				return $this->filterEntities($artwork);
 			}
 			return $artwork;
 		}
+	}
+	
+	protected function filterEntities($artwork) {
+		if ($this->SystemState->isKnown('edition')) {
+			$edition_id = $this->SystemState->queryArg('edition');
+			$format_id = $this->SystemState->isKnown('format') ? $this->SystemState->queryArg('format') : FALSE;
+			$editions = new Collection($artwork->editions);
+			$edition_result = $editions->filter(function($edition) use ($edition_id, $format_id) {
+				if ($edition->id == $edition_id) {
+					if ($format_id) {
+						$formats = new Collection($edition->formats);
+						$format_result = $formats->filter(function($format) use ($format_id) {
+							return $format->id == $format_id;
+						});
+						$edition->formats = $format_result->toArray();
+					}					
+					return TRUE;
+				}
+				return FALSE;
+			});
+			$artwork->editions = $edition_result->toArray();
+		}
+		return $artwork;
 	}
 	
 	/**
