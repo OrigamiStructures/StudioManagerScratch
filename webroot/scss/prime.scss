@@ -79,9 +79,14 @@ section.artwork {
 	}
 }
 
-legend {
-    background: #ccc none repeat scroll 0 0;
-    color: #7a7a7a;
-    padding-left: 0.3rem;
-    width: 100%;
+form {
+	legend {
+		background: #ccc none repeat scroll 0 0;
+		color: #7a7a7a;
+		padding-left: 0.3rem;
+		width: 100%;
+	}
+	img {
+		width: 30%;
+	}
 }

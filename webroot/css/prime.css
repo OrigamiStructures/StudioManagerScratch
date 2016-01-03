@@ -55,10 +55,12 @@ section.artwork {
       section.artwork h1 {
         margin-bottom: 0; } }
 
-legend {
+form legend {
   background: #ccc none repeat scroll 0 0;
   color: #7a7a7a;
   padding-left: 0.3rem;
   width: 100%; }
+form img {
+  width: 30%; }
 
 /*# sourceMappingURL=prime.css.map */
