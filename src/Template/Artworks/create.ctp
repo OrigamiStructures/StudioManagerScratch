@@ -6,8 +6,7 @@
             echo $this->Form->create($artwork, ['type' => 'file']);
                 echo $this->element('Artwork/' . $element_management['artwork']);
 //                echo $this->element('Series/' . $element_management['series']);
-				echo $this->element('Artwork/image');
-				echo $this->element('Image/artwork_fieldset');
+//				echo $this->element('Image/artwork_fieldset');
 				
 				/**
 				 * Create has no editions, refine of a simple artwork has one.

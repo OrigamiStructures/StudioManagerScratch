@@ -4,3 +4,5 @@
     <?= $this->Form->input('title', ['label' => 'Artwork Title']); ?>
     <?= $this->Form->input('description', ['placeholder' => 'Optional artwork description', 'label' => 'Artwork Description']); ?>
 </fieldset>
+<?= $this->element('Image/artwork_fieldset'); ?>
+
