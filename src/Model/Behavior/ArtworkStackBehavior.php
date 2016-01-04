@@ -68,47 +68,56 @@ class ArtworkStackBehavior extends Behavior {
 	 */
     public function saveStack($data) {
 		osd($data);die;
-		unset($data['id']);
-		unset($data['editions'][0]['id']);
-		unset($data['editions'][0]['formats'][0]['id']);
-		$entity = new Artwork($data);
-		$ed = new Edition($data['editions'][0]);
-		$fo = new Format($data['editions'][0]['formats'][0]);
-		$entity['editions'][0] = $ed;
-		$entity['editions'][0]['formats'][0] = $fo;
-		osd($entity);
-		$Artworks = \Cake\ORM\TableRegistry::get('Artworks');
-		$Editions = \Cake\ORM\TableRegistry::get('Editions');
-		$Formats = \Cake\ORM\TableRegistry::get('Formats');
-		$Artworks->save($entity);
-		osd($entity);
-		die;
-//		$this->success = TRUE;
-        $this->setupEntities($data);
-		// start transaction
-        foreach ($this->stack_members as $entity) {
-            $alias = Inflector::pluralize($entity);
-            $table = \Cake\ORM\TableRegistry::get($alias);
-			
-			if (is_array($this->$entity)) {
-				foreach ($this->$entity as $entity) {
-					if (!$table->save($entity)) {
-						// rollback transaction
-						return FALSE;
-					}
-				}
-			} else {
-				if ($table->save($this->$entity)) {
-//				if (true) {
-					$this->updateAssociations($table);
-				} else {
-					// rollback transaction
-					 return false;
-				}
-			}
-		}
-		
-		return true;
+		// insure null IDs
+		// adjust image nodes
+		// save the stack
+		// analize for Piece requirements
+		// save pieces
+// <editor-fold defaultstate="collapsed" desc="old code">
+//		unset($data['id']);
+//		unset($data['editions'][0]['id']);
+//		unset($data['editions'][0]['formats'][0]['id']);
+//		$entity = new Artwork($data);
+//		$ed = new Edition($data['editions'][0]);
+//		$fo = new Format($data['editions'][0]['formats'][0]);
+//		$entity['editions'][0] = $ed;
+//		$entity['editions'][0]['formats'][0] = $fo;
+//		osd($entity);
+//		$Artworks = \Cake\ORM\TableRegistry::get('Artworks');
+//		$Editions = \Cake\ORM\TableRegistry::get('Editions');
+//		$Formats = \Cake\ORM\TableRegistry::get('Formats');
+//		$Artworks->save($entity);
+//		osd($entity);
+//		die;
+////		$this->success = TRUE;
+//$this->setupEntities($data);
+//		// start transaction
+//foreach ($this->stack_members as $entity) {
+//	$alias = Inflector::pluralize($entity);
+//	$table = \Cake\ORM\TableRegistry::get($alias);
+//
+//
+//	if (is_array($this->$entity)) {
+//				foreach ($this->$entity as $entity) {
+//					if (!$table->save($entity)) {
+//						// rollback transaction
+//						return FALSE;
+//					}
+//				}
+//			} else {
+//				if ($table->save($this->$entity)) {
+////				if (true) {
+//					$this->updateAssociations($table);
+//				} else {
+//					// rollback transaction
+//			return false;
+//				}
+//			}
+//		}
+//
+//		return true; 
+// </editor-fold>
+
     }
 	
 	/**
