@@ -67,7 +67,7 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return boolean Success or failure of the save process
 	 */
     public function saveStack($data) {
-		osd($data);
+		osd($data);die;
 		unset($data['id']);
 		unset($data['editions'][0]['id']);
 		unset($data['editions'][0]['formats'][0]['id']);

@@ -1,5 +1,5 @@
 <!-- Element/Artwork/text.ctp -->
-		<?= $this->Form->input($artwork->id, ['type' => 'hidden']); ?>
+		<?= $this->Form->input('id', ['type' => 'hidden']); ?>
 
 		<?= $this->Html->tag('h1', $artwork->title); ?>
 		<?php

@@ -1,5 +1,6 @@
 <!-- Element/Edition/text.ctp -->
-					<?= $this->Form->input($edition->id, ['type' => 'hidden']); ?>
+<?php $edition_count = isset($edition_count) ? $edition_count : 0 ; ?>
+					<?= $this->Form->input("editions.$edition_count.id", ['type' => 'hidden']); ?>
 
 					<?php
 					if (!empty($edition->series_id)) {

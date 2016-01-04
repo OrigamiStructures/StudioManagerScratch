@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\Table;
 
 /**
  * Editions Controller
@@ -138,6 +139,14 @@ class EditionsController extends AppController
 	 * 
 	 */
 	public function refine() {
+        if ($this->request->is('post') || $this->request->is('put')) {
+			$Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
+            if ($Artworks->saveStack($this->request->data)) {
+                $this->redirect(['action' => 'elementTest']);
+            } else {
+                $this->Flash->error(__('The edition could not be saved. Please, try again.'));
+            }
+        }
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
 		$element_management = [
@@ -159,6 +168,14 @@ class EditionsController extends AppController
 	 * 
 	 */
 	public function create() {
+        if ($this->request->is('post') || $this->request->is('put')) {
+			$Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
+            if ($Artworks->saveStack($this->request->data)) {
+                $this->redirect(['action' => 'elementTest']);
+            } else {
+                $this->Flash->error(__('The edition could not be saved. Please, try again.'));
+            }
+        }
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
 		$element_management = [

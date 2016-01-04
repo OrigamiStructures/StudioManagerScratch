@@ -7,6 +7,6 @@ if ($SystemState->is(ARTWORK_REFINE)) {
 }
 ?>
 <fieldset>
-    <?= $this->Form->input("images.id"); ?>
+    <?= $this->Form->input("image.id"); ?>
     <?= $this->Form->input("image.image", ['type' => 'file']); ?>
 </fieldset>
