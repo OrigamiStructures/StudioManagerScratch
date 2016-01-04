@@ -147,7 +147,7 @@ class EditionsController extends AppController
 		];
 		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
-		$this->render('/Artworks/create');
+		$this->render('/Editions/create');
 	}
 	
 	/**
@@ -168,7 +168,7 @@ class EditionsController extends AppController
 		];
 		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
-		$this->render('/Artworks/create');		
+		$this->render('/Editions/create');		
 	}
 	
 }

@@ -22,3 +22,4 @@ $format_count = isset($format_count) ? $format_count : 0 ;
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.range_start"); ?>
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.range_end"); ?>
 </fieldset>
+<?= $this->element('Image/format_fieldset'); ?>

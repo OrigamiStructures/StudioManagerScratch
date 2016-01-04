@@ -7,13 +7,13 @@
                 echo $this->element('Artwork/' . $element_management['artwork']);
 //              echo $this->element('Series/' . $element_management['series']);
 //				echo $this->element('Image/artwork_fieldset');
+				echo $this->element('Edition/' . $element_management['edition']);
 				
 				/**
 				 * Create has no editions, refine of a simple artwork has one.
 				 * In these caes we let the user edit them directly for simplicity
 				 */
-				if (count($artwork->editions) < 2 ) {
-					echo $this->element('Edition/' . $element_management['edition']);
+				if (count($artwork->editions[0]->formats) < 2 ) {
 					echo $this->element('Format/' . $element_management['format']);
 					echo $this->Form->submit();
 				} else {
@@ -25,10 +25,10 @@
 					echo $this->Form->submit();
 				?>
 				<section class="editions">
-					<p>This artwork includes the following editions</p>
+					<p>This edition includes the following formats</p>
 				<?php
-					$this->set('editions', $artwork->editions);
-					echo $this->element('Edition/' . $element_management['edition']);
+					$this->set('formats', $artwork->editions[0]->formats);
+					echo $this->element('Format/' . $element_management['format']);
 				?>
 				</section>
 				<?php
