@@ -123,11 +123,36 @@ class ArtworkStackBehavior extends Behavior {
 
     }
 	
+	/**
+	 * Set new record IDs to NULL and set artist ownership for new records
+	 * 
+	 * All levels except Artwork might be created in multiples at some future 
+	 * point, so to keep the map operating identically at all levels, the 
+	 * array has an artifical zero-th level added before being passed to 
+	 * the recursive map. On return, the level is removed.
+	 * 
+	 * @param array $data
+	 * @return array
+	 */
 	private function initIDs($data) {
-		return (new Collection($data))->map([$this, 'mapIDs'])->toArray();
+		$artwork = new Collection([$data]);
+		$modified = $artwork->map([$this, 'mapIDs']);
+		return $modified->toArray()[0];
 	}
 	
-	private function mapIDs($record) {
+	/**
+	 * Map proper IDs to new records so they create properly
+	 * 
+	 * If a node's id is empty, it is being created. It won't create properly 
+	 * unless it's set to NULL. These new records also need the current 
+	 * artist_id set (all tables use this value). This data-point is never 
+	 * set in the forms so it always needs to be added. Records that have an 
+	 * ID are considered pre-existing and are passed through untouched. 
+	 * 
+	 * @param array $record
+	 * @return array
+	 */
+	public function mapIDs($record) {
 		if (isset($record->editions)) {
 			$record->editions = (new Collection($record->editions))
 					->map([$this, 'mapIDs'])->toArray();
