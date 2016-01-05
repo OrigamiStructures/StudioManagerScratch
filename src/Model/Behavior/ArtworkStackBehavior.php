@@ -153,15 +153,15 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return array
 	 */
 	public function mapIDs($record) {
-		if (isset($record->editions)) {
-			$record->editions = (new Collection($record->editions))
+		if (isset($record['editions'])) {
+			$record['editions'] = (new Collection($record['editions']))
 					->map([$this, 'mapIDs'])->toArray();
 		}
-		if (isset($record->formats)) {
-			$record->formats = (new Collection($record->formats))
+		if (isset($record['formats'])) {
+			$record['formats'] = (new Collection($record['formats']))
 					->map([$this, 'mapIDs'])->toArray();
 		}
-		if (empty($record->id)) {
+		if ($record['id'] === '') {
 			$record['id'] = NULL;
 			$record['user_id'] = $this->_table->SystemState->artistId();
 		} 
