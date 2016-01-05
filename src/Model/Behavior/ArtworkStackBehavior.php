@@ -67,12 +67,13 @@ class ArtworkStackBehavior extends Behavior {
     public function saveStack($data) {
 		osd($data);
 		// insure null IDs
+		// insure user_id in new entities
 		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
 			$data = $this->initIDs($data);
 		}
-		osd($data, 'after id initialization');
-		// insure user_id in new entities
 		// adjust image nodes
+		$data = $this->initImages($data);
+		osd($data, 'after id initialization');
 		// analize for Piece requirements
 		// save the stack
 		die;
@@ -148,19 +149,24 @@ class ArtworkStackBehavior extends Behavior {
 	 * artist_id set (all tables use this value). This data-point is never 
 	 * set in the forms so it always needs to be added. Records that have an 
 	 * ID are considered pre-existing and are passed through untouched. 
+	 * This interation doesn't go key-by-key, it goes model-layer by 
+	 * model-layer
 	 * 
 	 * @param array $record
 	 * @return array
 	 */
 	public function mapIDs($record) {
+		// if we're on the top 'artwork' level, recurse into editions level
 		if (isset($record['editions'])) {
 			$record['editions'] = (new Collection($record['editions']))
 					->map([$this, 'mapIDs'])->toArray();
 		}
+		// if we're on an edition level, recurse into formats level
 		if (isset($record['formats'])) {
 			$record['formats'] = (new Collection($record['formats']))
 					->map([$this, 'mapIDs'])->toArray();
 		}
+		// only change id data for brand new records
 		if ($record['id'] === '') {
 			$record['id'] = NULL;
 			$record['user_id'] = $this->_table->SystemState->artistId();
@@ -168,40 +174,33 @@ class ArtworkStackBehavior extends Behavior {
 		return $record;
 	}
 
-
-	/**
-	 * Generate the Entities represented in the data
-	 * 
-	 * $data must have top level indexes that match the names of Entity 
-	 * classes. We'll walk through those and do some preliminary adjustments 
-	 * to the data for each Entity. the universal 'user_id' link field will 
-	 * be set and 'id' will be unset if empty (otherwise the id value generated 
-	 * on insert isn't passed back in the Entiy on save). go figure. 
-	 * Once the data is ready, an Entity will be created from it.
-	 * Some Entities take control of the creation of others, so those cases 
-	 * are detected and handled.
-	 * 
-	 * @param array $data The raw request data
-	 */
-    private function setupEntities($data) {
-        foreach ($data as $entity => $columns) {
-			// if not created by earlier process
-			if (!$this->$entity) {
-				if (empty($columns['user_id'])) {
-					$columns['user_id'] = $this->_table->SystemState->artistId();
-				}
-
-				if (empty($columns['id'])) {
-					unset($columns['id']);
-				}
-
-				$entity_class = "App\Model\Entity\\" . $entity;
-				$this->$entity = new $entity_class($columns);
-				
-				$this->mediatedEntitySetup($entity);
-			}			
-        }
-    }
+	private function initImages($data) {
+		$artwork = $this->evaluateImage($data);
+		foreach($artwork['editions'] as $index => $edition) {
+			$formats = new Collection($edition['formats']);
+			$artwork['editions'][$index]['formats'] = $formats->map([$this, 'evaluateImage'])->toArray();
+		}
+		return $artwork;
+	}
+	
+	public function evaluateImage($record) {
+		if (!isset($record['image'])) {
+			return $record;
+		}
+		// if an image is being uploaded, prepare the environment
+		if ($record['image']['image']['name'] !== '') {
+			if ($record['image']['image']['error'] === 0) {
+				// I'm not sure if this is the right thing to do for the upload plugin
+				$record['image_id'] = $record['image']['id'] = NULL;
+			} else {
+				// there was an upload error. what should we do?
+			}
+		} else {
+			// There was no upload request. Dump the image node
+			unset($record['image']);
+		}
+		return $record;
+	}
 	
 	/**
 	 * Factory to select an Entity Setup process
