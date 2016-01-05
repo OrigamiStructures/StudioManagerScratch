@@ -117,11 +117,11 @@ class AppController extends Controller
 		$a = ['a' => 'b', 'c' => 'd', 'e' => 'f'];
 //		$native = array_map( function($value) { return 'pre_'.$value; }, $a );
 //		osd($native);
-		$this->pre = 'per_';
-//		$expand = new \Cake\Collection\Collection($a);
-//		$mapped = $expand->map([$this, 'expander']);
-		$mapped = array_map([$this, 'expander'], $a, array_keys($a));
-		osd($mapped);
+		$this->pre = 'prefix_';
+		$expand = new \Cake\Collection\Collection($a);
+		$mapped = $expand->map([$this, 'expander']);
+//		$mapped = array_map([$this, 'expander'], $a, array_keys($a));
+		osd($mapped->toArray());
 		$this->render('/Artworks/testMe');
 	}
 	

@@ -17,6 +17,7 @@ use App\Model\Entity\Edition;
 use App\Model\Entity\Format;
 use App\Model\Entity\Piece;
 use Cake\Utility\Inflector;
+use Cake\Collection\Collection;
 
 /**
  * CakePHP ArtworkStackBehavior
@@ -58,21 +59,23 @@ class ArtworkStackBehavior extends Behavior {
 	 * </pre>
 	 * All the Entities are created from array data and other logic that 
 	 * controls Entity relationships. Then working from the list of Entities 
-	 * named in this->stack_members, the Entities are saved one at a time. 
-	 * After successful save of each Entity, downstream Entities are updated 
-	 * using new data in the just save object. Mostly, this is a matter of 
-	 * passing association keys down to link things together.
+	 * named in this->stack_members...
 	 * 
 	 * @param array $data this->request-data from the form
 	 * @return boolean Success or failure of the save process
 	 */
     public function saveStack($data) {
-		osd($data);die;
+		osd($data);
 		// insure null IDs
+		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
+			$data = $this->initIDs($data);
+		}
+		osd($data, 'after id initialization');
+		// insure user_id in new entities
 		// adjust image nodes
-		// save the stack
 		// analize for Piece requirements
-		// save pieces
+		// save the stack
+		die;
 // <editor-fold defaultstate="collapsed" desc="old code">
 //		unset($data['id']);
 //		unset($data['editions'][0]['id']);
@@ -120,6 +123,27 @@ class ArtworkStackBehavior extends Behavior {
 
     }
 	
+	private function initIDs($data) {
+		return (new Collection($data))->map([$this, 'mapIDs'])->toArray();
+	}
+	
+	private function mapIDs($record) {
+		if (isset($record->editions)) {
+			$record->editions = (new Collection($record->editions))
+					->map([$this, 'mapIDs'])->toArray();
+		}
+		if (isset($record->formats)) {
+			$record->formats = (new Collection($record->formats))
+					->map([$this, 'mapIDs'])->toArray();
+		}
+		if (empty($record->id)) {
+			$record['id'] = NULL;
+			$record['user_id'] = $this->_table->SystemState->artistId();
+		} 
+		return $record;
+	}
+
+
 	/**
 	 * Generate the Entities represented in the data
 	 * 
