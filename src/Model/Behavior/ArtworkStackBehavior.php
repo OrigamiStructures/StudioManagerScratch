@@ -32,6 +32,8 @@ class ArtworkStackBehavior extends Behavior {
     public $Piece = FALSE;
 	
 	protected $_created;
+	
+	protected $_images_to_delete;
 
 	public $stack_members = [
         'Artwork', // Edition
@@ -47,19 +49,46 @@ class ArtworkStackBehavior extends Behavior {
     }
     
 	/**
-	 * Save based on stadardized TRD stack
+	 * The main save process for an Artwork stack
 	 * 
-	 * The data array is in the old CakePHP 2.x style 
+	 * Artwork/Edition/Format/Piece is the roughly the structure this works on. 
+	 * Create that stems from a Series or that involves Subscriptions are 
+	 * probably going to be handled separatly and from different views.
+	 * 
+	 * Save artwork based on a stadard TRD stack
+	 * 
+	 * The data array is in CakePHP 3.x style 
 	 * <pre>
+	 * // artwork is the root
 	 * [
-	 *	'Artwork' => [column data],
-	 *	'Edition' => [column data],
-	 *	...
+	 *	'id' => value,
+	 *  'artwork_column' => value,
+	 *  'editions' => [
+	 *		0 => [
+	 *			'id' => value,
+	 *			'edition_column' => value,
+	 *			'formats' => [
+	 *				0 => [
+	 *					'id' => value,
+	 *					'format_column' => value,
+	 *					'image' => [
+	 *						'id' => value,
+	 *						'image_column' = value,
+	 *					]
+	 *				]
+	 *			]
+	 *		],
+	 *	'image' => [
+	 *		'id' => value,
+	 *		'image_column' = value,
+	 *	]
 	 * ]
 	 * </pre>
-	 * All the Entities are created from array data and other logic that 
-	 * controls Entity relationships. Then working from the list of Entities 
-	 * named in this->stack_members...
+	 * 1   - make proper IDs for creation
+	 * 1.1 - set user_id in all cases
+	 * 2   - resolve ambiguity about new/old/no image
+	 * 3   - perform proper Piece creation/adjustment
+	 * 4   - save the assembled data in a transaction event
 	 * 
 	 * @param array $data this->request-data from the form
 	 * @return boolean Success or failure of the save process
@@ -73,8 +102,8 @@ class ArtworkStackBehavior extends Behavior {
 		}
 		// adjust image nodes
 		$data = $this->initImages($data);
-		osd($data, 'after id initialization');
 		// analize for Piece requirements
+		osd($data, 'after id initialization');
 		// save the stack
 		die;
 // <editor-fold defaultstate="collapsed" desc="old code">
@@ -175,6 +204,7 @@ class ArtworkStackBehavior extends Behavior {
 	}
 
 	private function initImages($data) {
+		$this->_images_to_delete = [];
 		$artwork = $this->evaluateImage($data);
 		foreach($artwork['editions'] as $index => $edition) {
 			$formats = new Collection($edition['formats']);
@@ -191,6 +221,7 @@ class ArtworkStackBehavior extends Behavior {
 		if ($record['image']['image']['name'] !== '') {
 			if ($record['image']['image']['error'] === 0) {
 				// I'm not sure if this is the right thing to do for the upload plugin
+				$this->_images_to_delete[] = $record['image_id'];
 				$record['image_id'] = $record['image']['id'] = NULL;
 			} else {
 				// there was an upload error. what should we do?
