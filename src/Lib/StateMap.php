@@ -149,6 +149,7 @@ class StateMap {
     'delete' => NULL,
     'register' => NULL,
     'login' => NULL,
+    'logout' => NULL,
     'validateEmail' => NULL,
   ),
 );
