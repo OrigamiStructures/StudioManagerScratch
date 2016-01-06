@@ -18,6 +18,7 @@ use App\Model\Entity\Format;
 use App\Model\Entity\Piece;
 use Cake\Utility\Inflector;
 use Cake\Collection\Collection;
+use Cake\ORM\TableRegistry;
 
 /**
  * CakePHP ArtworkStackBehavior
@@ -48,6 +49,13 @@ class ArtworkStackBehavior extends Behavior {
         parent::__construct($table, $config);
     }
     
+	public function addToSeries($series_id = NULL, $artwork_id = NULL) {
+		// get the series configuration
+		// insure it doesn't exist on the Artwork
+		// build the components on the Artwork
+		// save
+	}
+	
 	/**
 	 * The main save process for an Artwork stack
 	 * 
@@ -95,64 +103,51 @@ class ArtworkStackBehavior extends Behavior {
 	 */
     public function saveStack($data) {
 		osd($data);
-		// insure null IDs
-		// insure user_id in new entities
 		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
 			$data = $this->initIDs($data);
+			
 		}
-		// adjust image nodes
+		$data = $this->initPieces($data);
 		$data = $this->initImages($data);
 		// analize for Piece requirements
 		osd($data, 'after id initialization');
 		// save the stack
 		die;
-// <editor-fold defaultstate="collapsed" desc="old code">
-//		unset($data['id']);
-//		unset($data['editions'][0]['id']);
-//		unset($data['editions'][0]['formats'][0]['id']);
-//		$entity = new Artwork($data);
-//		$ed = new Edition($data['editions'][0]);
-//		$fo = new Format($data['editions'][0]['formats'][0]);
-//		$entity['editions'][0] = $ed;
-//		$entity['editions'][0]['formats'][0] = $fo;
-//		osd($entity);
-//		$Artworks = \Cake\ORM\TableRegistry::get('Artworks');
-//		$Editions = \Cake\ORM\TableRegistry::get('Editions');
-//		$Formats = \Cake\ORM\TableRegistry::get('Formats');
-//		$Artworks->save($entity);
-//		osd($entity);
-//		die;
-////		$this->success = TRUE;
-//$this->setupEntities($data);
-//		// start transaction
-//foreach ($this->stack_members as $entity) {
-//	$alias = Inflector::pluralize($entity);
-//	$table = \Cake\ORM\TableRegistry::get($alias);
-//
-//
-//	if (is_array($this->$entity)) {
-//				foreach ($this->$entity as $entity) {
-//					if (!$table->save($entity)) {
-//						// rollback transaction
-//						return FALSE;
-//					}
-//				}
-//			} else {
-//				if ($table->save($this->$entity)) {
-////				if (true) {
-//					$this->updateAssociations($table);
-//				} else {
-//					// rollback transaction
-//			return false;
-//				}
-//			}
-//		}
-//
-//		return true; 
-// </editor-fold>
-
     }
 	
+	protected function initPieces($data) {
+		$editions = new Collection($data['editions']);
+		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
+			$this->_piece_strategy = 'create';
+		} elseif ($this->_table->SystemState->is(ARTWORK_REFINE)) {
+			$this->_piece_strategy = 'refine';
+		}
+		$editions_with_pieces = $editions->map(function($edition){
+			$result = $this->createPieces($edition);
+			return $result;
+		});
+		$data['editions'] = $editions_with_pieces->toArray();
+		return $data;
+	}
+	
+	protected function createPieces($edition) {
+		$this->Pieces = TableRegistry::get('Pieces');
+		$this->Pieces->SystemState = $this->_table->SystemState;
+		switch ($edition['type']) {
+			case 'Limited Edition':
+			case 'Portfolio':
+			case 'Unique':
+				$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
+				break;
+			case 'Open Edition':
+			case 'Use':
+				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, $edition['quantity']);
+				break;
+		}
+		return $edition;
+	}
+	
+		
 	/**
 	 * Set new record IDs to NULL and set artist ownership for new records
 	 * 

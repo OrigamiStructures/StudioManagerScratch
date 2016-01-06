@@ -6,6 +6,10 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Collection\Collection;
+
+define('NUMBERED_PIECES', 1);
+define('OPEN_PIECES', 0);
 
 /**
  * Pieces Model
@@ -90,4 +94,35 @@ class PiecesTable extends AppTable
         $rules->add($rules->existsIn(['format_id'], 'Formats'));
         return $rules;
     }
+	
+	/**
+	 * Make the specified number of new Piece arrays (for TRD use)
+	 * 
+	 * When new Editions are being created, new Pieces will be needed to fill 
+	 * out the Artwork stack. This method makes the array nodes that, when 
+	 * inserted into the form data, will generate the proper Piece records. 
+	 * You can create and x-to-y record rand by passing a $start value. 
+	 * Control the record data by passing $default array. 
+	 * 
+	 * @param boolean $numbered Numbered or un-numbered pieces (limited or open editions)
+	 * @param integer $count How many pieces are needed
+	 * @param array $default [column => value] to control what data the pieces have
+	 * @param integer $start The index (and number) of the first of the ($count) pieces
+	 */
+	public function spawn($numbered, $count, $default = [], $start = 0) {
+		$columns = $default + [
+			'id' => NULL,
+			'user_id' => $this->SystemState->artistId(),
+			'number' => '',
+		];
+		$pieces = array_fill($start, $count, $columns);
+		if ($numbered) {
+			$number_edition = (new Collection($pieces))->map(function($piece, $index){
+				$piece['number'] = $index;
+				return $piece;
+			});
+			$pieces = $number_edition->toArray();
+		}
+		return $pieces;
+	}
 }

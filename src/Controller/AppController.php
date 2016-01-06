@@ -114,25 +114,13 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
-		$a = ['a' => 'b', 'c' => 'd', 'e' => 'f'];
-//		$native = array_map( function($value) { return 'pre_'.$value; }, $a );
-//		osd($native);
-		$this->pre = 'prefix_';
-		$expand = new \Cake\Collection\Collection($a);
-		$mapped = $expand->map([$this, 'expander']);
-//		$mapped = array_map([$this, 'expander'], $a, array_keys($a));
-		osd($mapped->toArray());
-		$this->render('/Artworks/testMe');
+		$this->c = 0;
+		$a = array_fill(0, 10, [$this->call(), 'value', 'other' => 'thing']);
+		osd($a);
 	}
 	
-	public function expander($value, $key = null, $iterator = null) {
-//		osd(func_get_args());
-		$test = ['a', 'e'];
-		if (in_array($key, $test)) {
-			return $this->pre.$value;
-		} else {
-			return $value;
-		}
+	public function call() {
+		return $this->c++;
 	}
 	
 }
