@@ -150,6 +150,7 @@ class StateMap {
     'register' => NULL,
     'login' => NULL,
     'logout' => NULL,
+    'profile' => NULL,
     'validateEmail' => NULL,
   ),
 );
