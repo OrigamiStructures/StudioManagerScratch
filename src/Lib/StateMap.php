@@ -10,6 +10,7 @@ class StateMap {
     'mapStates' => NULL,
     'afterFilter' => NULL,
     'set' => NULL,
+    '__construct' => NULL,
   ),
   'Artworks' => 
   array (
