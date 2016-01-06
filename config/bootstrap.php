@@ -203,4 +203,5 @@ Type::build('date')->useLocaleParser();
 Type::build('datetime')->useLocaleParser();
 
 Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
-Plugin::load('Users', ['bootstrap' => true, 'routes' => true]);
+Configure::write('Users.config', ['users']);
+Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
