@@ -35,12 +35,12 @@ class SeriesTable extends AppTable
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Editions', [
-            'foreignKey' => 'series_id'
-        ]);
+//        $this->belongsTo('Users', [
+//            'foreignKey' => 'user_id'
+//        ]);
+//        $this->hasMany('Editions', [
+//            'foreignKey' => 'series_id'
+//        ]);
     }
 
     /**

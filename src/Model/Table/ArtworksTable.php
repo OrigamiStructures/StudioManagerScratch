@@ -35,10 +35,10 @@ class ArtworksTable extends AppTable
 		$this->addBehavior('Family');
 		$this->addBehavior('ArtworkStack');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-			'SystemState' => $this->SystemState,
-        ]);
+//        $this->belongsTo('Users', [
+//            'foreignKey' => 'user_id',
+//			'SystemState' => $this->SystemState,
+//        ]);
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
 			'SystemState' => $this->SystemState,
