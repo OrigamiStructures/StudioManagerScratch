@@ -22,7 +22,7 @@ class ArtworkStackComponent extends Component {
 	public $SystemState;
 	
 	protected $full_containment = [
-		'Users', 'Images', 'Editions' => [
+		/*'Users', */'Images', 'Editions' => [
 			'Series', 'Pieces', 'Formats' => [
 				'Images', 'Pieces', 'Subscriptions'
 				]
@@ -37,6 +37,7 @@ class ArtworkStackComponent extends Component {
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
+		TableRegistry::locator($this->controller->locator);
 	}
 
 	/**
@@ -53,12 +54,12 @@ class ArtworkStackComponent extends Component {
 		if (!empty($this->$name)) {
 			return $this->$name;
 		} else if (in_array($name, $this->required_tables)) {
-			/**
+			$this->$name = TableRegistry::get($name);			/**
 			 * This entire if statement was an earlier attempt to get SystemState 
 			 * passed. It failed and so the hack described was added.
 			 */
-			if (TableRegistry::exists($name)) {
-				$this->$name = TableRegistry::get($name);
+//			if (TableRegistry::exists($name)) {
+//				$this->$name = TableRegistry::get($name);
 				/**
 				 * This line is a hack to resolve the problem that I couldn't find a 
 				 * way to get this property to automatically travel into the tables 
@@ -71,10 +72,10 @@ class ArtworkStackComponent extends Component {
 				 * And I didn't look at any strategy that would worm the property down 
 				 * into a behavior (because all the tables don't share a behavior).
 				 */
-				$this->$name->SystemState = $this->controller->SystemState; // HACK
-			} else {
-				$this->$name = TableRegistry::get($name, ['SystemState' => $this->controller->SystemState]);
-			}
+//				$this->$name->SystemState = $this->controller->SystemState; // HACK
+//			} else {
+//				$this->$name = TableRegistry::get($name, ['SystemState' => $this->controller->SystemState]);
+//			}
 			return $this->$name;
 		}
 	}
