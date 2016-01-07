@@ -108,8 +108,11 @@ class ArtworkStackBehavior extends Behavior {
 			
 		}
 		$data = $this->initPieces($data);
-		$data = $this->initImages($data);
+//		$data = $this->initImages($data);
+//		osd($entity);
 		// analize for Piece requirements
+//		$Artwork = TableRegistry::get('Artworks');
+//		$Artwork->save($data);
 		osd($data, 'after id initialization');
 		// save the stack
 		die;
@@ -133,15 +136,15 @@ class ArtworkStackBehavior extends Behavior {
 	protected function createPieces($edition) {
 		$this->Pieces = TableRegistry::get('Pieces');
 		$this->Pieces->SystemState = $this->_table->SystemState;
-		switch ($edition['type']) {
+		switch ($edition->type) {
 			case 'Limited Edition':
 			case 'Portfolio':
 			case 'Unique':
-				$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
+				$edition->pieces = $this->Pieces->spawn(NUMBERED_PIECES, $edition->quantity);
 				break;
 			case 'Open Edition':
 			case 'Use':
-				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, $edition['quantity']);
+				$edition->pieces = $this->Pieces->spawn(OPEN_PIECES, $edition->quantity);
 				break;
 		}
 		return $edition;
@@ -180,21 +183,36 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return array
 	 */
 	public function mapIDs($record) {
+		
 		// if we're on the top 'artwork' level, recurse into editions level
 		if (isset($record['editions'])) {
+			$entity_class = 'App\Model\Entity\Edition';
 			$record['editions'] = (new Collection($record['editions']))
 					->map([$this, 'mapIDs'])->toArray();
-		}
+			
+		} elseif (isset($record['formats'])) {
 		// if we're on an edition level, recurse into formats level
-		if (isset($record['formats'])) {
+			$entity_class = 'App\Model\Entity\Format';
 			$record['formats'] = (new Collection($record['formats']))
 					->map([$this, 'mapIDs'])->toArray();
+			
+		} else {
+			$entity_class = 'App\Model\Entity\Artwork';			
+		}
+		
+		// image is single, just do it in-line and continue. No iteration.
+		if (isset($record['image'])) {
+			$record['image'] = new \App\Model\Entity\Image($record['image']);
 		}
 		// only change id data for brand new records
 		if ($record['id'] === '') {
 			$record['id'] = NULL;
 			$record['user_id'] = $this->_table->SystemState->artistId();
-		} 
+		}
+		return new $entity_class($record);
+	}
+	
+	private function setIDs($record) {
 		return $record;
 	}
 

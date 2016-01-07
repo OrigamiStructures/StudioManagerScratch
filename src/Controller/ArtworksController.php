@@ -230,7 +230,7 @@ class ArtworksController extends AppController
     public function create() {
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+                $this->redirect(['action' => 'review', '?' => ['artwork' => $this->Artworks->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }

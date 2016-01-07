@@ -38,9 +38,9 @@ class SeriesTable extends AppTable
 //        $this->belongsTo('Users', [
 //            'foreignKey' => 'user_id'
 //        ]);
-//        $this->hasMany('Editions', [
-//            'foreignKey' => 'series_id'
-//        ]);
+        $this->hasMany('Editions', [
+            'foreignKey' => 'series_id'
+        ]);
     }
 
     /**

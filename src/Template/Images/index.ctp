@@ -21,7 +21,7 @@
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('user_id') ?></th>
-                <th><?= $this->Paginator->sort('image') ?></th>
+                <th><?= $this->Paginator->sort('image_file') ?></th>
                 <th><?= $this->Paginator->sort('image_dir') ?></th>
                 <th><?= $this->Paginator->sort('mimetype') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
@@ -34,7 +34,7 @@
                 <td><?= h($image->modified) ?></td>
                 <td><?= h($image->created) ?></td>
                 <td><?= $image->has('user') ? $this->Html->link($image->user->id, ['controller' => 'Users', 'action' => 'view', $image->user->id]) : '' ?></td>
-                <td><?= h($image->image) ?></td>
+                <td><?= h($image->image_file) ?></td>
                 <td><?= h($image->image_dir) ?></td>
                 <td><?= h($image->mimetype) ?></td>
                 <td class="actions">

@@ -24,7 +24,7 @@
         <legend><?= __('Edit Image') ?></legend>
         <?php
             echo $this->Form->input('user_id', ['options' => $users, 'empty' => true]);
-            echo $this->Form->input('image');
+            echo $this->Form->input('image_file');
             echo $this->Form->input('image_dir');
             echo $this->Form->input('mimetype');
             echo $this->Form->input('filesize');

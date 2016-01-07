@@ -45,8 +45,8 @@ class AppController extends Controller
 		$this->set('SystemState', $this->SystemState);
 		$this->locator = new CSTableLocator($this->SystemState);
 		$this->tableLocator($this->locator);
-		$time = microtime();
 		parent::__construct($request, $response, $name, $eventManager, $components);
+		
 	}
 	
 	public function beforeFilter(Event $event) {
