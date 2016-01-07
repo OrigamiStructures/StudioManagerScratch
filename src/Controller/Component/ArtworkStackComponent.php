@@ -21,7 +21,7 @@ class ArtworkStackComponent extends Component {
 
 	public $SystemState;
 	
-	protected $full_containment = [
+	public $full_containment = [
 		/*'Users', */'Images', 'Editions' => [
 			'Series', 'Pieces', 'Formats' => [
 				'Images', 'Pieces', 'Subscriptions'

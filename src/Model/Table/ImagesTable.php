@@ -37,12 +37,12 @@ class ImagesTable extends AppTable
 //        $this->belongsTo('Users', [
 //            'foreignKey' => 'user_id'
 //        ]);
-//        $this->hasMany('Artworks', [
-//            'foreignKey' => 'image_id'
-//        ]);
-//        $this->hasMany('Formats', [
-//            'foreignKey' => 'image_id'
-//        ]);
+        $this->hasMany('Artworks', [
+            'foreignKey' => 'image_id'
+        ]);
+        $this->hasMany('Formats', [
+            'foreignKey' => 'image_id'
+        ]);
 //        $this->hasMany('Members', [
 //            'foreignKey' => 'image_id'
 //        ]);

@@ -115,7 +115,12 @@ class PiecesTable extends AppTable
 			'user_id' => $this->SystemState->artistId(),
 			'number' => '',
 		];
-		$pieces = array_fill($start, $count, new \App\Model\Entity\Piece($columns));
+		
+		$i = $start;
+		while ($i < $count) {
+			$pieces[$i++] = new Piece($columns);
+		}
+
 		if ($numbered) {
 			$numbered_edition = (new Collection($pieces))->map(function($piece, $index){
 				$piece->number = $index+1;

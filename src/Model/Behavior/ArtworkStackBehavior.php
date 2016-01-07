@@ -108,14 +108,14 @@ class ArtworkStackBehavior extends Behavior {
 			
 		}
 		$data = $this->initPieces($data);
-//		$data = $this->initImages($data);
-//		osd($entity);
+		$entity = $this->initImages($data);
+		osd($entity, 'after id initialization');
 		// analize for Piece requirements
-//		$Artwork = TableRegistry::get('Artworks');
-//		$Artwork->save($data);
-		osd($data, 'after id initialization');
+		$Artwork = TableRegistry::get('Artworks');
+		osd($Artwork->save($entity), 'result of save');
+//		osd($Artwork->)
 		// save the stack
-		die;
+//		die;
     }
 	
 	protected function initPieces($data) {
@@ -220,28 +220,28 @@ class ArtworkStackBehavior extends Behavior {
 		$this->_images_to_delete = [];
 		$artwork = $this->evaluateImage($data);
 		foreach($artwork['editions'] as $index => $edition) {
-			$formats = new Collection($edition['formats']);
+			$formats = new Collection($edition->formats);
 			$artwork['editions'][$index]['formats'] = $formats->map([$this, 'evaluateImage'])->toArray();
 		}
 		return $artwork;
 	}
 	
 	public function evaluateImage($record) {
-		if (!isset($record['image'])) {
+		if (!isset($record->image)) {
 			return $record;
 		}
 		// if an image is being uploaded, prepare the environment
-		if ($record['image']['image']['name'] !== '') {
-			if ($record['image']['image']['error'] === 0) {
+		if ($record->image['image_file']['name'] !== '') {
+			if ($record->image['image_file']['error'] === 0) {
 				// I'm not sure if this is the right thing to do for the upload plugin
-				$this->_images_to_delete[] = $record['image_id'];
-				$record['image_id'] = $record['image']['id'] = NULL;
+				$this->_images_to_delete[] = $record->image_id;
+				$record->_image_id = $record->image->id = NULL;
 			} else {
 				// there was an upload error. what should we do?
 			}
 		} else {
 			// There was no upload request. Dump the image node
-			unset($record['image']);
+			unset($record->image);
 		}
 		return $record;
 	}
