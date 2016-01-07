@@ -39,15 +39,17 @@ class PiecesTable extends AppTable
         $this->addBehavior('Timestamp');
 //		$this->addBehavior('ArtworkStack');
 
-//        $this->belongsTo('Users', [
-//            'foreignKey' => 'user_id'
-//        ]);
-//        $this->belongsTo('Editions', [
-//            'foreignKey' => 'edition_id'
-//        ]);
-//        $this->belongsTo('Formats', [
-//            'foreignKey' => 'format_id'
-//        ]);
+		if ($this->SystemState->is(ARTWORK_SAVE)) {
+			$this->belongsTo('Users', [
+				'foreignKey' => 'user_id'
+			]);
+			$this->belongsTo('Editions', [
+				'foreignKey' => 'edition_id'
+			]);
+			$this->belongsTo('Formats', [
+				'foreignKey' => 'format_id'
+			]);
+		}
 //        $this->hasMany('Dispositions', [
 //            'foreignKey' => 'piece_id'
 //        ]);

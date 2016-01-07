@@ -230,11 +230,12 @@ class ArtworksController extends AppController
     public function create() {
 		$artwork = new \App\Model\Entity\Artwork();
         if ($this->request->is('post') || $this->request->is('put')) {
+			$this->SystemState->changeTo(ARTWORK_SAVE);
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, 
 				['associated' => $this->ArtworkStack->fullContainment]);
 			osd($artwork);//die;
-            if ($this->Artworks->save($artwork)) {
 //            if ($this->Artworks->saveStack($this->request->data)) {
+            if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));

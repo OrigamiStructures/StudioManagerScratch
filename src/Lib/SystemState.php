@@ -10,6 +10,7 @@ use App\Lib\StateMap;
 define('ARTWORK_CREATE', 1);
 define('ARTWORK_REVIEW', 2);
 define('ARTWORK_REFINE', 4);
+define('ARTWORK_SAVE', 8);
 
 /**
  * Description of SystemState
@@ -47,12 +48,32 @@ class SystemState {
 		return isset($this->_viewVars[$name]) ? $this->_viewVars[$name] : null;
 	}
 
+	/**
+	 * Is the System State current this $state?
+	 * 
+	 * @param integer $state 
+	 * @return boolean
+	 */
 	public function is($state) {
-		return $this->_current_state == strtolower($state);
+		return $this->_current_state == $state;
 	}
 	
+	/**
+	 * Get the current state value
+	 * 
+	 * @return integer
+	 */
 	public function now() {
 		return $this->_current_state;
+	}
+	
+	/**
+	 * Set the system state
+	 * 
+	 * @param integer $state
+	 */
+	public function changeTo($state) {
+		$this->_current_state = $state;
 	}
 	
 	public function map() {
