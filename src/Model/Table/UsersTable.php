@@ -24,7 +24,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Series
  * @property \Cake\ORM\Association\HasMany $Subscriptions
  */
-class UsersTable extends Table
+class UsersTable extends AppTable
 {
 
     /**

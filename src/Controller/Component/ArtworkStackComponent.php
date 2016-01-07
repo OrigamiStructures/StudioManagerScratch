@@ -21,10 +21,10 @@ class ArtworkStackComponent extends Component {
 
 	public $SystemState;
 	
-	protected $full_containment = [
-		'Users', 'Images', 'Editions' => [
-			'Series', 'Pieces', 'Formats' => [
-				'Images', 'Pieces', 'Subscriptions'
+	public $full_containment = [
+		/*'Users', */'Images', 'Editions' => [
+			/*'Series', */'Pieces', 'Formats' => [
+				'Images', 'Pieces', /*'Subscriptions'*/
 				]
 			]
 		];
@@ -37,6 +37,7 @@ class ArtworkStackComponent extends Component {
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
+		TableRegistry::locator($this->controller->locator);
 	}
 
 	/**
@@ -53,28 +54,7 @@ class ArtworkStackComponent extends Component {
 		if (!empty($this->$name)) {
 			return $this->$name;
 		} else if (in_array($name, $this->required_tables)) {
-			/**
-			 * This entire if statement was an earlier attempt to get SystemState 
-			 * passed. It failed and so the hack described was added.
-			 */
-			if (TableRegistry::exists($name)) {
-				$this->$name = TableRegistry::get($name);
-				/**
-				 * This line is a hack to resolve the problem that I couldn't find a 
-				 * way to get this property to automatically travel into the tables 
-				 * when a {Table}->get(id) call is made (which this->stackQuery() does). 
-				 * Setting the property in AppTable construct, overriding the 
-				 * Associtiation build calls in AppTable, addin the property to the 
-				 * Associtiation definitions in the the various tables, having the 
-				 * Controller use a different locateTable class that passes the value... 
-				 * NONE of these techniques worked. I didn't try a {Table}->find(). 
-				 * And I didn't look at any strategy that would worm the property down 
-				 * into a behavior (because all the tables don't share a behavior).
-				 */
-				$this->$name->SystemState = $this->controller->SystemState; // HACK
-			} else {
-				$this->$name = TableRegistry::get($name, ['SystemState' => $this->controller->SystemState]);
-			}
+			$this->$name = TableRegistry::get($name);
 			return $this->$name;
 		}
 	}

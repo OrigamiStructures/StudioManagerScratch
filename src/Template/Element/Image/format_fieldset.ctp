@@ -9,5 +9,5 @@ if ($SystemState->is(ARTWORK_REFINE)) {
 ?>
 <fieldset>
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.image.id"); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.images.image", ['type' => 'file']); ?>
+    <?= $this->Form->input("editions.$edition_count.formats.$format_count.image.image_file", ['type' => 'file']); ?>
 </fieldset>

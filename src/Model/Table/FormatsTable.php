@@ -37,10 +37,13 @@ class FormatsTable extends AppTable
 		$this->addBehavior('Family');
 		$this->addBehavior('ArtworkStack');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id',
-			'SystemState' => $this->SystemState,
-        ]);
+		if ($this->SystemState->is(ARTWORK_SAVE)) {
+			$this->belongsTo('Users',
+					[
+				'foreignKey' => 'user_id',
+				'SystemState' => $this->SystemState,
+			]);
+		}		
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
 			'SystemState' => $this->SystemState,

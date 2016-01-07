@@ -30,24 +30,24 @@ use App\Model\Table\CSTableLocator;
 class AppController extends Controller
 {
 	
-	public function __construct(\Cake\Network\Request $request = null,
-			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
-			$components = null) {
-		
-		$this->SystemState = new SystemState($request);
-		$this->set('SystemState', $this->SystemState);
-		$locator = new CSTableLocator($this->SystemState);
-		$this->tableLocator($locator);
-		
-		parent::__construct($request, $response, $name, $eventManager, $components);
-	}
-	
 	/**
 	 * Class providing system state and artist context
 	 *
 	 * @var SystemState
 	 */
 	public $SystemState;
+	
+	public function __construct(\Cake\Network\Request $request = null,
+			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
+			$components = null) {
+		
+		$this->SystemState = new SystemState($request);
+		$this->set('SystemState', $this->SystemState);
+		$this->locator = new CSTableLocator($this->SystemState);
+		$this->tableLocator($this->locator);
+		parent::__construct($request, $response, $name, $eventManager, $components);
+		
+	}
 	
 	public function beforeFilter(Event $event) {
 		parent::beforeFilter($event);
@@ -112,6 +112,16 @@ class AppController extends Controller
 		$result = parent::set($name, $value);
 		$this->SystemState->storeVars($result->viewVars);
 		return $result;
+	}
+	
+	public function testMe() {
+		$this->c = 0;
+		$a = array_fill(0, 10, [$this->call(), 'value', 'other' => 'thing']);
+		osd($a);
+	}
+	
+	public function call() {
+		return $this->c++;
 	}
 	
 }

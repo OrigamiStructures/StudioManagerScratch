@@ -23,8 +23,8 @@
             <td><?= $image->has('user') ? $this->Html->link($image->user->id, ['controller' => 'Users', 'action' => 'view', $image->user->id]) : '' ?></td>
         </tr>
         <tr>
-            <th><?= __('Image') ?></th>
-            <td><?= h($image->image) ?></td>
+            <th><?= __('Image File') ?></th>
+            <td><?= h($image->image_file) ?></td>
         </tr>
         <tr>
             <th><?= __('Image Dir') ?></th>

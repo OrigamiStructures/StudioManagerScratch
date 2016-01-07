@@ -15,7 +15,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Formats
  * @property \Cake\ORM\Association\HasMany $Members
  */
-class ImagesTable extends Table
+class ImagesTable extends AppTable
 {
 
     /**
@@ -34,18 +34,20 @@ class ImagesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Artworks', [
-            'foreignKey' => 'image_id'
-        ]);
-        $this->hasMany('Formats', [
-            'foreignKey' => 'image_id'
-        ]);
-        $this->hasMany('Members', [
-            'foreignKey' => 'image_id'
-        ]);
+		if ($this->SystemState->is(ARTWORK_SAVE)) {
+			$this->belongsTo('Users', [
+				'foreignKey' => 'user_id'
+			]);
+			$this->hasMany('Artworks', [
+				'foreignKey' => 'image_id'
+			]);
+			$this->hasMany('Formats', [
+				'foreignKey' => 'image_id'
+			]);
+			$this->hasMany('Members', [
+				'foreignKey' => 'image_id'
+			]);
+		}		
     }
 
     /**

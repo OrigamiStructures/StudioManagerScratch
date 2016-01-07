@@ -99,7 +99,15 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function admin() {
-		if ($this->SystemState->admin('system')){
+		if ($this->SystemState->admin()) {
+			
+			$this->menu['Admin'] = 
+				[
+					'Act as me' => [],
+					'Act as...' => [], //$User->artists(),
+				];
+		}
+		if ($this->SystemState->admin(ADMIN_SYSTEM)){
 			$this->menu['Admin']['Logs'] = [];
 			$this->menu['Admin']['Remap States'] = '/artworks/map_states';
 		}
