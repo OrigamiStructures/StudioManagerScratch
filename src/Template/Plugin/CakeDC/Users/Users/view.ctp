@@ -20,7 +20,7 @@
     </ul>
 </div>
 <div class="users view large-10 medium-9 columns">
-    <h2><?= h($Users->id) ?></h2>
+    <h2><?= h($Users->first_name . " " . $Users->last_name) ?></h2>
     <div class="row">
         <div class="large-5 columns strings">
             <h6 class="subheader"><?= __d('Users', 'Id') ?></h6>

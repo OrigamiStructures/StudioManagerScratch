@@ -44,7 +44,7 @@ class MenusTable extends AppTable{
 	protected $account = ['Account' => [
 			'Login' => 'users/users/login',
 			'Logout' => 'users/users/logout',
-			'Edit My Profile' => '/users/editProfile',
+			'Edit My Profile' => '/users/users/profile',
 			'Update Payment Type' => '/users/updatePayment'
 		]];
 	protected $admin = ['Admin' => [
