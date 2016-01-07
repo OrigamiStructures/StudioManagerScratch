@@ -12,6 +12,11 @@ define('ARTWORK_REVIEW', 2);
 define('ARTWORK_REFINE', 4);
 define('ARTWORK_SAVE', 8);
 
+// These will need to be change to something meaningful
+// For now, we can act as admins even though we're users
+define('ADMIN_SYSTEM', 'user'); // 'admin'
+define('ADMIN_ARTIST', 'artist_admin');
+
 /**
  * Description of SystemState
  *
@@ -19,17 +24,46 @@ define('ARTWORK_SAVE', 8);
  */
 class SystemState {
 	
-//	protected $constant = [
-//		ARTWORK_CREATE => 'ARTWORK_CREATE',
-//		ARTWORK_REVIEW => 'ARTWORK_REVIEW',
-//		ARTWORK_REFINE => 'ARTWORK_REFINE',
-//		NULL => 'NULL',
-//	];
-
+	/**
+	 * Controller/action => state map
+	 * 
+	 * To establish a default state for every callable action
+	 *
+	 * @var array
+	 */
 	protected $map;
+	
+	/**
+	 * Cake Request object
+	 *
+	 * @var Request
+	 */
 	public $request;
+	
+	/**
+	 * The current system state
+	 * 
+	 * @var integer
+	 */
 	protected $_current_state;
+	
+	/**
+	 * A local, independent copy of every variable registered for use on the View
+	 *
+	 * @var array
+	 */
 	protected $_viewVars;
+	
+	/**
+	 * Array of types of 'admin' access
+	 * 
+	 * Methods that test for a kind of admin access need to insure only 
+	 * valid admin roles are considered for testing. If the value in question 
+	 * is not in this array, just ignore it altogether. (see $this->admin() )
+	 *
+	 * @var array
+	 */
+	protected $_admin_roles = [ADMIN_SYSTEM, ADMIN_ARTIST];
 
 	public function __construct(Request $request) {
 		$this->request = $request;
@@ -59,25 +93,12 @@ class SystemState {
 	}
 	
 	/**
-	 * Get the current state value
-	 * 
-	 * @return integer
-	 */
-	public function now() {
-		return $this->_current_state;
-	}
-	
-	/**
 	 * Set the system state
 	 * 
 	 * @param integer $state
 	 */
 	public function changeTo($state) {
 		$this->_current_state = $state;
-	}
-	
-	public function map() {
-		return $this->map;
 	}
 	
 	/**
@@ -104,7 +125,7 @@ class SystemState {
 	 * @return string
 	 */
 	public function artistId() {
-		return '1';
+		return $this->request->session()->read('Auth.User.id');
 	}
 	
 	/**
@@ -114,12 +135,18 @@ class SystemState {
 	 * @return boolean
 	 */
 	public function admin($type = NULL) {
+		$user_role = $this->request->session()->read('Auth.User.role');
+		if (is_null($type)) {
+			return in_array($user_role, $this->_admin_roles);
+		} elseif (in_array($type, $this->_admin_roles)) {
+			return strtolower($type) === $user_role;
+		}
+		return false;
 		// Very tentative implementation plan: 
 		// 
 		// needs to sent TRUE if user is and 'artist' admin, meaning 
 		// they need to act as an artist other than themselves. And needs 
 		// to return TRUE for both 'system' and 'artist' for developers
-		return TRUE;
 	}
 	
 	/**
