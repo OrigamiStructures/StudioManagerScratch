@@ -237,7 +237,7 @@ class ArtworksController extends AppController
             if ($this->Artworks->saveStack($this->request->data) || true) {
 //            if ($this->Artworks->save($artwork)) {
 //				osd($artwork);
-				die;
+//				die;
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));

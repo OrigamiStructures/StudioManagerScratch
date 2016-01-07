@@ -107,7 +107,7 @@ class ArtworkStackBehavior extends Behavior {
 			$data = $this->initIDs($data);
 			
 		}
-//		$data = $this->initPieces($data);
+		$data = $this->initPieces($data);
 		$entity = $this->initImages($data);
 		osd($data, 'after id initialization');
 		// analize for Piece requirements
@@ -208,11 +208,11 @@ class ArtworkStackBehavior extends Behavior {
 		// only change id data for brand new records
 		if ($record['id'] === '') {
 			unset($record['id']);
-//			$record['id'] = NULL;
-//			$record['user_id'] = $this->_table->SystemState->artistId();
-//			$record['user'] = new \App\Model\Entity\User(['id' => $this->_table->SystemState->artistId()]);
+			$record['user'] = new \App\Model\Entity\User(['id' => $this->_table->SystemState->artistId()]);
 		}
-		return new $entity_class($record);
+		$entity = new $entity_class($record);
+		$entity->dirty('user_id');
+		return $entity;
 	}
 	
 	private function setIDs($record) {
