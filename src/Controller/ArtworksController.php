@@ -228,9 +228,17 @@ class ArtworksController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
+		$artwork = new \App\Model\Entity\Artwork();
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+			$this->SystemState->changeTo(ARTWORK_SAVE);
+//			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, 
+//				['associated' => $this->ArtworkStack->fullContainment]);
+//			osd($artwork);//die;
+            if ($artwork = $this->Artworks->saveStack($this->request->data)) {
+//            if ($this->Artworks->save($artwork)) {
+//				osd($artwork);
+//				die;
+                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
@@ -242,7 +250,6 @@ class ArtworksController extends AppController
             'format' => 'fieldset'
         ];
 		$this->ArtworkStack->layerChoiceLists();
-		$artwork = new \App\Model\Entity\Artwork();
         
         $this->set(compact('artwork', 'element_management'));
         $this->set('_serialize', ['artwork']);

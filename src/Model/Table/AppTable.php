@@ -20,26 +20,26 @@ class AppTable extends Table {
 		}
 		parent::__construct($config);
 	}
-	
+		
 // <editor-fold defaultstate="collapsed" desc="These overrides didn't work with {table->get(id) calls">
-	public function belongsTo($associated, array $options = array()) {
-		return parent::belongsTo($associated, [$this->SystemState]);
-	}
-
-
-	public function belongsToMany($associated, array $options = array()) {
-		return parent::belongsToMany($associated, [$this->SystemState]);
-	}
-
-
-	public function hasMany($associated, array $options = array()) {
-		return parent::hasMany($associated, [$this->SystemState]);
-	}
-
-
-	public function hasOne($associated, array $options = array()) {
-		parent::hasOne($associated, [$this->SystemState]);
-	}
+//	public function belongsTo($associated, array $options = array()) {
+//		return parent::belongsTo($associated, $options);
+//	}
+//
+//
+//	public function belongsToMany($associated, array $options = array()) {
+//		return parent::belongsToMany($associated, $options);
+//	}
+//
+//
+//	public function hasMany($associated, array $options = array()) {
+//		return parent::hasMany($associated, $options);
+//	}
+//
+//
+//	public function hasOne($associated, array $options = array()) {
+//		parent::hasOne($associated, $options);
+//	}
 
 // </editor-fold>
 	

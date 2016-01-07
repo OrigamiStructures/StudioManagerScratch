@@ -32,12 +32,12 @@ class SubscriptionsTable extends AppTable
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('Formats', [
-            'foreignKey' => 'subscription_id'
-        ]);
+//        $this->belongsTo('Users', [
+//            'foreignKey' => 'user_id'
+//        ]);
+//        $this->hasMany('Formats', [
+//            'foreignKey' => 'subscription_id'
+//        ]);
     }
 
     /**
