@@ -234,7 +234,7 @@ class ArtworksController extends AppController
 //			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, 
 //				['associated' => $this->ArtworkStack->fullContainment]);
 //			osd($artwork);//die;
-            if ($this->Artworks->saveStack($this->request->data) || true) {
+            if ($artwork = $this->Artworks->saveStack($this->request->data)) {
 //            if ($this->Artworks->save($artwork)) {
 //				osd($artwork);
 //				die;

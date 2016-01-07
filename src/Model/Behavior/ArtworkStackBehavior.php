@@ -102,21 +102,19 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return boolean Success or failure of the save process
 	 */
     public function saveStack($data) {
-		osd($data);
-		if ($this->_table->SystemState->is(ARTWORK_SAVE)) {
-			$data = $this->initIDs($data);
-			
-		}
-		$data = $this->initPieces($data);
-		$entity = $this->initImages($data);
-		osd($data, 'after id initialization');
+		// will this work for REVIEW?
+		// it was originally only for CREATE but thats been changed
+		// and SAVE was used to turn on necessary associations in the Tables 
+		// that or unnecessary overhead in REVIEW mode
+//		if ($this->_table->SystemState->is(ARTWORK_SAVE)) {
+		$entity = $this->initIDs($data);
+//		}
+		$entity = $this->initPieces($entity);
+		$entity = $this->initImages($entity);
 		// analize for Piece requirements
 		$Artwork = TableRegistry::get('Artworks');
-		osd($Artwork->save($data), 'result of save');
-		osd($data);
-//		osd($Artwork->)
 		// save the stack
-//		die;
+		return $Artwork->save($entity);
     }
 	
 	protected function initPieces($data) {
@@ -144,8 +142,10 @@ class ArtworkStackBehavior extends Behavior {
 				$edition->pieces = $this->Pieces->spawn(NUMBERED_PIECES, $edition->quantity);
 				break;
 			case 'Open Edition':
+				$edition->pieces = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition->quantity]);
+				break;
 			case 'Use':
-				$edition->pieces = $this->Pieces->spawn(OPEN_PIECES, $edition->quantity);
+				$edition->pieces = $this->Pieces->spawn(OPEN_PIECES, 1);
 				break;
 		}
 		return $edition;
