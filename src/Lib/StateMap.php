@@ -10,6 +10,7 @@ class StateMap {
     'mapStates' => NULL,
     'afterFilter' => NULL,
     'set' => NULL,
+    '__construct' => NULL,
   ),
   'Artworks' => 
   array (
@@ -148,6 +149,8 @@ class StateMap {
     'delete' => NULL,
     'register' => NULL,
     'login' => NULL,
+    'logout' => NULL,
+    'profile' => NULL,
     'validateEmail' => NULL,
   ),
 );

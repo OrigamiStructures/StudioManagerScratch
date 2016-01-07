@@ -42,9 +42,9 @@ class MenusTable extends AppTable{
 			'Go to Dispo' => '/disposition/index',
         ]];
 	protected $account = ['Account' => [
-			'Login' => '/users/login',
-			'Logout' => '/users/logout',
-			'Edit My Profile' => '/users/editProfile',
+			'Login' => 'users/users/login',
+			'Logout' => 'users/users/logout',
+			'Edit My Profile' => '/users/users/profile',
 			'Update Payment Type' => '/users/updatePayment'
 		]];
 	protected $admin = ['Admin' => [
