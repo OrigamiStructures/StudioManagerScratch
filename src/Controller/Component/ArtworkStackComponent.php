@@ -23,8 +23,8 @@ class ArtworkStackComponent extends Component {
 	
 	public $full_containment = [
 		/*'Users', */'Images', 'Editions' => [
-			'Series', 'Pieces', 'Formats' => [
-				'Images', 'Pieces', 'Subscriptions'
+			/*'Series', */'Formats', 'Pieces' => [
+				'Images', 'Pieces', /*'Subscriptions'*/
 				]
 			]
 		];

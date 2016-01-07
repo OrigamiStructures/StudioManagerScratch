@@ -103,16 +103,17 @@ class ArtworkStackBehavior extends Behavior {
 	 */
     public function saveStack($data) {
 		osd($data);
-		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
+		if ($this->_table->SystemState->is(ARTWORK_SAVE)) {
 			$data = $this->initIDs($data);
 			
 		}
-		$data = $this->initPieces($data);
+//		$data = $this->initPieces($data);
 		$entity = $this->initImages($data);
-		osd($entity, 'after id initialization');
+		osd($data, 'after id initialization');
 		// analize for Piece requirements
 		$Artwork = TableRegistry::get('Artworks');
-		osd($Artwork->save($entity), 'result of save');
+		osd($Artwork->save($data), 'result of save');
+		osd($data);
 //		osd($Artwork->)
 		// save the stack
 //		die;
@@ -186,18 +187,18 @@ class ArtworkStackBehavior extends Behavior {
 		
 		// if we're on the top 'artwork' level, recurse into editions level
 		if (isset($record['editions'])) {
-			$entity_class = 'App\Model\Entity\Edition';
+			$entity_class = 'App\Model\Entity\Artwork';
 			$record['editions'] = (new Collection($record['editions']))
 					->map([$this, 'mapIDs'])->toArray();
 			
 		} elseif (isset($record['formats'])) {
 		// if we're on an edition level, recurse into formats level
-			$entity_class = 'App\Model\Entity\Format';
+			$entity_class = 'App\Model\Entity\Edition';
 			$record['formats'] = (new Collection($record['formats']))
 					->map([$this, 'mapIDs'])->toArray();
 			
 		} else {
-			$entity_class = 'App\Model\Entity\Artwork';			
+			$entity_class = 'App\Model\Entity\Format';			
 		}
 		
 		// image is single, just do it in-line and continue. No iteration.
@@ -206,8 +207,10 @@ class ArtworkStackBehavior extends Behavior {
 		}
 		// only change id data for brand new records
 		if ($record['id'] === '') {
-			$record['id'] = NULL;
-			$record['user_id'] = $this->_table->SystemState->artistId();
+			unset($record['id']);
+//			$record['id'] = NULL;
+//			$record['user_id'] = $this->_table->SystemState->artistId();
+//			$record['user'] = new \App\Model\Entity\User(['id' => $this->_table->SystemState->artistId()]);
 		}
 		return new $entity_class($record);
 	}
@@ -235,13 +238,16 @@ class ArtworkStackBehavior extends Behavior {
 			if ($record->image['image_file']['error'] === 0) {
 				// I'm not sure if this is the right thing to do for the upload plugin
 				$this->_images_to_delete[] = $record->image_id;
-				$record->_image_id = $record->image->id = NULL;
+				unset($record->image_id);
+				unset($record->image->id);
+//				$record->_image_id = $record->image->id = NULL;
 			} else {
 				// there was an upload error. what should we do?
 			}
 		} else {
 			// There was no upload request. Dump the image node
 			unset($record->image);
+			unset($record->image_id);
 		}
 		return $record;
 	}
