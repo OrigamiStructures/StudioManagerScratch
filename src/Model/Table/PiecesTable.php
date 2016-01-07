@@ -117,11 +117,11 @@ class PiecesTable extends AppTable
 		];
 		$pieces = array_fill($start, $count, new \App\Model\Entity\Piece($columns));
 		if ($numbered) {
-			$number_edition = (new Collection($pieces))->map(function($piece, $index){
-				$piece->number = $index;
+			$numbered_edition = (new Collection($pieces))->map(function($piece, $index){
+				$piece->number = $index+1;
 				return $piece;
 			});
-			$pieces = $number_edition->toArray();
+			$pieces = $numbered_edition->toArray();
 		}
 		return $pieces;
 	}
