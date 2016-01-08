@@ -132,16 +132,26 @@ class SystemState /*implements EventListenerInterface*/ {
 	 * 
 	 * @return string
 	 */
-	public function artistId() {
-		return $this->request->session()->read('Auth.User.id');
+	public function artistId($id = NULL) {
+		if (is_null($id)) {
+			return $this->request->session()->read('Auth.User.artist_id');
+		} elseif ($id === 'user') {
+			$this->request->session()->write(
+					'Auth.User.artist_id', 
+					$this->request->session()->read('Auth.User.id')
+			);
+		} elseif (!is_null($this->request->session()->read("Auth.User.artists.$id"))) {
+			$id = $this->request->session()->read("Auth.User.artists.$id");
+		}
 	}
 	
 	/**
 	 * 
 	 * @param type $event
 	 */
-	public function setArtistId($event) {
-		osd($event); die;
+	public function loginListener($event) {
+		$this->request->session()->write('Auth.User.artist_id', $this->request->session()->read('Auth.User.id'));
+//		osd($event); die;
 	}
 
 

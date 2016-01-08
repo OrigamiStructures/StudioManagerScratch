@@ -61,7 +61,7 @@ class AppController extends Controller
     public function implementedEvents()
     {
 		$events = [
-            'Users.Component.UsersAuth.afterLogin' => 'setArtistID',
+            'Users.Component.UsersAuth.afterLogin' => 'loginListener',
         ];
 		return array_merge(parent::implementedEvents(), $events);
     }
@@ -70,8 +70,8 @@ class AppController extends Controller
 	 * 
 	 * @param type $event
 	 */
-	public function setArtistId($event) {
-		$this->SystemState->setArtistId($event, ['thing']);
+	public function loginListener($event) {
+		$this->SystemState->loginListener($event);
 	}
 
     /**
