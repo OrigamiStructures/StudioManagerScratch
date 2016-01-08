@@ -70,7 +70,7 @@ class SystemState implements EventListenerInterface {
 		$this->request = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
-		$this->_current_state = $this->map[$this->request->controller][$this->request->action];
+		$this->changeState($this->map[$this->request->controller][$this->request->action]);
 	}
 	
     public function implementedEvents()
@@ -103,9 +103,12 @@ class SystemState implements EventListenerInterface {
 	/**
 	 * Set the system state
 	 * 
+	 * THIS SHOULD SEND A STATECHANGE EVENT
+	 * 
 	 * @param integer $state
 	 */
-	public function changeTo($state) {
+	public function changeState($state) {
+		
 		$this->_current_state = $state;
 	}
 	
