@@ -18,6 +18,7 @@ use Cake\Controller\Controller;
 use Cake\Event\Event;
 use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
+use Cake\ORM\TableRegistry;
 
 /**
  * Application Controller
@@ -43,8 +44,9 @@ class AppController extends Controller
 		
 		$this->SystemState = new SystemState($request);
 		$this->set('SystemState', $this->SystemState);
-		$this->locator = new CSTableLocator($this->SystemState);
-		$this->tableLocator($this->locator);
+		$locator = new CSTableLocator($this->SystemState);
+		$this->tableLocator($locator);
+		TableRegistry::locator($locator);
 		parent::__construct($request, $response, $name, $eventManager, $components);
         $this->eventManager()->on($this->SystemState);
 		

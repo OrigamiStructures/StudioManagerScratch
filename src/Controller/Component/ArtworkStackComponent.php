@@ -7,7 +7,6 @@ use App\Model\Table\FormatsTable;
 use App\Model\Table\PiecesTable;
 use App\Model\Table\SubscriptionsTable;
 use App\Model\Table\SeriesTable;
-use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 //use Cake\Controller\Component\PaginatorComponent;
 
@@ -37,7 +36,6 @@ class ArtworkStackComponent extends Component {
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
-		TableRegistry::locator($this->controller->locator);
 	}
 
 	/**
