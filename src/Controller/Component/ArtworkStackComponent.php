@@ -8,6 +8,7 @@ use App\Model\Table\PiecesTable;
 use App\Model\Table\SubscriptionsTable;
 use App\Model\Table\SeriesTable;
 use Cake\Collection\Collection;
+use Cake\ORM\TableRegistry;
 //use Cake\Controller\Component\PaginatorComponent;
 
 /**
