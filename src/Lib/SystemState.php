@@ -6,6 +6,7 @@ use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Collection\Collection;
 use App\Lib\StateMap;
+use Cake\Event\EventListenerInterface;
 
 define('ARTWORK_CREATE', 1);
 define('ARTWORK_REVIEW', 2);
@@ -22,7 +23,7 @@ define('ADMIN_ARTIST', 'artist_admin');
  *
  * @author dondrake
  */
-class SystemState {
+class SystemState /*implements EventListenerInterface*/ {
 	
 	/**
 	 * Controller/action => state map
@@ -72,6 +73,13 @@ class SystemState {
 		$this->_current_state = $this->map[$this->request->controller][$this->request->action];
 	}
 	
+//    public function implementedEvents()
+//    {
+//        return [
+//            'Users.Component.UsersAuth.afterLogin' => [$this->SystemState, 'setArtistID'],
+//        ];
+//    }
+
 	/**
 	 * Make stored viewVars available
 	 * 
@@ -128,6 +136,15 @@ class SystemState {
 		return $this->request->session()->read('Auth.User.id');
 	}
 	
+	/**
+	 * 
+	 * @param type $event
+	 */
+	public function setArtistId($event) {
+		osd($event); die;
+	}
+
+
 	/**
 	 * Determine the degree (if any) of admin access
 	 * 

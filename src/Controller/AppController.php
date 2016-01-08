@@ -58,6 +58,22 @@ class AppController extends Controller
 		parent::afterFilter($event);
 	}
 
+    public function implementedEvents()
+    {
+		$events = [
+            'Users.Component.UsersAuth.afterLogin' => 'setArtistID',
+        ];
+		return array_merge(parent::implementedEvents(), $events);
+    }
+
+	/**
+	 * 
+	 * @param type $event
+	 */
+	public function setArtistId($event) {
+		$this->SystemState->setArtistId($event, ['thing']);
+	}
+
     /**
      * Initialization hook method.
      *
