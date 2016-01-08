@@ -13,7 +13,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\BelongsTo $Members
  */
-class ContactsTable extends Table
+class ContactsTable extends AppTable
 {
 
     /**

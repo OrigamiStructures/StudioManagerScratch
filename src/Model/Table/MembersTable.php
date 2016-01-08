@@ -17,7 +17,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $Users
  * @property \Cake\ORM\Association\BelongsToMany $Groups
  */
-class MembersTable extends Table
+class MembersTable extends AppTable
 {
 
     /**

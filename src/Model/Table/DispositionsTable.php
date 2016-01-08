@@ -15,7 +15,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsTo $Locations
  * @property \Cake\ORM\Association\BelongsTo $Pieces
  */
-class DispositionsTable extends Table
+class DispositionsTable extends AppTable
 {
 
     /**

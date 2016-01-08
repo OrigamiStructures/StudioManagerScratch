@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
  * Designs Model
  *
  */
-class DesignsTable extends Table
+class DesignsTable extends AppTable
 {
 
     /**
