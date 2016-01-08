@@ -39,16 +39,13 @@ class ArtworksTable extends AppTable
 		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id',
-				'SystemState' => $this->SystemState,
 			]);
 		}		
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
-			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Editions', [
             'foreignKey' => 'artwork_id',
-			'SystemState' => $this->SystemState,
         ]);
     }
 

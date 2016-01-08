@@ -230,7 +230,7 @@ class ArtworksController extends AppController
     public function create() {
 		$artwork = new \App\Model\Entity\Artwork();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$this->SystemState->changeTo(ARTWORK_SAVE);
+			$this->SystemState->changeState(ARTWORK_SAVE);
 //			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, 
 //				['associated' => $this->ArtworkStack->fullContainment]);
 //			osd($artwork);//die;

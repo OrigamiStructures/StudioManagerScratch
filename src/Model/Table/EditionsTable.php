@@ -52,25 +52,20 @@ class EditionsTable extends AppTable
 			$this->belongsTo('Users',
 					[
 				'foreignKey' => 'user_id',
-				'SystemState' => $this->SystemState,
 			]);
 			$this->belongsTo('Artworks',
 					[
 				'foreignKey' => 'artwork_id',
-				'SystemState' => $this->SystemState,
 			]);
 		}		
         $this->belongsTo('Series', [
             'foreignKey' => 'series_id',
-			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Formats', [
             'foreignKey' => 'edition_id',
-			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Pieces', [
             'foreignKey' => 'edition_id',
-			'SystemState' => $this->SystemState,
         ]);
     }
 
