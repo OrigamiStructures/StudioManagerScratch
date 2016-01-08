@@ -48,7 +48,13 @@ class MembersTable extends Table
         $this->hasMany('Locations', [
             'foreignKey' => 'member_id'
         ]);
-        $this->hasMany('Users', [
+        $this->hasMany('Addresses', [
+            'foreignKey' => 'member_id'
+        ]);
+        $this->hasMany('Contacts', [
+            'foreignKey' => 'member_id'
+        ]);
+        $this->hasOne('Users', [
             'foreignKey' => 'member_id'
         ]);
         $this->belongsToMany('Groups', [

@@ -1,20 +1,19 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\Group;
+use App\Model\Entity\Contact;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Groups Model
+ * Contacts Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsToMany $Members
- * @property \Cake\ORM\Association\HowOne $Members
+ * @property \Cake\ORM\Association\BelongsTo $Members
  */
-class GroupsTable extends Table
+class ContactsTable extends Table
 {
 
     /**
@@ -27,8 +26,8 @@ class GroupsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('groups');
-        $this->displayField('name');
+        $this->table('contacts');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -36,13 +35,9 @@ class GroupsTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsToMany('Members', [
-            'foreignKey' => 'group_id',
-            'targetForeignKey' => 'member_id',
-            'joinTable' => 'groups_members'
-        ]);
-        $this->hasOne('Members', [
-            'foreignKey' => 'member_id'
+        $this->belongsTo('Members', [
+            'foreignKey' => 'member_id',
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -59,7 +54,10 @@ class GroupsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('name');
+            ->allowEmpty('label');
+
+        $validator
+            ->allowEmpty('data');
 
         return $validator;
     }
@@ -74,6 +72,7 @@ class GroupsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['member_id'], 'Members'));
         return $rules;
     }
 }

@@ -1,21 +1,19 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Entity\Image;
+use App\Model\Entity\Address;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Images Model
+ * Addresses Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\HasMany $Artworks
- * @property \Cake\ORM\Association\HasMany $Formats
- * @property \Cake\ORM\Association\HasMany $Members
+ * @property \Cake\ORM\Association\BelongsTo $Members
  */
-class ImagesTable extends AppTable
+class AddressesTable extends Table
 {
 
     /**
@@ -28,26 +26,19 @@ class ImagesTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('images');
-        $this->displayField('title');
+        $this->table('addresses');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-			$this->belongsTo('Users', [
-				'foreignKey' => 'user_id'
-			]);
-			$this->hasMany('Artworks', [
-				'foreignKey' => 'image_id'
-			]);
-			$this->hasMany('Formats', [
-				'foreignKey' => 'image_id'
-			]);
-			$this->hasMany('Members', [
-				'foreignKey' => 'image_id'
-			]);
-		}		
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id'
+        ]);
+        $this->belongsTo('Members', [
+            'foreignKey' => 'member_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**
@@ -63,37 +54,25 @@ class ImagesTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('image');
+            ->allowEmpty('address1');
 
         $validator
-            ->allowEmpty('image_dir');
+            ->allowEmpty('address2');
 
         $validator
-            ->allowEmpty('mimetype');
+            ->allowEmpty('address3');
 
         $validator
-            ->allowEmpty('filesize');
+            ->allowEmpty('city');
 
         $validator
-            ->add('width', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('width');
+            ->allowEmpty('state');
 
         $validator
-            ->add('height', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('height');
+            ->allowEmpty('zip');
 
         $validator
-            ->allowEmpty('title');
-
-        $validator
-            ->allowEmpty('date');
-
-        $validator
-            ->allowEmpty('alt');
-
-        $validator
-            ->add('upload', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('upload');
+            ->allowEmpty('country');
 
         return $validator;
     }
@@ -108,6 +87,7 @@ class ImagesTable extends AppTable
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['member_id'], 'Members'));
         return $rules;
     }
 }
