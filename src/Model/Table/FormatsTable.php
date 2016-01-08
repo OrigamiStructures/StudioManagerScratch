@@ -42,24 +42,19 @@ class FormatsTable extends AppTable
 			$this->belongsTo('Users',
 					[
 				'foreignKey' => 'user_id',
-				'SystemState' => $this->SystemState,
 			]);
 		}		
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
-			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Editions', [
             'foreignKey' => 'edition_id',
-			'SystemState' => $this->SystemState,
         ]);
         $this->belongsTo('Subscriptions', [
             'foreignKey' => 'subscription_id',
-			'SystemState' => $this->SystemState,
         ]);
         $this->hasMany('Pieces', [
             'foreignKey' => 'format_id',
-			'SystemState' => $this->SystemState,
         ]);
     }
 

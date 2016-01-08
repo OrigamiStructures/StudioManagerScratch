@@ -6,6 +6,7 @@ use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 use Cake\Collection\Collection;
 use App\Lib\StateMap;
+use Cake\Event\EventListenerInterface;
 
 define('ARTWORK_CREATE', 1);
 define('ARTWORK_REVIEW', 2);
@@ -22,7 +23,7 @@ define('ADMIN_ARTIST', 'artist_admin');
  *
  * @author dondrake
  */
-class SystemState {
+class SystemState implements EventListenerInterface {
 	
 	/**
 	 * Controller/action => state map
@@ -69,9 +70,16 @@ class SystemState {
 		$this->request = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
-		$this->_current_state = $this->map[$this->request->controller][$this->request->action];
+		$this->changeState($this->map[$this->request->controller][$this->request->action]);
 	}
 	
+    public function implementedEvents()
+    {
+        return [
+            'Users.Component.UsersAuth.afterLogin' => 'afterLogin'
+        ];
+    }
+
 	/**
 	 * Make stored viewVars available
 	 * 
@@ -95,9 +103,12 @@ class SystemState {
 	/**
 	 * Set the system state
 	 * 
+	 * THIS SHOULD SEND A STATECHANGE EVENT
+	 * 
 	 * @param integer $state
 	 */
-	public function changeTo($state) {
+	public function changeState($state) {
+		
 		$this->_current_state = $state;
 	}
 	
@@ -122,12 +133,42 @@ class SystemState {
 	 * Admins (and possibly gallery owners in a later phase) will be able to 
 	 * 'act as' an artist rather than only seeing thier own artworks. 
 	 * 
+	 * CODE IMPROVEMENTS =========================== CODE IMPROVEMENTS
+	 * Auth.User.artists [
+	 *		'user' => xxx,
+	 *		'yyyy' => xxx,
+	 * ]
+	 * would allow both variations to be found in the same way. 
+	 * 'yyyy' could be some random string or a name. id's always hidden at 'xxx'
+	 * 
 	 * @return string
 	 */
-	public function artistId() {
-		return $this->request->session()->read('Auth.User.id');
+	public function artistId($id = NULL) {
+		if (is_null($id)) {
+			return $this->request->session()->read('Auth.User.artist_id');
+		}
+		$target_artist = FALSE;
+		if ($id === 'user') {
+			$target_artist = $this->request->session()->read('Auth.User.id');
+		} else {
+			$ta = $this->request->session()->read("Auth.User.artists.$id");
+			$target_artist = is_null($ta) ? FALSE : $ta;
+		}
+		if ($target_artist) {
+			$this->request->session()->write('Auth.User.artist_id', $target_artist);
+		}
 	}
 	
+	/**
+	 * 
+	 * @param type $event
+	 */
+	public function afterLogin($event) {
+		$this->artistId('user');
+//		osd($event); die;
+	}
+
+
 	/**
 	 * Determine the degree (if any) of admin access
 	 * 

@@ -98,12 +98,20 @@ class MenusTable extends AppTable{
 	protected function account() {
 	}
 	
+	/**
+	 * Set up the admin menus for the current circumstance
+	 */
 	protected function admin() {
-		if ($this->SystemState->admin()) {
-			
+		if (!$this->SystemState->admin()) {
+			unset($this->menu['Admin']);
+		} else {
+			// all admins have 'artist spoofing' capabilities
 			$this->menu['Admin'] = 
 				[
 					'Act as me' => [],
+					// Acts as should be a list if there are few than ???
+					// after that limit it should be a link to a choice page. 
+					// Probably a User/Account call to discover the list?
 					'Act as...' => [], //$User->artists(),
 				];
 		}
