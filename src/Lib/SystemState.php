@@ -23,7 +23,7 @@ define('ADMIN_ARTIST', 'artist_admin');
  *
  * @author dondrake
  */
-class SystemState /*implements EventListenerInterface*/ {
+class SystemState implements EventListenerInterface {
 	
 	/**
 	 * Controller/action => state map
@@ -73,12 +73,12 @@ class SystemState /*implements EventListenerInterface*/ {
 		$this->_current_state = $this->map[$this->request->controller][$this->request->action];
 	}
 	
-//    public function implementedEvents()
-//    {
-//        return [
-//            'Users.Component.UsersAuth.afterLogin' => [$this->SystemState, 'setArtistID'],
-//        ];
-//    }
+    public function implementedEvents()
+    {
+        return [
+            'Users.Component.UsersAuth.afterLogin' => 'afterLogin'
+        ];
+    }
 
 	/**
 	 * Make stored viewVars available
@@ -130,18 +130,29 @@ class SystemState /*implements EventListenerInterface*/ {
 	 * Admins (and possibly gallery owners in a later phase) will be able to 
 	 * 'act as' an artist rather than only seeing thier own artworks. 
 	 * 
+	 * CODE IMPROVEMENTS =========================== CODE IMPROVEMENTS
+	 * Auth.User.artists [
+	 *		'user' => xxx,
+	 *		'yyyy' => xxx,
+	 * ]
+	 * would allow both variations to be found in the same way. 
+	 * 'yyyy' could be some random string or a name. id's always hidden at 'xxx'
+	 * 
 	 * @return string
 	 */
 	public function artistId($id = NULL) {
 		if (is_null($id)) {
 			return $this->request->session()->read('Auth.User.artist_id');
-		} elseif ($id === 'user') {
-			$this->request->session()->write(
-					'Auth.User.artist_id', 
-					$this->request->session()->read('Auth.User.id')
-			);
-		} elseif (!is_null($this->request->session()->read("Auth.User.artists.$id"))) {
-			$id = $this->request->session()->read("Auth.User.artists.$id");
+		}
+		$target_artist = FALSE;
+		if ($id === 'user') {
+			$target_artist = $this->request->session()->read('Auth.User.id');
+		} else {
+			$ta = $this->request->session()->read("Auth.User.artists.$id");
+			$target_artist = is_null($ta) ? FALSE : $ta;
+		}
+		if ($target_artist) {
+			$this->request->session()->write('Auth.User.artist_id', $target_artist);
 		}
 	}
 	
@@ -149,8 +160,8 @@ class SystemState /*implements EventListenerInterface*/ {
 	 * 
 	 * @param type $event
 	 */
-	public function loginListener($event) {
-		$this->request->session()->write('Auth.User.artist_id', $this->request->session()->read('Auth.User.id'));
+	public function afterLogin($event) {
+		$this->artistId('user');
 //		osd($event); die;
 	}
 

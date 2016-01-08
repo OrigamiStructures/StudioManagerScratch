@@ -46,6 +46,7 @@ class AppController extends Controller
 		$this->locator = new CSTableLocator($this->SystemState);
 		$this->tableLocator($this->locator);
 		parent::__construct($request, $response, $name, $eventManager, $components);
+        $this->eventManager()->on($this->SystemState);
 		
 	}
 	
@@ -61,17 +62,18 @@ class AppController extends Controller
     public function implementedEvents()
     {
 		$events = [
-            'Users.Component.UsersAuth.afterLogin' => 'loginListener',
+//            'Users.Component.UsersAuth.afterLogin' => 'loginListener',
         ];
 		return array_merge(parent::implementedEvents(), $events);
     }
 
 	/**
+	 * Controller actions to perform on login
 	 * 
 	 * @param type $event
 	 */
 	public function loginListener($event) {
-		$this->SystemState->loginListener($event);
+		
 	}
 
     /**
