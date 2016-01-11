@@ -110,8 +110,8 @@ class ArtworksTable extends AppTable
 	
 	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
 		$this->initImages($data);
-		// also put user nodes in where needed
-		osd($data, 'beforeMarshal has finished its job');
+		$this->initIDs($data); // add in user_ids
+		$this->initPieces($data);
 	}
 	
 }

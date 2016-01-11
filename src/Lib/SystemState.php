@@ -100,7 +100,11 @@ class SystemState implements EventListenerInterface {
 		return $this->_current_state == $state;
 	}
 	
-	/**
+	public function now() {
+		return $this->_current_state;
+	}
+
+		/**
 	 * Set the system state
 	 * 
 	 * THIS SHOULD SEND A STATECHANGE EVENT

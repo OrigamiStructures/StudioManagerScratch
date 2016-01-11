@@ -197,9 +197,7 @@ class ArtworksController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
-			$result = $this->Artworks->save($artwork);
-			osd($result);
-            if ($result) {
+            if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'elementTest']);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -237,7 +235,11 @@ class ArtworksController extends AppController
 		$artwork = new \App\Model\Entity\Artwork();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
-				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
+				'associated' => [
+					'Images', 'Editions', 
+						'Editions.Pieces', 'Editions.Formats', 
+							'Editions.Formats.Images'
+					]
 			]);
             if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);

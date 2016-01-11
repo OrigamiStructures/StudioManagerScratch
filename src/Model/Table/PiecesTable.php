@@ -121,12 +121,12 @@ class PiecesTable extends AppTable
 		
 		$i = $start;
 		while ($i < $count) {
-			$pieces[$i++] = new Piece($columns);
+			$pieces[$i++] = $columns;
 		}
 
 		if ($numbered) {
 			$numbered_edition = (new Collection($pieces))->map(function($piece, $index){
-				$piece->number = $index+1;
+				$piece['number'] = $index+1;
 				return $piece;
 			});
 			$pieces = $numbered_edition->toArray();

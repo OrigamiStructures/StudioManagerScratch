@@ -48,7 +48,7 @@ class ArtworkStackBehavior extends Behavior {
     public function __construct(\Cake\ORM\Table $table, array $config = array()) {
         parent::__construct($table, $config);
     }
-    
+	
 	public function addToSeries($series_id = NULL, $artwork_id = NULL) {
 		// get the series configuration
 		// insure it doesn't exist on the Artwork
@@ -101,56 +101,94 @@ class ArtworkStackBehavior extends Behavior {
 	 * @param array $data this->request-data from the form
 	 * @return boolean Success or failure of the save process
 	 */
-    public function saveStack($data) {
-		// will this work for REVIEW?
-		// it was originally only for CREATE but thats been changed
-		// and SAVE was used to turn on necessary associations in the Tables 
-		// that or unnecessary overhead in REVIEW mode
-//		if ($this->_table->SystemState->is(ARTWORK_SAVE)) {
-//		}
-		$entity = $this->initPieces($entity);
-		$entity = $this->initImages($entity);
-		// analize for Piece requirements
-		$Artwork = TableRegistry::get('Artworks');
-		// save the stack
-		osd($entity);
-		return $Artwork->save($entity);
-    }
+//    public function saveStack($data) {
+//		// will this work for REVIEW?
+//		// it was originally only for CREATE but thats been changed
+//		// and SAVE was used to turn on necessary associations in the Tables 
+//		// that or unnecessary overhead in REVIEW mode
+////		if ($this->_table->SystemState->is(ARTWORK_SAVE)) {
+////		}
+//		$entity = $this->initPieces($entity);
+//		$entity = $this->initImages($entity);
+//		// analize for Piece requirements
+//		$Artwork = TableRegistry::get('Artworks');
+//		// save the stack
+//		osd($entity);
+//		return $Artwork->save($entity);
+//    }
+//	
 	
-	protected function initPieces($data) {
+	/**
+	 * Adjust the Pieces in TRD to match the user's request
+	 * 
+	 * Create and Refine processes have radically different rules for 
+	 * treatment of Pieces. As do the various Edition types. Here we target 
+	 * the handler for each Edition in the Artwork stack and call that 
+	 * handler to set up the save data for the Pieces for the Edition.
+	 * 
+	 * WHAT ABOUT PIECES OF FORMATS?
+	 * 
+	 * @param array $data
+	 * @return array
+	 */
+	public function initPieces($data) {
 		$editions = new Collection($data['editions']);
 		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
-			$this->_piece_strategy = 'create';
+			$piece_strategy = 'createPieces';
 		} elseif ($this->_table->SystemState->is(ARTWORK_REFINE)) {
-			$this->_piece_strategy = 'refine';
+			$piece_strategy = 'refinePieces';
 		}
-		$editions_with_pieces = $editions->map(function($edition){
-			$result = $this->createPieces($edition);
-			return $result;
-		});
+		$editions_with_pieces = $editions->map([$this, $piece_strategy]);
 		$data['editions'] = $editions_with_pieces->toArray();
 		return $data;
 	}
 	
-	protected function createPieces($edition) {
+	/**
+	 * Logic for creation of pieces for new Editions
+	 * 
+	 * @param array $edition
+	 * @return array
+	 */
+	public function createPieces($edition) {
 		$this->Pieces = TableRegistry::get('Pieces');
 		$this->Pieces->SystemState = $this->_table->SystemState;
-		switch ($edition->type) {
+		switch ($edition['type']) {
 			case 'Limited Edition':
 			case 'Portfolio':
 			case 'Unique':
-				$edition->pieces = $this->Pieces->spawn(NUMBERED_PIECES, $edition->quantity);
+				$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
 				break;
 			case 'Open Edition':
-				$edition->pieces = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition->quantity]);
+				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
 				break;
 			case 'Use':
-				$edition->pieces = $this->Pieces->spawn(OPEN_PIECES, 1);
+				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
 				break;
 		}
 		return $edition;
 	}
 	
+	/**
+	 * Logic for allowed editing of Pieces for Editions
+	 * 
+	 * @param array $edition
+	 * @return array
+	 */
+	public function refinePieces($edition) {
+		return $edition;
+	}
+
+
+	/**
+	 * Adjust the Image nodes on TRD to match the user's intention
+	 * 
+	 * beforeMarshal, the Image nodes need to be normalized for proper save. 
+	 * This isolates the nodes from Artworks stack that have an Image node and 
+	 * passes them into the method that resolve the data. 
+	 * 
+	 * @param array $data
+	 * @return array
+	 */
 	public function initImages($data) {
 		$this->_images_to_delete = [];
 		$artwork = $this->evaluateImage($data);
@@ -161,6 +199,12 @@ class ArtworkStackBehavior extends Behavior {
 		return $artwork;
 	}
 	
+	/**
+	 * Resolve the TRD Image data for proper save 
+	 * 
+	 * @param array $record
+	 * @return array
+	 */
 	public function evaluateImage($record) {
 		if (!isset($record['image'])) {
 			return $record;
@@ -170,8 +214,8 @@ class ArtworkStackBehavior extends Behavior {
 			if ($record['image']['image_file']['error'] === 0) {
 				// I'm not sure if this is the right thing to do for the upload plugin
 				$this->_images_to_delete[] = $record['image_id'];
-				unset($record['image_id']);
-				unset($record['image_id']);
+//				unset($record['image_id']);
+//				unset($record['image_id']);
 //				$record->_image_id = $record->image->id = NULL;
 			} else {
 				// there was an upload error. what should we do?
@@ -181,6 +225,65 @@ class ArtworkStackBehavior extends Behavior {
 			unset($record['image']);
 			unset($record['image_id']);
 		}
+		return $record;
+	}
+		
+	/**
+	 * Set artist ownership for new records
+	 * 
+	 * All levels except Artwork might be created in multiples at some future 
+	 * point, so to keep the map operating identically at all levels, the 
+	 * array has an artifical zero-th level added before being passed to 
+	 * the recursive map. On return, the level is removed.
+	 * 
+	 * @param array $data
+	 * @return array
+	 */
+	public function initIDs($data) {
+		$artwork = new Collection([$data]);
+		$modified = $artwork->map([$this, 'mapIDs']);
+		return $modified->toArray()[0];
+	}
+	
+	/**
+	 * Map a user_id to new records so they link properly
+	 * 
+	 * If a node's id is empty, it is being created. These new records need 
+	 * the current artist_id set (all tables use this value). This data-point 
+	 * is never set in the forms so it always needs to be added. Records that 
+	 * have an ID are considered pre-existing and are passed through 
+	 * untouched. This interation doesn't go key-by-key, it goes 
+	 * model-layer by model-layer 
+	 * 
+	 * @param array $record
+	 * @return array
+	 */
+	public function mapIDs($record) {
+		
+		// if we're on the top 'artwork' level, recurse into editions level
+		if (isset($record['editions'])) {
+			$record['editions'] = (new Collection($record['editions']))
+					->map([$this, 'mapIDs'])->toArray();
+			
+		} elseif (isset($record['formats'])) {
+		// if we're on an edition level, recurse into formats level
+			$record['formats'] = (new Collection($record['formats']))
+					->map([$this, 'mapIDs'])->toArray();
+		
+		} elseif (isset($record['image'])) {
+		// if we're on an edition level, recurse into formats level
+			$record['image'] = (new Collection($record['image']))
+					->map([$this, 'mapIDs'])->toArray();
+		}
+		
+		// only change id data for brand new records
+		if ($record['id'] === '') {
+			$record['user_id'] = $this->_table->SystemState->artistId();
+		}
+		return $record;
+	}
+	
+	private function setIDs($record) {
 		return $record;
 	}
 	
