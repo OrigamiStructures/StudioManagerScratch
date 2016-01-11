@@ -210,8 +210,12 @@ class SystemState implements EventListenerInterface {
 	 * @param string $name
 	 * @return string
 	 */
-	public function queryArg($name) {
-		return $this->request->query($name);
+	public function queryArg($name = NULL) {
+		if (!is_null($name)) {
+			return $this->request->query($name);
+		} else {
+			return $this->request->query;
+		}	
 	}
 	
 	/**
