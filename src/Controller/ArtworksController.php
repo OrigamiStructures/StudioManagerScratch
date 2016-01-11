@@ -194,13 +194,12 @@ class ArtworksController extends AppController
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-//			$artwork = new \App\Model\Entity\Artwork();
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
-				'associated' => ['Images', 'Editions', 'Editions.Formats']
+				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
-//			$artwork = $this->Artworks->initImages($artwork);
-			osd($artwork);//die;
-            if ($this->Artworks->save($artwork)) {
+			$result = $this->Artworks->save($artwork);
+			osd($result);
+            if ($result) {
                 $this->redirect(['action' => 'elementTest']);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -237,14 +236,10 @@ class ArtworksController extends AppController
     public function create() {
 		$artwork = new \App\Model\Entity\Artwork();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$this->SystemState->changeState(ARTWORK_SAVE);
-//			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, 
-//				['associated' => $this->ArtworkStack->fullContainment]);
-//			osd($artwork);//die;
-            if ($artwork = $this->Artworks->saveStack($this->request->data)) {
-//            if ($this->Artworks->save($artwork)) {
-//				osd($artwork);
-//				die;
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
+			]);
+            if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));

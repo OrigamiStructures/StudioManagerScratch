@@ -24,7 +24,6 @@ class ArtworksTable extends AppTable
 		$events = [
             'Model.beforeMarshal' => 'beforeMarshal',
         ];
-		osd('registering events in Artworks Table');
 		return array_merge(parent::implementedEvents(), $events);
     }
 
@@ -46,12 +45,9 @@ class ArtworksTable extends AppTable
 		$this->addBehavior('Family');
 		$this->addBehavior('ArtworkStack');
 
-//		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-//		if ($this->SystemState->is(ARTWORK_SAVE)) {
-			$this->belongsTo('Users', [
-				'foreignKey' => 'user_id',
-			]);
-//		}		
+		$this->belongsTo('Users', [
+			'foreignKey' => 'user_id',
+		]);
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
         ]);
@@ -106,7 +102,6 @@ class ArtworksTable extends AppTable
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
 	
-	
 	public function findForDisplay(Query $query, $options) {
 		return $query
 			->where(['user_id' => $options['artist_id'], 'id' => $options['artwork_id']])
@@ -116,7 +111,7 @@ class ArtworksTable extends AppTable
 	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
 		$this->initImages($data);
 		// also put user nodes in where needed
-		osd($data, 'before marshal');
+		osd($data, 'beforeMarshal has finished its job');
 	}
 	
 }

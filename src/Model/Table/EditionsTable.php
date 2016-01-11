@@ -49,14 +49,14 @@ class EditionsTable extends AppTable
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
 //		if ($this->SystemState->is(ARTWORK_SAVE)) {
-			$this->belongsTo('Users',
-					[
-				'foreignKey' => 'user_id',
-			]);
-			$this->belongsTo('Artworks',
-					[
-				'foreignKey' => 'artwork_id',
-			]);
+		$this->belongsTo('Users',
+				[
+			'foreignKey' => 'user_id',
+		]);
+		$this->belongsTo('Artworks',
+				[
+			'foreignKey' => 'artwork_id',
+		]);
 //		}		
         $this->belongsTo('Series', [
             'foreignKey' => 'series_id',
