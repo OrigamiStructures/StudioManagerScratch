@@ -21,7 +21,7 @@ class ArtworksController extends AppController
 		parent::initialize();
 		$this->loadComponent('ArtworkStack');
 	}
-
+	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
 	 * Index method
@@ -192,8 +192,15 @@ class ArtworksController extends AppController
     }
 	
 	public function refine() {
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->Artworks->saveStack($this->request->data)) {
+//			$artwork = new \App\Model\Entity\Artwork();
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Images', 'Editions', 'Editions.Formats']
+			]);
+//			$artwork = $this->Artworks->initImages($artwork);
+			osd($artwork);//die;
+            if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'elementTest']);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));

@@ -48,7 +48,7 @@ class EditionsTable extends AppTable
 		$this->addBehavior('ArtworkStack');
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
+//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users',
 					[
 				'foreignKey' => 'user_id',
@@ -57,7 +57,7 @@ class EditionsTable extends AppTable
 					[
 				'foreignKey' => 'artwork_id',
 			]);
-		}		
+//		}		
         $this->belongsTo('Series', [
             'foreignKey' => 'series_id',
         ]);

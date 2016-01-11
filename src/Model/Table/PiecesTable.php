@@ -40,7 +40,7 @@ class PiecesTable extends AppTable
 //		$this->addBehavior('ArtworkStack');
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
+//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id'
 			]);
@@ -50,7 +50,7 @@ class PiecesTable extends AppTable
 			$this->belongsTo('Formats', [
 				'foreignKey' => 'format_id'
 			]);
-		}
+//		}
 //        $this->hasMany('Dispositions', [
 //            'foreignKey' => 'piece_id'
 //        ]);

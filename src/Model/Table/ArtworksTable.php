@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use ArrayObject;
 
 /**
  * Artworks Model
@@ -16,6 +18,15 @@ use Cake\Validation\Validator;
  */
 class ArtworksTable extends AppTable
 {
+	
+    public function implementedEvents()
+    {
+		$events = [
+            'Model.beforeMarshal' => 'beforeMarshal',
+        ];
+		osd('registering events in Artworks Table');
+		return array_merge(parent::implementedEvents(), $events);
+    }
 
     /**
      * Initialize method
@@ -36,11 +47,11 @@ class ArtworksTable extends AppTable
 		$this->addBehavior('ArtworkStack');
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
+//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id',
 			]);
-		}		
+//		}		
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
         ]);
@@ -49,7 +60,7 @@ class ArtworksTable extends AppTable
         ]);
     }
 
-    /**
+	/**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -101,4 +112,11 @@ class ArtworksTable extends AppTable
 			->where(['user_id' => $options['artist_id'], 'id' => $options['artwork_id']])
 			->contain(['Editions' => ['Pieces', 'Series', 'Formats' => ['Pieces', 'Subscriptions']]]);
 	}
+	
+	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
+		$this->initImages($data);
+		// also put user nodes in where needed
+		osd($data, 'before marshal');
+	}
+	
 }
