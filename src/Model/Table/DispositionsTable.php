@@ -33,7 +33,18 @@ class DispositionsTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-
+		$this->addBehavior('CounterCache', [
+			/**
+			 * Disposition count > 0 prevents Pieces from being assigned to 
+			 * new Formats. At some point we could have a second disp_count 
+			 * that didn't prevent this. These would be pieces in some 
+			 * internal process disposition that didn't lock determine 
+			 * their physical nature (some planning or working stage?)
+			 * In this case we could just do a smart disposition_count 
+			 * instead of doing two count fields.
+			 */
+            'Pieces' => ['disposition_count', /*'internal_dispo_count'*/]
+        ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);

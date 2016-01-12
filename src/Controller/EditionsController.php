@@ -140,15 +140,18 @@ class EditionsController extends AppController
 	 * 
 	 */
 	public function refine() {
+		$this->Artworks = TableRegistry::get('Artworks');
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
-            if ($Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
+			]);
+            if ($this->Artworks->save($artwork)) {
+                $this->redirect(['ontroller' => 'artworks', 'action' => 'review']);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
         }
-		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
 		$element_management = [
 			'artwork' => 'describe',
@@ -169,10 +172,14 @@ class EditionsController extends AppController
 	 * 
 	 */
 	public function create() {
+		$this->Artworks = TableRegistry::get('Artworks');
+		$artwork = new \App\Model\Entity\Artwork();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
-            if ($Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
+			]);
+            if ($this->Artworks->save($artwork)) {
+                $this->redirect(['ontroller' => 'artworks', 'action' => 'review']);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
