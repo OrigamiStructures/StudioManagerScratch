@@ -146,8 +146,14 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
+//			osd($this->request->data);
+//			osd($artwork, 'the save array for edition refine');die;
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['ontroller' => 'artworks', 'action' => 'review']);
+                $this->Flash->success(__('The edition has been changed.'));
+                $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
+					'artwork' => $this->SystemState->queryArg('artwork'),
+					'edition' => $this->SystemState->queryArg('edition')
+						]]);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
@@ -173,18 +179,21 @@ class EditionsController extends AppController
 	 */
 	public function create() {
 		$this->Artworks = TableRegistry::get('Artworks');
-		$artwork = new \App\Model\Entity\Artwork();
+		
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
-				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
+				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
+			osd($this->request->data);
+			osd($artwork, 'the save array for edition create');//die;
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['ontroller' => 'artworks', 'action' => 'review']);
+                $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => ['artwork' => $this->SystemState->queryArg('artwork')]]);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
         }
-		$artwork = $this->ArtworkStack->stackQuery();
+//		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
 		$element_management = [
 			'artwork' => 'describe',
