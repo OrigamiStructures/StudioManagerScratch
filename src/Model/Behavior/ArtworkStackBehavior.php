@@ -162,6 +162,7 @@ class ArtworkStackBehavior extends Behavior {
 				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
 				break;
 			case 'Use':
+				$edition['quantity'] = 1;
 				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
 				break;
 		}
