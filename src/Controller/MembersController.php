@@ -109,4 +109,35 @@ class MembersController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+    
+	/**
+	 * Display one or a page of Members
+	 * 
+	 * Single record vs multiple records will be chosen based on whether the 
+	 * URL query value 'member' is set. If it is, we know the specific 
+	 * Member to display. If not, we'll get a page of them (the current page). 
+	 * 
+	 * Later, some accomodation for Search sets must be made. That may be  
+	 * redirected through here for rendering once the records are found 
+	 * or it may all be handled by another method.
+	 */
+    public function review() {
+        $element_management = [];
+		if ($this->SystemState->isKnown('member')) {
+			$member_element = 'full';
+			$member_variable = 'member';
+            $element_management['address'] = 'full';
+            $element_management['contact'] = 'full';
+		} else {
+			$member_element = 'many';
+			$member_variable = 'members';
+            $element_management['address'] = 'none';
+            $element_management['contact'] = 'none';
+		}
+        $element_management['member'] = $member_element;
+        $query = $this->Members->find('memberReview');
+        $this->set($member_variable, $this->paginate($query));
+        $this->set('element_management', $element_management);
+        $this->set('_serialize', [$member_variable]);
+    }
 }

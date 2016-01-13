@@ -95,4 +95,39 @@ class MembersTable extends AppTable
         $rules->add($rules->existsIn(['image_id'], 'Images'));
         return $rules;
     }
+    
+    /**
+     * Custom finder for the member review action
+     * 
+     * Returns either a list of members or a specific member based upon the existance
+     * of the member query argument
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findMemberReview(Query $query, array $options) {
+        $query = $this->findMemberList($query, $options);
+        if($this->SystemState->isKnown('member')){
+            $query->where([
+               'Member.id' => $this->SystemState->queryArg('member')
+            ]);
+        }
+        return $query;
+    }
+    
+    /**
+     * Custom finder for the memberList
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findMemberList(Query $query, array $options) {
+        $query->where([
+            'Member.active' => 1,
+            'Member.user_id' => $this->SystemState->artistId()
+        ]);
+        return $query;
+    }
 }
