@@ -205,3 +205,15 @@ Type::build('datetime')->useLocaleParser();
 Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
 Configure::write('Users.config', ['users']);
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
+
+
+/**
+ * Constants
+ */
+
+//Member Types for Member/Group
+define('MEMBER_TYPE_INSTITUTION', 'Institution');
+define('MEMBER_TYPE_PERSON', 'Person');
+define('MEMBER_TYPE_USER', 'User');
+define('MEMBER_TYPE_CATEGORY', 'Category');
+
