@@ -13,7 +13,9 @@
  *		- refine
  *		- create
  */
-if ($SystemState->is(ARTWORK_REFINE) && !$SystemState->isKnown('edition')) {
+if ($SystemState->controller() === 'formats') {
+	echo $this->element('Edition/describe');
+} elseif ($SystemState->is(ARTWORK_REFINE) && !$SystemState->isKnown('edition')) {
 	// edition_id is assumed known
 	if ($artwork->edition_count > 1) {
 		// wrap and add a header?

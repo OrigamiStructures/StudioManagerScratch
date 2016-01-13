@@ -15,5 +15,10 @@
  *		- create
  */
 
+if ($SystemState->controller() !== 'artworks') {
+	echo $this->element('Artwork/describe');
+} else {
+	echo $this->element('Artwork/fieldset');
+}
 ?>
 <!-- END Element/Artwork/form_layer.ctp -->

@@ -218,6 +218,14 @@ class SystemState implements EventListenerInterface {
 		}	
 	}
 	
+	public function controller() {
+		return strtolower($this->request->controller);
+	}
+	
+	public function action() {	
+		return strtolower($this->request->action);
+	}
+
 	/**
 	 * Developer Utility to map controller actions
 	 * 
