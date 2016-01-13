@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use App\Model\Entity\Traits\ParentEntity;
 
 /**
  * Edition Entity.
@@ -22,6 +23,8 @@ use Cake\ORM\Entity;
  */
 class Edition extends Entity
 {
+	
+	use Traits\ParentEntityTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
