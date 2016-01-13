@@ -109,13 +109,11 @@ class ArtworkStackComponent extends Component {
 			$editions = new Collection($artwork->editions);
 			
 			$edition_result = $editions->filter(function($edition) use ($edition_id, $format_id) {
-				osd($edition->id == $edition_id, "Edition test {$edition->id} == {$edition_id}");
 				if ($edition->id == $edition_id) {
 					if ($format_id) {
 						$formats = new Collection($edition->formats);
 						
 						$format_result = $formats->filter(function($format) use ($format_id) {
-							osd($format->id == $format_id, "Format test {$format->id} == {$format_id}");
 							return $format->id == $format_id;
 						});
 						$edition->formats = $format_result->toArray();
