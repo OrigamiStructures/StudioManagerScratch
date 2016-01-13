@@ -7,7 +7,7 @@
 #
 # Host: mysql.origamistructures.com (MySQL 5.6.25-log)
 # Database: stud_m
-# Generation Time: 2016-01-11 22:39:51 +0000
+# Generation Time: 2016-01-12 23:02:15 +0000
 # ************************************************************
 
 
@@ -146,10 +146,12 @@ CREATE TABLE `editions` (
   `modified` datetime DEFAULT NULL,
   `user_id` char(36) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
-  `type` varchar(127) DEFAULT NULL,
+  `type` varchar(127) DEFAULT 'Unique',
   `quantity` int(11) NOT NULL DEFAULT '1',
   `artwork_id` int(11) DEFAULT NULL,
   `series_id` int(11) DEFAULT NULL,
+  `unassigned_piece_count` int(11) DEFAULT '0',
+  `assigned_piece_count` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -173,6 +175,7 @@ CREATE TABLE `formats` (
   `image_id` int(11) DEFAULT NULL,
   `edition_id` int(11) DEFAULT NULL,
   `subscription_id` int(11) DEFAULT NULL,
+  `assigned_piece_count` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -330,6 +333,7 @@ CREATE TABLE `pieces` (
   `made` tinyint(1) DEFAULT '0',
   `edition_id` int(11) DEFAULT NULL,
   `format_id` int(11) DEFAULT NULL,
+  `disposition_count` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

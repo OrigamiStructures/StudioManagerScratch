@@ -37,6 +37,13 @@ class PiecesTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+		$this->addBehavior('CounterCache', [
+            'Formats' => ['assigned_piece_count'],
+            'Editions' => ['assigned_piece_count' => [
+				'conditions' => ['Pieces.format_id IS NOT NULL']
+				]
+			]
+        ]);
 //		$this->addBehavior('ArtworkStack');
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
@@ -51,9 +58,9 @@ class PiecesTable extends AppTable
 				'foreignKey' => 'format_id'
 			]);
 //		}
-//        $this->hasMany('Dispositions', [
-//            'foreignKey' => 'piece_id'
-//        ]);
+        $this->hasMany('Dispositions', [
+            'foreignKey' => 'piece_id'
+        ]);
     }
 
     /**

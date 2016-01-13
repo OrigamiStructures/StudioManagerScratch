@@ -11,32 +11,12 @@
  * Format and setting $format_count to its index. BUT HOW IS THIS WORKING 
  * FOR 'CREATE'? I'M A BIT CONFUSED.
  */
-osd($SystemState->now());die;
-if ($SystemState->is('ARTWORK_REFINE')) {
-	$edition_id = $SystemState->queryArg('edition');
-	$format_id = $SystemState->queryArg('format');
-	
-	if (!isset($edition_count) && !is_null($edition_id)) {
-		$edition_max = count($artwork['editions']);
-		$edition_count = 0;
-		while ($artwork['editions'][$edition_count]['id'] != $SystemState->queryArg('edition') && $edition_count < $edition_max) {
-			$edition_count++;
-		}
-	}
-	
-	if (!isset($format_count) && !is_null($format_id)) {
-		$format_max = count($artwork['editions'][$edition_count]['formats']);
-		$format_count = 0;
-		while ($artwork['editions'][$edition_count]['formats']['id'] != $SystemState->queryArg('format') && $format_count < $format_max) {
-			$edition_count++;
-		}
-	}
-}
-
+$edition_count = isset($edition_count) ? $edition_count : 0 ; 
+$format_count = isset($format_count) ? $format_count : 0 ; 
 ?>
 <fieldset>
 	<legend>Format Details</legend>
-	<?php osd($artwork); ?>
+	<?php // osd($artwork); ?>
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.id"); ?>
     <?= $this->Form->input("editions.$edition_count.formats.$format_count.edition_id", 
 			['type' => 'hidden']); ?>

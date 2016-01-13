@@ -46,6 +46,9 @@ class EditionsTable extends AppTable
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
 		$this->addBehavior('ArtworkStack');
+		$this->addBehavior('CounterCache', [
+            'Artworks' => ['edition_count']
+        ]);
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
 //		if ($this->SystemState->is(ARTWORK_SAVE)) {

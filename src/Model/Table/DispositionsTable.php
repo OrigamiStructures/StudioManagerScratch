@@ -45,7 +45,7 @@ class DispositionsTable extends AppTable
 			 */
             'Pieces' => ['disposition_count', /*'internal_dispo_count'*/]
         ]);
-        $this->belongsTo('Users', [
+		$this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
         $this->belongsTo('Members', [
