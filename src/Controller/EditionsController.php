@@ -159,14 +159,14 @@ class EditionsController extends AppController
             }
         }
 		$this->ArtworkStack->layerChoiceLists();
-		$element_management = [
-			'artwork' => 'describe',
-			'edition' => 'fieldset',
-			'format' => 'fieldset',
-		];
-		$this->set('element_management', $element_management);
+//		$element_management = [
+//			'artwork' => 'describe',
+//			'edition' => 'fieldset',
+//			'format' => 'fieldset',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
-		$this->render('/Editions/create');
+		$this->render('/Artworks/create_dev');
 	}
 	
 	/**
@@ -197,14 +197,14 @@ class EditionsController extends AppController
         }
 //		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
-		$element_management = [
-			'artwork' => 'describe',
-			'edition' => 'fieldset',
-			'format' => 'fieldset',
-		];
-		$this->set('element_management', $element_management);
+//		$element_management = [
+//			'artwork' => 'describe',
+//			'edition' => 'fieldset',
+//			'format' => 'fieldset',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
-		$this->render('/Editions/create');		
+		$this->render('/Artworks/create_dev');		
 	}
 	
 }

@@ -158,16 +158,16 @@ class FormatsController extends AppController
             }
         }
 		
-		$artwork = $this->ArtworkStack->stackQuery();
-		$element_management = [
-			'artwork' => 'describe',
-			'edition' => 'describe',
-			'format' => 'fieldset',
-		];
-		$this->set('element_management', $element_management);
+//		$artwork = $this->ArtworkStack->stackQuery();
+//		$element_management = [
+//			'artwork' => 'describe',
+//			'edition' => 'describe',
+//			'format' => 'fieldset',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Editions/create');
+		$this->render('/Artworks/create_dev');
 	}
 	
 	/**
@@ -198,15 +198,15 @@ class FormatsController extends AppController
             }
         }
 		
-		$element_management = [
-			'artwork' => 'describe',
-			'edition' => 'describe',
-			'format' => 'fieldset',
-		];
-		$this->set('element_management', $element_management);
+//		$element_management = [
+//			'artwork' => 'describe',
+//			'edition' => 'describe',
+//			'format' => 'fieldset',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Editions/create');		
+		$this->render('/Artworks/create_dev');		
 	}
 	
 }
