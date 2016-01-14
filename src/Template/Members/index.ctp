@@ -34,7 +34,8 @@
                 <td><?= $this->Number->format($member->id) ?></td>
                 <td><?= h($member->created) ?></td>
                 <td><?= h($member->modified) ?></td>
-                <td><?= h($member->name) ?></td>
+                <td><?= h($member->first_name) ?></td>
+                <td><?= h($member->last_name) ?></td>
                 <td><?= $this->Number->format($member->user_id) ?></td>
                 <td><?= $member->has('image') ? $this->Html->link($member->image->title, ['controller' => 'Images', 'action' => 'view', $member->image->id]) : '' ?></td>
                 <td class="actions">

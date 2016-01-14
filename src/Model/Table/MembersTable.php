@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use ArrayObject;
 
 /**
  * Members Model
@@ -19,6 +21,14 @@ use Cake\Validation\Validator;
  */
 class MembersTable extends AppTable
 {
+    public function implementedEvents()
+    {
+		$events = [
+            'Model.beforeMarshal' => 'beforeMarshal',
+        ];
+		return array_merge(parent::implementedEvents(), $events);
+    }
+
 
     /**
      * Initialize method
@@ -130,4 +140,26 @@ class MembersTable extends AppTable
         ]);
         return $query;
     }
+    
+    /**
+     * Implemented beforeMarshal event
+     * 
+     * @param \App\Model\Table\Event $event
+     * @param \App\Model\Table\ArrayObject $data
+     * @param \App\Model\Table\ArrayObject $options
+     */
+	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
+        osd($data, 'data before');
+        switch ($data['type']) {
+            case MEMBER_TYPE_USER:
+            case MEMBER_TYPE_CATEGORY:
+            case MEMBER_TYPE_INSTITUTION:
+                $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
+                break;
+            case MEMBER_TYPE_PERSON:
+                break;
+        }
+        osd($data, 'data after marshal');
+	}
+	
 }

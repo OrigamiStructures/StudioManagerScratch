@@ -110,6 +110,35 @@ class MembersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
     
+    /**
+     * Creates member records in element based state
+     * 
+     * @return void Redirects on successful add, renders view otherwise.
+     */
+    public function create($type) {
+		$member = new \App\Model\Entity\Member();
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $member = $this->Members->patchEntity($member, $this->request->data);
+            osd($member, 'entity after patch');
+            if ($this->Members->save($member)) {
+                $this->Flash->success(__('The member has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The member could not be saved. Please, try again.'));
+            }
+        }
+		
+        $element_management = [
+            'member' => 'fieldset',
+            'address' => 'fieldset',
+            'contact' => 'fieldset'
+        ];
+        $types = ['Institution', 'Person', 'User', 'Category'];
+        $types = array_combine($types, $types);
+        $this->set(compact('member', 'element_management', 'types'));
+        $this->set('_serialize', ['member']);
+    }
+	
 	/**
 	 * Display one or a page of Members
 	 * 
