@@ -144,6 +144,7 @@ class ArtworkStackComponent extends Component {
 		if ($controller == 'editions') {
 			$artwork->editions = [new \App\Model\Entity\Edition()];
 		} else {
+			osd($artwork);
 			$artwork->editions[0]->formats = [new \App\Model\Entity\Format()];
 		}
 		return $artwork;

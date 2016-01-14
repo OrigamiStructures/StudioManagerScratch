@@ -177,8 +177,8 @@ class ArtworkStackBehavior extends Behavior {
 		return $edition;
 	}
 	
-	public function afterSave(Event $event, ArrayObject $data, ArrayObject $options) {
-		osd(func_get_args());
+	public function afterSave(Event $event/*, ArrayObject $data, ArrayObject $options*/) {
+//		osd(func_get_args());
 	}
 
 		/**
