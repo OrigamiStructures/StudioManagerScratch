@@ -72,6 +72,10 @@ class MembersTable extends AppTable
             'targetForeignKey' => 'group_id',
             'joinTable' => 'groups_members'
         ]);
+        $this->hasOne('Groups',[
+            'className' => 'Groups',
+            'foreignKey' => 'member_id'
+        ]);
     }
 
     /**
@@ -120,7 +124,7 @@ class MembersTable extends AppTable
         $query = $this->findMemberList($query, $options);
         if($this->SystemState->isKnown('member')){
             $query->where([
-               'Member.id' => $this->SystemState->queryArg('member')
+               'Members.id' => $this->SystemState->queryArg('member')
             ]);
         }
         return $query;
@@ -135,9 +139,10 @@ class MembersTable extends AppTable
      */
     public function findMemberList(Query $query, array $options) {
         $query->where([
-            'Member.active' => 1,
-            'Member.user_id' => $this->SystemState->artistId()
+            'Members.active' => 1,
+            'Members.user_id' => $this->SystemState->artistId()
         ]);
+        $query->contain('Groups');
         return $query;
     }
     
