@@ -191,6 +191,11 @@ class ArtworksController extends AppController
         $this->set('_serialize', [$artwork_variable]);
     }
 	
+	/**
+	 * Edit the Artwork layer and deeper layers if the work is 'flat'
+	 * 
+	 * A 'flat' artwork would have one Edition with one Format
+	 */
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -198,7 +203,7 @@ class ArtworksController extends AppController
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['action' => 'elementTest']);
+                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }

@@ -185,10 +185,12 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
-			osd($this->request->data);
-			osd($artwork, 'the save array for edition create');//die;
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => ['artwork' => $this->SystemState->queryArg('artwork')]]);
+                $this->redirect([
+					'controller' => 'editions', 
+					'action' => 'review', 
+					'?' => ['artwork' => $this->SystemState->queryArg('artwork')]
+				]);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }

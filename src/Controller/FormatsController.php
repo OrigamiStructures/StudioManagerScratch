@@ -146,7 +146,13 @@ class FormatsController extends AppController
 				'associated' => ['Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['ontroller' => 'artworks', 'action' => 'review']);
+                $this->redirect([
+					'controller' => 'artworks', 
+					'action' => 'review',
+					'?' => [
+						'artwork' => $this->SystemState->queryArg('artwork'),
+						'format' => $this->SystemState->queryArg('edition')
+					]]);
             } else {
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
             }
@@ -180,7 +186,13 @@ class FormatsController extends AppController
 				'associated' => ['Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['ontroller' => 'artworks', 'action' => 'review']);
+                $this->redirect([
+					'controller' => 'artworks', 
+					'action' => 'review',
+					'?' => [
+						'artwork' => $this->SystemState->queryArg('artwork'),
+						'format' => $this->SystemState->queryArg('edition')
+					]]);
             } else {
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
             }
