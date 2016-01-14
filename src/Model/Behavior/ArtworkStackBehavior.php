@@ -19,6 +19,8 @@ use App\Model\Entity\Piece;
 use Cake\Utility\Inflector;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
+use Cake\Event\Event;
+use ArrayObject;
 
 /**
  * CakePHP ArtworkStackBehavior
@@ -175,7 +177,11 @@ class ArtworkStackBehavior extends Behavior {
 		return $edition;
 	}
 	
-	/**
+	public function afterSave(Event $event, ArrayObject $data, ArrayObject $options) {
+		osd(func_get_args());
+	}
+
+		/**
 	 * Logic for allowed editing of Pieces for Editions
 	 * 
 	 * @param array $edition
