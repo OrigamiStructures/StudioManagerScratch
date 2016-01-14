@@ -180,7 +180,6 @@ class MembersTable extends AppTable
      * @return Entity
      */
     public function completeMemberEntity($data, $type) {
-        osd($data, 'entry data');
         $contacts = $data->get('contacts');
         if(!isset($contacts)){
             $contacts[0]=[
@@ -204,7 +203,6 @@ class MembersTable extends AppTable
             $data->set('addresses', $addresses);
         }
         $data->set('type', $type);
-        osd($data, 'exit data');
         return $data;
     }
 	
