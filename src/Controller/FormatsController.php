@@ -180,10 +180,10 @@ class FormatsController extends AppController
 	 */
 	public function create() {
 		$this->Artworks = TableRegistry::get('Artworks');
-		$artwork = new \App\Model\Entity\Artwork();
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
-				'associated' => ['Editions.Formats.Images']
+				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
                 $this->redirect([
@@ -198,7 +198,6 @@ class FormatsController extends AppController
             }
         }
 		
-		$artwork = $this->ArtworkStack->stackQuery();
 		$element_management = [
 			'artwork' => 'describe',
 			'edition' => 'describe',

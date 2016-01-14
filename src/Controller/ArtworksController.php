@@ -237,7 +237,7 @@ class ArtworksController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
-		$artwork = $this->emptyStack(); 
+		$artwork = $this->ArtworkStack->creationStack(); 
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => [
@@ -265,12 +265,4 @@ class ArtworksController extends AppController
 		$this->render('create_dev');
     }
 	
-	private function emptyStack() {
-//		$image = new \App\Model\Entity\Image([]);
-		$format = new \App\Model\Entity\Format([/*'image' => $image*/]);
-		$edition = new \App\Model\Entity\Edition(['formats' => [$format]]);
-		$artwork = new \App\Model\Entity\Artwork(['editions' => [$edition], /*'image'=> $image*/]);
-		
-		return $artwork; 
-	}
 }

@@ -193,4 +193,31 @@ class ArtworkStackComponent extends Component {
 		return [$formats, $series, $subscriptions];
 	}
 	
+	/**
+	 * Make an entity to support Artwork stack layer creation
+	 * 
+	 * Creation may happen at any level and in those cases the upstream 
+	 * IDs (or other data) may be required. For later 'patching' and 
+	 * proper linking of new records, this allows any layer data to be
+	 * passed in.
+	 * 
+	 * @param array $data
+	 * @return \App\Model\Entity\Artwork
+	 */
+	public function creationStack($data = []) {
+//		$image = new \App\Model\Entity\Image([]);
+		$format_data = isset($data['format']) ? $data['format'] : [];
+		$format = new \App\Model\Entity\Format($format_data);
+		
+		$edition_data = (isset($data['edition']) ? $data['edition'] : []) + 
+			['formats' => [$format]];
+		$edition = new \App\Model\Entity\Edition($edition_data);
+		
+		$artwork_data = (isset($data['artwork']) ? $data['artwork'] : []) + 
+			['editions' => [$edition], /*'image'=> $image*/];
+		$artwork = new \App\Model\Entity\Artwork($artwork_data);
+		
+		return $artwork; 
+	}
+	
 }

@@ -146,25 +146,31 @@ class ArtworkStackBehavior extends Behavior {
 	/**
 	 * Logic for creation of pieces for new Editions
 	 * 
+	 * Direct creation of refinment of a Format for an existing Edition 
+	 * does not require Piece creation. Those calls are bounced. Later 
+	 * a better, more comprehensive Piece handling plan will be required.
+	 * 
 	 * @param array $edition
 	 * @return array
 	 */
 	public function createPieces($edition) {
-		$this->Pieces = TableRegistry::get('Pieces');
-		$this->Pieces->SystemState = $this->_table->SystemState;
-		switch ($edition['type']) {
-			case 'Limited Edition':
-			case 'Portfolio':
-			case 'Unique':
-				$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
-				break;
-			case 'Open Edition':
-				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
-				break;
-			case 'Use':
-				$edition['quantity'] = 1;
-				$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
-				break;
+		if ($this->_table->SystemState->controller() !== 'formats') {
+			$this->Pieces = TableRegistry::get('Pieces');
+			$this->Pieces->SystemState = $this->_table->SystemState;
+			switch ($edition['type']) {
+				case 'Limited Edition':
+				case 'Portfolio':
+				case 'Unique':
+					$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
+					break;
+				case 'Open Edition':
+					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
+					break;
+				case 'Use':
+					$edition['quantity'] = 1;
+					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
+					break;
+			}
 		}
 		return $edition;
 	}
