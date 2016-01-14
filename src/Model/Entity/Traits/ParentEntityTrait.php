@@ -9,16 +9,12 @@ namespace App\Model\Entity\Traits;
 trait ParentEntityTrait {
 	
 		public function indexOfRelated($association, $format_id) {
-		$index = FALSE;
-		$count = 0;
-		$max = count($this->$association);
-		if ( $max > 0) {
-			while ($count < $max && $this->{$association}[$count]->id != $format_id) {
-				$count++;
+		foreach ($this->$association as $index => $entity) {
+			if ($this->{$association}[$index]->id == $format_id) {
+				return $index;
 			}
-			$index = $count !== $max ? $count : FALSE;
 		}
-		return $index;
+		return FALSE;
 	}
 
 }

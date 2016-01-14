@@ -11,23 +11,23 @@
  * Format and setting $format_count to its index. BUT HOW IS THIS WORKING 
  * FOR 'CREATE'? I'M A BIT CONFUSED.
  */
-$edition_count = isset($edition_count) ? $edition_count : 0 ; 
-$format_count = isset($format_count) ? $format_count : 0 ; 
+$edition_index = isset($edition_index) ? $edition_index : 0 ; 
+$format_index = isset($format_index) ? $format_index : 0 ; 
 ?>
 <fieldset>
 	<legend>Format Details</legend>
 	<?php // osd($artwork); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.id"); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.edition_id", 
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.id"); ?>
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.edition_id", 
 			['type' => 'hidden']); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.title", 
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.title", 
 			['placeholder' => 'Optional Format Title', 'label' => 'Format Title']); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.description", 
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
 			['placeholder' => 'Media, size and other format details']); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.range_flag"); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.range_start"); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.range_end"); ?>
-    <?= $this->Form->input("editions.$edition_count.formats.$format_count.image_id", 
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.range_start"); ?>
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.range_end"); ?>
+    <?= $this->Form->input("editions.$edition_index.formats.$format_index.image_id", 
 			['type' => 'hidden']); ?>
 </fieldset>
 <?= $this->element('Image/format_fieldset'); ?>

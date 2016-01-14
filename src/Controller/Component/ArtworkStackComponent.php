@@ -138,14 +138,14 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function pruneEntities($artwork) {
-		$artwork = $this->filterEntities($artwork);
+//		$artwork = $this->filterEntities($artwork);
 		$controller = strtolower($this->SystemState->request->controller);
 
 		if ($controller == 'editions') {
 			$artwork->editions = [new \App\Model\Entity\Edition()];
 		} else {
-			osd($artwork);
-			$artwork->editions[0]->formats = [new \App\Model\Entity\Format()];
+			$edition_index = $artwork->indexOfRelated('editions', $this->SystemState->queryArg('edition'));
+			$artwork->editions[$edition_index]->formats = [new \App\Model\Entity\Format()];
 		}
 		return $artwork;
 	}
