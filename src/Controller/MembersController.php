@@ -117,22 +117,20 @@ class MembersController extends AppController
      */
     public function create($type) {
 		$member = new \App\Model\Entity\Member();
+        $member = $this->Members->completeMemberEntity($member, $type);
         if ($this->request->is('post') || $this->request->is('put')) {
             $member = $this->Members->patchEntity($member, $this->request->data);
-            osd($member, 'entity after patch');
+            osd($member, 'entity after patch');//die;
+//            $member->dirty('group', TRUE);
+            osd($member, 'entity after dirty');//die;
             if ($this->Members->save($member)) {
+                osd("member saved");die;
                 $this->Flash->success(__('The member has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'review']);
             } else {
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
-		
-        $element_management = [
-            'member' => 'fieldset',
-            'address' => 'fieldset',
-            'contact' => 'fieldset'
-        ];
         $types = ['Institution', 'Person', 'User', 'Category'];
         $types = array_combine($types, $types);
         $this->set(compact('member', 'element_management', 'types'));

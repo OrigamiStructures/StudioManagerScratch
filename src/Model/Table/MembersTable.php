@@ -160,6 +160,7 @@ class MembersTable extends AppTable
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_INSTITUTION:
                 $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
+                $data['group']['user_id'] = $this->SystemState->artistId();
                 break;
             case MEMBER_TYPE_PERSON:
                 break;
@@ -167,5 +168,44 @@ class MembersTable extends AppTable
         $data['user_id'] = $this->SystemState->artistId();
         osd($data, 'data after marshal');
 	}
+    
+    /**
+     * Complete the member entity for creation and editing
+     * 
+     * When an entity is built for member creation, or an entity found for editing. Make sure
+     * it has at least one address and two contact records for easy editing of the complete
+     * package.
+     * 
+     * @param Entity $data
+     * @return Entity
+     */
+    public function completeMemberEntity($data, $type) {
+        osd($data, 'entry data');
+        $contacts = $data->get('contacts');
+        if(!isset($contacts)){
+            $contacts[0]=[
+                'user_id' => $this->SystemState->artistId(),
+                'label' => 'email',
+                'primary' => 1
+                ];
+            $contacts[1]=[
+                'user_id' => $this->SystemState->artistId(),
+                'label' => 'phone'
+                ];
+            $data->set('contacts', $contacts);
+        }
+        $addresses = $data->get('addresses');
+        if(!isset($addresses)){
+            $addresses[0]=[
+                'user_id' => $this->SystemState->artistId(),
+                'label' => 'main',
+                'primary' => 1
+                ];
+            $data->set('addresses', $addresses);
+        }
+        $data->set('type', $type);
+        osd($data, 'exit data');
+        return $data;
+    }
 	
 }
