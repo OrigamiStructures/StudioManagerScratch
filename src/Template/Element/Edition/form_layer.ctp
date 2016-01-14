@@ -18,8 +18,16 @@ if ($SystemState->controller() === 'formats') {
 } elseif ($SystemState->is(ARTWORK_REFINE) && !$SystemState->isKnown('edition')) {
 	// edition_id is assumed known
 	if ($artwork->edition_count > 1) {
-		// wrap and add a header?
-		echo $this->element('Edition/many');
+		
+		
+		/**
+		 * THE DOM IN THIS SECTION IS A BAD HACK
+		 */
+		$this->set('editions', $artwork->editions);
+		echo $this->Html->tag('section', $this->element('Edition/many'), ['class' => 'editions']);
+//		echo $this->element('Edition/many');
+		
+		
 	} else {
 		// format_index 0
 		echo $this->element('Edition/fieldset');

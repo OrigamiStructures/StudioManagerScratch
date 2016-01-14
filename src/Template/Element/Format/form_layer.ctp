@@ -17,6 +17,7 @@ if ($SystemState->is(ARTWORK_REFINE) && !$SystemState->isKnown('format')) {
 	// edition_id is assumed known
 	if ($artwork->editions[$edition_index]->format_count > 1) {
 		// wrap and add a header?
+		$this->set('formats', $artwork->editions[$edition_index]->formats);
 		echo $this->element('Format/many');
 	} else {
 		// format_index 0
