@@ -48,7 +48,7 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function _getDisplayTitle() {
-		$title = empty($this->_properties['type']) ? $this->_properties['description'] : $this->_properties['type'];
+		$title = empty($this->_properties['title']) ? $this->_properties['description'] : $this->_properties['title'];
 		return "$title";
 	}
 	

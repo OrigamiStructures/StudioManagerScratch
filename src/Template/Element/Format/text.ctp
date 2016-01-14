@@ -4,6 +4,9 @@
 							<?= $this->Html->tag('p', $format->displayTitle, ['class' => 'format']); ?>
 
 							<?php
+							if (!empty($format->title)) {
+								echo $this->Html->tag('p', $format->description);
+							}
 							$pieces = isset($format->pieces) ? count($format->pieces) : 0;
 							$piece_lable = $pieces === 1 ? 'piece' : 'pieces';
 							if ($pieces === 0) {
