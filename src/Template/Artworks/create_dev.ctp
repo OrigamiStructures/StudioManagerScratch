@@ -4,13 +4,15 @@
 $edition_index = $SystemState->isKnown('edition') ?
 	$artwork->indexOfRelated('editions', $SystemState->queryArg('edition')) :
 	0 ;
+$editions = $artwork->editions;
 $edition = $artwork->editions[$edition_index];
 // set $format_index
 $format_index = $SystemState->isKnown('format') ?
 	$edition->indexOfRelated('formats', $SystemState->queryArg('format')) :
 	0 ;
+$formats = $edition->formats;
 $format = $edition->formats[$format_index];
-$this->set(compact('edition_index', 'format_index'));
+$this->set(compact('editions', 'edition', 'edition_index', 'formats', 'format', 'format_index'));
 ?>
 <section class="artwork">
 	<div class="row artwork">
@@ -33,21 +35,21 @@ $this->set(compact('edition_index', 'format_index'));
 			 */
 				echo $this->element('Artwork/form_layer');
 				
-				if ($SystemState->request->controller === 'artworks' && 
-						$artworks->edition_count > 1) {
+				if ($SystemState->controller() === 'artworks' && 
+						$artwork->edition_count > 1) {
 					echo $this->Form->submit();
 				}
 				
 				echo $this->element('Edition/form_layer');
 				
-				if ($SystemState->request->controller === 'editions' && 
+				if ($SystemState->controller() === 'editions' && 
 						$edition->format_count > 1) {
 					echo $this->Form->submit();
 				}
 				
 				echo $this->element('Format/form_layer');
 				
-				if ($SystemState->request->controller === 'formats' || 
+				if ($SystemState->controller() === 'formats' || 
 						($artwork->edition_count < 2 && $edition->format_count < 2)) {
 					echo $this->Form->submit();
 				}
