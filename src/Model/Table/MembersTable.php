@@ -159,6 +159,7 @@ class MembersTable extends AppTable
             case MEMBER_TYPE_PERSON:
                 break;
         }
+        $data['user_id'] = $this->SystemState->artistId();
         osd($data, 'data after marshal');
 	}
 	
