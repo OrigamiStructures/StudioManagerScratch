@@ -106,7 +106,7 @@ class StateMap {
     'delete' => NULL,
       'create' => NULL,
       'review' => NULL,
-      'revise' => NULL
+      'refine' => NULL
   ),
   'Menus' => 
   array (
