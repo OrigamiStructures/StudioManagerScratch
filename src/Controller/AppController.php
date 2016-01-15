@@ -20,6 +20,7 @@ use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Lib\SState;
+use App\Controller\Component\PieceAssignmentComponent;
 
 /**
  * Application Controller
@@ -136,9 +137,20 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
-		$this->c = 0;
-		$a = array_fill(0, 10, [$this->call(), 'value', 'other' => 'thing']);
-		osd($a);
+		$art1 = $this->loadComponent('PieceAssignment', ['artwork_id' => 2]);
+		osd($art1->stack, 'art1 stack');
+//		$art1->initialize(['artwork_id' => 2]);
+//		osd($art1);
+		
+		$ed = 'indexOfEdition';
+		$fo = 'indexOfFormat';
+//		osd(preg_match('/indexOf(.*)/', $none, $match));
+//		osd($match);
+//		preg_match('/indexOf(.*)/', $good, $match);
+//		osd($match);
+		osd($art1->stack->indexOfEdition(6), 'index of edition 6');
+		osd($art1->stack->indexOfEdition(2), 'index of edition 1');
+		osd($art1->stack->returnEdition(6));
 	}
 	
 	public function call() {

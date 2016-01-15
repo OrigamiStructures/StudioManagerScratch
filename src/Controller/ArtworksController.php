@@ -243,10 +243,11 @@ class ArtworksController extends AppController
 				'associated' => [
 					/*'Images', */'Editions', 
 						'Editions.Pieces', 'Editions.Formats', 
-							'Editions.Formats.Images'
+							'Editions.Formats.Images', 'Editions.Formats.Pieces'
 					]
 			]);
             if ($this->Artworks->save($artwork)) {
+//				$this->stackCounts($artwork->id);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -264,5 +265,5 @@ class ArtworksController extends AppController
         $this->set('_serialize', ['artwork']);
 		$this->render('create_dev');
     }
-	
+
 }
