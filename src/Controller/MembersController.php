@@ -170,10 +170,12 @@ class MembersController extends AppController
     
     public function revise() {
         //insert guard for only a single record
-        if(!isset($this->SystemState->queryArg('member'))){
+        if(!$this->SystemState->isKnown('member')){
+            osd('not known');
             $this->Flash->error(__('You must provide a single member id to edit'));
-            $this->redirect($this->referer());
+            return $this->redirect($this->referer());
         }
+        osd($this->SystemState->isKnown('member'));die;
 //        $query = $this->Members->find('memberReview');
 //        $query->first();
 //        $query->contain(['Addresses', 'Contacts', 'Groups']);
