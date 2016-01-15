@@ -168,10 +168,19 @@ class MembersController extends AppController
         $this->set('_serialize', [$member_variable]);
     }
     
-    public function revise($id = NULL) {
-        $member = $this->Members->get($id, [
+    public function revise() {
+        //insert guard for only a single record
+        if(!isset($this->SystemState->queryArg('member'))){
+            $this->Flash->error(__('You must provide a single member id to edit'));
+            $this->redirect($this->referer());
+        }
+//        $query = $this->Members->find('memberReview');
+//        $query->first();
+//        $query->contain(['Addresses', 'Contacts', 'Groups']);
+        $member = $this->Members->get($this->SystemState->queryArg('member'), [
             'contain' => ['Addresses', 'Contacts', 'Groups']
         ]);
+//        osd($query->toArray());die;
         $member = $this->Members->completeMemberEntity($member, $member->type);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $member = $this->Members->patchEntity($member, $this->request->data);
