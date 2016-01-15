@@ -163,26 +163,24 @@ class MembersController extends AppController
 		}
         $element_management['member'] = $member_element;
         $query = $this->Members->find('memberReview');
+        $query->contain(['Addresses', 'Contacts', 'Groups']);
         $this->set($member_variable, $this->paginate($query));
         $this->set('element_management', $element_management);
         $this->set('_serialize', [$member_variable]);
     }
     
-    public function revise() {
-        //insert guard for only a single record
+    /**
+     * Edit any member record, based upon the 'member' query argument
+     * 
+     */
+    public function refine() {
         if(!$this->SystemState->isKnown('member')){
-            osd('not known');
             $this->Flash->error(__('You must provide a single member id to edit'));
             return $this->redirect($this->referer());
         }
-        osd($this->SystemState->isKnown('member'));die;
-//        $query = $this->Members->find('memberReview');
-//        $query->first();
-//        $query->contain(['Addresses', 'Contacts', 'Groups']);
         $member = $this->Members->get($this->SystemState->queryArg('member'), [
             'contain' => ['Addresses', 'Contacts', 'Groups']
         ]);
-//        osd($query->toArray());die;
         $member = $this->Members->completeMemberEntity($member, $member->type);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $member = $this->Members->patchEntity($member, $this->request->data);
