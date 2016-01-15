@@ -167,4 +167,26 @@ class MembersController extends AppController
         $this->set('element_management', $element_management);
         $this->set('_serialize', [$member_variable]);
     }
+    
+    public function revise($id = NULL) {
+        $member = $this->Members->get($id, [
+            'contain' => ['Addresses', 'Contacts', 'Groups']
+        ]);
+        $member = $this->Members->completeMemberEntity($member, $member->type);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $member = $this->Members->patchEntity($member, $this->request->data);
+            if ($this->Members->save($member)) {
+                $this->Flash->success(__('The member has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The member could not be saved. Please, try again.'));
+            }
+        }
+        $types = ['Institution', 'Person', 'User', 'Category'];
+        $types = array_combine($types, $types);
+        $this->set(compact('member', 'element_management', 'types'));
+        $this->set('_serialize', ['member']);
+        $this->render('create');
+
+    }
 }
