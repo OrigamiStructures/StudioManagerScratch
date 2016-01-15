@@ -127,6 +127,7 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
+	  'review' => NULL,
   ),
   'Series' => 
   array (

@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use App\Model\Entity\Traits\ParentEntity;
 
 /**
  * Format Entity.
@@ -24,6 +25,8 @@ use Cake\ORM\Entity;
  */
 class Format extends Entity
 {
+	
+	use Traits\ParentEntityTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -45,8 +48,8 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function _getDisplayTitle() {
-		$title = empty($this->_properties['type']) ? $this->_properties['description'] : $this->_properties['type'];
-		return "$title {$this->_properties['user_id']}";
+		$title = empty($this->_properties['title']) ? $this->_properties['description'] : $this->_properties['title'];
+		return "$title";
 	}
 	
 }

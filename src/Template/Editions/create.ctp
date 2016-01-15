@@ -1,4 +1,4 @@
-<!-- Template/Artwork/new.ctp -->
+<!-- Template/Editions/create.ctp -->
 <section class="artwork">
 	<div class="row artwork">
 		<div class="columns small-12 medium-5 medium-offset-1">

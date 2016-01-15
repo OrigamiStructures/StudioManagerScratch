@@ -36,14 +36,17 @@ class FormatsTable extends AppTable
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
 		$this->addBehavior('ArtworkStack');
+		$this->addBehavior('CounterCache', [
+			'Editions' => ['format_count'],
+        ]);
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
+//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users',
 					[
 				'foreignKey' => 'user_id',
 			]);
-		}		
+//		}		
         $this->belongsTo('Images', [
             'foreignKey' => 'image_id',
         ]);

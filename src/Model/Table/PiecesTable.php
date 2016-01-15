@@ -37,10 +37,17 @@ class PiecesTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+		$this->addBehavior('CounterCache', [
+            'Formats' => ['assigned_piece_count'],
+            'Editions' => ['assigned_piece_count' => [
+				'conditions' => ['Pieces.format_id IS NOT NULL']
+				]
+			]
+        ]);
 //		$this->addBehavior('ArtworkStack');
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
+//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id'
 			]);
@@ -50,10 +57,10 @@ class PiecesTable extends AppTable
 			$this->belongsTo('Formats', [
 				'foreignKey' => 'format_id'
 			]);
-		}
-//        $this->hasMany('Dispositions', [
-//            'foreignKey' => 'piece_id'
-//        ]);
+//		}
+        $this->hasMany('Dispositions', [
+            'foreignKey' => 'piece_id'
+        ]);
     }
 
     /**
@@ -121,12 +128,12 @@ class PiecesTable extends AppTable
 		
 		$i = $start;
 		while ($i < $count) {
-			$pieces[$i++] = new Piece($columns);
+			$pieces[$i++] = $columns;
 		}
 
 		if ($numbered) {
 			$numbered_edition = (new Collection($pieces))->map(function($piece, $index){
-				$piece->number = $index+1;
+				$piece['number'] = $index+1;
 				return $piece;
 			});
 			$pieces = $numbered_edition->toArray();

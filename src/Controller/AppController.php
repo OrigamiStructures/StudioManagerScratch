@@ -19,6 +19,7 @@ use Cake\Event\Event;
 use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
+use App\Lib\SState;
 
 /**
  * Application Controller
@@ -44,39 +45,39 @@ class AppController extends Controller
 		
 		$this->SystemState = new SystemState($request);
 		$this->set('SystemState', $this->SystemState);
-		$locator = new CSTableLocator($this->SystemState);
-		$this->tableLocator($locator);
-		TableRegistry::locator($locator);
+		TableRegistry::locator(new CSTableLocator($this->SystemState));
+		
 		parent::__construct($request, $response, $name, $eventManager, $components);
         $this->eventManager()->on($this->SystemState);
-		
+//		$this->eventManager()->on(new SState());
+//		$this->SystemState->afterLogin(new Event('thing'));
 	}
 	
-	public function beforeFilter(Event $event) {
-		parent::beforeFilter($event);
-		\Cake\Routing\Router::parseNamedParams($this->request);
-	}
-	
-	public function afterFilter(Event $event) {
-		parent::afterFilter($event);
-	}
+//	public function beforeFilter(Event $event) {
+//		parent::beforeFilter($event);
+//		\Cake\Routing\Router::parseNamedParams($this->request);
+//	}
+//	
+//	public function afterFilter(Event $event) {
+//		parent::afterFilter($event);
+//	}
 
-    public function implementedEvents()
-    {
-		$events = [
-//            'Users.Component.UsersAuth.afterLogin' => 'loginListener',
-        ];
-		return array_merge(parent::implementedEvents(), $events);
-    }
+//    public function implementedEvents()
+//    {
+//		$events = [
+////            'Users.Component.UsersAuth.afterLogin' => 'loginListener',
+//        ];
+//		return array_merge(parent::implementedEvents(), $events);
+//    }
 
 	/**
 	 * Controller actions to perform on login
 	 * 
 	 * @param type $event
 	 */
-	public function loginListener($event) {
-		
-	}
+//	public function loginListener($event) {
+//		
+//	}
 
     /**
      * Initialization hook method.
@@ -110,7 +111,7 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
-		$menu = \Cake\ORM\TableRegistry::get('Menus', ['SystemState' => $this->SystemState]);
+		$menu = TableRegistry::get('Menus');
 		$this->set('menus', $menu->assemble());
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
@@ -119,7 +120,7 @@ class AppController extends Controller
         }
     }
 	
-	/**
+		/**
 	 * Override native ViewVarsTrait::set()
 	 * 
 	 * Maintain a copy of all current variables in the SystemState object

@@ -1,3 +1,7 @@
+@import 'settings';
+@import '../bower_components/foundation-sites/scss/foundation';
+
+
 footer{
 	height: 10rem;
 }
@@ -60,7 +64,7 @@ section.artwork {
 	}
 	
 	img {
-		margin-top: 0.8em;
+		/*margin-top: 0.8em;*/
 	}
 	
 	@media only screen and (min-width: 40.063em) {
@@ -77,7 +81,21 @@ section.artwork {
 			margin-bottom: 0;
 		}
 	}
+	
 }
+.column, .columns {
+	padding-left: 0;
+}
+
+img {
+	width: 100%;
+}
+
+section.format {
+	@include grid-row;
+	padding-top: 1em;
+}
+
 
 form {
 	legend {

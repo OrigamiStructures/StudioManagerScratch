@@ -1,0 +1,2 @@
+<?php
+osd($SystemState->queryArg());

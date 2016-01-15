@@ -139,25 +139,35 @@ class FormatsController extends AppController
 	 * 
 	 */
 	public function refine() {
+		$this->Artworks = TableRegistry::get('Artworks');
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
-            if ($Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Editions.Formats.Images']
+			]);
+            if ($this->Artworks->save($artwork)) {
+                $this->redirect([
+					'controller' => 'artworks', 
+					'action' => 'review',
+					'?' => [
+						'artwork' => $this->SystemState->queryArg('artwork'),
+						'format' => $this->SystemState->queryArg('edition')
+					]]);
             } else {
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
             }
         }
 		
-		$artwork = $this->ArtworkStack->stackQuery();
-		$element_management = [
-			'artwork' => 'describe',
-			'edition' => 'describe',
-			'format' => 'fieldset',
-		];
-		$this->set('element_management', $element_management);
+//		$artwork = $this->ArtworkStack->stackQuery();
+//		$element_management = [
+//			'artwork' => 'describe',
+//			'edition' => 'describe',
+//			'format' => 'fieldset',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Editions/create');
+		$this->render('/Artworks/create_dev');
 	}
 	
 	/**
@@ -169,25 +179,34 @@ class FormatsController extends AppController
 	 * 
 	 */
 	public function create() {
+		$this->Artworks = TableRegistry::get('Artworks');
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$Artworks = TableRegistry::get('Artworks', ['SystemState' => $this->SystemState]);
-            if ($Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
+			]);
+            if ($this->Artworks->save($artwork)) {
+                $this->redirect([
+					'controller' => 'artworks', 
+					'action' => 'review',
+					'?' => [
+						'artwork' => $this->SystemState->queryArg('artwork'),
+						'format' => $this->SystemState->queryArg('edition')
+					]]);
             } else {
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
             }
         }
 		
-		$artwork = $this->ArtworkStack->stackQuery();
-		$element_management = [
-			'artwork' => 'describe',
-			'edition' => 'describe',
-			'format' => 'fieldset',
-		];
-		$this->set('element_management', $element_management);
+//		$element_management = [
+//			'artwork' => 'describe',
+//			'edition' => 'describe',
+//			'format' => 'fieldset',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Editions/create');		
+		$this->render('/Artworks/create_dev');		
 	}
 	
 }

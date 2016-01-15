@@ -22,8 +22,8 @@ class ArtworkStackComponent extends Component {
 	public $SystemState;
 	
 	public $full_containment = [
-		/*'Users', */'Images', 'Editions' => [
-			'Series', 'Pieces', 'Formats' => [
+		'Users', 'Images', 'Editions.Users', 'Editions' => [
+			'Series', 'Pieces', 'Formats.Users', 'Formats' => [
 				'Images', 'Pieces', /*'Subscriptions'*/
 				]
 			]
@@ -83,7 +83,7 @@ class ArtworkStackComponent extends Component {
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
-			} else if ($this->SystemState->is(ARTWORK_REVIEW)) {
+			} else if ($this->SystemState->is(ARTWORK_REVIEW) || $this->SystemState->is(ARTWORK_REFINE)) {
 				return $this->filterEntities($artwork);
 			}
 			return $artwork;
@@ -138,13 +138,14 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function pruneEntities($artwork) {
-		$artwork = $this->filterEntities($artwork);
+//		$artwork = $this->filterEntities($artwork);
 		$controller = strtolower($this->SystemState->request->controller);
 
 		if ($controller == 'editions') {
 			$artwork->editions = [new \App\Model\Entity\Edition()];
 		} else {
-			$artwork->editions[0]->formats = [new \App\Model\Entity\Format()];
+			$edition_index = $artwork->indexOfRelated('editions', $this->SystemState->queryArg('edition'));
+			$artwork->editions[$edition_index]->formats = [new \App\Model\Entity\Format()];
 		}
 		return $artwork;
 	}
@@ -191,6 +192,33 @@ class ArtworkStackComponent extends Component {
 //		osd((time()+  microtime()) - $mili, 'do queries');
 //		return [$artworks, $editions, $formats, $series, $subscriptions];
 		return [$formats, $series, $subscriptions];
+	}
+	
+	/**
+	 * Make an entity to support Artwork stack layer creation
+	 * 
+	 * Creation may happen at any level and in those cases the upstream 
+	 * IDs (or other data) may be required. For later 'patching' and 
+	 * proper linking of new records, this allows any layer data to be
+	 * passed in.
+	 * 
+	 * @param array $data
+	 * @return \App\Model\Entity\Artwork
+	 */
+	public function creationStack($data = []) {
+//		$image = new \App\Model\Entity\Image([]);
+		$format_data = isset($data['format']) ? $data['format'] : [];
+		$format = new \App\Model\Entity\Format($format_data);
+		
+		$edition_data = (isset($data['edition']) ? $data['edition'] : []) + 
+			['formats' => [$format]];
+		$edition = new \App\Model\Entity\Edition($edition_data);
+		
+		$artwork_data = (isset($data['artwork']) ? $data['artwork'] : []) + 
+			['editions' => [$edition], /*'image'=> $image*/];
+		$artwork = new \App\Model\Entity\Artwork($artwork_data);
+		
+		return $artwork; 
 	}
 	
 }

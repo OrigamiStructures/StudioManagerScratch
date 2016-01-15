@@ -21,7 +21,7 @@ class ArtworksController extends AppController
 		parent::initialize();
 		$this->loadComponent('ArtworkStack');
 	}
-
+	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
 	 * Index method
@@ -191,10 +191,19 @@ class ArtworksController extends AppController
         $this->set('_serialize', [$artwork_variable]);
     }
 	
+	/**
+	 * Edit the Artwork layer and deeper layers if the work is 'flat'
+	 * 
+	 * A 'flat' artwork would have one Edition with one Format
+	 */
 	public function refine() {
+		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->Artworks->saveStack($this->request->data)) {
-                $this->redirect(['action' => 'elementTest']);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
+			]);
+            if ($this->Artworks->save($artwork)) {
+                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
@@ -219,7 +228,7 @@ class ArtworksController extends AppController
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
 		$this->set('element_management', $element_management);
-		$this->render('create');
+		$this->render('create_dev');
 	}
 	
     /**
@@ -228,16 +237,16 @@ class ArtworksController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
-		$artwork = new \App\Model\Entity\Artwork();
+		$artwork = $this->ArtworkStack->creationStack(); 
         if ($this->request->is('post') || $this->request->is('put')) {
-			$this->SystemState->changeState(ARTWORK_SAVE);
-//			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, 
-//				['associated' => $this->ArtworkStack->fullContainment]);
-//			osd($artwork);//die;
-            if ($artwork = $this->Artworks->saveStack($this->request->data)) {
-//            if ($this->Artworks->save($artwork)) {
-//				osd($artwork);
-//				die;
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+				'associated' => [
+					/*'Images', */'Editions', 
+						'Editions.Pieces', 'Editions.Formats', 
+							'Editions.Formats.Images'
+					]
+			]);
+            if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -253,6 +262,7 @@ class ArtworksController extends AppController
         
         $this->set(compact('artwork', 'element_management'));
         $this->set('_serialize', ['artwork']);
+		$this->render('create_dev');
     }
 	
 }

@@ -100,7 +100,11 @@ class SystemState implements EventListenerInterface {
 		return $this->_current_state == $state;
 	}
 	
-	/**
+	public function now() {
+		return $this->_current_state;
+	}
+
+		/**
 	 * Set the system state
 	 * 
 	 * THIS SHOULD SEND A STATECHANGE EVENT
@@ -206,10 +210,22 @@ class SystemState implements EventListenerInterface {
 	 * @param string $name
 	 * @return string
 	 */
-	public function queryArg($name) {
-		return $this->request->query($name);
+	public function queryArg($name = NULL) {
+		if (!is_null($name)) {
+			return $this->request->query($name);
+		} else {
+			return $this->request->query;
+		}	
 	}
 	
+	public function controller() {
+		return strtolower($this->request->controller);
+	}
+	
+	public function action() {	
+		return strtolower($this->request->action);
+	}
+
 	/**
 	 * Developer Utility to map controller actions
 	 * 
