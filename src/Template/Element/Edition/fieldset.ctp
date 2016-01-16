@@ -16,4 +16,17 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 			['placeholder' => 'Optional Edition Title', 'label' => 'Edition Title']); ?>
     <?= $this->Form->input("editions.$format_index.type", ['options' => $types]); ?>
     <?= $this->Form->input("editions.$format_index.quantity", ['default' => 1]); ?>
+	<?php
+ if ($SystemState->controller() !== 'formats' && $SystemState->is(ARTWORK_CREATE)) {
+	 echo '<div><p>If this Edition has more than one Piece:</p>';
+	 echo $this->Form->input('multiple', [
+			'label' => 'Will the pieces will be made in multiple formats?',
+			'type' => 'radio',
+			'options' => [' No', ' Yes'],
+			'default' => '0'
+		]);
+	 echo '</div>';
+
+}	
+	?>
 </fieldset>

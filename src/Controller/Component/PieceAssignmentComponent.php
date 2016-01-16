@@ -40,6 +40,10 @@ class PieceAssignmentComponent extends Component {
 		return $stackCounts;
 	}
 
+	public function hasOnePiece() {
+		return $this->stack->edition->quantity == 1;
+	}
+	
 	public function isFlat() {
 		return ($this->stack->edition_count == 1) && 
 			($this->stack->edtions[0]->format_count == 1);
