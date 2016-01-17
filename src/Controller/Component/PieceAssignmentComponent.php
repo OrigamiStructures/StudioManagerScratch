@@ -27,6 +27,8 @@ class PieceAssignmentComponent extends Component {
 	private $edition_index;
 	private $format;
 	private $format_index;
+	private $multiple_formats;
+	private $pieces;
 	
 	public function initialize(array $config = array()) {
 		parent::initialize($config);
@@ -34,6 +36,9 @@ class PieceAssignmentComponent extends Component {
 		$this->SystemState = $this->controller->SystemState;
 		$this->Artworks = TableRegistry::get('Artworks');
 		$this->artwork = $config['artwork'];
+		if (isset($artwork->multiple)) {
+			$this->multiple_formats = (boolean) $artwork->multiple;
+		}
 		$this->stack = $this->stackCounts($this->artwork->id);
 		$this->mostRecentEdition();
 		$this->mostRecentFormat();
@@ -45,16 +50,33 @@ class PieceAssignmentComponent extends Component {
 	}
 	
 	public function assign() {
-		if ($this->SystemState->is(ARTWORK_CREATE) && $this->onePiece() ) {
-			$this->Pieces = \Cake\ORM\TableRegistry::get('Pieces');
-			$this->pieces = $this->edition->pieces[0];
-			$this->pieces->format_id = $this->format->id;
-			$this->pieces->dirty('format_id', true);
-			$this->Pieces->save($this->pieces);
-		} 
+		unset($this->pieces);
+		if ($this->SystemState->is(ARTWORK_CREATE) && $this->onePiece()) {
+			$this->pieces = [$this->piecesToFormat($this->edition->pieces[0])];
+//			$this->pieces = $this->edition->pieces[0];
+//			$this->pieces->format_id = $this->format->id;
+//			$this->pieces->dirty('format_id', true);
+		} elseif ($this->SystemState->is(ARTWORK_CREATE) &&  !$this->multiple_formats ) {
+			$this->pieces = (new Collection($this->edition->pieces))
+					->map([$this, 'piecesToFormat'])->toArray();
+		}
+		if (isset($this->pieces)) {
+			$this->Formats = \Cake\ORM\TableRegistry::get('Formats');
+			$this->format->pieces = $this->pieces;
+			$this->format->dirty('pieces', true);
+			$this->Formats->save($this->format);
+		}		
 	}
 	
-	/**
+	
+	
+	public function piecesToFormat($piece) {
+			$piece->format_id = $this->format->id;
+			$piece->dirty('format_id', true);
+			return $piece;
+	}
+
+		/**
 	 * Get an analysis stack for an Artwork
 	 * 
 	 * This will report on number of associated records at each level and 
@@ -69,7 +91,7 @@ class PieceAssignmentComponent extends Component {
 			'fields' => ['id', 'edition_count'],
 			'contain' => [
 				'Editions' => ['fields' => [
-					'id', 'modified', 'artwork_id', 'format_count', 'quantity', 'assigned_piece_count']],
+					'id', 'modified', 'artwork_id', 'type', 'format_count', 'quantity', 'assigned_piece_count']],
 				'Editions.Pieces' => [ 'fields' => [
 					'id', 'edition_id', 'format_id', 'number', 'quantity', 'disposition_count']],
 				'Editions.Formats' => ['fields' => [
