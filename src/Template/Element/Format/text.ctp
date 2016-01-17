@@ -7,12 +7,11 @@
 							if (!empty($format->title)) {
 								echo $this->Html->tag('p', $format->description);
 							}
-							$pieces = isset($format->pieces) ? count($format->pieces) : 0;
-							$piece_lable = $pieces === 1 ? 'piece' : 'pieces';
-							if ($pieces === 0) {
-								echo $this->Html->tag('p', "There are $pieces $piece_lable for this format");
+							$piece_lable = $format->assigned_piece_count === 1 ? 'piece' : 'pieces';
+							if ($format->assigned_piece_count === 0) {
+								echo $this->Html->tag('p', "There no pieces assigned to this format || tool link? ||");
 							} else {
-								echo $this->Html->link("Details about the $pieces $piece_lable in this format",
+								echo $this->Html->link("Details about the $format->assigned_piece_count $piece_lable assigned to this format",
 									['controller' => 'pieces', 'action' => 'review', '?' => [
 											'artwork' => $artwork->id,
 											'edition' => $edition->id,
