@@ -90,9 +90,9 @@ class ArtworkStackComponent extends Component {
 		}
 	}
 	
-	public function assignPieces($artwork_id) {
-		$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork_id' => $artwork_id]);
-		osd($this->PieceAssignment->isFlat());
+	public function assignPieces($artwork) {
+		$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
+		$this->PieceAssignment->assign();
 	}
 	
 	/**

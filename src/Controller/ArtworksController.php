@@ -203,7 +203,7 @@ class ArtworksController extends AppController
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork->id);
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -248,7 +248,7 @@ class ArtworksController extends AppController
 					]
 			]);
             if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork->id);
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));

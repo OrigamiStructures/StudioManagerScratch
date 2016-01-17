@@ -145,7 +145,7 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork->id);
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),
@@ -178,7 +178,7 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork->id);
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect([
 					'controller' => 'editions', 
 					'action' => 'review', 
