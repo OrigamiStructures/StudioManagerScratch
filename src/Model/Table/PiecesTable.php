@@ -43,7 +43,6 @@ class PiecesTable extends AppTable
 			],
             'Editions' => ['assigned_piece_count' => [
 				$this, 'assignedPieces',
-//				'conditions' => ['Pieces.format_id IS NOT NULL']
 				]
 			]
         ]);
@@ -93,6 +92,18 @@ class PiecesTable extends AppTable
         return $validator;
     }
 	
+	/**
+	 * Callable that calcs CounterCache Piece values for Formats and Editions
+	 * 
+	 * These counts are actually sums of 'quantity' on the pieces because of 
+	 * the way pieces for Open Editions are tracked (avoiding making thousands 
+	 * of individual records)
+	 * 
+	 * @param Event $event
+	 * @param Entity $entity
+	 * @param Table $table
+	 * @return int
+	 */
 	public function assignedPieces($event, $entity, $table) {
 		if (is_null($entity->format_id)) {
 			return 0;
