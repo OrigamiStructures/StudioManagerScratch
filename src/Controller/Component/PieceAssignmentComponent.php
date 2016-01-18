@@ -65,7 +65,20 @@ class PieceAssignmentComponent extends Component {
 			$this->format->pieces = $this->pieces;
 			$this->format->dirty('pieces', true);
 			$this->Formats->save($this->format);
-		}		
+		}
+		/**
+		 * Open editions --
+		 * Pieces don't get moved to formats because there is initially only 
+		 * one piece attached to the Edition. In truth, this one record may 
+		 * not be required at all. It may be true that the assignment of 
+		 * a piece to an Open Format involves adding a new piece to the 
+		 * system and setting its quantity. In a Limited, the availble pool
+		 * of unassigned pieces determines the possiblity of a move. For 
+		 * an open, the difference between Edition->quantity and 
+		 * Edition->assigned_piece_count determines. This suggests the need 
+		 * for Enity sub-classes that can answer the limit question on 
+		 * a single common call.
+		 */
 	}
 	
 	
