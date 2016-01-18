@@ -104,9 +104,9 @@ class PiecesTable extends AppTable
 			$sum = (new Collection($pieces->toArray()))->reduce(
 					function($accumulate, $value) {
 						return $accumulate + $value->quantity;
-					}
+					}, 0
 				);
-			return $sum->toArray()['quantity'];//die;
+			return $sum;//die;
 		}
 	}
 

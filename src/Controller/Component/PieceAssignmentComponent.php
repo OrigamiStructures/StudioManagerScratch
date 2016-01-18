@@ -36,26 +36,18 @@ class PieceAssignmentComponent extends Component {
 		$this->SystemState = $this->controller->SystemState;
 		$this->Artworks = TableRegistry::get('Artworks');
 		$this->artwork = $config['artwork'];
-		if (isset($artwork->multiple)) {
-			$this->multiple_formats = (boolean) $artwork->multiple;
+		if (isset($this->artwork->multiple)) {
+			$this->multiple_formats = (boolean) $this->artwork->multiple;
 		}
 		$this->stack = $this->stackCounts($this->artwork->id);
 		$this->mostRecentEdition();
 		$this->mostRecentFormat();
-//		osd($this->artwork);
-//		osd($this->stack);
-//		osd($this->mostRecentEdition());
-//		osd($this->mostRecentFormat());
-//		die;
 	}
 	
 	public function assign() {
 		unset($this->pieces);
 		if ($this->SystemState->is(ARTWORK_CREATE) && $this->onePiece()) {
 			$this->pieces = [$this->piecesToFormat($this->edition->pieces[0])];
-//			$this->pieces = $this->edition->pieces[0];
-//			$this->pieces->format_id = $this->format->id;
-//			$this->pieces->dirty('format_id', true);
 		} elseif ($this->SystemState->is(ARTWORK_CREATE) &&  !$this->multiple_formats ) {
 			$this->pieces = (new Collection($this->edition->pieces))
 					->map([$this, 'piecesToFormat'])->toArray();
