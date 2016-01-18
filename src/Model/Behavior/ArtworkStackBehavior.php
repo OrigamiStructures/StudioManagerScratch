@@ -104,7 +104,7 @@ class ArtworkStackBehavior extends Behavior {
 				case 'Open Edition':
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
 					break;
-				case 'Use':
+				case 'Rights':
 					$edition['quantity'] = 1;
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
 					break;
@@ -113,6 +113,17 @@ class ArtworkStackBehavior extends Behavior {
 		return $edition;
 	}
 	
+	/**
+	 * Logic for allowed editing of Pieces for Editions
+	 * 
+	 * @param array $edition
+	 * @return array
+	 */
+	public function refinePieces($edition) {
+		return $edition;
+	}
+
+
 	/**
 	 * Adjust the Image nodes on TRD to match the user's intention
 	 * 
