@@ -38,9 +38,11 @@ class PiecesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('CounterCache', [
-            'Formats' => ['assigned_piece_count'],
+            'Formats' => ['assigned_piece_count'=> [
+				$this, 'assignedPieces'],
+			],
             'Editions' => ['assigned_piece_count' => [
-				'conditions' => ['Pieces.format_id IS NOT NULL']
+				$this, 'assignedPieces',
 				]
 			]
         ]);
@@ -89,6 +91,35 @@ class PiecesTable extends AppTable
 
         return $validator;
     }
+	
+	/**
+	 * Callable that calcs CounterCache Piece values for Formats and Editions
+	 * 
+	 * These counts are actually sums of 'quantity' on the pieces because of 
+	 * the way pieces for Open Editions are tracked (avoiding making thousands 
+	 * of individual records)
+	 * 
+	 * @param Event $event
+	 * @param Entity $entity
+	 * @param Table $table
+	 * @return int
+	 */
+	public function assignedPieces($event, $entity, $table) {
+		if (is_null($entity->format_id)) {
+			return 0;
+		} else {
+			$pieces = $table->find('all')->where([
+				'edition_id' => $entity->edition_id,
+				'format_id' => $entity->format_id,
+				])->select(['id', 'format_id', 'edition_id', 'quantity']);
+			$sum = (new Collection($pieces->toArray()))->reduce(
+					function($accumulate, $value) {
+						return $accumulate + $value->quantity;
+					}, 0
+				);
+			return $sum;//die;
+		}
+	}
 
     /**
      * Returns a rules checker object that will be used for validating

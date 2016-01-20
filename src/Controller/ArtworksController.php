@@ -203,31 +203,32 @@ class ArtworksController extends AppController
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
 		
-		$artwork = $this->ArtworkStack->stackQuery();
-		if (count($artwork['editions']) > 1) {
-			// many editions
-			$element_management = [
-				'artwork' => 'fieldset',
-				'edition' => 'many',
-				'format' => 'many',
-			];
-		} else {
-			$element_management = [
-				'artwork' => 'fieldset',
-				'edition' => 'fieldset',
-				'format' => 'fieldset',
-			];
-		}
+//		$artwork = $this->ArtworkStack->stackQuery();
+//		if (count($artwork['editions']) > 1) {
+//			// many editions
+//			$element_management = [
+//				'artwork' => 'fieldset',
+//				'edition' => 'many',
+//				'format' => 'many',
+//			];
+//		} else {
+//			$element_management = [
+//				'artwork' => 'fieldset',
+//				'edition' => 'fieldset',
+//				'format' => 'fieldset',
+//			];
+//		}
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->set('element_management', $element_management);
+//		$this->set('element_management', $element_management);
 		$this->render('create_dev');
 	}
 	
@@ -247,21 +248,22 @@ class ArtworksController extends AppController
 					]
 			]);
             if ($this->Artworks->save($artwork)) {
-//				$this->stackCounts($artwork->id);
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
 		
-        $element_management = [
-            'artwork' => 'fieldset',
-            'edition' => 'fieldset',
-            'format' => 'fieldset'
-        ];
+//        $element_management = [
+//            'artwork' => 'fieldset',
+//            'edition' => 'fieldset',
+//            'format' => 'fieldset'
+//        ];
 		$this->ArtworkStack->layerChoiceLists();
         
-        $this->set(compact('artwork', 'element_management'));
+//        $this->set(compact('artwork', 'element_management'));
+		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
 		$this->render('create_dev');
     }

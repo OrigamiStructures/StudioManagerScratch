@@ -49,7 +49,7 @@ $this->set(compact('editions', 'edition', 'edition_index', 'formats', 'format', 
 				
 				echo $this->element('Format/form_layer');
 				
-				if ($SystemState->controller() === 'formats' || 
+				if ($SystemState->is(ARTWORK_CREATE) || $SystemState->controller() === 'formats' || 
 						($artwork->edition_count < 2 && $edition->format_count < 2)) {
 					echo $this->Form->submit();
 				}
