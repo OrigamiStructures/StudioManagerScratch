@@ -17,23 +17,29 @@ $helper = $factory->load($edition->type);
 							if (!empty($format->title)) {
 								echo $this->Html->tag('p', $format->description);
 							}
+							?>
 							
+							<section class="disposition">
+								<?= $helper->pieceSummary($format) ?>
+								<?= $helper->pieceTools($format) ?>
+							</section>
+							<?php
 							/**
 							 * ============================================================
 							 * This retains piece assignment reporting AND dispostion tools
 							 */
 							
-							$piece_lable = $format->assigned_piece_count === 1 ? 'piece' : 'pieces';
-							if ($format->assigned_piece_count === 0) {
-								echo $this->Html->tag('p', "There no pieces assigned to this format || tool link? ||");
-							} else {
-								echo $this->Html->link("Details about the $format->assigned_piece_count $piece_lable assigned to this format",
-									['controller' => 'pieces', 'action' => 'review', '?' => [
-											'artwork' => $artwork->id,
-											'edition' => $edition->id,
-											'format' => $format->id
-										]]);
-							}
+//							$piece_lable = $format->assigned_piece_count === 1 ? 'piece' : 'pieces';
+//							if ($format->assigned_piece_count === 0) {
+//								echo $this->Html->tag('p', "There no pieces assigned to this format || tool link? ||");
+//							} else {
+//								echo $this->Html->link("Details about the $format->assigned_piece_count $piece_lable assigned to this format",
+//									['controller' => 'pieces', 'action' => 'review', '?' => [
+//											'artwork' => $artwork->id,
+//											'edition' => $edition->id,
+//											'format' => $format->id
+//										]]);
+//							}
 							// also provide information about pieces, 
 							// including range, and subscriptions
 							?>

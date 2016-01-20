@@ -46,8 +46,8 @@ class EditionFactoryHelper extends Helper {
 	public function pieceTools($entity) {
 		if (stristr(get_class($entity), 'Edition')) {
 			$this->_editionPieceTools($entity);
-//		} elseif (stristr(get_class($entity), 'Format')){
-//			$this->_formatPieceTools($entity);
+		} elseif (stristr(get_class($entity), 'Format')){
+			$this->_formatPieceTools($entity);
 		} else {
 			$bad_class = get_class($entity);
 			throw new \BadMethodCallException(
@@ -64,6 +64,13 @@ class EditionFactoryHelper extends Helper {
 	}
 	protected function _editionPieceTools($entity) {
 		return '';
+	}
+	protected function _formatPieceTools($entity) {
+		return '';
+	}
+	
+	protected function _canDispose($piece) {
+		return true;
 	}
 
 }

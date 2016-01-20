@@ -13,13 +13,32 @@ use App\View\Helper\EditionFactoryHelper;
  */
 class UniqueHelper extends EditionFactoryHelper {
 	
-	public function _editionPieceSummary($edition) {
-		return '';
+	protected function _formatPieceSummary($format) {
+		$piece = $format->pieces[0];
+		if((boolean) $piece->disposition_count) {
+			return '<p>pending results</p>';
+		} else {
+			echo $this->Html->tag('p', 
+				'You haven\'t recorded the status of this work', 
+				['class' => 'current_disposition']
+			);
+		}
 	}
 	
-	public function _editionPieceTools($edition) {
-		return '';
+	protected function _formatPieceTools($format) {
+		$piece = $format->pieces[0];
+		if ($this->_canDispose($piece)) {
+			echo $this->Html->link("Add status information",
+				['controller' => 'pieces', 'action' => 'create', '?' => [
+					'format' => $format->id,
+					'piece' => $piece->id
+				]]);
+		} else {
+			echo $this->Html->tag('p', 
+				'You can\'t change the status of this artwork.', 
+				['class' => 'current_disposition']
+			);
+		}
 	}
-	
-	
 }
+	
