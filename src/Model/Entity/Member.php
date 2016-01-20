@@ -33,4 +33,28 @@ class Member extends Entity
         '*' => true,
         'id' => false,
     ];
+    
+    public function _getName(){
+        switch ($this->_properties['type']) {
+            case MEMBER_TYPE_PERSON:
+                return $this->_properties['first_name'] . ' ' . $this->_properties['last_name'];
+                break;
+
+            default:
+                return $this->_properties['first_name'];
+                break;
+        }
+    }
+    
+    public function _getSortName(){
+        switch ($this->_properties['type']) {
+            case MEMBER_TYPE_PERSON:
+                return $this->_properties['last_name'] . ', ' . $this->_properties['first_name'];
+                break;
+
+            default:
+                return $this->_properties['first_name'];
+                break;
+        }
+    }
 }
