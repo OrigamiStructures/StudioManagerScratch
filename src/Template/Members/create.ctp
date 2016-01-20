@@ -7,7 +7,8 @@
                 echo $this->element('Member/refine');
                 echo $this->element('Address/refine');
                 echo $this->element('Contact/refine');
-                echo $this->Form->submit();
+                echo $this->Form->button('Submit', ['type' => 'submit', 'class' => 'button success']);
+                echo $this->Html->link('Cancel', ['action' => 'review', '?' => ['member' => $member->id]], ['class' => 'button secondary', 'confirm' => 'Are you sure you want to cancel?']);
             echo $this->Form->end();
             ?>
         </div>

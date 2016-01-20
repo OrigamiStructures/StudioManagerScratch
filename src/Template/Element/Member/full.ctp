@@ -17,4 +17,10 @@
 		</section>
 	</div>
 </section>
+<section class="control row">
+    <?php
+        echo $this->Html->link('Refine', ['action' => 'refine', '?' => ['member' => $member->id]], ['class' => 'button']);
+        echo $this->Html->link('Delete', ['action' => 'delete', '?' => ['member' => $member->id]], ['class' => 'button alert', 'confirm' => 'Are you sure you want to delete this member?']);
+    ?>
+</section>
 <!-- END Element/Member/full.ctp -->
