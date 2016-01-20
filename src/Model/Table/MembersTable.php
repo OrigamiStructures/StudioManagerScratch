@@ -154,7 +154,17 @@ class MembersTable extends AppTable
      * @param \App\Model\Table\ArrayObject $options
      */
 	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
-        osd($data, 'data before');
+        $this->bmSetupGroup($data);
+        $this->bmSetupSort($data);
+        $data['user_id'] = $this->SystemState->artistId();
+	}
+    
+    /**
+     * Setup the group element for User, Category and Instituion
+     * 
+     * @param ArrayObject $data
+     */
+    private function bmSetupGroup(ArrayObject $data) {
         switch ($data['type']) {
             case MEMBER_TYPE_USER:
             case MEMBER_TYPE_CATEGORY:
@@ -165,10 +175,37 @@ class MembersTable extends AppTable
             case MEMBER_TYPE_PERSON:
                 break;
         }
-        $data['user_id'] = $this->SystemState->artistId();
-        osd($data, 'data after marshal');
-	}
+    }
     
+    /**
+     * Setup the last_name as a sorting name for Categories and Institutions
+     * 
+     * @param ArrayObject $data
+     */
+    private function bmSetupSort(ArrayObject $data) {
+        switch ($data['type']) {
+            case MEMBER_TYPE_CATEGORY:
+            case MEMBER_TYPE_INSTITUTION:
+                $data['last_name'] = $this->createSortName($data['first_name']);
+                break;
+            case MEMBER_TYPE_USER:
+            case MEMBER_TYPE_PERSON:
+                break;
+        }
+    }
+    
+    /**
+     * Modify the provided string and return it as a properly sortable name
+     * 
+     * for example, drop leading 'The ' bits.
+     * 
+     * @param string $name
+     * @return string
+     */
+    private function createSortName($name) {
+        return $name;
+    }
+
     /**
      * Complete the member entity for creation and editing
      * 
