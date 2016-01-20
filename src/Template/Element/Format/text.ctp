@@ -1,4 +1,7 @@
 <!-- Element/Format/text.ctp -->
+<?php
+//$this->helper = $this->Factory->load($edition->type);
+?>
 							<?= $this->Form->input($format->id, ['type' => 'hidden']); ?>
 
 							<?= $this->Html->tag('p', $format->displayTitle, ['class' => 'format']); ?>
@@ -7,6 +10,12 @@
 							if (!empty($format->title)) {
 								echo $this->Html->tag('p', $format->description);
 							}
+							
+							/**
+							 * ============================================================
+							 * This retains piece assignment reporting AND dispostion tools
+							 */
+							
 							$piece_lable = $format->assigned_piece_count === 1 ? 'piece' : 'pieces';
 							if ($format->assigned_piece_count === 0) {
 								echo $this->Html->tag('p', "There no pieces assigned to this format || tool link? ||");
