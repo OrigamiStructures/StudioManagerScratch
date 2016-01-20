@@ -1,2 +1,7 @@
 <!-- Template/Member/review.ctp -->
-<?= $this->element('Member/'.$element_management['member']);?>
+<?php
+    foreach ($members as $member) {
+        $this->set('member', $member);
+        echo $this->element('Member/'.$element_management['member']);
+    }
+?>

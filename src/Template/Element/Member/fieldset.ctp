@@ -2,6 +2,7 @@
 <fieldset>
 	<legend>Member Information</legend>
     <?= $this->Form->input("id"); ?>
+    <?= $this->Form->input("group.id", ['type' => 'hidden']); ?>
     <?php
         $fnameLabel = ($member->type != MEMBER_TYPE_PERSON) ? 'Name' : 'First Name';
     ?>

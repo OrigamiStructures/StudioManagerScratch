@@ -164,7 +164,7 @@ class MembersController extends AppController
 		}
         $query = $this->Members->find('memberReview');
         $query->contain(['Addresses', 'Contacts', 'Groups']);
-        $query->orderAsc('sortName');
+        $query->orderAsc('last_name');
         $this->set('members', $this->paginate($query));
         $this->set('element_management', $element_management);
         $this->set('_serialize', ['members']);
@@ -187,7 +187,7 @@ class MembersController extends AppController
             $member = $this->Members->patchEntity($member, $this->request->data);
             if ($this->Members->save($member)) {
                 $this->Flash->success(__('The member has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => "review", '?' => ['member' => $member->id]]);
             } else {
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
