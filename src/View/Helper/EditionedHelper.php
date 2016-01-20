@@ -1,19 +1,19 @@
 <?php
 namespace App\View\Helper;
 
-use Cake\View\Helper;
-use Cake\View\Helper\HtmlHelper;
+use App\View\Helper\EditionFactoryHelper;
 
 /**
- * CakePHP EditionHelper
+ * EditionedHelper: rule based view/tool rendering for Limited and Open Editions
+ * 
+ * Limited and Open editions both support multiple formats and multiple pieces. 
+ * These two Editions types require the most display reporting to express thier 
+ *   
  * @author dondrake
  */
-class EditionHelper extends Helper {
-	
-	public $helpers = ['Html'];
+class EditionedHelper extends EditionFactoryHelper {
 
-
-	public function editionPieceSummary($edition) {
+	protected function _editionPieceSummary($edition) {
 					/**
 					 * =========================================================
 					 * This should be a 'reassign' tool subject to Edition rules
@@ -32,25 +32,12 @@ class EditionHelper extends Helper {
 					// report on unmade pieces
 	}
 	
-	public function editionPieceTools($edition) {
+	protected function _editionPieceTools($edition) {
 		
 	}
-	
-	public function editionPieceFields($edition) {
+		
+	protected function _formatPieceTools($edition) {
 		
 	}
-	
-	public function formatPieceSummary($edition) {
-		
-	}
-	
-	public function formatPieceTools($edition) {
-		
-	}
-	
-	public function formatPieceFields($edition) {
-		
-	}
-	
 	
 }

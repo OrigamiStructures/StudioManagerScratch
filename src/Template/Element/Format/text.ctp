@@ -1,6 +1,13 @@
 <!-- Element/Format/text.ctp -->
 <?php
-//$this->helper = $this->Factory->load($edition->type);
+/**
+ * $artwork, $edition and $format are assumed to have been set by an upstream process
+ * 
+ * Edition Helper concrete classes are called on to administer 
+ * display and tool-availability rulings.
+ */
+$factory = $this->loadHelper('EditionFactory');
+$helper = $factory->load($edition->type);
 ?>
 							<?= $this->Form->input($format->id, ['type' => 'hidden']); ?>
 
