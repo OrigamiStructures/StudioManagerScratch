@@ -20,7 +20,7 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 	/**
 	 * This needs to respond to new Edition quantity change rules
 	 */
-	$this->Form->input("editions.$format_index.quantity", ['default' => 1]); 
+	echo $this->Form->input("editions.$format_index.quantity", ['default' => 1]); 
 	?>
 	
 	<?php
