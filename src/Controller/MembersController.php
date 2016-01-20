@@ -149,24 +149,25 @@ class MembersController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
-        $element_management = [];
 		if ($this->SystemState->isKnown('member')) {
-			$member_element = 'full';
-			$member_variable = 'member';
-            $element_management['address'] = 'full';
-            $element_management['contact'] = 'full';
+            $element_management= [
+                'member' => 'full',
+                'address' => 'full',
+                'contact' => 'full'
+            ];
 		} else {
-			$member_element = 'many';
-			$member_variable = 'members';
-            $element_management['address'] = 'none';
-            $element_management['contact'] = 'none';
+            $element_management= [
+                'member' => 'many',
+                'address' => 'none',
+                'contact' => 'none'
+            ];
 		}
-        $element_management['member'] = $member_element;
         $query = $this->Members->find('memberReview');
         $query->contain(['Addresses', 'Contacts', 'Groups']);
-        $this->set($member_variable, $this->paginate($query));
+        $query->orderAsc('sortName');
+        $this->set('members', $this->paginate($query));
         $this->set('element_management', $element_management);
-        $this->set('_serialize', [$member_variable]);
+        $this->set('_serialize', ['members']);
     }
     
     /**

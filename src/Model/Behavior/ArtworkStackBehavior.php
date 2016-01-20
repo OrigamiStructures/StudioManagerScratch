@@ -59,76 +59,12 @@ class ArtworkStackBehavior extends Behavior {
 	}
 	
 	/**
-	 * The main save process for an Artwork stack
-	 * 
-	 * Artwork/Edition/Format/Piece is the roughly the structure this works on. 
-	 * Create that stems from a Series or that involves Subscriptions are 
-	 * probably going to be handled separatly and from different views.
-	 * 
-	 * Save artwork based on a stadard TRD stack
-	 * 
-	 * The data array is in CakePHP 3.x style 
-	 * <pre>
-	 * // artwork is the root
-	 * [
-	 *	'id' => value,
-	 *  'artwork_column' => value,
-	 *  'editions' => [
-	 *		0 => [
-	 *			'id' => value,
-	 *			'edition_column' => value,
-	 *			'formats' => [
-	 *				0 => [
-	 *					'id' => value,
-	 *					'format_column' => value,
-	 *					'image' => [
-	 *						'id' => value,
-	 *						'image_column' = value,
-	 *					]
-	 *				]
-	 *			]
-	 *		],
-	 *	'image' => [
-	 *		'id' => value,
-	 *		'image_column' = value,
-	 *	]
-	 * ]
-	 * </pre>
-	 * 1   - make proper IDs for creation
-	 * 1.1 - set user_id in all cases
-	 * 2   - resolve ambiguity about new/old/no image
-	 * 3   - perform proper Piece creation/adjustment
-	 * 4   - save the assembled data in a transaction event
-	 * 
-	 * @param array $data this->request-data from the form
-	 * @return boolean Success or failure of the save process
-	 */
-//    public function saveStack($data) {
-//		// will this work for REVIEW?
-//		// it was originally only for CREATE but thats been changed
-//		// and SAVE was used to turn on necessary associations in the Tables 
-//		// that or unnecessary overhead in REVIEW mode
-////		if ($this->_table->SystemState->is(ARTWORK_SAVE)) {
-////		}
-//		$entity = $this->initPieces($entity);
-//		$entity = $this->initImages($entity);
-//		// analize for Piece requirements
-//		$Artwork = TableRegistry::get('Artworks');
-//		// save the stack
-//		osd($entity);
-//		return $Artwork->save($entity);
-//    }
-//	
-	
-	/**
 	 * Adjust the Pieces in TRD to match the user's request
 	 * 
 	 * Create and Refine processes have radically different rules for 
 	 * treatment of Pieces. As do the various Edition types. Here we target 
 	 * the handler for each Edition in the Artwork stack and call that 
 	 * handler to set up the save data for the Pieces for the Edition.
-	 * 
-	 * WHAT ABOUT PIECES OF FORMATS?
 	 * 
 	 * @param array $data
 	 * @return array
@@ -146,7 +82,7 @@ class ArtworkStackBehavior extends Behavior {
 	}
 	
 	/**
-	 * Logic for creation of pieces for new Editions
+	 * Callable: Logic for creation of pieces for new Editions
 	 * 
 	 * Direct creation of refinment of a Format for an existing Edition 
 	 * does not require Piece creation. Those calls are bounced. Later 
@@ -168,7 +104,7 @@ class ArtworkStackBehavior extends Behavior {
 				case 'Open Edition':
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
 					break;
-				case 'Use':
+				case 'Rights':
 					$edition['quantity'] = 1;
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
 					break;
@@ -177,11 +113,7 @@ class ArtworkStackBehavior extends Behavior {
 		return $edition;
 	}
 	
-	public function afterSave(Event $event/*, ArrayObject $data, ArrayObject $options*/) {
-//		osd(func_get_args());
-	}
-
-		/**
+	/**
 	 * Logic for allowed editing of Pieces for Editions
 	 * 
 	 * @param array $edition
@@ -295,9 +227,5 @@ class ArtworkStackBehavior extends Behavior {
 		}
 		return $record;
 	}
-	
-	private function setIDs($record) {
-		return $record;
-	}
-	
+		
 }

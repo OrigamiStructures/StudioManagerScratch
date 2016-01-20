@@ -90,6 +90,11 @@ class ArtworkStackComponent extends Component {
 		}
 	}
 	
+	public function assignPieces($artwork) {
+		$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
+		$this->PieceAssignment->assign();
+	}
+	
 	/**
 	 * Use URL query arguments to filter the Entity
 	 * 

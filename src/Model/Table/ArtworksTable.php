@@ -19,13 +19,13 @@ use ArrayObject;
 class ArtworksTable extends AppTable
 {
 	
-    public function implementedEvents()
-    {
-		$events = [
-            'Model.beforeMarshal' => 'beforeMarshal',
-        ];
-		return array_merge(parent::implementedEvents(), $events);
-    }
+//    public function implementedEvents()
+//    {
+//		$events = [
+//            'Model.beforeMarshal' => 'beforeMarshal',
+//        ];
+//		return array_merge(parent::implementedEvents(), $events);
+//    }
 
     /**
      * Initialize method

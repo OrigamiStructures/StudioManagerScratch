@@ -136,8 +136,6 @@ class EditionsController extends AppController
 	 * multiple Formats has not been resolved. The first will show in a 
 	 * fieldset for editing but subsiquent Formats are also in the data.
 	 * 
-	 * SAVE HAS NOT BEEN WRITTEN
-	 * 
 	 */
 	public function refine() {
 		$this->Artworks = TableRegistry::get('Artworks');
@@ -146,9 +144,8 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
-//			osd($this->request->data);
-//			osd($artwork, 'the save array for edition refine');die;
             if ($this->Artworks->save($artwork)) {
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),
@@ -158,13 +155,8 @@ class EditionsController extends AppController
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
         }
+		
 		$this->ArtworkStack->layerChoiceLists();
-//		$element_management = [
-//			'artwork' => 'describe',
-//			'edition' => 'fieldset',
-//			'format' => 'fieldset',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/create_dev');
 	}
@@ -186,6 +178,7 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
             if ($this->Artworks->save($artwork)) {
+				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect([
 					'controller' => 'editions', 
 					'action' => 'review', 
@@ -195,14 +188,8 @@ class EditionsController extends AppController
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
         }
-//		$artwork = $this->ArtworkStack->stackQuery();
+		
 		$this->ArtworkStack->layerChoiceLists();
-//		$element_management = [
-//			'artwork' => 'describe',
-//			'edition' => 'fieldset',
-//			'format' => 'fieldset',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/create_dev');		
 	}

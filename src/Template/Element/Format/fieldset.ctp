@@ -24,10 +24,10 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 			['placeholder' => 'Optional Format Title', 'label' => 'Format Title']); ?>
     <?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
 			['placeholder' => 'Media, size and other format details']); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.range_start"); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.range_end"); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.image_id", 
-			['type' => 'hidden']); ?>
+    <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
+    <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_start"); ?>
+    <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_end"); ?>
+    <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.image_id", 
+//			['type' => 'hidden']); ?>
 </fieldset>
 <?= $this->element('Image/format_fieldset'); ?>

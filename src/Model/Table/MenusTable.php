@@ -164,6 +164,9 @@ class MenusTable extends AppTable{
 	 * @return array
 	 */
 	protected function addEditions(){
+		
+		// NEW RULE - not everything allows create
+		
 		if (is_null($this->SystemState->menu_artwork)) {
 			return;
 		}
@@ -185,6 +188,9 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function addFormats() {
+		
+		// NEW RULE - not everything allows create
+		
 		if (is_null($this->SystemState->menu_artwork)) {
 			return;
 		}
