@@ -47,7 +47,7 @@ class Edition extends Entity
 	 */
 	public function _getDisplayTitle() {
 		$type = strtolower($this->_properties['type']) === 'unique' 
-				? 'Edition of 1' 
+				? 'Unique Work' 
 				: ucwords($this->_properties['type']) . " ({$this->_properties['quantity']})";
 		$title = empty($this->_properties['title']) ? ucwords($this->_properties['title']) : ucwords("{$this->_properties['title']}, ");
 		return  $title . $type;
