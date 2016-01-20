@@ -36,8 +36,7 @@ class MenusTable extends AppTable{
 			'Collectors' => [],
 			'Venues' => [],
 			'Representitives' => [],
-			'View Institutions' => '/groups/institutions',
-			'View Members' => '/members/',
+			'View Members' => '/members/review',
 			'View Categories' => '/groups/categories'
 		]];
 	protected $disposition = ['Dispostion' => [
