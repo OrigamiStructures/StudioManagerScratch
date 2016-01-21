@@ -20,6 +20,7 @@ $helper = $factory->load($edition->type);
 							?>
 							
 							<section class="disposition">
+								<?php $format->potential_pieces = $edition->unassigned_piece_count; ?>
 								<?= $helper->pieceSummary($format) ?>
 								<?= $helper->pieceTools($format) ?>
 							</section>

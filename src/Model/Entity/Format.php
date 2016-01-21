@@ -52,4 +52,30 @@ class Format extends Entity
 		return "$title";
 	}
 	
+	public function hasAssigned() {
+		return $this->_properties['assigned_piece_count'] > 0;
+	}
+	
+	public function hasCollected() {
+		return $this->_properties['collected_piece_count'] > 0;
+	}
+	
+	public function hasSalable() {
+		if (isset($this->potential_pieces)) {
+			
+		}
+	}
+
+	public function hasFluid() {
+		return $this->_properties['fluid_piece_count'] > 0;
+	}
+	
+	public function hasDisposed() {
+		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
+	}
+	
+	public function _getDisposedPieceCount () {
+		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
+	}
+	
 }

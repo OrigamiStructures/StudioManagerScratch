@@ -14,7 +14,7 @@ use App\View\Helper\EditionFactoryHelper;
 class EditionedHelper extends EditionFactoryHelper {
 
 	protected function _editionPieceSummary($edition) {
-		$unassigned = $reassign = $assignment_tool = '';
+		$unassigned = $reassign = '';
 		if ($edition->hasUnassigned()) {
 			$grammar = $edition->unassigned_piece_count === 1 ?
 				['is', $edition->unassigned_piece_count, 'piece', 'hasn\'t', ] :
@@ -52,8 +52,45 @@ class EditionedHelper extends EditionFactoryHelper {
 		echo $assignment_tool;
 	}
 		
-	protected function _formatPieceTools($edition) {
+	protected function _formatPieceSummary($format) {
+		$assigned = $reassign = $dispositions = $salable = '';
 		
+//		"There are x pieces assigned to the format, y of them can be reassigned.";
+		if ($format->hasFluid()) {
+			$count = $format->fluid_piece_count === $format->assigned_piece_count ?
+					'All' : $format->fluid_piece_count;
+			$reassign = sprintf('<br />%s of them can be reassigned to other formats.', 
+					$count);
+		}
+		if ($format->hasAssigned()) {
+			$grammar = $format->assigned_piece_count === 1 ?
+				['is', $format->assigned_piece_count, 'piece', $reassign] :
+				['are', $format->assigned_piece_count, 'pieces', $reassign];
+			$assigned = sprintf("<p>There %s %d %s assigned to this format.%s</p>\n",
+					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
+		}
+		
+//		"There are status events recorded for t pieces";
+		if ($format->hasDisposed()) {
+			$count = $format->disposed_piece_count === $format->assigned_piece_count ?
+					'all' : $format->disposed_piece_count;
+			$grammar = ($count === 1) || ($count === 'all') ?
+				[$count, 'of them'] :
+				[$count, 'pieces'];
+			$dispositions = sprintf("<p>There are status events recorded for %s %s.</p>\n",
+					$grammar[0], $grammar[1]);
+		}
+		
+//		"There are up to z pieces in this format available for sale. Examine these pieces";
+		if ($format->hasSalable()) {
+			
+		}
+		
+		echo $assigned . $dispositions;
+		
+	}
+	protected function _formatPieceTools($format) {
+		"Add status information";
 	}
 	
 }

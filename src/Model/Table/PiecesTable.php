@@ -41,6 +41,7 @@ class PiecesTable extends AppTable
             'Formats' => [
 				'assigned_piece_count'=> [$this, 'assignedPieces'],
 				'fluid_piece_count'  => [$this, 'fluidPieces'],
+				'collected_piece_count' => ['conditions' => ['collected' => 1]],
 			],
             'Editions' => [
 				'assigned_piece_count' => [$this, 'assignedPieces'],
