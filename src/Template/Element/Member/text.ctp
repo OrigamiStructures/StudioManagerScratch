@@ -1,4 +1,8 @@
 
 <!-- Element/Member/text.ctp -->
-    <?= h($member->name); ?>
+<?php
+    if(isset($member->first_name)){
+        echo h($member->name);
+    }
+?>
 <!-- END Element/Member/text.ctp -->
