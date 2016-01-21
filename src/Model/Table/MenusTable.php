@@ -33,9 +33,8 @@ class MenusTable extends AppTable{
 			'Format' => [],
         ]];
 	protected $member = ['Market' => [
-			'Collectors' => [],
-			'Venues' => [],
-			'Representitives' => [],
+            'Create Institution' => '/members/create/Institution',
+            'Create Person' => '/members/create/Person',
 			'View Members' => '/members/review',
 			'View Categories' => '/groups/categories'
 		]];
