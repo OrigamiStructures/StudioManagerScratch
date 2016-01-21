@@ -38,12 +38,13 @@ class PiecesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('CounterCache', [
-            'Formats' => ['assigned_piece_count'=> [
-				$this, 'assignedPieces'],
+            'Formats' => [
+				'assigned_piece_count'=> [$this, 'assignedPieces'],
+				'fluid_piece_count'  => [$this, 'fluidPieces'],
 			],
-            'Editions' => ['assigned_piece_count' => [
-				$this, 'assignedPieces',
-				]
+            'Editions' => [
+				'assigned_piece_count' => [$this, 'assignedPieces'],
+				'fluid_piece_count'  => [$this, 'fluidPieces'],
 			]
         ]);
 //		$this->addBehavior('ArtworkStack');
@@ -111,6 +112,24 @@ class PiecesTable extends AppTable
 			$pieces = $table->find('all')->where([
 				'edition_id' => $entity->edition_id,
 				'format_id' => $entity->format_id,
+				])->select(['id', 'format_id', 'edition_id', 'quantity']);
+			$sum = (new Collection($pieces->toArray()))->reduce(
+					function($accumulate, $value) {
+						return $accumulate + $value->quantity;
+					}, 0
+				);
+			return $sum;//die;
+		}
+	}
+
+	public function fluidPieces($event, $entity, $table) {
+		if (is_null($entity->format_id)) {
+			return 0;
+		} else {
+			$pieces = $table->find('all')->where([
+				'edition_id' => $entity->edition_id,
+				'format_id' => $entity->format_id,
+				'disposition_count' => 0,
 				])->select(['id', 'format_id', 'edition_id', 'quantity']);
 			$sum = (new Collection($pieces->toArray()))->reduce(
 					function($accumulate, $value) {

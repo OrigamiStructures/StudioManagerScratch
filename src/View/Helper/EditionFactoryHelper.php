@@ -32,9 +32,9 @@ class EditionFactoryHelper extends Helper {
 	
 	public function pieceSummary($entity) {
 		if (stristr(get_class($entity), 'Edition')) {
-			$this->_editionPieceSummary($entity);
+			return $this->_editionPieceSummary($entity);
 		} elseif (stristr(get_class($entity), 'Format')){
-			$this->_formatPieceSummary($entity);
+			return $this->_formatPieceSummary($entity);
 		} else {
 			$bad_class = get_class($entity);
 			throw new \BadMethodCallException(
@@ -45,9 +45,9 @@ class EditionFactoryHelper extends Helper {
 
 	public function pieceTools($entity) {
 		if (stristr(get_class($entity), 'Edition')) {
-			$this->_editionPieceTools($entity);
+			return $this->_editionPieceTools($entity);
 		} elseif (stristr(get_class($entity), 'Format')){
-			$this->_formatPieceTools($entity);
+			return $this->_formatPieceTools($entity);
 		} else {
 			$bad_class = get_class($entity);
 			throw new \BadMethodCallException(

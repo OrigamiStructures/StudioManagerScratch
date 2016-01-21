@@ -53,12 +53,20 @@ class Edition extends Entity
 		return  $title . $type;
 	}
 	
-	public function _getUnassigned() {
-		return $this_properties['quantity'] - $this->_properties['assigned_piece_count'];
+	public function hasUnassigned() {
+		return (boolean) $this->unassigned_piece_count > 0;
 	}
 	
-	public function hasAvailablePieces() {
-		return $this_properties['quantity'] - $this->_properties['assigned_piece_count'] > 0;
+	public function _getUnassignedPieceCount() {
+		return $this->_properties['quantity'] - $this->_properties['assigned_piece_count'];
+	}
+	
+//	public function hasAvailablePieces() {
+//		return (boolean) $this_properties['quantity'] - $this->_properties['assigned_piece_count'] > 0;
+//	}
+	
+	public function hasFluid() {
+		return $this->_properties['fluid_piece_count'] > 0;
 	}
 	
 }
