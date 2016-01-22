@@ -122,4 +122,18 @@ class FormatsTable extends AppTable
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
 	
+	/**
+	 * Given a format id return the format entity with contained edition entinty (query)
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @throws \BadMethodCallException
+	 */
+	public function findParentEdition(Query $query, $options) {
+		if (!isset($options['format_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['format_id']");
+		}
+		return $query->where(['Formats.id' => $options['format_id']])->contain(['Editions']);
+	}
+	
 }

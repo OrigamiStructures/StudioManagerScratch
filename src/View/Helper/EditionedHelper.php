@@ -37,6 +37,7 @@ class EditionedHelper extends EditionFactoryHelper {
 	 */
 	protected function _editionPieceSummary($edition) {
 		$unassigned = $reassign = '';
+		
 		if ($edition->hasUnassigned()) {
 			if ($edition->unassigned_piece_count === $edition->quantity) {
 				$unassigned = 'No pieces have been assigned to any format.';				
@@ -69,10 +70,30 @@ class EditionedHelper extends EditionFactoryHelper {
 		echo "<p>$unassigned</p>\n<p>$reassign</p>\n";
 	}
 	
+	/**
+	 * Generate all the Edition layer tools for piece management
+	 * 
+	 * Currently there is only one tool at this layer:
+	 * Generate tool/link to piece assignment page for an edition
+	 * 
+	 * Assignment and reassignment are managed from the same page. The tool 
+	 * label will say either or both words as appropriate to the circumstance
+	 * 
+	 * @param Entity $edition
+	 */
 	protected function _editionPieceTools($edition) {
 		$assignment_tool = '';
 		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
-			$assignment_tool = $this->Html->link("Assign pieces to formats",
+			
+			if ($edition->hasUnassigned()) {
+				$label[] = 'Assign';
+			}
+			if ($edition->hasFluid() && ($edition->fluid_piece_count !== $edition->unassigned_piece_count)) {
+				$label[] = 'Reassign';
+			}
+			$label = implode('/', $label);
+		
+			$assignment_tool = $this->Html->link("$label pieces to formats",
 				['controller' => 'pieces', 'action' => 'review', '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
@@ -170,8 +191,8 @@ class EditionedHelper extends EditionFactoryHelper {
 		
 	}
 
-	protected function _formatPieceTools($format, $edition) {
-		"Add status information";
-	}
+//	protected function _formatPieceTools($format, $edition) {
+//		"Add status information";
+//	}
 	
 }
