@@ -22,9 +22,10 @@ class EditionedHelper extends EditionFactoryHelper {
 	 * number of formats. At the Edition level we have 2 values to report on we 
 	 * will generate 2 core statements in a few grammatical variations:
 	 * 
-	 * 1a - There are n pieces that have been assigned to a format.
-	 * 1b - There is 1 piece that has been assigned to a format.
-	 * 1b - No piece that have been assigned to any format.
+	 * 1a - No pieces have been assigned to any format.
+	 * 1b - All pieces have been assigned to formats.
+	 * 1c - There are n pieces not assigned to a format.
+	 * 1d - There is 1 piece not assigned to a format.
 	 * 
 	 * 2a - There are n pieces that can be reassigned to different formats.
 	 * 2a - There is 1 piece that can be reassigned to a different format.
@@ -37,28 +38,35 @@ class EditionedHelper extends EditionFactoryHelper {
 	protected function _editionPieceSummary($edition) {
 		$unassigned = $reassign = '';
 		if ($edition->hasUnassigned()) {
-			$grammar = $edition->unassigned_piece_count === 1 ?
-				['is', $edition->unassigned_piece_count, 'piece', 'hasn\'t', ] :
-				['are', $edition->unassigned_piece_count, 'pieces', 'haven\'t'];
-			$unassigned = sprintf(
-					"<p></p>\n",
-					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
-			
+			if ($edition->unassigned_piece_count === $edition->quantity) {
+				$unassigned = 'No pieces have been assigned to any format.';				
+			} else {
+				$grammar = $edition->unassigned_piece_count === 1 ?
+					'is one piece' :
+					"are {$edition->unassigned_piece_count} pieces";
+				$unassigned = sprintf(
+						"%s not assigned to a format.",
+						$grammar[0], $grammar[1], $grammar[2], $grammar[3]);				
+			}
 		} else {
-			// no statement iff all pieces are assigned
+			$unassigned = 'All pieces have been assigned to formats.';
 		}
-		if ($edition->hasFluid() && $edition->format_count > 1) {
+
+		if ($edition->hasFluid() && 
+				($edition->format_count > 1) && 
+				($edition->assigned_piece_count > 0)) 
+		{
 			$grammar = $edition->fluid_piece_count === 1 ?
 				['is', $edition->fluid_piece_count, 'piece', 'can', ] :
 				['are', $edition->fluid_piece_count, 'pieces', 'could'];
 			$reassign = sprintf(
-					"<p>There %s %d %s that %s be reassigned to different formats.</p>\n",
+					"There %s %d %s that %s be reassigned to different formats.",
 					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
-		} else {
-			// no statement if no pieces can be reassigned
+		} elseif ($edition->assigned_piece_count > 0) {
+			$reassign = 'There are no pieces that can be reassigned.';
 		}
 		
-		echo $unassigned . $reassign;
+		echo "<p>$unassigned</p>\n<p>$reassign</p>\n";
 	}
 	
 	protected function _editionPieceTools($edition) {
@@ -131,7 +139,7 @@ class EditionedHelper extends EditionFactoryHelper {
 //		"There are status events recorded for t pieces";
 		if ($format->hasDisposed()) {
 			if ($format->disposed_piece_count === 1) {
-				$dispositions = 'The status of 1 piece has been recorded.';
+				$dispositions = "<p>The status of 1 piece has been recorded.</p>\n";
 			} else {
 				$count = $format->disposed_piece_count === $format->assigned_piece_count ?
 						'all' : $format->disposed_piece_count;
@@ -143,7 +151,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			}
 			
 		} elseif ($format->hasAssigned()) {
-			$dispositions = 'You haven\'t recorded the status of any pieces.';
+			$dispositions = "<p>You haven't recorded the status of any pieces.</p>\n";
 		}
 		
 //		"There are up to z pieces in this format available for sale";
@@ -161,6 +169,7 @@ class EditionedHelper extends EditionFactoryHelper {
 		echo $assigned . $dispositions . $salable;
 		
 	}
+
 	protected function _formatPieceTools($format, $edition) {
 		"Add status information";
 	}

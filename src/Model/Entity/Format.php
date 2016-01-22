@@ -65,15 +65,16 @@ class Format extends Entity
 //		osd($fluid_piece_count,'$fluid_piece_count');
 //		osd($this->_properties['fluid_piece_count'],'$this->_properties[fluid_piece_count]');
 //		osd($this->_properties['collected_piece_count'],'$this->_properties[collected_piece_count]');
-		return ($this->_properties['assigned_piece_count'] + 
-				($fluid_piece_count - $this->_properties['fluid_piece_count']) - 
-				$this->_properties['collected_piece_count']) > 0;
+		/**
+		 * formats disposed pieces + editions fluid pieces - formats collected pieces
+		 */
+		return ($this->disposed_piece_count + 
+				$fluid_piece_count - $this->_properties['collected_piece_count']) > 0;
 	}
 	
 	public function salable_piece_count($fluid_piece_count) {
-		return $this->_properties['assigned_piece_count'] + 
-				($fluid_piece_count - $this->_properties['fluid_piece_count']) - 
-				$this->_properties['collected_piece_count'];
+		return $this->disposed_piece_count + 
+				$fluid_piece_count - $this->_properties['collected_piece_count'];
 	}
 
 	public function hasFluid() {
