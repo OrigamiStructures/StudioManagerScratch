@@ -60,10 +60,20 @@ class Format extends Entity
 		return $this->_properties['collected_piece_count'] > 0;
 	}
 	
-	public function hasSalable() {
-		if (isset($this->potential_pieces)) {
-			
-		}
+	public function hasSalable($fluid_piece_count) {
+//		osd($this->_properties['assigned_piece_count'],'$this->_properties[assigned_piece_count]');
+//		osd($fluid_piece_count,'$fluid_piece_count');
+//		osd($this->_properties['fluid_piece_count'],'$this->_properties[fluid_piece_count]');
+//		osd($this->_properties['collected_piece_count'],'$this->_properties[collected_piece_count]');
+		return ($this->_properties['assigned_piece_count'] + 
+				($fluid_piece_count - $this->_properties['fluid_piece_count']) - 
+				$this->_properties['collected_piece_count']) > 0;
+	}
+	
+	public function salable_piece_count($fluid_piece_count) {
+		return $this->_properties['assigned_piece_count'] + 
+				($fluid_piece_count - $this->_properties['fluid_piece_count']) - 
+				$this->_properties['collected_piece_count'];
 	}
 
 	public function hasFluid() {

@@ -30,11 +30,11 @@ class EditionFactoryHelper extends Helper {
 		return $this->_View->loadHelper($this->_map[$version]);
 	}
 	
-	public function pieceSummary($entity) {
+	public function pieceSummary($entity, $edition = NULL) {
 		if (stristr(get_class($entity), 'Edition')) {
 			return $this->_editionPieceSummary($entity);
 		} elseif (stristr(get_class($entity), 'Format')){
-			return $this->_formatPieceSummary($entity);
+			return $this->_formatPieceSummary($entity, $edition);
 		} else {
 			$bad_class = get_class($entity);
 			throw new \BadMethodCallException(
@@ -43,11 +43,11 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 
-	public function pieceTools($entity) {
+	public function pieceTools($entity, $edition = NULL) {
 		if (stristr(get_class($entity), 'Edition')) {
 			return $this->_editionPieceTools($entity);
 		} elseif (stristr(get_class($entity), 'Format')){
-			return $this->_formatPieceTools($entity);
+			return $this->_formatPieceTools($entity, $edition);
 		} else {
 			$bad_class = get_class($entity);
 			throw new \BadMethodCallException(
@@ -56,16 +56,16 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 
-	protected function _editionPieceSummary($entity) {
+	protected function _editionPieceSummary($edition) {
 		return '';
 	}
-	protected function _formatPieceSummary($entity) {
+	protected function _formatPieceSummary($format, $edition) {
 		return '';
 	}
-	protected function _editionPieceTools($entity) {
+	protected function _editionPieceTools($edition) {
 		return '';
 	}
-	protected function _formatPieceTools($entity) {
+	protected function _formatPieceTools($format, $edition) {
 		return '';
 	}
 	

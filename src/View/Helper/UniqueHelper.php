@@ -13,7 +13,7 @@ use App\View\Helper\EditionFactoryHelper;
  */
 class UniqueHelper extends EditionFactoryHelper {
 	
-	protected function _formatPieceSummary($format) {
+	protected function _formatPieceSummary($format, $edition) {
 		$piece = $format->pieces[0];
 		if((boolean) $piece->disposition_count) {
 			return '<p>pending results</p>';
@@ -25,7 +25,7 @@ class UniqueHelper extends EditionFactoryHelper {
 		}
 	}
 	
-	protected function _formatPieceTools($format) {
+	protected function _formatPieceTools($format, $edition) {
 		$piece = $format->pieces[0];
 		if ($this->_canDispose($piece)) {
 			echo $this->Html->link("Add status information",
