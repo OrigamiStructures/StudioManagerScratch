@@ -38,12 +38,14 @@ class PiecesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('CounterCache', [
-            'Formats' => ['assigned_piece_count'=> [
-				$this, 'assignedPieces'],
+            'Formats' => [
+				'assigned_piece_count'=> [$this, 'assignedPieces'],
+				'fluid_piece_count'  => [$this, 'fluidPieces'],
+				'collected_piece_count' => ['conditions' => ['collected' => 1]],
 			],
-            'Editions' => ['assigned_piece_count' => [
-				$this, 'assignedPieces',
-				]
+            'Editions' => [
+				'assigned_piece_count' => [$this, 'assignedPieces'],
+				'fluid_piece_count'  => [$this, 'fluidPieces'],
 			]
         ]);
 //		$this->addBehavior('ArtworkStack');
@@ -121,6 +123,24 @@ class PiecesTable extends AppTable
 		}
 	}
 
+	public function fluidPieces($event, $entity, $table) {
+		if (is_null($entity->format_id)) {
+			return 0;
+		} else {
+			$pieces = $table->find('all')->where([
+				'edition_id' => $entity->edition_id,
+				'format_id' => $entity->format_id,
+				'disposition_count' => 0,
+				])->select(['id', 'format_id', 'edition_id', 'quantity']);
+			$sum = (new Collection($pieces->toArray()))->reduce(
+					function($accumulate, $value) {
+						return $accumulate + $value->quantity;
+					}, 0
+				);
+			return $sum;//die;
+		}
+	}
+
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
@@ -170,5 +190,42 @@ class PiecesTable extends AppTable
 			$pieces = $numbered_edition->toArray();
 		}
 		return $pieces;
+	}
+	
+	/**
+	 * Find pieces that can gain Dispositions in this circmstance
+	 * 
+	 * I'm not sure if an edition id would ever be sent.
+	 * 
+	 * When a format_id is sent canDispose() finds:
+	 *		- The already-disposed but still disposable pieces on the format
+	 *		- The fluid pieces in the edition 
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return type
+	 */
+	public function findCanDispose(Query $query, $options) {
+		if (!isset($options['format_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['format_id']");
+		}
+		$format_id = $options['format_id'];
+		$edition_id = $this->Formats->find('parentEdition', $options)
+				->select(['Editions.id'])
+				->toArray()[0]['Editions']->id;
+					
+		if (isset($options['edition_id'])) {
+			$conditions['edition_id'] = $options['edition_id'];
+		}
+		
+//		find piece (format_id && format.disposed && piece.free) or (edition.fluid)
+		$query->where(['Pieces.format_id' => $format_id, 'Pieces.disposition_count >' => 0] /*disposable*/)
+			->orWhere(['Peices.edition_id' => $edition_id, 'Pieces.disposition_count' => 0]);
+		osd($query);die;
+				// ADD CONDITION TO DISCOVER PIECES THAT CAN STILL BE DISPOSED
+		$conditions;
+		// ===========================================================
+		
+		return $query->where($conditions);
 	}
 }

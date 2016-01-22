@@ -52,4 +52,41 @@ class Format extends Entity
 		return "$title";
 	}
 	
+	public function hasAssigned() {
+		return $this->_properties['assigned_piece_count'] > 0;
+	}
+	
+	public function hasCollected() {
+		return $this->_properties['collected_piece_count'] > 0;
+	}
+	
+	public function hasSalable($fluid_piece_count) {
+//		osd($this->_properties['assigned_piece_count'],'$this->_properties[assigned_piece_count]');
+//		osd($fluid_piece_count,'$fluid_piece_count');
+//		osd($this->_properties['fluid_piece_count'],'$this->_properties[fluid_piece_count]');
+//		osd($this->_properties['collected_piece_count'],'$this->_properties[collected_piece_count]');
+		/**
+		 * formats disposed pieces + editions fluid pieces - formats collected pieces
+		 */
+		return ($this->disposed_piece_count + 
+				$fluid_piece_count - $this->_properties['collected_piece_count']) > 0;
+	}
+	
+	public function salable_piece_count($fluid_piece_count) {
+		return $this->disposed_piece_count + 
+				$fluid_piece_count - $this->_properties['collected_piece_count'];
+	}
+
+	public function hasFluid() {
+		return $this->_properties['fluid_piece_count'] > 0;
+	}
+	
+	public function hasDisposed() {
+		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
+	}
+	
+	public function _getDisposedPieceCount () {
+		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
+	}
+	
 }

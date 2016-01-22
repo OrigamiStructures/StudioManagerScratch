@@ -23,6 +23,8 @@ $helper = $factory->load($edition->type);
 					?>
 
 					<?= $this->Html->tag('h2', $edition->displayTitle); ?>
-					<?= $helper->pieceSummary($edition); ?>
-					<?= $helper->pieceTools($edition); ?>
+					<section class="assignment">
+						<?= $helper->pieceSummary($edition); ?>
+						<?= $helper->pieceTools($edition); ?>
+					</section>
 <!-- END Element/Edition/text.ctp -->

@@ -98,12 +98,13 @@ class ArtworkStackBehavior extends Behavior {
 			switch ($edition['type']) {
 				case 'Limited Edition':
 				case 'Portfolio':
-				case 'Unique':
+				case 'Publication':
 					$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
 					break;
 				case 'Open Edition':
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
 					break;
+				case 'Unique':
 				case 'Rights':
 					$edition['quantity'] = 1;
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);

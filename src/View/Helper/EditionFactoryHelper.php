@@ -16,6 +16,15 @@ class EditionFactoryHelper extends Helper {
 	
 	public $helpers = ['Html'];
 	
+	/**
+	 * Map specific edition types to more general helper strategies
+	 * 
+	 * Unique - edition with 1 format and 1 piece
+	 * Editioned - edition with n formats and n pieces
+	 * Packaged - edition with 1 format and n pieces
+	 *
+	 * @var array
+	 */
 	protected $_map = [
 		'Unique' => 'Unique',
 		'Rights' => 'Unique',
@@ -25,29 +34,63 @@ class EditionFactoryHelper extends Helper {
 		'Publication' => 'Packaged',
 	];
 	
+	/**
+	 * Factory to generate a specific helper
+	 * 
+	 * The edition->type is synthesized into the map key
+	 * 
+	 * @param type $type
+	 * @return type
+	 */
 	public function load($type) {
 		$version = str_replace(' ', '', $type);
 		return $this->_View->loadHelper($this->_map[$version]);
 	}
 	
-	public function pieceSummary($entity) {
+	/**
+	 * Get text describing the state of the pieces for this edition or format
+	 * 
+	 * @param Entity $entity Format or Edition
+	 * @param EditionEntity $edition
+	 * @return string statements describing the pieces (loose html dom nodes)
+	 * @throws \BadMethodCallException
+	 */
+	public function pieceSummary($entity, $edition = NULL) {
+		
 		if (stristr(get_class($entity), 'Edition')) {
-			$this->_editionPieceSummary($entity);
-		} elseif (stristr(get_class($entity), 'Format')){
-			$this->_formatPieceSummary($entity);
+			return $this->_editionPieceSummary($entity);
+			
+		} elseif (stristr(get_class($entity), 'Format') &&
+				stristr(get_class($edition), 'Edition')){
+			return $this->_formatPieceSummary($entity, $edition);
+			
 		} else {
-			$bad_class = get_class($entity);
+			$first_class = get_class($entity);
+			$second_class = !is_null($edition) ? get_class($edition) : NULL ;
+			
 			throw new \BadMethodCallException(
-					"Argument must be an entity of type Edition or Format. "
-					. "An Entity of type $bad_class was passed.");
+					"Method requires an entity of type Edition or Format, or two entities of types Format and Edition. "
+					. "$first_class and $second_class were passed.");
 		}
 	}
 
-	public function pieceTools($entity) {
+	/**
+	 * Get tools to manage the pieces for this edition or format
+	 * 
+	 * @param Entity $entity Format or Edition
+	 * @param EditionEntity $edition
+	 * @return string tools to manage the pieces (loose html dom nodes)
+	 * @throws \BadMethodCallException
+	 */
+	public function pieceTools($entity, $edition = NULL) {
+		
 		if (stristr(get_class($entity), 'Edition')) {
-			$this->_editionPieceTools($entity);
-//		} elseif (stristr(get_class($entity), 'Format')){
-//			$this->_formatPieceTools($entity);
+			return $this->_editionPieceTools($entity);
+			
+		} elseif (stristr(get_class($entity), 'Format') && 
+				stristr(get_class($edition), 'Edition')){
+			return $this->_formatPieceTools($entity, $edition);
+			
 		} else {
 			$bad_class = get_class($entity);
 			throw new \BadMethodCallException(
@@ -56,14 +99,64 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 
-	protected function _editionPieceSummary($entity) {
+	protected function _editionPieceSummary($edition) {
 		return '';
 	}
-	protected function _formatPieceSummary($entity) {
-		return '';
-	}
-	protected function _editionPieceTools($entity) {
+	protected function _formatPieceSummary($format, $edition) {
 		return '';
 	}
 
+	/**
+	 * Generate all the Edition layer tools for piece management
+	 * 
+	 * Currently there is only one tool at this layer:
+	 * Generate tool/link to piece assignment page for an edition
+	 * 
+	 * Assignment and reassignment are managed from the same page. The tool 
+	 * label will say either or both words as appropriate to the circumstance
+	 * 
+	 * @param Entity $edition
+	 */
+	protected function _editionPieceTools($edition) {
+		
+		$assignment_tool = '';
+		if ($edition->hasUnassigned()) {
+			$label[] = 'Assign';
+		}
+		if ($edition->hasFluid() && ($edition->fluid_piece_count !== $edition->unassigned_piece_count)) {
+			$label[] = 'Reassign';
+		}
+		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
+			$label = implode('/', $label);
+			$assignment_tool = $this->Html->link("$label pieces to formats",
+				['controller' => 'pieces', 'action' => 'review', '?' => [
+					'artwork' => $edition->artwork_id,
+					'edition' => $edition->id,
+				]]) . "\n";
+		}
+		echo $assignment_tool;
+	}
+	
+//	protected function _formatPieceTools($format, $edition) {
+//		return '';
+//	}
+	protected function _formatPieceTools($format, $edition) {
+		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
+		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
+		if ((boolean) $pieces) {
+			echo $this->Html->link("Add status information",
+				['controller' => 'dispositions', 'action' => 'create', '?' => [
+					'artwork' => $edition->artwork_id,
+					'edition' => $edition->id,
+					'format' => $format->id,
+					'piece' => $pieces[0]->id
+				]]);
+		} else {
+			echo $this->Html->tag('p', 
+				'You can\'t change the status of this artwork.', 
+				['class' => 'current_disposition']
+			);
+		}
+	}
+	
 }

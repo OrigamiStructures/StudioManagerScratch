@@ -43,7 +43,10 @@ class DispositionsTable extends AppTable
 			 * In this case we could just do a smart disposition_count 
 			 * instead of doing two count fields.
 			 */
-            'Pieces' => ['disposition_count', /*'internal_dispo_count'*/]
+            'Pieces' => [
+				'disposition_count',
+				'collected' => [$this, 'markCollected'],
+				/*'internal_dispo_count'*/]
         ]);
 		$this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -89,4 +92,9 @@ class DispositionsTable extends AppTable
         $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
         return $rules;
     }
+	
+	public function markCollected($event, $entity, $table) {
+		// this search must find dispositions that would be considered 'collected'
+		return (boolean) 0;
+	}
 }
