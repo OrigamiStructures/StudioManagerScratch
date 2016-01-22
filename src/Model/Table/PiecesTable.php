@@ -192,15 +192,37 @@ class PiecesTable extends AppTable
 		return $pieces;
 	}
 	
+	/**
+	 * Find pieces that can gain Dispositions in this circmstance
+	 * 
+	 * I'm not sure if an edition id would ever be sent.
+	 * 
+	 * When a format_id is sent canDispose() finds:
+	 *		- The already-disposed but still disposable pieces on the format
+	 *		- The fluid pieces in the edition 
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return type
+	 */
 	public function findCanDispose(Query $query, $options) {
-		if (isset($options['format_id'])) {
-			$conditions['format_id'] = $options['format_id'];
+		if (!isset($options['format_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['format_id']");
 		}
+		$format_id = $options['format_id'];
+		$edition_id = $this->Formats->find('parentEdition', $options)
+				->select(['Editions.id'])
+				->toArray()[0]['Editions']->id;
+					
 		if (isset($options['edition_id'])) {
 			$conditions['edition_id'] = $options['edition_id'];
 		}
 		
-		// ADD CONDITION TO DISCOVER PIECES THAT CAN STILL BE DISPOSED
+//		find piece (format.disposed && piece.free) or (edition.fluid)
+		$query->where(['Pieces.format_id' => $format_id, 'Pieces.disposition_count >' => 0 /*disposable*/])
+				->orWhere($conditions);
+		osd($query);die;
+				// ADD CONDITION TO DISCOVER PIECES THAT CAN STILL BE DISPOSED
 		$conditions;
 		// ===========================================================
 		

@@ -191,8 +191,8 @@ class EditionedHelper extends EditionFactoryHelper {
 		
 	}
 
-	protected function _formatPieceTools($format, $edition) {
-		"Add status information";
-	}
+//	protected function _formatPieceTools($format, $edition) {
+//		"Add status information";
+//	}
 	
 }
