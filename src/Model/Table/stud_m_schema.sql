@@ -7,7 +7,7 @@
 #
 # Host: mysql.origamistructures.com (MySQL 5.6.25-log)
 # Database: stud_m
-# Generation Time: 2016-01-12 23:02:15 +0000
+# Generation Time: 2016-01-21 15:19:45 +0000
 # ************************************************************
 
 
@@ -38,9 +38,23 @@ CREATE TABLE `addresses` (
   `state` varchar(255) DEFAULT NULL,
   `zip` varchar(255) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `primary` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `addresses` WRITE;
+/*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
+
+INSERT INTO `addresses` (`id`, `created`, `modified`, `user_id`, `member_id`, `address1`, `address2`, `address3`, `city`, `state`, `zip`, `country`, `label`, `primary`)
+VALUES
+	(1,'2016-01-14 23:02:13','2016-01-14 23:02:13',NULL,11,'123 Main St.','','','Los Angeles','CA','99567','USA','main',NULL),
+	(2,'2016-01-14 23:12:33','2016-01-14 23:12:33',NULL,12,'123 Main St.','','','Los Angeles','CA','99567','USA','main',NULL),
+	(3,'2016-01-20 22:32:01','2016-01-20 22:46:30',NULL,13,'123 Main St.','Second Floor Suite 58','','Palo Alto','CA','94567','USA','main',NULL),
+	(4,'2016-01-20 23:08:56','2016-01-20 23:08:56',NULL,5,'1 Hogarth Blvd.','','','Pine Grove','CA','95665','USA','main',NULL);
+
+/*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table artworks
@@ -56,6 +70,7 @@ CREATE TABLE `artworks` (
   `image_id` int(11) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `description` text,
+  `edition_count` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -100,6 +115,20 @@ CREATE TABLE `contacts` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `contacts` WRITE;
+/*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
+
+INSERT INTO `contacts` (`id`, `created`, `modified`, `user_id`, `member_id`, `label`, `data`)
+VALUES
+	(1,'2016-01-14 23:12:33','2016-01-14 23:12:33',NULL,12,'email','office@onceler.com'),
+	(2,'2016-01-14 23:12:33','2016-01-14 23:12:33',NULL,12,'phone','212.884.8246'),
+	(3,'2016-01-20 22:32:01','2016-01-20 22:32:01',NULL,13,'email','foo@men.com'),
+	(4,'2016-01-20 22:32:01','2016-01-20 22:32:01',NULL,13,'phone','999-867-4784'),
+	(5,'2016-01-20 23:08:56','2016-01-20 23:38:22',NULL,5,'email','boss@davisfound.com'),
+	(6,'2016-01-20 23:08:56','2016-01-20 23:08:56',NULL,5,'phone','');
+
+/*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table designs
@@ -150,8 +179,9 @@ CREATE TABLE `editions` (
   `quantity` int(11) NOT NULL DEFAULT '1',
   `artwork_id` int(11) DEFAULT NULL,
   `series_id` int(11) DEFAULT NULL,
-  `unassigned_piece_count` int(11) DEFAULT '0',
   `assigned_piece_count` int(11) DEFAULT '0',
+  `format_count` int(11) DEFAULT '0',
+  `fluid_piece_count` int(11) DEFAULT '0' COMMENT 'pieces with no dispositions can easily move to other formats',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -176,6 +206,8 @@ CREATE TABLE `formats` (
   `edition_id` int(11) DEFAULT NULL,
   `subscription_id` int(11) DEFAULT NULL,
   `assigned_piece_count` int(11) DEFAULT '0',
+  `fluid_piece_count` int(11) DEFAULT '0' COMMENT 'pieces with no dispositions can easily move to other formats',
+  `collected_piece_count` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -192,9 +224,24 @@ CREATE TABLE `groups` (
   `modified` datetime DEFAULT NULL,
   `user_id` char(36) DEFAULT NULL,
   `member_id` int(11) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+
+INSERT INTO `groups` (`id`, `created`, `modified`, `user_id`, `member_id`, `active`)
+VALUES
+	(1,NULL,NULL,'008ab31c-124d-4e15-a4e1-45fccd7becac',5,1),
+	(2,'2016-01-14 19:27:31','2016-01-14 19:27:31',NULL,9,1),
+	(3,'2016-01-14 19:30:44','2016-01-14 19:30:44','008ab31c-124d-4e15-a4e1-45fccd7becac',10,1),
+	(4,'2016-01-14 23:02:13','2016-01-14 23:02:13','008ab31c-124d-4e15-a4e1-45fccd7becac',11,1),
+	(5,'2016-01-14 23:12:33','2016-01-14 23:12:33','008ab31c-124d-4e15-a4e1-45fccd7becac',12,1),
+	(6,'2016-01-20 22:32:02','2016-01-20 22:32:02','008ab31c-124d-4e15-a4e1-45fccd7becac',13,1);
+
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table groups_members
@@ -292,15 +339,28 @@ CREATE TABLE `members` (
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
 
-INSERT INTO `members` (`id`, `created`, `modified`, `user_id`, `image_id`, `first_name`, `last_name`, `type`)
+INSERT INTO `members` (`id`, `created`, `modified`, `user_id`, `image_id`, `first_name`, `last_name`, `type`, `active`)
 VALUES
-	(1,'2015-12-04 06:33:58','2015-12-04 06:33:58','1',NULL,NULL,NULL,NULL);
+	(1,'2015-12-04 06:33:58','2015-12-04 06:33:58','1',NULL,NULL,NULL,NULL,1),
+	(2,'2016-01-14 00:22:51','2016-01-14 00:22:51','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Bill','Blevins','Person',1),
+	(3,'2016-01-14 03:21:15','2016-01-14 03:21:15','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Tommy','Tune','Person',1),
+	(4,'2016-01-14 03:34:45','2016-01-14 03:34:45','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Davy','Jones','Person',1),
+	(5,'2016-01-14 03:40:27','2016-01-20 23:38:22','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Davis Foundation','Davis Foundation','Institution',1),
+	(6,'2016-01-14 19:16:10','2016-01-14 19:16:10','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Findley Group','','Institution',1),
+	(7,'2016-01-14 19:20:15','2016-01-14 19:20:15','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Thompkins Group','','Institution',1),
+	(8,'2016-01-14 19:21:46','2016-01-14 19:21:46','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Donneley','','Institution',1),
+	(9,'2016-01-14 19:27:31','2016-01-14 19:27:31','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Blumenfeld and Associates','','Institution',1),
+	(10,'2016-01-14 19:30:44','2016-01-14 19:30:44','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Curly Media','','Institution',1),
+	(11,'2016-01-14 23:02:13','2016-01-14 23:02:13','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Floyd Society','','Institution',1),
+	(12,'2016-01-14 23:12:33','2016-01-14 23:12:33','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Onceler Manufacturing','','Institution',1),
+	(13,'2016-01-20 22:32:01','2016-01-20 22:46:29','008ab31c-124d-4e15-a4e1-45fccd7becac',NULL,'Foo Men','Foo Men','Institution',1);
 
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -334,6 +394,7 @@ CREATE TABLE `pieces` (
   `edition_id` int(11) DEFAULT NULL,
   `format_id` int(11) DEFAULT NULL,
   `disposition_count` int(11) DEFAULT '0',
+  `collected` int(1) DEFAULT '0' COMMENT 'counter cache boolean',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
