@@ -25,13 +25,25 @@ class UniqueHelper extends EditionFactoryHelper {
 		}
 	}
 	
+	/**
+	 * Override tools for this one-piece-only special case
+	 * 
+	 * We can move the artist further down the editing path because 
+	 * in this case we know there is only one piece. 
+	 * 
+	 * @param FormatEntity $format
+	 * @param EditionEntity $edition
+	 */
 	protected function _formatPieceTools($format, $edition) {
-		$piece = $format->pieces[0];
-		if ($this->_canDispose($piece)) {
+		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
+		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
+		if ((boolean) $pieces) {
 			echo $this->Html->link("Add status information",
-				['controller' => 'pieces', 'action' => 'create', '?' => [
+				['controller' => 'dispositions', 'action' => 'create', '?' => [
+					'artwork' => $edition->artwork_id,
+					'edition' => $edition->id,
 					'format' => $format->id,
-					'piece' => $piece->id
+					'piece' => $pieces[0]->id
 				]]);
 		} else {
 			echo $this->Html->tag('p', 

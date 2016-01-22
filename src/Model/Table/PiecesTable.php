@@ -191,4 +191,19 @@ class PiecesTable extends AppTable
 		}
 		return $pieces;
 	}
+	
+	public function findCanDispose(Query $query, $options) {
+		if (isset($options['format_id'])) {
+			$conditions['format_id'] = $options['format_id'];
+		}
+		if (isset($options['edition_id'])) {
+			$conditions['edition_id'] = $options['edition_id'];
+		}
+		
+		// ADD CONDITION TO DISCOVER PIECES THAT CAN STILL BE DISPOSED
+		$conditions;
+		// ===========================================================
+		
+		return $query->where($conditions);
+	}
 }
