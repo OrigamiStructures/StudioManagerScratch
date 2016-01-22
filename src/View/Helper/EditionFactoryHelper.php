@@ -149,7 +149,6 @@ class EditionFactoryHelper extends Helper {
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
 					'format' => $format->id,
-					'piece' => $pieces[0]->id
 				]]);
 		} else {
 			echo $this->Html->tag('p', 
