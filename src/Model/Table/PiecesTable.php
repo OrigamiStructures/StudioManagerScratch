@@ -218,9 +218,9 @@ class PiecesTable extends AppTable
 			$conditions['edition_id'] = $options['edition_id'];
 		}
 		
-//		find piece (format.disposed && piece.free) or (edition.fluid)
-		$query->where(['Pieces.format_id' => $format_id, 'Pieces.disposition_count >' => 0 /*disposable*/])
-				->orWhere($conditions);
+//		find piece (format_id && format.disposed && piece.free) or (edition.fluid)
+		$query->where(['Pieces.format_id' => $format_id, 'Pieces.disposition_count >' => 0] /*disposable*/)
+			->orWhere(['Peices.edition_id' => $edition_id, 'Pieces.disposition_count' => 0]);
 		osd($query);die;
 				// ADD CONDITION TO DISCOVER PIECES THAT CAN STILL BE DISPOSED
 		$conditions;
