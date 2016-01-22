@@ -95,7 +95,7 @@ class PiecesTable extends AppTable
     }
 	
 	/**
-	 * Callable that calcs CounterCache Piece values for Formats and Editions
+	 * Callable that calcs CounterCache Pieces that belongTo Formats
 	 * 
 	 * These counts are actually sums of 'quantity' on the pieces because of 
 	 * the way pieces for Open Editions are tracked (avoiding making thousands 
@@ -107,9 +107,9 @@ class PiecesTable extends AppTable
 	 * @return int
 	 */
 	public function assignedPieces($event, $entity, $table) {
-		if (is_null($entity->format_id)) {
-			return 0;
-		} else {
+//		if (is_null($entity->format_id)) {
+//			return 0;
+//		} else {
 			$pieces = $table->find('all')->where([
 				'edition_id' => $entity->edition_id,
 				'format_id' => $entity->format_id,
@@ -120,13 +120,24 @@ class PiecesTable extends AppTable
 					}, 0
 				);
 			return $sum;//die;
-		}
+//		}
 	}
 
+	/**
+	 * Callable for CounterCache Pieces that don't have Dispositions
+	 * 
+	 * If a piece doesn't have a disposition, it can still be moved between 
+	 * any available formats.
+	 * 
+	 * @param Event $event
+	 * @param Entity $entity
+	 * @param Table $table
+	 * @return integer
+	 */
 	public function fluidPieces($event, $entity, $table) {
-		if (is_null($entity->format_id)) {
-			return 0;
-		} else {
+//		if (is_null($entity->format_id)) {
+//			return 0;
+//		} else {
 			$pieces = $table->find('all')->where([
 				'edition_id' => $entity->edition_id,
 				'format_id' => $entity->format_id,
@@ -138,7 +149,7 @@ class PiecesTable extends AppTable
 					}, 0
 				);
 			return $sum;//die;
-		}
+//		}
 	}
 
     /**
