@@ -15,19 +15,7 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
     <?= $this->Form->input("editions.$edition_index.title", 
 			['placeholder' => 'Optional Edition Title', 'label' => 'Edition Title']); ?>
     <?= $this->Form->input("editions.$edition_index.type", ['options' => $types]); ?>
-	
-    <?php
-	/**
-	 * This needs to respond to new Edition quantity change rules
-	 */
-	if ($SystemState->is(ARTWORK_CREATE)) {
-		echo $this->Form->input("editions.$edition_index.quantity", ['default' => 1]);
-	} elseif (!$this->isUnique($artwork->editions[$edition_index])) {
-		$factory = $this->loadHelper('EditionFactory');
-		$helper = $factory->load($edition->type);
-		echo $this->Html->para(NULL, $helper->editionQuantitySummary($edition));
-	}
-	?>
+    <?= $this->element('Edition/quantity_input'); // complex quantity input logic ?>
 	
 	<?php
  if ($SystemState->controller() !== 'formats' && $SystemState->is(ARTWORK_CREATE)) {

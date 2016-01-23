@@ -191,8 +191,59 @@ class EditionedHelper extends EditionFactoryHelper {
 		
 	}
 
-//	protected function _formatPieceTools($format, $edition) {
-//		"Add status information";
-//	}
+	/**
+	 * Future size-change rules could be complicated:
+	 * 
+	 * edition->collected_piece_count set absolute minimum
+	 * edition->disposed_piece_count sets current minimum
+	 * 
+	 * disposed zero, minimum 1
+	 * collected zero, minimum disposed unless some can delete
+	 * collected positive != disposed minimum is disposed unless
+	 *  some can delete, but never less than collected.
+	 * collected = quantity, sold out
+	 * 
+	 * if disposed < quantity show set to minumum check
+	 * if disposed > 0 && disposed > collected show dispose tool
+	 * always show new edition size input (placeholder: min or greater)
+	 * 
+	 * This edition is sold out.
+	 * There N pieces sold.
+	 * - Don't report zero sales
+	 * 
+	 * Current rules are simpler
+	 * [Reduce or ]Increase the edition to (placehlder: min or greater)
+	 * 
+	 * 
+	 * @param type $edition
+	 * @return string
+	 */
+	public function editionQuantitySummary($edition) {
+		$size_statement = $increase = '';
+		
+		if ($edition->type === EDITION_OPEN) {
+			$label = 'Increase the edition size to:';
+			$minimum = $edition->disposed_piece_count;
+			if (!$edition->hasSalable()) {
+				$sold_statement = "This edition is sold out.";
+			}
+			if ($edition->hasFluid()) {
+				$label = "Reduce or $label";
+			}
+			
+			
+			
+			// whatever its sold-out status, you can always make it bigger
+			$increase = 'Input to increase the edition size. ADD X PIECES TO THE EDITION';
+			
+//			echo "<p>$size_statement<br />$increase</p>";
+			
+		} else {
+			// max numbered disposed piece is minimum edition size
+			// policy statement about limited editions
+			// new total 'size' of edition
+			return 'Message for limited editons';
+		}
+	}
 	
 }

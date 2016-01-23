@@ -25,8 +25,10 @@ class Edition extends Entity
 {
 	
 	use Traits\ParentEntityTrait;
+	
+	protected $_collected;
 
-    /**
+	/**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * Note that when '*' is set to true, this allows all unspecified fields to
@@ -61,6 +63,33 @@ class Edition extends Entity
 		return $this->_properties['quantity'] - $this->_properties['assigned_piece_count'];
 	}
 	
+	public function _getDisposedPieceCount() {
+		return $this->_properties['quantity'] - $this->_properties['fluid_piece_count'];
+	}
+	
+	public function hasSalable() {
+		return $this->salable_piece_count > 0;
+	}
+	
+	public function hasCollected() {
+		return $this->collected_piece_count > 0;
+	}
+	
+	public function _getSalablePieceCount() {
+		return $this->quantity - $this->collected_piece_count;
+	}
+	
+	public function _getCollectedPieceCount() {
+		if (!isset($this->collected)) {
+			$fluid_piece_count = $this->_properties['fluid_piece_count'];
+			$formats = new \Cake\Collection\Collection($this->_properties['formats']);
+			$this->collected = $formats->reduce(function($accumulator, $format) use ($fluid_piece_count) {
+						return $accumulator + $format->collected_piece_count;
+					}, 0);
+		}
+		return $this->collected;
+	}
+
 //	public function hasAvailablePieces() {
 //		return (boolean) $this_properties['quantity'] - $this->_properties['assigned_piece_count'] > 0;
 //	}
