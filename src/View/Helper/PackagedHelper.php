@@ -7,10 +7,10 @@ use App\View\Helper\EditionFactoryHelper;
 /**
  * PackagedHelper: rule based view/tool rendering for Portfolio and Publication
  * 
- * Portfolios and Publications are similar in that they can have multiple 
- * Pieces both only one Format per Edition. They are the two Edition types 
- * that package other Edition pieces into collections. Portfolio gathers 
- * other tangible artwork pieces and Publication gathers Rights for artworks. 
+ * Portfolios and Publications follow the general patterns of Open/Limited but 
+ * I want some more specific languag on the disposition tool. They are the two 
+ * Edition types that package other Edition pieces into collections. Portfolio 
+ * gathers artwork pieces and Publication gathers rights for artworks. 
  * 
  * @author dondrake
  */

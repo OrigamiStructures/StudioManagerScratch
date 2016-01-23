@@ -158,4 +158,11 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 	
+	public function editionQuantitySummary($edition) {
+		if ($edition->type === EDITION_OPEN) {
+			return 'Message for open editions';
+		} else {
+			return 'Message for limited editons';
+		}
+	}
 }

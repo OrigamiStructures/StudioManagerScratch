@@ -5,7 +5,7 @@
 					<?= $this->element('Edition/text'); ?>
 					<section class="formats">
 						<?php $this->set('formats', $edition->formats); 
-						echo $this->element('Format/' . $element_management['format']); ?>
+						echo $this->element('Format/many'); ?>
 
 					</section>
 				</div>

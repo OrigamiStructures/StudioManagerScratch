@@ -57,4 +57,10 @@ class AppView extends View
 		$this->SystemState->storeVars($result->viewVars);
 		return $result;
 	}
+	
+	public function isUnique($edition) {
+		osd($edition->type);
+		osd(in_array($edition->type, [EDITION_RIGHTS, EDITION_UNIQUE]));
+		return in_array($edition->type, [EDITION_RIGHTS, EDITION_UNIQUE]);
+	}
 }
