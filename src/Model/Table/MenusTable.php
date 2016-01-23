@@ -207,13 +207,13 @@ class MenusTable extends AppTable{
 			
 			if ($many_editions) {
 				$this->menu['Artwork']['Format'][$edition->display_title] = [
-					'Create' => "/formats/create$query_args",
+					'Create' => $this->allowNewFormat($edition) ? "/formats/create$query_args" : [],
 					'Refine' => $refine,
 					'Review' => $review
 				];
 			} else {
 				$this->menu['Artwork']['Format'] = [
-					'Create' => "/formats/create$query_args",
+					'Create' => $this->allowNewFormat($edition) ? "/formats/create$query_args" : [],
 					'Refine' => $refine,
 					'Review' => $review
 			];
@@ -221,8 +221,8 @@ class MenusTable extends AppTable{
 		}
 	}
 	
-	protected function allowNewFormat($edtion) {
-		return in_array($edition->type, [EDITION_UNIQUE, EDITION_RIGHTS]);
+	protected function allowNewFormat($edition) {
+		return !in_array($edition->type, [EDITION_UNIQUE, EDITION_RIGHTS]);
 	}
 
 }
