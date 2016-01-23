@@ -1,3 +1,6 @@
+<?php 
+//osd($pieces);die;
+?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
@@ -18,12 +21,14 @@
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('created') ?></th>
-                <th><?= $this->Paginator->sort('modified') ?></th>
-                <th><?= $this->Paginator->sort('user_id') ?></th>
+                <th><?= $this->Paginator->sort('ArtEdition') ?></th>
+                <th><?= $this->Paginator->sort('Format') ?></th>
+                <th><?= $this->Paginator->sort('ar/ed/frmt') ?></th>
                 <th><?= $this->Paginator->sort('number') ?></th>
                 <th><?= $this->Paginator->sort('quantity') ?></th>
                 <th><?= $this->Paginator->sort('made') ?></th>
+                <th><?= $this->Paginator->sort('dispo') ?></th>
+                <th><?= $this->Paginator->sort('collected') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -31,12 +36,14 @@
             <?php foreach ($pieces as $piece): ?>
             <tr>
                 <td><?= $this->Number->format($piece->id) ?></td>
-                <td><?= h($piece->created) ?></td>
-                <td><?= h($piece->modified) ?></td>
-                <td><?= $piece->has('user') ? $this->Html->link($piece->user->id, ['controller' => 'Users', 'action' => 'view', $piece->user->id]) : '' ?></td>
+                <td><?= $piece->edition->artwork->title . '<br />' . $piece->edition->display_title; ?></td>
+                <td><?= isset($piece->format) ? $piece->format->display_title : ''; ?></td>
+                <td><?= $piece->edition->artwork->id . '/' . $piece->edition_id . '/' . (is_null($piece->format_id) ? 'NULL' : $piece->format_id); ?></td>
                 <td><?= $this->Number->format($piece->number) ?></td>
                 <td><?= $this->Number->format($piece->quantity) ?></td>
                 <td><?= h($piece->made) ?></td>
+                <td><?= h($piece->disposition_count) ?></td>
+                <td><?= h($piece->collected) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $piece->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $piece->id]) ?>

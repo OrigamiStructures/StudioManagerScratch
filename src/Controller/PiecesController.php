@@ -17,11 +17,18 @@ class PiecesController extends AppController
 	 *
 	 * @return void
 	     */
-	public function index()     {
-		$this->paginate = [
-			'contain' => ['Users', 'Editions', 'Formats']
-		];
-		$this->set('pieces', $this->paginate($this->Pieces));
+	public function index() {
+		$conditions = [];
+		if ($this->SystemState->isKnown('edition')) {
+			$conditions = ['Pieces.edition_id' => $this->SystemState->queryArg('edition')];
+		}
+		if ($this->SystemState->isKnown('artwork')) {
+			$conditions = ['Artworks.id' => $this->SystemState->queryArg('artwork')];
+		}
+		$query = $this->Pieces->find('all')
+				->where($conditions)
+				->contain(['Users', 'Editions', 'Formats', 'Editions.Artworks']);
+		$this->set('pieces', $this->paginate($query));
 		$this->set('_serialize', ['pieces']);
 	}
 
