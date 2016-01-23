@@ -54,7 +54,7 @@ class Edition extends Entity
 	}
 	
 	public function hasUnassigned() {
-		return (boolean) $this->unassigned_piece_count > 0;
+		return $this->unassigned_piece_count > 0;
 	}
 	
 	public function _getUnassignedPieceCount() {

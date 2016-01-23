@@ -16,17 +16,9 @@ use App\View\Helper\EditionFactoryHelper;
  */
 class PackagedHelper extends EditionFactoryHelper {
 	
-	public function pieceSummary($entity) {
-		if (stristr(get_class($entity), 'Edition')) {
-			$this->_editionPieceSummary($entity);
-		} elseif (stristr(get_class($entity), 'Format')){
-			$this->_formatPieceSummary($entity);
-		}
-	}
-	
-	public function pieceTools($entity) {
-		return '';
-	}
-	
+/**
+ * This may have special tools that link back to the contained Artworks
+ * 
+ */	
 	
 }

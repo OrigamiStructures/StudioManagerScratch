@@ -423,6 +423,9 @@ section.artwork {
 img {
   width: 100%; }
 
+img.dup_image {
+  opacity: .3; }
+
 section.format {
   max-width: 75rem;
   margin-left: auto;
