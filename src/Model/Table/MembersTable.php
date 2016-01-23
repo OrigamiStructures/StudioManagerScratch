@@ -218,7 +218,7 @@ class MembersTable extends AppTable
      */
     public function completeMemberEntity($data, $type) {
         $contacts = $data->get('contacts');
-        if(!isset($contacts)){
+        if(empty($contacts)){
             $contacts[0]=[
                 'user_id' => $this->SystemState->artistId(),
                 'label' => 'email',
@@ -231,7 +231,7 @@ class MembersTable extends AppTable
             $data->set('contacts', $contacts);
         }
         $addresses = $data->get('addresses');
-        if(!isset($addresses)){
+        if(empty($addresses)){
             $addresses[0]=[
                 'user_id' => $this->SystemState->artistId(),
                 'label' => 'main',
