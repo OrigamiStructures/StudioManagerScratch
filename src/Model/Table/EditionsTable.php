@@ -25,7 +25,7 @@ class EditionsTable extends AppTable
 	 * @var array
 	 */
 	protected $types = [
-		1 => 'Unique', 'Limited Edition', 'Open Edition', 'Rights', 'Portfolio'
+		1 => EDITION_UNIQUE, EDITION_RIGHTS, EDITION_LIMITED, EDITION_OPEN, EDITION_PORTFOLIO, EDITION_PUBLICATION
 	];
 
 

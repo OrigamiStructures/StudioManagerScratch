@@ -96,16 +96,16 @@ class ArtworkStackBehavior extends Behavior {
 			$this->Pieces = TableRegistry::get('Pieces');
 			$this->Pieces->SystemState = $this->_table->SystemState;
 			switch ($edition['type']) {
-				case 'Limited Edition':
-				case 'Portfolio':
-				case 'Publication':
+				case EDITION_LIMITED:
+				case EDITION_PORTFOLIO:
+				case EDITION_PUBLICATION:
 					$edition['pieces'] = $this->Pieces->spawn(NUMBERED_PIECES, $edition['quantity']);
 					break;
-				case 'Open Edition':
+				case EDITION_OPEN:
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $edition['quantity']]);
 					break;
-				case 'Unique':
-				case 'Rights':
+				case EDITION_UNIQUE:
+				case EDITION_RIGHTS:
 					$edition['quantity'] = 1;
 					$edition['pieces'] = $this->Pieces->spawn(OPEN_PIECES, 1);
 					break;

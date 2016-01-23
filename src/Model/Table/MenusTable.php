@@ -220,5 +220,9 @@ class MenusTable extends AppTable{
 			}
 		}
 	}
+	
+	protected function allowNewFormat($edtion) {
+		return in_array($edition->type, [EDITION_UNIQUE, EDITION_RIGHTS]);
+	}
 
 }

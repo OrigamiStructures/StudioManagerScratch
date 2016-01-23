@@ -217,3 +217,11 @@ define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
 
+//Edition Types
+define('EDITION_UNIQUE', 'Unique');
+define('EDITION_RIGHTS', 'Rights');
+define('EDITION_LIMITED', 'Limited Edition');
+define('EDITION_OPEN', 'Open Edition');
+define('EDITION_PORTFOLIO', 'Portfolio');
+define('EDITION_PUBLICATION', 'Publication');
+

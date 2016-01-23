@@ -26,12 +26,12 @@ class EditionFactoryHelper extends Helper {
 	 * @var array
 	 */
 	protected $_map = [
-		'Unique' => 'Unique',
-		'Rights' => 'Unique',
-		'OpenEdition' => 'Editioned',
-		'LimitedEdition' => 'Editioned',
-		'Portfolio' => 'Packaged',
-		'Publication' => 'Packaged',
+		EDITION_UNIQUE => 'Unique',
+		EDITION_RIGHTS => 'Unique',
+		EDITION_LIMITED => 'Editioned',
+		EDITION_OPEN => 'Editioned',
+		EDITION_PORTFOLIO => 'Packaged',
+		EDITION_PUBLICATION => 'Packaged',
 	];
 	
 	/**
@@ -43,8 +43,8 @@ class EditionFactoryHelper extends Helper {
 	 * @return type
 	 */
 	public function load($type) {
-		$version = str_replace(' ', '', $type);
-		return $this->_View->loadHelper($this->_map[$version]);
+//		$version = str_replace(' ', '', $type);
+		return $this->_View->loadHelper($this->_map[$type]);
 	}
 	
 	/**
