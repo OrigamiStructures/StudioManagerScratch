@@ -145,24 +145,10 @@ class MembersController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
-		if ($this->SystemState->isKnown('member')) {
-            $element_management= [
-                'member' => 'full',
-                'address' => 'full',
-                'contact' => 'full'
-            ];
-		} else {
-            $element_management= [
-                'member' => 'many',
-                'address' => 'none',
-                'contact' => 'none'
-            ];
-		}
         $query = $this->Members->find('memberReview');
         $query->contain(['Addresses', 'Contacts', 'Groups']);
         $query->orderAsc('last_name');
         $this->set('members', $this->paginate($query));
-        $this->set('element_management', $element_management);
         $this->set('_serialize', ['members']);
     }
     
@@ -171,6 +157,7 @@ class MembersController extends AppController
      * 
      */
     public function refine() {
+        $referrer = $this->referer();
         if(!$this->SystemState->isKnown('member')){
             $this->Flash->error(__('You must provide a single member id to edit'));
             return $this->redirect($this->referer());
@@ -190,7 +177,7 @@ class MembersController extends AppController
         }
         $types = ['Institution', 'Person', 'User', 'Category'];
         $types = array_combine($types, $types);
-        $this->set(compact('member', 'element_management', 'types'));
+        $this->set(compact('member', 'element_management', 'types', 'referrer'));
         $this->set('_serialize', ['member']);
         $this->render('create');
 
