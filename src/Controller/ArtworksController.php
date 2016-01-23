@@ -174,6 +174,7 @@ class ArtworksController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
+		osd($this->request->query);die;
 		if ($this->SystemState->isKnown('artwork')) {
 			$artwork_element = 'full';
 			$artwork_variable = 'artwork';
@@ -268,4 +269,27 @@ class ArtworksController extends AppController
 		$this->render('create_dev');
     }
 
+	/**
+	 * Display one or a page of Artworks
+	 * 
+	 * Single record vs multiple record will be chosen based on whether the 
+	 * URL query value 'artwork' is set. If it is, we know the specific 
+	 * Artwork to display. If not, we'll get a page of them (the current page). 
+	 * 
+	 * Later, some accomodation for Search sets must be made. That may be  
+	 * redirected through here for rendering once the records are found 
+	 * or it may all be handled by another method.
+	 */
+    public function validateQuantities($id) {
+		$this->request->query = ['artwork' => $id];
+        $element_management = [
+            'artwork' => 'full',
+            'edition' => 'many',
+            'format' => 'many'
+        ];
+        $this->set('artwork', $this->ArtworkStack->stackQuery());
+        $this->set('element_management', $element_management);
+//        $this->set('_serialize', [$artwork_variable]);
+    }
+	
 }
