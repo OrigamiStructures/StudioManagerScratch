@@ -437,6 +437,11 @@ section.format {
   section.format::after {
     clear: both; }
 
+section.assignment, section.disposition {
+  padding-top: .8em;
+  font-size: 90%;
+  color: #444; }
+
 form legend {
   background: #ccc none repeat scroll 0 0;
   color: #7a7a7a;
