@@ -14,12 +14,22 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 			['type' => 'hidden']); ?>
     <?= $this->Form->input("editions.$edition_index.title", 
 			['placeholder' => 'Optional Edition Title', 'label' => 'Edition Title']); ?>
-    <?= $this->Form->input("editions.$edition_index.type", ['options' => $types]); ?>
+	
+    <?php
+ if ($SystemState->is(ARTWORK_CREATE) || !$edition->hasDisposed()) {
+	 // Once dispositions start, edition types cannot be change because it 
+	 // involves destroying pieces and possibly formats (?!)
+	 // THIS NEEDS DISCUSSION
+	 $this->Form->input("editions.$edition_index.type", ['options' => $types]);
+ }	
+	?>
+	
     <?= $this->element('Edition/quantity_input'); // complex quantity input logic ?>
 	
 	<?php
  if ($SystemState->controller() !== 'formats' && $SystemState->is(ARTWORK_CREATE)) {
 	 // do this for Artworks::create or Editions::create
+	 // It allows the system to streamline piece creation in some cases
 	 echo '<div><p>If this Edition has more than one Piece:</p>';
 	 echo $this->Form->input('multiple', [
 			'label' => 'Will the pieces will be made in multiple formats?',

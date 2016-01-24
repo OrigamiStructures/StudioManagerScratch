@@ -55,30 +55,84 @@ class Edition extends Entity
 		return  $title . $type;
 	}
 	
+	/**
+	 * Does the edition have any pieces that have not been assigned to a format
+	 * 
+	 * @return boolean
+	 */
 	public function hasUnassigned() {
 		return $this->unassigned_piece_count > 0;
 	}
 	
+	/**
+	 * Count of pieces that have not been assigned to formats
+	 * 
+	 * unassigned_piece_count is edition size - assigned_piece_count
+	 * 
+	 * @return integer
+	 */
 	public function _getUnassignedPieceCount() {
 		return $this->_properties['quantity'] - $this->_properties['assigned_piece_count'];
 	}
 	
+	/**
+	 * Does the edtion have pieces that have dispositions
+	 * 
+	 * @return boolean
+	 */
+	public function hasDisposed() {
+		return $this->disposed_piece_count > 0;
+	}
+	
+	/**
+	 * The number of pieces in the edition that have dispositions
+	 * 
+	 * disposed_piece_count is calculated as assigned_piece_count - fluid_piece_count
+	 * 
+	 * @return integer
+	 */
 	public function _getDisposedPieceCount() {
 		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
 	}
 	
+	/**
+	 * Does the edition have any pieces that can be sold
+	 * 
+	 * @return boolean
+	 */
 	public function hasSalable() {
 		return $this->salable_piece_count > 0;
 	}
 	
+	/**
+	 * Does the edition have any pieces with dispositions categorized as 'collected'
+	 * 
+	 * @return boolean
+	 */
 	public function hasCollected() {
 		return $this->collected_piece_count > 0;
 	}
 	
+	/**
+	 * Count of pieces that might be avaialble for sale
+	 * 
+	 * salable_piece_count is the edition size - collected_piece_count
+	 * 
+	 * @return integer
+	 */
 	public function _getSalablePieceCount() {
 		return $this->quantity - $this->collected_piece_count;
 	}
 	
+	/**
+	 * Count of pieces that have dispositons categorized as 'collected'
+	 * 
+	 * collected_piece_count is calculated directly from the contained format 
+	 * entities by summing the formats 'collected' CounterCache value. 
+	 * To avoid multiple 'reduce' calls, the result is cached in a property
+	 * 
+	 * @return integer
+	 */
 	public function _getCollectedPieceCount() {
 		if (!isset($this->collected)) {
 			$fluid_piece_count = $this->_properties['fluid_piece_count'];
@@ -90,10 +144,21 @@ class Edition extends Entity
 		return $this->collected;
 	}
 
-//	public function hasAvailablePieces() {
-//		return (boolean) $this_properties['quantity'] - $this->_properties['assigned_piece_count'] > 0;
-//	}
-	
+	/**
+	 * Does the edition have pieces that are assigned but not disposed?
+	 * 
+	 * fluid_piece_count is a direct CounterCache value on bothe editions 
+	 * and formats. On editons the where clause is:
+	 * <pre>
+	 *	[
+	 *		'edition_id' => $piece->edition_id,
+	 *		'format_id IS NOT NULL',
+	 *		'disposition_count' => 0,
+	 *	]
+	 * </pre>
+	 * 
+	 * @return boolean
+	 */
 	public function hasFluid() {
 		return $this->_properties['fluid_piece_count'] > 0;
 	}
