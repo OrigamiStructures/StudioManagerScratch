@@ -437,7 +437,7 @@ section.format {
   section.format::after {
     clear: both; }
 
-section.assignment, section.disposition {
+section.assignment, section.disposition, p.policy_statement {
   padding-top: .8em;
   font-size: 90%;
   color: #444; }

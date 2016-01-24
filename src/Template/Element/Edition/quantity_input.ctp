@@ -20,7 +20,7 @@ if ($SystemState->is(ARTWORK_CREATE)) {
 		$pieces = $edition->collected_piece_count === 1 ? 'one piece' : $edition->collected_piece_count . ' pieces';
 		
 		$policy = "You have sold $pieces from this edition.<br />Most artists believe an edition's size should not be increased after active sales have begun. ClearStudio does not prevent this practice. Proceed according to your own policies.";
-		$policy_statement = $this->Html->para(NULL, $policy);
+		$policy_statement = $this->Html->para('policy_statement', $policy);
 	}
 } else {
 	$allow_quantity = FALSE;
