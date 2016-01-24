@@ -24,6 +24,7 @@
 	</thead>
 	<tbody>
 		<tr class='edition'>
+			<td>&nbsp;</td>
 			<td><?= $edition->quantity; ?></td>
 			<td><?= tf($edition->hasAssigned()); ?></td>
 			<td><?= $edition->assigned_piece_count; ?></td>

@@ -1,7 +1,7 @@
 <?php
 function tf($value) {
 	if (is_null($value)) {
-		return 'NULL';
+		return '';
 	}
 	return (boolean) $value ? 'True' : 'False';
 }

@@ -42,12 +42,9 @@ class EditionedHelper extends EditionFactoryHelper {
 			if ($edition->unassigned_piece_count === $edition->quantity) {
 				$unassigned = 'No pieces have been assigned to any format.';				
 			} else {
-				$grammar = $edition->unassigned_piece_count === 1 ?
-					'is one piece' :
-					"are {$edition->unassigned_piece_count} pieces";
-				$unassigned = sprintf(
-						"%s not assigned to a format.",
-						$grammar[0], $grammar[1], $grammar[2], $grammar[3]);				
+				$unassigned = $edition->unassigned_piece_count === 1 ?
+					'There is one piece not assigned to a format.' :
+					"There are {$edition->unassigned_piece_count} pieces not assigned to a format.";
 			}
 		} else {
 			$unassigned = 'All pieces have been assigned to formats.';

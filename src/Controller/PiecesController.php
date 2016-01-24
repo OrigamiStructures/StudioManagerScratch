@@ -19,10 +19,11 @@ class PiecesController extends AppController
 	     */
 	public function index() {
 		$conditions = [];
-		if ($this->SystemState->isKnown('edition')) {
+		if ($this->SystemState->isKnown('format')) {
+			$conditions = ['Pieces.format_id' => $this->SystemState->queryArg('format')];
+		} elseif ($this->SystemState->isKnown('edition')) {
 			$conditions = ['Pieces.edition_id' => $this->SystemState->queryArg('edition')];
-		}
-		if ($this->SystemState->isKnown('artwork')) {
+		} elseif ($this->SystemState->isKnown('artwork')) {
 			$conditions = ['Artworks.id' => $this->SystemState->queryArg('artwork')];
 		}
 		$query = $this->Pieces->find('all')
@@ -95,8 +96,11 @@ class PiecesController extends AppController
 			}
 		}
 		$users = $this->Pieces->Users->find('list', ['valueField' => 'username', 'limit' => 200]);
-		$editions = $this->Pieces->Editions->find('list', ['valueField' => 'title', 'limit' => 200]);
-		$formats = $this->Pieces->Formats->find('list', ['valueField' => 'title', 'limit' => 200]);
+		$editions = $this->Pieces->Editions->find('list', ['valueField' => 'title', 'limit' => 200])
+				->where(['Editions.id' => $piece->edition_id]);
+
+		$formats = $this->Pieces->Formats->find('list', ['valueField' => 'title', 'limit' => 200])
+				->where(['Formats.edition_id' => $piece->edition_id]);
 		$this->set(compact('piece', 'users', 'editions', 'formats'));
 		$this->set('_serialize', ['piece']);
 	}

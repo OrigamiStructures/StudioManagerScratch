@@ -3,9 +3,9 @@ $links = $this->Html->link($artwork->id, ['controller' => 'pieces', '?' => ['art
 		'/' .
 		$this->Html->link($edition->id, ['controller' => 'pieces', '?' => ['edition' => $edition->id]]) .
 		'/' .
-		$format->id;
+		$this->Html->link($format->id, ['controller' => 'pieces', '?' => ['format' => $format->id]]);
 ?>
-<tr class='format'>
+		<tr class='format'>
 			<td><?= $links; ?></td>
 			<td><?= $format->quantity; ?></td>
 			<td><?= tf($format->hasAssigned()); ?></td>

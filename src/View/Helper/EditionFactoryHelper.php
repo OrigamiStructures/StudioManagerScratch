@@ -123,7 +123,7 @@ class EditionFactoryHelper extends Helper {
 		if ($edition->hasUnassigned()) {
 			$label[] = 'Assign';
 		}
-		if ($edition->hasFluid() && ($edition->fluid_piece_count !== $edition->unassigned_piece_count)) {
+		if ($edition->hasFluid()) {
 			$label[] = 'Reassign';
 		}
 		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
