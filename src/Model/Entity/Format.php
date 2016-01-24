@@ -3,6 +3,7 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use App\Model\Entity\Traits\ParentEntity;
+use Cake\Utility\Text;
 
 /**
  * Format Entity.
@@ -42,6 +43,7 @@ class Format extends Entity
         'id' => false,
     ];
 	
+	/**
 	protected $_salable;
 
 	/**
@@ -50,41 +52,107 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function _getDisplayTitle() {
-		$title = empty($this->_properties['title']) ? $this->_properties['description'] : $this->_properties['title'];
-		return "$title";
+		$title = empty($this->title) ? $this->_gutDescription() : $this->title;
+		return $title;
 	}
 	
+	/**
+	 * Does this format have any pieces assigned to it
+	 * 
+	 * assigned_piece_count is a CounterCache value
+	 * 
+	 * @return boolean
+	 */
 	public function hasAssigned() {
 		return $this->_properties['assigned_piece_count'] > 0;
 	}
 	
+	/**
+	 * Are there any pieces assigned that have a disposition catategorized as 'collected'
+	 * 
+	 * collected_piece_count is a CounterCache value
+	 * 
+	 * @return boolean
+	 */
 	public function hasCollected() {
 		return $this->_properties['collected_piece_count'] > 0;
 	}
 	
+	/**
+	 * Are there pieces available for sale as part of this format
+	 * 
+	 * @param integer $undisposed All undisposed pieces on the edition
+	 * @return boolean
+	 */
 	public function hasSalable($undisposed) {
 		return $this->salable_piece_count($undisposed) > 0;
 	}
 	
+	/**
+	 * The count of pieces possibly available for sale as this format
+	 * 
+	 * edition->undispose + format->disposed_but_not_collected
+	 * 
+	 * The edition's undisposed pieces represent all pieces that aren't locked 
+	 * to a format (even if they are assigned to a format) and so, could be 
+	 * assigned to this format and sold. The pieces that are disposed in 
+	 * this format but that aren't already collected are also salable.
+	 * 
+	 * @param integer $undisposed All undisposed pieces on the edition
+	 * @return integer
+	 */
 	public function salable_piece_count($undisposed) {
 		if (!isset($this->_salable)) {
 			$this->_salable = $this->disposed_piece_count - 
-					$this->_properties['collected_piece_count'] + 
+					$this->collected_piece_count + 
 					$undisposed;
 		}
 		return $this->_salable;
 	}
 
+	/**
+	 * Does this format have assigned pieces that are not disposed?
+	 * 
+	 * fluid_piece_count is a CounterCache value
+	 * 
+	 * @return boolean
+	 */
 	public function hasFluid() {
-		return $this->_properties['fluid_piece_count'] > 0;
+		return $this->fluid_piece_count > 0;
 	}
 	
+	/**
+	 * Does this format have disposed pieces?
+	 * 
+	 * @return boolean
+	 */
 	public function hasDisposed() {
-		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
+		return $this->assigned_piece_count - $this->fluid_piece_count;
 	}
 	
+	/**
+	 * Count of disposed pieces on this format
+	 * 
+	 * @return integer
+	 */
 	public function _getDisposedPieceCount() {
 		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
+	}
+	
+	/**
+	 * Remove the middle from a long description, so it can serve as a title/label
+	 * 
+	 * @return string
+	 */
+	protected function _gutDescription() {
+		$display_value = $this->description;
+		if (strlen($this->description) > 33) {
+			$lead = Text::truncate($this->description, 15, ['ellipsis' => ' ... ']);
+			$tail = Text::tail($this->description, 10, ['ellipsis' => '', 'exact' => FALSE]);
+			
+			$display_value = "$lead$tail";
+		}
+		return $display_value;
 	}
 	
 }
