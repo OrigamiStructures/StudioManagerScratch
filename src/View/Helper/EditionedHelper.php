@@ -54,12 +54,9 @@ class EditionedHelper extends EditionFactoryHelper {
 				($edition->format_count > 1) && 
 				($edition->assigned_piece_count > 0)) 
 		{
-			$grammar = $edition->fluid_piece_count === 1 ?
-				['is', $edition->fluid_piece_count, 'piece', 'can', ] :
-				['are', $edition->fluid_piece_count, 'pieces', 'could'];
-			$reassign = sprintf(
-					"There %s %d %s that %s be reassigned to different formats.",
-					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
+			$reassign = $edition->fluid_piece_count === 1 ?
+				'There is one piece that can be reassigned to a different format.' :
+				"There are $edition->fluid_piece_count that could be reassigned to different formats.";
 		} elseif ($edition->assigned_piece_count > 0) {
 			$reassign = 'There are no pieces that can be reassigned.';
 		}
@@ -173,11 +170,11 @@ class EditionedHelper extends EditionFactoryHelper {
 		}
 		
 //		"There are up to z pieces in this format available for sale";
-		$fluid = $edition->fluid_piece_count;
-		if ($format->hasSalable($fluid)) {
-			$grammar = $format->salable_piece_count($fluid) === 1 ?
+		$undisposed = $edition->quantity + $edition->disposed_piece_count;
+		if ($format->hasSalable($undisposed)) {
+			$grammar = $format->salable_piece_count($undisposed) === 1 ?
 				'there might be 1 piece' :
-				"There are up to {$format->salable_piece_count($fluid)} pieces";
+				"There are up to {$format->salable_piece_count($undisposed)} pieces";
 			$salable = sprintf("<p>%s available for sale in this format.</p>\n",
 					$grammar);
 		} else {

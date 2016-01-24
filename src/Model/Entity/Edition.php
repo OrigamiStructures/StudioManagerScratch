@@ -64,7 +64,7 @@ class Edition extends Entity
 	}
 	
 	public function _getDisposedPieceCount() {
-		return $this->_properties['quantity'] - $this->_properties['fluid_piece_count'];
+		return $this->_properties['assigned_piece_count'] - $this->_properties['fluid_piece_count'];
 	}
 	
 	public function hasSalable() {

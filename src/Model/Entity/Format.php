@@ -42,6 +42,8 @@ class Format extends Entity
         'id' => false,
     ];
 	
+	protected $_salable;
+
 	/**
 	 * Fully detailed descriptive label for the edition
 	 * 
@@ -60,16 +62,17 @@ class Format extends Entity
 		return $this->_properties['collected_piece_count'] > 0;
 	}
 	
-	public function hasSalable($fluid_piece_count) {
-		return ($this->disposed_piece_count - 
-				$this->_properties['collected_piece_count'] + 
-				$fluid_piece_count ) > 0;
+	public function hasSalable($undisposed) {
+		return $this->salable_piece_count($undisposed) > 0;
 	}
 	
-	public function salable_piece_count($fluid_piece_count) {
-		return $this->disposed_piece_count - 
-				$this->_properties['collected_piece_count'] + 
-				$fluid_piece_count;
+	public function salable_piece_count($undisposed) {
+		if (!isset($this->_salable)) {
+			$this->_salable = $this->disposed_piece_count - 
+					$this->_properties['collected_piece_count'] + 
+					$undisposed;
+		}
+		return $this->_salable;
 	}
 
 	public function hasFluid() {
