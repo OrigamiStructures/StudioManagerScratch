@@ -27,6 +27,8 @@
             echo $this->Form->input('number');
             echo $this->Form->input('quantity');
             echo $this->Form->input('made');
+            echo $this->Form->input('disposition_count');
+            echo $this->Form->input('collected');
             echo $this->Form->input('edition_id', ['options' => $editions, 'empty' => true]);
             echo $this->Form->input('format_id', ['options' => $formats, 'empty' => true]);
         ?>

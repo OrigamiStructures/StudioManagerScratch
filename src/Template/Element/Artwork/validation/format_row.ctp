@@ -1,4 +1,12 @@
-		<tr class='format'>
+<?php 
+$links = $this->Html->link($artwork->id, ['controller' => 'pieces', '?' => ['artwork' => $artwork->id]]) .
+		'/' .
+		$this->Html->link($edition->id, ['controller' => 'pieces', '?' => ['edition' => $edition->id]]) .
+		'/' .
+		$format->id;
+?>
+<tr class='format'>
+			<td><?= $links; ?></td>
 			<td><?= $format->quantity; ?></td>
 			<td><?= tf($format->hasAssigned()); ?></td>
 			<td><?= $format->assigned_piece_count; ?></td>

@@ -6,6 +6,7 @@
 	</caption>
 	<thead>
 		<tr>
+			<th>IDs</th>
 			<th>Quantity</th>
 			<th>hasAssigned</th>
 			<th>Assigned</th>

@@ -174,7 +174,6 @@ class ArtworksController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
-		osd($this->request->query);die;
 		if ($this->SystemState->isKnown('artwork')) {
 			$artwork_element = 'full';
 			$artwork_variable = 'artwork';

@@ -86,14 +86,17 @@ class PiecesController extends AppController
 			$piece = $this->Pieces->patchEntity($piece, $this->request->data);
 			if ($this->Pieces->save($piece)) {
 				$this->Flash->success(__('The piece has been saved.'));
-				return $this->redirect(['action' => 'index']);
+				$artwork_id = $this->Pieces->Editions->get($piece->edition_id, [
+					'select' => ['artwork_id']
+				])->artwork_id;
+				return $this->redirect(['controller' => 'artworks', 'action' => 'validate_quantities', $artwork_id]);
 			} else {
 				$this->Flash->error(__('The piece could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->Pieces->Users->find('list', ['limit' => 200]);
-		$editions = $this->Pieces->Editions->find('list', ['limit' => 200]);
-		$formats = $this->Pieces->Formats->find('list', ['limit' => 200]);
+		$users = $this->Pieces->Users->find('list', ['valueField' => 'username', 'limit' => 200]);
+		$editions = $this->Pieces->Editions->find('list', ['valueField' => 'title', 'limit' => 200]);
+		$formats = $this->Pieces->Formats->find('list', ['valueField' => 'title', 'limit' => 200]);
 		$this->set(compact('piece', 'users', 'editions', 'formats'));
 		$this->set('_serialize', ['piece']);
 	}
