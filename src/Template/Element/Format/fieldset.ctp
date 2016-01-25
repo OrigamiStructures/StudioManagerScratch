@@ -20,10 +20,11 @@ $format_index = isset($format_index) ? $format_index : 0 ;
     <?= $this->Form->input("editions.$edition_index.formats.$format_index.id"); ?>
     <?= $this->Form->input("editions.$edition_index.formats.$format_index.edition_id", 
 			['type' => 'hidden']); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.title", 
-			['placeholder' => 'Optional Format Title', 'label' => 'Format Title']); ?>
+	
+    <?= $this->element('Format/title_input'); // complex title input logic ?>
     <?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
 			['placeholder' => 'Media, size and other format details']); ?>
+	
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_start"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_end"); ?>

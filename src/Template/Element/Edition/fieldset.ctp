@@ -16,11 +16,13 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 			['placeholder' => 'Optional Edition Title', 'label' => 'Edition Title']); ?>
 	
     <?php
- if ($SystemState->is(ARTWORK_CREATE) || !$edition->hasDisposed()) {
+ if ($SystemState->is(ARTWORK_CREATE)) {
+	 // I have a blanket 'disallowed' on type change after creation
+	 // but it could be otherwise. fare
 	 // Once dispositions start, edition types cannot be change because it 
 	 // involves destroying pieces and possibly formats (?!)
 	 // THIS NEEDS DISCUSSION
-	 $this->Form->input("editions.$edition_index.type", ['options' => $types]);
+	 echo $this->Form->input("editions.$edition_index.type", ['options' => $types]);
  }	
 	?>
 	

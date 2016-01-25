@@ -1,10 +1,9 @@
 <?php
 $policy_statement = FALSE;
 $allow_quantity = TRUE;
-
 if ($SystemState->is(ARTWORK_CREATE)) {
 	$default = 1;
-	$lable = 'Edition Size';
+	$label = 'Edition Size';
 //		echo $this->Form->input("editions.$edition_index.quantity", ['default' => 1]);
 		
 } elseif (!$this->isUnique($artwork->editions[$edition_index])) {
