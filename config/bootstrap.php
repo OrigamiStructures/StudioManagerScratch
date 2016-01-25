@@ -222,6 +222,20 @@ define('EDITION_UNIQUE', 'Unique');
 define('EDITION_RIGHTS', 'Rights');
 define('EDITION_LIMITED', 'Limited Edition');
 define('EDITION_OPEN', 'Open Edition');
-define('EDITION_PORTFOLIO', 'Portfolio');
-define('EDITION_PUBLICATION', 'Publication');
+define('PORTFOLIO_LIMITED', 'Limited Portfolio');
+define('PORTFOLIO_OPEN', 'Open Portfolio');
+define('PUBLICATION_LIMITED', 'Limited Publication');
+define('PUBLICATION_OPEN', 'Open Publication');
 
+define('NUMBERED_PIECES', 1);
+define('OPEN_PIECES', 0);
+
+define('ARTWORK_CREATE', 1);
+define('ARTWORK_REVIEW', 2);
+define('ARTWORK_REFINE', 4);
+define('ARTWORK_SAVE', 8);
+
+// These will need to be change to something meaningful
+// For now, we can act as admins even though we're users
+define('ADMIN_SYSTEM', 'user'); // 'admin'
+define('ADMIN_ARTIST', 'artist_admin');

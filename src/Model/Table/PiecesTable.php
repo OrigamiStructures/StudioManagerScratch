@@ -8,9 +8,6 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
 
-define('NUMBERED_PIECES', 1);
-define('OPEN_PIECES', 0);
-
 /**
  * Pieces Model
  *
