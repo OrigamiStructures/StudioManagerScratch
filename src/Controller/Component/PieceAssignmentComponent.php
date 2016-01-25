@@ -177,11 +177,10 @@ class PieceAssignmentComponent extends Component {
 		} else {
 			$method = 'resizeLimitedEdition';
 		}
-		return $this->$method($refinement, $this->edition);
+		return $this->$method($original, $change, $this->edition);
 	}
 	
-	protected function resizeOpenEdition($change, $edition) {
-		osd($edition);
+	protected function resizeOpenEdition($original, $change, $edition) {
 		if ($change > 0) {
 			
 		}
