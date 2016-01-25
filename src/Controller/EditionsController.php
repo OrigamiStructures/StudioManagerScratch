@@ -136,6 +136,8 @@ class EditionsController extends AppController
 	 * multiple Formats has not been resolved. The first will show in a 
 	 * fieldset for editing but subsiquent Formats are also in the data.
 	 * 
+	 * THIS ASSUMES 1 EDITION IN THE FORM, ALWAYS THE FIRST
+	 * 
 	 */
 	public function refine() {
 		$this->Artworks = TableRegistry::get('Artworks');
@@ -144,8 +146,21 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
-            if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork);
+			
+			$edition = $artwork->returnEdition($this->request->data['editions'][0]['id']);
+			$quantity_tuple = !$edition->dirty('quantity') ?
+					FALSE : 
+					[
+						'original' => $edition->getOriginal('quantity'),
+						'refinement' => $edition->quantity,
+						'id' => $edition->id,
+					];
+			
+			if ($this->Artworks->save($artwork)) {
+				if ($quantity_tuple) {
+					$this->ArtworkStack->refinePieces($artwork,$quantity_tuple);
+				}
+				die;
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),

@@ -140,7 +140,7 @@ class PieceAssignmentComponent extends Component {
 			if (!isset($this->edition)) {
 			}
 			$formats = new Collection($this->edition->formats);
-			osd($formats->max('modified'));
+//			osd($formats->max('modified'));
 			$this->format = (new Collection($this->edition->formats))->max(
 				function($format) {return $format->modified->toUnixString();
 			});
@@ -158,4 +158,42 @@ class PieceAssignmentComponent extends Component {
 		return ($this->stack->edition_count == 1) && 
 			($this->stack->edtions[0]->format_count == 1);
 	}
+	
+	/**
+	 * Handle edition size changes for editions that already have pieces
+	 * 
+	 * There is a lot of initialization that has been done. Many properties set
+	 * 
+	 * @param Entity $artwork The post-save entity
+	 * @param array $quantity_tuple (int) $original, (int) $refinement, (Entity) $edition
+	 */
+	public function refine($data = []) {
+		extract($data); // $original, $refinement, $id
+		$change = $refinement - $original; // decrease (-x), increase (+x)
+		
+		// Unique and Rights have ONE piece don't have the input for quanitity
+		if ($edition->type === EDITION_OPEN) {
+			$method = 'resizeOpenEdition';
+		} else {
+			$method = 'resizeLimitedEdition';
+		}
+		return $this->$method($refinement, $this->edition);
+	}
+	
+	protected function resizeOpenEdition($change, $edition) {
+		osd($edition);
+		if ($change > 0) {
+			
+		}
+		osd('resizeOpenEdition');die;
+	}
+	
+	protected function resizeLimitedEdition($change, $edition) {
+	osd($edition);
+	if ($change > 0) {
+			
+		}
+		osd('resizeLimitedEdition');die;
+	}
+	
 }

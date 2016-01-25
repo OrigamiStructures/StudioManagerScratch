@@ -95,6 +95,11 @@ class ArtworkStackComponent extends Component {
 		$this->PieceAssignment->assign();
 	}
 	
+	public function refinePieces($artwork, $data = []) {
+		$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
+		$this->PieceAssignment->refine($data);
+	}
+	
 	/**
 	 * Use URL query arguments to filter the Entity
 	 * 

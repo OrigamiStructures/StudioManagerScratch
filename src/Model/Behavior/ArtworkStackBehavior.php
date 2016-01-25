@@ -61,6 +61,7 @@ class ArtworkStackBehavior extends Behavior {
 	/**
 	 * Adjust the Pieces in TRD to match the user's request
 	 * 
+	 * Called from beforeMarshal in ArtworksTable
 	 * Create and Refine processes have radically different rules for 
 	 * treatment of Pieces. As do the various Edition types. Here we target 
 	 * the handler for each Edition in the Artwork stack and call that 
@@ -84,7 +85,7 @@ class ArtworkStackBehavior extends Behavior {
 	/**
 	 * Callable: Logic for creation of pieces for new Editions
 	 * 
-	 * Direct creation of refinment of a Format for an existing Edition 
+	 * Direct creation or refinment of a Format for an existing Edition 
 	 * does not require Piece creation. Those calls are bounced. Later 
 	 * a better, more comprehensive Piece handling plan will be required.
 	 * 
@@ -139,8 +140,10 @@ class ArtworkStackBehavior extends Behavior {
 		$this->_images_to_delete = [];
 		$artwork = $this->evaluateImage($data);
 		foreach($artwork['editions'] as $index => $edition) {
-			$formats = new Collection($edition['formats']);
-			$artwork['editions'][$index]['formats'] = $formats->map([$this, 'evaluateImage'])->toArray();
+			if (!empty($edition['formats'])) {
+				$formats = new Collection($edition['formats']);
+				$artwork['editions'][$index]['formats'] = $formats->map([$this, 'evaluateImage'])->toArray();
+			}			
 		}
 		return $artwork;
 	}
