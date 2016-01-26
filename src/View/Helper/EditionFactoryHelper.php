@@ -30,9 +30,12 @@ class EditionFactoryHelper extends Helper {
 		EDITION_RIGHTS => 'Unique',
 		EDITION_LIMITED => 'Editioned',
 		EDITION_OPEN => 'Editioned',
-		EDITION_PORTFOLIO => 'Packaged',
-		EDITION_PUBLICATION => 'Packaged',
-	];
+		
+		PORTFOLIO_LIMITED => 'Packaged',
+		PORTFOLIO_OPEN => 'Packaged',
+		PUBLICATION_LIMITED => 'Packaged',
+		PUBLICATION_OPEN => 'Packaged',
+			];
 	
 	/**
 	 * Factory to generate a specific helper
