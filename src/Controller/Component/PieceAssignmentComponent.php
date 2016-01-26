@@ -11,6 +11,8 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use App\Model\Entity\Piece;
+use CakeDC\Users\Exception\BadConfigurationException;
 
 /**
  * CakePHP PieceAssignment
@@ -172,19 +174,63 @@ class PieceAssignmentComponent extends Component {
 		$change = $refinement - $original; // decrease (-x), increase (+x)
 		
 		// Unique and Rights have ONE piece don't have the input for quanitity
-		if ($edition->type === EDITION_OPEN) {
+		if ($this->edition->type === EDITION_OPEN) {
 			$method = 'resizeOpenEdition';
 		} else {
 			$method = 'resizeLimitedEdition';
 		}
-		return $this->$method($original, $change, $this->edition);
+		return $this->$method($original, $change);
 	}
 	
-	protected function resizeOpenEdition($original, $change, $edition) {
+	/**
+	 * Change the size of an Open edition
+	 * 
+	 * @param type $original
+	 * @param type $change
+	 */
+	protected function resizeOpenEdition($original, $change) {
+		$this->Pieces = TableRegistry::get('Pieces');
+		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
+		osd($piece);//die;
 		if ($change > 0) {
+			$this->increaseOpenEdition($original, $change, $piece);
+		} else {
 			
 		}
-		osd('resizeOpenEdition');die;
+		osd('resizeOpenEdition');
+//		osd($this->edition, 'the edition'); die;
+	}
+	
+	protected function increaseOpenEdition($original, $change, $piece) {
+		// hasUnassigned() can't work because the edition is in flux 
+		// and values aren't updated. Specifically, edition->quantity which 
+		// calculates unassigned is now out of phase with pieces (that's why we're here)
+		$piece = $this->Pieces->find('unassigned', 
+				['edition_id' => $this->edition->id])->toArray();
+		
+		if (count($piece) === 1) {
+			$piece = $piece[0];
+			$this->edition->pieces = [$this->Pieces->patchEntity($piece, 
+				['quantity' => $piece->quantity + $change])];
+			osd($piece, 'had one'); //die;
+
+		} elseif (empty($piece)) {
+			$this->edition->pieces = [new Piece(
+				$this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $change])
+			)];
+			osd($this->edition->pieces[0], 'made one'); //die;
+		
+		} else {
+			\Cake\Log\Log::emergency('More than one unassigned piece was '
+					. 'found on an Open edition', $piece);
+			throw new BadConfigurationException(
+					"Open Edition types should not have more than one unassigned "
+					. "piece record but edition {$this->edition->id} has more.");
+		}
+	}
+	
+	protected function decreaseOpenEdition($original, $change, $piece) {
+		
 	}
 	
 	protected function resizeLimitedEdition($change, $edition) {
@@ -192,7 +238,7 @@ class PieceAssignmentComponent extends Component {
 	if ($change > 0) {
 			
 		}
-		osd('resizeLimitedEdition');die;
+		osd('resizeLimitedEdition');//die;
 	}
 	
 }

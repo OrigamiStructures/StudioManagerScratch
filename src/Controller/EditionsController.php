@@ -155,12 +155,13 @@ class EditionsController extends AppController
 						'refinement' => $edition->quantity,
 						'id' => $edition->id,
 					];
-			
+			if ($quantity_tuple) {
+				$this->ArtworkStack->refinePieces($artwork,$quantity_tuple);
+			}
+//			osd($artwork);
+//			die;
+
 			if ($this->Artworks->save($artwork)) {
-				if ($quantity_tuple) {
-					$this->ArtworkStack->refinePieces($artwork,$quantity_tuple);
-				}
-				die;
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),
