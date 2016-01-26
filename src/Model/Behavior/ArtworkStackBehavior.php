@@ -95,7 +95,7 @@ class ArtworkStackBehavior extends Behavior {
 	public function createPieces($edition) {
 		if ($this->_table->SystemState->controller() !== 'formats') {
 			$this->Pieces = TableRegistry::get('Pieces');
-			$this->Pieces->SystemState = $this->_table->SystemState;
+//			$this->Pieces->SystemState = $this->_table->SystemState;
 			switch ($edition['type']) {
 				case EDITION_LIMITED:
 				case PORTFOLIO_LIMITED:
