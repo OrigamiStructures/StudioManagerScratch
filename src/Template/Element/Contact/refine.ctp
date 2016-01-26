@@ -1,10 +1,9 @@
 <!-- Element/Contact/revise.ctp -->
 <?php
     $contacts = $member['contacts'];
+    $count = count($contacts);
     foreach ($contacts as $key => $contact) {
-        $this->set('contact', $contact);
-        $this->set('contactKey', $key);
-//            echo $this->Html->div('addressDisplay', $this->element('Address/display'), ['display' => 'hidden']);
+        $this->set(compact('contact', 'key', 'count'));
         echo $this->Html->div('contactFieldset', $this->element('Contact/fieldset'));
     }
 ?>
