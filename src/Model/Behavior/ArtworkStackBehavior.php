@@ -96,6 +96,9 @@ class ArtworkStackBehavior extends Behavior {
 		if ($this->_table->SystemState->controller() !== 'formats') {
 			$this->Pieces = TableRegistry::get('Pieces');
 //			$this->Pieces->SystemState = $this->_table->SystemState;
+			
+			// THIS COULD MOVE TO PIECES TABLE
+			
 			switch ($edition['type']) {
 				case EDITION_LIMITED:
 				case PORTFOLIO_LIMITED:
@@ -124,6 +127,9 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return array
 	 */
 	public function refinePieces($edition) {
+		// nothing can be done here
+		// right now, with data = trd, we don't have enough info 
+		// to do quantity-change handling.
 		return $edition;
 	}
 

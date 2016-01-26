@@ -231,4 +231,20 @@ class ArtworkStackComponent extends Component {
 		return $artwork; 
 	}
 	
+	public function editionQuantityChange($artwork, $edition_id) {
+		$edition = $artwork->returnEdition($edition_id);
+		$quantity_tuple = !$edition->dirty('quantity') ?
+				FALSE : 
+				[
+					'original' => $edition->getOriginal('quantity'),
+					'refinement' => $edition->quantity,
+					'id' => $edition->id,
+				];
+		if ($quantity_tuple) {
+			$this->refinePieces($artwork,$quantity_tuple);
+		}
+//			osd($artwork);
+//			die;
+	}
+	
 }

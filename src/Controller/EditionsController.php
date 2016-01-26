@@ -147,19 +147,7 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 			
-			$edition = $artwork->returnEdition($this->request->data['editions'][0]['id']);
-			$quantity_tuple = !$edition->dirty('quantity') ?
-					FALSE : 
-					[
-						'original' => $edition->getOriginal('quantity'),
-						'refinement' => $edition->quantity,
-						'id' => $edition->id,
-					];
-			if ($quantity_tuple) {
-				$this->ArtworkStack->refinePieces($artwork,$quantity_tuple);
-			}
-//			osd($artwork);
-//			die;
+			$this->ArtworkStack->editionQuantityChange($artwork, $this->request->data['editions'][0]['id']);
 
 			if ($this->Artworks->save($artwork)) {
                 $this->Flash->success(__('The edition has been changed.'));

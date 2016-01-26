@@ -130,7 +130,7 @@ class PieceAssignmentComponent extends Component {
 		return $this->edition->quantity === 1;
 	}
 
-		protected function mostRecentFormat() {
+	protected function mostRecentFormat() {
 		if (isset($this->format)) {
 			return $this->format;
 		}
