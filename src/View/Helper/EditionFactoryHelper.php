@@ -132,7 +132,7 @@ class EditionFactoryHelper extends Helper {
 		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
 			$label = implode('/', $label);
 			$assignment_tool = $this->Html->link("$label pieces to formats",
-				['controller' => 'pieces', 'action' => 'review', '?' => [
+				['controller' => 'pieces'/*, 'action' => 'review'*/, '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
 				]]) . "\n";
@@ -148,7 +148,8 @@ class EditionFactoryHelper extends Helper {
 		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
 		if ((boolean) $pieces) {
 			echo $this->Html->link("Add status information",
-				['controller' => 'dispositions', 'action' => 'create', '?' => [
+				[/*'controller' => 'dispositions', 'action' => 'create'*/
+					'controller' => 'pieces', '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
 					'format' => $format->id,
