@@ -11,6 +11,8 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use App\Model\Entity\Piece;
+use CakeDC\Users\Exception\BadConfigurationException;
 
 /**
  * CakePHP PieceAssignment
@@ -128,7 +130,7 @@ class PieceAssignmentComponent extends Component {
 		return $this->edition->quantity === 1;
 	}
 
-		protected function mostRecentFormat() {
+	protected function mostRecentFormat() {
 		if (isset($this->format)) {
 			return $this->format;
 		}
@@ -140,7 +142,7 @@ class PieceAssignmentComponent extends Component {
 			if (!isset($this->edition)) {
 			}
 			$formats = new Collection($this->edition->formats);
-			osd($formats->max('modified'));
+//			osd($formats->max('modified'));
 			$this->format = (new Collection($this->edition->formats))->max(
 				function($format) {return $format->modified->toUnixString();
 			});
@@ -150,12 +152,96 @@ class PieceAssignmentComponent extends Component {
 		return $this->format;
 	}
 
-	public function hasOnePiece() {
-		return $this->stack->edition->quantity == 1;
+	/**
+	 * Handle edition size changes for editions that already have pieces
+	 * 
+	 * There is a lot of initialization that has been done. Many properties set
+	 * 
+	 * @param Entity $artwork The post-save entity
+	 * @param array $quantity_tuple (int) $original, (int) $refinement, (Entity) $edition
+	 */
+	public function refine($data = []) {
+		extract($data); // $original, $refinement, $id
+		$change = $refinement - $original; // decrease (-x), increase (+x)
+		
+		// Unique and Rights have ONE piece don't have the input for quanitity
+		if ($this->edition->type === EDITION_OPEN) {
+			$method = 'resizeOpenEdition';
+		} else {
+			$method = 'resizeLimitedEdition';
+		}
+		return $this->$method($original, $change);
 	}
 	
-	public function isFlat() {
-		return ($this->stack->edition_count == 1) && 
-			($this->stack->edtions[0]->format_count == 1);
+	/**
+	 * Change the size of an Open edition
+	 * 
+	 * @param integer $original
+	 * @param integer $change
+	 */
+	protected function resizeOpenEdition($original, $change) {
+		$this->Pieces = TableRegistry::get('Pieces');
+		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
+		osd($piece);//die;
+		if ($change > 0) {
+			$this->increaseOpenEdition($change, $piece);
+		} else {
+			
+		}
+		osd('resizeOpenEdition');
+//		osd($this->edition, 'the edition'); die;
 	}
+	
+	/**
+	 * Add pieces to an existing Open edition type
+	 * 
+	 * Open editions use the 'quantity' field of Piece entities, so if an 
+	 * open edition has unassigned pieces, there will be one record for them. 
+	 * Increasing the edition size requires changing the 'quantity' value 
+	 * in that record or creating an unassigned piece record with the quantity
+	 * 
+	 * @param integer $change Number of additional unassigned pieces needed
+	 * @param entity $piece Entity, the unassigned piece record
+	 * @throws BadConfigurationException
+	 */
+	protected function increaseOpenEdition($change, $piece) {
+		// hasUnassigned() can't work because the edition is in flux 
+		// and values aren't updated. Specifically, edition->quantity which 
+		// calculates unassigned is now out of phase with pieces (that's why we're here)
+		$piece = $this->Pieces->find('unassigned', 
+				['edition_id' => $this->edition->id])->toArray();
+		
+		if (count($piece) === 1) {
+			$piece = $piece[0];
+			$this->edition->pieces = [$this->Pieces->patchEntity($piece, 
+				['quantity' => $piece->quantity + $change])];
+			osd($piece, 'had one'); //die;
+
+		} elseif (empty($piece)) {
+			$this->edition->pieces = [new Piece(
+				$this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $change])
+			)];
+			osd($this->edition->pieces[0], 'made one'); //die;
+		
+		} else {
+			\Cake\Log\Log::emergency('More than one unassigned piece was '
+					. 'found on an Open edition', $piece);
+			throw new BadConfigurationException(
+					"Open Edition types should not have more than one unassigned "
+					. "piece record but edition {$this->edition->id} has more.");
+		}
+	}
+	
+	protected function decreaseOpenEdition($original, $change, $piece) {
+		
+	}
+	
+	protected function resizeLimitedEdition($change, $edition) {
+	osd($edition);
+	if ($change > 0) {
+			
+		}
+		osd('resizeLimitedEdition');//die;
+	}
+	
 }

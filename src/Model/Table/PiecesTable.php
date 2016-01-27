@@ -8,9 +8,6 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
 
-define('NUMBERED_PIECES', 1);
-define('OPEN_PIECES', 0);
-
 /**
  * Pieces Model
  *
@@ -253,5 +250,16 @@ class PiecesTable extends AppTable
 //		find piece (format_id && format.disposed && piece.free) or (edition.fluid)
 		return $query->where(['Pieces.format_id' => $format_id, 'Pieces.disposition_count >' => 0, /*disposable*/] )
 			->orWhere(['Pieces.edition_id' => $edition_id, 'Pieces.disposition_count' => 0]);
+	}
+	
+	public function findUnassigned(Query $query, $options) {
+		if (!isset($options['edition_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+		}
+		return $query->where([
+			'edition_id' => $options['edition_id'],
+			'format_id IS NULL',
+			'user_id' => $this->SystemState->artistId(),
+		]);
 	}
 }

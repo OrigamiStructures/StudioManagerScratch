@@ -25,7 +25,20 @@ class EditionsTable extends AppTable
 	 * @var array
 	 */
 	protected $types = [
-		1 => EDITION_UNIQUE, EDITION_RIGHTS, EDITION_LIMITED, EDITION_OPEN, EDITION_PORTFOLIO, EDITION_PUBLICATION
+		EDITION_UNIQUE => 'Unique Work',
+		EDITION_RIGHTS => 'Rights',
+		'Edition' => [
+			EDITION_LIMITED => 'Limited (numbered)',
+			EDITION_OPEN => 'Open (un-numbered)',			
+		],
+		'Portfolio' => [
+			PORTFOLIO_LIMITED => 'Limited (numbered)',
+			PORTFOLIO_OPEN => 'Open (un-numbered)',
+		],
+		'Publication' => [
+			PUBLICATION_LIMITED => 'Limited (numbered)',
+			PUBLICATION_OPEN => 'Open (un-numbered)',
+		],
 	];
 
 
@@ -136,7 +149,7 @@ class EditionsTable extends AppTable
 	 * @return array
 	 */
 	public function typeList() {
-		return array_combine($this->types, $this->types);
+		return $this->types;
 	}
 	
 }

@@ -96,6 +96,36 @@ class ArtworkStackComponent extends Component {
 	}
 	
 	/**
+	 * Check and handle edition->quantity change during refine() requests
+	 * 
+	 * Both artworks and editions refine() methods may see changes to 
+	 * the edition size. The is the method that detects if quantity 
+	 * was edited. All edition types pass through this check. The 
+	 * handling will be parsed out to specialized code in the 
+	 * PieceAssignmentComponent if there was an edit of this value.
+	 * 
+	 * @param entity $artwork The full artwork stack
+	 * @param integer $edition_id ID of the edition that was up for editing
+	 */
+	public function refinePieces($artwork, $edition_id) {
+		$edition = $artwork->returnEdition($edition_id);
+		$quantity_tuple = !$edition->dirty('quantity') ?
+				FALSE : 
+				[
+					'original' => $edition->getOriginal('quantity'),
+					'refinement' => $edition->quantity,
+					'id' => $edition->id,
+				];
+		if ($quantity_tuple) {
+			$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
+			$this->PieceAssignment->refine($quantity_tuple);
+		}
+//			osd($artwork);
+//			die;
+	}
+	
+	
+	/**
 	 * Use URL query arguments to filter the Entity
 	 * 
 	 * 'review' views target specifics memebers of the an Artwork stack. The 

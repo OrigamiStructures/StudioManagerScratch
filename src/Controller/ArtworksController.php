@@ -202,6 +202,13 @@ class ArtworksController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
+			
+			// if the count is > 1, there were no edition inputs
+			if ($artwork->edition_count === 1) {
+				$this->ArtworkStack->refinePieces($artwork,
+						$this->request->data['editions'][0]['id']);
+			}	
+			
             if ($this->Artworks->save($artwork)) {
 				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);

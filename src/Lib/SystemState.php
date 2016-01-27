@@ -8,16 +8,6 @@ use Cake\Collection\Collection;
 use App\Lib\StateMap;
 use Cake\Event\EventListenerInterface;
 
-define('ARTWORK_CREATE', 1);
-define('ARTWORK_REVIEW', 2);
-define('ARTWORK_REFINE', 4);
-define('ARTWORK_SAVE', 8);
-
-// These will need to be change to something meaningful
-// For now, we can act as admins even though we're users
-define('ADMIN_SYSTEM', 'user'); // 'admin'
-define('ADMIN_ARTIST', 'artist_admin');
-
 /**
  * Description of SystemState
  *
