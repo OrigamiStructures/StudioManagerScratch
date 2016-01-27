@@ -76,8 +76,15 @@ class PieceAssignmentComponent extends Component {
 	}
 	
 	
-	
-	public function piecesToFormat($piece) {
+	/**
+	 * Move the single piece onto the last edited format
+	 * 
+	 * THIS SEEMS A BIT QUESTIONABLE. ONE PIECE? FORMAT ASSUMPTION...
+	 * 
+	 * @param Entity $piece
+	 * @return Entity
+	 */
+	protected function piecesToFormat($piece) {
 			$piece->format_id = $this->format->id;
 			$piece->dirty('format_id', true);
 			return $piece;
@@ -186,7 +193,7 @@ class PieceAssignmentComponent extends Component {
 		if ($change > 0) {
 			$this->increaseOpenEdition($change, $piece);
 		} else {
-			
+//			$this->decreaseOpenEdition($original, $change, $piece);
 		}
 		osd('resizeOpenEdition');
 //		osd($this->edition, 'the edition'); die;
@@ -215,13 +222,13 @@ class PieceAssignmentComponent extends Component {
 			$piece = $piece[0];
 			$this->edition->pieces = [$this->Pieces->patchEntity($piece, 
 				['quantity' => $piece->quantity + $change])];
-			osd($piece, 'had one'); //die;
+			osd('had one'); //die;
 
 		} elseif (empty($piece)) {
 			$this->edition->pieces = [new Piece(
 				$this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $change])
 			)];
-			osd($this->edition->pieces[0], 'made one'); //die;
+			osd('made one'); //die;
 		
 		} else {
 			\Cake\Log\Log::emergency('More than one unassigned piece was '
@@ -230,6 +237,7 @@ class PieceAssignmentComponent extends Component {
 					"Open Edition types should not have more than one unassigned "
 					. "piece record but edition {$this->edition->id} has more.");
 		}
+		osd($this->edition->pieces[0]);
 	}
 	
 	protected function decreaseOpenEdition($original, $change, $piece) {
