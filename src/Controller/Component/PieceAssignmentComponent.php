@@ -152,15 +152,6 @@ class PieceAssignmentComponent extends Component {
 		return $this->format;
 	}
 
-	public function hasOnePiece() {
-		return $this->stack->edition->quantity == 1;
-	}
-	
-	public function isFlat() {
-		return ($this->stack->edition_count == 1) && 
-			($this->stack->edtions[0]->format_count == 1);
-	}
-	
 	/**
 	 * Handle edition size changes for editions that already have pieces
 	 * 
@@ -185,15 +176,15 @@ class PieceAssignmentComponent extends Component {
 	/**
 	 * Change the size of an Open edition
 	 * 
-	 * @param type $original
-	 * @param type $change
+	 * @param integer $original
+	 * @param integer $change
 	 */
 	protected function resizeOpenEdition($original, $change) {
 		$this->Pieces = TableRegistry::get('Pieces');
 		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
 		osd($piece);//die;
 		if ($change > 0) {
-			$this->increaseOpenEdition($original, $change, $piece);
+			$this->increaseOpenEdition($change, $piece);
 		} else {
 			
 		}
@@ -201,7 +192,19 @@ class PieceAssignmentComponent extends Component {
 //		osd($this->edition, 'the edition'); die;
 	}
 	
-	protected function increaseOpenEdition($original, $change, $piece) {
+	/**
+	 * Add pieces to an existing Open edition type
+	 * 
+	 * Open editions use the 'quantity' field of Piece entities, so if an 
+	 * open edition has unassigned pieces, there will be one record for them. 
+	 * Increasing the edition size requires changing the 'quantity' value 
+	 * in that record or creating an unassigned piece record with the quantity
+	 * 
+	 * @param integer $change Number of additional unassigned pieces needed
+	 * @param entity $piece Entity, the unassigned piece record
+	 * @throws BadConfigurationException
+	 */
+	protected function increaseOpenEdition($change, $piece) {
 		// hasUnassigned() can't work because the edition is in flux 
 		// and values aren't updated. Specifically, edition->quantity which 
 		// calculates unassigned is now out of phase with pieces (that's why we're here)

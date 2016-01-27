@@ -147,7 +147,7 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 			
-			$this->ArtworkStack->editionQuantityChange($artwork, $this->request->data['editions'][0]['id']);
+			$this->ArtworkStack->refinePieces($artwork, $this->request->data['editions'][0]['id']);
 
 			if ($this->Artworks->save($artwork)) {
                 $this->Flash->success(__('The edition has been changed.'));

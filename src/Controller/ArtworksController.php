@@ -205,7 +205,7 @@ class ArtworksController extends AppController
 			
 			// if the count is > 1, there were no edition inputs
 			if ($artwork->edition_count === 1) {
-				$this->ArtworkStack->editionQuantityChange($artwork,
+				$this->ArtworkStack->refinePieces($artwork,
 						$this->request->data['editions'][0]['id']);
 			}	
 			
