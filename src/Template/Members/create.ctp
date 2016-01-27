@@ -12,7 +12,7 @@
                 echo $this->element('Address/refine');
                 echo $this->element('Contact/refine');
                 echo $this->Form->button('Submit', ['type' => 'submit', 'class' => 'button success']);
-                echo $this->Html->link('Cancel', $referrer, ['class' => 'button secondary', 'confirm' => 'Are you sure you want to cancel?']);
+                echo $this->Html->link('Cancel', $SystemState->referer(), ['class' => 'button secondary', 'confirm' => 'Are you sure you want to cancel?']);
             echo $this->Form->end();
             ?>
         </div>

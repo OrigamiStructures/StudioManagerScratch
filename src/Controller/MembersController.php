@@ -35,7 +35,6 @@ class MembersController extends AppController
         ];
         $this->set('members', $this->paginate($this->Members));
         $this->set('_serialize', ['members']);
-        $this->set('referrer', 'findMeEasy');
     }
 
     /**
@@ -135,7 +134,7 @@ class MembersController extends AppController
             $member = $this->Members->patchEntity($member, $this->request->data);
             if ($this->Members->save($member)) {
                 $this->Flash->success(__('The member has been saved.'));
-                return $this->redirect(['action' => 'review']);
+                return $this->redirect(['action' => 'review', '?' => ['member' => $member->id]]);
             } else {
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
@@ -180,6 +179,7 @@ class MembersController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
+        $this->SystemState->referer($this->referer());
         $query = $this->Members->find('memberReview');
         $query->contain(['Addresses', 'Contacts', 'Groups']);
         $query->orderAsc('last_name');
@@ -194,9 +194,8 @@ class MembersController extends AppController
     public function refine() {
         if(!$this->SystemState->isKnown('member')){
             $this->Flash->error(__('You must provide a single member id to edit'));
-            return $this->redirect($this->referer());
+            return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
         }
-        $this->set('referrer', $this->referer());
         
         $member = $this->Members->find('memberReview')->toArray()[0];
         
@@ -204,10 +203,13 @@ class MembersController extends AppController
             $member = $this->Members->patchEntity($member, $this->request->data);
             if ($this->Members->save($member)) {
                 $this->Flash->success(__('The member has been saved.'));
-                return $this->redirect(['action' => "review", '?' => ['member' => $member->id]]);
+                return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
             } else {
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
+        }
+        if(empty($member->errors())){
+            $this->SystemState->referer($this->referer());
         }
         $this->set('member', $member);
         $this->set('_serialize', ['member']);

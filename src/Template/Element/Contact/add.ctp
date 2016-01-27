@@ -7,6 +7,5 @@
         'formaction' => "/members/addElement/$type",
         'class' => 'button tiny round info'
             ]);
-//    echo $this->Html->link("Add $label", ['action' => 'addElement', $type, '?' => ['member' => $SystemState->queryArg('member'), 'url' => urlencode($referrer)]]);
 ?>
 <!-- END Element/Contact/add.ctp -->
