@@ -1,9 +1,9 @@
 <?php 
 $links = $this->Html->link($artwork->id, ['controller' => 'pieces', '?' => ['artwork' => $artwork->id]]) .
 		'/' .
-		$this->Html->link($edition->id, ['controller' => 'pieces', '?' => ['edition' => $edition->id]]) .
+		$this->Html->link($edition->id, ['controller' => 'pieces', '?' => ['artwork' => $artwork->id, 'edition' => $edition->id]]) .
 		'/' .
-		$this->Html->link($format->id, ['controller' => 'pieces', '?' => ['format' => $format->id]]);
+		$this->Html->link($format->id, ['controller' => 'pieces', '?' => ['artwork' => $artwork->id, 'edition' => $edition->id, 'format' => $format->id]]);
 ?>
 		<tr class='format'>
 			<td><?= $links; ?></td>
