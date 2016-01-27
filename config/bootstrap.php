@@ -239,3 +239,7 @@ define('ARTWORK_SAVE', 8);
 // For now, we can act as admins even though we're users
 define('ADMIN_SYSTEM', 'user'); // 'admin'
 define('ADMIN_ARTIST', 'artist_admin');
+
+//System Constants
+define('SYSTEM_VOID_REFERER', TRUE);
+define('SYSTEM_CONSUME_REFERER', FALSE);

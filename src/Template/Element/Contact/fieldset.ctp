@@ -5,9 +5,3 @@
     <?= $this->Form->input("contacts.$key.label"); ?>
     <?= $this->Form->input("contacts.$key.data");?>
 </fieldset>
-<?php
-    if($key = $count -1){
-        $this->set('type', 'contacts');
-        echo $this->element('Contact/add');
-    }
-?>

@@ -273,4 +273,27 @@ CLASS;
 		fclose($map_class_file);
 		return $result;
 	}
+    
+    /**
+     * Manage persistent session-based referer
+     * 
+     * @param string $referer
+     * @return string
+     */
+    public function referer($referer = NULL) {
+        $session_referer = $this->request->session()->read('referer');
+        if(is_null($referer)){
+            $r = (!is_null($session_referer)) ? $session_referer : $this->request->referer();
+        } elseif ($referer === SYSTEM_VOID_REFERER) {
+            $r = $this->request->referer();
+            $this->request->session()->delete('referer');
+        } elseif ($referer === SYSTEM_CONSUME_REFERER) {
+            $r =  (!is_null($session_referer)) ? $session_referer : $this->request->referer();
+            $this->request->session()->delete('referer');
+        } else {
+            $r = $referer;
+            $this->request->session()->write('referer', $referer);
+        }
+        return $r;
+    }
 }

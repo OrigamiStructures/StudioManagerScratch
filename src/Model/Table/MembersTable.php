@@ -142,7 +142,7 @@ class MembersTable extends AppTable
             'Members.active' => 1,
             'Members.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain('Groups');
+        $query->contain(['Addresses', 'Contacts', 'Groups']);
         return $query;
     }
     
@@ -165,7 +165,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupGroup(ArrayObject $data) {
-        switch ($data['type']) {
+        switch ($data['member_type']) {
             case MEMBER_TYPE_USER:
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_INSTITUTION:
@@ -183,7 +183,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupSort(ArrayObject $data) {
-        switch ($data['type']) {
+        switch ($data['member_type']) {
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_INSTITUTION:
                 $data['last_name'] = $this->createSortName($data['first_name']);
@@ -213,34 +213,33 @@ class MembersTable extends AppTable
      * it has at least one address and two contact records for easy editing of the complete
      * package.
      * 
-     * @param Entity $data
+     * @param Entity $entity
+     * @param string $type the member type
      * @return Entity
      */
-    public function completeMemberEntity($data, $type) {
-        $contacts = $data->get('contacts');
-        if(empty($contacts)){
-            $contacts[0]=[
+    public function defaultMemberEntity($entity, $type) {
+        $contacts = [
+            [
                 'user_id' => $this->SystemState->artistId(),
                 'label' => 'email',
                 'primary' => 1
-                ];
-            $contacts[1]=[
+            ],
+            [
                 'user_id' => $this->SystemState->artistId(),
                 'label' => 'phone'
-                ];
-            $data->set('contacts', $contacts);
-        }
-        $addresses = $data->get('addresses');
-        if(empty($addresses)){
-            $addresses[0]=[
+            ]
+        ];
+        $addresses = [
+            [
                 'user_id' => $this->SystemState->artistId(),
                 'label' => 'main',
                 'primary' => 1
-                ];
-            $data->set('addresses', $addresses);
-        }
-        $data->set('type', $type);
-        return $data;
+            ]
+        ];
+        $entity->set('member_type', $type);
+        $entity->set('contacts', $contacts);
+        $entity->set('addresses', $addresses);
+        return $entity;
     }
 	
 }

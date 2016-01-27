@@ -90,4 +90,22 @@ class AddressesTable extends AppTable
         $rules->add($rules->existsIn(['member_id'], 'Members'));
         return $rules;
     }
+    
+	/**
+	 * Make the specified number of new Contact arrays (for TRD use)
+	 * 
+	 * @param integer $count How many contacts are needed
+	 * @param array $default [column => value] to control what data the pieces have
+	 * @param integer $start The index (and number) of the first of the ($count) pieces
+	 */
+	public function spawn($count, $default = [], $start = 0) {
+		$columns = $default + [
+			'id' => NULL,
+			'user_id' => $this->SystemState->artistId(),
+            'label' => 'New'
+		];
+        
+        return array_fill($start, $count, $columns);
+	}
+	
 }

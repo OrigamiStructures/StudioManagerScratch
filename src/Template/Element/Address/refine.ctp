@@ -1,4 +1,5 @@
-<!-- Element/Address/revise.ctp -->
+<!-- Element/Address/refine.ctp -->
+<section class="row address">
 <?php
     $addresses = $member['addresses'];
     foreach ($addresses as $key => $address) {
@@ -7,5 +8,8 @@
 //            echo $this->Html->div('addressDisplay', $this->element('Address/display'), ['display' => 'hidden']);
         echo $this->Html->div('addressFieldset', $this->element('Address/fieldset'));
     }
+    $this->set('type', 'addresses');
+    echo $this->element('Contact/add');
 ?>
-<!-- END Element/Address/revise.ctp -->
+</section>
+<!-- END Element/Address/refine.ctp -->
