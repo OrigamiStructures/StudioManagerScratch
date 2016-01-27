@@ -1,10 +1,13 @@
-<!-- Element/Contact/revise.ctp -->
+<!-- Element/Contact/refine.ctp -->
+<section class="row contact">
 <?php
     $contacts = $member['contacts'];
-    $count = count($contacts);
     foreach ($contacts as $key => $contact) {
-        $this->set(compact('contact', 'key', 'count'));
+        $this->set(compact('contact', 'key'));
         echo $this->Html->div('contactFieldset', $this->element('Contact/fieldset'));
     }
+    $this->set('type', 'contacts');
+    echo $this->element('Contact/add');
 ?>
-<!-- END Element/Contact/revise.ctp -->
+</section>
+<!-- END Element/Contact/refine.ctp -->
