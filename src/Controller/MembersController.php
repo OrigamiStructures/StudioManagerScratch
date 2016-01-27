@@ -146,7 +146,6 @@ class MembersController extends AppController
             throw new \BadMethodCallException('Type must be either contacts or addresses');
         }
         $member = $this->refine(TRUE);
-        osd($member);
         $addition = $member->get($type);
         $count = count($addtion);
         $addition[$count] = [
@@ -194,7 +193,9 @@ class MembersController extends AppController
         $member = $this->Members->get($this->SystemState->queryArg('member'), [
             'contain' => ['Addresses', 'Contacts', 'Groups']
         ]);
-        $member = $this->Members->completeMemberEntity($member, $member->type);
+        $type = $member->type;
+        $member = $this->Members->completeMemberEntity($member, 'contacts', 0);
+        $member = $this->Members->completeMemberEntity($member, 'addresses', 0);
         
         // Duck out for addContact and addAddress
         if($add){
