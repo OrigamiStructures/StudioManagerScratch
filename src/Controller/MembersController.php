@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Utility\Inflector;
 
 /**
  * Members Controller
@@ -10,6 +11,17 @@ use App\Controller\AppController;
  */
 class MembersController extends AppController
 {
+    private $_memberTypes = [
+        MEMBER_TYPE_INSTITUTION, MEMBER_TYPE_INSTITUTION,
+        MEMBER_TYPE_PERSON, MEMBER_TYPE_PERSON,
+        MEMBER_TYPE_USER, MEMBER_TYPE_USER,
+        MEMBER_TYPE_CATEGORY, MEMBER_TYPE_CATEGORY
+    ];
+    
+    public function initialize() {
+        parent::initialize();
+        $this->set('member_types', $this->_memberTypes);
+    }
 
     /**
      * Index method
@@ -23,6 +35,7 @@ class MembersController extends AppController
         ];
         $this->set('members', $this->paginate($this->Members));
         $this->set('_serialize', ['members']);
+        $this->set('referrer', 'findMeEasy');
     }
 
     /**
@@ -117,7 +130,7 @@ class MembersController extends AppController
      */
     public function create($type) {
 		$member = new \App\Model\Entity\Member();
-        $member = $this->Members->completeMemberEntity($member, $type);
+        $member = $this->Members->defaultMemberEntity($member, $type);
         if ($this->request->is('post') || $this->request->is('put')) {
             $member = $this->Members->patchEntity($member, $this->request->data);
             if ($this->Members->save($member)) {
@@ -127,9 +140,7 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
-        $types = ['Institution', 'Person', 'User', 'Category'];
-        $types = array_combine($types, $types);
-        $this->set(compact('member', 'element_management', 'types'));
+        $this->set(compact('member'));
         $this->set('_serialize', ['member']);
     }
     
@@ -139,20 +150,19 @@ class MembersController extends AppController
      * With 'contacts' or 'addresses' in the type, add the respective new element to the
      * return
      * 
-     * @param string $type 'contacts' or 'addresses'
+     * @param string $entity_type 'contacts' or 'addresses'
      */
-    public function addElement($type) {
-        if(!in_array($type, ['contacts', 'addresses'])){
-            throw new \BadMethodCallException('Type must be either contacts or addresses');
+    public function addElement($entity_type) {
+        if(!in_array($entity_type, ['contacts', 'addresses'])){
+            throw new \BadMethodCallException('Entity type must be either contacts or addresses');
         }
-        $member = $this->refine(TRUE);
-        $addition = $member->get($type);
-        $count = count($addtion);
-        $addition[$count] = [
-            'user_id' => $this->SystemState->artistId(),
-            'label' => 'new'
-        ];
-        $member->set($type, $addition);
+        $table = Inflector::pluralize(Inflector::classify($entity_type));
+        $member = new \App\Model\Entity\Member($this->request->data);
+        
+        $start = count($member->$entity_type);
+        
+        $member->$entity_type = $member->$entity_type + $this->Members->$table->spawn(1, [], $start);
+        
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('create');
@@ -181,27 +191,15 @@ class MembersController extends AppController
      * Edit any member record, based upon the 'member' query argument
      * 
      */
-    public function refine($add = FALSE) {
-        $referrer = $this->referer();
-        $types = ['Institution', 'Person', 'User', 'Category'];
-        $types = array_combine($types, $types);
-        
+    public function refine() {
         if(!$this->SystemState->isKnown('member')){
             $this->Flash->error(__('You must provide a single member id to edit'));
             return $this->redirect($this->referer());
         }
-        $member = $this->Members->get($this->SystemState->queryArg('member'), [
-            'contain' => ['Addresses', 'Contacts', 'Groups']
-        ]);
-        $type = $member->type;
-        $member = $this->Members->completeMemberEntity($member, 'contacts', 0);
-        $member = $this->Members->completeMemberEntity($member, 'addresses', 0);
+        $this->set('referrer', $this->referer());
         
-        // Duck out for addContact and addAddress
-        if($add){
-            $this->set(compact('referrer', 'types'));
-            return $member;
-        }
+        $member = $this->Members->find('memberReview')->toArray()[0];
+        
         if ($this->request->is(['patch', 'post', 'put'])) {
             $member = $this->Members->patchEntity($member, $this->request->data);
             if ($this->Members->save($member)) {
@@ -211,7 +209,7 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('member', 'element_management', 'types', 'referrer'));
+        $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('create');
 

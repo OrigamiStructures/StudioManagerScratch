@@ -35,7 +35,7 @@ class Member extends Entity
     ];
     
     public function _getName(){
-        switch ($this->_properties['type']) {
+        switch ($this->_properties['member_type']) {
             case MEMBER_TYPE_PERSON:
                 return $this->_properties['first_name'] . ' ' . $this->_properties['last_name'];
                 break;
@@ -47,7 +47,7 @@ class Member extends Entity
     }
     
     public function _getSortName(){
-        switch ($this->_properties['type']) {
+        switch ($this->_properties['member_type']) {
             case MEMBER_TYPE_PERSON:
                 return $this->_properties['last_name'] . ', ' . $this->_properties['first_name'];
                 break;

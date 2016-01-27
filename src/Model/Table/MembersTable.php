@@ -142,7 +142,7 @@ class MembersTable extends AppTable
             'Members.active' => 1,
             'Members.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain('Groups');
+        $query->contain(['Addresses', 'Contacts', 'Groups']);
         return $query;
     }
     
@@ -165,7 +165,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupGroup(ArrayObject $data) {
-        switch ($data['type']) {
+        switch ($data['member_type']) {
             case MEMBER_TYPE_USER:
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_INSTITUTION:
@@ -183,7 +183,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupSort(ArrayObject $data) {
-        switch ($data['type']) {
+        switch ($data['member_type']) {
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_INSTITUTION:
                 $data['last_name'] = $this->createSortName($data['first_name']);
@@ -214,59 +214,31 @@ class MembersTable extends AppTable
      * package.
      * 
      * @param Entity $entity
-     * @param string $type
-     * @param int $count
+     * @param string $type the member type
      * @return Entity
      */
-    public function completeMemberEntity($entity, $type, $count) {
-        if(!in_array($type, ['contacts', 'addresses'])){
-            throw new \BadMethodCallException('Type must be either contacts or addresses');
-        }
-        $addition = $entity->get($type);
-        $curr_count = count($addtion);
-        
-        //Make sure there are at least two contact, plus whatever you're adding
-        if($type == 'contacts' && $curr_count < 2){
-            $count = $count + (2-$curr_count);
-        }
-        
-        //Make sure there are at least one addresses, plus whatever you're adding
-        if($type == 'addresses' && $curr_cout < 1){
-            $count = $count + (1-$curr_count);
-        }
-        
-        $addtion = array_fill(
-                $curr_count, 
-                $count, 
-                [
-                    'user_id' => $this->SystemState->artistId(),
-                    'label' => 'new'
-                ]);
-        $entity->set($type, $addition);
-//
-//        $contacts = $entity->get('contacts');
-//        if(empty($contacts)){
-//            $contacts[0]=[
-//                'user_id' => $this->SystemState->artistId(),
-//                'label' => 'email',
-//                'primary' => 1
-//                ];
-//            $contacts[1]=[
-//                'user_id' => $this->SystemState->artistId(),
-//                'label' => 'phone'
-//                ];
-//            $entity->set('contacts', $contacts);
-//        }
-//        $addresses = $entity->get('addresses');
-//        if(empty($addresses)){
-//            $addresses[0]=[
-//                'user_id' => $this->SystemState->artistId(),
-//                'label' => 'main',
-//                'primary' => 1
-//                ];
-//            $entity->set('addresses', $addresses);
-//        }
-////        $entity->set('type', $type);
+    public function defaultMemberEntity($entity, $type) {
+        $contacts = [
+            [
+                'user_id' => $this->SystemState->artistId(),
+                'label' => 'email',
+                'primary' => 1
+            ],
+            [
+                'user_id' => $this->SystemState->artistId(),
+                'label' => 'phone'
+            ]
+        ];
+        $addresses = [
+            [
+                'user_id' => $this->SystemState->artistId(),
+                'label' => 'main',
+                'primary' => 1
+            ]
+        ];
+        $entity->set('member_type', $type);
+        $entity->set('contacts', $contacts);
+        $entity->set('addresses', $addresses);
         return $entity;
     }
 	

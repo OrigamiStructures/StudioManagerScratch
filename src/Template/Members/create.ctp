@@ -3,7 +3,11 @@
 	<div class="row member">
 		<div class="columns small-12 medium-5 medium-offset-1">
             <?php
-            echo $this->Form->create($member);
+            $url = ['action' => "create", $member->member_type];
+            if(!empty($member->id)){
+                $url = ['action' => 'refine', '?' => ['member' => $member->id]];
+            }
+            echo $this->Form->create($member, ['url' => $url]);
                 echo $this->element('Member/refine');
                 echo $this->element('Address/refine');
                 echo $this->element('Contact/refine');
