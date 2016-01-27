@@ -292,7 +292,7 @@ CLASS;
             $this->request->session()->delete('referer');
         } else {
             $r = $referer;
-            $this->request->session()->write($referer);
+            $this->request->session()->write('referer', $referer);
         }
         return $r;
     }
