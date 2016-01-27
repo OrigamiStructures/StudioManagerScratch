@@ -275,24 +275,24 @@ CLASS;
 	}
     
     /**
-     * Manage persistent session-based referrer
+     * Manage persistent session-based referer
      * 
-     * @param string $referrer
+     * @param string $referer
      * @return string
      */
-    public function referrer($referrer = NULL) {
-        $session_referrer = $this->request->session()->read('referrer');
-        if(is_null($referrer)){
-            $r = (!is_null($session_referrer)) ? $session_referrer : $this->request->referrer();
-        } elseif ($referrer === SYSTEM_VOID_REFERRER) {
+    public function referer($referer = NULL) {
+        $session_referrer = $this->request->session()->read('referer');
+        if(is_null($referer)){
+            $r = (!is_null($session_referrer)) ? $session_referrer : $this->request->referer();
+        } elseif ($referer === SYSTEM_VOID_REFERRER) {
             $r = $this->request->referer();
-            $this->request->session()->delete('referrer');
-        } elseif ($referrer === SYSTEM_CONSUME_REFERRER) {
-            $r =  (!is_null($session_referrer)) ? $session_referrer : $this->request->referrer();
-            $this->request->session()->delete('referrer');
+            $this->request->session()->delete('referer');
+        } elseif ($referer === SYSTEM_CONSUME_REFERRER) {
+            $r =  (!is_null($session_referrer)) ? $session_referrer : $this->request->referer();
+            $this->request->session()->delete('referer');
         } else {
-            $r = $referrer;
-            $this->request->session()->write($referrer);
+            $r = $referer;
+            $this->request->session()->write($referer);
         }
         return $r;
     }
