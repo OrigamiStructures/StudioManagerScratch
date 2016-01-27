@@ -241,5 +241,5 @@ define('ADMIN_SYSTEM', 'user'); // 'admin'
 define('ADMIN_ARTIST', 'artist_admin');
 
 //System Constants
-define('SYSTEM_VOID_REFERRER', TRUE);
-define('SYSTEM_CONSUME_REFERRER', FALSE);
+define('SYSTEM_VOID_REFERER', TRUE);
+define('SYSTEM_CONSUME_REFERER', FALSE);

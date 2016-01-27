@@ -281,14 +281,14 @@ CLASS;
      * @return string
      */
     public function referer($referer = NULL) {
-        $session_referrer = $this->request->session()->read('referer');
+        $session_referer = $this->request->session()->read('referer');
         if(is_null($referer)){
-            $r = (!is_null($session_referrer)) ? $session_referrer : $this->request->referer();
-        } elseif ($referer === SYSTEM_VOID_REFERRER) {
+            $r = (!is_null($session_referer)) ? $session_referer : $this->request->referer();
+        } elseif ($referer === SYSTEM_VOID_REFERER) {
             $r = $this->request->referer();
             $this->request->session()->delete('referer');
-        } elseif ($referer === SYSTEM_CONSUME_REFERRER) {
-            $r =  (!is_null($session_referrer)) ? $session_referrer : $this->request->referer();
+        } elseif ($referer === SYSTEM_CONSUME_REFERER) {
+            $r =  (!is_null($session_referer)) ? $session_referer : $this->request->referer();
             $this->request->session()->delete('referer');
         } else {
             $r = $referer;
