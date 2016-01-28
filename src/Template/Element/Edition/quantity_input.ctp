@@ -11,7 +11,7 @@ if ($SystemState->is(ARTWORK_CREATE)) {
 	$size_statement = $increase = $policy = '';
 	$minimum = $edition->disposed_piece_count > 0 ? $edition->disposed_piece_count : 1 ;
 	$label = ($edition->hasFluid() || $edition->hasUnassigned() ? 'Reduce or ' : '') .
-			"Increase the edition size (minimum size $minimum):";
+			"Change the edition size (minimum size $minimum):";
 //	$salable_statement = !$edition->hasSalable() ? $this->Html->para(NULL, "This edition is sold out.") : '';
 	$default = $edition->quantity;
 	
