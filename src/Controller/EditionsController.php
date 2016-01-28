@@ -143,12 +143,13 @@ class EditionsController extends AppController
 		$this->Artworks = TableRegistry::get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
+//			$this->ArtworkStack->addRefinementRules();
+
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 			
 			$this->ArtworkStack->refinePieces($artwork, $this->request->data['editions'][0]['id']);
-			osd($artwork);die;
 
 			if ($this->Artworks->save($artwork)) {
                 $this->Flash->success(__('The edition has been changed.'));
