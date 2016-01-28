@@ -215,20 +215,36 @@ class PieceAssignmentComponent extends Component {
 		// hasUnassigned() can't work because the edition is in flux 
 		// and values aren't updated. Specifically, edition->quantity which 
 		// calculates unassigned is now out of phase with pieces (that's why we're here)
-		$piece = $this->Pieces->find('unassigned', 
+		$format_id = FALSE;
+		$flat_edition = $this->edition->format_count === 1;
+		
+		if ($flat_edition) {
+			$format_id = $this->edition->formats[0]->id;
+			$piece = $this->Pieces->find('fluid', 
+				[
+					'edition_id' => $this->edition->id,
+				])->toArray();
+		} else {
+			$piece = $this->Pieces->find('unassigned', 
 				['edition_id' => $this->edition->id])->toArray();
+		}
 		
 		if (count($piece) === 1) {
 			$piece = $piece[0];
-			$this->edition->pieces = [$this->Pieces->patchEntity($piece, 
-				['quantity' => $piece->quantity + $change])];
-			osd('had one'); //die;
+			$data = [
+				'quantity' => $piece->quantity + $change,
+				'format_id' => $flat_edition ? $format_id : NULL,
+			];
+			$this->edition->pieces = [$this->Pieces->patchEntity($piece, $data)];
 
 		} elseif (empty($piece)) {
+			$data = [
+				'quantity' => $change,
+				'format_id' => $flat_edition ? $format_id : NULL,
+			];
 			$this->edition->pieces = [new Piece(
-				$this->Pieces->spawn(OPEN_PIECES, 1, ['quantity' => $change])
+				$this->Pieces->spawn(OPEN_PIECES, 1, $data)[0]
 			)];
-			osd('made one'); //die;
 		
 		} else {
 			\Cake\Log\Log::emergency('More than one unassigned piece was '
@@ -237,7 +253,6 @@ class PieceAssignmentComponent extends Component {
 					"Open Edition types should not have more than one unassigned "
 					. "piece record but edition {$this->edition->id} has more.");
 		}
-		osd($this->edition->pieces[0]);
 	}
 	
 	protected function decreaseOpenEdition($original, $change, $piece) {
