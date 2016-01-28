@@ -36,7 +36,7 @@ class GroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsTo('MembersProxy', [
+        $this->belongsTo('Members', [
             'className' => 'Members',
             'foreignKey' => 'id',
             'bindingKey' => 'member_id',
@@ -92,6 +92,8 @@ class GroupsTable extends AppTable
             'Groups.active' => 1,
             'Groups.user_id' => $this->SystemState->artistId()
         ]);
+        $query->contain(['Members']);
+        osd($query->toArray());
         return $query;
     }
     
@@ -105,9 +107,9 @@ class GroupsTable extends AppTable
      */
     public function findMemberGroups(Query $query, array $options) {
         $query = $this->findMyGroups($query, $options);
-        $query->where([
-            'Members.id' => $this->SystemState->queryArg('member')
-        ]);
+//        $query->where([
+//            'Members.id' => $this->SystemState->queryArg('member')
+//        ]);
         return $query;
     }
 }

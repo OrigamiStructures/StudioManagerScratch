@@ -182,6 +182,7 @@ class MembersController extends AppController
         $query = $this->Members->find('memberReview');
         $query->contain(['Addresses', 'Contacts', 'Groups']);
         $query->orderAsc('last_name');
+        $this->retreiveAndSetGroups();
         $this->set('members', $this->paginate($query));
         $this->set('_serialize', ['members']);
     }
@@ -214,5 +215,14 @@ class MembersController extends AppController
         $this->set('_serialize', ['member']);
         $this->render('create');
 
+    }
+    
+    /**
+     * Find all groups associated with this member and set them to viewVars
+     * 
+     */
+    private function retreiveAndSetGroups() {
+        $member_groups = $this->Members->Groups->find('memberGroups');
+        $this->set('member_groups', $member_groups);
     }
 }

@@ -68,13 +68,15 @@ class MembersTable extends AppTable
             'foreignKey' => 'member_id'
         ]);
         $this->belongsToMany('Groups', [
+            'className' => 'Groups',
             'foreignKey' => 'member_id',
             'targetForeignKey' => 'group_id',
             'joinTable' => 'groups_members'
         ]);
-        $this->hasOne('Groups',[
+        $this->hasOne('ProxyGroup',[
             'className' => 'Groups',
-            'foreignKey' => 'member_id'
+            'foreignKey' => 'member_id',
+            'propertyName' => 'proxy_group'
         ]);
     }
 
