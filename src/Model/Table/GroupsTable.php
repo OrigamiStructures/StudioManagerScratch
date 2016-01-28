@@ -93,7 +93,7 @@ class GroupsTable extends AppTable
             'Groups.user_id' => $this->SystemState->artistId()
         ]);
         $query->contain(['Members']);
-        osd($query->toArray());
+//        osd($query->toArray());
         return $query;
     }
     

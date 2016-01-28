@@ -180,7 +180,7 @@ class MembersController extends AppController
     public function review() {
         $this->SystemState->referer($this->referer());
         $query = $this->Members->find('memberReview');
-        $query->contain(['Addresses', 'Contacts', 'Groups']);
+        $query->contain(['Addresses', 'Contacts', 'Groups', 'ProxyGroup']);
         $query->orderAsc('last_name');
         $this->retreiveAndSetGroups();
         $this->set('members', $this->paginate($query));
