@@ -52,7 +52,7 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function _getDisplayTitle() {
-		$title = empty($this->title) ? $this->_gutDescription() : $this->title;
+		$title = empty($this->title) ? /*$this->_gutDescription()*/'' : $this->title;
 		return $title;
 	}
 	
