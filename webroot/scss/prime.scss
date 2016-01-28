@@ -116,4 +116,13 @@ form {
 	img {
 		width: 30%;
 	}
+	
+	.form-error, .error-message {
+		color: #ec5840;
+		display: block;
+		font-size: 1rem;
+		font-weight: bold;
+		margin-bottom: 1rem;
+		margin-top: 0;
+	}
 }
