@@ -18,6 +18,6 @@ $links = $this->Html->link($artwork->id, ['controller' => 'pieces', '?' => ['art
 			<td><?= $format->fluid_piece_count; ?></td>
 			<td><?= tf($format->hasCollected()); ?></td>
 			<td><?= $format->collected_piece_count; ?></td>
-			<td><?= tf($format->hasSalable($edition->quantity - $edition->disposed_piece_count)); ?></td>
-			<td><?= $format->salable_piece_count($edition->quantity - $edition->disposed_piece_count); ?></td>
+			<td><?= tf($format->hasSalable($edition->undisposed_piece_count)); ?></td>
+			<td><?= $format->salable_piece_count($edition->undisposed_piece_count); ?></td>
 		</tr>

@@ -170,7 +170,7 @@ class EditionedHelper extends EditionFactoryHelper {
 		}
 		
 //		"There are up to z pieces in this format available for sale";
-		$undisposed = $edition->quantity + $edition->disposed_piece_count;
+		$undisposed = $edition->undisposed_piece_count;
 		if ($format->hasSalable($undisposed)) {
 			$grammar = $format->salable_piece_count($undisposed) === 1 ?
 				'there might be 1 piece' :

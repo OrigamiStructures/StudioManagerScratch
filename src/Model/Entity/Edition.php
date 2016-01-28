@@ -124,6 +124,10 @@ class Edition extends Entity
 		return $this->quantity - $this->collected_piece_count;
 	}
 	
+	public function _getUndisposedPieceCount() {
+		return $this->quantity - $this->disposed_piece_count;
+	}
+	
 	/**
 	 * Count of pieces that have dispositons categorized as 'collected'
 	 * 
