@@ -165,10 +165,11 @@ class PieceAssignmentComponent extends Component {
 	 * There is a lot of initialization that has been done. Many properties set
 	 * 
 	 * @param Entity $artwork The post-save entity
-	 * @param array $quantity_tuple (int) $original, (int) $refinement, (Entity) $edition
+	 * @param array $quantity_tuple (int) $original, (int) $refinement, $id
 	 */
 	public function refine($data = []) {
-		extract($data); // $original, $refinement, $id
+		extract($data); // $original, $refinement, $Edition
+		$this->edition = $this->artwork->returnEdition($id);
 		$change = $refinement - $original; // decrease (-x), increase (+x)
 		
 		// Unique and Rights have ONE piece don't have the input for quanitity
@@ -189,14 +190,22 @@ class PieceAssignmentComponent extends Component {
 	protected function resizeOpenEdition($original, $change) {
 		$this->Pieces = TableRegistry::get('Pieces');
 		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
-		osd($piece);//die;
+
 		if ($change > 0) {
+		$this->Pieces = TableRegistry::get('Pieces');
+		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
 			$this->increaseOpenEdition($change, $piece);
 		} else {
-//			$this->decreaseOpenEdition($original, $change, $piece);
+			
+			$editions = TableRegistry::get('Editions');
+			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+
+			if (abs($change) > $original_edition->undisposed_piece_count - 1 ) {
+				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
+				return;
+			}
+			$this->decreaseOpenEdition($change, $original_edition);
 		}
-		osd('resizeOpenEdition');
-//		osd($this->edition, 'the edition'); die;
 	}
 	
 	/**
@@ -255,8 +264,25 @@ class PieceAssignmentComponent extends Component {
 		}
 	}
 	
-	protected function decreaseOpenEdition($original, $change, $piece) {
+	/**
+	 * 
+	 * @param type $change
+	 * @param type $piece
+	 */
+	protected function decreaseOpenEdition($change, $original_edition) {
+		osd(abs($change));
+//		osd(func_get_args());die;
+		$format_id = FALSE;
+		$flat_edition = $this->edition->format_count === 1;
 		
+		$piece = $this->Pieces->find('undisposed', 
+			[
+				'edition_id' => $this->edition->id,
+			])->order(['format_id' => 'ASC'])->toArray();
+
+		osd($piece, 'undisposed pieces');
+		
+		die;
 	}
 	
 	protected function resizeLimitedEdition($change, $edition) {

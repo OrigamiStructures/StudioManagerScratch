@@ -252,6 +252,14 @@ class PiecesTable extends AppTable
 			->orWhere(['Pieces.edition_id' => $edition_id, 'Pieces.disposition_count' => 0]);
 	}
 	
+	/**
+	 * Pieces that are not yet assigned to Formats
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return type
+	 * @throws \BadMethodCallException
+	 */
 	public function findUnassigned(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
 			throw new \BadMethodCallException("You must pass \$option['edition_id']");
@@ -259,6 +267,45 @@ class PiecesTable extends AppTable
 		return $query->where([
 			'edition_id' => $options['edition_id'],
 			'format_id IS NULL',
+			'user_id' => $this->SystemState->artistId(),
+		]);
+	}
+	
+	/**
+	 * Pieces that are assigned to formats but not yet disposed
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return type
+	 * @throws \BadMethodCallException
+	 */
+	public function findFluid(Query $query, $options) {
+		if (!isset($options['edition_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+		}
+		return $query->where([
+			'edition_id' => $options['edition_id'],
+			'format_id IS NOT NULL',
+			'disposition_count' => 0,
+			'user_id' => $this->SystemState->artistId(),
+		]);
+	}
+	
+	/**
+	 * Pieces that are assigned to formats but not yet disposed
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return type
+	 * @throws \BadMethodCallException
+	 */
+	public function findUndisposed(Query $query, $options) {
+		if (!isset($options['edition_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+		}
+		return $query->where([
+			'edition_id' => $options['edition_id'],
+			'disposition_count' => 0,
 			'user_id' => $this->SystemState->artistId(),
 		]);
 	}

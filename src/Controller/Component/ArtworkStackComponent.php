@@ -139,6 +139,7 @@ class ArtworkStackComponent extends Component {
 			$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
 			$this->PieceAssignment->refine($quantity_tuple);
 		}
+		osd($quantity_tuple, 'after call');//die;
 //			osd($artwork);
 //			die;
 	}
