@@ -39,6 +39,25 @@ class ArtworkStackComponent extends Component {
 		$this->SystemState = $this->controller->SystemState;
 	}
 
+//    public function implementedEvents()
+//    {
+//        $eventMap = [
+//            'Controller.initialize' => 'beforeFilter',
+//            'Controller.startup' => 'startup',
+//            'Controller.beforeRender' => 'beforeRender',
+//            'Controller.beforeRedirect' => 'beforeRedirect',
+//            'Controller.shutdown' => 'shutdown',
+//			'Model.buildRules' => 'buildRules',
+//			];
+//        $events = [];
+//        foreach ($eventMap as $event => $method) {
+//            if (method_exists($this, $method)) {
+//                $events[$event] = $method;
+//            }
+//        }
+//        return $events;
+//    }
+
 	/**
 	 * Get a named Table instance
 	 * 
@@ -255,5 +274,16 @@ class ArtworkStackComponent extends Component {
 		
 		return $artwork; 
 	}
+	
+	
+//    public function buildRules(RulesChecker $rules)
+//    {
+//		$rules->add(function($entity, $options) {
+//			osd(func_get_args());
+//		}, 'QuantityRange');
+//		die;
+//		
+//        return $rules;
+//    }
 	
 }
