@@ -36,7 +36,7 @@ class GroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsTo('MembersProxy', [
+        $this->belongsTo('Members', [
             'className' => 'Members',
             'foreignKey' => 'id',
             'bindingKey' => 'member_id',
@@ -78,5 +78,38 @@ class GroupsTable extends AppTable
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
+    }
+    
+    /**
+     * Find all the active groups belonging to the logged in user
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findMyGroups(Query $query, array $options) {
+        $query->where([
+            'Groups.active' => 1,
+            'Groups.user_id' => $this->SystemState->artistId()
+        ]);
+        $query->contain(['Members']);
+//        osd($query->toArray());
+        return $query;
+    }
+    
+    /**
+     * Find groups associated with this SystemState member, filtered by basic
+     * findMyGroups search
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findMemberGroups(Query $query, array $options) {
+        $query = $this->findMyGroups($query, $options);
+//        $query->where([
+//            'Members.id' => $this->SystemState->queryArg('member')
+//        ]);
+        return $query;
     }
 }

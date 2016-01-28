@@ -23,6 +23,7 @@ class MembersController extends AppController
         $this->set('member_types', $this->_memberTypes);
     }
 
+// <editor-fold defaultstate="collapsed" desc="CRUD Methods">
     /**
      * Index method
      *
@@ -44,8 +45,7 @@ class MembersController extends AppController
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function view($id = null)
-    {
+    public function view($id = null)     {
         $member = $this->Members->get($id, [
             'contain' => ['Images', 'Groups', 'Users', 'Dispositions', 'Locations']
         ]);
@@ -58,8 +58,7 @@ class MembersController extends AppController
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
+    public function add()     {
         $member = $this->Members->newEntity();
         if ($this->request->is('post')) {
             $member = $this->Members->patchEntity($member, $this->request->data);
@@ -83,8 +82,7 @@ class MembersController extends AppController
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
-    {
+    public function edit($id = null)     {
         $member = $this->Members->get($id, [
             'contain' => ['Groups']
         ]);
@@ -110,8 +108,7 @@ class MembersController extends AppController
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function delete($id = null)
-    {
+    public function delete($id = null)     {
         $this->request->allowMethod(['post', 'delete']);
         $member = $this->Members->get($id);
         if ($this->Members->delete($member)) {
@@ -121,6 +118,8 @@ class MembersController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    // </editor-fold>
     
     /**
      * Creates member records in element based state
@@ -181,8 +180,9 @@ class MembersController extends AppController
     public function review() {
         $this->SystemState->referer($this->referer());
         $query = $this->Members->find('memberReview');
-        $query->contain(['Addresses', 'Contacts', 'Groups']);
+        $query->contain(['Addresses', 'Contacts', 'Groups', 'ProxyGroup']);
         $query->orderAsc('last_name');
+        $this->retreiveAndSetGroups();
         $this->set('members', $this->paginate($query));
         $this->set('_serialize', ['members']);
     }
@@ -215,5 +215,14 @@ class MembersController extends AppController
         $this->set('_serialize', ['member']);
         $this->render('create');
 
+    }
+    
+    /**
+     * Find all groups associated with this member and set them to viewVars
+     * 
+     */
+    private function retreiveAndSetGroups() {
+        $member_groups = $this->Members->Groups->find('memberGroups');
+        $this->set('member_groups', $member_groups);
     }
 }
