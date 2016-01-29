@@ -148,7 +148,12 @@ class EditionedHelper extends EditionFactoryHelper {
 			$assigned = sprintf("<p>There %s %d %s assigned to this format.%s</p>\n",
 					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
 		} else {
-			$assigned = "<p>This fomat has no pieces assigned.</p>\n";
+			if ($format->hasSalable($edition->undisposed_piece_count)) {
+				$assigned = "<p>This fomat has no pieces assigned.</p>\n";
+			} else {
+				$assigned = "<p>This fomat was never implemented.</p>\n";
+			}
+			
 		}
 		
 //		"There are status events recorded for t pieces";
@@ -178,7 +183,12 @@ class EditionedHelper extends EditionFactoryHelper {
 			$salable = sprintf("<p>%s available for sale in this format.</p>\n",
 					$grammar);
 		} else {
-			$salable = "<p class=\"sold_out\">SOLD OUT</p>\n";
+			if (!$format->hasAssigned()) {
+				$salable = "";
+			} else {
+				$salable = "<p class=\"sold_out\">SOLD OUT</p>\n";
+			}
+			
 		}
 		
 		echo $assigned . $dispositions . $salable;
