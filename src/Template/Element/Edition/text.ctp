@@ -1,3 +1,15 @@
+<?php
+$q = [
+	'controller' => 'editions', 
+//	'action' => 'review', 
+	'?' => [
+		'artwork' => $artwork->id,
+		'edition' => $edition->id,
+	]];
+$nav = $this->Html->link('v', $q + ['action' => 'review']);
+$ed = $this->Html->link('f', $q + ['action' => 'refine']);
+$l = "<span class='nav'>[$nav|$ed] </span>";
+?>
 <!-- Element/Edition/text.ctp -->
 <?php
 /**
@@ -22,7 +34,7 @@ $helper = $factory->load($edition->type);
 					}
 					?>
 
-					<?= $this->Html->tag('h2', $edition->displayTitle); ?>
+					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
 					<section class="assignment">
 						<?= $helper->pieceSummary($edition); ?>
 						<?= $helper->pieceTools($edition); ?>
