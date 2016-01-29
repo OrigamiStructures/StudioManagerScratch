@@ -14,7 +14,7 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\BelongsToMany $Members
  * @property \Cake\ORM\Association\HowOne $Members
  */
-class GroupsTable extends AppTable
+class ProxyGroupsTable extends AppTable
 {
 
     /**
@@ -36,17 +36,17 @@ class GroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-//        $this->belongsTo('Members', [
-//            'className' => 'Members',
-//            'foreignKey' => 'id',
-//            'bindingKey' => 'member_id',
-//            'dependent' => TRUE,
-//        ]);
-        $this->belongsToMany('Members', [
-            'foreignKey' => 'group_id',
-            'targetForeignKey' => 'member_id',
-            'joinTable' => 'groups_members',
+        $this->belongsTo('Members', [
+            'className' => 'Members',
+            'foreignKey' => 'id',
+            'bindingKey' => 'member_id',
+            'dependent' => TRUE,
         ]);
+//        $this->belongsToMany('Members', [
+//            'foreignKey' => 'group_id',
+//            'targetForeignKey' => 'member_id',
+//            'joinTable' => 'groups_members',
+//        ]);
     }
 
     /**
@@ -87,15 +87,15 @@ class GroupsTable extends AppTable
      * @param array $options
      * @return Query
      */
-    public function findMyGroups(Query $query, array $options) {
-        $query->where([
-            'Groups.active' => 1,
-            'Groups.user_id' => $this->SystemState->artistId()
-        ]);
-        $query->contain(['Members']);
-//        osd($query->toArray());
-        return $query;
-    }
+//    public function findMyGroups(Query $query, array $options) {
+//        $query->where([
+//            'Groups.active' => 1,
+//            'Groups.user_id' => $this->SystemState->artistId()
+//        ]);
+//        $query->contain(['Members']);
+////        osd($query->toArray());
+//        return $query;
+//    }
     
     /**
      * Find groups associated with this SystemState member, filtered by basic
@@ -105,11 +105,11 @@ class GroupsTable extends AppTable
      * @param array $options
      * @return Query
      */
-    public function findMemberGroups(Query $query, array $options) {
-        $query = $this->findMyGroups($query, $options);
-//        $query->where([
-//            'Members.id' => $this->SystemState->queryArg('member')
-//        ]);
-        return $query;
-    }
+//    public function findMemberGroups(Query $query, array $options) {
+//        $query = $this->findMyGroups($query, $options);
+////        $query->where([
+////            'Members.id' => $this->SystemState->queryArg('member')
+////        ]);
+//        return $query;
+//    }
 }

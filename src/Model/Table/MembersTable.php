@@ -74,9 +74,9 @@ class MembersTable extends AppTable
             'joinTable' => 'groups_members'
         ]);
         
-        $this->hasOne('ProxyGroup',[
-//            'targetTable' => \Cake\ORM\TableRegistry::get('Groups'),
-            'className' => 'Groups as ProxyGroup',
+        $this->hasOne('ProxyGroups',[
+//            'targetTable' => \Cake\ORM\TableRegistry::get('ProxyGroups'),
+            'className' => 'ProxyGroups',
             'foreignKey' => 'member_id',
             'propertyName' => 'proxy_group'
         ]);
