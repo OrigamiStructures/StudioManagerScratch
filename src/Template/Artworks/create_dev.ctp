@@ -60,4 +60,15 @@ $this->set(compact('editions', 'edition', 'edition_index', 'formats', 'format', 
         </div>
     </div>
 </section>
-<?php //			osd($artwork);
+<?php 
+$args = $SystemState->queryArg(); 
+$q = [];
+foreach (['artwork', 'edition', 'format'] as $crumb) {
+	if (array_key_exists($crumb, $args)) {
+		$q = $q +[$crumb => $args[$crumb]];
+		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q]);
+		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
+	}
+}
+
+//			osd($artwork);
