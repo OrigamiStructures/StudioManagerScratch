@@ -200,7 +200,7 @@ class PieceAssignmentComponent extends Component {
 			$editions = TableRegistry::get('Editions');
 			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
 
-			if (abs($change) > $original_edition->undisposed_piece_count - 1 ) {
+			if (abs($change) > $original_edition->undisposed_piece_count ) {
 				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
 				return;
 			}
@@ -271,18 +271,50 @@ class PieceAssignmentComponent extends Component {
 	 */
 	protected function decreaseOpenEdition($change, $original_edition) {
 		osd(abs($change));
+		$change = abs($change);
 //		osd(func_get_args());die;
-		$format_id = FALSE;
-		$flat_edition = $this->edition->format_count === 1;
-		
-		$piece = $this->Pieces->find('undisposed', 
+//		$format_id = FALSE;
+//		$flat_edition = $this->edition->format_count === 1;
+//		osd($this->edition);
+		$pieces = $this->Pieces->find('undisposed', 
 			[
 				'edition_id' => $this->edition->id,
 			])->order(['format_id' => 'ASC'])->toArray();
 
-		osd($piece, 'undisposed pieces');
+		(new Collection($this->edition->formats))->each(function($format) {
+			$format->pieces = NULL;
+			$format->dirty('pieces', FALSE);
+		}) ;
+		$this->edition->pieces = $pieces;
 		
-		die;
+//		osd($this->edition);die;
+		
+		$index = 0;
+		$limit = count($pieces);
+		do {
+			$piece = $pieces[$index++];
+			$deletions = [];
+			if ($piece->quantity >= $change) {
+				$piece->quantity -= $change;
+				$change = 0;
+				
+			} else { // change >= quantity
+				$change -= $piece->quantity;
+				$piece->quantity = 0;
+				$deletions[] = $piece;
+			}
+			
+		} while ($change > 0 && $index < $limit);
+		
+		if ($change > 0) {
+			throw new \Cake\Network\Exception\BadRequestException(
+				'There were not enough undisposed Pieces to reduce the Edition the '
+					. 'requested amount.');
+		}
+		osd($pieces, 'undisposed pieces');
+		osd($change.'//'.$index.'//'.$limit, 'change index limit');
+		osd($deletions, 'deletions');
+//		die;
 	}
 	
 	protected function resizeLimitedEdition($change, $edition) {

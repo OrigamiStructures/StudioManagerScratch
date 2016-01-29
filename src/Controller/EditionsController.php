@@ -150,7 +150,7 @@ class EditionsController extends AppController
 			]);
 			
 			$this->ArtworkStack->refinePieces($artwork, $this->request->data['editions'][0]['id']);
-			osd($artwork, 'done refining');//die;
+//			osd($artwork, 'done refining');die;
 
 			if ($this->Artworks->save($artwork)) {
                 $this->Flash->success(__('The edition has been changed.'));
