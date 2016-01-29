@@ -42,7 +42,8 @@ $this->set(compact('editions', 'edition', 'edition_index', 'formats', 'format', 
 				
 				echo $this->element('Edition/form_layer');
 				
-				if ($SystemState->controller() === 'editions' && 
+				if (($SystemState->controller() === 'editions' ||
+						$SystemState->controller() === 'artworks') && 
 						$edition->format_count > 1) {
 					echo $this->Form->submit();
 				}
