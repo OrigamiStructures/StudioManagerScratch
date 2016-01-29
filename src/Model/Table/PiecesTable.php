@@ -303,10 +303,12 @@ class PiecesTable extends AppTable
 		if (!isset($options['edition_id'])) {
 			throw new \BadMethodCallException("You must pass \$option['edition_id']");
 		}
-		return $query->where([
+		$query = $query->where([
 			'edition_id' => $options['edition_id'],
 			'disposition_count' => 0,
 			'user_id' => $this->SystemState->artistId(),
 		]);
+//		osd($query);
+		return $query;
 	}
 }
