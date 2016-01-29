@@ -208,9 +208,11 @@ class ArtworksController extends AppController
 				$this->ArtworkStack->refinePieces($artwork,
 						$this->request->data['editions'][0]['id']);
 			}	
-			osd($artwork);die;
+//			osd($artwork);die;
 			
-            if ($this->Artworks->save($artwork)) {
+			$deletions = $this->ArtworkStack->refinePieces($artwork, $this->request->data);
+
+			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
 				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {

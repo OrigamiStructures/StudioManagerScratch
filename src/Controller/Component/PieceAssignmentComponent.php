@@ -178,7 +178,7 @@ class PieceAssignmentComponent extends Component {
 		} else {
 			$method = 'resizeLimitedEdition';
 		}
-		return $this->$method($original, $change);
+		return $this->$method($original, $change); // return array of Pieces to delete
 	}
 	
 	/**
@@ -194,7 +194,7 @@ class PieceAssignmentComponent extends Component {
 		if ($change > 0) {
 		$this->Pieces = TableRegistry::get('Pieces');
 		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
-			$this->increaseOpenEdition($change, $piece);
+			return $this->increaseOpenEdition($change, $piece); // return [] (deletions required)
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
@@ -204,7 +204,7 @@ class PieceAssignmentComponent extends Component {
 				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
 				return;
 			}
-			$this->decreaseOpenEdition($change, $original_edition);
+			return $this->decreaseOpenEdition($change, $original_edition); // return [] deletions required
 		}
 	}
 	
@@ -262,6 +262,8 @@ class PieceAssignmentComponent extends Component {
 					"Open Edition types should not have more than one unassigned "
 					. "piece record but edition {$this->edition->id} has more.");
 		}
+		
+		return []; // deletions required
 	}
 	
 	/**
@@ -270,12 +272,7 @@ class PieceAssignmentComponent extends Component {
 	 * @param type $piece
 	 */
 	protected function decreaseOpenEdition($change, $original_edition) {
-		osd(abs($change));
 		$change = abs($change);
-//		osd(func_get_args());die;
-//		$format_id = FALSE;
-//		$flat_edition = $this->edition->format_count === 1;
-//		osd($this->edition);
 		$pieces = $this->Pieces->find('undisposed', 
 			[
 				'edition_id' => $this->edition->id,
@@ -287,17 +284,14 @@ class PieceAssignmentComponent extends Component {
 		}) ;
 		$this->edition->pieces = $pieces;
 		
-//		osd($this->edition);die;
-		
 		$index = 0;
 		$limit = count($pieces);
 		do {
 			$piece = $pieces[$index++];
 			$deletions = [];
-			if ($piece->quantity >= $change) {
+			if ($piece->quantity > $change) {
 				$piece->quantity -= $change;
 				$change = 0;
-				
 			} else { // change >= quantity
 				$change -= $piece->quantity;
 				$piece->quantity = 0;
@@ -311,10 +305,8 @@ class PieceAssignmentComponent extends Component {
 				'There were not enough undisposed Pieces to reduce the Edition the '
 					. 'requested amount.');
 		}
-		osd($pieces, 'undisposed pieces');
-		osd($change.'//'.$index.'//'.$limit, 'change index limit');
-		osd($deletions, 'deletions');
-//		die;
+
+		return $deletions;
 	}
 	
 	protected function resizeLimitedEdition($change, $edition) {

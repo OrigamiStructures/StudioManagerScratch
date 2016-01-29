@@ -77,6 +77,19 @@ class ArtworkStackComponent extends Component {
 		}
 	}
 	
+	
+	public function refinementTransaction($artwork, $deletions) {
+		$ArtworkTable = TableRegistry::get('Artworks');
+		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
+			$result = $ArtworkTable->save($artwork, ['atomic' => false]);
+			foreach ($deletions as $piece) {
+				$result = $result && $ArtworkTable->Editions->Pieces->delete($piece, ['atomic' => false]);
+			}
+			return $result;
+		});
+		return $result;
+	}
+
 	/**
 	 * Call from anywhere in the ArtworkStack to get the proper result
 	 * 
@@ -137,11 +150,10 @@ class ArtworkStackComponent extends Component {
 				];
 		if ($quantity_tuple) {
 			$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
-			$this->PieceAssignment->refine($quantity_tuple);
+			return $this->PieceAssignment->refine($quantity_tuple); // return [deletions required]
 		}
 		osd($quantity_tuple, 'after call');//die;
-//			osd($artwork);
-//			die;
+		return []; // deletions required
 	}
 	
 	

@@ -15,6 +15,12 @@ class EditionsController extends AppController
 	
 	public $components = ['ArtworkStack'];
 	
+	
+	public function initialize() {
+		parent::initialize();
+		$this->loadComponent('ArtworkStack');
+	}
+
 // <editor-fold defaultstate="collapsed" desc="BASIC CRUD">
 	/**
 	 * Index method
@@ -149,10 +155,9 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 			
-			$this->ArtworkStack->refinePieces($artwork, $this->request->data['editions'][0]['id']);
-//			osd($artwork, 'done refining');die;
+			$deletions = $this->ArtworkStack->refinePieces($artwork, $this->request->data['editions'][0]['id']);
 
-			if ($this->Artworks->save($artwork)) {
+			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),
