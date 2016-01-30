@@ -73,6 +73,18 @@ class SystemState implements EventListenerInterface {
             'Users.Component.UsersAuth.afterLogin' => 'afterLogin'
         ];
     }
+	
+	public function limitedEditionTypes() {
+		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
+	}
+
+	public function openEditionTypes() {
+		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
+	}
+
+	public function uniqueEditionTypes() {
+		return [EDITION_UNIQUE, EDITION_RIGHTS];
+	}
 
 	/**
 	 * Make stored viewVars available
