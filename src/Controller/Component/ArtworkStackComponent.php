@@ -82,8 +82,10 @@ class ArtworkStackComponent extends Component {
 		$ArtworkTable = TableRegistry::get('Artworks');
 		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
 			$result = $ArtworkTable->save($artwork, ['atomic' => false]);
-			foreach ($deletions as $piece) {
-				$result = $result && $ArtworkTable->Editions->Pieces->delete($piece, ['atomic' => false]);
+			if (is_array($deletions)) {
+				foreach ($deletions as $piece) {
+					$result = $result && $ArtworkTable->Editions->Pieces->delete($piece, ['atomic' => false]);
+				}
 			}
 			return $result;
 		});
