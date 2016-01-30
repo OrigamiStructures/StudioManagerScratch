@@ -56,7 +56,9 @@ class PiecesTable extends AppTable
 				'foreignKey' => 'edition_id'
 			]);
 			$this->belongsTo('Formats', [
-				'foreignKey' => 'format_id'
+//				'foreignKey' => 'format_id',
+				'foreignKey' => ['format_id', 'edition_id'],
+				'bindingKey' => ['id', 'edition_id'],
 			]);
 //		}
         $this->hasMany('Dispositions', [

@@ -57,7 +57,10 @@ class FormatsTable extends AppTable
             'foreignKey' => 'subscription_id',
         ]);
         $this->hasMany('Pieces', [
-            'foreignKey' => 'format_id',
+//            'foreignKey' => 'format_id',
+//			'conditions' => ['edition_id' => 'Formats.edition_id'],
+            'foreignKey' => ['format_id', 'edition_id'],
+			'bindingKey' => ['id', 'edition_id'],
         ]);
     }
 

@@ -257,8 +257,9 @@ class ArtworksController extends AppController
 							'Editions.Formats.Images', 'Editions.Formats.Pieces'
 					]
 			]);
+			$this->ArtworkStack->assignPieces($artwork);
+//			osd($artwork);die('ready to go');
             if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));

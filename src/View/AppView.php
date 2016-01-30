@@ -58,7 +58,4 @@ class AppView extends View
 		return $result;
 	}
 	
-	public function isUnique($edition) {
-		return in_array($edition->type, $this->SystemState->singleFormatEditionTypes());
-	}
 }

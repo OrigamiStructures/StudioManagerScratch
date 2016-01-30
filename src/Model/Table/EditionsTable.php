@@ -152,4 +152,44 @@ class EditionsTable extends AppTable
 		return $this->types;
 	}
 	
+	/**
+	 * Get the minimum alowed size for an edition
+	 * 
+	 * 
+	 * 
+	 * @param integer|Entity $edition
+	 * @return integer The minimum size
+	 */
+	public function minimumSize($edition) {
+		if (is_int($edition)) {
+			$edition = $this->get($edition, ['conditions' => [
+				'user_id' => $this->SystemState->artistId(),
+			]]);
+		}
+		
+		if (!($edition instanceof Edition)) {
+			throw new \BadMethodCallException('An Edition entity or an ID that '
+					. 'could lead to an Edition entity was required.');
+		}		
+		
+		if (in_array($edition->type, $this->SystemState->limitedEditionTypes())) {
+			/**
+			 * Limited editions nip undisposed pieces from the end of the edition
+			 */
+			$pieces = Cake\ORM\TableRegistry::get('Pieces');
+			$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $edition->id]);
+			$minimum = $highestNumberDisposed['number'];
+
+		} else {
+
+			/**
+			 * Open edititions can delete any undisposed pieces
+			 */
+			$minimum = $edition->disposed_piece_count/* > 0 ? $edition->disposed_piece_count : 1 */;
+		}
+		
+		return $minimum;
+	
+	}
+	
 }
