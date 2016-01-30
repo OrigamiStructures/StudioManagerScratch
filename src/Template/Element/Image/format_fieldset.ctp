@@ -2,7 +2,8 @@
 <?php 
 $render_image_input = TRUE;
 if ($SystemState->is(ARTWORK_REFINE)) {
-	if (!in_array($edition->type, [EDITION_LIMITED, EDITION_OPEN])) {
+	// 
+	if (in_array($edition->type, $SystemState->singleFormatEditionTypes())) {
 		$render_image_input = FALSE;
 	}
 }

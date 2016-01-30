@@ -59,6 +59,6 @@ class AppView extends View
 	}
 	
 	public function isUnique($edition) {
-		return in_array($edition->type, [EDITION_RIGHTS, EDITION_UNIQUE]);
+		return in_array($edition->type, $this->SystemState->singleFormatEditionTypes());
 	}
 }
