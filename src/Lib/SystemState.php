@@ -82,8 +82,13 @@ class SystemState implements EventListenerInterface {
 		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
 	}
 
-	public function uniqueEditionTypes() {
+	public function singleFormatEditionTypes() {
 		return [EDITION_UNIQUE, EDITION_RIGHTS];
+	}
+	
+	public function multiFormatEditionTypes() {
+		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
+				EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
 	}
 
 	/**
