@@ -13,7 +13,9 @@ if ($SystemState->is(ARTWORK_CREATE)) {
 /**
  * Establish values REFINEMENT of multiple-format types
  */
-} elseif (in_array($edition->type, $this->SystemState->multipleFormatEditionTypes())) {
+} elseif (in_array($edition->type, $SystemState->multiFormatEditionTypes())) {
+	
+	// COULD THIS STUFF GO IN THE FACTORY-BUILT HELPER FOR THE EDITION TYPE?
 	
 	$EditionTable = Cake\ORM\TableRegistry::get('Editions');
 	$minimum = $EditionTable->minimumSize($edition);

@@ -339,11 +339,20 @@ class PiecesTable extends AppTable
 		return $query;
 	}
 	
+	/**
+	 * Get the number of the highest numbered piece in an edition
+	 * 
+	 * THE ARGUMENTS ARE NOT IDEAL FOR THIS CALL
+	 * 
+	 * @param array $options conditions to find the edition
+	 * @return integer
+	 */
 	public function highestNumberDisposed($options) {
 		$disposed_pieces = $this->find('disposed', $options);
-		return (new Collection($disposed_pieces))->max(
+		$result = (new Collection($disposed_pieces))->max(
 				function($piece) {return $piece->number;
-			})->toArray();
+			});
+		return is_null($result) ? 0 : $result->toArray()['number'];
 	}
 		
 	

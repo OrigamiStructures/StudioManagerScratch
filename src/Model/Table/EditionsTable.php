@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use App\Model\Behavior\FamilyBehavior;
+use Cake\ORM\TableRegistry;
 
 /**
  * Editions Model
@@ -155,7 +156,10 @@ class EditionsTable extends AppTable
 	/**
 	 * Get the minimum alowed size for an edition
 	 * 
-	 * 
+	 * Given an edition entity or the ID of an edition, return the piece number 
+	 * which is the highest numbered disposed piece in the edition or, if it's 
+	 * an open edition, the number of disposed pieces in the edition. 
+	 * This number will represent the minimum size for the edition.
 	 * 
 	 * @param integer|Entity $edition
 	 * @return integer The minimum size
@@ -176,9 +180,7 @@ class EditionsTable extends AppTable
 			/**
 			 * Limited editions nip undisposed pieces from the end of the edition
 			 */
-			$pieces = Cake\ORM\TableRegistry::get('Pieces');
-			$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $edition->id]);
-			$minimum = $highestNumberDisposed['number'];
+			$minimum = $this->Pieces->highestNumberDisposed(['edition_id' => $edition->id]);
 
 		} else {
 
