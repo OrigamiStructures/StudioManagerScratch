@@ -317,11 +317,15 @@ class PieceAssignmentComponent extends Component {
 			$editions = TableRegistry::get('Editions');
 			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
 
-			if (abs($change) > $original_edition->undisposed_piece_count ) {
+			$pieces = TableRegistry::get('Pieces');
+			$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $this->edition->id]);
+			$edition_tail = $original_edition->quantity - $highestNumberDisposed['number'];
+						
+			if (abs($change) > $edition_tail ) {
 				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
 				return;
 			}
-			return $this->decreaseLimitedEdition($change, $original_edition); // return [] deletions required
+			return $this->decreaseLimitedEdition($change, $pieces, $original_edition); // return [] deletions required
 		}
 		osd('resizeLimitedEdition');//die;
 	}
@@ -357,8 +361,12 @@ class PieceAssignmentComponent extends Component {
 		return [];
 	}
 	
-	protected function decreaseLimitedEdition($change, $original_edition) {
-		
+	protected function decreaseLimitedEdition($change, $pieces, $original_edition) {
+		$change = abs($change);
+		$deletions = $pieces->find()->where(['edition_id' => $this->edition->id])
+				->order(['number' => 'DESC'])
+				->limit($change);
+		return $deletions->toArray();
 	}
 	
 }

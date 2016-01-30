@@ -336,4 +336,13 @@ class PiecesTable extends AppTable
 //		osd($query);die;
 		return $query;
 	}
+	
+	public function highestNumberDisposed($options) {
+		$disposed_pieces = $this->find('disposed', $options);
+		return (new Collection($disposed_pieces))->max(
+				function($piece) {return $piece->number;
+			})->toArray();
+	}
+		
+	
 }

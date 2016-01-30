@@ -12,10 +12,8 @@ if ($SystemState->is(ARTWORK_CREATE)) {
 	
 	if (in_array($edition->type, $SystemState->limitedEditionTypes())) {
 		$pieces = Cake\ORM\TableRegistry::get('Pieces');
-		$disposed_pieces = $pieces->find('disposed', ['edition_id' => $edition->id]);
-		$minimum = (new Cake\Collection\Collection($disposed_pieces))->max(
-				function($piece) {return $piece->number;
-			})->toArray()['number'];
+		$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $edition->id]);
+		$minimum = $highestNumberDisposed['number'];
 			
 	} else {
 		$minimum = $edition->disposed_piece_count/* > 0 ? $edition->disposed_piece_count : 1 */;
