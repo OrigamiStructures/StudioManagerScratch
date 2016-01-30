@@ -9,7 +9,18 @@ if ($SystemState->is(ARTWORK_CREATE)) {
 } elseif (!$this->isUnique($artwork->editions[$edition_index])) {
 	
 	$size_statement = $increase = $policy = '';
-	$minimum = $edition->disposed_piece_count > 0 ? $edition->disposed_piece_count : 1 ;
+	
+	if (in_array($edition->type, $SystemState->limitedEditionTypes())) {
+		$pieces = Cake\ORM\TableRegistry::get('Pieces');
+		$disposed_pieces = $pieces->find('disposed', ['edition_id' => $edition->id]);
+		$minimum = (new Cake\Collection\Collection($disposed_pieces))->max(
+				function($piece) {return $piece->number;
+			})->toArray()['number'];
+			
+	} else {
+		$minimum = $edition->disposed_piece_count/* > 0 ? $edition->disposed_piece_count : 1 */;
+	}
+	
 	$label = ($edition->hasFluid() || $edition->hasUnassigned() ? 'Reduce or ' : '') .
 			"Change the edition size (minimum size $minimum):";
 //	$salable_statement = !$edition->hasSalable() ? $this->Html->para(NULL, "This edition is sold out.") : '';

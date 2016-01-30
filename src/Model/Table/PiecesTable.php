@@ -200,6 +200,7 @@ class PiecesTable extends AppTable
 	 * @param integer $start The index (and number) of the first of the ($count) pieces
 	 */
 	public function spawn($numbered, $count, $default = [], $start = 0) {
+		$count += $start;
 		$columns = $default + [
 			'id' => NULL,
 			'user_id' => $this->SystemState->artistId(),
@@ -292,7 +293,7 @@ class PiecesTable extends AppTable
 	}
 	
 	/**
-	 * Pieces that are assigned to formats but not yet disposed
+	 * Pieces that are not yet disposed
 	 * 
 	 * @param Query $query
 	 * @param type $options
@@ -309,6 +310,30 @@ class PiecesTable extends AppTable
 			'user_id' => $this->SystemState->artistId(),
 		]);
 //		osd($query);
+		return $query;
+	}
+	
+	/**
+	 * Pieces that are disposed
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return type
+	 * @throws \BadMethodCallException
+	 */
+	public function findDisposed(Query $query, $options) {
+		if (!isset($options['edition_id'])) {
+			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+		}
+		if (isset($options['format_id'])) {
+			$query->where(['format_id' => $options['format_id'],]);
+		}
+		$query = $query->where([
+			'edition_id' => $options['edition_id'],
+			'disposition_count > 0',
+			'user_id' => $this->SystemState->artistId(),
+		]);
+//		osd($query);die;
 		return $query;
 	}
 }
