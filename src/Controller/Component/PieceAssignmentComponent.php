@@ -168,7 +168,7 @@ class PieceAssignmentComponent extends Component {
 	 * @param array $quantity_tuple (int) $original, (int) $refinement, $id
 	 */
 	public function refine($data = []) {
-		extract($data); // $original, $refinement, $Edition
+		extract($data); // $original, $refinement, $id (edition_id)
 		$this->edition = $this->artwork->returnEdition($id);
 		$change = $refinement - $original; // decrease (-x), increase (+x)
 		
@@ -188,8 +188,8 @@ class PieceAssignmentComponent extends Component {
 	 * @param integer $change
 	 */
 	protected function resizeOpenEdition($original, $change) {
-		$this->Pieces = TableRegistry::get('Pieces');
-		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
+//		$this->Pieces = TableRegistry::get('Pieces');
+//		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
 
 		if ($change > 0) {
 		$this->Pieces = TableRegistry::get('Pieces');
@@ -309,12 +309,56 @@ class PieceAssignmentComponent extends Component {
 		return $deletions;
 	}
 	
-	protected function resizeLimitedEdition($change, $edition) {
-	osd($edition);
-	if ($change > 0) {
+	protected function resizeLimitedEdition($original, $change) {
+		if ($change > 0) {
+			return $this->increaseLimitedEdition($change); // return [] (deletions required)
+		} else {
 			
+			$editions = TableRegistry::get('Editions');
+			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+
+			if (abs($change) > $original_edition->undisposed_piece_count ) {
+				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
+				return;
+			}
+			return $this->decreaseLimitedEdition($change, $original_edition); // return [] deletions required
 		}
 		osd('resizeLimitedEdition');//die;
+	}
+	
+	protected function increaseLimitedEdition($change) {
+
+		$editions = TableRegistry::get('Editions');
+		$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+		$flat_edition = $this->edition->format_count === 1;
+		(new Collection($this->edition->formats))->each(function($format) {
+			$format->pieces = NULL;
+			$format->dirty('pieces', FALSE);
+		}) ;
+		$this->edition->pieces = [];
+		
+		// if flat, add to the one format,
+		if ($flat_edition) {
+			$format_id = $this->edition->formats[0]->id;
+		}
+		
+		$data = [
+			'quantity' => 1,
+			'edition_id' => $this->edition->id,
+			'format_id' => $flat_edition ? $format_id : NULL,
+		];
+		$this->Pieces = TableRegistry::get('Pieces');
+		$new_peices = $this->Pieces->spawn(NUMBERED_PIECES, $change, $data, $original_edition->quantity);
+		$new_peices = (new Collection($new_peices))->map(function($piece) {
+			return (new Piece($piece));
+		});
+		$this->edition->pieces = $new_peices->toArray();
+
+		return [];
+	}
+	
+	protected function decreaseLimitedEdition($change, $original_edition) {
+		
 	}
 	
 }
