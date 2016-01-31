@@ -36,4 +36,30 @@ class Piece extends Entity
         '*' => true,
         'id' => false,
     ];
+	
+	/**
+	 * CAKE BUG CAKE BUG
+	 * 
+	 * Format -> Pieces uses two keys so that pieces will completely hook up 
+	 * when new pieces are saved directly on pieces. But later when count cache 
+	 * process runs and an existing edition-linked piece is move to a format, 
+	 * only on key changes... but counter cache only asks for 'changed' keys. 
+	 * Then it tries to merge that array with the assoc-keys array. Of course 
+	 * one doesn't match two so there is a failure. 
+	 * 
+	 * This HACK watches for this Format process (the only one with two keys) 
+	 * and makes sure we get both back. Single key cases are left alone.
+	 * 
+	 * @param array $properties
+	 * @return type
+	 */
+    public function extractOriginalChanged(array $properties) {
+		if (count($properties == 2)) {
+			$result = parent::extractOriginalChanged($properties) + 
+				parent::extractOriginal($properties);
+		} else {
+			$result = parent::extractOriginalChanged($properties);
+		}
+		return $result;
+	}
 }

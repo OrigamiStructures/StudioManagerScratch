@@ -160,14 +160,12 @@ class EditionsController extends AppController
 //			osd($artwork);die;
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
-				die('success');
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),
 					'edition' => $this->SystemState->queryArg('edition')
 						]]);
             } else {
-				die('failed');
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
         }
