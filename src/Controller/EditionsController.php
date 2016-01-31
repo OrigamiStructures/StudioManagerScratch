@@ -154,16 +154,20 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
-			
-			$deletions = $this->ArtworkStack->refinePieces($artwork, $this->request->data['editions'][0]['id']);
+			$index = array_keys($this->request->data['editions'])[0];
+			$deletions = $this->ArtworkStack->refinePieces($artwork, 
+					$this->request->data['editions'][$index]['id']);
+//			osd($artwork);die;
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
+				die('success');
                 $this->Flash->success(__('The edition has been changed.'));
                 $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
 					'artwork' => $this->SystemState->queryArg('artwork'),
 					'edition' => $this->SystemState->queryArg('edition')
 						]]);
             } else {
+				die('failed');
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
         }
@@ -205,5 +209,4 @@ class EditionsController extends AppController
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/create_dev');		
 	}
-	
 }

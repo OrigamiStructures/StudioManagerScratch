@@ -205,8 +205,9 @@ class ArtworksController extends AppController
 			
 			// if the count is > 1, there were no edition inputs
 			if ($artwork->edition_count === 1) {
-				$this->ArtworkStack->refinePieces($artwork,
-						$this->request->data['editions'][0]['id']);
+				$index = array_keys($this->request->data['editions'])[0];
+				$deletions = $this->ArtworkStack->refinePieces($artwork, 
+						$this->request->data['editions'][$index]['id']);
 			}	
 //			osd($artwork);die;
 			
@@ -262,7 +263,7 @@ class ArtworksController extends AppController
             if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
-                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
+               $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
 		

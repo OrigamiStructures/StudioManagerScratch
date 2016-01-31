@@ -47,6 +47,8 @@ class PieceAssignmentComponent extends Component {
 	}
 	
 	public function assign() {
+		$index = array_keys($this->artwork->editions)[0];
+		$this->edition = $this->artwork->editions[$index];
 		unset($this->pieces);
 		if ($this->SystemState->is(ARTWORK_CREATE) && ($this->onePiece() || !$this->multiple_formats)) {
 			$this->piecesToFormat();
@@ -128,8 +130,8 @@ class PieceAssignmentComponent extends Component {
 	/**
 	 * Change the size of a limited edition
 	 * 
-	 * @param type $original
-	 * @param type $change
+	 * @param integer $original
+	 * @param signed-integer $change
 	 * @return type
 	 */
 	protected function resizeLimitedEdition($original, $change) {
@@ -222,6 +224,7 @@ class PieceAssignmentComponent extends Component {
 			[
 				'edition_id' => $this->edition->id,
 			])->order(['format_id' => 'ASC'])->toArray();
+//		osd($piesces);die;
 
 		(new Collection($this->edition->formats))->each(function($format) {
 			$format->pieces = NULL;
@@ -259,29 +262,34 @@ class PieceAssignmentComponent extends Component {
 		$editions = TableRegistry::get('Editions');
 		$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
 		$flat_edition = $this->edition->format_count === 1;
-		(new Collection($this->edition->formats))->each(function($format) {
-			$format->pieces = NULL;
-			$format->dirty('pieces', FALSE);
-		}) ;
-		$this->edition->pieces = [];
+//		(new Collection($this->edition->formats))->each(function($format) {
+//			$format->pieces = NULL;
+//			$format->dirty('pieces', FALSE);
+//		}) ;
+//		$this->edition->pieces = [];
 		
 		// if flat, add to the one format,
-		if ($flat_edition) {
-			$format_id = $this->edition->formats[0]->id;
-		}
+//		if ($flat_edition) {
+//			$format_id = $this->edition->formats[0]->id;
+//		}
 		
 		$data = [
 			'quantity' => 1,
 			'edition_id' => $this->edition->id,
-			'format_id' => $flat_edition ? $format_id : NULL,
+//			'format_id' => $flat_edition ? $format_id : NULL,
 		];
 		$this->Pieces = TableRegistry::get('Pieces');
-		$new_peices = $this->Pieces->spawn(NUMBERED_PIECES, $change, $data, $original_edition->quantity);
-		$new_peices = (new Collection($new_peices))->map(function($piece) {
+		$new_pieces = $this->Pieces->spawn(NUMBERED_PIECES, $change, $data, $original_edition->quantity);
+//		osd($new_pieces);
+		$new_pieces = (new Collection($new_pieces))->map(function($piece) {
 			return (new Piece($piece));
 		});
-		$this->edition->pieces = $new_peices->toArray();
-
+		if ($flat_edition) {
+			$this->edition->formats[0]->pieces = $new_pieces->toArray();
+		} else {
+			$this->edition->pieces = $new_pieces->toArray();
+		}
+//		osd($this->edition); die;
 		return [];
 	}
 	

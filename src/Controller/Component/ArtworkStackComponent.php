@@ -80,6 +80,7 @@ class ArtworkStackComponent extends Component {
 	
 	public function refinementTransaction($artwork, $deletions) {
 		$ArtworkTable = TableRegistry::get('Artworks');
+//		osd($artwork);die;
 		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
 			$result = $ArtworkTable->save($artwork, ['atomic' => false]);
 			if (is_array($deletions)) {
@@ -154,7 +155,7 @@ class ArtworkStackComponent extends Component {
 			$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
 			return $this->PieceAssignment->refine($quantity_tuple); // return [deletions required]
 		}
-		osd($quantity_tuple, 'after call');//die;
+//		osd($quantity_tuple, 'after call');//die;
 		return []; // deletions required
 	}
 	

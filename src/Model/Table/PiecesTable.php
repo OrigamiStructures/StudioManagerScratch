@@ -53,7 +53,8 @@ class PiecesTable extends AppTable
 				'foreignKey' => 'user_id'
 			]);
 			$this->belongsTo('Editions', [
-				'foreignKey' => 'edition_id'
+				'foreignKey' => 'edition_id',
+				'bindingKey' => 'id',
 			]);
 			$this->belongsTo('Formats', [
 //				'foreignKey' => 'format_id',
@@ -181,9 +182,10 @@ class PiecesTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
+		osd(\Cake\Error\Debugger::trace());
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['edition_id'], 'Editions'));
-        $rules->add($rules->existsIn(['format_id'], 'Formats'));
+        $rules->add($rules->existsIn(['format_id', 'edition_id'], 'Formats'));
         return $rules;
     }
 	
@@ -311,7 +313,7 @@ class PiecesTable extends AppTable
 			'disposition_count' => 0,
 			'user_id' => $this->SystemState->artistId(),
 		]);
-//		osd($query);
+		osd($query);die;
 		return $query;
 	}
 	
@@ -355,5 +357,15 @@ class PiecesTable extends AppTable
 		return is_null($result) ? 0 : $result->toArray()['number'];
 	}
 		
-	
+	public function save(\Cake\Datasource\EntityInterface $entity,
+			$options = array()) {
+		
+		// UNTIL I UNDERSTAND RULES, THE EXISTS-IN ARE KILLING PIECE CREATION
+		if ($entity->isNew()) {
+			$result = parent::save($entity, ['checkRules' => false]);
+		} else {
+			$result = parent::save($entity, $options);
+		}
+		return $result;
+	}
 }
