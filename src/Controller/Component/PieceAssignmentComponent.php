@@ -113,7 +113,7 @@ class PieceAssignmentComponent extends Component {
 		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
 
 		if ($change > 0) {
-			return $this->increaseOpenEdition($change, $piece); // return [] (deletions required)
+			$this->increaseOpenEdition($change, $piece);
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
@@ -136,7 +136,7 @@ class PieceAssignmentComponent extends Component {
 	 */
 	protected function resizeLimitedEdition($original, $change) {
 		if ($change > 0) {
-			return $this->increaseLimitedEdition($change); // return [] (deletions required)
+			$this->increaseLimitedEdition($change);
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
@@ -152,7 +152,6 @@ class PieceAssignmentComponent extends Component {
 			}
 			return $this->decreaseLimitedEdition($change, $pieces, $original_edition); // return [] deletions required
 		}
-		osd('resizeLimitedEdition');//die;
 	}
 	
 	/**
@@ -257,42 +256,49 @@ class PieceAssignmentComponent extends Component {
 		return $deletions;
 	}
 	
+	/**
+	 * Increase the Limited Edition by some amount
+	 * 
+	 * If there is only one format, put the new pieces directly on it. 
+	 * Otherwise put them on the edition. 
+	 * 
+	 * @param signed-int $change
+	 */
 	protected function increaseLimitedEdition($change) {
 
 		$editions = TableRegistry::get('Editions');
 		$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
 		$flat_edition = $this->edition->format_count === 1;
-//		(new Collection($this->edition->formats))->each(function($format) {
-//			$format->pieces = NULL;
-//			$format->dirty('pieces', FALSE);
-//		}) ;
-//		$this->edition->pieces = [];
-		
-		// if flat, add to the one format,
-//		if ($flat_edition) {
-//			$format_id = $this->edition->formats[0]->id;
-//		}
-		
 		$data = [
 			'quantity' => 1,
 			'edition_id' => $this->edition->id,
 //			'format_id' => $flat_edition ? $format_id : NULL,
 		];
+		
 		$this->Pieces = TableRegistry::get('Pieces');
 		$new_pieces = $this->Pieces->spawn(NUMBERED_PIECES, $change, $data, $original_edition->quantity);
-//		osd($new_pieces);
 		$new_pieces = (new Collection($new_pieces))->map(function($piece) {
 			return (new Piece($piece));
 		});
+		
 		if ($flat_edition) {
 			$this->edition->formats[0]->pieces = $new_pieces->toArray();
 		} else {
 			$this->edition->pieces = $new_pieces->toArray();
 		}
-//		osd($this->edition); die;
-		return [];
 	}
 	
+	/**
+	 * Get the pieces that should be removed from the edition
+	 * 
+	 * Numbered editions can only loose their tailing, undisposed pieces 
+	 * even if those pieces are assigned to a format.
+	 * 
+	 * @param signed-int $change
+	 * @param Table $pieces
+	 * @param entity $original_edition
+	 * @return array
+	 */
 	protected function decreaseLimitedEdition($change, $pieces, $original_edition) {
 		$change = abs($change);
 		$deletions = $pieces->find()->where(['edition_id' => $this->edition->id])
