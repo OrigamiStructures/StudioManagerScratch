@@ -158,6 +158,7 @@ class EditionsController extends AppController
 			$deletions = $this->ArtworkStack->refinePieces($artwork, 
 					$this->request->data['editions'][$index]['id']);
 //			osd($artwork);die;
+//			die;
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));

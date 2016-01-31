@@ -144,7 +144,7 @@ class PieceAssignmentComponent extends Component {
 
 			$pieces = TableRegistry::get('Pieces');
 			$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $this->edition->id]);
-			$edition_tail = $original_edition->quantity - $highestNumberDisposed['number'];
+			$edition_tail = $original_edition->quantity - $highestNumberDisposed;
 						
 			if (abs($change) > $edition_tail ) {
 				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
