@@ -221,22 +221,6 @@ class ArtworksController extends AppController
             }
         }
 		
-//		$artwork = $this->ArtworkStack->stackQuery();
-//		if (count($artwork['editions']) > 1) {
-//			// many editions
-//			$element_management = [
-//				'artwork' => 'fieldset',
-//				'edition' => 'many',
-//				'format' => 'many',
-//			];
-//		} else {
-//			$element_management = [
-//				'artwork' => 'fieldset',
-//				'edition' => 'fieldset',
-//				'format' => 'fieldset',
-//			];
-//		}
-		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
 //		$this->set('element_management', $element_management);
@@ -266,15 +250,9 @@ class ArtworksController extends AppController
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
-		
-//        $element_management = [
-//            'artwork' => 'fieldset',
-//            'edition' => 'fieldset',
-//            'format' => 'fieldset'
-//        ];
+
 		$this->ArtworkStack->layerChoiceLists();
         
-//        $this->set(compact('artwork', 'element_management'));
 		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
 		$this->render('create_dev');
