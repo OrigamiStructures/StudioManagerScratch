@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use App\View\Helper\EditionFactoryHelper;
+use Cake\ORM\TableRegistry;
 
 /**
  * EditionedHelper: rule based view/tool rendering for Limited and Open Editions
@@ -46,7 +47,7 @@ class EditionedHelper extends EditionFactoryHelper {
 					'There is one piece not assigned to a format.' :
 					"There are {$edition->unassigned_piece_count} pieces not assigned to a format.";
 			}
-		} else {
+		} elseif ($edition->format_count > 1) {
 			$unassigned = 'All pieces have been assigned to formats.';
 		}
 
@@ -57,7 +58,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			$reassign = $edition->fluid_piece_count === 1 ?
 				'There is one piece that can be reassigned to a different format.' :
 				"There are $edition->fluid_piece_count that could be reassigned to different formats.";
-		} elseif ($edition->assigned_piece_count > 0) {
+		} elseif ($edition->assigned_piece_count > 0 && $edition->format_count > 1) {
 			$reassign = 'There are no pieces that can be reassigned.';
 		}
 		
@@ -222,32 +223,64 @@ class EditionedHelper extends EditionFactoryHelper {
 	 * @param type $edition
 	 * @return string
 	 */
-	public function editionQuantitySummary($edition) {
-		$size_statement = $increase = '';
+//	public function editionQuantitySummary($edition) {
+//		$size_statement = $increase = '';
+//		
+//		if ($edition->type === EDITION_OPEN) {
+//			$label = 'Increase the edition size to:';
+//			$minimum = $edition->disposed_piece_count;
+//			if (!$edition->hasSalable()) {
+//				$sold_statement = "This edition is sold out.";
+//			}
+//			if ($edition->hasFluid()) {
+//				$label = "Reduce or $label";
+//			}
+//			
+//			
+//			
+//			// whatever its sold-out status, you can always make it bigger
+//			$increase = 'Input to increase the edition size. ADD X PIECES TO THE EDITION';
+//			
+////			echo "<p>$size_statement<br />$increase</p>";
+//			
+//		} else {
+//			// max numbered disposed piece is minimum edition size
+//			// policy statement about limited editions
+//			// new total 'size' of edition
+//			return 'Message for limited editons';
+//		}
+//	}
+	
+	public function quantityInput($edition, $edition_index) {
 		
-		if ($edition->type === EDITION_OPEN) {
-			$label = 'Increase the edition size to:';
-			$minimum = $edition->disposed_piece_count;
-			if (!$edition->hasSalable()) {
-				$sold_statement = "This edition is sold out.";
-			}
-			if ($edition->hasFluid()) {
-				$label = "Reduce or $label";
-			}
-			
-			
-			
-			// whatever its sold-out status, you can always make it bigger
-			$increase = 'Input to increase the edition size. ADD X PIECES TO THE EDITION';
-			
-//			echo "<p>$size_statement<br />$increase</p>";
-			
-		} else {
-			// max numbered disposed piece is minimum edition size
-			// policy statement about limited editions
-			// new total 'size' of edition
-			return 'Message for limited editons';
+		$form = $this->_View->loadHelper('Form');
+		$EditionTable = TableRegistry::get('Editions');
+		$minimum = $EditionTable->minimumSize($edition);
+
+		$label = ($edition->hasFluid() || $edition->hasUnassigned() ? 'Reduce or ' : '') .
+				"Change the edition size (minimum size $minimum):";
+		$default = $edition->quantity;
+		$policy_statement = '';
+
+		if ($edition->type === EDITION_LIMITED & $edition->hasCollected()) {
+			$pieces = $edition->collected_piece_count === 1 ?
+					'one piece' :
+					"$edition->collected_piece_count pieces";
+			$policy = "You have sold $pieces from this edition.<br />Most artists "
+					. "believe an edition's size should not be increased after active "
+					. "sales have begun. ClearStudio does not prevent this practice. "
+					. "Proceed according to your own policies.";
+			$policy_statement = $this->Html->para('policy_statement', $policy) . "\n\t\t";
 		}
+		
+		$output = $policy_statement . 
+			 $form->input("editions.$edition_index.quantity", [
+				'default' => $default, 
+				'label' => $label
+			]); 
+		
+		return $output;
+		
 	}
 	
 }

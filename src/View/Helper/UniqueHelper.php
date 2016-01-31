@@ -52,5 +52,6 @@ class UniqueHelper extends EditionFactoryHelper {
 			);
 		}
 	}
+	
 }
 	

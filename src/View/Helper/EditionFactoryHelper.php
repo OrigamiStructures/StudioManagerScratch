@@ -162,7 +162,11 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 	
-	public function editionQuantitySummary($edition) {
+//	public function editionQuantitySummary($edition) {
+//		return '';
+//	}
+	
+	public function quantityInput($edition, $edition_index) {
 		return '';
 	}
 	
