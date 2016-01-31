@@ -313,7 +313,6 @@ class PiecesTable extends AppTable
 			'disposition_count' => 0,
 			'user_id' => $this->SystemState->artistId(),
 		]);
-		osd($query);die;
 		return $query;
 	}
 	

@@ -192,8 +192,9 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
+			$this->ArtworkStack->assignPieces($artwork);
+			
             if ($this->Artworks->save($artwork)) {
-				$this->ArtworkStack->assignPieces($artwork);
                 $this->redirect([
 					'controller' => 'editions', 
 					'action' => 'review', 
