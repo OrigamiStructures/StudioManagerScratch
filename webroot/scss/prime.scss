@@ -130,3 +130,19 @@ form {
 span.nav {
 	font-size: .9rem;
 }
+
+div.radio > label {
+	
+	.disabled {
+		color: #ccc;
+	}
+	
+	input {
+		margin: .5rem;
+
+		.disabled {
+			color: #ccc;
+		}
+		
+	}
+}

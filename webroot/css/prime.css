@@ -460,4 +460,11 @@ form .form-error, form .error-message {
 span.nav {
   font-size: .9rem; }
 
+div.radio > label .disabled {
+  color: #ccc; }
+div.radio > label input {
+  margin: .5rem; }
+  div.radio > label input .disabled {
+    color: #ccc; }
+
 /*# sourceMappingURL=prime.css.map */
