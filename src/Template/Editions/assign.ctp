@@ -35,7 +35,7 @@ $radio_destination_data = [$entry];
 
 	$entry['text'] = $this->Html->tag(
 			'span', 
-			$entry['text'] . ((boolean) $range ? " Available: #$range" : ' None Avaialble'), 
+			$entry['text'] . ((boolean) $range ? " Numbers: $range" : ' None Avaialble'), 
 			['class' => $node->hasUnassigned() ? '' : 'disabled']);
 $radio_source_data = [$entry + ['disabled' => !$node->hasUnassigned()]];
 
@@ -63,7 +63,7 @@ foreach($edition[0]->formats as $format) {
 
 	$entry['text'] = $this->Html->tag(
 			'span', 
-			$entry['text'] . ((boolean) $range ? " (Available: #$range)" : ' (None Avaialble)'), 
+			$entry['text'] . ((boolean) $range ? " (Numbers: $range)" : ' (None Avaialble)'), 
 			['class' => $node->hasFluid() ? '' : 'disabled']);
 	array_push($radio_source_data, $entry + ['disabled' => !$node->hasFluid()]);
 }

@@ -89,7 +89,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			$label = implode('/', $label);
 		
 			$assignment_tool = $this->Html->link("$label pieces to formats",
-				['controller' => 'pieces', '?' => [
+				['controller' => 'editions', 'action' => 'assign', '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
 				]]) . "\n";
