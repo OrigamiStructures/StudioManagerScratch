@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
 
 /**
  * Editions Controller
@@ -236,7 +237,7 @@ class EditionsController extends AppController
 //		$pieces 
 //		osd($edition->toArray());
 		$this->set('edition', $edition->toArray());
-		$this->set('pieces', $pieces->toArray());
+		$this->set('pieces', new Collection($pieces->toArray()));
 		
 	}
 	
