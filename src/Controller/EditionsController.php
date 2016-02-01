@@ -216,7 +216,7 @@ class EditionsController extends AppController
 			$this->redirect($this->SystemState->referer());
 		}
 		$edition_id = $this->SystemState->queryArg('edition');
-		$conditions = $this->SystemState->buildConditions(['artwork', 'edition' => 'id']);
+		$conditions = $this->SystemState->buildConditions(['edition' => 'id']);
 		
 		// Edition 
 		//	with unassigned Pieces
@@ -232,9 +232,12 @@ class EditionsController extends AppController
 					return $q
 						->where(['disposition_count' => 0]);
 				}]);
+		$pieces = $this->Editions->Pieces->find()->where($this->SystemState->buildConditions(['edition']));
 //		$pieces 
 //		osd($edition->toArray());
 		$this->set('edition', $edition->toArray());
+		$this->set('pieces', $pieces->toArray());
+		
 	}
 	
 }
