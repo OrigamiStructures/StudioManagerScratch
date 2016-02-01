@@ -20,7 +20,7 @@ use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Lib\SState;
-use App\Controller\Component\PieceAssignmentComponent;
+use App\Controller\Component\PieceAllocationComponent;
 
 /**
  * Application Controller
@@ -137,7 +137,7 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
-		$art1 = $this->loadComponent('PieceAssignment', ['artwork_id' => 2]);
+		$art1 = $this->loadComponent('PieceAllocation', ['artwork_id' => 2]);
 		osd($art1->stack, 'art1 stack');
 //		$art1->initialize(['artwork_id' => 2]);
 //		osd($art1);
