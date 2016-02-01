@@ -55,7 +55,6 @@ foreach($edition[0]->formats as $format) {
 	$fluid = $pieces->filter(function($piece) use($node) {
 		return ($piece->format_id === $node->id && $piece->disposition_count === 0);
 	});
-	osd($fluid->toArray(), 'fluid');
 	$fluid_numbers = $fluid->reduce(function($accumulate, $piece) {
 		$accumulate[] = $piece->number;
 		return $accumulate;
