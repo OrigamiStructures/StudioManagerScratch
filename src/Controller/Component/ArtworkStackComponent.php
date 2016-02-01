@@ -12,7 +12,19 @@ use Cake\ORM\TableRegistry;
 //use Cake\Controller\Component\PaginatorComponent;
 
 /**
- * CakePHP ArtworkStackComponent
+ * ArtworkStackComponent provides a unified interface for the three layers, Artwork, Edition, and Format
+ * 
+ * The creation and refinement of Artworks is a process that may effect 1, 2 or 3 
+ * the layers. So, depending on context, we may be in any of 3 controllers. 
+ * This component provides the basic services that allow them all to behave 
+ * in the same way. Queries are always performed from the top of the stack 
+ * even if we are working on a Format. Saves are always done from the top also. 
+ * All the views and elements are designed to cascade through all the layers.
+ * 
+ * Refinement of editions that involves quantity changes trigger the application 
+ * of a special rule set to manage piece records. This task is passed off to 
+ * a separate component.
+ * 
  * @author dondrake
  */
 class ArtworkStackComponent extends Component {
@@ -58,7 +70,16 @@ class ArtworkStackComponent extends Component {
 		}
 	}
 	
-	
+	/**
+	 * Wrap both refinement save and deletions in a single transaction
+	 * 
+	 * Creation is a simple Table->save() but refinement may involve deletion 
+	 * of piece records. This method provides refinement for all layers of the stack.
+	 * 
+	 * @param Entity $artwork
+	 * @param array $deletions
+	 * @return boolean
+	 */
 	public function refinementTransaction($artwork, $deletions) {
 		$ArtworkTable = TableRegistry::get('Artworks');
 //		osd($artwork);die;
