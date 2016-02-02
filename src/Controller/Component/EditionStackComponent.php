@@ -31,6 +31,32 @@ class EditionStackComponent extends Component {
 		$this->SystemState = $this->controller->SystemState;
 	}
 
+	/**
+	 * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
+	 * 
+	 * The Edition carries its Artwork record for some upstream context. 
+	 * The Edition and its Formats are returned as siblings, each with its Pieces. 
+	 * The Pieces are categorized as appropriate to that layer. 
+	 * The AssignemntTrait on the Edition and Piece entities unify piece access. 
+	 * <pre>
+	 * // providers array
+	 * 'edition' => Edition
+	 *		'unassigned' -> Pieces
+	 * 0 => Format
+	 *		'fluid' -> Pieces
+	 * ...
+	 * 0+n => Format
+	 *		'fluid' -> Pieces
+	 * 
+	 * // pieces array
+	 * 0 => Piece
+	 * ...
+	 * 0+n => Piece
+	 * </pre>
+	 * 
+	 * 
+	 * @return tuple 'providers, pieces'
+	 */
 	public function stackQuery() {
 		$Pieces = TableRegistry::get('Pieces');
 		$Formats = TableRegistry::get('Formats');
@@ -53,7 +79,7 @@ class EditionStackComponent extends Component {
 		$providers = ['edition' => $edition] + $formats->toArray();
 		
 		foreach ($providers as $provider) {
-			osd($provider->range($provider->assignablePieces(), $provider->type));
+			osd($provider->range($provider->assignablePieces(), $edition->type));
 		}
 //		
 		// this may need order() later for piece-table reporting of open editions

@@ -18,8 +18,14 @@ use App\Lib\SystemState;
 trait AssignmentTrait {
 		
 	/**
+	 * Return a 'number range' string or a count of pieces
+	 * 
+	 * Lists of numbered edition pieces can be described with typical 
+	 * 1-7, 9, 12-13 style strings. Open edition pieces can only report
+	 * on the count of pieces in the collection. 
 	 * 
 	 * @param \App\Model\Entity\Traits\Collection $pieces
+	 * @param string $type The edition type
 	 */
 	public function range(Collection $pieces, $type) {
 		if (in_array($type, SystemState::ltd())) {
@@ -37,14 +43,14 @@ trait AssignmentTrait {
 	}
 	
 	/**
+	 * Return the assignable pieces in this entity
 	 * 
-	 * @param type $type
-	 * @return \App\Model\Entity\Traits\Collection
+	 * @param boolean $type Return value type, collection or array of entities
+	 * @return array|Collection
 	 * @throws \CakeDC\Users\Exception\BadConfigurationException
 	 */
-	public function assignablePieces($type = ASSIGNABLE_COLLECTION) {
+	public function assignablePieces($return_type = PIECE_COLLECTION_RETURN) {
 		if (stristr($this->_className, 'Edition')) {
-//			osd($this);die;
 			$property = 'unassigned';
 		} elseif (stristr($this->_className, 'Format')) {
 			$property = 'fluid';
@@ -53,8 +59,18 @@ trait AssignmentTrait {
 				"{$this->_className} does not have assignable pieces, so it "
 				. "is not compatible with the AssignmentTrait.");
 		}
-//		osd($this->$property);die;
-		if (ASSIGNABLE_COLLECTION) {
+		return $this->_pieces($property, $return_type);
+	}
+	
+	/**
+	 * Return the values at the named property as entities or a collection
+	 * 
+	 * @param string $property
+	 * @param boolean $return_type
+	 * @return Collection|array
+	 */
+	protected function _pieces ($property, $return_type) {
+		if ($return_type) {
 			return new Collection($this->$property);
 		} else {
 			return $this->$property;
