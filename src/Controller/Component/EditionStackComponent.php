@@ -40,18 +40,26 @@ class EditionStackComponent extends Component {
 	 * The AssignemntTrait on the Edition and Piece entities unify piece access. 
 	 * <pre>
 	 * // providers array
-	 * 'edition' => Edition
-	 *		'unassigned' -> Pieces
-	 * 0 => Format
-	 *		'fluid' -> Pieces
-	 * ...
-	 * 0+n => Format
-	 *		'fluid' -> Pieces
+	 * ['edition' => EditionEntity {
+	 *			..., 
+	 *			'unassigned' -> PiecesEntity {},
+	 *      },
+	 *  0 => FormatEntity {
+	 *			...,
+	 *			'fluid' -> PiecesEntity {},
+	 *      },
+	 *  ...
+	 *  0+n => FormatEntity {
+	 *			...,
+	 *			'fluid' -> PiecesEntity {},
+	 *      },
+	 * ]
 	 * 
 	 * // pieces array
-	 * 0 => Piece
+	 * [0 => PieceEntity {},
 	 * ...
-	 * 0+n => Piece
+	 * 0+n => PieceEntity {},
+	 * ]
 	 * </pre>
 	 * 
 	 * 
@@ -71,9 +79,8 @@ class EditionStackComponent extends Component {
 		
 		$formats = $Formats->find()->where($child_condition);
 		$formats = $formats->each(function($format) use($child_condition, $Pieces) {
-			$conditions = $child_condition + 
-					['format_id' => $format->id, 'disposition_count' => 0];
-			$format->fluid = $Pieces->find()->where($conditions)->toArray();
+			$conditions = $child_condition + ['format_id' => $format->id];
+			$format->fluid = $Pieces->find('fluid', $conditions)->toArray();
 		});
 
 		$providers = ['edition' => $edition] + $formats->toArray();
@@ -85,7 +92,7 @@ class EditionStackComponent extends Component {
 		// this may need order() later for piece-table reporting of open editions
 		$pieces = $Pieces->find()->where($child_condition); 
 		
-		return $providers;
+		return ['providers' => $providers, 'pieces' => $pieces];
 				
 	}
 }
