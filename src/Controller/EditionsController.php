@@ -212,6 +212,8 @@ class EditionsController extends AppController
 	}
 	
 	public function assign() {
+		$EditionStack = $this->loadComponent('EditionStack');
+		$EditionStack->stackQuery();die;
 		if (!$this->SystemState->isKnown('artwork')) {
 			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
 			$this->redirect($this->SystemState->referer());

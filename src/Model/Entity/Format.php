@@ -2,8 +2,9 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
 use Cake\Utility\Text;
+use App\Model\Entity\Traits\AssignmentTrait;
 
 /**
  * Format Entity.
@@ -27,7 +28,8 @@ use Cake\Utility\Text;
 class Format extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
+	use AssignmentTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

@@ -9,6 +9,8 @@
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -23,7 +25,41 @@ use Cake\Controller\Component;
  */
 class EditionStackComponent extends Component {
 	
+    public function initialize(array $config) 
+	{
+		$this->controller = $this->_registry->getController();
+		$this->SystemState = $this->controller->SystemState;
+	}
+
 	public function stackQuery() {
+		$Pieces = TableRegistry::get('Pieces');
+		$Formats = TableRegistry::get('Formats');
+		$Editions = TableRegistry::get('Editions');
 		
+		$edition_condition = $this->SystemState->buildConditions(['edition' => 'id']);	
+		$child_condition = $this->SystemState->buildConditions(['edition']);
+//		
+		$edition = $Editions->find()->where($edition_condition)->toArray()[0];
+		$unassigned = $Pieces->find('unassigned', $child_condition);
+		$edition->unassigned = $unassigned->toArray();
+		
+		$formats = $Formats->find()->where($child_condition);
+		$formats = $formats->each(function($format) use($child_condition, $Pieces) {
+			$conditions = $child_condition + 
+					['format_id' => $format->id, 'disposition_count' => 0];
+			$format->fluid = $Pieces->find()->where($conditions)->toArray();
+		});
+
+		$providers = ['edition' => $edition] + $formats->toArray();
+		
+		foreach ($providers as $provider) {
+			osd($provider->range($provider->assignablePieces(), $provider->type));
+		}
+//		
+		// this may need order() later for piece-table reporting of open editions
+		$pieces = $Pieces->find()->where($child_condition); 
+		
+		return $providers;
+				
 	}
 }

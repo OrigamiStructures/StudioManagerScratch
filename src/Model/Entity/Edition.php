@@ -2,7 +2,8 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\AssignmentTrait;
 
 /**
  * Edition Entity.
@@ -24,7 +25,8 @@ use App\Model\Entity\Traits\ParentEntity;
 class Edition extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
+	use AssignmentTrait;
 	
 	protected $_collected;
 

@@ -78,6 +78,10 @@ class SystemState implements EventListenerInterface {
 	public function limitedEditionTypes() {
 		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
 	}
+	
+	static function ltd() {
+		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
+	}
 
 	public function openEditionTypes() {
 		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
