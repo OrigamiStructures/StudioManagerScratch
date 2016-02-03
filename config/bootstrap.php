@@ -243,3 +243,7 @@ define('ADMIN_ARTIST', 'artist_admin');
 //System Constants
 define('SYSTEM_VOID_REFERER', TRUE);
 define('SYSTEM_CONSUME_REFERER', FALSE);
+
+//AssignemtTrait Constants
+define('PIECE_ENTITY_RETURN', FALSE);
+define('PIECE_COLLECTION_RETURN', TRUE);

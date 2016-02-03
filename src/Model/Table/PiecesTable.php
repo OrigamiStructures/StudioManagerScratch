@@ -241,7 +241,7 @@ class PiecesTable extends AppTable
 	 */
 	public function findCanDispose(Query $query, $options) {
 		if (!isset($options['format_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['format_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
 		$format_id = $options['format_id'];
 		$edition_id = $this->Formats->find('parentEdition', $options)
@@ -267,7 +267,7 @@ class PiecesTable extends AppTable
 	 */
 	public function findUnassigned(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
 		return $query->where([
 			'edition_id' => $options['edition_id'],
@@ -286,14 +286,20 @@ class PiecesTable extends AppTable
 	 */
 	public function findFluid(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
-		return $query->where([
-			'edition_id' => $options['edition_id'],
-			'format_id IS NOT NULL',
-			'disposition_count' => 0,
-			'user_id' => $this->SystemState->artistId(),
-		]);
+		if (!isset($options['format_id'])) {
+				$option = $options + ['format_id IS NOT NULL',
+				'disposition_count' => 0,
+				'user_id' => $this->SystemState->artistId(),
+			];
+		} else {
+			$options = $options + [
+				'disposition_count' => 0,
+				'user_id' => $this->SystemState->artistId(),
+			];
+		}
+		return $query->where($options);
 	}
 	
 	/**
@@ -306,7 +312,7 @@ class PiecesTable extends AppTable
 	 */
 	public function findUndisposed(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
 		$query = $query->where([
 			'edition_id' => $options['edition_id'],

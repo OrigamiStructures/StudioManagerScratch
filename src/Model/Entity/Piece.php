@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use App\Model\Entity\Traits\ParentEntityTrait;
 
 /**
  * Piece Entity.
@@ -23,6 +24,8 @@ use Cake\ORM\Entity;
 class Piece extends Entity
 {
 
+	use ParentEntityTrait;
+	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -61,5 +64,14 @@ class Piece extends Entity
 			$result = parent::extractOriginalChanged($properties);
 		}
 		return $result;
+	}
+	
+	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return type
+	 */
+	public function key() {
+		return $this->_key([$this->edition_id, $this->format_id]);
 	}
 }
