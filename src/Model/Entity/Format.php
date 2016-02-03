@@ -2,8 +2,9 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
 use Cake\Utility\Text;
+use App\Model\Entity\Traits\AssignmentTrait;
 
 /**
  * Format Entity.
@@ -27,7 +28,8 @@ use Cake\Utility\Text;
 class Format extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
+	use AssignmentTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -52,10 +54,20 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function _getDisplayTitle() {
-		$title = empty($this->title) ? /*$this->_gutDescription()*/'' : $this->title;
+		$title = empty($this->title) ? 'Format: ' . $this->_gutDescription() : $this->title;
 		return $title;
 	}
 	
+	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return string
+	 */
+	public function key() {
+		return $this->_key([$this->edition_id, $this->id]);
+	}
+
+
 	/**
 	 * Does this format have any pieces assigned to it
 	 * 
@@ -145,14 +157,15 @@ class Format extends Entity
 	 * @return string
 	 */
 	protected function _gutDescription() {
-		$display_value = $this->description;
-		if (strlen($this->description) > 33) {
-			$lead = Text::truncate($this->description, 15, ['ellipsis' => ' ... ']);
-			$tail = Text::tail($this->description, 10, ['ellipsis' => '', 'exact' => FALSE]);
-			
-			$display_value = "$lead$tail";
-		}
-		return $display_value;
+//		$display_value = $this->description;
+//		if (strlen($this->description) > 33) {
+//			$lead = Text::truncate($this->description, 15, ['ellipsis' => ' ... ']);
+//			$tail = Text::tail($this->description, 10, ['ellipsis' => '', 'exact' => FALSE]);
+//			
+//			$display_value = "$lead$tail";
+//		}
+//		return $display_value;
+		return Text::truncate($this->description, 10);
 	}
 	
 }

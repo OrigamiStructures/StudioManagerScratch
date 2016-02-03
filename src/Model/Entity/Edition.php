@@ -2,7 +2,8 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\AssignmentTrait;
 
 /**
  * Edition Entity.
@@ -24,7 +25,8 @@ use App\Model\Entity\Traits\ParentEntity;
 class Edition extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
+	use AssignmentTrait;
 	
 	protected $_collected;
 
@@ -53,6 +55,15 @@ class Edition extends Entity
 				: ucwords($this->_properties['type']) . " ({$this->_properties['quantity']})";
 		$title = empty($this->_properties['title']) ? ucwords($this->_properties['title']) : ucwords("{$this->_properties['title']}, ");
 		return  $title . $type;
+	}
+	
+	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return type
+	 */
+	public function key() {
+		return $this->_key([$this->id, '']);
 	}
 	
 	/**

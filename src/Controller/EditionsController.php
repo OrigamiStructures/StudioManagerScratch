@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use App\Form\AssignmentForm;
 
 /**
  * Editions Controller
@@ -216,29 +217,25 @@ class EditionsController extends AppController
 			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
 			$this->redirect($this->SystemState->referer());
 		}
-		$edition_id = $this->SystemState->queryArg('edition');
-		$conditions = $this->SystemState->buildConditions(['edition' => 'id']);
 		
-		// Edition 
-		//	with unassigned Pieces
-		//  and Formats
-		//   with fluid Pieces
-		$edition = $this->Editions->find()->where($conditions)
-				->contain(['Pieces' => function($q) use($edition_id) {
-					return $q
-						->where(['edition_id' => $edition_id, 'format_id IS NULL']);
-				}])
-				->contain('Formats')
-				->contain(['Formats.Pieces' => function($q) use($edition_id) {
-					return $q
-						->where(['disposition_count' => 0]);
-				}]);
-		$pieces = $this->Editions->Pieces->find()->where($this->SystemState->buildConditions(['edition']));
-//		$pieces 
-//		osd($edition->toArray());
-		$this->set('edition', $edition->toArray());
-		$this->set('pieces', new Collection($pieces->toArray()));
+		$EditionStack = $this->loadComponent('EditionStack');
+		$data = $EditionStack->stackQuery();//die;
+		$assignment = new AssignmentForm($data['providers']);
+//		osd($assignment);
 		
+        if ($this->request->is('post') || $this->request->is('put')) {
+			if ($assignment->execute($this->request->data)) {
+				osd('that was successful');
+			} else {
+				osd('that failed');
+			}
+			
+			osd($this->request->data);
+			osd($assignment->errors());//die;
+        }
+			
+		extract($data);
+		$this->set(compact(array_keys($data)));		
 	}
 	
 }

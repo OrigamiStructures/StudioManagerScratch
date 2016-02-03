@@ -39,5 +39,8 @@ trait ParentEntityTrait {
 		}
 		return FALSE;
 	}
-
+	
+	protected function _key(array $args) {
+		return implode('_', $args);
+	}
 }
