@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Utility\Inflector;
+use Cake\Core\Configure;
+use Cake\Controller\Component\CookieComponent;
 
 /**
  * Members Controller
@@ -19,6 +21,7 @@ class MembersController extends AppController
     ];
     
     public function initialize() {
+        $this->loadComponent('Cookie');
         parent::initialize();
         $this->set('member_types', $this->_memberTypes);
     }
@@ -224,5 +227,14 @@ class MembersController extends AppController
     private function retreiveAndSetGroups() {
         $member_groups = $this->Members->Groups->find('memberGroups');
         $this->set('member_groups', $member_groups);
+    }
+    
+    public function testMe() {
+        $cookie_name = Configure::read('Users.RememberMe.Cookie.name');
+        $cookie = $this->Cookie->read($cookie_name);
+        osd($cookie, 'the cookie');
+        osd($this->request->session()->read(), 'session before');
+        $this->request->session()->destroy();
+        osd($this->request->session()->read(), 'session after destroy');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
 
 /**
  * Editions Controller
@@ -192,7 +193,7 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
-			$this->ArtworkStack->assignPieces($artwork);
+			$this->ArtworkStack->allocatePieces($artwork);
 			
             if ($this->Artworks->save($artwork)) {
                 $this->redirect([
@@ -209,4 +210,35 @@ class EditionsController extends AppController
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/create_dev');		
 	}
+	
+	public function assign() {
+		if (!$this->SystemState->isKnown('artwork')) {
+			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
+			$this->redirect($this->SystemState->referer());
+		}
+		$edition_id = $this->SystemState->queryArg('edition');
+		$conditions = $this->SystemState->buildConditions(['edition' => 'id']);
+		
+		// Edition 
+		//	with unassigned Pieces
+		//  and Formats
+		//   with fluid Pieces
+		$edition = $this->Editions->find()->where($conditions)
+				->contain(['Pieces' => function($q) use($edition_id) {
+					return $q
+						->where(['edition_id' => $edition_id, 'format_id IS NULL']);
+				}])
+				->contain('Formats')
+				->contain(['Formats.Pieces' => function($q) use($edition_id) {
+					return $q
+						->where(['disposition_count' => 0]);
+				}]);
+		$pieces = $this->Editions->Pieces->find()->where($this->SystemState->buildConditions(['edition']));
+//		$pieces 
+//		osd($edition->toArray());
+		$this->set('edition', $edition->toArray());
+		$this->set('pieces', new Collection($pieces->toArray()));
+		
+	}
+	
 }

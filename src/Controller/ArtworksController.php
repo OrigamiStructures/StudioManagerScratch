@@ -194,7 +194,7 @@ class ArtworksController extends AppController
 	/**
 	 * Edit the Artwork layer and deeper layers if the work is 'flat'
 	 * 
-	 * A 'flat' artwork would have one Edition with one Format
+	 * A 'flat' artwork would have one Edition possibly with one Format
 	 */
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
@@ -203,7 +203,7 @@ class ArtworksController extends AppController
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 			
-			// if the count is > 1, there were no edition inputs
+			// if there is 1 edition, the quantity input could have been present
 			if ($artwork->edition_count === 1) {
 				$index = array_keys($this->request->data['editions'])[0];
 				$deletions = $this->ArtworkStack->refinePieces($artwork, 
@@ -214,7 +214,7 @@ class ArtworksController extends AppController
 			$deletions = $this->ArtworkStack->refinePieces($artwork, $this->request->data);
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
-				$this->ArtworkStack->assignPieces($artwork);
+//				$this->ArtworkStack->allocatePieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -242,7 +242,7 @@ class ArtworksController extends AppController
 							'Editions.Formats.Images', 'Editions.Formats.Pieces'
 					]
 			]);
-			$this->ArtworkStack->assignPieces($artwork);
+			$this->ArtworkStack->allocatePieces($artwork);
 //			osd($artwork);die('ready to go');
             if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);

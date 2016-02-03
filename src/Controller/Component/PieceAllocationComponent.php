@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -15,10 +8,18 @@ use App\Model\Entity\Piece;
 use CakeDC\Users\Exception\BadConfigurationException;
 
 /**
- * CakePHP PieceAssignment
+ * PieceAllocation Handles allocation/deletion of pieces during create/refine
+ * 
+ * Allocation of new pieces and deletion of existing pieces are processes that 
+ * are trigged by change to Editions->quantity. Both piece increase and decrease 
+ * are performed according to set rules and those rules are defined in this class.
+ * 
+ * Piece assignment and reassignment are user directed processes and are handled 
+ * in a separte class that responds to spefic user assignment requests.
+ * 
  * @author dondrake
  */
-class PieceAssignmentComponent extends Component {
+class PieceAllocationComponent extends Component {
 	
 	protected $controller;
 	protected $SystemState;
@@ -46,7 +47,7 @@ class PieceAssignmentComponent extends Component {
 //		$this->mostRecentFormat();
 	}
 	
-	public function assign() {
+	public function allocate() {
 		$index = array_keys($this->artwork->editions)[0];
 		$this->edition = $this->artwork->editions[$index];
 		unset($this->pieces);

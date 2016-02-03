@@ -122,21 +122,21 @@ class EditionFactoryHelper extends Helper {
 	 */
 	protected function _editionPieceTools($edition) {
 		
-		$assignment_tool = '';
-		if ($edition->hasUnassigned()) {
-			$label[] = 'Assign';
-		}
-		if ($edition->hasFluid()) {
-			$label[] = 'Reassign';
-		}
-		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
-			$label = implode('/', $label);
-			$assignment_tool = $this->Html->link("$label pieces to formats",
-				['controller' => 'pieces'/*, 'action' => 'review'*/, '?' => [
-					'artwork' => $edition->artwork_id,
-					'edition' => $edition->id,
-				]]) . "\n";
-		}
+		$assignment_tool = 'This is REM\'d. Who\'s using it?';
+//		if ($edition->hasUnassigned()) {
+//			$label[] = 'Assign';
+//		}
+//		if ($edition->hasFluid()) {
+//			$label[] = 'Reassign';
+//		}
+//		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
+//			$label = implode('/', $label);
+//			$assignment_tool = $this->Html->link("$label pieces to formats",
+//				['controller' => 'editions', 'action' => 'assign', '?' => [
+//					'artwork' => $edition->artwork_id,
+//					'edition' => $edition->id,
+//				]]) . "\n";
+//		}
 		echo $assignment_tool;
 	}
 	

@@ -1,4 +1,8 @@
 <?php
+namespace App\Lib;
+
+use Cake\Utility\Hash;
+use ArrayIterator;
 /**
  * Description of Range
  *
