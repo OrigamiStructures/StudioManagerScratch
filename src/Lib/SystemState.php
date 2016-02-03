@@ -8,6 +8,9 @@ use Cake\Collection\Collection;
 use App\Lib\StateMap;
 use Cake\Event\EventListenerInterface;
 use Cake\Utility\Inflector;
+use App\Model\Table\UsersTable;
+use App\Model\Entity\User;
+use Cake\ORM\TableRegistry;
 
 /**
  * Description of SystemState
@@ -71,7 +74,7 @@ class SystemState implements EventListenerInterface {
     public function implementedEvents()
     {
         return [
-            'Users.Component.UsersAuth.afterLogin' => 'afterLogin'
+            'Users.Component.UsersAuth.afterLogin' => 'afterLogin',
         ];
     }
 	
@@ -172,6 +175,12 @@ class SystemState implements EventListenerInterface {
 		}
 		if ($target_artist) {
 			$this->request->session()->write('Auth.User.artist_id', $target_artist);
+            $Users = TableRegistry::get('Users');
+            $user = new User([
+                'id' => $this->request->session()->read('Auth.User.id'),
+                'artist_id' => $target_artist
+                ]);
+            $Users->save($user);
 		}
 	}
 	
@@ -180,11 +189,12 @@ class SystemState implements EventListenerInterface {
 	 * @param type $event
 	 */
 	public function afterLogin($event) {
+//        osd($data, 'the data from after login');
+        // die(__LINE__);
 		$this->artistId('user');
 //		osd($event); die;
 	}
-
-
+    
 	/**
 	 * Determine the degree (if any) of admin access
 	 * 

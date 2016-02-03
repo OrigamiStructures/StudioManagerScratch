@@ -104,7 +104,8 @@ class ArtworkStackComponent extends Component {
 		// no 'artwork' query value indicates a paginated page
 		if (!$this->SystemState->isKnown('artwork')) {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
-				'contain' => $this->full_containment
+				'contain' => $this->full_containment,
+				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
@@ -113,7 +114,8 @@ class ArtworkStackComponent extends Component {
 			// There may be more keys known than just the 'artwork', but that's 
 			// all we need for the query.
 			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
-				'contain' => $this->full_containment
+				'contain' => $this->full_containment,
+				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
