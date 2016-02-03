@@ -28,7 +28,7 @@ trait AssignmentTrait {
 	 * @param string $type The edition type
 	 */
 	public function range(Collection $pieces, $type) {
-		if (in_array($type, SystemState::ltd())) {
+		if (in_array($type, SystemState::limitedEditionTypes())) {
 			$numbers = $pieces->reduce(function($accumulate, $piece) {
 				$accumulate[] = $piece->number;
 				return $accumulate;

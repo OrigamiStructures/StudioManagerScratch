@@ -1,25 +1,49 @@
 <!-- Element/Edition/assignment_sources.ctp -->
 <?php 
-$radio_source_data = [];
+$assignment_source_data = [];
 
-// $providers: a standard product of EditionStackComponent
-foreach($providers as $provider) {
-	$key_value = get_class($provider) . "\\{$provider->id}";
-	$entry = [
-		'value' => $key_value,
-		'text' => $this->Html->tag('span', trim($provider->display_title)),
+$source = new \Cake\Collection\Collection($providers);
+$source_output = $source->reduce(function($accumulator, $provider) use($helper, $edition) {
+	$key = $provider->key();
+	$acumulator[$key] = [];
+	$range = $helper->rangeText($provider, $edition);
+	$text = $this->Html->tag('span', $provider->display_title, ['class' => 'source']);
+	$attributes = $provider->hasAssignable() ? ['escape' => FALSE] : ['class' => 'disabled', 'escape' => FALSE, 'disabled' => TRUE];
+	
+	$accumulator[$key] = [
+		'range' => $range,
+		'text' => $text,
+		'label' => $this->Html->tag('p',  "$text $range", $attributes),
+		'value' => get_class($provider) . '\\' . $provider->id,
+		'attributes' => $attributes,
 	];
-	$range = $provider->range($provider->assignablePieces(PIECE_COLLECTION_RETURN), $edition->type);
-	$entry['text'] = $this->Html->tag(
-			'span', 
-			$entry['text'] . ((boolean) $range ? " (Numbers: $range)" : ' (None Avaialble)'), 
-			['class' => $provider->hasAssignable() ? '' : 'disabled']);
-	array_push($radio_source_data, $entry + ['disabled' => !$provider->hasAssignable()]);
+	return $accumulator;
+}, []);
+
+
+
+//osd($source_output);
+
+if (in_array($edition->type, App\Lib\SystemState::limitedEditionTypes())) {
+	// checkboxes, all checked by default
+	foreach($source_output as $source) {
+		echo $source['label'];
+	}
+
+} else {
+	// labels
+	foreach($source_output as $index => $source) {
+//		osd($source);
+//		echo($source['text']);
+//		echo($source['range']);
+//		echo($source['value']);
+		$l = $source['text'];
+		$v = $source['value'];
+		echo $this->Form->label("source_for_pieces_$index", $source['label'], ['escape' => FALSE]);
+		$attr = ['label' => FALSE, 'type' => 'checkbox', 'value' => $v] + $source['attributes'];
+//		osd($attr);
+		echo $this->Form->input("source_for_pieces_$index", $attr);
+	}
 }
 ?>
-		<p>Sources: Pieces to assign or reassign</p>
-		<?= $this->Form->radio(
-			'Sources for Pieces',
-			$radio_source_data,
-			['escape' => FALSE]); ?>
 <!-- END Element/Edition/assignment_sources.ctp -->

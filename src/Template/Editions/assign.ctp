@@ -9,13 +9,17 @@ $this->set(compact('edition', 'helper'));
 	<?= $this->Form->create(); ?>
     <div class="large-6 columns radio">
 		<?= $this->element('Edition/assignment_sources'); ?>
+		<div class="high">
+			<?= $this->Form->submit(); ?>
+		</div>
 	</div>
     <div class="large-6 columns radio">
 		<?= $this->element('Edition/assignment_destinations'); ?>
+		<div class="high">
+			<?= $this->Form->input('to_move', ['label' => 'Pieces to move']); ?>
+		</div>
 	</div>
-	<?= $this->Form->submit(); ?>
 	<?= $this->Form->end(); ?>
-  </div>
 
 <?php
 
@@ -25,4 +29,5 @@ echo $this->element('Pieces/overview_table');
 //osd($providers);
 //osd($edition);
 ?>
+  </div>
 <!-- END Editions/assign.ctp -->

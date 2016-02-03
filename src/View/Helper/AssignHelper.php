@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use App\Lib\SystemState;
 
 /**
  * CakePHP AssignHelper
@@ -9,6 +10,9 @@ use Cake\View\Helper;
  */
 class AssignHelper extends Helper {
 	
+	public $helpers = ['Html'];
+
+
 	public function assignmentSources() {
 		
 	}
@@ -17,4 +21,18 @@ class AssignHelper extends Helper {
 		
 	}
 	
+	public function rangeText($provider, $edition) {
+		if (in_array($edition->type, SystemState::limitedEditionTypes())) {
+			$identifier = 'Numbers: ';
+		} else {
+			$identifier = 'Available: ';
+		}
+		if ($provider->hasAssignable()) {
+			$text = $identifier . $provider->range($provider->assignablePieces(), $edition->type);
+		} else {
+			$text = 'None available';
+		}
+		return $this->Html->tag('span', $text, ['class' => 'range']);
+		
+	}
 }

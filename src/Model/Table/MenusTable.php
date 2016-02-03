@@ -222,7 +222,7 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function allowNewFormat($edition) {
-		return in_array($edition->type, $this->SystemState->multiFormatEditionTypes());
+		return in_array($edition->type, App\Lib\SystemState::multiFormatEditionTypes());
 	}
 
 }
