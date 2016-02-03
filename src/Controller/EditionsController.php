@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use App\Form\AssignmentForm;
 
 /**
  * Editions Controller
@@ -212,17 +213,27 @@ class EditionsController extends AppController
 	}
 	
 	public function assign() {
-		$EditionStack = $this->loadComponent('EditionStack');
 		if (!$this->SystemState->isKnown('artwork')) {
 			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
 			$this->redirect($this->SystemState->referer());
 		}
 		
+		$EditionStack = $this->loadComponent('EditionStack');
+		$data = $EditionStack->stackQuery();//die;
+		$assignment = new AssignmentForm($data['providers']);
+//		osd($assignment);
+		
         if ($this->request->is('post') || $this->request->is('put')) {
-			osd($this->request->data);die;
+			if ($assignment->execute($this->request->data)) {
+				osd('that was successful');
+			} else {
+				osd('that failed');
+			}
+			
+			osd($this->request->data);
+			osd($assignment->errors());//die;
         }
 			
-		$data = $EditionStack->stackQuery();//die;
 		extract($data);
 		$this->set(compact(array_keys($data)));		
 	}
