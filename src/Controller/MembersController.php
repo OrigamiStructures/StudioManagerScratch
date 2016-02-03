@@ -161,8 +161,9 @@ class MembersController extends AppController
         $member = new \App\Model\Entity\Member($this->request->data);
         
         $start = count($member->$entity_type);
-        
-        $member->$entity_type = $member->$entity_type + $this->Members->$table->spawn(1, [], $start);
+//        osd($member->$entity_type);die;
+                
+        $member->$entity_type = (!empty($member->$entity_type) ? $member->$entity_type : []) + $this->Members->$table->spawn(1, [], $start);
         
         $this->set('member', $member);
         $this->set('_serialize', ['member']);

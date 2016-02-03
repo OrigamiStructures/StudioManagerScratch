@@ -2,11 +2,9 @@
 <?php foreach ($members as $member): ?>
     <?php $this->set('member', $member); ?>
 <?php
-osd($member, 'Main member');
 foreach ($member_groups as $key => $group) {
     echo $this->Html->para('groups', "$group->id --- $group->displayTitle");
 }
-//osd($member_groups->toArray(), 'found groups');
 ?>
     <div class="member row">
         <div class="columns small-12 medium-9 text">
