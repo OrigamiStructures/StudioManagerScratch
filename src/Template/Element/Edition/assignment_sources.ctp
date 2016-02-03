@@ -33,21 +33,25 @@ if (in_array($edition->type, App\Lib\SystemState::limitedEditionTypes())) {
 
 } else {
 	// labels
+	$count = 0;
 	foreach($source_output as $index => $source) {
-		$l = $source['text'];
-		$v = $source['value'];
-		$attr = ['label' => FALSE, 'type' => 'checkbox', 'value' => $v] + $source['attributes'];
-		$input = $this->Form->input("source_for_pieces_$index", $attr);
+		/**
+		 * MAKE A PROPER TAG TEMPLATE TO CLEAN THIS SHIT UP
+		 */
+		$attr = ['label' => FALSE, 'type' => 'checkbox', 'value' => $source['value']] + $source['attributes'];
+		$input = $this->Form->input("source_for_pieces_$count", $attr);
 		$input = str_replace(['<div class="input checkbox">', '</div>'], ['', ''], $input);
-//		$input = $this->Html->tag('input', "source_for_pieces_$index", $attr);
+		
 		echo '<div class="input checkbox">';
 		echo $this->Form->label(
-				"source_for_pieces_$index", 
+				"source_for_pieces_$count", 
 				$input . $source['text'] . ' ' . $source['range'], 
 				['escape' => FALSE] + $source['attributes']
 		);
 		echo '</div>';
-//		osd($attr);
+		
+		$count++;
+
 	}
 }
 ?>

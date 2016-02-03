@@ -63,7 +63,7 @@ class Edition extends Entity
 	 * @return type
 	 */
 	public function key() {
-		return "$this->id.";
+		return $this->_key([$this->id, '']);
 	}
 	
 	/**

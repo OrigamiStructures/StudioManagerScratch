@@ -64,7 +64,7 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function key() {
-		return "$this->edition_id.$this->id";
+		return $this->_key([$this->edition_id, $this->id]);
 	}
 
 

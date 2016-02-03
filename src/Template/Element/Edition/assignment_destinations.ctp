@@ -12,7 +12,7 @@ foreach($providers as $provider) {
 ?>
 		<p>Destinations</p>
 		<?= $this->Form->radio(
-			'Destinations for Pieces',
+			'destinations_for_pieces',
 			$radio_destination_data,
 			['escape' => FALSE]); ?>
 <!-- END Element/Edition/assignment_destinations.ctp -->
