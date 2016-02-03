@@ -63,6 +63,24 @@ trait AssignmentTrait {
 	}
 	
 	/**
+	 * Unified interface for varied objects
+	 * 
+	 * @return boolean
+	 * @throws \CakeDC\Users\Exception\BadConfigurationException
+	 */
+	public function hasAssignable() {
+		if (stristr($this->_className, 'Edition')) {
+			return $this->hasUnassigned();
+		} elseif (stristr($this->_className, 'Format')) {
+			return $this->hasFluid();
+		} else {
+			throw new \CakeDC\Users\Exception\BadConfigurationException(
+				"{$this->_className} does not have assignable pieces, so it "
+				. "is not compatible with the AssignmentTrait.");
+		}
+	}
+	
+	/**
 	 * Return the values at the named property as entities or a collection
 	 * 
 	 * @param string $property

@@ -58,6 +58,15 @@ class Edition extends Entity
 	}
 	
 	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return type
+	 */
+	public function key() {
+		return "$this->id.";
+	}
+	
+	/**
 	 * Does the edition have any pieces that have not been assigned to a format
 	 * 
 	 * @return boolean

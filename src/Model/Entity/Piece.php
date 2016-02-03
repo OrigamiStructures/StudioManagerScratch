@@ -62,4 +62,13 @@ class Piece extends Entity
 		}
 		return $result;
 	}
+	
+	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return type
+	 */
+	public function key() {
+		return "$this->edition_id.$this->format_id";
+	}
 }

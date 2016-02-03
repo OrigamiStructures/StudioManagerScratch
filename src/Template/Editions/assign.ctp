@@ -1,27 +1,6 @@
 <?php
 $edition = $providers['edition'];
-
-foreach ($providers as $provider) {
-	osd($provider->range($provider->assignablePieces(), $edition->type));
-	
-	
-}
-//osd($providers);
-//osd($pieces);
-//osd($this->viewVars);
-die;
-/**
- * make range values from piece collections
- */
-//$unassigned = $pieces->filter(function($piece) {
-//	return is_null($piece->format_id);
-//});
-//$unassigned_numbers = $unassigned->reduce(function($accumulate, $piece) {
-//	$accumulate[] = $piece->number;
-//	return $accumulate;
-//}, []);
-//$range = App\Lib\Range::constructRange($unassigned_numbers, '{n}');
-//osd($range);
+$this->set('edition', $edition);
 
 /**
  * make 3 array
@@ -30,53 +9,27 @@ die;
  *		one is basic 'source' radio buttons (with disabled's set) for helper
  */
 
+$radio_destination_data = $radio_source_data = [];
+
 // INIT ALL 3 ARRAYS WITH EDITION NODE
-$node = clone $edition[0];
-unset($node->formats);
-unset($node->pieces);
-$key_value = get_class($node) . "\\{$node->id}";
-
-$providers[$key_value] = $node;
-
-$entry = [
-	'value' => $key_value,
-	'text' => $node->display_title,
-];
-$radio_destination_data = [$entry];
-
-	$entry['text'] = $this->Html->tag(
-			'span', 
-			$entry['text'] . ((boolean) $range ? " Numbers: $range" : ' None Avaialble'), 
-			['class' => $node->hasUnassigned() ? '' : 'disabled']);
-$radio_source_data = [$entry + ['disabled' => !$node->hasUnassigned()]];
 
 // POPULATE ALL 3 ARRAYS WITH THE FORMAT NODES
-foreach($edition[0]->formats as $format) {
-	$node = clone $format;
-	$key_value = get_class($node) . "\\{$node->id}";
-	unset($node->pieces);
-	$providers[$key_value] = $node;
+foreach($providers as $provider) {
+	$key_value = get_class($provider) . "\\{$provider->id}";
 
 	$entry = [
 		'value' => $key_value,
-		'text' => $this->Html->tag('span', trim($node->display_title . ' Format')),
+		'text' => $this->Html->tag('span', trim($provider->display_title)),
 	];
 	array_push($radio_destination_data, $entry);
 	
-	$fluid = $pieces->filter(function($piece) use($node) {
-		return ($piece->format_id === $node->id && $piece->disposition_count === 0);
-	});
-	$fluid_numbers = $fluid->reduce(function($accumulate, $piece) {
-		$accumulate[] = $piece->number;
-		return $accumulate;
-	}, []);
-	$range = App\Lib\Range::constructRange($fluid_numbers, '{n}');
+	$range = $provider->range($provider->assignablePieces(PIECE_COLLECTION_RETURN), $edition->type);
 
 	$entry['text'] = $this->Html->tag(
 			'span', 
 			$entry['text'] . ((boolean) $range ? " (Numbers: $range)" : ' (None Avaialble)'), 
-			['class' => $node->hasFluid() ? '' : 'disabled']);
-	array_push($radio_source_data, $entry + ['disabled' => !$node->hasFluid()]);
+			['class' => $provider->hasAssignable() ? '' : 'disabled']);
+	array_push($radio_source_data, $entry + ['disabled' => !$provider->hasAssignable()]);
 }
 /**
  * DONE WITH MAKE 3 ARRAYS
@@ -104,6 +57,6 @@ foreach($edition[0]->formats as $format) {
 
 echo $this->element('Pieces/overview_table');
 
-osd($pieces);
-osd($providers);
+//osd($pieces);
+//osd($providers);
 //osd($edition);

@@ -4,7 +4,7 @@
 	</caption>
 	<thead>
 		<tr>
-			<th>Number</th>
+			<?= $helper->pieceNumberColumn($edtion->type, 'header') ?><!--<th>Number</th>-->
 			<th>Quantity</th>
 			<th>Owner</th>
 			<th>History</th>
