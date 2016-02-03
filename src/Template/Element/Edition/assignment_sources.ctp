@@ -8,7 +8,7 @@ $source_output = $source->reduce(function($accumulator, $provider) use($helper, 
 	$acumulator[$key] = [];
 	$range = $helper->rangeText($provider, $edition);
 	$text = $this->Html->tag('span', $provider->display_title, ['class' => 'source']);
-	$attributes = $provider->hasAssignable() ? ['escape' => FALSE] : ['class' => 'disabled', 'escape' => FALSE, 'disabled' => TRUE];
+	$attributes = $provider->hasAssignable() ? ['escape' => FALSE, 'checked' => TRUE] : ['class' => 'disabled', 'escape' => FALSE, 'disabled' => TRUE];
 	
 	$accumulator[$key] = [
 		'range' => $range,

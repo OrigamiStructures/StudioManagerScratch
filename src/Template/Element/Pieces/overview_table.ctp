@@ -5,7 +5,13 @@
 	</caption>
 	<thead>
 		<tr>
+			<?php 
+			if (in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) : ;
+			?>
 			<th>Number</th>
+			<?php 
+			endif;
+			?>
 			<th>Quantity</th>
 			<th>Owner</th>
 			<th>History</th>
