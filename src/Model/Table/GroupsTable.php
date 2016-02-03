@@ -36,12 +36,6 @@ class GroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-//        $this->belongsTo('Members', [
-//            'className' => 'Members',
-//            'foreignKey' => 'id',
-//            'bindingKey' => 'member_id',
-//            'dependent' => TRUE,
-//        ]);
         $this->belongsToMany('Members', [
             'foreignKey' => 'group_id',
             'targetForeignKey' => 'member_id',
