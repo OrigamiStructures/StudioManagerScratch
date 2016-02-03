@@ -1,3 +1,4 @@
+<!-- Element/Edition/overview_rows.ctp -->
 <?php
 $owners = new \Cake\Collection\Collection($providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
@@ -8,7 +9,7 @@ $owner_title = $owners->reduce(function($accumulator, $owner) {
 foreach($pieces as $piece) :
 ?>
 	<tr>
-		<?= $helper->pieceNumberColumn($edtion->type, 'header') ?><!--<td><?= $piece->number; ?></td>-->
+		<td><?= $piece->number; ?></td>
 		<td><?= $piece->quantity; ?></td>
 		<td><?= $owner_title[$piece->key()] ?></td>
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
@@ -17,3 +18,4 @@ foreach($pieces as $piece) :
 <?php
 endforeach;
 ?>
+<!-- END Element/Edition/overview_rows.ctp -->
