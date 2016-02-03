@@ -1,16 +1,27 @@
 <?php
+$edition = $providers['edition'];
+
+foreach ($providers as $provider) {
+	osd($provider->range($provider->assignablePieces(), $edition->type));
+	
+	
+}
+//osd($providers);
+//osd($pieces);
+//osd($this->viewVars);
+die;
 /**
  * make range values from piece collections
  */
-$unassigned = $pieces->filter(function($piece) {
-	return is_null($piece->format_id);
-});
-$unassigned_numbers = $unassigned->reduce(function($accumulate, $piece) {
-	$accumulate[] = $piece->number;
-	return $accumulate;
-}, []);
-$range = App\Lib\Range::constructRange($unassigned_numbers, '{n}');
-osd($range);
+//$unassigned = $pieces->filter(function($piece) {
+//	return is_null($piece->format_id);
+//});
+//$unassigned_numbers = $unassigned->reduce(function($accumulate, $piece) {
+//	$accumulate[] = $piece->number;
+//	return $accumulate;
+//}, []);
+//$range = App\Lib\Range::constructRange($unassigned_numbers, '{n}');
+//osd($range);
 
 /**
  * make 3 array

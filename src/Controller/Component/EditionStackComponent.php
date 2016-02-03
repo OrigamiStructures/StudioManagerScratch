@@ -85,11 +85,7 @@ class EditionStackComponent extends Component {
 
 		$providers = ['edition' => $edition] + $formats->toArray();
 		
-		foreach ($providers as $provider) {
-			osd($provider->range($provider->assignablePieces(), $edition->type));
-		}
-//		
-		// this may need order() later for piece-table reporting of open editions
+		// this may need ->order() later for piece-table reporting of open editions
 		$pieces = $Pieces->find()->where($child_condition); 
 		
 		return ['providers' => $providers, 'pieces' => $pieces];
