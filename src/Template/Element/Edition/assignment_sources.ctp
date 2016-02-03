@@ -16,6 +16,7 @@ $source_output = $source->reduce(function($accumulator, $provider) use($helper, 
 		'label' => $this->Html->tag('p',  "$text $range", $attributes),
 		'value' => get_class($provider) . '\\' . $provider->id,
 		'attributes' => $attributes,
+		'disabled' => $provider->hasAssignable(),
 	];
 	return $accumulator;
 }, []);
@@ -33,16 +34,20 @@ if (in_array($edition->type, App\Lib\SystemState::limitedEditionTypes())) {
 } else {
 	// labels
 	foreach($source_output as $index => $source) {
-//		osd($source);
-//		echo($source['text']);
-//		echo($source['range']);
-//		echo($source['value']);
 		$l = $source['text'];
 		$v = $source['value'];
-		echo $this->Form->label("source_for_pieces_$index", $source['label'], ['escape' => FALSE]);
 		$attr = ['label' => FALSE, 'type' => 'checkbox', 'value' => $v] + $source['attributes'];
+		$input = $this->Form->input("source_for_pieces_$index", $attr);
+		$input = str_replace(['<div class="input checkbox">', '</div>'], ['', ''], $input);
+//		$input = $this->Html->tag('input', "source_for_pieces_$index", $attr);
+		echo '<div class="input checkbox">';
+		echo $this->Form->label(
+				"source_for_pieces_$index", 
+				$input . $source['text'] . ' ' . $source['range'], 
+				['escape' => FALSE] + $source['attributes']
+		);
+		echo '</div>';
 //		osd($attr);
-		echo $this->Form->input("source_for_pieces_$index", $attr);
 	}
 }
 ?>

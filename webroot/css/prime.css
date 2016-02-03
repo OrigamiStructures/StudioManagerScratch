@@ -467,4 +467,7 @@ div.radio > label input {
   div.radio > label input .disabled {
     color: #ccc; }
 
+label.disabled {
+  color: #e6e6e6; }
+
 /*# sourceMappingURL=prime.css.map */
