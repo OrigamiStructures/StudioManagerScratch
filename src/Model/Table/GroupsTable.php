@@ -41,6 +41,9 @@ class GroupsTable extends AppTable
             'targetForeignKey' => 'member_id',
             'joinTable' => 'groups_members',
         ]);
+        $this->belongsTo('ProxyMembers',[
+            'foreignKey' => 'member_id',
+        ]);
     }
 
     /**
@@ -86,7 +89,7 @@ class GroupsTable extends AppTable
             'Groups.active' => 1,
             'Groups.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain(['Members']);
+        $query->contain(['Members', 'ProxyMembers']);
 //        osd($query->toArray());
         return $query;
     }
