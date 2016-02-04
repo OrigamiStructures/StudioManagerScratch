@@ -6,12 +6,16 @@ use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use App\Lib\SystemState;
 use Cake\View\Form\FormContext;
+use Cake\Collection\Collection;
 
 class AssignmentForm extends Form
 {
 	protected $_providers;
-	public $_chosen_sources = [];
-
+	protected $_form_data;
+	public $source_pieces = [];
+	public $source_quantity = 0;
+	public $source_numbers = [];
+	
 	public function __construct($providers) {
 		$this->_providers = $providers;
 	}
@@ -112,11 +116,12 @@ class AssignmentForm extends Form
 	 * @param array $context
 	 * @return boolean
 	 */
-	public function piecesAvailableValidation ($value, $context) {
+	public function piecesAvailabilityConfirmation ($context) {
 		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
-			return $this->checkOpenAvailability($value, $context);
+			return $this->checkOpenAvailability($context);
 		} else {
-			return $this->checkNumberedAvailability($value, $context);
+			osd('numbered path');
+			return $this->checkNumberedAvailability($context);
 		}
 	}
 	
@@ -127,15 +132,41 @@ class AssignmentForm extends Form
 	 * @param array $context
 	 * @return boolean
 	 */
-	protected function checkOpenAvailability($value, $context) {
-		$sources = $this->_sourceKeys($context);
-//		$pieces = (new \Cake\Collection\Collection($this->_providers))
-//				->reduce(function)
-//		foreach ($this->_providers as $provider) {
-//			
-//		}
+	protected function checkOpenAvailability($context) {
+		$this->_sourcePieces($context);
+		$this->source_quantity = (new Collection($this->source_pieces))->sumOf(function ($piece) {
+				return $piece->quantity;
+			});
+
+		if ($this->source_quantity >= $context['data']['to_move']) {
+			$result = TRUE;
+		} else {
+			$result = FALSE;
+			$difference = $context['data']['to_move'] - $this->source_quantity;
+			// set flash message here
+			osd($this->errors());
+			$this->_errors['to_move'] = ['_empty' => "There are $this->source_quantity pieces in the selected sources "
+					. "and you have asked to move {$context['data']['to_move']}. "
+					. "Reduce your request by at least $difference pieces."];
+			osd($this->errors());
+		}
+		return $result;
+	}
+	
+
+	/**
+	 * Insure there are enough numbered Edition pieces to move in the selected sources
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
+		protected function checkNumberedAvailability($context){
+		$this->_sourcePieces($context);
+		$this->source_numbers = (new Collection($this->source_pieces))->combine('{n}', 'number');
+		osd($this->source_numbers->toArray());
 //		osd($this->_providers);
-		return true;
+//		return $sources;
 	}
 	
 	/**
@@ -145,7 +176,7 @@ class AssignmentForm extends Form
 	 * @return Collection
 	 */
 	protected function _chosenSources($context) {
-		return (new \Cake\Collection\Collection($context['data']))
+		return (new Collection($context['data']))
 			->filter(function($value, $key) {
 				return (stristr($key, 'source_for_pieces_')) && !empty($value);
 			});
@@ -156,36 +187,25 @@ class AssignmentForm extends Form
 	 * 
 	 * @param array $context
 	 */
-	protected function _sourceKeys($context) {
+	protected function _sourcePieces($context) {
 		$sources = $this->_chosenSources($context);
-		
+		$sources->each(function($value, $key) {
+			$index = intval(str_replace('source_for_pieces_', '', $key));
+			$provider_key = $index === 0 ? 'edition' : $index - 1;
+			$this->source_pieces = array_merge(
+				$this->source_pieces, 
+				$this->_providers[$provider_key]->assignablePieces(PIECE_ENTITY_RETURN)
+			);
+		});
 
-//		return (new \Cake\Collection\Collection($context['data']))
-//			->reduce(function($accumlator, $value) {
-//				$value = str_replace('\\', '_', $value);
-//				if (preg_match('/App_Model_Entity_(Edition|Format)_(\d+)/', $value, $match)) {
-//					osd($match);
-//				}
-//			}, []);
-	}
-
-	/**
-	 * Insure there are enough numbered Edition pieces to move in the selected sources
-	 * 
-	 * @param mixed $value
-	 * @param array $context
-	 * @return boolean
-	 */
-		protected function checkNumberedAvailability($value, $context){
-		$sources = $this->_sourceKeys($context);
-//		osd($this->_providers);
-		return true;
+		return $this->source_pieces;
 	}
 
 	protected function _execute(array $data)
     {
-		
-        // Send an email.
-        return true;
+		// data is packaged to match Validarot::context because we reuse many of its callbacks
+		$result = $this->piecesAvailabilityConfirmation(['data' => $data]);
+
+		return $result;
     }
 }

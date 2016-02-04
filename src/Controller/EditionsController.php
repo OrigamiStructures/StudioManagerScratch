@@ -222,15 +222,17 @@ class EditionsController extends AppController
 		$EditionStack = $this->loadComponent('EditionStack');
 		$data = $EditionStack->stackQuery();//die;
 		$assignment = new AssignmentForm($data['providers']);
-		osd($this->request->data, 'to build form context');
+//		osd($this->request->data, 'to build form context');
 		$assign = new \Cake\View\Form\FormContext($this->request, $this->request->data);
 //		osd($assignment);
 		
         if ($this->request->is('post') || $this->request->is('put')) {
 			if ($assignment->execute($this->request->data)) {
+				
 				osd('that was successful');
 			} else {
 				osd('that failed');
+				osd($assignment->errors());
 				$errors= $assignment->errors();
 			}
 			

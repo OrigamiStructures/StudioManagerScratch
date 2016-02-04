@@ -44,7 +44,6 @@ if (App\Lib\SystemState::isNumberedEdition($edition->type)) {
 		/**
 		 * MAKE A PROPER TAG TEMPLATE TO CLEAN THIS SHIT UP
 		 */
-//		osd($this->request->data);
 		if (isset($this->request->data["source_for_pieces_$count"])) {
 			$checked = $this->request->data["source_for_pieces_$count"] === $source['value'];
 		}
