@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\Utility\Inflector;
 use Cake\Core\Configure;
 use Cake\Controller\Component\CookieComponent;
+use Cake\Collection\Collection;
 
 /**
  * Members Controller
@@ -227,7 +228,9 @@ class MembersController extends AppController
      */
     private function retreiveAndSetGroups() {
         $member_groups = $this->Members->Groups->find('memberGroups');
+        $groups_list = (new Collection($member_groups))->combine('id', 'displayTitle');
         $this->set('member_groups', $member_groups);
+        $this->set('groups_list', $groups_list);
     }
     
     public function testMe() {
