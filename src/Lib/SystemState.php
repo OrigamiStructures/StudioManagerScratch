@@ -82,10 +82,22 @@ class SystemState implements EventListenerInterface {
 		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
 	}
 	
+	static function isNumberedEdition($edition_type) {
+		return in_array(
+			$edition_type, 
+			[EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED]);
+	}
+	
 	static function openEditionTypes() {
 		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
 	}
 
+	static function isOpenEdition($edition_type) {
+		return in_array(
+			$edition_type, 
+			[EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
+	}
+	
 	static function singleFormatEditionTypes() {
 		return [EDITION_UNIQUE, EDITION_RIGHTS];
 	}

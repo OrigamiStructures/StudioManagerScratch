@@ -6,7 +6,7 @@ $this->set(compact('edition', 'helper'));
 ?>
 
   <div class="row">
-	<?= $this->Form->create(); ?>
+	<?= $this->Form->create($assign); ?>
     <div class="large-6 columns radio">
 		<?= $this->element('Edition/assignment_sources'); ?>
 		<div class="high">

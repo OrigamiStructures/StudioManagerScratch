@@ -53,6 +53,7 @@ if (in_array($edition->type, App\Lib\SystemState::limitedEditionTypes())) {
 		$count++;
 
 	}
+	echo $helper->validationError('source_for_pieces_0', $errors);
 }
 ?>
 <!-- END Element/Edition/assignment_sources.ctp -->

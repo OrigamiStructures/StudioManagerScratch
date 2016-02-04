@@ -222,7 +222,7 @@ class EditionsController extends AppController
 		$EditionStack = $this->loadComponent('EditionStack');
 		$data = $EditionStack->stackQuery();//die;
 		$assignment = new AssignmentForm($data['providers']);
-//		$assign = new \Cake\View\Form\FormContext($this->request, $this->request->data);
+		$assign = new \Cake\View\Form\FormContext($this->request, $this->request->data);
 //		osd($assignment);
 		
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -240,7 +240,7 @@ class EditionsController extends AppController
 		extract($data);
 		$this->set(compact(array_keys($data)));	
 		$this->set('errors', $errors);
-//		$this->set('assign', $assign);
+		$this->set('assign', $assign);
 	}
 	
 }
