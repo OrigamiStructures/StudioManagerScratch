@@ -39,11 +39,21 @@ if (App\Lib\SystemState::isNumberedEdition($edition->type)) {
 } else {
 	// labels
 	$count = 0;
+	$checked = empty($this->request->data);
 	foreach($source_output as $index => $source) {
 		/**
 		 * MAKE A PROPER TAG TEMPLATE TO CLEAN THIS SHIT UP
 		 */
-		$attr = ['label' => FALSE, 'type' => 'checkbox', 'value' => $source['value']] + $source['attributes'];
+//		osd($this->request->data);
+		if (isset($this->request->data["source_for_pieces_$count"])) {
+			$checked = $this->request->data["source_for_pieces_$count"] === $source['value'];
+		}
+		$attr = [
+			'label' => FALSE, 
+			'type' => 'checkbox', 
+			'value' => $source['value'],
+			'checked' => $checked && !$source['disabled'],
+			] + $source['attributes'];
 		$input = $this->Form->input("source_for_pieces_$count", $attr);
 		$input = str_replace(['<div class="input checkbox">', '</div>'], ['', ''], $input);
 		
