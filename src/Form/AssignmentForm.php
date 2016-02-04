@@ -144,11 +144,9 @@ class AssignmentForm extends Form
 			$result = FALSE;
 			$difference = $context['data']['to_move'] - $this->source_quantity;
 			// set flash message here
-			osd($this->errors());
-			$this->_errors['to_move'] = ['_empty' => "There are $this->source_quantity pieces in the selected sources "
+			$this->_errors['to_move'] = ['piece_quantity' => "There are $this->source_quantity pieces in the selected sources "
 					. "and you have asked to move {$context['data']['to_move']}. "
 					. "Reduce your request by at least $difference pieces."];
-			osd($this->errors());
 		}
 		return $result;
 	}
@@ -164,7 +162,28 @@ class AssignmentForm extends Form
 		protected function checkNumberedAvailability($context){
 		$this->_sourcePieces($context);
 		$this->source_numbers = (new Collection($this->source_pieces))->combine('{n}', 'number');
-		osd($this->source_numbers->toArray());
+		$request = \App\Lib\Range::parseRange($context['data']['to_move']);
+		$bad_request = array_diff($request, $this->source_numbers->toArray());
+		if (!empty($bad_request)) {
+			$result = FALSE;
+			$grammar = count($bad_request) > 1 ? 'are' : 'is';
+			$bad_range = \App\Lib\Range::constructRange($bad_request);
+			
+			$good_request = array_intersect($this->source_numbers->toArray(), $request);
+			$good_range = \App\Lib\Range::constructRange($good_request);
+			
+			if ($good_range) {
+				$try_this = '<br />The available pieces in your request: ' . $good_range;
+			} else {
+				$try_this = '';
+			}
+			
+			$this->_errors['to_move'] = [
+				'missing_pieces' =>  "$bad_range $grammar not available in the selected sources$try_this"];
+		} else {
+			$request = TRUE;
+		}
+		return $result;
 //		osd($this->_providers);
 //		return $sources;
 	}

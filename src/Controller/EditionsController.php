@@ -232,7 +232,6 @@ class EditionsController extends AppController
 				osd('that was successful');
 			} else {
 				osd('that failed');
-				osd($assignment->errors());
 				$errors= $assignment->errors();
 			}
 			
