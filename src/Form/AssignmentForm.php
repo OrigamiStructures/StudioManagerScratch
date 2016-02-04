@@ -43,7 +43,7 @@ class AssignmentForm extends Form
 			->notEmpty('to_move', 'You must indicate which pieces should be moved.')
 			->notEmpty('destinations_for_pieces', 'You must choose a destination for the pieces.');
 		
-		if (SystemState::isOpenEditionTypes($this->_providers['edition']->type)) {
+		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
 			// open editions allow an integer value
 			$validator
 				->add('to_move', [
@@ -78,14 +78,25 @@ class AssignmentForm extends Form
 		return $validator;
     }
 	
+	/**
+	 * Insure at there is at least one source to draw from
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
 	public function sourceValidation($value, $context) {
-		$sources = (new \Cake\Collection\Collection($context['data']))
-			->filter(function($value, $key) {
-				return (stristr($key, 'source_for_pieces_')) && !empty($value);
-			});
+		$sources = $this->_chosenSources($context);
 		return (boolean) iterator_count($sources) ;
 	}
 	
+	/**
+	 * Insure the range describing numbered pieces to move is valid
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
 	public function rangePatternValidation($value, $context) {
 		$pattern = '/(\d+-\d+|\d+)(, *(\d+-\d+|\d+))*/'; 
 		preg_match($pattern, $value, $match);
@@ -93,19 +104,80 @@ class AssignmentForm extends Form
 		return $value === $match[0];
 	}
 	
+	/**
+	 * Insure there are enough pieces to move
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
 	public function piecesAvailableValidation ($value, $context) {
-		if (SystemState::isOpenEditionTypes($this->_providers['edition']->type)) {
+		osd($context);
+		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
 			return $this->checkOpenAvailability($value, $context);
 		} else {
 			return $this->checkNumberedAvailability($value, $context);
 		}
 	}
 	
+	/**
+	 * Insure there are enough Open Edition pieces to move in the selected sources
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
 	protected function checkOpenAvailability($value, $context) {
+		$sources = $this->_sourceKeys($context);
+//		foreach ($this->_providers as $provider) {
+//			
+//		}
+//		osd($this->_providers);
 		return true;
 	}
 	
-	protected function checkNumberedAvailability($value, $context){
+	/**
+	 * Return the trd nodes that are the chosen sources for pieces
+	 * 
+	 * @param array $context
+	 * @return Collection
+	 */
+	protected function _chosenSources($context) {
+		return (new \Cake\Collection\Collection($context['data']))
+			->filter(function($value, $key) {
+				return (stristr($key, 'source_for_pieces_')) && !empty($value);
+			});
+	}
+
+	/**
+	 * Get all the reassignable pieces from the select sources
+	 * 
+	 * @param array $context
+	 */
+	protected function _sourceKeys($context) {
+		$sources = $this->_chosenSources($context);
+		
+		osd($sources->toArray());
+
+//		return (new \Cake\Collection\Collection($context['data']))
+//			->reduce(function($accumlator, $value) {
+//				$value = str_replace('\\', '_', $value);
+//				if (preg_match('/App_Model_Entity_(Edition|Format)_(\d+)/', $value, $match)) {
+//					osd($match);
+//				}
+//			}, []);
+	}
+
+	/**
+	 * Insure there are enough numbered Edition pieces to move in the selected sources
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
+		protected function checkNumberedAvailability($value, $context){
+		$sources = $this->_sourceKeys($context);
+//		osd($this->_providers);
 		return true;
 	}
 

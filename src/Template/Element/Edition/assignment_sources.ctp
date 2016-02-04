@@ -16,7 +16,7 @@ $source_output = $source->reduce(function($accumulator, $provider) use($helper, 
 		'label' => $this->Html->tag('p',  "$text $range", $attributes),
 		'value' => get_class($provider) . '\\' . $provider->id,
 		'attributes' => $attributes,
-		'disabled' => $provider->hasAssignable(),
+		'disabled' => !$provider->hasAssignable(),
 	];
 	return $accumulator;
 }, []);
@@ -25,10 +25,15 @@ $source_output = $source->reduce(function($accumulator, $provider) use($helper, 
 
 //osd($source_output);
 
-if (in_array($edition->type, App\Lib\SystemState::limitedEditionTypes())) {
+if (App\Lib\SystemState::isNumberedEdition($edition->type)) {
 	// checkboxes, all checked by default
+	$count = 0;
 	foreach($source_output as $source) {
+		if (!$source['disabled']) {
+			echo $this->Form->input("source_for_pieces_$count", ['type' => 'hidden', 'value' => $source['value']]);
+		}
 		echo $source['label'];
+		$count++;
 	}
 
 } else {
