@@ -10,7 +10,8 @@ $this->set(compact('edition', 'helper'));
     <div class="large-6 columns radio">
 		<?= $this->element('Edition/assignment_sources'); ?>
 		<div class="high">
-			<?= $this->Form->input('to_move', ['label' => 'Pieces to move']); ?>
+			<?= $this->Form->input('to_move', ['label' => 'Pieces to move', 'error' => 'some error']); ?>
+			<?= $helper->validationError('to_move', $errors); ?>
 			<?= $this->Form->submit(); ?>
 		</div>
 	</div>

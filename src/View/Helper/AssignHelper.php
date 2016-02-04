@@ -35,4 +35,11 @@ class AssignHelper extends Helper {
 		return $this->Html->tag('span', $text, ['class' => 'range']);
 		
 	}
+	
+	public function validationError($column, $errors) {
+//		osd($errors);
+		if (isset($errors[$column])) {
+			return $this->Html->div('error-message', $errors[$column]);
+		}
+	}
 }

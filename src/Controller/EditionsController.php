@@ -217,10 +217,12 @@ class EditionsController extends AppController
 			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
 			$this->redirect($this->SystemState->referer());
 		}
+		$errors = [];
 		
 		$EditionStack = $this->loadComponent('EditionStack');
 		$data = $EditionStack->stackQuery();//die;
 		$assignment = new AssignmentForm($data['providers']);
+//		$assign = new \Cake\View\Form\FormContext($this->request, $this->request->data);
 //		osd($assignment);
 		
         if ($this->request->is('post') || $this->request->is('put')) {
@@ -228,14 +230,17 @@ class EditionsController extends AppController
 				osd('that was successful');
 			} else {
 				osd('that failed');
+				$errors= $assignment->errors();
 			}
 			
-			osd($this->request->data);
-			osd($assignment->errors());//die;
+//			osd($this->request->data);
+//			osd($assignment->errors());//die;
         }
 			
 		extract($data);
-		$this->set(compact(array_keys($data)));		
+		$this->set(compact(array_keys($data)));	
+		$this->set('errors', $errors);
+//		$this->set('assign', $assign);
 	}
 	
 }
