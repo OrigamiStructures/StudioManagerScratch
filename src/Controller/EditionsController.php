@@ -222,6 +222,7 @@ class EditionsController extends AppController
 		$EditionStack = $this->loadComponent('EditionStack');
 		$data = $EditionStack->stackQuery();//die;
 		$assignment = new AssignmentForm($data['providers']);
+		osd($this->request->data, 'to build form context');
 		$assign = new \Cake\View\Form\FormContext($this->request, $this->request->data);
 //		osd($assignment);
 		

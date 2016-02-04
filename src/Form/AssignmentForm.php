@@ -10,7 +10,7 @@ use Cake\View\Form\FormContext;
 class AssignmentForm extends Form
 {
 	protected $_providers;
-	protected $_chosen_sources;
+	public $_chosen_sources = [];
 
 	public function __construct($providers) {
 		$this->_providers = $providers;
@@ -54,11 +54,12 @@ class AssignmentForm extends Form
 				->add('source_for_pieces_0', 'available_source', [
 					'rule' => [$this, 'sourceValidation'],
 					'message' => 'You must indicate at least one source for pieces',
-				])
-				->add('to_move', 'available_pieces', [
-					'rule' => [$this, 'piecesAvailableValidation'],
-					'message' => 'You asked to move more pieces than were available in the indicated source(s)',
+//				])
+//				->add('to_move', 'available_pieces', [
+//					'rule' => [$this, 'piecesAvailableValidation'],
+//					'message' => 'You asked to move more pieces than were available in the indicated source(s)',
 				]);
+//			osd($this->_providers['KEY'],'CHOSEN SOURCES PROPERTY');
 			
 		} else {
 			// limited editions allow range values
@@ -67,10 +68,10 @@ class AssignmentForm extends Form
 					'rule' => [$this, 'rangePatternValidation'],
 					'message' => "Use numbers (eg. 27) or ranges (eg. 3-7) separated by commas (, )."
 					. "<br /> 5-7, 9, 12-13 would return 5, 6, 7, 9, 12, 13 ",
-				])
-				->add('to_move', 'available_pieces', [
-					'rule' => [$this, 'piecesAvailableValidation'],
-					'message' => 'Some of the pices you asked to move were not free or did not exist.',
+//				])
+//				->add('to_move', 'available_pieces', [
+//					'rule' => [$this, 'piecesAvailableValidation'],
+//					'message' => 'Some of the pices you asked to move were not free or did not exist.',
 				]);
 
 		}
@@ -112,7 +113,6 @@ class AssignmentForm extends Form
 	 * @return boolean
 	 */
 	public function piecesAvailableValidation ($value, $context) {
-		osd($context);
 		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
 			return $this->checkOpenAvailability($value, $context);
 		} else {
@@ -129,6 +129,8 @@ class AssignmentForm extends Form
 	 */
 	protected function checkOpenAvailability($value, $context) {
 		$sources = $this->_sourceKeys($context);
+//		$pieces = (new \Cake\Collection\Collection($this->_providers))
+//				->reduce(function)
 //		foreach ($this->_providers as $provider) {
 //			
 //		}
@@ -157,7 +159,6 @@ class AssignmentForm extends Form
 	protected function _sourceKeys($context) {
 		$sources = $this->_chosenSources($context);
 		
-		osd($sources->toArray());
 
 //		return (new \Cake\Collection\Collection($context['data']))
 //			->reduce(function($accumlator, $value) {
@@ -183,6 +184,7 @@ class AssignmentForm extends Form
 
 	protected function _execute(array $data)
     {
+		
         // Send an email.
         return true;
     }
