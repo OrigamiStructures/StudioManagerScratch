@@ -11,6 +11,7 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use App\Model\Entity\Piece;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -25,7 +26,11 @@ use Cake\Collection\Collection;
  */
 class EditionStackComponent extends Component {
 	
-    public function initialize(array $config) 
+	protected $pieces_to_save ;
+	protected $pieces_to_delete;
+
+
+	public function initialize(array $config) 
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
@@ -91,4 +96,144 @@ class EditionStackComponent extends Component {
 		return ['providers' => $providers, 'pieces' => $pieces];
 				
 	}
+	
+	/**
+	 * Move the indicated pieces to to indicated destination
+	 * 
+	 * All request inputs were valid and logical we now have the  properties for the edit 
+	 * <pre>
+	 *	- the set source piece entities ($assignment->source_pieces) 
+	 *  - an idetifier for the destination ($assignment->destination) 
+	 *  - if edition is OPEN
+	 *		- the number of pieces to move ($assignment->source_quantity) 
+	 *  - if edition is LIMITED
+	 *		- the list of piece number to move ($assignment->$source_numbers) 
+	 * </pre>
+	 * 
+	 * @param Form $assignment The Form that gathered and validated the request
+	 * @param array $providers The oringal list of Edition/Formats and their pieces
+	 */
+	public function reassignPieces($assignment, $providers) {
+		$edition = $providers['edition'];
+		preg_match('/(.*)(\d+)/', $assignment->destination, $match);
+		if (stristr($match[1], 'Format')) {
+			$patch = ['format_id' => $match[2]];
+		} else {
+			$patch = ['format_id' => NULL];
+		}
+		
+		if (\App\Lib\SystemState::isNumberedEdition($edition->type)) {
+			$this->_prepareNumberedPieces($assignment, $patch);
+		} else {
+			$this->_prepareOpenPieces($assignment, $patch, $edition->id);
+		}
+		// perform transactional save/delete
+		return $this->reassignmentTransaction();
+	}
+	
+	/**
+	 * 
+	 * @param Form $assignment The Form that gathered and validated the request
+	 * @param array $providers The oringal list of Edition/Formats and their pieces
+	 * @param array $patch
+	 * @return
+	 */
+	protected function _prepareNumberedPieces($assignment, $patch) {
+		// filter the source by the request
+		$Pieces = TableRegistry::get('Pieces');
+		$source = new Collection($assignment->source_pieces);
+		
+		$to_move = $source->filter(function($value) use($assignment) {
+			return in_array($value->number, $assignment->request_numbers);
+		});
+		
+		$this->pieces_to_save = $to_move->map(function($value) use($patch, $Pieces) {
+			return $Pieces->patchEntity($value, $patch);
+		})->toArray();
+		
+		return $this->pieces_to_save;
+
+	}
+	
+	protected function _prepareOpenPieces($assignment, $patch, $edition_id) {
+		
+		$this->pieces_to_save = $pieces = $assignment->source_pieces;
+		$change = $assignment->request_quantity;
+//		osd($pieces);
+		/**
+		 * I lifted this algorithm from
+		 * PieceAllocationComponent::decreaseOptionEdition()
+		 * Refactoring might help, or this separation might be ok.
+		 */
+		$index = 0;
+		$limit = count($pieces);
+		do {
+			$piece = $pieces[$index++];
+			$deletions = [];
+			if ($piece->quantity > $change) {
+				$piece->quantity -= $change;
+				$change = 0;
+			} else { // change >= quantity
+				$change -= $piece->quantity;
+				$piece->quantity = 0;
+				$deletions[] = $piece;
+				unset($this->pieces_to_save[$index -1]); // this line was added to the lifted code
+			}
+			
+		} while ($change > 0 && $index < $limit);
+		
+		if ($change > 0) {
+			throw new \Cake\Network\Exception\BadRequestException(
+				'There were not enough undisposed Pieces to move all the requested pieces'); // this message was changed from the lifted code
+		}
+		// END OF LIFTED CODE
+		
+//		osd($deletions, 'deletions');
+//		osd($pieces, 'changes');
+//		osd($this->pieces_to_save);
+		
+		//make the new enitity
+		$this->pieces_to_save[] = new Piece($patch + [
+				'quantity' => $assignment->request_quantity,
+				'edition_id' => $edition_id,
+				'user_id' => $this->SystemState->artistId(),
+			]);
+		$this->pieces_to_delete = $deletions;
+
+		return $this->pieces_to_save;
+
+	}
+	
+		/**
+	 * Wrap both refinement save and deletions in a single transaction
+	 * 
+	 * Creation is a simple Table->save() but refinement may involve deletion 
+	 * of piece records. This method provides refinement for all layers of the stack.
+	 * 
+	 * @param Entity $artwork
+	 * @param array $deletions
+	 * @return boolean
+	 */
+	public function reassignmentTransaction() {
+		$PiecesTable = TableRegistry::get('Pieces');
+		$result = $PiecesTable->connection()->transactional(function () use ($PiecesTable) {
+			$result = TRUE;
+			if (is_array($this->pieces_to_save)) {
+				foreach ($this->pieces_to_save as $piece) {
+					$step = $PiecesTable->save($piece, ['atomic' => false, 'checkRules' => false]);
+					$result = $result && $step;
+				}
+			}
+			if (is_array($this->pieces_to_delete)) {
+				foreach ($this->pieces_to_delete as $piece) {
+					$result = $result && $PiecesTable->delete($piece, ['atomic' => false]);
+				}
+			}
+			return $result;
+		});
+		return $result;
+	}
+
+
+	
 }

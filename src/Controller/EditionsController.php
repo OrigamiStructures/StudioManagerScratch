@@ -6,6 +6,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 use App\Form\AssignmentForm;
+use Cake\View\Form\FormContext;
 
 /**
  * Editions Controller
@@ -159,8 +160,6 @@ class EditionsController extends AppController
 			$index = array_keys($this->request->data['editions'])[0];
 			$deletions = $this->ArtworkStack->refinePieces($artwork, 
 					$this->request->data['editions'][$index]['id']);
-//			osd($artwork);die;
-//			die;
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));
@@ -220,26 +219,27 @@ class EditionsController extends AppController
 		$errors = [];
 		
 		$EditionStack = $this->loadComponent('EditionStack');
-		$data = $EditionStack->stackQuery();//die;
+		$data = $EditionStack->stackQuery();
+		extract($data); // providers, pieces
+		
 		$assignment = new AssignmentForm($data['providers']);
-//		osd($this->request->data, 'to build form context');
-		$assign = new \Cake\View\Form\FormContext($this->request, $this->request->data);
-//		osd($assignment);
+		$assign = new FormContext($this->request, $this->request->data);
 		
         if ($this->request->is('post') || $this->request->is('put')) {
 			if ($assignment->execute($this->request->data)) {
-				
-				osd('that was successful');
+				if($this->EditionStack->reassignPieces($assignment, $providers)) {
+					$this->Flash->error(__('The reassignments were completed.'));
+					$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+				} else {
+					$this->Flash->error(__('There was a problem reassigning the pieces. Please try again'));
+				}
+
 			} else {
-				osd('that failed');
+				// have use correct input errors
 				$errors= $assignment->errors();
 			}
-			
-//			osd($this->request->data);
-//			osd($assignment->errors());//die;
         }
 			
-		extract($data);
 		$this->set(compact(array_keys($data)));	
 		$this->set('errors', $errors);
 		$this->set('assign', $assign);

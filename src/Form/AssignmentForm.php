@@ -14,7 +14,10 @@ class AssignmentForm extends Form
 	protected $_form_data;
 	public $source_pieces = [];
 	public $source_quantity = 0;
+	public $request_quantity =0;
 	public $source_numbers = [];
+	public $request_numbers = [];
+	public $destination = '';
 	
 	public function __construct($providers) {
 		$this->_providers = $providers;
@@ -140,6 +143,7 @@ class AssignmentForm extends Form
 
 		if ($this->source_quantity >= $context['data']['to_move']) {
 			$result = TRUE;
+			$this->request_quantity = $context['data']['to_move'];
 		} else {
 			$result = FALSE;
 			$difference = $context['data']['to_move'] - $this->source_quantity;
@@ -162,14 +166,14 @@ class AssignmentForm extends Form
 		protected function checkNumberedAvailability($context){
 		$this->_sourcePieces($context);
 		$this->source_numbers = (new Collection($this->source_pieces))->combine('{n}', 'number');
-		$request = \App\Lib\Range::parseRange($context['data']['to_move']);
-		$bad_request = array_diff($request, $this->source_numbers->toArray());
+		$this->request_numbers = \App\Lib\Range::parseRange($context['data']['to_move']);
+		$bad_request = array_diff($this->request_numbers, $this->source_numbers->toArray());
 		if (!empty($bad_request)) {
 			$result = FALSE;
 			$grammar = count($bad_request) > 1 ? 'are' : 'is';
 			$bad_range = \App\Lib\Range::constructRange($bad_request);
 			
-			$good_request = array_intersect($this->source_numbers->toArray(), $request);
+			$good_request = array_intersect($this->source_numbers->toArray(), $this->request_numbers);
 			$good_range = \App\Lib\Range::constructRange($good_request);
 			
 			if ($good_range) {
@@ -181,7 +185,7 @@ class AssignmentForm extends Form
 			$this->_errors['to_move'] = [
 				'missing_pieces' =>  "$bad_range $grammar not available in the selected sources$try_this"];
 		} else {
-			$request = TRUE;
+			$result = TRUE;
 		}
 		return $result;
 //		osd($this->_providers);
@@ -224,6 +228,7 @@ class AssignmentForm extends Form
     {
 		// data is packaged to match Validarot::context because we reuse many of its callbacks
 		$result = $this->piecesAvailabilityConfirmation(['data' => $data]);
+		$this->destination = $data['destinations_for_pieces'];
 
 		return $result;
     }

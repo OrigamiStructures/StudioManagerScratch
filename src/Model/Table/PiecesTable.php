@@ -129,7 +129,7 @@ class PiecesTable extends AppTable
 					return $accumulate + $value->quantity;
 				}, 0
 			);
-		return $sum;//die;
+		return $sum;
 //		}
 	}
 	
@@ -182,7 +182,7 @@ class PiecesTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
-		osd(\Cake\Error\Debugger::trace());
+//		osd(\Cake\Error\Debugger::trace());
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['edition_id'], 'Editions'));
         $rules->add($rules->existsIn(['format_id', 'edition_id'], 'Formats'));
@@ -342,7 +342,7 @@ class PiecesTable extends AppTable
 			'disposition_count > 0',
 			'user_id' => $this->SystemState->artistId(),
 		]);
-//		osd($query);die;
+
 		return $query;
 	}
 	
