@@ -18,7 +18,9 @@ class AssignmentForm extends Form
 	public $source_numbers = [];
 	public $request_numbers = [];
 	public $destination = '';
-	
+	public $destination_piece = [];
+
+
 	public function __construct($providers) {
 		$this->_providers = $providers;
 	}
@@ -45,10 +47,18 @@ class AssignmentForm extends Form
 
     protected function _buildValidator(Validator $validator)
     {
+		
 //		osd('this string ' + 'that string');
         $validator
 			->notEmpty('to_move', 'You must indicate which pieces should be moved.')
-			->notEmpty('destinations_for_pieces', 'You must choose a destination for the pieces.');
+			->notEmpty('destinations_for_pieces', 'You must choose a destination for the pieces.')
+			->add('destinations_for_pieces', [
+				'same_as_source' => [
+					'rule' => [$this, 'filterSource'],
+					'message' => 'There was only one source chosen and it was the '
+					. 'same as the destination. No action was taken.'
+				]
+			]);
 		
 		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
 			// open editions allow an integer value
@@ -113,6 +123,20 @@ class AssignmentForm extends Form
 	}
 	
 	/**
+	 * Insure there is a source that isn't the destination
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
+	public function filterSource($value, $context) {
+		$sources = array_flip($this->_chosenSources($context)->toArray());
+		unset($sources[0]);
+		unset($sources[$value]);
+		return !empty($sources);
+	}
+	
+	/**
 	 * Insure there are enough pieces to move
 	 * 
 	 * @param mixed $value
@@ -120,15 +144,36 @@ class AssignmentForm extends Form
 	 * @return boolean
 	 */
 	public function piecesAvailabilityConfirmation ($context) {
+		$context = $this->_removeMatchingSource($context);
 		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
 			return $this->checkOpenAvailability($context);
 		} else {
-			osd('numbered path');
 			return $this->checkNumberedAvailability($context);
 		}
 	}
 	
 	/**
+	 * Make sure the source that matches the destination is not included
+	 * 
+	 * @param array $context
+	 */
+	protected function _removeMatchingSource($context) {
+		$columns = $context['data'];
+		$keys = array_keys($columns);
+		$count = 0;
+		// source columns are at the start of the list so we can skip out quickly
+		while (stristr($keys[$count], 'source_for_pieces_') &&
+				$columns[$keys[$count]] !== $columns['destinations_for_pieces']) {
+			$count++;
+		}
+		if (stristr($keys[$count], 'source_for_pieces_')) {
+			$context['data'][$keys[$count]] = '0';
+		}
+		
+		return $context;
+	}
+
+		/**
 	 * Insure there are enough Open Edition pieces to move in the selected sources
 	 * 
 	 * @param mixed $value
@@ -140,7 +185,7 @@ class AssignmentForm extends Form
 		$this->source_quantity = (new Collection($this->source_pieces))->sumOf(function ($piece) {
 				return $piece->quantity;
 			});
-
+			
 		if ($this->source_quantity >= $context['data']['to_move']) {
 			$result = TRUE;
 			$this->request_quantity = $context['data']['to_move'];
@@ -220,15 +265,41 @@ class AssignmentForm extends Form
 				$this->_providers[$provider_key]->assignablePieces(PIECE_ENTITY_RETURN)
 			);
 		});
-
 		return $this->source_pieces;
+	}
+	
+	protected function _identifyOpenDestinationPiece($data) {
+		if (stristr($this->destination, 'Edition')) {
+			$this->destination_piece = $this->_providers['edition']->unassigned;
+		} else {
+			$fragments = explode('\\', $data['destinations_for_pieces']);
+			$format_id = array_pop($fragments);
+			$class_name = implode('\\', $fragments);
+			
+			$destination_format = (new Collection($this->_providers))->filter(
+				function($value) use($format_id, $class_name) {
+					return get_class($value) == $class_name && $value->id == $format_id;
+				})->toArray();
+				
+			$destination_format = array_pop($destination_format);
+			$this->destination_piece = $destination_format->fluid;
+		}
 	}
 
 	protected function _execute(array $data)
     {
-		// data is packaged to match Validarot::context because we reuse many of its callbacks
+		// data is packaged to match Validator::context because we reuse many of its callbacks
 		$result = $this->piecesAvailabilityConfirmation(['data' => $data]);
-		$this->destination = $data['destinations_for_pieces'];
+		
+		if ($result) {
+			// the final validaton passed so set up some final values for save
+			$this->destination = $data['destinations_for_pieces'];
+			
+			if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
+				$this->_identifyOpenDestinationPiece($data);
+				$this->destination_piece = array_pop($this->destination_piece);
+			}
+		}
 
 		return $result;
     }

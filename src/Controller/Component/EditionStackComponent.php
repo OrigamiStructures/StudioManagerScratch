@@ -159,6 +159,7 @@ class EditionStackComponent extends Component {
 		
 		$this->pieces_to_save = $pieces = $assignment->source_pieces;
 		$change = $assignment->request_quantity;
+
 //		osd($pieces);
 		/**
 		 * I lifted this algorithm from
@@ -167,17 +168,20 @@ class EditionStackComponent extends Component {
 		 */
 		$index = 0;
 		$limit = count($pieces);
+		$deletions = [];
 		do {
 			$piece = $pieces[$index++];
-			$deletions = [];
+
 			if ($piece->quantity > $change) {
 				$piece->quantity -= $change;
 				$change = 0;
+//				osd(['pq'=>$piece->quantity, 'c'=>$change],'quantity > $change');
 			} else { // change >= quantity
 				$change -= $piece->quantity;
 				$piece->quantity = 0;
 				$deletions[] = $piece;
 				unset($this->pieces_to_save[$index -1]); // this line was added to the lifted code
+//				osd(['pq'=>$piece->quantity, 'c'=>$change],'quantity <= $change');
 			}
 			
 		} while ($change > 0 && $index < $limit);
@@ -188,22 +192,30 @@ class EditionStackComponent extends Component {
 		}
 		// END OF LIFTED CODE
 		
-//		osd($deletions, 'deletions');
-//		osd($pieces, 'changes');
-//		osd($this->pieces_to_save);
-		
 		//make the new enitity
-		$this->pieces_to_save[] = new Piece($patch + [
+		if(is_null($assignment->destination_piece)) {
+			$piece_entity = new Piece([
 				'quantity' => $assignment->request_quantity,
 				'edition_id' => $edition_id,
 				'user_id' => $this->SystemState->artistId(),
 			]);
+		} else {
+			$piece_entity = $assignment->destination_piece;
+			$patch['quantity'] = $piece_entity->quantity + $assignment->request_quantity;
+		}
+
+		$PieceTable = TableRegistry::get('Pieces') ;
+		$this->pieces_to_save[] = $PieceTable->patchEntity($piece_entity, $patch);
 		$this->pieces_to_delete = $deletions;
 
 		return $this->pieces_to_save;
 
 	}
 	
+	protected function searchExistingPiece($assignment) {
+		
+	}
+
 		/**
 	 * Wrap both refinement save and deletions in a single transaction
 	 * 
