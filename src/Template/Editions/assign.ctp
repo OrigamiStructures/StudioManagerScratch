@@ -27,9 +27,18 @@ $this->set(compact('edition', 'helper'));
 
 echo $this->element('Pieces/overview_table');
 
-//osd($pieces);
-//osd($providers);
-//osd($edition);
+/**
+ * MAKE BREADCRUMBS FOR PAGE
+ */
+$args = $SystemState->queryArg(); 
+$q = [];
+foreach (['artwork', 'edition', 'format'] as $crumb) {
+	if (array_key_exists($crumb, $args)) {
+		$q = $q +[$crumb => $args[$crumb]];
+		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q]);
+		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
+	}
+}
 ?>
 
 <!-- END Editions/assign.ctp -->

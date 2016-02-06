@@ -222,9 +222,9 @@ class AssignmentForm extends Form
 			$good_range = \App\Lib\Range::constructRange($good_request);
 			
 			if ($good_range) {
-				$try_this = '<br />The available pieces in your request: ' . $good_range;
+				$try_this = '.<br />The available pieces in your request: ' . $good_range;
 			} else {
-				$try_this = '';
+				$try_this = " or $grammar already in the destination.";
 			}
 			
 			$this->_errors['to_move'] = [
