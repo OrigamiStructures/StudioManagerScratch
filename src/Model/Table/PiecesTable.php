@@ -122,15 +122,14 @@ class PiecesTable extends AppTable
 	 * @param Table $table
 	 * @return int
 	 */
-	public function assignedPieces($query) {
+	public function assignedPieces(Query $query) {
 		$query->select(['id', 'format_id', 'edition_id', 'quantity']);
-		$sum = (new Collection($query->toArray()))->reduce(
-				function($accumulate, $value) {
-					return $accumulate + $value->quantity;
-				}, 0
+		$sum = (new Collection($query->toArray()))->sumOf(
+				function($value) {
+					return $value->quantity;
+				}
 			);
 		return $sum;
-//		}
 	}
 	
 	public function fluidFormatPieces($event, $entity, $table) {
@@ -164,10 +163,10 @@ class PiecesTable extends AppTable
 	 */
 	public function fluidPieces($query) {
 		$query->select(['id', 'format_id', 'edition_id', 'quantity']);
-		$sum = (new Collection($query->toArray()))->reduce(
-				function($accumulate, $value) {
-					return $accumulate + $value->quantity;
-				}, 0
+		$sum = (new Collection($query->toArray()))->sumOf(
+				function($value) {
+					return $value->quantity;
+				}
 			);
 		return $sum;//die;
 //		}
@@ -269,11 +268,12 @@ class PiecesTable extends AppTable
 		if (!isset($options['edition_id'])) {
 			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
-		return $query->where([
+		$query = $query->where([
 			'edition_id' => $options['edition_id'],
 			'format_id IS NULL',
 			'user_id' => $this->SystemState->artistId(),
 		]);
+		return $query;
 	}
 	
 	/**
@@ -299,7 +299,8 @@ class PiecesTable extends AppTable
 				'user_id' => $this->SystemState->artistId(),
 			];
 		}
-		return $query->where($options);
+		$query->where($options);
+		return $query;
 	}
 	
 	/**
