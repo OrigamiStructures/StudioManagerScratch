@@ -10,7 +10,7 @@ use Cake\Collection\Collection;
 
 class AssignmentForm extends Form
 {
-	protected $_providers;
+	public $_providers;
 	protected $_form_data;
 	public $source_pieces = [];
 	public $source_quantity = 0;

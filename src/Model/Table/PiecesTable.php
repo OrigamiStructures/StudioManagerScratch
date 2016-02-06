@@ -35,15 +35,16 @@ class PiecesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('CounterCache', [
+            'Editions' => [
+				'assigned_piece_count' => [$this, 'assignedEditionPieces'],
+				'fluid_piece_count'  => [$this, 'fluidEditionPieces'],
+					
+			],
             'Formats' => [
 				'assigned_piece_count'=> [$this, 'assignedFormatPieces'],
 				'fluid_piece_count'  => [$this, 'fluidFormatPieces'],
 				'collected_piece_count' => ['conditions' => ['collected' => 1]],
 			],
-            'Editions' => [
-				'assigned_piece_count' => [$this, 'assignedEditionPieces'],
-				'fluid_piece_count'  => [$this, 'fluidEditionPieces'],
-			]
         ]);
 //		$this->addBehavior('ArtworkStack');
 
@@ -107,6 +108,11 @@ class PiecesTable extends AppTable
 			'edition_id' => $entity->edition_id,
 			'format_id IS NOT NULL',
 			]);
+		/**
+		 * THIS NEEDS TO BUMP ASSIGNED FORMAT COUNTING
+		 * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+		 * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
+		 */
 		return $this->assignedPieces($pieces);
 	}
 
@@ -147,6 +153,11 @@ class PiecesTable extends AppTable
 			'format_id IS NOT NULL',
 			'disposition_count' => 0,
 			]);
+		/**
+		 * THIS NEEDS TO BUMP FLUID FORMAT PIECES
+		 * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+		 * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
+		 */
 		return $this->fluidPieces($pieces);
 	}
 

@@ -212,6 +212,7 @@ class EditionsController extends AppController
 	}
 	
 	public function assign() {
+		$this->SystemState->referer($this->SystemState->referer());
 		if (!$this->SystemState->isKnown('artwork')) {
 			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
 			$this->redirect($this->SystemState->referer());

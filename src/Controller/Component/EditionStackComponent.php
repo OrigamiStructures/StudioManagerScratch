@@ -12,6 +12,7 @@ use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 use App\Model\Entity\Piece;
+use Cake\I18n\Time;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -138,7 +139,7 @@ class EditionStackComponent extends Component {
 	 * @param array $patch
 	 * @return
 	 */
-	protected function _prepareNumberedPieces($assignment, $patch) {
+	protected function _prepareNumberedPieces(\App\Form\AssignmentForm $assignment, $patch) {
 		// filter the source by the request
 		$Pieces = TableRegistry::get('Pieces');
 		$source = new Collection($assignment->source_pieces);
@@ -151,8 +152,33 @@ class EditionStackComponent extends Component {
 			return $Pieces->patchEntity($value, $patch);
 		})->toArray();
 		
+		// if a move was from a Format to the Edition, the Formats counter cache will 
+		// fail. Move one piece from each format that has one to correct them.
+		if (stristr($assignment->destination, 'Edition')) {
+			$this->_getFormatTriggerPieces($assignment);
+		}
+		
 		return $this->pieces_to_save;
 
+	}
+	
+	public function _getFormatTriggerPieces(\App\Form\AssignmentForm $assignment) {
+		$Pieces = TableRegistry::get('Pieces');
+		$update_trigger_value = [
+			'created' => new \DateTime('now')
+		];
+		$formats = $assignment->_providers;
+		array_shift($formats);
+		$trigger_pieces = (new Collection($formats))
+			->reduce(function($accumulator, $format) use ($Pieces, $update_trigger_value){
+				if (!empty($format->fluid)) {
+					$piece = $Pieces->patchEntity($format->fluid[0], $update_trigger_value);
+					$accumulator[] = $piece;
+				}
+				return $accumulator;
+			}, []);
+			
+		$this->pieces_to_save = $this->pieces_to_save + $trigger_pieces;
 	}
 	
 	protected function _prepareOpenPieces($assignment, $patch, $edition_id) {
