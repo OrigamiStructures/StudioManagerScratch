@@ -3,6 +3,10 @@
 <?php 
 $assignment_source_data = [];
 
+/**
+ * Build some data arrays to feed into the output loop. 
+ * Just keeping the logic isolated. Build variables, use variables
+ */
 $source = new \Cake\Collection\Collection($providers);
 $source_output = $source->reduce(function($accumulator, $provider) use($helper, $edition) {
 	$key = $provider->key();

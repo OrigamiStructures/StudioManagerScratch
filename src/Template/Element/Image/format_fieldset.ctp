@@ -3,7 +3,7 @@
 $render_image_input = TRUE;
 if ($SystemState->is(ARTWORK_REFINE)) {
 	// 
-	if (in_array($edition->type, SystemState::singleFormatEditionTypes())) {
+	if (in_array($edition->type, App\Lib\SystemState::singleFormatEditionTypes())) {
 		$render_image_input = FALSE;
 	}
 }
