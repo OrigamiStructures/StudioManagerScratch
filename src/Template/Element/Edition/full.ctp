@@ -1,13 +1,14 @@
-
 			<!-- Element/Edition/full.ctp -->
 			<section class="edtion">
-				<div class="columns small-12 medium-9 description">
+				<div class="text">
 					<?= $this->element('Edition/text'); ?>
-					<section class="formats">
-						<?php $this->set('formats', $edition->formats); 
-						echo $this->element('Format/many'); ?>
-
-					</section>
+				</div>
+				<div class="pieces">
+					<?= $this->element('Edition/pieces'); ?>
+				</div>
+				<div class="formats">
+					<?php $this->set('formats', $edition->formats); ?>
+					<?= $this->element('Format/many'); ?>
 				</div>
 			</section>
 			<!-- END Element/Edition/full.ctp -->

@@ -1,17 +1,14 @@
-
 <!-- Element/Artwork/full.ctp -->
 <section class="artwork row">
-	<div class="columns small-12 medium-3 image">
+	<div class="image">
 		<?= $this->element('Artwork/image') ?>
 	</div>
-	<div class="columns small-12 medium-9 text">
+	<div class="text">
 		<?= $this->element('Artwork/text'); ?>
-		<section class="editions">
-		<?php
-			$this->set('editions', $artwork->editions);
-			echo $this->element('Edition/' . $element_management['edition']);
-		?>
-		</section>
+	</div>
+	<div class="editions">
+	<?php $this->set('editions', $artwork->editions); ?>
+		<?= $this->element('Edition/' . $element_management['edition']); ?>
 	</div>
 </section>
 <!-- END Element/Artwork/full.ctp -->
