@@ -1,5 +1,5 @@
 			<!-- Element/Edition/full.ctp -->
-			<section class="edtion">
+			<section class="edition">
 				<div class="text">
 					<?= $this->element('Edition/text'); ?>
 				</div>

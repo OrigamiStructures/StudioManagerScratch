@@ -1,5 +1,5 @@
 <!-- Element/Artwork/full.ctp -->
-<section class="artwork row">
+<section class="artwork">
 	<div class="image">
 		<?= $this->element('Artwork/image') ?>
 	</div>
