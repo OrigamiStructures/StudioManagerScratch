@@ -360,11 +360,6 @@ body.is-reveal-open {
 .foundation-mq {
   font-family: "small=0em&medium=40em&large=64em&xlarge=75em&xxlarge=90em"; }
 
-/* 0, 640px */
-/* 641px, 1024px */
-/* 1025px, 1440px */
-/* 1441px, 1920px */
-/* 1921px, ... */
 footer {
   height: 10rem; }
 
@@ -401,159 +396,208 @@ footer {
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
-/*div.artworks {*/
-section.artwork {
-  max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto; }
-  section.artwork::before, section.artwork::after {
-    content: ' ';
-    display: table; }
-  section.artwork::after {
-    clear: both; }
-  @media only screen and (max-width: upper-bound(0, 40rem)) {
-    section.artwork > div.image {
-      width: 50%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      color: red; }
-      section.artwork > div.image:last-child:not(:first-child) {
-        float: right; }
-      section.artwork > div.image:last-child {
-        float: left; } }
-  @media only screen and (min-width: lower-bound(40.0625rem, 64rem)) and (max-width: upper-bound(40.0625rem, 64rem)) {
-    section.artwork > div.image {
-      width: 25%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      color: green; }
-      section.artwork > div.image:last-child:not(:first-child) {
-        float: right; }
-      section.artwork > div.image:last-child {
-        float: left; } }
-  @media only screen and (min-width: lower-bound(64.0625rem, 90rem)) and (max-width: upper-bound(64.0625rem, 90rem)) {
-    section.artwork > div.image {
-      width: 25%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      color: blue; }
-      section.artwork > div.image:last-child:not(:first-child) {
-        float: right; } }
-  @media only screen and (max-width: upper-bound(0, 40rem)) {
-    section.artwork > div.text, section.artwork > div.editions {
-      width: 100%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      color: red; }
-      section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
-        float: right; } }
-  @media only screen and (min-width: lower-bound(64.0625rem, 90rem)) and (max-width: upper-bound(64.0625rem, 90rem)) {
-    section.artwork > div.text, section.artwork > div.editions {
-      width: 75%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      color: blue; }
-      section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
-        float: right; } }
+/**
+==============================================================
 
-/*}*/
-/*div.editions {*/
-section.edition {
+ARTWORK STACK 
+
+==============================================================
+**/
+div.artworks section.artwork {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto; }
-  section.edition::before, section.edition::after {
+  div.artworks section.artwork::before, div.artworks section.artwork::after {
     content: ' ';
     display: table; }
-  section.edition::after {
+  div.artworks section.artwork::after {
     clear: both; }
-  section.edition > div.text {
+
+/* ARTWORK STACK small up */
+@media only screen {
+  /* small up */
+  section.artwork > div.image {
+    width: 25%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: red; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+    section.artwork > div.image:last-child {
+      float: left; }
+  section.artwork > div.text, section.artwork > div.editions {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: red; }
+    section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; } }
+/* ARTWORK STACK medium only */
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  section.artwork > div.image {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    /*@include grid-col-end();*/
+    color: green; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork > div.text, section.artwork > div.editions {
+    color: green; } }
+/* ARTWORK STACK large up */
+@media only screen and (min-width: 64.063em) {
+  section.artwork > div.image {
+    width: 16.66667%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: blue; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork > div.text, section.artwork > div.editions {
+    width: 83.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: blue; }
+    section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; } }
+div.editions section.edition {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto; }
+  div.editions section.edition::before, div.editions section.edition::after {
+    content: ' ';
+    display: table; }
+  div.editions section.edition::after {
+    clear: both; }
+
+@media only screen {
+  /* small up */
+  div.text, > div.pieces, > div.formats {
     width: 100%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.edition > div.text:last-child:not(:first-child) {
-      float: right; }
-    @media only screen {
-      section.edition > div.text {
-        width: 100%;
-        float: left;
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem; }
-        section.edition > div.text:last-child:not(:first-child) {
-          float: right; } }
-    @media only screen and (min-width: lower-bound(64.0625rem, 90rem)) {
-      section.edition > div.text {
-        width: 50%;
-        float: left;
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem; }
-        section.edition > div.text:last-child:not(:first-child) {
-          float: right; } }
-  @media only screen and (max-width: upper-bound(0, 40rem)) {
-    section.edition > div.pieces {
-      width: 100%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem; }
-      section.edition > div.pieces:last-child:not(:first-child) {
-        float: right; } }
-  @media only screen and (min-width: lower-bound(64.0625rem, 90rem)) and (max-width: upper-bound(64.0625rem, 90rem)) {
-    section.edition > div.pieces {
-      width: 50%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem; }
-      section.edition > div.pieces:last-child:not(:first-child) {
-        float: right; } }
-  @media only screen {
-    section.edition > div.formats {
-      width: 100%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem; }
-      section.edition > div.formats:last-child:not(:first-child) {
-        float: right; } }
-
-/*}*/
-/*div.formats {*/
-section.format {
-  max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto; }
-  section.format::before, section.format::after {
-    content: ' ';
-    display: table; }
-  section.format::after {
-    clear: both; }
-  section.format > div.image {
-    width: 8.33333%;
-    float: left;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-    section.format > div.image:last-child:not(:first-child) {
-      float: right; }
-  section.format > div.text {
-    width: 41.66667%;
-    float: left;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-    section.format > div.text:last-child:not(:first-child) {
-      float: right; }
-  section.format > div.pieces {
+    div.text:last-child:not(:first-child), > div.pieces:last-child:not(:first-child), > div.formats:last-child:not(:first-child) {
+      float: right; } }
+/*div.editions {*/
+@media only screen and (min-width: 40.063em) {
+  /* medium up */
+  section.edition div.text {
     width: 50%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.format > div.pieces:last-child:not(:first-child) {
+    section.edition div.text:last-child:not(:first-child) {
       float: right; }
-
+  section.edition div.pieces {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.edition div.pieces:last-child:not(:first-child) {
+      float: right; } }
 /*}*/
+div.formats {
+  width: 100%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem; }
+  div.formats:last-child:not(:first-child) {
+    float: right; }
+  div.formats section.format {
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto; }
+    div.formats section.format::before, div.formats section.format::after {
+      content: ' ';
+      display: table; }
+    div.formats section.format::after {
+      clear: both; }
+    div.formats section.format div.image {
+      /*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
+      				@include grid-column(3);
+      				@include grid-col-end();
+      			}*/ }
+      @media only screen {
+        div.formats section.format div.image {
+          /* small up */
+          width: 58.33333%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.formats section.format div.image:last-child:not(:first-child) {
+            float: right; }
+          div.formats section.format div.image:last-child {
+            float: left; } }
+      @media only screen and (min-width: 64.063em) {
+        div.formats section.format div.image {
+          /* large up */
+          width: 8.33333%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.formats section.format div.image:last-child:not(:first-child) {
+            float: right; } }
+    @media only screen {
+      div.formats section.format div.text {
+        /* small up */
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format div.text:last-child:not(:first-child) {
+          float: right; } }
+    @media only screen and (min-width: 40.063em) and (max-width: 64em) {
+      div.formats section.format div.text {
+        /* medium only */
+        width: 50%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format div.text:last-child:not(:first-child) {
+          float: right; } }
+    @media only screen and (min-width: 64.063em) {
+      div.formats section.format div.text {
+        /* large up */
+        width: 41.66667%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format div.text:last-child:not(:first-child) {
+          float: right; } }
+    @media only screen {
+      div.formats section.format div.pieces {
+        /* small up */
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format div.pieces:last-child:not(:first-child) {
+          float: right; } }
+    @media only screen and (min-width: 40.063em) and (max-width: 64em) {
+      div.formats section.format div.pieces {
+        /* medium only */
+        width: 50%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format div.pieces:last-child:not(:first-child) {
+          float: right; } }
+    @media only screen and (min-width: 64.063em) {
+      div.formats section.format div.pieces {
+        /* large up */
+        width: 50%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format div.pieces:last-child:not(:first-child) {
+          float: right; } }
+
 section.format {
   max-width: 75rem;
   margin-left: auto;
