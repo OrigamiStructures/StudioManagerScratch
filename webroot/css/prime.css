@@ -421,8 +421,7 @@ div.artworks section.artwork {
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    color: red;
-    padding-left: 0; }
+    color: red; }
     section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.image:last-child {
@@ -436,7 +435,9 @@ div.artworks section.artwork {
     padding-right: 0.9375rem;
     color: red; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
-      float: right; } }
+      float: right; }
+    section.artwork > div.text h1, section.artwork > div.editions h1 {
+      margin: 0; } }
 /* ARTWORK STACK medium only */
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
   section.artwork > div.image {

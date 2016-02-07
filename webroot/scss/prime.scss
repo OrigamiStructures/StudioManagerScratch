@@ -70,7 +70,6 @@ div.artworks {
 			@include grid-column(3);
 			@include grid-col-end();
 			color: red;
-			padding-left: 0;
 			img {
 				width: 100%;
 			}
@@ -78,6 +77,9 @@ div.artworks {
 		 > div.text,  > div.editions {
 			@include grid-column(12);
 			color: red;
+			h1 {
+				margin: 0;
+			}
 		}
 	}
 }
