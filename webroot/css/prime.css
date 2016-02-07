@@ -421,11 +421,14 @@ div.artworks section.artwork {
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    color: red; }
+    color: red;
+    padding-left: 0; }
     section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.image:last-child {
       float: left; }
+    section.artwork > div.image img {
+      width: 100%; }
   section.artwork > div.text, section.artwork > div.editions {
     width: 100%;
     float: left;

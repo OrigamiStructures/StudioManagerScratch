@@ -67,13 +67,17 @@ div.artworks {
 @media only screen { /* small up */ 
 	section.artwork {
 		 > div.image {
-				@include grid-column(3);
-				@include grid-col-end();
-				color: red;
+			@include grid-column(3);
+			@include grid-col-end();
+			color: red;
+			padding-left: 0;
+			img {
+				width: 100%;
+			}
 		}
 		 > div.text,  > div.editions {
-				@include grid-column(12);
-				color: red;
+			@include grid-column(12);
+			color: red;
 		}
 	}
 }
