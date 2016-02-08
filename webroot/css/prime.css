@@ -552,7 +552,7 @@ div.formats {
       				@include grid-column(3);
       				@include grid-col-end();
       			}*/ }
-      @media screen and (max-width: 63.9375em), screen and (min-width: 75em) {
+      @media screen and (max-width: 63.9375em) {
         div.formats section.format div.image .dup {
           display: none !important; } }
       @media only screen {
