@@ -427,7 +427,7 @@ div.artworks section.artwork {
 @media only screen {
   /* small up */
   section.artwork > div.image {
-    width: 25%;
+    width: 50%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
@@ -561,25 +561,36 @@ div.formats {
           max-width: 75rem;
           margin-left: auto;
           margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
           width: 16.66667%;
           float: left;
           padding-left: 0;
           padding-right: 0;
-          /*@include grid-col-end();*/ }
+          margin-left: 0; }
           div.formats section.format div.image::before, div.formats section.format div.image::after {
             content: ' ';
             display: table; }
           div.formats section.format div.image::after {
             clear: both; }
           div.formats section.format div.image:last-child:not(:first-child) {
-            float: right; } }
+            float: right; }
+          div.formats section.format div.image, div.formats section.format div.image:last-child {
+            float: none; }
+          div.formats section.format div.image:last-child:not(:first-child) {
+            float: right; }
+          div.formats section.format div.image:last-child {
+            float: left; } }
       @media only screen and (min-width: 64.063em) {
         div.formats section.format div.image {
           /* large up */
           width: 8.33333%;
           float: left;
           padding-left: 0;
-          padding-right: 0; }
+          padding-right: 0;
+          margin-left: auto; }
           div.formats section.format div.image:last-child:not(:first-child) {
             float: right; } }
     @media only screen {

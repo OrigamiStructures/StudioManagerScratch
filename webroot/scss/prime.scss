@@ -78,7 +78,7 @@ div.artworks {
 @media only screen { /* small up */ 
 	section.artwork {
 		 > div.image {
-			@include grid-column(3);
+			@include grid-column(6);
 			@include grid-col-end();
 			color: red;
 			img {
@@ -177,9 +177,10 @@ div.formats {
 				@include show-for-only(large);
 			}
 			@media only screen { /* small up */
-				@include grid-row();
+				@include grid-column-row();
 				@include grid-column(2, 0);
-				/*@include grid-col-end();*/
+				margin-left: 0;
+				@include grid-col-end();
 			}
 /*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
 				@include grid-column(3);
@@ -187,6 +188,7 @@ div.formats {
 			}*/
 			@media only screen and (min-width: 64.063em) { /* large up */
 				@include grid-column(1, 0);
+				margin-left: auto;
 			}
 		}
 		div.text {
