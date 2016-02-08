@@ -404,6 +404,11 @@ ARTWORK STACK
 
 ==============================================================
 **/
+section.assignment p, section.disposition p {
+  margin: 0;
+  /*line-height: 1;*/
+  font-size: 90%; }
+
 /**
 ==============================================================
 ARTWORK
@@ -492,29 +497,31 @@ div.editions section.edition {
 
 @media only screen {
   /* small up */
-  > div.text, > div.pieces, > div.formats {
+  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats {
     width: 100%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
-    > div.text:last-child:not(:first-child), > div.pieces:last-child:not(:first-child), > div.formats:last-child:not(:first-child) {
-      float: right; } }
+    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child) {
+      float: right; }
+  section.edition > div.text h2 {
+    font-size: 1.5rem; } }
 /*div.editions {*/
 @media only screen and (min-width: 40.063em) {
   /* medium up */
-  section.edition div.text {
+  section.edition > div.text {
     width: 50%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
-    section.edition div.text:last-child:not(:first-child) {
+    section.edition > div.text:last-child:not(:first-child) {
       float: right; }
-  section.edition div.pieces {
+  section.edition > div.pieces {
     width: 50%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.edition div.pieces:last-child:not(:first-child) {
+    section.edition > div.pieces:last-child:not(:first-child) {
       float: right; } }
 /*}*/
 /**

@@ -58,6 +58,13 @@ ARTWORK STACK
 
 ==============================================================
 **/
+section.assignment, section.disposition {
+	p {
+		margin: 0;
+		/*line-height: 1;*/
+		font-size: 90%;
+	}
+}
 /**
 ==============================================================
 ARTWORK
@@ -121,14 +128,21 @@ EDITIONS
 ==============================================================
 **/
 div.editions {
-	  section.edition {
+	section.edition {
 		@include grid-row();
-	 }
+	}
 }
 	
 @media only screen { /* small up */
-	 > div.text, > div.pieces, > div.formats {
-		@include grid-column(12, 0);
+	section.edition {
+		> div.text, > div.pieces, > div.formats {
+			@include grid-column(12, 0);
+		}
+		> div.text {
+			h2 {
+				font-size: 1.5rem;
+			}
+		}
 	}
 }
 
@@ -136,10 +150,10 @@ div.editions {
 	
 @media only screen and (min-width:  40.063em) { /* medium up */
 	 section.edition {
-		 div.text {
+		> div.text {
 			@include grid-column(6, 0);
 		}
-		 div.pieces {
+		> div.pieces {
 			@include grid-column(6);
 		}
 	 }
