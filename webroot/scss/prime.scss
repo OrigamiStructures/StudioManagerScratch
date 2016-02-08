@@ -60,8 +60,7 @@ ARTWORK STACK
 **/
 section.assignment, section.disposition {
 	p {
-		margin: 0;
-		/*line-height: 1;*/
+		margin-bottom: 0;
 		font-size: 90%;
 	}
 }
@@ -98,13 +97,13 @@ div.artworks {
 /* ARTWORK STACK medium only */
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {   
 	section.artwork {
-		 > div.image {
-				@include grid-column(6);
-				/*@include grid-col-end();*/
-				color: green;
+		> div.image {
+			@include grid-column(6);
+			/*@include grid-col-end();*/
+			color: green;
 		}
-		 > div.text,  > div.editions {
-				color: green;
+		> div.text,  > div.editions {
+			color: green;
 		}
 	}
 }
@@ -173,9 +172,13 @@ div.formats {
 	section.format {
 		@include grid-row();
 		
-		 div.image {
+		div.image {
+			.dup {
+				@include show-for-only(large);
+			}
 			@media only screen { /* small up */
-				@include grid-column(7, 0);
+				@include grid-row();
+				@include grid-column(2, 0);
 				/*@include grid-col-end();*/
 			}
 /*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
@@ -186,7 +189,7 @@ div.formats {
 				@include grid-column(1, 0);
 			}
 		}
-		 div.text {
+		div.text {
 			@media only screen { /* small up */
 				@include grid-column(12, 0);
 			}
@@ -196,6 +199,9 @@ div.formats {
 			@media only screen and (min-width: 64.063em) { /* large up */
 				@include grid-column(5);
 			}
+		p {
+			margin-bottom: 0;
+		}
 		}
 		 div.pieces {
 			@media only screen { /* small up */

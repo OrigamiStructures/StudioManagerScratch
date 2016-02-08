@@ -405,8 +405,7 @@ ARTWORK STACK
 ==============================================================
 **/
 section.assignment p, section.disposition p {
-  margin: 0;
-  /*line-height: 1;*/
+  margin-bottom: 0;
   font-size: 90%; }
 
 /**
@@ -553,14 +552,25 @@ div.formats {
       				@include grid-column(3);
       				@include grid-col-end();
       			}*/ }
+      @media screen and (max-width: 63.9375em), screen and (min-width: 75em) {
+        div.formats section.format div.image .dup {
+          display: none !important; } }
       @media only screen {
         div.formats section.format div.image {
           /* small up */
-          width: 58.33333%;
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 16.66667%;
           float: left;
           padding-left: 0;
           padding-right: 0;
           /*@include grid-col-end();*/ }
+          div.formats section.format div.image::before, div.formats section.format div.image::after {
+            content: ' ';
+            display: table; }
+          div.formats section.format div.image::after {
+            clear: both; }
           div.formats section.format div.image:last-child:not(:first-child) {
             float: right; } }
       @media only screen and (min-width: 64.063em) {
@@ -599,6 +609,8 @@ div.formats {
         padding-right: 0.9375rem; }
         div.formats section.format div.text:last-child:not(:first-child) {
           float: right; } }
+    div.formats section.format div.text p {
+      margin-bottom: 0; }
     @media only screen {
       div.formats section.format div.pieces {
         /* small up */
