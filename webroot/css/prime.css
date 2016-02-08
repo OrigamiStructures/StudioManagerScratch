@@ -404,9 +404,15 @@ ARTWORK STACK
 
 ==============================================================
 **/
-section.assignment p, section.disposition p {
-  margin-bottom: 0;
-  font-size: 90%; }
+section.assignment, section.disposition {
+  padding-top: 0; }
+  section.assignment p, section.assignment p.policy_statement, section.disposition p, section.disposition p.policy_statement {
+    margin-bottom: 0;
+    font-size: 90%;
+    color: #444; }
+
+p.policy_statement {
+  padding-top: .8em; }
 
 /**
 ==============================================================
@@ -416,12 +422,19 @@ ARTWORK
 div.artworks section.artwork {
   max-width: 75rem;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: .4rem solid #ccc; }
   div.artworks section.artwork::before, div.artworks section.artwork::after {
     content: ' ';
     display: table; }
   div.artworks section.artwork::after {
     clear: both; }
+  div.artworks section.artwork h1, div.artworks section.artwork h2, div.artworks section.artwork p {
+    margin-bottom: 0; }
+  div.artworks section.artwork img {
+    margin-top: .4rem; }
 
 /* ARTWORK STACK small up */
 @media only screen {
@@ -451,7 +464,7 @@ div.artworks section.artwork {
 /* ARTWORK STACK medium only */
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
   section.artwork > div.image {
-    width: 50%;
+    width: 33.33333%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
@@ -487,7 +500,10 @@ EDITIONS
 div.editions section.edition {
   max-width: 75rem;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  margin-top: .5rem;
+  padding-top: .5rem;
+  border-top: .2rem solid #eee; }
   div.editions section.edition::before, div.editions section.edition::after {
     content: ' ';
     display: table; }
@@ -509,14 +525,14 @@ div.editions section.edition {
 @media only screen and (min-width: 40.063em) {
   /* medium up */
   section.edition > div.text {
-    width: 50%;
+    width: 58.33333%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
     section.edition > div.text:last-child:not(:first-child) {
       float: right; }
   section.edition > div.pieces {
-    width: 50%;
+    width: 41.66667%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
@@ -539,6 +555,9 @@ div.formats {
     max-width: 75rem;
     margin-left: auto;
     margin-right: auto;
+    margin-top: .4rem;
+    padding-top: .4rem;
+    /*border-top: thin solid #ececec;*/
     /*		> div.image, > div.text, > div.pieces {
     			padding-left: 0;
     		}*/ }
@@ -605,7 +624,7 @@ div.formats {
     @media only screen and (min-width: 40.063em) and (max-width: 64em) {
       div.formats section.format div.text {
         /* medium only */
-        width: 50%;
+        width: 58.33333%;
         float: left;
         padding-left: 0;
         padding-right: 0; }
@@ -614,7 +633,7 @@ div.formats {
     @media only screen and (min-width: 64.063em) {
       div.formats section.format div.text {
         /* large up */
-        width: 41.66667%;
+        width: 50%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
@@ -634,7 +653,7 @@ div.formats {
     @media only screen and (min-width: 40.063em) and (max-width: 64em) {
       div.formats section.format div.pieces {
         /* medium only */
-        width: 50%;
+        width: 41.66667%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
@@ -643,25 +662,18 @@ div.formats {
     @media only screen and (min-width: 64.063em) {
       div.formats section.format div.pieces {
         /* large up */
-        width: 50%;
+        width: 41.66667%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
         div.formats section.format div.pieces:last-child:not(:first-child) {
           float: right; } }
 
-section.format {
-  max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 1em; }
-  section.format::before, section.format::after {
-    content: ' ';
-    display: table; }
-  section.format::after {
-    clear: both; }
-
-section.assignment, section.disposition, p.policy_statement {
+/*section.format {
+	@include grid-row;
+	padding-top: 1em;
+}*/
+p.policy_statement {
   padding-top: .8em;
   font-size: 90%;
   color: #444; }

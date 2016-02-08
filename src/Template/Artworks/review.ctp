@@ -1,5 +1,7 @@
 <!-- Template/Artwork/review.ctp -->
+<div class="artworks">
 <?= $this->element('Artwork/'.$element_management['artwork']);?>
+</div>
 <?php 
 $args = $SystemState->queryArg(); 
 $q = [];

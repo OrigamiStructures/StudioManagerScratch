@@ -1,5 +1,4 @@
 <!-- Element/Artwork/many.ctp -->
-<div class="artworks">
 	
 <?php
 foreach ($artworks as $artwork){
@@ -7,4 +6,3 @@ foreach ($artworks as $artwork){
 	echo $this->element('Artwork/full');
 }
 ?>
-</div>

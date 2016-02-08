@@ -59,11 +59,17 @@ ARTWORK STACK
 ==============================================================
 **/
 section.assignment, section.disposition {
-	p {
+	padding-top: 0;
+	p, p.policy_statement {
 		margin-bottom: 0;
 		font-size: 90%;
+		color: #444;
 	}
 }
+p.policy_statement {
+	padding-top: .8em;
+}
+
 /**
 ==============================================================
 ARTWORK
@@ -72,12 +78,22 @@ ARTWORK
 div.artworks {
 	section.artwork {
 		@include grid-row();
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: .4rem solid #ccc;
+		
+		h1, h2, p {
+			margin-bottom: 0;
+		}
+		img {
+			margin-top: .4rem;
+		}
 	}
 }
 /* ARTWORK STACK small up */
 @media only screen { /* small up */ 
 	section.artwork {
-		 > div.image {
+		> div.image {
 			@include grid-column(6);
 			@include grid-col-end();
 			color: red;
@@ -85,7 +101,7 @@ div.artworks {
 				width: 100%;
 			}
 		}
-		 > div.text,  > div.editions {
+		> div.text,  > div.editions {
 			@include grid-column(12);
 			color: red;
 			h1 {
@@ -98,7 +114,7 @@ div.artworks {
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {   
 	section.artwork {
 		> div.image {
-			@include grid-column(6);
+			@include grid-column(4);
 			/*@include grid-col-end();*/
 			color: green;
 		}
@@ -129,6 +145,9 @@ EDITIONS
 div.editions {
 	section.edition {
 		@include grid-row();
+		margin-top: .5rem;
+		padding-top: .5rem;
+		border-top: .2rem solid #eee;
 	}
 }
 	
@@ -150,10 +169,10 @@ div.editions {
 @media only screen and (min-width:  40.063em) { /* medium up */
 	 section.edition {
 		> div.text {
-			@include grid-column(6, 0);
+			@include grid-column(7, 0);
 		}
 		> div.pieces {
-			@include grid-column(6);
+			@include grid-column(5);
 		}
 	 }
 	 
@@ -171,6 +190,9 @@ div.formats {
 	
 	section.format {
 		@include grid-row();
+		margin-top: .4rem;
+		padding-top: .4rem;
+		/*border-top: thin solid #ececec;*/
 		
 		div.image {
 			.dup {
@@ -196,10 +218,10 @@ div.formats {
 				@include grid-column(12, 0);
 			}
 			@media only screen and (min-width: 40.063em) and (max-width: 64em) { /* medium only */  
-				@include grid-column(6, 0);
+				@include grid-column(7, 0);
 			}
 			@media only screen and (min-width: 64.063em) { /* large up */
-				@include grid-column(5);
+				@include grid-column(6);
 			}
 		p {
 			margin-bottom: 0;
@@ -210,10 +232,10 @@ div.formats {
 				@include grid-column(12, 0);
 			}
 			@media only screen and (min-width: 40.063em) and (max-width: 64em) { /* medium only */  
-				@include grid-column(6);
+				@include grid-column(5);
 			}
 			@media only screen and (min-width: 64.063em) { /* large up */
-				@include grid-column(6);
+				@include grid-column(5);
 			}
 		}
 	
@@ -226,12 +248,12 @@ div.formats {
 
 
 
-section.format {
+/*section.format {
 	@include grid-row;
 	padding-top: 1em;
-}
+}*/
 
-section.assignment, section.disposition, p.policy_statement {
+p.policy_statement {
 	padding-top: .8em;
 	font-size: 90%;
 	color: #444;
