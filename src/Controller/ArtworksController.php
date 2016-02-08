@@ -224,7 +224,7 @@ class ArtworksController extends AppController
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
 //		$this->set('element_management', $element_management);
-		$this->render('create_dev');
+		$this->render('create');
 	}
 	
     /**
@@ -255,7 +255,7 @@ class ArtworksController extends AppController
         
 		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
-		$this->render('create_dev');
+		$this->render('create');
     }
 
 	/**

@@ -1,41 +1,78 @@
 <!-- Template/Artwork/create.ctp -->
+<?php
+// set $edition_index
+$edition_index = $SystemState->isKnown('edition') ?
+	$artwork->indexOfRelated('editions', $SystemState->queryArg('edition')) :
+	0 ;
+$editions = $artwork->editions;
+$edition = $artwork->editions[$edition_index];
+// set $format_index
+$format_index = $SystemState->isKnown('format') ?
+	$edition->indexOfRelated('formats', $SystemState->queryArg('format')) :
+	0 ;
+$formats = $edition->formats;
+$format = $edition->formats[$format_index];
+$this->set(compact('editions', 'edition', 'edition_index', 'formats', 'format', 'format_index'));
+?>
 <section class="artwork">
 	<div class="row artwork">
 		<div class="columns small-12 medium-5 medium-offset-1">
             <?php
             echo $this->Form->create($artwork, ['type' => 'file']);
-                echo $this->element('Artwork/' . $element_management['artwork']);
-//              echo $this->element('Series/' . $element_management['series']);
-//				echo $this->element('Image/artwork_fieldset');
+			/**
+			 * The submit button should be inserted after the last fieldset. 
+			 * 
+			 * Output may be 
+			 *		<fieldsets> // only on controller = artworks
+			 *		<sections>
+			 * Or
+			 *		<sections> // on controller = editions || formats
+			 *		<fieldsets>
+			 * Or
+			 *		<sections> // only on controller = editions
+			 *		<fieldsets>
+			 *		<sections>
+			 */
+				echo $this->element('Artwork/form_layer');
 				
-				/**
-				 * Create has no editions, refine of a simple artwork has one.
-				 * In these caes we let the user edit them directly for simplicity
-				 */
-				if (count($artwork->editions) < 2 ) {
-					echo $this->element('Edition/' . $element_management['edition']);
-					echo $this->element('Format/' . $element_management['format']);
+				if ($SystemState->controller() === 'artworks' && 
+						$artwork->edition_count > 1) {
 					echo $this->Form->submit();
-				} else {
-					/**
-					 * Refine may find an artwork with multiple editions. In this 
-					 * case we'll just show text data for the editions rather 
-					 * than multiple forms for mass editing 
-					 */
+				}
+				
+				echo $this->element('Edition/form_layer');
+				
+				if (($SystemState->controller() === 'editions' ||
+						$SystemState->controller() === 'artworks') && 
+						$edition->format_count > 1) {
 					echo $this->Form->submit();
-				?>
-				<section class="editions">
-					<p>This artwork includes the following editions</p>
-				<?php
-					$this->set('editions', $artwork->editions);
-					echo $this->element('Edition/' . $element_management['edition']);
-				?>
-				</section>
-				<?php
-				}			
+				}
+				
+				echo $this->element('Format/form_layer');
+				
+				if ($SystemState->is(ARTWORK_CREATE) || $SystemState->controller() === 'formats' || 
+						($artwork->edition_count < 2 && $edition->format_count < 2)) {
+					echo $this->Form->submit();
+				}
+				
             echo $this->Form->end();
             ?>
         </div>
     </div>
 </section>
-<?php //			osd($artwork);
+
+<?php 
+/**
+ * BREAD CRUMB CREATION TO SUPPORT THE LAYOUT
+ */
+$args = $SystemState->queryArg(); 
+$q = [];
+foreach (['artwork', 'edition', 'format'] as $crumb) {
+	if (array_key_exists($crumb, $args)) {
+		$q = $q +[$crumb => $args[$crumb]];
+		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q]);
+		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
+	}
+}
+
+//			osd($artwork);

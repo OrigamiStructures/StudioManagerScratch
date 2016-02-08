@@ -167,7 +167,7 @@ class FormatsController extends AppController
 //		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Artworks/create_dev');
+		$this->render('/Artworks/create');
 	}
 	
 	/**
@@ -206,7 +206,7 @@ class FormatsController extends AppController
 //		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Artworks/create_dev');		
+		$this->render('/Artworks/create');		
 	}
 	
 }
