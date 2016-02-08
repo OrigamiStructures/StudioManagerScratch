@@ -400,7 +400,13 @@ footer {
 ==============================================================
 
 ARTWORK STACK 
+// @include grid-column(12, 0) second arg is gutter setting
 
+==============================================================
+**/
+/**
+==============================================================
+ARTWORK
 ==============================================================
 **/
 div.artworks section.artwork {
@@ -469,6 +475,11 @@ div.artworks section.artwork {
     color: blue; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; } }
+/**
+==============================================================
+EDITIONS
+==============================================================
+**/
 div.editions section.edition {
   max-width: 75rem;
   margin-left: auto;
@@ -481,12 +492,12 @@ div.editions section.edition {
 
 @media only screen {
   /* small up */
-  div.text, > div.pieces, > div.formats {
+  > div.text, > div.pieces, > div.formats {
     width: 100%;
     float: left;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
-    div.text:last-child:not(:first-child), > div.pieces:last-child:not(:first-child), > div.formats:last-child:not(:first-child) {
+    padding-left: 0;
+    padding-right: 0; }
+    > div.text:last-child:not(:first-child), > div.pieces:last-child:not(:first-child), > div.formats:last-child:not(:first-child) {
       float: right; } }
 /*div.editions {*/
 @media only screen and (min-width: 40.063em) {
@@ -494,8 +505,8 @@ div.editions section.edition {
   section.edition div.text {
     width: 50%;
     float: left;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem; }
+    padding-left: 0;
+    padding-right: 0; }
     section.edition div.text:last-child:not(:first-child) {
       float: right; }
   section.edition div.pieces {
@@ -506,17 +517,25 @@ div.editions section.edition {
     section.edition div.pieces:last-child:not(:first-child) {
       float: right; } }
 /*}*/
+/**
+==============================================================
+FORMAT
+==============================================================
+**/
 div.formats {
   width: 100%;
   float: left;
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem; }
+  padding-left: 0;
+  padding-right: 0; }
   div.formats:last-child:not(:first-child) {
     float: right; }
   div.formats section.format {
     max-width: 75rem;
     margin-left: auto;
-    margin-right: auto; }
+    margin-right: auto;
+    /*		> div.image, > div.text, > div.pieces {
+    			padding-left: 0;
+    		}*/ }
     div.formats section.format::before, div.formats section.format::after {
       content: ' ';
       display: table; }
@@ -532,19 +551,18 @@ div.formats {
           /* small up */
           width: 58.33333%;
           float: left;
-          padding-left: 0.9375rem;
-          padding-right: 0.9375rem; }
+          padding-left: 0;
+          padding-right: 0;
+          /*@include grid-col-end();*/ }
           div.formats section.format div.image:last-child:not(:first-child) {
-            float: right; }
-          div.formats section.format div.image:last-child {
-            float: left; } }
+            float: right; } }
       @media only screen and (min-width: 64.063em) {
         div.formats section.format div.image {
           /* large up */
           width: 8.33333%;
           float: left;
-          padding-left: 0.9375rem;
-          padding-right: 0.9375rem; }
+          padding-left: 0;
+          padding-right: 0; }
           div.formats section.format div.image:last-child:not(:first-child) {
             float: right; } }
     @media only screen {
@@ -552,8 +570,8 @@ div.formats {
         /* small up */
         width: 100%;
         float: left;
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem; }
+        padding-left: 0;
+        padding-right: 0; }
         div.formats section.format div.text:last-child:not(:first-child) {
           float: right; } }
     @media only screen and (min-width: 40.063em) and (max-width: 64em) {
@@ -561,8 +579,8 @@ div.formats {
         /* medium only */
         width: 50%;
         float: left;
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem; }
+        padding-left: 0;
+        padding-right: 0; }
         div.formats section.format div.text:last-child:not(:first-child) {
           float: right; } }
     @media only screen and (min-width: 64.063em) {
@@ -579,8 +597,8 @@ div.formats {
         /* small up */
         width: 100%;
         float: left;
-        padding-left: 0.9375rem;
-        padding-right: 0.9375rem; }
+        padding-left: 0;
+        padding-right: 0; }
         div.formats section.format div.pieces:last-child:not(:first-child) {
           float: right; } }
     @media only screen and (min-width: 40.063em) and (max-width: 64em) {

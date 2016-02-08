@@ -54,10 +54,15 @@ footer{
 ==============================================================
 
 ARTWORK STACK 
+// @include grid-column(12, 0) second arg is gutter setting
 
 ==============================================================
 **/
-
+/**
+==============================================================
+ARTWORK
+==============================================================
+**/
 div.artworks {
 	section.artwork {
 		@include grid-row();
@@ -110,6 +115,11 @@ div.artworks {
 	}
 }
 
+/**
+==============================================================
+EDITIONS
+==============================================================
+**/
 div.editions {
 	  section.edition {
 		@include grid-row();
@@ -117,8 +127,8 @@ div.editions {
 }
 	
 @media only screen { /* small up */
-	 div.text, > div.pieces, > div.formats {
-		@include grid-column(12);
+	 > div.text, > div.pieces, > div.formats {
+		@include grid-column(12, 0);
 	}
 }
 
@@ -127,41 +137,47 @@ div.editions {
 @media only screen and (min-width:  40.063em) { /* medium up */
 	 section.edition {
 		 div.text {
-			@include grid-column(6);
+			@include grid-column(6, 0);
 		}
 		 div.pieces {
 			@include grid-column(6);
 		}
 	 }
+	 
 }
 	
 /*}*/
 
+/**
+==============================================================
+FORMAT
+==============================================================
+**/
 div.formats {
-	@include grid-column(12);
+	@include grid-column(12, 0);
 	
 	section.format {
 		@include grid-row();
-	
+		
 		 div.image {
 			@media only screen { /* small up */
-				@include grid-column(7);
-				@include grid-col-end();
+				@include grid-column(7, 0);
+				/*@include grid-col-end();*/
 			}
 /*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
 				@include grid-column(3);
 				@include grid-col-end();
 			}*/
 			@media only screen and (min-width: 64.063em) { /* large up */
-				@include grid-column(1);
+				@include grid-column(1, 0);
 			}
 		}
 		 div.text {
 			@media only screen { /* small up */
-				@include grid-column(12);
+				@include grid-column(12, 0);
 			}
 			@media only screen and (min-width: 40.063em) and (max-width: 64em) { /* medium only */  
-				@include grid-column(6);
+				@include grid-column(6, 0);
 			}
 			@media only screen and (min-width: 64.063em) { /* large up */
 				@include grid-column(5);
@@ -169,7 +185,7 @@ div.formats {
 		}
 		 div.pieces {
 			@media only screen { /* small up */
-				@include grid-column(12);
+				@include grid-column(12, 0);
 			}
 			@media only screen and (min-width: 40.063em) and (max-width: 64em) { /* medium only */  
 				@include grid-column(6);
@@ -178,6 +194,11 @@ div.formats {
 				@include grid-column(6);
 			}
 		}
+	
+/*		> div.image, > div.text, > div.pieces {
+			padding-left: 0;
+		}*/
+	
 	}
 }
 
