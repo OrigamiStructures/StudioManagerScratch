@@ -1,7 +1,15 @@
 <!-- Template/Artwork/review.ctp -->
+
+<?php 
+$ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElement');
+$this->set('ArtStackElement', $ArtStackElement);
+$artwork_element = $ArtStackElement->choose('artworksContent', $this);
+?>
+
 <div class="artworks">
-<?= $this->element('Artwork/'.$element_management['artwork']);?>
+<?= $this->element($artwork_element);?>
 </div>
+
 <?php 
 $args = $SystemState->queryArg(); 
 $q = [];
