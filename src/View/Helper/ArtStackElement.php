@@ -103,4 +103,40 @@ class ArtStackElement extends Helper {
 		return $element;
 	}
 	
+	/**
+	 * Choose the Format element to go in the current section.format
+	 * 
+	 * @return string
+	 */
+	protected function formatContentRule() {
+		switch ($this->SystemState->now()) {
+			case ARTWORK_REVIEW :
+				$element = 'Format/describe';
+				break;
+			case ARTWORK_CREATE :
+				$element = 'Format/fieldset';
+				break;
+			case ARTWORK_REFINE :
+				$controller = $this->SystemState->controller();
+				// Refinement much choose based on the context of the edit
+				// Always display if the target is downstream
+				// Always fieldset if this is the target
+				// fieldset if target is upstream and this is the only child
+				if ($controller === 'formats') {
+					$element = 'Format/fieldset';
+				} elseif ($controller === 'artworks' && 
+						$this->SystemState->artwork->edition_count === 1 &&
+						$this->SystemState->edition->format_count === 1) {
+					$element = 'Format/fieldset';
+				} elseif ($controller === 'editions' && 
+						$this->SystemState->edition->format_count === 1) {
+					$element = 'Format/fieldset';
+				} else {
+					$element = 'Format/describe';
+				}
+				break;
+		}
+		return $element;
+	}
+	
 }

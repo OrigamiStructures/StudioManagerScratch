@@ -1,14 +1,9 @@
 
 						<!-- Element/Format/full.ctp -->
+<?php 
+$format_element = $ArtStackElement->choose('formatContent');
+?>
 						<section class="format">
-							<div class="image">
-								<?= $this->element('Format/image') ?>
-							</div>
-							<div class="text">
-								<?= $this->element('Format/text'); ?>
-							</div>
-							<div class="pieces">
-								<?= $this->element('Format/pieces'); ?>
-							</div>
+							<?= $this->element($format_element); ?>
 						</section>
 						<!-- END Element/Format/full.ctp -->
