@@ -56,14 +56,14 @@ class ArtStackElement extends Helper {
 				$element = 'Artwork/describe';
 				break;
 			case ARTWORK_CREATE :
-				$element = 'Artwork/filedset';
+				$element = 'Artwork/fieldset';
 				break;
 			case ARTWORK_REFINE :
 				// Refinement much choose based on the context of the edit
 				// Always display if the target is downstream
 				// Always fieldset if this is the target
 				if ($this->SystemState->controller() === 'artworks') {
-					$element = 'Artwork/filedset';
+					$element = 'Artwork/fieldset';
 				} else {
 					$element = 'Artwork/describe';
 				}
