@@ -2,6 +2,7 @@
 <?php
 foreach ($editions as $edition){
 	$this->set('edition', $edition);
+	
 	echo $this->element('Edition/full');
 }
 ?>

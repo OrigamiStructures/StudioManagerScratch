@@ -3,11 +3,11 @@
 <?php 
 $ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElement');
 $this->set('ArtStackElement', $ArtStackElement);
-$artwork_element = $ArtStackElement->choose('artworksContent', $this);
+$artworks_element = $ArtStackElement->choose('artworksContent');
 ?>
 
 <div class="artworks">
-<?= $this->element($artwork_element);?>
+<?= $this->element($artworks_element);?>
 </div>
 
 <?php 

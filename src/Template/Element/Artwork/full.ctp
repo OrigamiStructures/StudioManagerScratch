@@ -1,14 +1,15 @@
 <!-- Element/Artwork/full.ctp -->
+
+<?php 
+$artwork_element = $ArtStackElement->choose('artworkContent');
+?>
+
 <section class="artwork">
-	<div class="image">
-		<?= $this->element('Artwork/image') ?>
-	</div>
-	<div class="text">
-		<?= $this->element('Artwork/text'); ?>
-	</div>
+	<?= $this->element($artwork_element) ?>
+
 	<div class="editions">
-	<?php $this->set('editions', $artwork->editions); ?>
-		<?= $this->element('Edition/' . $element_management['edition']); ?>
+		<?php $this->set('editions', $artwork->editions); ?>
+		<?= $this->element('Edition/many'); ?>
 	</div>
 </section>
 <!-- END Element/Artwork/full.ctp -->

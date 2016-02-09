@@ -1,11 +1,12 @@
 			<!-- Element/Edition/full.ctp -->
+			
+<?php 
+$edition_element = $ArtStackElement->choose('editionContent');
+?>
+			
 			<section class="edition">
-				<div class="text">
-					<?= $this->element('Edition/text'); ?>
-				</div>
-				<div class="pieces">
-					<?= $this->element('Edition/pieces'); ?>
-				</div>
+				<?= $this->element("$edition_element"); ?>
+				
 				<div class="formats">
 					<?php $this->set('formats', $edition->formats); ?>
 					<?= $this->element('Format/many'); ?>
