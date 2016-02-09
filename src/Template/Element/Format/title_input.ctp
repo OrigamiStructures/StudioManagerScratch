@@ -4,7 +4,7 @@ $render_title_input = TRUE;
 if ($SystemState->is(ARTWORK_REFINE)) {
 //	osd(!in_array($edition->type, [EDITION_LIMITED, EDITION_OPEN]), '!in_array($edition->type, [EDITION_LIMITED, EDITION_OPEN])');
 //	osd($format->title, '$format->title');
-	if (in_array($edition->type, SystemState::singleFormatEditionTypes()) && empty($format->title)) {
+	if (in_array($edition->type, App\Lib\SystemState::singleFormatEditionTypes()) && empty($format->title)) {
 		$render_title_input = FALSE;
 	}
 }

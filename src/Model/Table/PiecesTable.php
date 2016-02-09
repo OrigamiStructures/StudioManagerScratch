@@ -35,15 +35,16 @@ class PiecesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('CounterCache', [
+            'Editions' => [
+				'assigned_piece_count' => [$this, 'assignedEditionPieces'],
+				'fluid_piece_count'  => [$this, 'fluidEditionPieces'],
+					
+			],
             'Formats' => [
 				'assigned_piece_count'=> [$this, 'assignedFormatPieces'],
 				'fluid_piece_count'  => [$this, 'fluidFormatPieces'],
 				'collected_piece_count' => ['conditions' => ['collected' => 1]],
 			],
-            'Editions' => [
-				'assigned_piece_count' => [$this, 'assignedEditionPieces'],
-				'fluid_piece_count'  => [$this, 'fluidEditionPieces'],
-			]
         ]);
 //		$this->addBehavior('ArtworkStack');
 
@@ -107,6 +108,11 @@ class PiecesTable extends AppTable
 			'edition_id' => $entity->edition_id,
 			'format_id IS NOT NULL',
 			]);
+		/**
+		 * THIS NEEDS TO BUMP ASSIGNED FORMAT COUNTING
+		 * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+		 * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
+		 */
 		return $this->assignedPieces($pieces);
 	}
 
@@ -122,15 +128,14 @@ class PiecesTable extends AppTable
 	 * @param Table $table
 	 * @return int
 	 */
-	public function assignedPieces($query) {
+	public function assignedPieces(Query $query) {
 		$query->select(['id', 'format_id', 'edition_id', 'quantity']);
-		$sum = (new Collection($query->toArray()))->reduce(
-				function($accumulate, $value) {
-					return $accumulate + $value->quantity;
-				}, 0
+		$sum = (new Collection($query->toArray()))->sumOf(
+				function($value) {
+					return $value->quantity;
+				}
 			);
-		return $sum;//die;
-//		}
+		return $sum;
 	}
 	
 	public function fluidFormatPieces($event, $entity, $table) {
@@ -148,6 +153,11 @@ class PiecesTable extends AppTable
 			'format_id IS NOT NULL',
 			'disposition_count' => 0,
 			]);
+		/**
+		 * THIS NEEDS TO BUMP FLUID FORMAT PIECES
+		 * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+		 * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
+		 */
 		return $this->fluidPieces($pieces);
 	}
 
@@ -164,10 +174,10 @@ class PiecesTable extends AppTable
 	 */
 	public function fluidPieces($query) {
 		$query->select(['id', 'format_id', 'edition_id', 'quantity']);
-		$sum = (new Collection($query->toArray()))->reduce(
-				function($accumulate, $value) {
-					return $accumulate + $value->quantity;
-				}, 0
+		$sum = (new Collection($query->toArray()))->sumOf(
+				function($value) {
+					return $value->quantity;
+				}
 			);
 		return $sum;//die;
 //		}
@@ -182,7 +192,7 @@ class PiecesTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
-		osd(\Cake\Error\Debugger::trace());
+//		osd(\Cake\Error\Debugger::trace());
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['edition_id'], 'Editions'));
         $rules->add($rules->existsIn(['format_id', 'edition_id'], 'Formats'));
@@ -269,11 +279,12 @@ class PiecesTable extends AppTable
 		if (!isset($options['edition_id'])) {
 			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
-		return $query->where([
+		$query = $query->where([
 			'edition_id' => $options['edition_id'],
 			'format_id IS NULL',
 			'user_id' => $this->SystemState->artistId(),
 		]);
+		return $query;
 	}
 	
 	/**
@@ -299,7 +310,8 @@ class PiecesTable extends AppTable
 				'user_id' => $this->SystemState->artistId(),
 			];
 		}
-		return $query->where($options);
+		$query->where($options);
+		return $query;
 	}
 	
 	/**
@@ -342,7 +354,7 @@ class PiecesTable extends AppTable
 			'disposition_count > 0',
 			'user_id' => $this->SystemState->artistId(),
 		]);
-//		osd($query);die;
+
 		return $query;
 	}
 	

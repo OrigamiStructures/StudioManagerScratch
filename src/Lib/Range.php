@@ -90,14 +90,21 @@ class Range {
 	 * @return array
 	 */
 	static function parseRange($range) {
-		$pattern = '/\d+|\d+-\d+|\d+, *\d+/'; // idon't know what this would be
 		
 		$sequence = array();
 		
-		// this is as good as our validation gets right now
-		if ((!is_int($range)) && (!is_string($range)) || (trim($range, ' ') == '')) {
-			return $sequence;
-		}
+		/**
+		 * this is being done by form validation so, i'm suppressing for now
+		 */
+//		$pattern = '/(\d+-\d+|\d+)(, *(\d+-\d+|\d+))*/'; 
+//		preg_match($pattern, $range, $match); 
+//		if ($range !== $match[0]) {
+//			return $sequence;
+//		}
+		// this was the best validation prior to the regex above
+//		if ((!is_int($range)) && (!is_string($range)) || (trim($range, ' ') == '')) {
+//			return $sequence;
+//		}
 		
 		// break on the range gaps first
 		$groups = explode(',', $range);

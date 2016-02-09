@@ -234,9 +234,9 @@ class PieceAllocationComponent extends Component {
 		
 		$index = 0;
 		$limit = count($pieces);
+		$deletions = [];
 		do {
 			$piece = $pieces[$index++];
-			$deletions = [];
 			if ($piece->quantity > $change) {
 				$piece->quantity -= $change;
 				$change = 0;
