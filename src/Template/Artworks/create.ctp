@@ -1,5 +1,5 @@
 <!-- Template/Artwork/create.ctp -->
-<?php
+				<?php
 // set $edition_index
 $edition_index = $SystemState->isKnown('edition') ?
 	$artwork->indexOfRelated('editions', $SystemState->queryArg('edition')) :
