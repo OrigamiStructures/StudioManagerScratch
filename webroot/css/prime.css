@@ -581,6 +581,8 @@ div.formats {
     @media screen and (max-width: 63.9375em) {
       div.formats section.format div.image .dup {
         display: none !important; } }
+    div.formats section.format div.image img {
+      width: 100%; }
     div.formats section.format div.text p {
       margin-bottom: 0; }
   @media only screen {

@@ -135,8 +135,6 @@ class FormatsController extends AppController
 	 * 
 	 * The artwork and edition will show as 'reference' info on the page.
 	 * 
-	 * SAVE HAS NOT BEEN WRITTEN
-	 * 
 	 */
 	public function refine() {
 		$this->Artworks = TableRegistry::get('Artworks');
@@ -158,16 +156,9 @@ class FormatsController extends AppController
             }
         }
 		
-//		$artwork = $this->ArtworkStack->stackQuery();
-//		$element_management = [
-//			'artwork' => 'describe',
-//			'edition' => 'describe',
-//			'format' => 'fieldset',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Artworks/create');
+		$this->render('/Artworks/review');
 	}
 	
 	/**
@@ -200,12 +191,6 @@ class FormatsController extends AppController
             }
         }
 		
-//		$element_management = [
-//			'artwork' => 'describe',
-//			'edition' => 'describe',
-//			'format' => 'fieldset',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
 		$this->render('/Artworks/review');		

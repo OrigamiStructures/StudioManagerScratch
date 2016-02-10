@@ -206,6 +206,9 @@ div.formats {
 			.dup {
 				@include show-for(large);
 			}
+			img {
+				width: 100%;
+			}
 		}
 		div.text {
 			p {

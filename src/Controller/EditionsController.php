@@ -174,7 +174,7 @@ class EditionsController extends AppController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->render('/Artworks/create');
+		$this->render('/Artworks/review');
 	}
 	
 	/**
