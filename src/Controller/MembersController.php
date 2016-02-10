@@ -129,6 +129,7 @@ class MembersController extends AppController
 //        die;
         $getMember = $this->Members->get($this->request->data['id']);
         osd($getMember, 'getMember');
+        die;
         if ($this->Members->delete($member)) {
             osd('success');
             $this->Flash->success(__('The member has been deleted.'));
