@@ -59,10 +59,12 @@ class MembersTable extends AppTable
             'foreignKey' => 'member_id'
         ]);
         $this->hasMany('Addresses', [
-            'foreignKey' => 'member_id'
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE
         ]);
         $this->hasMany('Contacts', [
-            'foreignKey' => 'member_id'
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE
         ]);
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
@@ -73,11 +75,11 @@ class MembersTable extends AppTable
             'targetForeignKey' => 'group_id',
             'joinTable' => 'groups_members'
         ]);
-        
         $this->hasOne('ProxyGroups',[
             'className' => 'ProxyGroups',
             'foreignKey' => 'member_id',
-            'propertyName' => 'proxy_group'
+            'propertyName' => 'proxy_group',
+            'dependent' => TRUE
         ]);
     }
 
@@ -244,6 +246,13 @@ class MembersTable extends AppTable
                 'primary' => 1
             ]
         ];
+        if(in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION]) && $this->SystemState->is(MEMBER_CREATE)){
+            $proxy_group = [
+                'user_id' => $this->SystemState->artistId()
+            ];
+            $proxy_group_entity = new \Cake\ORM\Entity($proxy_group);
+            $entity->set('proxy_group', $proxy_group_entity);
+        }
         $entity->set('member_type', $type);
         $entity->set('contacts', $contacts);
         $entity->set('addresses', $addresses);

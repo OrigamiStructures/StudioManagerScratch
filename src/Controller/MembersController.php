@@ -119,6 +119,12 @@ class MembersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $this->SystemState->referer($this->referer());
         $member = $this->Members->get($id);
+        //Update relationships to remove many to many relation records
+        $this->Members->hasMany('GroupsMembers', [
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE
+        ]);
+
         if ($this->Members->delete($member)) {
             $this->Flash->success(__('The member has been deleted.'));
         } else {
