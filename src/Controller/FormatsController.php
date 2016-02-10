@@ -179,12 +179,14 @@ class FormatsController extends AppController
 	 * 
 	 */
 	public function create() {
+//		osd($this->request->data, 'trd');
 		$this->Artworks = TableRegistry::get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
+//			osd($artwork, 'artwork for format submit');die;
             if ($this->Artworks->save($artwork)) {
                 $this->redirect([
 					'controller' => 'artworks', 

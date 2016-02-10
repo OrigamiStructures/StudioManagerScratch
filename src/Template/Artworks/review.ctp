@@ -7,7 +7,12 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 ?>
 
 <div class="artworks">
-<?= $this->element($artworks_element);?>
+	<?php
+	if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE])) : 
+		echo $this->Form->create($artwork, ['type' => 'file']); 
+	endif; ?>
+	<?= $this->element($artworks_element);?>
+	<?php if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE])) : echo $this->Form->end(); endif; ?>
 </div>
 
 <?php 

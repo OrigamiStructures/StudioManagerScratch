@@ -186,6 +186,7 @@ class EditionsController extends AppController
 	 * 
 	 */
 	public function create() {
+//		osd($this->request->data, 'trd');
 		$this->Artworks = TableRegistry::get('Artworks');
 		
 		$artwork = $this->ArtworkStack->stackQuery();
@@ -194,7 +195,7 @@ class EditionsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
-			
+//			osd($artwork, 'after adding pieces'); die;
             if ($this->Artworks->save($artwork)) {
                 $this->redirect([
 					'controller' => 'editions', 

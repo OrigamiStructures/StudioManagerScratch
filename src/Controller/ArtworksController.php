@@ -233,6 +233,7 @@ class ArtworksController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
+//		osd($this->request->data, 'trd');
 		$artwork = $this->ArtworkStack->creationStack(); 
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
@@ -243,7 +244,7 @@ class ArtworksController extends AppController
 					]
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
-//			osd($artwork);die('ready to go');
+//			osd($artwork);die('ready to go, artwork controller submitted');
             if ($this->Artworks->save($artwork)) {
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
