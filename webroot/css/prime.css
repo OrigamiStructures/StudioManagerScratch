@@ -491,6 +491,21 @@ div.artworks section.artwork {
     padding-right: 0.9375rem;
     color: blue; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; }
+
+  section.artwork.editing > div.image {
+    width: 25%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork.editing > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork.editing > div.text, section.artwork.editing > div.editions {
+    width: 75%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork.editing > div.text:last-child:not(:first-child), section.artwork.editing > div.editions:last-child:not(:first-child) {
       float: right; } }
 /**
 ==============================================================

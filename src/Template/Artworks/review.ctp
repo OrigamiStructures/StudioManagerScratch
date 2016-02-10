@@ -1,14 +1,15 @@
 <!-- Template/Artwork/review.ctp -->
 
 <?php 
+$editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE]);
 $ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElement');
-$this->set('ArtStackElement', $ArtStackElement);
+$this->set(compact('ArtStackElement', 'editing'));
 $artworks_element = $ArtStackElement->choose('artworksContent');
 ?>
 
 <div class="artworks">
 	<?php
-	if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE])) : 
+	if ($editing) : 
 		echo $this->Form->create($artwork, ['type' => 'file']); 
 	endif; ?>
 	<?= $this->element($artworks_element);?>

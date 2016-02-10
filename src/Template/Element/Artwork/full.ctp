@@ -4,7 +4,7 @@
 $artwork_element = $ArtStackElement->choose('artworkContent');
 ?>
 
-<section class="artwork">
+<section class="artwork<?= $editing ? ' editing' : ''; ?>">
 	<?= $this->element($artwork_element) ?>
 
 	<div class="editions">

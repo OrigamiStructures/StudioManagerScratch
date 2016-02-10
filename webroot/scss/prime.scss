@@ -135,6 +135,14 @@ div.artworks {
 			color: blue;
 		}
 	}
+	section.artwork.editing {
+		> div.image {
+			@include grid-column(3);
+		}
+		 > div.text,  > div.editions {
+			@include grid-column(9);
+		 }
+	}
 }
 
 /**

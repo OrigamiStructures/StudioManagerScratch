@@ -3,7 +3,7 @@
 <?php 
 $format_element = $ArtStackElement->choose('formatContent');
 ?>
-						<section class="format">
+						<section class="format<?= $editing ? ' editing' : ''; ?>">
 							<?= $this->element($format_element); ?>
 						</section>
 						<!-- END Element/Format/full.ctp -->
