@@ -32,6 +32,7 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 								<?= $this->element('Format/pieces'); ?>
 							</div>
 						</fieldset>
+						<?= $this->Form->submit(); ?>
 	<?php // osd($artwork); ?>
 	
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
