@@ -116,30 +116,15 @@ class MembersController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function delete($id = null)     {
-        if(!is_null($id)){
-            $this->request->data = ['id' => $id];
-        }
         $this->request->allowMethod(['post', 'delete']);
-        $member = new Member($this->request->data);
-        $member->user_id = 245;//$this->SystemState->artistId();
-        osd($member, 'member');
-        $member->isNew(FALSE);
-        $member->clean();
-        osd($member, 'member');
-//        die;
-        $getMember = $this->Members->get($this->request->data['id']);
-        osd($getMember, 'getMember');
-        die;
+        $this->SystemState->referer($this->referer());
+        $member = $this->Members->get($id);
         if ($this->Members->delete($member)) {
-            osd('success');
             $this->Flash->success(__('The member has been deleted.'));
         } else {
-            osd('failure');
             $this->Flash->error(__('The member could not be deleted. Please, try again.'));
         }
-        osd($member, 'member after delete');
-        die;
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
     }
 
     
