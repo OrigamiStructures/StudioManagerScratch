@@ -103,8 +103,8 @@ div.artworks {
 		}
 		> div.text,  > div.editions {
 			@include grid-column(12);
-			color: firebrick;
-			font-face: serif;
+			color: violet;
+			font-family: serif;
 			
 			h1 {
 				margin: 0;

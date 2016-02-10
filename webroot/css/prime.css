@@ -456,8 +456,8 @@ div.artworks section.artwork {
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    color: firebrick;
-    font-face: serif; }
+    color: violet;
+    font-family: serif; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.text h1, section.artwork > div.editions h1 {
