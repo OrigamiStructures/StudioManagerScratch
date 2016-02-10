@@ -6,6 +6,7 @@ use Cake\Utility\Inflector;
 use Cake\Core\Configure;
 use Cake\Controller\Component\CookieComponent;
 use Cake\Collection\Collection;
+use App\Model\Entity\Member;
 
 /**
  * Members Controller
@@ -105,6 +106,8 @@ class MembersController extends AppController
         $this->set('_serialize', ['member']);
     }
 
+    // </editor-fold>
+
     /**
      * Delete method
      *
@@ -113,17 +116,31 @@ class MembersController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function delete($id = null)     {
+        if(!is_null($id)){
+            $this->request->data = ['id' => $id];
+        }
         $this->request->allowMethod(['post', 'delete']);
-        $member = $this->Members->get($id);
+        $member = new Member($this->request->data);
+        $member->user_id = 245;//$this->SystemState->artistId();
+        osd($member, 'member');
+        $member->isNew(FALSE);
+        $member->clean();
+        osd($member, 'member');
+//        die;
+        $getMember = $this->Members->get($this->request->data['id']);
+        osd($getMember, 'getMember');
         if ($this->Members->delete($member)) {
+            osd('success');
             $this->Flash->success(__('The member has been deleted.'));
         } else {
+            osd('failure');
             $this->Flash->error(__('The member could not be deleted. Please, try again.'));
         }
+        osd($member, 'member after delete');
+        die;
         return $this->redirect(['action' => 'index']);
     }
 
-    // </editor-fold>
     
     /**
      * Creates member records in element based state
