@@ -19,6 +19,7 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 <?php 
 $args = $SystemState->queryArg(); 
 $q = [];
+echo "This is your artwork";
 foreach (['artwork', 'edition', 'format'] as $crumb) {
 	if (array_key_exists($crumb, $args)) {
 		$q = $q +[$crumb => $args[$crumb]];
