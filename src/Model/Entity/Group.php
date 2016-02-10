@@ -30,4 +30,14 @@ class Group extends Entity
         '*' => true,
         'id' => false,
     ];
+    
+	/**
+	 * Fully detailed descriptive label for the group
+	 * 
+	 * @return string
+	 */
+	public function _getDisplayTitle() {
+        return $this->proxy_member['first_name'];
+	}
+	
 }
