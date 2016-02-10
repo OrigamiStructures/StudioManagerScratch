@@ -110,7 +110,12 @@ class MembersTable extends AppTable
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['image_id'], 'Images'));
+        $rules->addDelete([$this, 'deleteRule']);
         return $rules;
+    }
+    
+    public function deleteRule($entity, $options) {
+        return $entity->user_id === $this->SystemState->artistId();
     }
     
     /**
