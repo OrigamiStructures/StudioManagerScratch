@@ -572,51 +572,17 @@ div.formats {
     margin-right: auto;
     margin-top: .4rem;
     padding-top: .4rem;
-    /*border-top: thin solid #ececec;*/
-    /*		> div.image, > div.text, > div.pieces {
-    			padding-left: 0;
-    		}*/ }
+    /*border-top: thin solid #ececec;*/ }
     div.formats section.format::before, div.formats section.format::after {
       content: ' ';
       display: table; }
     div.formats section.format::after {
       clear: both; }
-    div.formats section.format div.image {
-      /*			@media only screen {  small up 
-      				@include grid-column-row();
-      				@include grid-column(2, 0);
-      				margin-left: 0;
-      				@include grid-col-end();
-      			}*/
-      /*			@media only screen and (min-width: 64.063em) {  large up 
-      				@include grid-column(1, 0);
-      				margin-left: auto;
-      			}*/ }
-      @media screen and (max-width: 63.9375em) {
-        div.formats section.format div.image .dup {
-          display: none !important; } }
-    div.formats section.format div.text {
-      /*			@media only screen {  small up 
-      				@include grid-column(12, 0);
-      			}*/
-      /*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
-      				@include grid-column(7, 0);
-      			}*/
-      /*			@media only screen and (min-width: 64.063em) {  large up 
-      				@include grid-column(6);
-      			}*/ }
-      div.formats section.format div.text p {
-        margin-bottom: 0; }
-    div.formats section.format div.pieces {
-      /*			@media only screen {  small up 
-      				@include grid-column(12, 0);
-      			}*/
-      /*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
-      				@include grid-column(5);
-      			}*/
-      /*			@media only screen and (min-width: 64.063em) {  large up 
-      				@include grid-column(5);
-      			}*/ }
+    @media screen and (max-width: 63.9375em) {
+      div.formats section.format div.image .dup {
+        display: none !important; } }
+    div.formats section.format div.text p {
+      margin-bottom: 0; }
   @media only screen {
     div.formats {
       /* small up */ }
@@ -659,21 +625,60 @@ div.formats {
         padding-left: 0;
         padding-right: 0; }
         div.formats section.format > div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset div.image {
+        /*@include grid-column-row();*/
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format.editing > fieldset div.image:last-child:not(:first-child) {
           float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
-    div.formats section.format > div.text {
+    div.formats section.format div.text {
       width: 58.33333%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format > div.text:last-child:not(:first-child) {
+      div.formats section.format div.text:last-child:not(:first-child) {
         float: right; }
-    div.formats section.format > div.pieces {
+    div.formats section.format div.pieces {
       width: 41.66667%;
       float: left;
       padding-left: 0.9375rem;
       padding-right: 0.9375rem; }
-      div.formats section.format > div.pieces:last-child:not(:first-child) {
+      div.formats section.format div.pieces:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.editing > fieldset > div.image {
+      max-width: 75rem;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem;
+      width: 50%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0; }
+      div.formats section.format.editing > fieldset > div.image::before, div.formats section.format.editing > fieldset > div.image::after {
+        content: ' ';
+        display: table; }
+      div.formats section.format.editing > fieldset > div.image::after {
+        clear: both; }
+      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        float: right; }
+      div.formats section.format.editing > fieldset > div.image, div.formats section.format.editing > fieldset > div.image:last-child {
+        float: none; }
+      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 64.063em) {
     div.formats {
@@ -699,6 +704,22 @@ div.formats {
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
         div.formats section.format > div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset > div.image {
+        /*@include grid-column-row();*/
+        width: 33.33333%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto; }
+        div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+        width: 66.66667%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
           float: right; } }
 
 /*section.format {

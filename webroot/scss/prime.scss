@@ -206,47 +206,12 @@ div.formats {
 			.dup {
 				@include show-for(large);
 			}
-/*			@media only screen {  small up 
-				@include grid-column-row();
-				@include grid-column(2, 0);
-				margin-left: 0;
-				@include grid-col-end();
-			}*/
-/*			@media only screen and (min-width: 64.063em) {  large up 
-				@include grid-column(1, 0);
-				margin-left: auto;
-			}*/
 		}
 		div.text {
-/*			@media only screen {  small up 
-				@include grid-column(12, 0);
-			}*/
-/*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
-				@include grid-column(7, 0);
-			}*/
-/*			@media only screen and (min-width: 64.063em) {  large up 
-				@include grid-column(6);
-			}*/
 			p {
 				margin-bottom: 0;
 			}
 		}
-		 div.pieces {
-/*			@media only screen {  small up 
-				@include grid-column(12, 0);
-			}*/
-/*			@media only screen and (min-width: 40.063em) and (max-width: 64em) {  medium only   
-				@include grid-column(5);
-			}*/
-/*			@media only screen and (min-width: 64.063em) {  large up 
-				@include grid-column(5);
-			}*/
-		}
-	
-/*		> div.image, > div.text, > div.pieces {
-			padding-left: 0;
-		}*/
-	
 	}
 	
 		@media only screen { /* small up */
@@ -264,18 +229,35 @@ div.formats {
 					@include grid-column(12, 0);
 				}
 			}
-			
-		}
-		@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-			section.format {
-				> div.text{
-					@include grid-column(7, 0);
-				}
-				> div.pieces {
-					@include grid-column(5);
+			section.format.editing > fieldset {
+				div.image {
+					/*@include grid-column-row();*/
+					@include grid-column(12, 0)
 				}
 			}
 		}
+		
+		@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+			section.format {
+				div.text{
+					@include grid-column(7, 0);
+				}
+				div.pieces {
+					@include grid-column(5);
+				}
+			}
+			section.format.editing > fieldset {
+				> div.image {
+					@include grid-column-row();
+					@include grid-column(6, 0);
+					margin-left: 0;
+				}
+				> div.text, div.pieces {
+					@include grid-column(12, 0)
+				}
+			}
+		}
+		
 		@media only screen and (min-width: 64.063em) { /* large up */
 			section.format {
 				> div.image {
@@ -287,6 +269,16 @@ div.formats {
 				}
 				> div.pieces {
 					@include grid-column(5);
+				}
+			}
+			section.format.editing > fieldset {
+				> div.image {
+					/*@include grid-column-row();*/
+					@include grid-column(4, 0);
+					margin-left: auto;
+				}
+				> div.text, div.pieces {
+					@include grid-column(8)
 				}
 			}
 		}
