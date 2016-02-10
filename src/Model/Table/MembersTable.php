@@ -21,9 +21,9 @@ use ArrayObject;
  */
 class MembersTable extends AppTable
 {
-    private $_person_containment = ['Addresses', 'Contacts', 'Groups'];
+    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
     
-    private $_complete_containment = ['Addresses', 'Contacts', 'Groups', 'ProxyGroups' => ['Members']];
+    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
     
     public function implementedEvents()
     {
