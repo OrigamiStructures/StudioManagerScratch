@@ -14,21 +14,30 @@
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 $format_index = isset($format_index) ? $format_index : 0 ; 
 ?>
-<fieldset>
-	<legend>Format Details</legend>
+						<fieldset>
+							<legend>Format Details</legend>
+							<div class="image">
+								<?= $this->element('Image/format_fieldset'); ?>
+							</div>
+							<div class="text">
+								<?= $this->Form->input("editions.$edition_index.formats.$format_index.id"); ?>
+								<?= $this->Form->input("editions.$edition_index.formats.$format_index.edition_id", 
+										['type' => 'hidden']); ?>
+
+								<?= $this->element('Format/title_input'); // complex title input logic ?>
+								<?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
+										['placeholder' => 'Media, size and other format details']); ?>
+							</div>
+							<div class="pieces">
+								<?= $this->element('Format/pieces'); ?>
+							</div>
+						</fieldset>
+						<?= $this->Form->submit(); ?>
 	<?php // osd($artwork); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.id"); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.edition_id", 
-			['type' => 'hidden']); ?>
-	
-    <?= $this->element('Format/title_input'); // complex title input logic ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
-			['placeholder' => 'Media, size and other format details']); ?>
 	
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_start"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_end"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.image_id", 
 //			['type' => 'hidden']); ?>
-</fieldset>
-<?= $this->element('Image/format_fieldset'); ?>
+

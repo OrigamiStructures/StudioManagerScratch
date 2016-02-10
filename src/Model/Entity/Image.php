@@ -57,8 +57,8 @@ class Image extends Entity
         if(!empty($this->image_dir)){
             $path = $this->image_dir . DS;
         }
-        if(!empty($this->image)){
-            $image = $this->image;
+        if(!empty($this->image_file)){
+            $image = $this->image_file;
         }
         return $path . $image;
     }

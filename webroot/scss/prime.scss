@@ -1,6 +1,5 @@
-@import 'settings';
+@import '_settings';
 @import '../bower_components/foundation-sites/scss/foundation';
-
 
 footer{
 	height: 10rem;
@@ -50,56 +49,255 @@ footer{
 		background-color:linen;
 	}
 }	
-section.artwork {
-	padding: 1rem 0;
-	
-	div.row {
-		padding: 0;
-	}
-	
-	p {
-		line-height: normal;
-		margin: 0;
-		padding: 0;
-	}
-	
-	img {
-		/*margin-top: 0.8em;*/
-	}
-	
-	@media only screen and (min-width: 40.063em) {
-/*		h1, h2, h3, h4, h5, h6 {
-			line-height: 1.4;
-		}*/
 
-		h2 {
-			font-size: 1.5rem;
-			margin: 1rem 0 0;
-		}
+/**
+==============================================================
+
+ARTWORK STACK 
+// @include grid-column(12, 0) second arg is gutter setting
+
+==============================================================
+**/
+section.assignment, section.disposition {
+	padding-top: 0;
+	p, p.policy_statement {
+		margin-bottom: 0;
+		font-size: 90%;
+		color: #444;
+	}
+}
+p.policy_statement {
+	padding-top: .8em;
+}
+
+/**
+==============================================================
+ARTWORK
+==============================================================
+**/
+div.artworks {
+	section.artwork {
+		@include grid-row();
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: .4rem solid #ccc;
 		
-		h1 {
+		h1, h2, p {
 			margin-bottom: 0;
 		}
+		img {
+			margin-top: .4rem;
+		}
+	}
+}
+/* ARTWORK STACK small up */
+@media only screen { /* small up */ 
+	section.artwork {
+		> div.image {
+			@include grid-column(6);
+			@include grid-col-end();
+			color: red;
+			img {
+				width: 100%;
+			}
+		}
+		> div.text,  > div.editions {
+			@include grid-column(12);
+			color: firebrick;
+			font-face: serif;
+			
+			h1 {
+				margin: 0;
+			}
+		}
+	}
+}
+/* ARTWORK STACK medium only */
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {   
+	section.artwork {
+		> div.image {
+			@include grid-column(4);
+			/*@include grid-col-end();*/
+			color: green;
+		}
+		> div.text,  > div.editions {
+			color: green;
+		}
+	}
+}
+/* ARTWORK STACK large up */
+@media only screen and (min-width: 64.063em) { 
+	section.artwork {
+		 > div.image {
+			@include grid-column(2);
+			color: blue;
+		}
+		 > div.text,  > div.editions {
+			@include grid-column(10);
+			color: blue;
+		}
+	}
+	section.artwork.editing {
+		> div.image {
+			@include grid-column(3);
+		}
+		 > div.text,  > div.editions {
+			@include grid-column(9);
+		 }
+	}
+}
+
+/**
+==============================================================
+EDITIONS
+==============================================================
+**/
+div.editions {
+	section.edition {
+		@include grid-row();
+		margin-top: .5rem;
+		padding-top: .5rem;
+		border-top: .2rem solid #eee;
+	}
+}
+	
+@media only screen { /* small up */
+	section.edition {
+		> div.text, > div.pieces, > div.formats {
+			@include grid-column(12, 0);
+		}
+		> div.text {
+			h2 {
+				font-size: 1.5rem;
+			}
+		}
+	}
+}
+
+/*div.editions {*/
+	
+@media only screen and (min-width:  40.063em) { /* medium up */
+	 section.edition {
+		> div.text {
+			@include grid-column(7, 0);
+		}
+		> div.pieces {
+			@include grid-column(5);
+		}
+	 }
+	 
+}
+	
+/*}*/
+
+/**
+==============================================================
+FORMAT
+==============================================================
+**/
+div.formats {
+	@include grid-column(12, 0);
+	
+	section.format {
+		@include grid-row();
+		margin-top: .4rem;
+		padding-top: .4rem;
+		/*border-top: thin solid #ececec;*/
+		
+		div.image {
+			.dup {
+				@include show-for(large);
+			}
+			img {
+				width: 100%;
+			}
+		}
+		div.text {
+			p {
+				margin-bottom: 0;
+			}
+		}
 	}
 	
-}
-.column, .columns {
-	padding-left: 0;
+		@media only screen { /* small up */
+			section.format{
+				> div.image {
+					@include grid-column-row();
+					@include grid-column(2, 0);
+					margin-left: 0;
+					@include grid-col-end();
+				}
+				> div.text {
+					@include grid-column(12, 0);
+				}
+				> div.pieces {
+					@include grid-column(12, 0);
+				}
+			}
+			section.format.editing > fieldset {
+				div.image {
+					/*@include grid-column-row();*/
+					@include grid-column(12, 0)
+				}
+			}
+		}
+		
+		@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+			section.format {
+				div.text{
+					@include grid-column(7, 0);
+				}
+				div.pieces {
+					@include grid-column(5);
+				}
+			}
+			section.format.editing > fieldset {
+				> div.image {
+					@include grid-column-row();
+					@include grid-column(6, 0);
+					margin-left: 0;
+				}
+				> div.text, div.pieces {
+					@include grid-column(12, 0)
+				}
+			}
+		}
+		
+		@media only screen and (min-width: 64.063em) { /* large up */
+			section.format {
+				> div.image {
+					@include grid-column(1, 0);
+					margin-left: auto;
+				}
+				> div.text {
+					@include grid-column(6);
+				}
+				> div.pieces {
+					@include grid-column(5);
+				}
+			}
+			section.format.editing > fieldset {
+				> div.image {
+					/*@include grid-column-row();*/
+					@include grid-column(4, 0);
+					margin-left: auto;
+				}
+				> div.text, div.pieces {
+					@include grid-column(8)
+				}
+			}
+		}
+
 }
 
-img {
-	width: 100%;
-}
-img.dup_image {
-	opacity: .3;
-}
 
-section.format {
+
+/*section.format {
 	@include grid-row;
 	padding-top: 1em;
-}
+}*/
 
-section.assignment, section.disposition, p.policy_statement {
+p.policy_statement {
 	padding-top: .8em;
 	font-size: 90%;
 	color: #444;

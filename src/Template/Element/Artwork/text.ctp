@@ -6,7 +6,7 @@ $q = [
 		'artwork' => $artwork->id
 	]];
 $nav = $this->Html->link('v', $q + ['action' => 'review']);
-$ed = $this->Html->link('f', $q + ['action' => 'refine']);
+$ed = $this->Html->link(' f', $q + ['action' => 'refine']);
 $l = "<span class='nav'>[$nav|$ed] </span>"
 ?>
 <!-- Element/Artwork/text.ctp -->

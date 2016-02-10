@@ -396,48 +396,340 @@ footer {
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
-section.artwork {
-  padding: 1rem 0; }
-  section.artwork div.row {
-    padding: 0; }
-  section.artwork p {
-    line-height: normal;
-    margin: 0;
-    padding: 0; }
-  section.artwork img {
-    /*margin-top: 0.8em;*/ }
-  @media only screen and (min-width: 40.063em) {
-    section.artwork {
-      /*		h1, h2, h3, h4, h5, h6 {
-      			line-height: 1.4;
-      		}*/ }
-      section.artwork h2 {
-        font-size: 1.5rem;
-        margin: 1rem 0 0; }
-      section.artwork h1 {
-        margin-bottom: 0; } }
+/**
+==============================================================
 
-.column, .columns {
-  padding-left: 0; }
+ARTWORK STACK 
+// @include grid-column(12, 0) second arg is gutter setting
 
-img {
-  width: 100%; }
+==============================================================
+**/
+section.assignment, section.disposition {
+  padding-top: 0; }
+  section.assignment p, section.assignment p.policy_statement, section.disposition p, section.disposition p.policy_statement {
+    margin-bottom: 0;
+    font-size: 90%;
+    color: #444; }
 
-img.dup_image {
-  opacity: .3; }
+p.policy_statement {
+  padding-top: .8em; }
 
-section.format {
+/**
+==============================================================
+ARTWORK
+==============================================================
+**/
+div.artworks section.artwork {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 1em; }
-  section.format::before, section.format::after {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: .4rem solid #ccc; }
+  div.artworks section.artwork::before, div.artworks section.artwork::after {
     content: ' ';
     display: table; }
-  section.format::after {
+  div.artworks section.artwork::after {
+    clear: both; }
+  div.artworks section.artwork h1, div.artworks section.artwork h2, div.artworks section.artwork p {
+    margin-bottom: 0; }
+  div.artworks section.artwork img {
+    margin-top: .4rem; }
+
+/* ARTWORK STACK small up */
+@media only screen {
+  /* small up */
+  section.artwork > div.image {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: red; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+    section.artwork > div.image:last-child {
+      float: left; }
+    section.artwork > div.image img {
+      width: 100%; }
+  section.artwork > div.text, section.artwork > div.editions {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: firebrick;
+    font-face: serif; }
+    section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; }
+    section.artwork > div.text h1, section.artwork > div.editions h1 {
+      margin: 0; } }
+/* ARTWORK STACK medium only */
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  section.artwork > div.image {
+    width: 33.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    /*@include grid-col-end();*/
+    color: green; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork > div.text, section.artwork > div.editions {
+    color: green; } }
+/* ARTWORK STACK large up */
+@media only screen and (min-width: 64.063em) {
+  section.artwork > div.image {
+    width: 16.66667%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: blue; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork > div.text, section.artwork > div.editions {
+    width: 83.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    color: blue; }
+    section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; }
+
+  section.artwork.editing > div.image {
+    width: 25%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork.editing > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork.editing > div.text, section.artwork.editing > div.editions {
+    width: 75%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork.editing > div.text:last-child:not(:first-child), section.artwork.editing > div.editions:last-child:not(:first-child) {
+      float: right; } }
+/**
+==============================================================
+EDITIONS
+==============================================================
+**/
+div.editions section.edition {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: .5rem;
+  padding-top: .5rem;
+  border-top: .2rem solid #eee; }
+  div.editions section.edition::before, div.editions section.edition::after {
+    content: ' ';
+    display: table; }
+  div.editions section.edition::after {
     clear: both; }
 
-section.assignment, section.disposition, p.policy_statement {
+@media only screen {
+  /* small up */
+  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats {
+    width: 100%;
+    float: left;
+    padding-left: 0;
+    padding-right: 0; }
+    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child) {
+      float: right; }
+  section.edition > div.text h2 {
+    font-size: 1.5rem; } }
+/*div.editions {*/
+@media only screen and (min-width: 40.063em) {
+  /* medium up */
+  section.edition > div.text {
+    width: 58.33333%;
+    float: left;
+    padding-left: 0;
+    padding-right: 0; }
+    section.edition > div.text:last-child:not(:first-child) {
+      float: right; }
+  section.edition > div.pieces {
+    width: 41.66667%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.edition > div.pieces:last-child:not(:first-child) {
+      float: right; } }
+/*}*/
+/**
+==============================================================
+FORMAT
+==============================================================
+**/
+div.formats {
+  width: 100%;
+  float: left;
+  padding-left: 0;
+  padding-right: 0; }
+  div.formats:last-child:not(:first-child) {
+    float: right; }
+  div.formats section.format {
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: .4rem;
+    padding-top: .4rem;
+    /*border-top: thin solid #ececec;*/ }
+    div.formats section.format::before, div.formats section.format::after {
+      content: ' ';
+      display: table; }
+    div.formats section.format::after {
+      clear: both; }
+    @media screen and (max-width: 63.9375em) {
+      div.formats section.format div.image .dup {
+        display: none !important; } }
+    div.formats section.format div.image img {
+      width: 100%; }
+    div.formats section.format div.text p {
+      margin-bottom: 0; }
+  @media only screen {
+    div.formats {
+      /* small up */ }
+      div.formats section.format > div.image {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        width: 16.66667%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0; }
+        div.formats section.format > div.image::before, div.formats section.format > div.image::after {
+          content: ' ';
+          display: table; }
+        div.formats section.format > div.image::after {
+          clear: both; }
+        div.formats section.format > div.image:last-child:not(:first-child) {
+          float: right; }
+        div.formats section.format > div.image, div.formats section.format > div.image:last-child {
+          float: none; }
+        div.formats section.format > div.image:last-child:not(:first-child) {
+          float: right; }
+        div.formats section.format > div.image:last-child {
+          float: left; }
+      div.formats section.format > div.text {
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format > div.text:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format > div.pieces {
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format > div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset div.image {
+        /*@include grid-column-row();*/
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format.editing > fieldset div.image:last-child:not(:first-child) {
+          float: right; } }
+  @media only screen and (min-width: 40.063em) and (max-width: 64em) {
+    div.formats section.format div.text {
+      width: 58.33333%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format div.text:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format div.pieces {
+      width: 41.66667%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.formats section.format div.pieces:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.editing > fieldset > div.image {
+      max-width: 75rem;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem;
+      width: 50%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0; }
+      div.formats section.format.editing > fieldset > div.image::before, div.formats section.format.editing > fieldset > div.image::after {
+        content: ' ';
+        display: table; }
+      div.formats section.format.editing > fieldset > div.image::after {
+        clear: both; }
+      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        float: right; }
+      div.formats section.format.editing > fieldset > div.image, div.formats section.format.editing > fieldset > div.image:last-child {
+        float: none; }
+      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+        float: right; } }
+  @media only screen and (min-width: 64.063em) {
+    div.formats {
+      /* large up */ }
+      div.formats section.format > div.image {
+        width: 8.33333%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto; }
+        div.formats section.format > div.image:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format > div.text {
+        width: 50%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format > div.text:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format > div.pieces {
+        width: 41.66667%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format > div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset > div.image {
+        /*@include grid-column-row();*/
+        width: 33.33333%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto; }
+        div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+        width: 66.66667%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+          float: right; } }
+
+/*section.format {
+	@include grid-row;
+	padding-top: 1em;
+}*/
+p.policy_statement {
   padding-top: .8em;
   font-size: 90%;
   color: #444; }

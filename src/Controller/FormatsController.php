@@ -135,8 +135,6 @@ class FormatsController extends AppController
 	 * 
 	 * The artwork and edition will show as 'reference' info on the page.
 	 * 
-	 * SAVE HAS NOT BEEN WRITTEN
-	 * 
 	 */
 	public function refine() {
 		$this->Artworks = TableRegistry::get('Artworks');
@@ -158,16 +156,9 @@ class FormatsController extends AppController
             }
         }
 		
-//		$artwork = $this->ArtworkStack->stackQuery();
-//		$element_management = [
-//			'artwork' => 'describe',
-//			'edition' => 'describe',
-//			'format' => 'fieldset',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Artworks/create_dev');
+		$this->render('/Artworks/review');
 	}
 	
 	/**
@@ -179,12 +170,14 @@ class FormatsController extends AppController
 	 * 
 	 */
 	public function create() {
+//		osd($this->request->data, 'trd');
 		$this->Artworks = TableRegistry::get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
+//			osd($artwork, 'artwork for format submit');die;
             if ($this->Artworks->save($artwork)) {
                 $this->redirect([
 					'controller' => 'artworks', 
@@ -198,15 +191,9 @@ class FormatsController extends AppController
             }
         }
 		
-//		$element_management = [
-//			'artwork' => 'describe',
-//			'edition' => 'describe',
-//			'format' => 'fieldset',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
-		$this->render('/Artworks/create_dev');		
+		$this->render('/Artworks/review');		
 	}
 	
 }

@@ -122,7 +122,11 @@ class ArtworkStackComponent extends Component {
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
-			} else if ($this->SystemState->is(ARTWORK_REVIEW) || $this->SystemState->is(ARTWORK_REFINE)) {
+			} else if ($this->SystemState->is(ARTWORK_REFINE)) {
+				// make the nodes to edit be at the top. show others for context
+				return $this->filterEntities($artwork); // TO BE WRITTEN
+			} else if ($this->SystemState->is(ARTWORK_REVIEW)) {
+				// filter to the specific case the user requested
 				return $this->filterEntities($artwork);
 			}
 			return $artwork;
@@ -212,11 +216,12 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function pruneEntities($artwork) {
-//		$artwork = $this->filterEntities($artwork);
-		$controller = strtolower($this->SystemState->request->controller);
+		$artwork = $this->filterEntities($artwork);
+		$controller = $this->SystemState->controller();
 
 		if ($controller == 'editions') {
 			$artwork->editions = [new \App\Model\Entity\Edition()];
+			$artwork->editions[0]->formats = [new \App\Model\Entity\Format()];
 		} else {
 			$edition_index = $artwork->indexOfRelated('editions', $this->SystemState->queryArg('edition'));
 			$artwork->editions[$edition_index]->formats = [new \App\Model\Entity\Format()];

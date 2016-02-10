@@ -1,7 +1,8 @@
 <!-- Element/Edition/many.ctp -->
 <?php
-foreach ($editions as $edition){
-	$this->set('edition', $edition);
+foreach ($editions as $edition_index => $edition){
+	$this->set(compact('edition_index', 'edition'));
+	
 	echo $this->element('Edition/full');
 }
 ?>

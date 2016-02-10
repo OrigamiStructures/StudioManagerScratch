@@ -5,7 +5,8 @@ use Cake\View\Helper;
 use App\Lib\SystemState;
 
 /**
- * CakePHP AssignHelper
+ * AssignHelper supports the EditionController::assign() modelless form
+ * 
  * @author dondrake
  */
 class AssignHelper extends Helper {
@@ -36,6 +37,15 @@ class AssignHelper extends Helper {
 		
 	}
 	
+	/** 
+	 * This error message packager may have more general use. 
+	 * 
+	 * CONSIDER FINDING A NEW CLASS FOR THIS
+	 * 
+	 * @param type $column
+	 * @param type $errors
+	 * @return type
+	 */
 	public function validationError($column, $errors) {
 //		osd($errors);
 		if (isset($errors[$column])) {

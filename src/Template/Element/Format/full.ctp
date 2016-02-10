@@ -1,11 +1,9 @@
 
 						<!-- Element/Format/full.ctp -->
-						<section class="format">
-							<div class="columns small-12 medium-3 image">
-								<?= $this->element('Format/image') ?>
-							</div>
-							<div class="columns small-12 medium-9 description">
-								<?= $this->element('Format/text'); ?>
-							</div>
+<?php 
+$format_element = $ArtStackElement->choose('formatContent');
+?>
+						<section class="format<?= $editing ? ' editing' : ''; ?>">
+							<?= $this->element($format_element); ?>
 						</section>
 						<!-- END Element/Format/full.ctp -->
