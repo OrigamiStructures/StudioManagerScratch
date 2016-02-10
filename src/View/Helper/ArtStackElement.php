@@ -56,8 +56,6 @@ class ArtStackElement extends Helper {
 				$element = 'Artwork/describe';
 				break;
 			case ARTWORK_CREATE :
-				$element = 'Artwork/fieldset';
-				break;
 			case ARTWORK_REFINE :
 				// Refinement much choose based on the context of the edit
 				// Always display if the target is downstream
@@ -68,7 +66,10 @@ class ArtStackElement extends Helper {
 					$element = 'Artwork/describe';
 				}
 				break;
+//			default :
+//				$element = 'Artwork/describe';
 		}
+//		osd($element); die;
 		return $element;
 	}
 	
@@ -78,22 +79,34 @@ class ArtStackElement extends Helper {
 	 * @return string
 	 */
 	protected function editionContentRule() {
+		$controller = $this->SystemState->controller();
+		
 		switch ($this->SystemState->now()) {
 			case ARTWORK_REVIEW :
 				$element = 'Edition/describe';
 				break;
 			case ARTWORK_CREATE :
-				$element = 'Edition/fieldset';
+				if ($controller === 'formats') {
+					$element = 'Edition/describe';
+				} else {
+					$element = 'Edition/fieldset';
+				}
 				break;
 			case ARTWORK_REFINE :
-				$controller = $this->SystemState->controller();
+//				osd($this->SystemState->queryArg('edition'),'query arg');
+//				osd($this->SystemState->edition->id,'edition');
+						
 				// Refinement much choose based on the context of the edit
 				// Always display if the target is downstream
 				// Always fieldset if this is the target
 				// fieldset if target is upstream and this is the only child
-				if ($controller === 'editions') {
-					$element = 'Edition/fieldset';
-				} elseif ($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1) {
+				if ($controller === 'formats') {
+					$element = 'Edition/describe';
+//				} elseif ($controller === 'editions' && 
+//						$this->SystemState->edition->id === $this->SystemState->queryArg('edition')) ||
+//						($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1)) 
+				} elseif ($controller === 'editions' ||
+						($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1)) {
 					$element = 'Edition/fieldset';
 				} else {
 					$element = 'Edition/describe';
