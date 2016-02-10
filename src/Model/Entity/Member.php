@@ -57,4 +57,26 @@ class Member extends Entity
                 break;
         }
     }
+    
+    /**
+     * Return a properly cased concatenation of the member type and its name.
+     * 
+     * @param string $case either 'title' or 'lower'
+     * @return string the formatted label
+     */
+    public function memberLabel($case) {
+        switch ($case) {
+            case "title":
+                $label = ucwords($this->member_type) . " " . $this->name;
+                break;
+            
+            case "lower":
+                $label = strtolower($this->member_type) . " " . $this->name;
+                
+            default:
+                $label = strtolower($this->member_type) . " " . $this->name;
+                break;
+        }
+        return $label;
+    }
 }

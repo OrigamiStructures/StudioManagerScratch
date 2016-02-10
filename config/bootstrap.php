@@ -217,6 +217,12 @@ define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
 
+//Member State
+define('MEMBER_CREATE', 1);
+define('MEMBER_REVIEW', 2);
+define('MEMBER_REFINE', 4);
+define('MEMBER_SAVE', 8);
+
 //Edition Types
 define('EDITION_UNIQUE', 'Unique');
 define('EDITION_RIGHTS', 'Rights');

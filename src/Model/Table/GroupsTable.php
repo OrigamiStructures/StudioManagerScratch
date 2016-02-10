@@ -36,16 +36,13 @@ class GroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-//        $this->belongsTo('Members', [
-//            'className' => 'Members',
-//            'foreignKey' => 'id',
-//            'bindingKey' => 'member_id',
-//            'dependent' => TRUE,
-//        ]);
         $this->belongsToMany('Members', [
             'foreignKey' => 'group_id',
             'targetForeignKey' => 'member_id',
             'joinTable' => 'groups_members',
+        ]);
+        $this->belongsTo('ProxyMembers',[
+            'foreignKey' => 'member_id',
         ]);
     }
 
@@ -92,7 +89,7 @@ class GroupsTable extends AppTable
             'Groups.active' => 1,
             'Groups.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain(['Members']);
+        $query->contain(['Members', 'ProxyMembers']);
 //        osd($query->toArray());
         return $query;
     }

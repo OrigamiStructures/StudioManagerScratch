@@ -1,5 +1,9 @@
 
 <!-- Element/Contact/full.ctp -->
+
+<?php
+if(!empty($contacts)):
+?>
 <section class="contact">
     <div class="columns small-12 medium-9 description">
         <?php
@@ -10,4 +14,7 @@
         ?>
     </div>
 </section>
+<?php
+endif;
+?>
 <!-- END Element/Contact/full.ctp -->
