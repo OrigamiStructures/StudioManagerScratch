@@ -175,19 +175,12 @@ class ArtworksController extends AppController
 	 */
     public function review() {
 		if ($this->SystemState->isKnown('artwork')) {
-//			$artwork_element = 'full';
 			$artwork_variable = 'artwork';
 		} else {
-//			$artwork_element = 'many';
 			$artwork_variable = 'artworks';
 		}
-//        $element_management = [
-//            'artwork' => $artwork_element,
-//            'edition' => 'many',
-//            'format' => 'many'
-//        ];
-        $this->set($artwork_variable, $this->ArtworkStack->stackQuery());
-//        $this->set('element_management', $element_management);
+
+		$this->set($artwork_variable, $this->ArtworkStack->stackQuery());
         $this->set('_serialize', [$artwork_variable]);
     }
 	
