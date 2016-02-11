@@ -1,5 +1,3 @@
-<!-- Element/Contact/display.ctp -->
-<dl>
-    <dt><?= h($contact->label); ?></dt><dd><?= h($contact->data); ?></dd>
-</dl>
-<!-- END Element/Contact/display.ctp -->
+<!-- Element/Group/display.ctp -->
+<?= $this->Html->para('group', $group->displayTitle);?>
+<!-- END Element/Group/display.ctp -->

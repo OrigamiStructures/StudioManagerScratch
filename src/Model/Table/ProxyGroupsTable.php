@@ -36,11 +36,14 @@ class ProxyGroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsTo('Members', [
+        $this->belongsTo('ProxyMembers', [
+            'foreignKey' => 'member_id',
+        ]);
+        $this->belongsToMany('Members', [
             'className' => 'Members',
-            'foreignKey' => 'id',
-            'bindingKey' => 'member_id',
-            'dependent' => TRUE,
+            'foreignKey' => 'group_id',
+            'targetForeignKey' => 'member_id',
+            'joinTable' => 'groups_members'
         ]);
     }
 

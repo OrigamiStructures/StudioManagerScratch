@@ -21,6 +21,10 @@ use ArrayObject;
  */
 class MembersTable extends AppTable
 {
+    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
+    
+    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
+    
     public function implementedEvents()
     {
 		$events = [
@@ -132,11 +136,8 @@ class MembersTable extends AppTable
      */
     public function findMemberReview(Query $query, array $options) {
         $query = $this->findMemberList($query, $options);
-        if($this->SystemState->isKnown('member')){
-            $query->where([
-               'Members.id' => $this->SystemState->queryArg('member')
-            ]);
-        }
+        $query = $this->findContainment($query, $options);
+        $query->orderAsc('last_name');
         return $query;
     }
     
@@ -152,7 +153,29 @@ class MembersTable extends AppTable
             'Members.active' => 1,
             'Members.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain(['Addresses', 'Contacts', 'Groups']);
+        return $query;
+    }
+    
+    /**
+     * Custom finder to setup containment based upon member type
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findContainment(Query $query, array $options) {
+        if($this->SystemState->isKnown('member')){
+            $query->where([
+               'Members.id' => $this->SystemState->queryArg('member')
+            ]);
+            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
+                $query->contain($this->_person_containment);
+            } else {
+                $query->contain($this->_complete_containment);
+            }
+        } else {
+            $query->contain($this->_complete_containment);
+        }
         return $query;
     }
     
