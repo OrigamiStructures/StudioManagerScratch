@@ -254,6 +254,9 @@ define('SYSTEM_CONSUME_REFERER', FALSE);
 define('PIECE_ENTITY_RETURN', FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
 // general piece collection filter options
+// NOTES ON ADDING TO THIS SECTION
+// PieceTableHelper::_map needs matching entry to identify the
+// filter strategy callable or sort strategy callable
 define('PIECE_FILTER_COLLECTED', 'collected');
 define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
 define('PIECE_FILTER_ASSIGNED', 'assigned');

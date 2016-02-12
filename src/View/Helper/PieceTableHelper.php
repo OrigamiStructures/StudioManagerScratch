@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use Cake\Collection\Collection;
 
 /**
  * PieceTableHelper will coordinate piece filtration and selection of tabel structures
@@ -14,6 +15,15 @@ use Cake\View\Helper;
  */
 class PieceTableHelper extends Helper {
 	
+	protected $_map = [
+		PIECE_FILTER_COLLECTED => 'filterCollected',
+		PIECE_FILTER_NOT_COLLECTED => 'filterNotCollected',
+		PIECE_FILTER_ASSIGNED => 'filterAssigned',
+		PIECE_FILTER_UNASSIGNED => 'filterUnassigned',
+		PIECE_FILTER_FLUID => 'filterFluid',
+		
+	];
+	
 	/**
 	 * 
 	 * @param type $pieces
@@ -23,13 +33,12 @@ class PieceTableHelper extends Helper {
 		
 	}
 	
-	/**
-	 * define('PIECE_FILTER_COLLECTED', 'collected');
-	 * define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
-	 * define('PIECE_FILTER_ASSIGNED', 'assigned');
-	 * define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');* define('PIECE_FILTER_UNASSIGNED', 'not_assigned');
-	 * define('PIECE_FILTER_FLUID', 'fluid');
-	 */
+	public function filter($pieces, $filter_strategy) {
+		$method = $this->_map[$filter_strategy];
+		$filtered_pieces = (new Collection($pieces))->filter([$this, $method]);
+		return $filtered_pieces;
+	}
+	
 	public function filterCollected($piece, $key = NULL) {
 		return $piece->collected === 1;
 	}
@@ -38,4 +47,16 @@ class PieceTableHelper extends Helper {
 		return $piece->collected !== 1;
 	}
 	
+	public function filterAssigned($piece, $key = NULL) {
+		return is_null($piece->format_id);
+	}
+	
+	public function filterUnassigned($piece, $key = NULL) {
+		return $piece->collected !== 1;
+	}
+	
+	public function filterFluid($piece, $key = NULL) {
+		return $piece->disposition_count === 0;
+	}
+		
 }
