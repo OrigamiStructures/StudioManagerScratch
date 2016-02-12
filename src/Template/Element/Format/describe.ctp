@@ -1,4 +1,11 @@
 <!-- Element/Format/describe.ctp -->
+<?php
+/**
+ * THE UNIVERSAL FULL FORMAT DESCRIPTION
+ * Swaps places with 'fieldset' (and a future simple version?)
+ */
+?>
+
 							<div class="image">
 								<?= $this->element('Format/image') ?>
 							</div>
