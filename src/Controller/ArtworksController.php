@@ -265,13 +265,13 @@ class ArtworksController extends AppController
 	 */
     public function validateQuantities($id) {
 		$this->request->query = ['artwork' => $id];
-        $element_management = [
-            'artwork' => 'full',
-            'edition' => 'many',
-            'format' => 'many'
-        ];
+//        $element_management = [
+//            'artwork' => 'full',
+//            'edition' => 'many',
+//            'format' => 'many'
+//        ];
         $this->set('artwork', $this->ArtworkStack->stackQuery());
-        $this->set('element_management', $element_management);
+//        $this->set('element_management', $element_management);
 //        $this->set('_serialize', [$artwork_variable]);
     }
 	

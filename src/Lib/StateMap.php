@@ -26,6 +26,7 @@ class StateMap {
     'initialize' => NULL,
     'mapStates' => NULL,
 	'testMe' => NULL,
+	  'validateQuantities' => 2
   ),
   'Designs' => 
   array (

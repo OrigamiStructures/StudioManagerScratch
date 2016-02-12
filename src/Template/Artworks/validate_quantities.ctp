@@ -1,4 +1,7 @@
 <?php
+$editing = FALSE;
+$ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElementHelper');
+$this->set(compact('ArtStackElement', 'editing'));
 function tf($value) {
 	if (is_null($value)) {
 		return '';
@@ -54,4 +57,6 @@ foreach ($artwork->editions as $edition) {
 
 
 <!-- The 'review' rendering of this artwork -->
-<?= $this->element('Artwork/'.$element_management['artwork']);?>
+<div class="artworks">
+<?= $this->element('Artwork/full');?>
+</div>

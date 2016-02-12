@@ -76,8 +76,8 @@ class ArtStackElementHelper extends Helper {
 					$element = 'Artwork/describe';
 				}
 				break;
-//			default :
-//				$element = 'Artwork/describe';
+			default :
+				$element = 'Artwork/describe';
 		}
 //		osd($element); die;
 		return $element;
@@ -122,6 +122,8 @@ class ArtStackElementHelper extends Helper {
 					$element = 'Edition/describe';
 				}
 				break;
+			default :
+				$element = 'Artwork/describe';
 		}
 		return $element;
 	}
@@ -158,6 +160,8 @@ class ArtStackElementHelper extends Helper {
 					$element = 'Format/describe';
 				}
 				break;
+			default :
+				$element = 'Artwork/describe';
 		}
 		return $element;
 	}
