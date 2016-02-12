@@ -725,6 +725,20 @@ div.formats {
         div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
           float: right; } }
 
+nav.breadcrumbs {
+  /*@include grid-row();*/
+  width: 100%;
+  background-color: slategrey; }
+  nav.breadcrumbs > ul {
+    list-style: none;
+    /*@include grid-column(12);*/ }
+    nav.breadcrumbs > ul li {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a.review {
+      font-weight: bold; }
+
 /*section.format {
 	@include grid-row;
 	padding-top: 1em;

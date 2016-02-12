@@ -40,8 +40,10 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 		  <li><button type="button" class="button">Search</button></li>
 		</ul>
 	  </div>
-	</nav>    
-	<?= $this->Html->getCrumbs(' > ', 'Home'); ?>
+	</nav>
+	<nav class="breadcrumbs">
+		<?= $this->Html->getCrumbList(); ?>
+	</nav>
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">
         <?= $this->fetch('content') ?>

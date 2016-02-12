@@ -19,12 +19,14 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 <?php 
 $args = $SystemState->queryArg(); 
 $q = [];
-echo "This is your artwork";
 foreach (['artwork', 'edition', 'format'] as $crumb) {
 	if (array_key_exists($crumb, $args)) {
 		$q = $q +[$crumb => $args[$crumb]];
-		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q]);
-		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
+		$controller = "{$crumb}s";
+		$edit_link = $this->Html->link('Edit', ['controller' => $controller, 'action' => 'refine', '?' => $q]);
+		$new_link = $this->Html->link('New', ['controller' => $controller, 'action' => 'create', '?' => $q]); 
+		$this->Html->addCrumb(ucwords($crumb). " [$edit_link • $new_link]", ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
+//		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
 	}
 }
 

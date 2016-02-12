@@ -290,7 +290,25 @@ div.formats {
 
 }
 
-
+nav.breadcrumbs {
+	/*@include grid-row();*/
+	width: 100%;
+	background-color: slategrey;
+	
+	> ul {
+		list-style: none;
+		li {
+			color: #fcf8e3;
+		}
+		/*@include grid-column(12);*/
+		a {
+			color: #fcf8e3;
+		}
+		a.review {
+			font-weight: bold;
+		}
+	}
+}
 
 /*section.format {
 	@include grid-row;
