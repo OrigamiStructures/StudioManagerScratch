@@ -1,7 +1,7 @@
 <!-- Element/Edition/overview_table.ctp -->
 <table>
 	<caption>
-		Pieces in this edition
+		<?= $caption ?>
 	</caption>
 	<thead>
 		<tr>

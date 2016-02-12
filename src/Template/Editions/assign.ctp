@@ -25,7 +25,7 @@ $this->set(compact('edition', 'helper'));
   </div>
 <?php
 
-echo $this->element('Pieces/overview_table');
+echo $this->element('Pieces/overview_table', ['caption' => 'Pieces in this edition']);
 
 /**
  * MAKE BREADCRUMBS FOR PAGE

@@ -111,6 +111,9 @@ class ArtworkStackComponent extends Component {
 			$this->controller->set('menu_artworks', clone $artworks);
 			return $artworks;
 		} else {
+			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
+			// BASED ON ONGOING DISPOSITION CREATION ?????
+			// 
 			// There may be more keys known than just the 'artwork', but that's 
 			// all we need for the query.
 			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
