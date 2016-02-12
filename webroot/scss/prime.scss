@@ -159,6 +159,11 @@ div.editions {
 		padding-top: .5rem;
 		border-top: .2rem solid #eee;
 	}
+	
+	table {
+		width: 100%;
+	}
+		
 }
 	
 @media only screen { /* small up */
@@ -179,10 +184,10 @@ div.editions {
 @media only screen and (min-width:  40.063em) { /* medium up */
 	 section.edition {
 		> div.text {
-			@include grid-column(7, 0);
+			@include grid-column(6, 0);
 		}
 		> div.pieces {
-			@include grid-column(5);
+			@include grid-column(6);
 		}
 	 }
 	 
@@ -203,6 +208,10 @@ div.formats {
 		margin-top: .4rem;
 		padding-top: .4rem;
 		/*border-top: thin solid #ececec;*/
+		
+		table {
+			width: 100%;
+		}
 		
 		div.image {
 			.dup {
@@ -245,10 +254,10 @@ div.formats {
 		@media only screen and (min-width: 40.063em) and (max-width: 64em) {
 			section.format {
 				div.text{
-					@include grid-column(7, 0);
+					@include grid-column(6, 0);
 				}
 				div.pieces {
-					@include grid-column(5);
+					@include grid-column(6);
 				}
 			}
 			section.format.editing > fieldset {
@@ -270,10 +279,10 @@ div.formats {
 					margin-left: auto;
 				}
 				> div.text {
-					@include grid-column(6);
+					@include grid-column(5);
 				}
 				> div.pieces {
-					@include grid-column(5);
+					@include grid-column(6);
 				}
 			}
 			section.format.editing > fieldset {

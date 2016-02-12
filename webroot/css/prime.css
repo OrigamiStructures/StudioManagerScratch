@@ -525,6 +525,8 @@ div.editions section.edition {
     display: table; }
   div.editions section.edition::after {
     clear: both; }
+div.editions table {
+  width: 100%; }
 
 @media only screen {
   /* small up */
@@ -541,14 +543,14 @@ div.editions section.edition {
 @media only screen and (min-width: 40.063em) {
   /* medium up */
   section.edition > div.text {
-    width: 58.33333%;
+    width: 50%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
     section.edition > div.text:last-child:not(:first-child) {
       float: right; }
   section.edition > div.pieces {
-    width: 41.66667%;
+    width: 50%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
@@ -579,6 +581,8 @@ div.formats {
       display: table; }
     div.formats section.format::after {
       clear: both; }
+    div.formats section.format table {
+      width: 100%; }
     @media screen and (max-width: 63.9375em) {
       div.formats section.format div.image .dup {
         display: none !important; } }
@@ -639,14 +643,14 @@ div.formats {
           float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format div.text {
-      width: 58.33333%;
+      width: 50%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
       div.formats section.format div.text:last-child:not(:first-child) {
         float: right; }
     div.formats section.format div.pieces {
-      width: 41.66667%;
+      width: 50%;
       float: left;
       padding-left: 0.9375rem;
       padding-right: 0.9375rem; }
@@ -695,14 +699,14 @@ div.formats {
         div.formats section.format > div.image:last-child:not(:first-child) {
           float: right; }
       div.formats section.format > div.text {
-        width: 50%;
+        width: 41.66667%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
         div.formats section.format > div.text:last-child:not(:first-child) {
           float: right; }
       div.formats section.format > div.pieces {
-        width: 41.66667%;
+        width: 50%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
