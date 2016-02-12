@@ -41,10 +41,14 @@ class ArtStackElement extends Helper {
 	 */
 	protected function artworksContentRule() {
 //		osd($this->SystemState->_viewVars);
-		if (is_null($this->SystemState->artworks)) {
-			$element = 'Artwork/full';
+		if (!is_null($this->SystemState->artwork)) {
+			$element = 'Artwork/full';			
+		} elseif (!is_null($this->SystemState->artworks)) {
+			$element = 'Artwork/many';	
 		} else {
-			$element = 'Artwork/many';		
+			// there was no spec'd artwork and no pagination result
+			// so this is a new user
+			$element = 'Training/welcome_new_art';
 		}
 		return $element;
 	}
@@ -53,7 +57,7 @@ class ArtStackElement extends Helper {
 	protected function artworkContentRule() {
 		switch ($this->SystemState->now()) {
 			case ARTWORK_REVIEW :
-				$element = 'Artwork/describe';
+					$element = 'Artwork/describe';
 				break;
 			case ARTWORK_CREATE :
 			case ARTWORK_REFINE :
