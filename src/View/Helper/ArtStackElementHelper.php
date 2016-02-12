@@ -162,4 +162,21 @@ class ArtStackElementHelper extends Helper {
 		return $element;
 	}
 	
+	public function editionPieceTableRule() {
+		if (!is_null($this->SystemState->artworks)) {
+			// paginated result does not render piece tables
+			return FALSE;
+		} else {
+			return 'Edition/pieces';
+		}
+	}
+	
+	public function formatPieceTableRule() {
+		if (!is_null($this->SystemState->artworks)) {
+			// paginated result does not render piece tables
+			return FALSE;
+		} else {
+			return 'Format/pieces';
+		}
+	}
 }
