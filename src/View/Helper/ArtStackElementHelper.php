@@ -22,7 +22,7 @@ use Cake\View\Helper;
  * 
  * @author dondrake
  */
-class ArtStackElement extends Helper {
+class ArtStackElementHelper extends Helper {
 	
 	protected $SystemState;
 

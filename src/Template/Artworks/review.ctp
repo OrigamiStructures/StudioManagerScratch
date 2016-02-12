@@ -2,7 +2,7 @@
 
 <?php 
 $editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE]);
-$ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElement');
+$ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElementHelper');
 $this->set(compact('ArtStackElement', 'editing'));
 $artworks_element = $ArtStackElement->choose('artworksContent');
 ?>
