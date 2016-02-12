@@ -742,6 +742,8 @@ nav.breadcrumbs {
       color: #fcf8e3; }
     nav.breadcrumbs > ul a.review {
       font-weight: bold; }
+      nav.breadcrumbs > ul a.review span {
+        font-weight: normal; }
 
 /*section.format {
 	@include grid-row;

@@ -25,7 +25,8 @@ foreach (['artwork', 'edition', 'format'] as $crumb) {
 		$controller = "{$crumb}s";
 		$edit_link = $this->Html->link('Edit', ['controller' => $controller, 'action' => 'refine', '?' => $q]);
 		$new_link = $this->Html->link('New', ['controller' => $controller, 'action' => 'create', '?' => $q]); 
-		$this->Html->addCrumb(ucwords($crumb). " [$edit_link • $new_link]", ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
+		$tools = " <span>[$edit_link • $new_link]</span>";
+		$this->Html->addCrumb(ucwords($crumb). $tools, ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
 //		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
 	}
 }
