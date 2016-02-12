@@ -376,7 +376,8 @@ CLASS;
 			return $accumulate;
 		}, []);
 		if ($user_filter) {
-			$conditions['user_id'] = $this->artistId();
+		$table = is_string($user_filter) ? "{$user_filter}." : '' ;
+			$conditions["{$table}user_id"] = "'{$this->artistId()}'";
 		}
 		return $conditions;
 	}
