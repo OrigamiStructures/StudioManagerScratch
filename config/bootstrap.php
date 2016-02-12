@@ -253,3 +253,11 @@ define('SYSTEM_CONSUME_REFERER', FALSE);
 //AssignemtTrait Constants
 define('PIECE_ENTITY_RETURN', FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
+// general piece collection filter options
+define('PIECE_FILTER_COLLECTED', 'collected');
+define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
+define('PIECE_FILTER_ASSIGNED', 'assigned');
+define('PIECE_FILTER_UNASSIGNED', 'not_assigned');
+define('PIECE_FILTER_FLUID', 'fluid');
+
+

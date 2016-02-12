@@ -31,6 +31,12 @@ class ArtStackElementHelper extends Helper {
 		$this->SystemState = $this->_View->SystemState;
 	}
 	
+	/**
+	 * Choose an element to render a layer based on context and a rule set
+	 * 
+	 * @param string $layer Layer that needs context rules evaluation
+	 * @return string Name of the selected element
+	 */
 	public function choose($layer) {
 		$method = "{$layer}Rule";
 		return $this->$method();
