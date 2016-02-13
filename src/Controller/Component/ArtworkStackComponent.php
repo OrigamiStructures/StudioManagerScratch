@@ -129,7 +129,7 @@ class ArtworkStackComponent extends Component {
 			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
 				'contain' => $this->full_containment,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
-				'cache' => 'default',
+//				'cache' => 'default',
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));

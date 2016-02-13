@@ -31,7 +31,6 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 
 					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
 					<section class="assignment">
-						<?= $EditionHelper->pieceSummary($edition); ?>
 						<?= $EditionHelper->pieceTools($edition); ?>
 					</section>
 <!-- END Element/Edition/text.ctp -->
