@@ -29,10 +29,10 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 										['placeholder' => 'Media, size and other format details']); ?>
 							</div>
 							<div class="pieces">
-								<?= $this->element('Format/pieces'); ?>
+
 							</div>
 						</fieldset>
-						<?= $this->Form->submit(); ?>
+						<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 	<?php // osd($artwork); ?>
 	
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>

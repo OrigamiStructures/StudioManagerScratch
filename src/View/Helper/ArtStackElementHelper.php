@@ -190,6 +190,7 @@ class ArtStackElementHelper extends Helper {
 		} else {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
+				case ARTWORK_REFINE:
 					if ($edition->format_count === 1 && !$edition->hasUnassinged()) {
 						$element = 'empty';
 					} else {
@@ -198,6 +199,8 @@ class ArtStackElementHelper extends Helper {
 					// default PieceHelper edition filter is ok
 					return $element;
 					break;
+				default :
+					return 'empty';
 			}
 		}
 	}
@@ -217,9 +220,12 @@ class ArtStackElementHelper extends Helper {
 		} else {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
+				case ARTWORK_REFINE:
 					// default PieceHelper format filter is ok
 					return 'Format/pieces';
 					break;
+				default :
+					return 'empty';
 			}
 		}
 	}

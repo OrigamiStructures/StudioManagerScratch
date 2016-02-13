@@ -4,6 +4,7 @@ namespace App\View\Helper;
 use App\View\Helper\EditionFactoryHelper;
 use Cake\ORM\TableRegistry;
 
+
 /**
  * EditionedHelper: rule based view/tool rendering for Limited and Open Editions
  * 
@@ -291,14 +292,26 @@ class EditionedHelper extends EditionFactoryHelper {
 				$caption = 'All the pieces in this edition are assigned to formats';
 			}
 			
-			$pieces = $EditionHelper->pieceTool()->filter($edition->pieces, 'edition');
-			$providers = ['edition' => $edition] + $edition->formats; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
-			$this->set(compact('caption', 'pieces', 'providers', 'PieceHelper'));
+			$pieces = $this->pieceTool()->filter($edition->pieces, 'edition');
+			$providers = ['edition' => $edition]; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
+			$this->_View->set(compact('caption', 'pieces', 'providers'));
 		}		
 	}
 
 	protected function _formatPieceTable($format, $edition) {
-		
+		if ($this->SystemState->is(ARTWORK_REVIEW)) {
+			if ($edition->hasAssigned()) {
+				$caption = 'No pieces have been assigned to this format.';
+			} else {
+				$caption = 'Pieces in this format.';
+			}
+			
+			$pieces = $this->pieceTool()->filter($format->pieces, 'format');
+//			osd($format->pieces, 'starting set');
+//			osd($pieces, 'result');
+			$providers = [$format]; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
+			$this->_View->set(compact('caption', 'pieces', 'providers'));
+		}		
 	}
 
 }

@@ -48,6 +48,6 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 				if (($SystemState->controller() === 'editions' ||
 						$SystemState->controller() === 'artworks') && 
 						$edition->format_count > 1) {
-					echo $this->Form->submit();
+					echo $this->Form->submit('Submit', ['class' => 'button']);
 				}
 ?>

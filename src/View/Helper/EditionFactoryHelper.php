@@ -40,6 +40,11 @@ class EditionFactoryHelper extends Helper {
 		PUBLICATION_OPEN => 'Packaged',
 			];
 	
+	public function __construct(\Cake\View\View $View, array $config = array()) {
+		parent::__construct($View, $config);
+		$this->SystemState = $View->SystemState;
+	}
+	
 	/**
 	 * Factory to generate a specific helper
 	 * 

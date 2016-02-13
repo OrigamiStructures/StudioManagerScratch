@@ -11,7 +11,7 @@ $this->set(compact('edition', 'helper'));
 		<?= $this->element('Edition/assignment_sources'); ?>
 		<div class="high">
 			<?= $this->element('Edition/assignment_to_move'); ?>
-			<?= $this->Form->submit(); ?>
+			<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 		</div>
 	</div>
     <div class="large-6 columns radio">
@@ -23,9 +23,14 @@ $this->set(compact('edition', 'helper'));
 	<?= $this->Form->end(); ?>
 
   </div>
+	<div class="row">
+		<div class="column small-8">
+	<?= $this->element('Pieces/overview_table', ['caption' => 'Pieces in this edition']); ?>
+		</div>
+	</div>
 <?php
 
-echo $this->element('Pieces/overview_table', ['caption' => 'Pieces in this edition']);
+//echo $this->element('Pieces/overview_table', ['caption' => 'Pieces in this edition']);
 
 /**
  * MAKE BREADCRUMBS FOR PAGE

@@ -1,5 +1,5 @@
 <!-- Element/Edition/overview_table.ctp -->
-<table>
+<table style="width: 100%">
 	<caption>
 		<?= $caption ?>
 	</caption>
