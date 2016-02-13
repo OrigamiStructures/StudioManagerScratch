@@ -36,14 +36,18 @@ footer{
 		font-size: .75rem;
 		display: block;
 		position: absolute;
-		top: .98rem;
-		left: 4rem;
+		top: .1rem;
+		left: 9rem;
 		z-index: 1000;
 		border: thin solid #ccc;
 	}
 	ul.nested:hover {
 		display: block;
 		z-index: 1000;
+	}
+	> ul.menu > li.has-submenu:hover > ul.nested {
+		top: 1.5rem;
+		left: .2rem;
 	}
 	section.artwork:nth-of-type(2n) {
 		background-color:linen;
