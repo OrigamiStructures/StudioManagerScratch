@@ -130,6 +130,11 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 
+	/**
+	 * Return an instance of the piece filter/sort utility class
+	 * 
+	 * @return PiecesUtitlity
+	 */
 	public function pieceTool() {
 		if (!isset($this->PiecesUtitlity)) {
 			$this->PiecesUtility = new \App\Lib\PiecesUtility();

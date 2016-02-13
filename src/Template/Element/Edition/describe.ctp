@@ -11,7 +11,7 @@
 	</div>
 
 	<div class="pieces">
-		<?php $piece_element = $ArtStackElement->choose('editionPieceTable'); ?>
+		<?php $piece_element = $ArtStackElement->choosePieceTable($edition); ?>
 		<?= $this->element($piece_element); ?>
 	</div>
 

@@ -166,15 +166,37 @@ class ArtStackElementHelper extends Helper {
 		return $element;
 	}
 	
-	public function editionPieceTableRule() {
+	public function choosePieceTable($entity, $edition = NULL) {
+		if (stristr(get_class($entity), 'Edition')) {
+			return $this->_editionPieceTable($entity);
+			
+		} elseif (stristr(get_class($entity), 'Format') &&
+				stristr(get_class($edition), 'Edition')){
+			return $this->_formatPieceTable($entity, $edition);
+			
+		} else {
+			$first_class = get_class($entity);
+			$second_class = !is_null($edition) ? get_class($edition) : NULL ;
+			
+			throw new \BadMethodCallException(
+					"Method requires an entity of type Edition or Format, or two entities of types Format and Edition. "
+					. "$first_class and $second_class were passed.");
+		}
+	}
+	protected function _editionPieceTable($edition) {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
 			return 'empty';
 		} else {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
+					if ($edition->format_count === 1 && !$edition->hasUnassinged()) {
+						$element = 'empty';
+					} else {
+						$element = 'Edition/pieces';
+					}
 					// default PieceHelper edition filter is ok
-					return 'Edition/pieces';
+					return $element;
 					break;
 			}
 		}
@@ -188,7 +210,7 @@ class ArtStackElementHelper extends Helper {
 	 * 
 	 * @return string Name of the element to render
 	 */
-	public function formatPieceTableRule() {
+	public function _formatPieceTable($format, $edition) {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
 			return 'empty';

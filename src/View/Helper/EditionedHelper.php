@@ -284,7 +284,17 @@ class EditionedHelper extends EditionFactoryHelper {
 	}
 
 	protected function _editionPieceTable($edition) {
-		
+		if ($this->SystemState->is(ARTWORK_REVIEW)) {
+			if ($edition->hasUnassigned()) {
+				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
+			} else {
+				$caption = 'All the pieces in this edition are assigned to formats';
+			}
+			
+			$pieces = $EditionHelper->pieceTool()->filter($edition->pieces, 'edition');
+			$providers = ['edition' => $edition] + $edition->formats; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
+			$this->set(compact('caption', 'pieces', 'providers', 'PieceHelper'));
+		}		
 	}
 
 	protected function _formatPieceTable($format, $edition) {
