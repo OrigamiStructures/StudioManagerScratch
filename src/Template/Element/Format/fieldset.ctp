@@ -29,7 +29,7 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 										['placeholder' => 'Media, size and other format details']); ?>
 							</div>
 							<div class="pieces">
-
+								<!-- no pieces during creation -->
 							</div>
 						</fieldset>
 						<?= $this->Form->submit('Submit', ['class' => 'button']); ?>

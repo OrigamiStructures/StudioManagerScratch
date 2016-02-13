@@ -293,7 +293,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			}
 			
 			$pieces = $this->pieceTool()->filter($edition->pieces, 'edition');
-			$providers = ['edition' => $edition]; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
+			$providers = ['edition' => $edition];
 			$this->_View->set(compact('caption', 'pieces', 'providers'));
 		}		
 	}
@@ -307,9 +307,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			}
 			
 			$pieces = $this->pieceTool()->filter($format->pieces, 'format');
-//			osd($format->pieces, 'starting set');
-//			osd($pieces, 'result');
-			$providers = [$format]; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
+			$providers = [$format];
 			$this->_View->set(compact('caption', 'pieces', 'providers'));
 		}		
 	}
