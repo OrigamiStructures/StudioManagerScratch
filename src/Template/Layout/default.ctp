@@ -10,7 +10,9 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
+	<!--<link href='https://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>-->
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<title>
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>

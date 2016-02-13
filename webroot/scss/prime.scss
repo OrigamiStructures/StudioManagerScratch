@@ -96,15 +96,12 @@ div.artworks {
 		> div.image {
 			@include grid-column(6);
 			@include grid-col-end();
-			color: red;
 			img {
 				width: 100%;
 			}
 		}
 		> div.text,  > div.editions {
 			@include grid-column(12);
-			color: violet;
-			font-family: serif;
 			
 			h1 {
 				margin: 0;
@@ -118,10 +115,8 @@ div.artworks {
 		> div.image {
 			@include grid-column(4);
 			/*@include grid-col-end();*/
-			color: green;
 		}
 		> div.text,  > div.editions {
-			color: green;
 		}
 	}
 }
@@ -130,11 +125,9 @@ div.artworks {
 	section.artwork {
 		 > div.image {
 			@include grid-column(2);
-			color: blue;
 		}
 		 > div.text,  > div.editions {
 			@include grid-column(10);
-			color: blue;
 		}
 	}
 	section.artwork.editing {

@@ -443,8 +443,7 @@ div.artworks section.artwork {
     width: 50%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: red; }
+    padding-right: 0.9375rem; }
     section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.image:last-child {
@@ -455,9 +454,7 @@ div.artworks section.artwork {
     width: 100%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: violet;
-    font-family: serif; }
+    padding-right: 0.9375rem; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.text h1, section.artwork > div.editions h1 {
@@ -469,28 +466,23 @@ div.artworks section.artwork {
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    /*@include grid-col-end();*/
-    color: green; }
+    /*@include grid-col-end();*/ }
     section.artwork > div.image:last-child:not(:first-child) {
-      float: right; }
-  section.artwork > div.text, section.artwork > div.editions {
-    color: green; } }
+      float: right; } }
 /* ARTWORK STACK large up */
 @media only screen and (min-width: 64.063em) {
   section.artwork > div.image {
     width: 16.66667%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: blue; }
+    padding-right: 0.9375rem; }
     section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
   section.artwork > div.text, section.artwork > div.editions {
     width: 83.33333%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: blue; }
+    padding-right: 0.9375rem; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
 
