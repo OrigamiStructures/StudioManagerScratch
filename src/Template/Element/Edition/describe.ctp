@@ -11,12 +11,8 @@
 	</div>
 
 	<div class="pieces">
-		<?php 
-		$piece_element = $ArtStackElement->choose('editionPieceTable');
-		if ($piece_element) : 
-		?>
+		<?php $piece_element = $ArtStackElement->choose('editionPieceTable'); ?>
 		<?= $this->element($piece_element); ?>
-		<?php endif; ?>
 	</div>
 
 <!-- END Element/Edition/describe.ctp -->

@@ -169,18 +169,36 @@ class ArtStackElementHelper extends Helper {
 	public function editionPieceTableRule() {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
-			return FALSE;
+			return 'empty';
 		} else {
-			return 'Edition/pieces';
+			switch ($this->SystemState->now()) {
+				case ARTWORK_REVIEW:
+					// default PieceHelper edition filter is ok
+					return 'Edition/pieces';
+					break;
+			}
 		}
 	}
 	
+	/**
+	 * Choose wich pieces element has the info needed in this context
+	 * 
+	 * Data specific to the edition type and current task/context is 
+	 * decided on by the EditionFactoryHelper. This just sets the template.
+	 * 
+	 * @return string Name of the element to render
+	 */
 	public function formatPieceTableRule() {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
-			return FALSE;
+			return 'empty';
 		} else {
-			return 'Format/pieces';
+			switch ($this->SystemState->now()) {
+				case ARTWORK_REVIEW:
+					// default PieceHelper format filter is ok
+					return 'Format/pieces';
+					break;
+			}
 		}
 	}
 }

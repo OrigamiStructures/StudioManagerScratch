@@ -1,9 +1,11 @@
 <!-- Element/Edition/pieces.ctp -->
 <?php 
 $caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
-$pieces = $edition->pieces;
+//$PieceHelper = $this->loadHelper('PieceTable');
+//$pieces = $edition->pieces;
+$pieces = $EditionHelper->pieceTool()->filter($edition->pieces, 'edition');
 $providers = ['edition' => $edition] + $edition->formats; // CONCATENATION CAN BE REMOVED LATER WHEN 'WHERE' CLAUSE IS WORKING
-$this->set(compact('caption', 'pieces', 'providers'));
+$this->set(compact('caption', 'pieces', 'providers', 'PieceHelper'));
 ?>
 
 <?= $this->element('Pieces/overview_table'); ?>

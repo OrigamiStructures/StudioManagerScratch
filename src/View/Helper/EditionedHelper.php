@@ -282,5 +282,13 @@ class EditionedHelper extends EditionFactoryHelper {
 		return $output;
 		
 	}
-	
+
+	protected function _editionPieceTable($edition) {
+		
+	}
+
+	protected function _formatPieceTable($format, $edition) {
+		
+	}
+
 }

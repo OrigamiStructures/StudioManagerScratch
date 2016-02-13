@@ -262,5 +262,7 @@ define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
 define('PIECE_FILTER_ASSIGNED', 'assigned');
 define('PIECE_FILTER_UNASSIGNED', 'not_assigned');
 define('PIECE_FILTER_FLUID', 'fluid');
+define('PIECE_FILTER_NONE', 'none');
+define('PIECE_SORT_NONE', 'none');
 
 

@@ -13,11 +13,7 @@
 								<?= $this->element('Format/text'); ?>
 							</div>
 							<div class="pieces">
-								<?php 
-								$piece_element = $ArtStackElement->choose('formatPieceTable');
-								if ($piece_element) : 
-								?>
+								<?php $piece_element = $ArtStackElement->choose('formatPieceTable'); ?>
 								<?= $this->element($piece_element); ?>
-								<?php endif; ?>
 							</div>
 <!-- END Element/Format/describe.ctp -->
