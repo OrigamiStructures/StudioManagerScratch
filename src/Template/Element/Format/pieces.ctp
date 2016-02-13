@@ -1,7 +1,8 @@
 <!-- Element/Format/pieces.ctp -->
 <?php 
+$piece_element = $ArtStackElement->choosePieceTable($format, $edition);
 $EditionHelper->pieceTable($format, $edition);
 ?>
 
-<?= $this->element('Pieces/owners_table'); ?>
+<?= $this->element($piece_element); ?>
 <!-- END Element/Format/pieces.ctp -->

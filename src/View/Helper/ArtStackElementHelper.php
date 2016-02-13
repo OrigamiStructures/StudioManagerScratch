@@ -166,6 +166,17 @@ class ArtStackElementHelper extends Helper {
 		return $element;
 	}
 	
+	/**
+	 * Return the name of the Piece element to render in this situation
+	 * 
+	 * Details of the values to use in the element are set by the 
+	 * EditionFactory concrete helper for the edition type
+	 * 
+	 * @param EditionEntity|FormatEntity $entity
+	 * @param EditionEntity|null $edition
+	 * @return string
+	 * @throws \BadMethodCallException
+	 */
 	public function choosePieceTable($entity, $edition = NULL) {
 		if (stristr(get_class($entity), 'Edition')) {
 			return $this->_editionPieceTable($entity);
@@ -194,7 +205,7 @@ class ArtStackElementHelper extends Helper {
 					if ($edition->format_count === 1 && !$edition->hasUnassinged()) {
 						$element = 'empty';
 					} else {
-						$element = 'Edition/pieces';
+						$element = 'Pieces/owners_table';
 					}
 					// default PieceHelper edition filter is ok
 					return $element;
@@ -222,7 +233,7 @@ class ArtStackElementHelper extends Helper {
 				case ARTWORK_REVIEW:
 				case ARTWORK_REFINE:
 					// default PieceHelper format filter is ok
-					return 'Format/pieces';
+					return 'Pieces/owners_table';
 					break;
 				default :
 					return 'empty';
