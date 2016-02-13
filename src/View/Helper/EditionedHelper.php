@@ -285,7 +285,7 @@ class EditionedHelper extends EditionFactoryHelper {
 	}
 
 	protected function _editionPieceTable($edition) {
-		if ($this->SystemState->is(ARTWORK_REVIEW) && is_null($this->SystemState->artworks)) {
+		if (/*$this->SystemState->is(ARTWORK_REVIEW) && */is_null($this->SystemState->artworks)) {
 			if ($edition->hasUnassigned()) {
 				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
 			} else {
@@ -299,7 +299,7 @@ class EditionedHelper extends EditionFactoryHelper {
 	}
 
 	protected function _formatPieceTable($format, $edition) {
-		if ($this->SystemState->is(ARTWORK_REVIEW) && is_null($this->SystemState->artworks)) {
+		if (/*$this->SystemState->is(ARTWORK_REVIEW) && */is_null($this->SystemState->artworks)) {
 			if ($edition->hasAssigned()) {
 				$caption = 'No pieces have been assigned to this format.';
 			} else {

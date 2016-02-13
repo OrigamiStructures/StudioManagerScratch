@@ -54,6 +54,44 @@ footer{
 	}
 }	
 
+@media only screen { /* small up */ 
+	div.pieces {
+		button {
+			display: none;
+		}
+		table {
+			display: block;
+			width: rem-calc(800);
+		}
+	}
+}
+
+@media only screen and (min-width: 40.063em) {   
+	div.pieces {
+		position: relative;
+		button {
+			display: block;
+		}
+		table {
+			display: none;
+		}
+	}
+
+	div.pieces:hover {
+		button {
+			display: none;
+		}
+		table {
+			width: rem-calc(800);
+			display: block;
+			position: absolute;
+			top: 0;
+			overflow-y: visible;
+			z-index: 1000;
+		}
+	}
+}
+
 /**
 ==============================================================
 
@@ -158,7 +196,7 @@ div.editions {
 	}
 	
 	table {
-		width: 100%;
+		/*width: 100%;*/
 	}
 		
 }
@@ -207,7 +245,7 @@ div.formats {
 		/*border-top: thin solid #ececec;*/
 		
 		table {
-			width: 100%;
+			/*width: 100%;*/
 		}
 		
 		div.image {

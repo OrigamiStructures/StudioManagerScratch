@@ -399,6 +399,30 @@ footer {
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
+@media only screen {
+  /* small up */
+  div.pieces button {
+    display: none; }
+  div.pieces table {
+    display: block;
+    width: 50rem; } }
+@media only screen and (min-width: 40.063em) {
+  div.pieces {
+    position: relative; }
+    div.pieces button {
+      display: block; }
+    div.pieces table {
+      display: none; }
+
+  div.pieces:hover button {
+    display: none; }
+  div.pieces:hover table {
+    width: 50rem;
+    display: block;
+    position: absolute;
+    top: 0;
+    overflow-y: visible;
+    z-index: 1000; } }
 /**
 ==============================================================
 
@@ -521,7 +545,7 @@ div.editions section.edition {
   div.editions section.edition::after {
     clear: both; }
 div.editions table {
-  width: 100%; }
+  /*width: 100%;*/ }
 
 @media only screen {
   /* small up */
@@ -577,7 +601,7 @@ div.formats {
     div.formats section.format::after {
       clear: both; }
     div.formats section.format table {
-      width: 100%; }
+      /*width: 100%;*/ }
     @media screen and (max-width: 63.9375em) {
       div.formats section.format div.image .dup {
         display: none !important; } }

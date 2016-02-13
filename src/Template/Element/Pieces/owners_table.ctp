@@ -1,11 +1,12 @@
 <!-- Element/Edition/owners_table.ctp -->
 <?php 
+//osd($pieces);die;
 /**
  * For use when the pieces table is show in an Editon or Format context and 
  * the only pieces displayed are the ones for that context
  */
 ?>
-<table style="width: 100%">
+<table>
 	<caption>
 		<?= $caption ?>
 	</caption>
