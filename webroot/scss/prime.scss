@@ -413,3 +413,8 @@ div.radio > label {
 .disabled  {
 	color: #ccc;
 }
+
+div.training {
+	@include grid-column-row();
+	@include grid-column(8);
+}

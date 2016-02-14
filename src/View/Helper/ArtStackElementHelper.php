@@ -49,7 +49,7 @@ class ArtStackElementHelper extends Helper {
 //		osd($this->SystemState->_viewVars);
 		if (!is_null($this->SystemState->artwork)) {
 			$element = 'Artwork/full';			
-		} elseif (!is_null($this->SystemState->artworks)) {
+		} elseif (!is_null($this->SystemState->artworks) && !empty ($this->SystemState->artworks)) {
 			$element = 'Artwork/many';	
 		} else {
 			// there was no spec'd artwork and no pagination result

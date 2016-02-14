@@ -109,7 +109,7 @@ class ArtworkStackComponent extends Component {
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
-			return $artworks;
+			return $artworks->toArray();
 		} else {
 			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
 			// BASED ON ONGOING DISPOSITION CREATION ?????
