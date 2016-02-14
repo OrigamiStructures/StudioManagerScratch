@@ -38,8 +38,8 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 	  </div>
 	  <div class="top-bar-right">
 		<ul class="menu">
-		  <li><input type="search" placeholder="Search"></li>
-		  <li><button type="button" class="button">Search</button></li>
+		  <li><input placeholder="Search"></li>
+		  <li><button type="button" class="button tiny">Search</button></li>
 		</ul>
 	  </div>
 	</nav>
