@@ -51,7 +51,11 @@ class UniqueHelper extends EditionFactoryHelper {
 	}
 
 	protected function _formatPieceTable($format, $edition) {
+		$caption = 'Details about this work';
+		$pieces = $format->pieces;
+		$providers = [$format];
 		
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
 	}
 
 }

@@ -72,7 +72,8 @@ class ArtworkStackBehavior extends Behavior {
 	 */
 	public function initPieces($data) {
 		$editions = new Collection($data['editions']);
-		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
+		if (in_array($this->_table->SystemState->now(), [ARTWORK_CREATE, ARTWORK_CREATE_UNIQUE])) {
+//		if ($this->_table->SystemState->is(ARTWORK_CREATE)) {
 			$piece_strategy = 'createPieces';
 		} elseif ($this->_table->SystemState->is(ARTWORK_REFINE)) {
 			$piece_strategy = 'refinePieces';

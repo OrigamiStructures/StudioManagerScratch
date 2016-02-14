@@ -10,7 +10,11 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 <div class="artworks">
 	<?php
 	if ($editing) : 
-		echo $this->Form->create($artwork, ['type' => 'file']); 
+		if ($SystemState->is(ARTWORK_CREATE_UNIQUE)) {
+			echo $this->Form->create($artwork, ['type' => 'file', 'action' => 'create']);
+		} else {
+			echo $this->Form->create($artwork, ['type' => 'file']);
+		}	
 	endif; ?>
 	<?= $this->element($artworks_element);?>
 	<?php if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE])) : echo $this->Form->end(); endif; ?>

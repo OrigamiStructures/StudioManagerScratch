@@ -226,7 +226,6 @@ class ArtworksController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
-//		osd($this->request->data, 'trd');
 		$artwork = $this->ArtworkStack->creationStack(); 
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
@@ -237,7 +236,6 @@ class ArtworksController extends AppController
 					]
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
-//			osd($artwork);die('ready to go, artwork controller submitted');
             if ($this->Artworks->save($artwork)) {
 //				if ($this->request->action !== 'create') {
 //					return $artwork;
@@ -259,12 +257,13 @@ class ArtworksController extends AppController
 		$this->render('review');
     }
 	
-//	public function createUnique() {
-//		$this->request->data += ['user_id' => $this->SystemState->artistId()];
-//		$artwork = $this->create();
+	public function createUnique() {
+		$this->request->data += ['user_id' => $this->SystemState->artistId()];
+		$artwork = $this->create();
 //		$this->autoRender = FALSE;
 //		$this->redirect(['controller' => 'artworks', 'action' => 'refine', '?' => ['artwork' => $artwork->id]]);
-//	}
+		$this->render('review');
+	}
 
 	/**
 	 * Display one or a page of Artworks
