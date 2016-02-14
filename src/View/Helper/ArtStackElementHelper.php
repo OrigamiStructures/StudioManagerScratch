@@ -240,4 +240,17 @@ class ArtStackElementHelper extends Helper {
 			}
 		}
 	}
+	
+	/**
+	 * Buttons to place after the format fieldset of the artwork stack form
+	 * 
+	 * While this last form fieldset may not exist for some layer refinement 
+	 * they always appear during creation. And since the 'unique' tailored creation 
+	 * is actualy a refinement of a empty stubbed record, we'll need a special 
+	 * cancel button to delete that stub. Other special buttons may turn up.
+	 */
+//	public function artFinalFormButtonsRule() {
+//		$buttons = $this->Form->submit('Submit', ['class' => 'button']) . "\n";
+//		$buttons += $this->Form->postLink();
+//	}
 }

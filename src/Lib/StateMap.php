@@ -22,6 +22,7 @@ class StateMap {
     'sample' => NULL,
     'review' => 2,
     'create' => 1,
+    'createUnique' => 1,
     'refine' => 4,
     'initialize' => NULL,
     'mapStates' => NULL,

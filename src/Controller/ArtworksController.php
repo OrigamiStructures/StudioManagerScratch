@@ -239,18 +239,32 @@ class ArtworksController extends AppController
 			$this->ArtworkStack->allocatePieces($artwork);
 //			osd($artwork);die('ready to go, artwork controller submitted');
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+//				if ($this->request->action !== 'create') {
+//					return $artwork;
+//				} else {
+					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+//				}
+                
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
+//				if ($this->request->action !== 'create') {
+//					return FALSE;
+//				}
             }
         }
-
 		$this->ArtworkStack->layerChoiceLists();
         
 		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
 		$this->render('review');
     }
+	
+//	public function createUnique() {
+//		$this->request->data += ['user_id' => $this->SystemState->artistId()];
+//		$artwork = $this->create();
+//		$this->autoRender = FALSE;
+//		$this->redirect(['controller' => 'artworks', 'action' => 'refine', '?' => ['artwork' => $artwork->id]]);
+//	}
 
 	/**
 	 * Display one or a page of Artworks
