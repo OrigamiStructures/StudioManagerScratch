@@ -209,10 +209,10 @@ class ArtStackElementHelper extends Helper {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
 				case ARTWORK_REFINE:
-					if ($edition->format_count === 1 && !$edition->hasUnassinged()) {
-						$element = 'empty';
-					} else {
+					if ($edition->hasUnassinged()) {
 						$element = 'Pieces/owners_table';
+					} else {
+						$element = 'empty';
 					}
 					// default PieceHelper edition filter is ok
 					return $element;
@@ -238,19 +238,25 @@ class ArtStackElementHelper extends Helper {
 		} else {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
-					if ($this->SystemState->controller() === 'formats') {
-						return 'Pieces/overview_table';
+					if (count($this->SystemState->pieces) > 0) {
+						if ($this->SystemState->controller() === 'formats') {
+							// single format focus allows detailed piece work
+							$element = 'Pieces/overview_table';
+						} else {
+							$element = 'Pieces/owners_table';
+						}
 					} else {
-						return 'Pieces/owners_table';
+						$element = 'empty';
 					}
+					break;
 				case ARTWORK_REFINE:
-					// default PieceHelper format filter is ok
-					return 'Pieces/owners_table';
+						$element = 'Pieces/owners_table';
 					break;
 				default :
-					return 'empty';
+					$element = 'empty';
 			}
 		}
+		return $element;
 	}
 	
 	/**

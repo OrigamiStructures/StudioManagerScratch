@@ -151,9 +151,9 @@ class EditionedHelper extends EditionFactoryHelper {
 					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
 		} else {
 			if ($format->hasSalable($edition->undisposed_piece_count)) {
-				$assigned = "<p>This fomat has no pieces assigned.</p>\n";
+				$assigned = "<p>This format has no pieces assigned.</p>\n";
 			} else {
-				$assigned = "<p>This fomat was never implemented.</p>\n";
+				$assigned = "<p>This format was never implemented.</p>\n";
 			}
 			
 		}
@@ -284,29 +284,54 @@ class EditionedHelper extends EditionFactoryHelper {
 		
 	}
 
+	/**
+	 * Decide what piece table display is right for this edition and context
+	 * 
+	 * @param Entity $edition
+	 */
 	protected function _editionPieceTable($edition) {
-		if (/*$this->SystemState->is(ARTWORK_REVIEW) && */is_null($this->SystemState->artworks)) {
+		if (is_null($this->SystemState->artworks)) {
+			
+			// the filter strategy is assumed to have been set at this point . 
+			// Seems like a lot of coupling. 
+			$pieces = $this->pieceTool()->filter($edition->pieces, 'edition');
+			
 			if ($edition->hasUnassigned()) {
 				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
 			} else {
-				$caption = 'All the pieces in this edition are assigned to formats';
+				$caption = '';
+//				// this information is already shown for empty editions
+//				$caption = 'All the pieces in this edition are assigned to formats';
 			}
 			
-			$pieces = $this->pieceTool()->filter($edition->pieces, 'edition');
 			$providers = ['edition' => $edition];
 			$this->_View->set(compact('caption', 'pieces', 'providers'));
 		}		
 	}
 
+	/**
+	 * Decide what piece table display is right for this format and context 
+	 * 
+	 * @param Entity $format
+	 * @param Entity $edition
+	 */
 	protected function _formatPieceTable($format, $edition) {
-		if (/*$this->SystemState->is(ARTWORK_REVIEW) && */is_null($this->SystemState->artworks)) {
-			if ($edition->hasAssigned()) {
-				$caption = 'No pieces have been assigned to this format.';
-			} else {
+		if (is_null($this->SystemState->artworks)) {
+			
+			// the filter strategy is assumed to have been set at this point
+			// and format->pieces is assumed to be the working set. Seems 
+			// like a lot of coupling. And some bad assumptions.
+			$pieces = $this->pieceTool()->filter($format->pieces, 'format');
+		
+			if ($format->hasAssigned()) {
 				$caption = 'Pieces in this format.';
+				
+			} else {
+//				// this information is already shown for empty formats
+//				$caption = 'No pieces have been assigned to this format.';
+				$caption = '';
 			}
 			
-			$pieces = $this->pieceTool()->filter($format->pieces, 'format');
 			$providers = [$format];
 			$this->_View->set(compact('caption', 'pieces', 'providers'));
 		}		
