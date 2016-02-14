@@ -27,8 +27,6 @@ class EditionsTable extends AppTable
 	 * @var array
 	 */
 	protected $types = [
-		EDITION_UNIQUE => 'Unique Work',
-		EDITION_RIGHTS => 'Rights',
 		'Edition' => [
 			EDITION_LIMITED => 'Limited (numbered)',
 			EDITION_OPEN => 'Open (un-numbered)',			
@@ -41,6 +39,8 @@ class EditionsTable extends AppTable
 			PUBLICATION_LIMITED => 'Limited (numbered)',
 			PUBLICATION_OPEN => 'Open (un-numbered)',
 		],
+		EDITION_UNIQUE => 'Unique Work',
+		EDITION_RIGHTS => 'Rights',
 	];
 
 
