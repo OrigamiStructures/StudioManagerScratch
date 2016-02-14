@@ -198,10 +198,6 @@ div.editions {
 		padding-top: .5rem;
 		border-top: .2rem solid #eee;
 	}
-	
-	table {
-		/*width: 100%;*/
-	}
 		
 }
 	
@@ -307,6 +303,23 @@ div.formats {
 			}
 			> div.text, div.pieces {
 				@include grid-column(12, 0)
+			}
+		}
+	}
+	
+	@media only screen and (min-width: 40.063em) {
+		section.format.format_focus {
+			div.text{
+				@include grid-column(12, 0);
+			}
+			div.pieces {
+				@include grid-column(12);
+				button {
+					display: none;
+				}
+				table {
+					display: block;
+				}
 			}
 		}
 	}

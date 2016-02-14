@@ -549,8 +549,6 @@ div.editions section.edition {
     display: table; }
   div.editions section.edition::after {
     clear: both; }
-div.editions table {
-  /*width: 100%;*/ }
 
 @media only screen {
   /* small up */
@@ -711,6 +709,25 @@ div.formats {
       padding-right: 0; }
       div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.formats section.format.format_focus div.text {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.format_focus div.text:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.format_focus div.pieces {
+      width: 100%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.formats section.format.format_focus div.pieces:last-child:not(:first-child) {
+        float: right; }
+      div.formats section.format.format_focus div.pieces button {
+        display: none; }
+      div.formats section.format.format_focus div.pieces table {
+        display: block; } }
   @media only screen and (min-width: 64.063em) {
     div.formats {
       /* large up */ }

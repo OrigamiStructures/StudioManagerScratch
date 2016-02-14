@@ -58,7 +58,6 @@ class ArtStackElementHelper extends Helper {
 		return $element;
 	}
 	
-	
 	protected function artworkContentRule() {
 		switch ($this->SystemState->now()) {
 			case ARTWORK_REVIEW :
@@ -148,7 +147,7 @@ class ArtStackElementHelper extends Helper {
 				break;
 			case ARTWORK_REFINE :
 				$controller = $this->SystemState->controller();
-				// Refinement much choose based on the context of the edit
+				// Refinement must choose based on the context of the edit
 				// Always display if the target is downstream
 				// Always fieldset if this is the target
 				// fieldset if target is upstream and this is the only child
@@ -239,6 +238,11 @@ class ArtStackElementHelper extends Helper {
 		} else {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
+					if ($this->SystemState->controller() === 'formats') {
+						return 'Pieces/overview_table';
+					} else {
+						return 'Pieces/owners_table';
+					}
 				case ARTWORK_REFINE:
 					// default PieceHelper format filter is ok
 					return 'Pieces/owners_table';

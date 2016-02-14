@@ -1,9 +1,22 @@
 <!-- Template/Artwork/review.ctp -->
 
 <?php 
+/**
+ * set values that amend tag classes for css refinement
+ */
 $editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
-$ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElementHelper');
-$this->set(compact('ArtStackElement', 'editing'));
+if ($SystemState->isKnown('format')) {
+	$focus = 'format_focus';
+//} elseif ($SystemState->isKnown('edition')) {
+//	$focus = 'edition_focus';
+} else {
+	$focus = FALSE;
+}
+
+
+$ArtStackElement
+		= $this->loadHelper('App\View\Helper\ArtStackElementHelper');
+$this->set(compact('ArtStackElement', 'editing', 'focus'));
 $artworks_element = $ArtStackElement->choose('artworksContent');
 ?>
 
@@ -16,6 +29,7 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 			echo $this->Form->create($artwork, ['type' => 'file']);
 		}	
 	endif; ?>
+	
 	<?= $this->element($artworks_element);?>
 	<?php if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE])) : echo $this->Form->end(); endif; ?>
 </div>
