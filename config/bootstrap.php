@@ -240,6 +240,7 @@ define('ARTWORK_CREATE', 1);
 define('ARTWORK_REVIEW', 2);
 define('ARTWORK_REFINE', 4);
 define('ARTWORK_SAVE', 8);
+define('ARTWORK_CREATE_UNIQUE', 3);
 
 // These will need to be change to something meaningful
 // For now, we can act as admins even though we're users

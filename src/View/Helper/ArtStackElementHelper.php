@@ -75,6 +75,9 @@ class ArtStackElementHelper extends Helper {
 					$element = 'Artwork/describe';
 				}
 				break;
+			case ARTWORK_CREATE_UNIQUE :
+				$element = 'Artwork/create_unique';
+				break;
 			default :
 				$element = 'Artwork/describe';
 		}
@@ -100,6 +103,9 @@ class ArtStackElementHelper extends Helper {
 				} else {
 					$element = 'Edition/fieldset';
 				}
+				break;
+			case ARTWORK_CREATE_UNIQUE :
+				$element = 'Edition/create_unique';
 				break;
 			case ARTWORK_REFINE :
 //				osd($this->SystemState->queryArg('edition'),'query arg');
@@ -158,6 +164,9 @@ class ArtStackElementHelper extends Helper {
 				} else {
 					$element = 'Format/describe';
 				}
+				break;
+			case ARTWORK_CREATE_UNIQUE :
+				$element = 'Format/create_unique';
 				break;
 			default :
 				$element = 'Artwork/describe';

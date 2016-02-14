@@ -1,7 +1,7 @@
 <!-- Template/Artwork/review.ctp -->
 
 <?php 
-$editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE]);
+$editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
 $ArtStackElement = $this->loadHelper('App\View\Helper\ArtStackElementHelper');
 $this->set(compact('ArtStackElement', 'editing'));
 $artworks_element = $ArtStackElement->choose('artworksContent');
@@ -13,7 +13,7 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 		echo $this->Form->create($artwork, ['type' => 'file']); 
 	endif; ?>
 	<?= $this->element($artworks_element);?>
-	<?php if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE])) : echo $this->Form->end(); endif; ?>
+	<?php if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE])) : echo $this->Form->end(); endif; ?>
 </div>
 
 <?php 

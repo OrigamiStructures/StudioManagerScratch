@@ -17,7 +17,7 @@
 //		]); 
 	
 	if ($SystemState->isKnown('video')) {
-		echo $this->Html->media($SystemState->queryArg('video'), ['pathPrefix' => 'files/training_videos/', 'controls' => true]);
+		echo $this->Html->media($SystemState->queryArg('video'), ['pathPrefix' => 'files/training_videos/', 'controls' => true, 'autoplay' => true]);
 	}
 		?>
 	
