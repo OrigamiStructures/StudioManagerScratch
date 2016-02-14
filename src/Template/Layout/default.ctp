@@ -44,7 +44,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 	  </div>
 	</nav>
 	<nav class="breadcrumbs">
-		<?= $this->Html->getCrumbList(); ?>
+		<?= $this->Html->getCrumbList([], 'All Art'); ?>
 	</nav>
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">

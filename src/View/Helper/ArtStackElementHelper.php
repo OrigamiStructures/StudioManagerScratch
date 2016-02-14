@@ -46,10 +46,9 @@ class ArtStackElementHelper extends Helper {
 	 * The artworks div may be destined to have one or many artwork sections
 	 */
 	protected function artworksContentRule() {
-//		osd($this->SystemState->_viewVars);
 		if (!is_null($this->SystemState->artwork)) {
 			$element = 'Artwork/full';			
-		} elseif (!is_null($this->SystemState->artworks) && !empty ($this->SystemState->artworks)) {
+		} elseif (!is_null($this->SystemState->artworks) && count($this->SystemState->artworks) > 0) {
 			$element = 'Artwork/many';	
 		} else {
 			// there was no spec'd artwork and no pagination result
