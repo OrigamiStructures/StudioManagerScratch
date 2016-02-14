@@ -54,6 +54,13 @@ footer{
 	}
 }	
 
+/**
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
+**/
 @media only screen { /* small up */ 
 	div.pieces {
 		button {
@@ -61,11 +68,9 @@ footer{
 		}
 		table {
 			display: block;
-			width: rem-calc(800);
 		}
 	}
 }
-
 @media only screen and (min-width: 40.063em) {   
 	div.pieces {
 		position: relative;
@@ -82,7 +87,6 @@ footer{
 			display: none;
 		}
 		table {
-			width: rem-calc(800);
 			display: block;
 			position: absolute;
 			top: 0;
@@ -263,74 +267,74 @@ div.formats {
 		}
 	}
 	
-		@media only screen { /* small up */
-			section.format{
-				> div.image {
-					@include grid-column-row();
-					@include grid-column(2, 0);
-					margin-left: 0;
-					@include grid-col-end();
-				}
-				> div.text {
-					@include grid-column(12, 0);
-				}
-				> div.pieces {
-					@include grid-column(12, 0);
-				}
+	@media only screen { /* small up */
+		section.format{
+			> div.image {
+				@include grid-column-row();
+				@include grid-column(2, 0);
+				margin-left: 0;
+				@include grid-col-end();
 			}
-			section.format.editing > fieldset {
-				div.image {
-					/*@include grid-column-row();*/
-					@include grid-column(12, 0)
-				}
+			> div.text {
+				@include grid-column(12, 0);
+			}
+			> div.pieces {
+				@include grid-column(12, 0);
 			}
 		}
-		
-		@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-			section.format {
-				div.text{
-					@include grid-column(6, 0);
-				}
-				div.pieces {
-					@include grid-column(6);
-				}
-			}
-			section.format.editing > fieldset {
-				> div.image {
-					@include grid-column-row();
-					@include grid-column(6, 0);
-					margin-left: 0;
-				}
-				> div.text, div.pieces {
-					@include grid-column(12, 0)
-				}
+		section.format.editing > fieldset {
+			div.image {
+				/*@include grid-column-row();*/
+				@include grid-column(12, 0)
 			}
 		}
-		
-		@media only screen and (min-width: 64.063em) { /* large up */
-			section.format {
-				> div.image {
-					@include grid-column(1, 0);
-					margin-left: auto;
-				}
-				> div.text {
-					@include grid-column(5);
-				}
-				> div.pieces {
-					@include grid-column(6);
-				}
+	}
+
+	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+		section.format {
+			div.text{
+				@include grid-column(6, 0);
 			}
-			section.format.editing > fieldset {
-				> div.image {
-					/*@include grid-column-row();*/
-					@include grid-column(4, 0);
-					margin-left: auto;
-				}
-				> div.text, div.pieces {
-					@include grid-column(8)
-				}
+			div.pieces {
+				@include grid-column(6);
 			}
 		}
+		section.format.editing > fieldset {
+			> div.image {
+				@include grid-column-row();
+				@include grid-column(6, 0);
+				margin-left: 0;
+			}
+			> div.text, div.pieces {
+				@include grid-column(12, 0)
+			}
+		}
+	}
+
+	@media only screen and (min-width: 64.063em) { /* large up */
+		section.format {
+			> div.image {
+				@include grid-column(1, 0);
+				margin-left: auto;
+			}
+			> div.text {
+				@include grid-column(5);
+			}
+			> div.pieces {
+				@include grid-column(6);
+			}
+		}
+		section.format.editing > fieldset {
+			> div.image {
+				/*@include grid-column-row();*/
+				@include grid-column(4, 0);
+				margin-left: auto;
+			}
+			> div.text, div.pieces {
+				@include grid-column(8)
+			}
+		}
+	}
 
 }
 

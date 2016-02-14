@@ -399,13 +399,19 @@ footer {
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
+/**
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
+**/
 @media only screen {
   /* small up */
   div.pieces button {
     display: none; }
   div.pieces table {
-    display: block;
-    width: 50rem; } }
+    display: block; } }
 @media only screen and (min-width: 40.063em) {
   div.pieces {
     position: relative; }
@@ -417,7 +423,6 @@ footer {
   div.pieces:hover button {
     display: none; }
   div.pieces:hover table {
-    width: 50rem;
     display: block;
     position: absolute;
     top: 0;
