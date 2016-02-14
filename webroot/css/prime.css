@@ -720,14 +720,16 @@ div.formats {
     div.formats section.format.format_focus div.pieces {
       width: 100%;
       float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem; }
+      padding-left: 0;
+      padding-right: 0; }
       div.formats section.format.format_focus div.pieces:last-child:not(:first-child) {
         float: right; }
       div.formats section.format.format_focus div.pieces button {
         display: none; }
       div.formats section.format.format_focus div.pieces table {
-        display: block; } }
+        display: block; }
+    div.formats section.format.format_focus div.pieces:hover table {
+      position: relative; } }
   @media only screen and (min-width: 64.063em) {
     div.formats {
       /* large up */ }
