@@ -233,6 +233,7 @@ define('PORTFOLIO_OPEN', 'Open Portfolio');
 define('PUBLICATION_LIMITED', 'Limited Publication');
 define('PUBLICATION_OPEN', 'Open Publication');
 
+// Serves as a boolean argument in method call(s)
 define('NUMBERED_PIECES', 1);
 define('OPEN_PIECES', 0);
 
@@ -248,10 +249,12 @@ define('ADMIN_SYSTEM', 'user'); // 'admin'
 define('ADMIN_ARTIST', 'artist_admin');
 
 //System Constants
+// Serves as a boolean argument in method call(s)
 define('SYSTEM_VOID_REFERER', TRUE);
 define('SYSTEM_CONSUME_REFERER', FALSE);
 
 //AssignemtTrait Constants
+// boolean argument to control the kind of return value from a method
 define('PIECE_ENTITY_RETURN', FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
 // general piece collection filter options
