@@ -204,23 +204,23 @@ class ArtStackElementHelper extends Helper {
 	protected function _editionPieceTable($edition) {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
-			return 'empty';
+			$element = 'empty';
 		} else {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
 				case ARTWORK_REFINE:
-					if ($edition->hasUnassinged()) {
+					if ($edition->hasUnassigned()) {
 						$element = 'Pieces/owners_table';
 					} else {
 						$element = 'empty';
 					}
 					// default PieceHelper edition filter is ok
-					return $element;
 					break;
 				default :
-					return 'empty';
+					$element = 'empty';
 			}
 		}
+		return $element;
 	}
 	
 	/**
