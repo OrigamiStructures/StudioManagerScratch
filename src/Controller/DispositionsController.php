@@ -10,6 +10,13 @@ use App\Controller\AppController;
  */
 class DispositionsController extends AppController
 {
+	
+	public $DispositionManager;
+
+	public function initialize() {
+		parent::initialize();
+		$this->loadComponent('DispositionManager');
+	}
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
@@ -131,6 +138,13 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
-		
+		$disposition = $this->DispositionManager->read();
+		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		osd($disposition);
+		osd($this->Dispositions->get(1, [
+			'contain' => [
+				'Pieces', 'Pieces.Formats.Editions.Artworks', 'Members', 'Addresses'
+			]
+		]));
 	}
 }

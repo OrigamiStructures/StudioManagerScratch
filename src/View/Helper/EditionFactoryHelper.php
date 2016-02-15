@@ -175,11 +175,13 @@ class EditionFactoryHelper extends Helper {
 		if ((((boolean) $pieces) && $format->hasSalable($edition->undisposed)) || $format->hasAssigned()) {
 			echo $this->Html->link("Add status information",
 				[/*'controller' => 'dispositions', 'action' => 'create'*/
-					'controller' => 'pieces', '?' => [
-					'artwork' => $edition->artwork_id,
-					'edition' => $edition->id,
-					'format' => $format->id,
-				]]);
+					'controller' => 'dispositions',
+					'action' => 'create','?' => [
+						'artwork' => $edition->artwork_id,
+						'edition' => $edition->id,
+						'format' => $format->id,
+					]
+				]);
 		} else {
 			echo $this->Html->tag('p', 
 				'You can\'t change the status of this artwork.', 

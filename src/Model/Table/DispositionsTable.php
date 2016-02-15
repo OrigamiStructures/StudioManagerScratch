@@ -54,11 +54,13 @@ class DispositionsTable extends AppTable
         $this->belongsTo('Members', [
             'foreignKey' => 'member_id'
         ]);
-        $this->belongsTo('Locations', [
-            'foreignKey' => 'location_id'
+        $this->belongsTo('Addresses', [
+            'foreignKey' => 'address_id'
         ]);
-        $this->belongsTo('Pieces', [
-            'foreignKey' => 'piece_id'
+        $this->belongsToMany('Pieces', [
+            'foreignKey' => 'disposition_id',
+            'targetForeignKey' => 'piece_id',
+            'joinTable' => 'dispositions_pieces',
         ]);
     }
 
