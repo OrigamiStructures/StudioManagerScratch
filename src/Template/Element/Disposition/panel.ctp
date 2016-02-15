@@ -1,3 +1,6 @@
-<p>this is the disposition panel</p>
+<div class="dispositions_panel">
+	<?= $this->Form->create(); ?>
+	<?= $this->element('Disposition/definition_row'); ?>
+	<?= $this->Form->end(); ?>
+</div>
 <?php
-echo $this->Html->link('Discard disposition', ['controller' => 'dispositions', 'action' => 'discard']);

@@ -206,9 +206,12 @@ $accordionmenu-arrows: true;
 
 $badge-background: $primary-color;
 $badge-color: foreground($badge-background);
-$badge-padding: 0.3em;
+/*$badge-padding: 0.3em;
 $badge-minwidth: 2.1em;
-$badge-font-size: 0.6rem;
+$badge-font-size: 0.6rem;*/
+$badge-padding: 0.1em;
+$badge-minwidth: 1.8em;
+$badge-font-size:1rem;
 
 // 10. Breadcrumbs
 // ---------------

@@ -334,7 +334,10 @@ class EditionedHelper extends EditionFactoryHelper {
 			
 			$providers = [$format];
 			$this->_View->set(compact('caption', 'pieces', 'providers'));
-		}		
+		} else {
+			$caption = '';
+			$this->_View->set('caption', $caption);
+		}	
 	}
 
 }

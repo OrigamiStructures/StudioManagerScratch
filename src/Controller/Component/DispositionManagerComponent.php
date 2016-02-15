@@ -40,12 +40,17 @@ class DispositionManagerComponent extends Component {
 	}
 	
 	public function merge(Disposition $dispostion, array $arguemnts) {
-		osd($arguemnts);
+//		osd($arguemnts);
 		$this->identity($arguemnts);
 	}
 	
 	protected function identity($arguments) {
-		
+		if (array_key_exists('artwork', $arguments)) {
+			$this->SystemState->referer([
+				'controller' => 'artworks',
+				'action' => 'review',
+				'?' => $arguments]);
+		}
 	}
 	
 }
