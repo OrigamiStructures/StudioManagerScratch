@@ -21,6 +21,7 @@ use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Lib\SState;
 use App\Controller\Component\PieceAllocationComponent;
+use Cake\Cache\Cache;
 
 /**
  * Application Controller
@@ -114,6 +115,9 @@ class AppController extends Controller
     {
 		$menu = TableRegistry::get('Menus');
 		$this->set('menus', $menu->assemble());
+		
+		$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
+		
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
         ) {

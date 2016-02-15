@@ -26,6 +26,10 @@ class DispositionManagerComponent extends Component {
 		return Cache::remember($this->SystemState->artistId(), [$this, 'generate'], 'dispo');
 	}
 	
+	public function discard() {
+		Cache::delete($this->SystemState->artistId(), 'dispo');
+	}
+	
 	/**
 	 * Make a brand new Disposition Entity
 	 * 

@@ -147,4 +147,10 @@ class DispositionsController extends AppController
 			]
 		]));
 	}
+	
+	public function discard() {
+		$this->DispositionManager->discard();
+		$this->autoRender = false;
+		$this->redirect($this->referer());
+	}
 }
