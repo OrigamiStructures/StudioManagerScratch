@@ -1,7 +1,7 @@
 	<div class="disposition">
 		<section class="pieces">
 			<span class="warning badge">!!!</span>
-			<p>Pieces</p>
+			<?= $this->element('Disposition/piece_list'); ?>
 		</section>
 		<section class="disposition">
 			<span class="warning badge">!!!</span>

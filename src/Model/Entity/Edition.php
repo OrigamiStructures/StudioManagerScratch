@@ -195,5 +195,8 @@ class Edition extends Entity
 		}
 		return $label;
 	}
+	public function identityArguments() {
+		return ['edition' => $this->id, 'artwork' => $this->artwork_id];
+	}
 	
 }

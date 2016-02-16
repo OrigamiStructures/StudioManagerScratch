@@ -188,5 +188,12 @@ class Format extends Entity
 		}
 		return $label;
 	}
+	public function identityArguments() {
+		$args = ['format' => $this->id];
+		if (is_object($this->edition)) {
+			$args = $this->edition->identityArguments() + $args;
+		}
+		return $args;
+	}
 	
 }

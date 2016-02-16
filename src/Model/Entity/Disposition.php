@@ -43,10 +43,13 @@ class Disposition extends Entity
 	 * @return boolean
 	 */
 	public function hasPiece($piece_id) {
-		$candidates = new Collection($this->pieces);
-		return !empty($candidates->filter(function($piece) use ($piece_id) {
-			return $piece->fullyIdentified() && $piece->id === $piece_id;
-		})->toArray());
+		if (is_array($this->pieces)) {
+			$candidates = new Collection($this->pieces);
+			return !empty($candidates->filter(function($piece) use ($piece_id) {
+								return $piece->fullyIdentified() && $piece->id === $piece_id;
+							})->toArray());
+		}
+		return FALSE;
 	}
 	
 	/**
@@ -59,10 +62,13 @@ class Disposition extends Entity
 	 * @return boolean
 	 */
 	public function hasFormat($format_id) {
-		$candidates = new Collection($this->pieces);
-		return !empty($candidates->filter(function($piece) use ($piece_id) {
-			return $piece->fullyIdentified() && $piece->id === $piece_id;
-		})->toArray());
+		if (is_array($this->pieces)) {
+			$candidates = new Collection($this->pieces);
+			return !empty($candidates->filter(function($piece) use ($format_id) {
+								return $piece->fullyIdentified() && $piece->id === $format_id;
+							})->toArray());
+		}
+		return FALSE;
 	}
 	
 	/**

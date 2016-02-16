@@ -94,4 +94,11 @@ class Piece extends Entity
 		}
 		return $label;
 	}
+	public function identityArguments() {
+		$args = ['piece' => $this->id];
+		if (is_object($this->format)) {
+			$args = $this->format->identityArguments() + $args;
+		}
+		return $args;
+	}
 }

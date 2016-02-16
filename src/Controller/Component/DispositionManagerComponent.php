@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Cache\Cache;
 use App\Model\Entity\Disposition;
+use Cake\ORM\TableRegistry;
 
 /**
  * CakePHP DispositionManagerComponent
@@ -33,7 +34,8 @@ class DispositionManagerComponent extends Component {
 	 * @return Disposition The evolving or brand new disposition
 	 */
 	public function get() {
-		return Cache::remember($this->SystemState->artistId(), [$this, 'generate'], 'dispo');
+		$this->disposition = Cache::remember($this->SystemState->artistId(), [$this, 'generate'], 'dispo');
+		return $this->disposition;
 	}
 	
 	/**
@@ -49,15 +51,22 @@ class DispositionManagerComponent extends Component {
 	 * @return Disposition
 	 */
 	public function generate() {
-		return new Disposition(['id', 'pieces', 'member', 'location']);
+		return new Disposition(['id', 'pieces' => [], 'member', 'location']);
 	}
 	
 	public function merge(Disposition $dispostion, array $arguments) {
 //		osd($arguemnts);
 		$this->_register($arguments);
 		$this->_setRedirect($arguments);
+//		osd($this->disposition);die;
+		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
 	}
 	
+	/**
+	 * 
+	 * @param type $arguments
+	 * @return 
+	 */
 	protected function _register($arguments) {
 		if (array_key_exists('artwork', $arguments)) {
 			return $this->_registerArtwork($arguments);
@@ -74,11 +83,26 @@ class DispositionManagerComponent extends Component {
 			}
 		} else { // presence of 'format' arg is assumed now
 			if (!$this->disposition->hasFormat($arguments['format'])) {
-				$this->disposition->pieces[] = $this->pieceStack($arguments['format']);
+				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}
 	}
 	
+	public function pieceStack($piece_id) {
+		$Pieces = TableRegistry::get('Pieces');
+		return $Pieces->get($piece_id, [
+			'contain' => 'Formats.Editions.Artworks',
+		]);
+	}
+
+	public function formatStack($format_id) {
+		$Pieces = TableRegistry::get('Formats');
+		return $Pieces->get($format_id, [
+			'contain' => 'Editions.Artworks',
+		]);
+	}
+
+
 	protected function _registerMember($arguments) {
 		
 	}
