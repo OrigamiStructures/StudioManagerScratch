@@ -83,12 +83,12 @@ class Disposition extends Entity
 	public function dropFormat($format_id) {
 		$limit = count($this->pieces);
 		$index = 0;
-		while ($count < $limit) {
+		while ($index < $limit) {
 			if (!$this->pieces[$index]->fullyIdentified() && $this->pieces[$index]->id == $format_id) {
 				unset($this->pieces[$index]);
 				$index = $limit + 1;
 			} else {
-				$count++;
+				$index++;
 			}
 		}
 	}
