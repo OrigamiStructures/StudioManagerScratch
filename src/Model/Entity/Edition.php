@@ -189,9 +189,9 @@ class Edition extends Entity
 	 * @return string
 	 */
 	public function identityLabel() {
-		$label = $this->dispalyTitle;
+		$label = $this->display_title;
 		if (is_object($this->artwork)) {
-			$label = "{$this->artwork->identityLabel()} $label";
+			$label = "{$this->artwork->identityLabel()}, $label";
 		}
 		return $label;
 	}

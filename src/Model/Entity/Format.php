@@ -182,9 +182,9 @@ class Format extends Entity
 	 * @return string
 	 */
 	public function identityLabel() {
-		$label = $this->dispalyTitle;
+		$label = $this->display_title;
 		if (is_object($this->edition)) {
-			$label = "{$this->edition->identityLabel()} $label";
+			$label = "{$this->edition->identityLabel()}, $label";
 		}
 		return $label;
 	}

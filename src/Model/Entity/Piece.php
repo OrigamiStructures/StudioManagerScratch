@@ -90,7 +90,7 @@ class Piece extends Entity
 	public function identityLabel() {
 		$label = (!is_null($this->number) ? "#$this->number" : "$this->quantity pieces");
 		if (is_object($this->format)) {
-			$label = "{$this->format->identityLabel()} $label";
+			$label = "{$this->format->identityLabel()}, $label";
 		}
 		return $label;
 	}
