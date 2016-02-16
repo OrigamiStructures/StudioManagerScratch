@@ -14,6 +14,31 @@ class DispositionManagerComponent extends Component {
 	
 	public $disposition;
 	
+	/**
+	 * Map specific disposition labels to their underlying types
+	 * 
+	 * Should this be in the Table class?
+	 *
+	 * @var array
+	 */
+	protected $map = [
+		DISPOSITION_TRANSFER_SALE		=> DISPOSITION_TRANSFER,	
+		DISPOSITION_TRANSFER_DONATION	=> DISPOSITION_TRANSFER,	
+		DISPOSITION_TRANSFER_GIFT		=> DISPOSITION_TRANSFER,
+		
+		DISPOSITION_LOAN_SHOW			=> DISPOSITION_LOAN,
+		DISPOSITION_LOAN_CONSIGNMENT	=> DISPOSITION_LOAN,
+		DISPOSITION_LOAN_PRIVATE		=> DISPOSITION_LOAN,	
+		DISPOSITION_LOAN_RENTAL			=> DISPOSITION_LOAN,
+		
+		DISPOSITION_STORE_STORAGE		=> DISPOSITION_STORE,
+
+		DISPOSITION_UNAVAILABLE_LOST	=> DISPOSITION_UNAVAILABLE,
+		DISPOSITION_UNAVAILABLE_DAMAGED => DISPOSITION_UNAVAILABLE,
+		DISPOSITION_UNAVAILABLE_STOLEN  => DISPOSITION_UNAVAILABLE,
+	];
+
+
 	public function initialize(array $config) 
 	{
 		$this->controller = $this->_registry->getController();
