@@ -9,6 +9,7 @@ use App\Model\Table\SubscriptionsTable;
 use App\Model\Table\SeriesTable;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
+use Cake\Cache\Cache;
 //use Cake\Controller\Component\PaginatorComponent;
 
 /**
@@ -82,6 +83,7 @@ class ArtworkStackComponent extends Component {
 	 */
 	public function refinementTransaction($artwork, $deletions) {
 		$ArtworkTable = TableRegistry::get('Artworks');
+		Cache::delete("get_default_artworks[_{$artwork->id}_]", 'artwork');//die;
 //		osd($artwork);die;
 		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
 			$result = $ArtworkTable->save($artwork, ['atomic' => false]);
@@ -129,7 +131,7 @@ class ArtworkStackComponent extends Component {
 			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
 				'contain' => $this->full_containment,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
-//				'cache' => 'default',
+				'cache' => 'artwork',
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
