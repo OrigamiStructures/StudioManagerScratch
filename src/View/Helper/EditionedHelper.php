@@ -316,28 +316,51 @@ class EditionedHelper extends EditionFactoryHelper {
 	 * @param Entity $edition
 	 */
 	protected function _formatPieceTable($format, $edition) {
-		if (is_null($this->SystemState->artworks)) {
-			
-			// the filter strategy is assumed to have been set at this point
-			// and format->pieces is assumed to be the working set. Seems 
-			// like a lot of coupling. And some bad assumptions.
-			$pieces = $this->pieceTool()->filter($format->pieces, 'format');
-		
-			if ($format->hasAssigned()) {
-				$caption = 'Pieces in this format.';
-				
-			} else {
-//				// this information is already shown for empty formats
-//				$caption = 'No pieces have been assigned to this format.';
-				$caption = '';
-			}
-			
-			$providers = [$format];
-			$this->_View->set(compact('caption', 'pieces', 'providers'));
-		} else {
+		if (!is_null($this->SystemState->artworks)) {
 			$caption = '';
 			$this->_View->set('caption', $caption);
-		}	
+			return;
+		}
+		
+		if (is_null($this->SystemState->standing_disposition)) {
+			$this->_mainModeFormatPieceTable($format, $edition);
+		} else {
+			$this->_dispositionModeFormatPieceTable($format, $edition);
+		}
+	}
+	
+	private function _dispositionModeFormatPieceTable($format, $edition){
+		$disposition = $this->SystemState->standing_disposition;
+		if (!is_null($disposition->type)) {
+			$pieces = $edition->pieces;
+		} else {
+			// set the pieceTool filter and do the filtration
+			$pieces = $format->pieces;
+		}
+		$caption = "Indicate the pieces you want to include in this $disposition->display_label";
+		$providers = ['edition' => $edition] + $edition->formats;
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
+	}
+
+
+	private function _mainModeFormatPieceTable($format, $edition) {
+		// the filter strategy is assumed to have been set at this point
+		// and format->pieces is assumed to be the working set. Seems 
+		// like a lot of coupling. And some bad assumptions.
+		// possibly this is just falling through on default settings?
+		$pieces = $this->pieceTool()->filter($format->pieces, 'format');
+
+		if ($format->hasAssigned()) {
+			$caption = 'Pieces in this format.';
+
+		} else {
+//				// this information is already shown for empty formats
+//				$caption = 'No pieces have been assigned to this format.';
+			$caption = '';
+		}
+
+		$providers = [$format];
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
 	}
 
 }
