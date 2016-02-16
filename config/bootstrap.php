@@ -224,14 +224,14 @@ define('MEMBER_REFINE', 4);
 define('MEMBER_SAVE', 8);
 
 //Edition Types
-define('EDITION_UNIQUE', 'Unique');
-define('EDITION_RIGHTS', 'Rights');
-define('EDITION_LIMITED', 'Limited Edition');
-define('EDITION_OPEN', 'Open Edition');
-define('PORTFOLIO_LIMITED', 'Limited Portfolio');
-define('PORTFOLIO_OPEN', 'Open Portfolio');
-define('PUBLICATION_LIMITED', 'Limited Publication');
-define('PUBLICATION_OPEN', 'Open Publication');
+define('EDITION_UNIQUE'			, 'Unique');
+define('EDITION_RIGHTS'			, 'Rights');
+define('EDITION_LIMITED'		, 'Limited Edition');
+define('EDITION_OPEN'			, 'Open Edition');
+define('PORTFOLIO_LIMITED'		, 'Limited Portfolio');
+define('PORTFOLIO_OPEN'			, 'Open Portfolio');
+define('PUBLICATION_LIMITED'	, 'Limited Publication');
+define('PUBLICATION_OPEN'		, 'Open Publication');
 
 // Serves as a boolean argument in method call(s)
 define('NUMBERED_PIECES', 1);
@@ -250,23 +250,42 @@ define('ADMIN_ARTIST', 'artist_admin');
 
 //System Constants
 // Serves as a boolean argument in method call(s)
-define('SYSTEM_VOID_REFERER', TRUE);
-define('SYSTEM_CONSUME_REFERER', FALSE);
+define('SYSTEM_VOID_REFERER'	, TRUE);
+define('SYSTEM_CONSUME_REFERER' , FALSE);
 
 //AssignemtTrait Constants
 // boolean argument to control the kind of return value from a method
-define('PIECE_ENTITY_RETURN', FALSE);
+define('PIECE_ENTITY_RETURN'	, FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
 // general piece collection filter options
 // NOTES ON ADDING TO THIS SECTION
 // PieceTableHelper::_map needs matching entry to identify the
 // filter strategy callable or sort strategy callable
-define('PIECE_FILTER_COLLECTED', 'collected');
-define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
-define('PIECE_FILTER_ASSIGNED', 'assigned');
-define('PIECE_FILTER_UNASSIGNED', 'not_assigned');
-define('PIECE_FILTER_FLUID', 'fluid');
-define('PIECE_FILTER_NONE', 'none');
-define('PIECE_SORT_NONE', 'none');
+define('PIECE_FILTER_COLLECTED'		, 'collected');
+define('PIECE_FILTER_NOT_COLLECTED'	, 'not_collected');
+define('PIECE_FILTER_ASSIGNED'		, 'assigned');
+define('PIECE_FILTER_UNASSIGNED'	, 'not_assigned');
+define('PIECE_FILTER_FLUID'			, 'fluid');
+define('PIECE_FILTER_NONE'			, 'none');
+define('PIECE_SORT_NONE'			, 'none');
+
+define('DISPOSITION_TRANSFER'			, 'transfer');
+define('DISPOSITION_LOAN'				, 'loan');
+define('DISPOSITION_STORE'				, 'storage');
+define('DISPOSITION_UNAVAILABLE'		, 'unavailable');
 
 
+define('DISPOSITION_TRANSFER_SALE'		, 'Sold');
+define('DISPOSITION_TRANSFER_DONATION'	, 'Donated');
+define('DISPOSITION_TRANSFER_GIFT'		, 'Gift');
+
+define('DISPOSITION_LOAN_SHOW'			, 'Show');
+define('DISPOSITION_LOAN_CONSIGNMENT'	, 'Consign');
+define('DISPOSITION_LOAN_PRIVATE'		, 'Private Loan');
+define('DISPOSITION_LOAN_RENTAL'		, 'Rental');
+
+define('DISPOSITION_UNAVAILABLE_LOST'	, 'Lost');
+define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
+define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
+
+define('DISPOSITION_STORE_STORAGE'		, 'Storage');
