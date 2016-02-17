@@ -45,9 +45,10 @@ class Disposition extends Entity
 	public function hasPiece($piece_id) {
 		if (is_array($this->pieces)) {
 			$candidates = new Collection($this->pieces);
-			return !empty($candidates->filter(function($piece) use ($piece_id) {
-					return $piece->fullyIdentified() && $piece->id === $piece_id;
-				})->toArray());
+			$existing_piece = $candidates->filter(function($piece) use ($piece_id) {
+					return $piece->fullyIdentified() && $piece->id == $piece_id;
+				});
+			return iterator_count($existing_piece) > 0;
 		}
 		return FALSE;
 	}
@@ -81,16 +82,11 @@ class Disposition extends Entity
 	 * @param integer $format_id
 	 */
 	public function dropFormat($format_id) {
-		$limit = count($this->pieces);
-		$index = 0;
-		while ($index < $limit) {
-			if (!$this->pieces[$index]->fullyIdentified() && $this->pieces[$index]->id == $format_id) {
-				unset($this->pieces[$index]);
-				$index = $limit + 1;
-			} else {
-				$index++;
-			}
-		}
+		$candidates = new Collection($this->pieces);
+		$surviving_pieces = $candidates->reject(function($piece) use ($format_id) {
+			return !$piece->fullyIdentified() && $piece->id == $format_id;
+		});
+		$this->pieces = $surviving_pieces->toArray();
 	}
 
 }
