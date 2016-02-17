@@ -1,15 +1,14 @@
 <!-- Element/Group/full.ctp -->
 <?php
-$groups_count = count($groups);
+$groups_count = count($member->groups);
 $this->set('groups_count', $groups_count);
 if($editing){
     echo $this->element('Group/add');
 }
 
-if(!empty($groups)):
+if(!empty($member->groups)):
     echo $this->Html->tag('h4', 'Groups');
-    foreach ($groups as $key => $group) {
-    //            osd($group, 'single group');
+    foreach ($member->groups as $key => $group) {
         $this->set('group', $group);
         echo $this->element('Group/display');
     }

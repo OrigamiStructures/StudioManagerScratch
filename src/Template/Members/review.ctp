@@ -11,7 +11,10 @@ if (in_array($SystemState->now(), [MEMBER_CREATE, MEMBER_REFINE])):
             ? ['action' => 'refine', '?' => ['member' => $member->id]] 
             : ['action' => "create", $member->member_type];
 elseif($SystemState->isKnown('member')):
-    $element = "Member/full";
+    $element = "Member/refine";
+    $members = $members->toArray();
+    $member = array_shift($members);
+    $this->set('member', $member);
 else:
     $element = "Member/many";
 endif;

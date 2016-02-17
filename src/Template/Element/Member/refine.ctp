@@ -1,24 +1,27 @@
 <!-- Element/Member/refine.ctp -->
+<?php
+    $mode = ($editing) ? 'refine' : 'review';
+?>
 <section class="member">
     <?= $this->element('Member/text') ?>
     <div class="member_left">
         <section class="identity">
-            <?= $this->element('Member/fieldset') ?>
+            <?= $this->element("Member/identity_$mode") ?>
         </section>
         <div class="contacts">
-            <?= $this->element('Contact/refine') ?>
+            <?= $this->element("Contact/$mode") ?>
         </div>
     </div>
     <div class="member_right">
         <div class="addresses">
-            <?= $this->element('Address/refine') ?>
+            <?= $this->element("Address/$mode") ?>
         </div>
         <div class="groups">
-            <?= $this->element('Group/refine') ?>
+            <?= $this->element("Group/$mode") ?>
         </div>
     </div>
     <div class="controls">
-        <?= $this->element('Member/form_controls') ?>
+        <?= $this->element("Member/{$mode}_controls") ?>
     </div>
 </section>
 <!-- END Element/Member/refine.ctp -->
