@@ -712,14 +712,15 @@ div.formats {
       padding-right: 0; }
       div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
-  @media only screen and (min-width: 40.063em) {
+  @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format.format_focus div.text {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
       div.formats section.format.format_focus div.text:last-child:not(:first-child) {
-        float: right; }
+        float: right; } }
+  @media only screen and (min-width: 40.063em) {
     div.formats section.format.format_focus div.pieces {
       width: 100%;
       float: left;
@@ -773,6 +774,13 @@ div.formats {
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
         div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.format_focus div.text {
+        width: 83.33333%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format.format_focus div.text:last-child:not(:first-child) {
           float: right; } }
 
 nav.breadcrumbs {
@@ -852,6 +860,73 @@ div.training {
   div.training:last-child:not(:first-child) {
     float: right; }
 
+/**
+==============================================================
+DISPOSITION
+==============================================================
+**/
+@media only screen {
+  /* small up */
+  div.dispositions_panel div.disposition {
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto; }
+    div.dispositions_panel div.disposition::before, div.dispositions_panel div.disposition::after {
+      content: ' ';
+      display: table; }
+    div.dispositions_panel div.disposition::after {
+      clear: both; }
+    div.dispositions_panel div.disposition section {
+      width: 100%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem;
+      background-color: wheat;
+      border: thin solid firebrick; }
+      div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+        float: right; }
+    div.dispositions_panel div.disposition section.prompt {
+      width: 100%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+        float: right; }
+    div.dispositions_panel div.disposition .warning {
+      color: firebrick;
+      font-size: 1rem;
+      font-weight: bold; } }
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  div.dispositions_panel div.disposition section {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.prompt {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+      float: right; } }
+@media only screen and (min-width: 64.063em) {
+  /*large up */
+  div.dispositions_panel div.disposition section {
+    width: 25%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.prompt {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+      float: right; } }
 /**
 ==============================================================
 MEMBERS
