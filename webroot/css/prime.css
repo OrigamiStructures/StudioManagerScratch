@@ -895,7 +895,11 @@ DISPOSITION
     div.dispositions_panel div.disposition .warning {
       color: firebrick;
       font-size: 1rem;
-      font-weight: bold; } }
+      font-weight: bold; }
+    div.dispositions_panel div.disposition .pieces > p {
+      font-size: 80%;
+      line-height: 1rem;
+      margin-bottom: 0.5rem; } }
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
   div.dispositions_panel div.disposition section {
     width: 50%;
