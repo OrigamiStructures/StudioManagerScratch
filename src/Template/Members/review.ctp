@@ -12,8 +12,10 @@ if (in_array($SystemState->now(), [MEMBER_CREATE, MEMBER_REFINE])):
             : ['action' => "create", $member->member_type];
 elseif($SystemState->isKnown('member')):
     $element = "Member/refine";
-    $members = $members->toArray();
-    $member = array_shift($members);
+    if(!isset($member)){
+        $members = $members->toArray();
+        $member = array_shift($members);
+    }
     $this->set('member', $member);
 else:
     $element = "Member/many";

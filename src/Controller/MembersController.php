@@ -159,13 +159,13 @@ class MembersController extends AppController
     /**
      * Add contact or address
      * 
-     * With 'contacts' or 'addresses' in the type, add the respective new element to the
-     * return
+     * With 'contacts', 'addresses', or 'groups' in the type, add the respective 
+     * new element to the return
      * 
-     * @param string $entity_type 'contacts' or 'addresses'
+     * @param string $entity_type 'contacts', 'addresses', or 'groups'
      */
     public function addElement($entity_type) {
-        if(!in_array($entity_type, ['contacts', 'addresses'])){
+        if(!in_array($entity_type, ['contacts', 'addresses', 'groups'])){
             throw new \BadMethodCallException('Entity type must be either contacts or addresses');
         }
         $table = Inflector::pluralize(Inflector::classify($entity_type));
@@ -224,6 +224,7 @@ class MembersController extends AppController
         if(empty($member->errors())){
             $this->SystemState->referer($this->referer());
         }
+        $this->retreiveAndSetGroups();
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('review');
@@ -237,7 +238,7 @@ class MembersController extends AppController
         $member_groups = $this->Members->Groups->find('memberGroups');
         $groups_list = (new Collection($member_groups))->combine('id', 'displayTitle');
         $this->set('member_groups', $member_groups);
-        $this->set('groups_list', $groups_list);
+        $this->set('groups', $groups_list);
     }
     
     public function testMe() {
