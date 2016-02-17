@@ -8,5 +8,15 @@
             ]
         ], 
         ['class' => 'button']);
+		if ($standing_disposition) {
+        echo $this->Html->link('Dispose', [
+			'controller' => 'dispositions',
+            'action' => 'create', 
+            '?' => [
+                'member' => $member->id,
+                ]
+            ], 
+            ['class' => 'button']);
+		}
 ?>
 <!-- END Element/Member/review_controls.ctp -->

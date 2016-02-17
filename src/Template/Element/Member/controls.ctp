@@ -24,5 +24,15 @@
                 ['confirm' => __("Are you sure you want to delete this {$member->memberLabel('lower')}"),
                         'class' => 'button alert']
                 );
+		if ($standing_disposition) {
+        echo $this->Html->link('Dispose', [
+			'controller' => 'dispositions',
+            'action' => 'create', 
+            '?' => [
+                'member' => $member->id,
+                ]
+            ], 
+            ['class' => 'button']);
+		}
     ?>
 <!-- END Element/Member/controls.ctp -->
