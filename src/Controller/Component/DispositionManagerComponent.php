@@ -53,13 +53,13 @@ class DispositionManagerComponent extends Component {
 	 */
 	public function generate() {
 		return new Disposition([
-			'id', 
+			'id' => NULL, 
 			'label' => 'sale',
 			'type' => 'transfer',
-			'start_date',
-			'end_date',
+			'start_date' => NULL,
+			'end_date' => NULL,
 			'pieces' => [], 
-			'member', 
+			'member' => NULL, 
 			'addresses' => [],
 		]);
 	}
@@ -121,7 +121,6 @@ class DispositionManagerComponent extends Component {
 		$this->_mergeAddresses($member->addresses);
 		unset($member->addresses);
 		$this->disposition->member = $member;
-		osd($this->disposition);
 	}
 	
 	protected function _mergeAddresses($addresses) {
@@ -132,7 +131,6 @@ class DispositionManagerComponent extends Component {
 				return $address->id;
 			})->toArray();
 		}
-		osd($existing);
 		if ((boolean) $existing) {
 			$new_addresses = (new Collection($addresses))->reject(
 				function($address) use($existing) {
@@ -141,7 +139,7 @@ class DispositionManagerComponent extends Component {
 		} else {
 			$new_addresses = $addresses;
 		}
-		$this->disposition->addresses = $this->disposition->addresses + $new_addresses;
+		$this->disposition->addresses = array_merge($this->disposition->addresses, $new_addresses);
 	}
 
 
