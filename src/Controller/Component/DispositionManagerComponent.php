@@ -5,6 +5,7 @@ use Cake\Controller\Component;
 use Cake\Cache\Cache;
 use App\Model\Entity\Disposition;
 use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
 
 /**
  * CakePHP DispositionManagerComponent
@@ -53,13 +54,13 @@ class DispositionManagerComponent extends Component {
 	public function generate() {
 		return new Disposition([
 			'id', 
-			'label',
-			'type',
+			'label' => 'sale',
+			'type' => 'transfer',
 			'start_date',
 			'end_date',
 			'pieces' => [], 
 			'member', 
-			'location'
+			'addresses' => [],
 		]);
 	}
 	
@@ -114,7 +115,33 @@ class DispositionManagerComponent extends Component {
 
 
 	protected function _registerMember($arguments) {
-		
+		$Memebers = TableRegistry::get('Members');
+		$conditions = $this->SystemState->buildConditions([]);
+		$member = $Memebers->get($arguments['member'], ['conditions' => $conditions, 'contain' => ['Contacts', 'Addresses']]);
+		$this->_mergeAddresses($member->addresses);
+		unset($member->addresses);
+		$this->disposition->member = $member;
+		osd($this->disposition);
+	}
+	
+	protected function _mergeAddresses($addresses) {
+		$existing = FALSE;
+		if (!empty($this->disposition->addresses)) {
+			$existing = (new Collection($this->disposition->addresses))->map(
+					function($address) {
+				return $address->id;
+			})->toArray();
+		}
+		osd($existing);
+		if ((boolean) $existing) {
+			$new_addresses = (new Collection($addresses))->reject(
+				function($address) use($existing) {
+					return in_array($address->id, $existing);
+				})->toArray();
+		} else {
+			$new_addresses = $addresses;
+		}
+		$this->disposition->addresses = $this->disposition->addresses + $new_addresses;
 	}
 
 
