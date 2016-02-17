@@ -23,7 +23,7 @@ use App\Lib\SystemState;
 trait DispositionTrait {
 		
 	public function fullyIdentified() {
-		return (get_class($this) === '\App\Model\Entity\Piece');
+		return (get_class($this) === 'App\Model\Entity\Piece');
 	}
 
 }
