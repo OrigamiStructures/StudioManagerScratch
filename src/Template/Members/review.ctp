@@ -21,5 +21,5 @@ endif;
 <div class="members">
     <?php if ($editing){echo $this->Form->create($member, ['url' => $url]);}?>
     <?= $this->element($element); ?>
-    <?php if ($editing){echo $this->Form->end();}?>
+    <?php if ($editing){ echo $this->Form->end();}?>
 </div>

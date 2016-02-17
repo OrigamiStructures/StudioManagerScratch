@@ -17,5 +17,8 @@
             <?= $this->element('Group/refine') ?>
         </div>
     </div>
+    <div class="controls">
+        <?= $this->element('Member/form_controls') ?>
+    </div>
 </section>
 <!-- END Element/Member/refine.ctp -->
