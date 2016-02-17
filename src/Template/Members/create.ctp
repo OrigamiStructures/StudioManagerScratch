@@ -8,6 +8,7 @@
                 $url = ['action' => 'refine', '?' => ['member' => $member->id]];
             }
             echo $this->Form->create($member, ['url' => $url]);
+            
                 echo $this->element('Member/refine');
                 echo $this->element('Address/refine');
                 echo $this->element('Contact/refine');
