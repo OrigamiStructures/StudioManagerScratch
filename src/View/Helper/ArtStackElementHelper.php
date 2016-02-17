@@ -243,7 +243,7 @@ class ArtStackElementHelper extends Helper {
 					if (count($this->SystemState->pieces) > 0) {
 						if ($this->SystemState->isKnown('format')) {
 							// single format focus allows detailed piece work
-							if (!is_null($this->SystemState->standing_disposition)) {
+							if ($this->SystemState->standing_disposition) {
 								// artist is defining a disposition. show those tools in the table
 								$element = 'Pieces/dispose_pieces_table';
 							} else {

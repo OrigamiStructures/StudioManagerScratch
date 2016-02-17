@@ -322,7 +322,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			return;
 		}
 		
-		if (is_null($this->SystemState->standing_disposition)) {
+		if (!$this->SystemState->standing_disposition) {
 			$this->_mainModeFormatPieceTable($format, $edition);
 		} else {
 			$this->_dispositionModeFormatPieceTable($format, $edition);

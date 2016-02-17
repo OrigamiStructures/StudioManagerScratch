@@ -140,11 +140,7 @@ class DispositionsController extends AppController
 	public function create() {
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
-//		osd($this->Dispositions->get(1, [
-//			'contain' => [
-//				'Pieces', 'Pieces.Formats.Editions.Artworks', 'Members', 'Addresses'
-//			]
-//		]));
+
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 	}

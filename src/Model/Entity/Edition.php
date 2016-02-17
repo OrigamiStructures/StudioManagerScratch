@@ -189,7 +189,10 @@ class Edition extends Entity
 	 * @return string
 	 */
 	public function identityLabel() {
-		$label = $this->display_title;
+		$type = strtolower($this->_properties['type']) === 'unique' 
+				? 'Unique Work' 
+				: ucwords($this->_properties['type']);
+		$label = empty($this->_properties['title']) ? $type : ucwords($this->_properties['title']);
 		if (is_object($this->artwork)) {
 			$label = "{$this->artwork->identityLabel()}, $label";
 		}
