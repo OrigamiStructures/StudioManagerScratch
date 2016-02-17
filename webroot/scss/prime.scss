@@ -440,3 +440,44 @@ div.training {
 	@include grid-column-row();
 	@include grid-column(8);
 }
+
+/**
+==============================================================
+MEMBERS
+==============================================================
+**/
+
+div.members{
+	@media only screen { /* small up */
+		section.member{
+            @include grid-row();
+			> div {
+				@include grid-column(12, 0);
+			}
+			> section {
+				@include grid-column(12, 0);
+			}
+		}
+	}
+
+/*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	}*/
+	
+	@media only screen and (min-width: 40.063em) {
+		section.member{
+			> div {
+				@include grid-column(6, 0);
+			}
+			> section {
+				@include grid-column(6, 0);
+			}
+		}
+	}
+
+/*	@media only screen and (min-width: 64.063em) {  large up 
+	}*/
+}
+
+section.member {
+    
+}
