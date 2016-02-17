@@ -12,5 +12,5 @@
             echo $this->Form->input("last_name");
         }
     ?>
-    <?= $this->Form->input("member_type");?>
+    <?= $this->Form->input("member_type", ['type' => 'hidden']);?>
 </fieldset>

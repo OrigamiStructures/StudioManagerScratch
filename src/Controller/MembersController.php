@@ -153,6 +153,7 @@ class MembersController extends AppController
         }
         $this->set(compact('member'));
         $this->set('_serialize', ['member']);
+        $this->render('review');
     }
     
     /**
@@ -177,7 +178,7 @@ class MembersController extends AppController
         
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
-        $this->render('create');
+        $this->render('review');
     }
 	
 	/**
@@ -225,8 +226,7 @@ class MembersController extends AppController
         }
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
-        $this->render('create');
-
+        $this->render('review');
     }
     
     /**

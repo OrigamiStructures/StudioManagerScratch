@@ -307,18 +307,13 @@ div.formats {
 		}
 	}
 	
-	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	@media only screen and (min-width: 40.063em) {
 		section.format.format_focus {
 			div.text{
 				@include grid-column(12, 0);
 			}
-		}
-	}
-
-	@media only screen and (min-width: 40.063em) {
-		section.format.format_focus {
 			div.pieces {
-				@include grid-column(12, 0);
+				@include grid-column(12,0);
 				button {
 					display: none;
 				}
@@ -333,7 +328,7 @@ div.formats {
 			}
 		}
 	}
-	
+
 	@media only screen and (min-width: 64.063em) { /* large up */
 		section.format {
 			> div.image {
@@ -355,11 +350,6 @@ div.formats {
 			}
 			> div.text, div.pieces {
 				@include grid-column(8)
-			}
-		}
-		section.format.format_focus {
-			div.text{
-				@include grid-column(10);
 			}
 		}
 	}
@@ -453,57 +443,45 @@ div.training {
 
 /**
 ==============================================================
-DISPOSITION
+MEMBERS
 ==============================================================
 **/
-@media only screen { /* small up */
-	div.dispositions_panel {
-		div.disposition {
-			@include grid-row();
-			section {
-				@include grid-column(12);
-				background-color: wheat;
-				border: thin solid firebrick;
-			}
-			section.prompt {
-				@include grid-column(12);
-			}
-			.warning {
-				color: firebrick;
-				font-size: 1rem;
-				font-weight: bold;
-			}
-			.pieces > p {
-				font-size: 80%;
-				line-height: 1rem;
-				margin-bottom: 0.5rem;
-			}
+
+div.members{
+	@media only screen { /* small up */
+		section.member{
+            @include grid-row();
+            h2{
+                @include grid-column(12);
+            }
+            div.member_left, div.member_right{
+                @include grid-column-row();
+                @include grid-column(12);
+                > div {
+                    @include grid-column(12);
+                }
+                > section {
+                    @include grid-column(12);
+                }
+            }
 		}
 	}
+
+/*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	}*/
+	
+	@media only screen and (min-width: 40.063em) {
+		section.member{
+            div.member_left, div.member_right{
+                @include grid-column(6);
+            }
+		}
+	}
+
+/*	@media only screen and (min-width: 64.063em) {  large up 
+	}*/
 }
 
-@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-	div.dispositions_panel {
-		div.disposition {
-			section {
-				@include grid-column(6);
-			}
-			section.prompt {
-				@include grid-column(12);
-			}
-		}
-	}
-}
-
-@media only screen and (min-width: 64.063em) {  /*large up */
-	div.dispositions_panel {
-		div.disposition {
-			section {
-				@include grid-column(3);
-			}
-			section.prompt {
-				@include grid-column(12);
-			}
-		}
-	}
+section.member {
+    
 }
