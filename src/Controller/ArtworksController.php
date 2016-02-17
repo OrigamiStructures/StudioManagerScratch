@@ -237,17 +237,10 @@ class ArtworksController extends AppController
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
             if ($this->Artworks->save($artwork)) {
-//				if ($this->request->action !== 'create') {
-//					return $artwork;
-//				} else {
 					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
-//				}
                 
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
-//				if ($this->request->action !== 'create') {
-//					return FALSE;
-//				}
             }
         }
 		$this->ArtworkStack->layerChoiceLists();
@@ -257,11 +250,15 @@ class ArtworksController extends AppController
 		$this->render('review');
     }
 	
+	/**
+	 * Simplify to UX for making unique artwork
+	 * 
+	 * arrive here with a postLink and TRD that makes 
+	 * the normal create method and form simpler. 
+	 */
 	public function createUnique() {
 		$this->request->data += ['user_id' => $this->SystemState->artistId()];
 		$artwork = $this->create();
-//		$this->autoRender = FALSE;
-//		$this->redirect(['controller' => 'artworks', 'action' => 'refine', '?' => ['artwork' => $artwork->id]]);
 		$this->render('review');
 	}
 
