@@ -51,7 +51,16 @@ class DispositionManagerComponent extends Component {
 	 * @return Disposition
 	 */
 	public function generate() {
-		return new Disposition(['id', 'pieces' => [], 'member', 'location']);
+		return new Disposition([
+			'id', 
+			'label',
+			'type',
+			'start_date',
+			'end_date',
+			'pieces' => [], 
+			'member', 
+			'location'
+		]);
 	}
 	
 	public function merge(Disposition $dispostion, array $arguments) {
@@ -60,6 +69,7 @@ class DispositionManagerComponent extends Component {
 		$this->_setRedirect($arguments);
 //		osd($this->disposition);die;
 		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
+		return $this->disposition;
 	}
 	
 	/**

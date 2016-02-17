@@ -275,8 +275,8 @@ define('DISPOSITION_STORE'				, 'storage');
 define('DISPOSITION_UNAVAILABLE'		, 'unavailable');
 
 
-define('DISPOSITION_TRANSFER_SALE'		, 'Sold');
-define('DISPOSITION_TRANSFER_DONATION'	, 'Donated');
+define('DISPOSITION_TRANSFER_SALE'		, 'Sale');
+define('DISPOSITION_TRANSFER_DONATION'	, 'Donation');
 define('DISPOSITION_TRANSFER_GIFT'		, 'Gift');
 
 define('DISPOSITION_LOAN_SHOW'			, 'Show');
