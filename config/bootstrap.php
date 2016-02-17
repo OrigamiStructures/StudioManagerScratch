@@ -233,6 +233,7 @@ define('PORTFOLIO_OPEN', 'Open Portfolio');
 define('PUBLICATION_LIMITED', 'Limited Publication');
 define('PUBLICATION_OPEN', 'Open Publication');
 
+// Serves as a boolean argument in method call(s)
 define('NUMBERED_PIECES', 1);
 define('OPEN_PIECES', 0);
 
@@ -240,6 +241,7 @@ define('ARTWORK_CREATE', 1);
 define('ARTWORK_REVIEW', 2);
 define('ARTWORK_REFINE', 4);
 define('ARTWORK_SAVE', 8);
+define('ARTWORK_CREATE_UNIQUE', 3);
 
 // These will need to be change to something meaningful
 // For now, we can act as admins even though we're users
@@ -247,9 +249,24 @@ define('ADMIN_SYSTEM', 'user'); // 'admin'
 define('ADMIN_ARTIST', 'artist_admin');
 
 //System Constants
+// Serves as a boolean argument in method call(s)
 define('SYSTEM_VOID_REFERER', TRUE);
 define('SYSTEM_CONSUME_REFERER', FALSE);
 
 //AssignemtTrait Constants
+// boolean argument to control the kind of return value from a method
 define('PIECE_ENTITY_RETURN', FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
+// general piece collection filter options
+// NOTES ON ADDING TO THIS SECTION
+// PieceTableHelper::_map needs matching entry to identify the
+// filter strategy callable or sort strategy callable
+define('PIECE_FILTER_COLLECTED', 'collected');
+define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
+define('PIECE_FILTER_ASSIGNED', 'assigned');
+define('PIECE_FILTER_UNASSIGNED', 'not_assigned');
+define('PIECE_FILTER_FLUID', 'fluid');
+define('PIECE_FILTER_NONE', 'none');
+define('PIECE_SORT_NONE', 'none');
+
+

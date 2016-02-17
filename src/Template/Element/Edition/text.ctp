@@ -18,13 +18,8 @@ $l = "<span class='nav'>[$nav|$ed] </span>";
  * All form inputs are Artwork rooted, so $edition_index is required. 
  * If it was not set in an upstream process, it is assumed to be 0.
  * ($edition could be 'assumed' too I suppose)
- * 
- * Edition Helper concrete classes are called on to administer 
- * display and tool-availability rulings.
  */
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
-$factory = $this->loadHelper('EditionFactory');
-$helper = $factory->load($edition->type);
 ?>
 					<?= $this->Form->input("editions.$edition_index.id", ['type' => 'hidden']); ?>
 
@@ -36,7 +31,7 @@ $helper = $factory->load($edition->type);
 
 					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
 					<section class="assignment">
-						<?= $helper->pieceSummary($edition); ?>
-						<?= $helper->pieceTools($edition); ?>
+						<?= $EditionHelper->pieceSummary($edition); ?>
+						<?= $EditionHelper->pieceTools($edition); ?>
 					</section>
 <!-- END Element/Edition/text.ctp -->

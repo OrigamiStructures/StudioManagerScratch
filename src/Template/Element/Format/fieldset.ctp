@@ -29,10 +29,20 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 										['placeholder' => 'Media, size and other format details']); ?>
 							</div>
 							<div class="pieces">
-								<?= $this->element('Format/pieces'); ?>
+								<!-- no pieces during creation -->
 							</div>
 						</fieldset>
-						<?= $this->Form->submit(); ?>
+						<?php 
+						/**
+						 * PENDING FURTHER STUDY
+						 * While this last form fieldset may not exist for some layer refinement 
+						 * they always appear during creation. And since the 'unique' tailored creation 
+						 * is actualy a refinement of a empty stubbed record, we'll need a special 
+						 * cancel button to delete that stub. Other special buttons may turn up.
+						 */
+//						echo $ArtStackElement->choose('artFinalFormButtons'); 
+						?>
+						<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 	<?php // osd($artwork); ?>
 	
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>

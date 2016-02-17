@@ -10,7 +10,9 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
+	<!--<link href='https://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>-->
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<title>
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
@@ -36,12 +38,14 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 	  </div>
 	  <div class="top-bar-right">
 		<ul class="menu">
-		  <li><input type="search" placeholder="Search"></li>
-		  <li><button type="button" class="button">Search</button></li>
+		  <li><input placeholder="Search"></li>
+		  <li><button type="button" class="button tiny">Search</button></li>
 		</ul>
 	  </div>
-	</nav>    
-	<?= $this->Html->getCrumbs(' > ', 'Home'); ?>
+	</nav>
+	<nav class="breadcrumbs">
+		<?= $this->Html->getCrumbList([], 'All Art'); ?>
+	</nav>
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">
         <?= $this->fetch('content') ?>

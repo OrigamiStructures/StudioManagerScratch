@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use App\Lib\PiecesUtility;
 
 /**
  * FactoryHelper swaps Edition and Format helper subclasses onto a common call point
@@ -16,6 +17,8 @@ class EditionFactoryHelper extends Helper {
 	
 	public $helpers = ['Html'];
 	
+	protected $PiecesUtility;
+
 	/**
 	 * Map specific edition types to more general helper strategies
 	 * 
@@ -36,6 +39,11 @@ class EditionFactoryHelper extends Helper {
 		PUBLICATION_LIMITED => 'Packaged',
 		PUBLICATION_OPEN => 'Packaged',
 			];
+	
+	public function __construct(\Cake\View\View $View, array $config = array()) {
+		parent::__construct($View, $config);
+		$this->SystemState = $View->SystemState;
+	}
 	
 	/**
 	 * Factory to generate a specific helper
@@ -102,6 +110,43 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 
+	/**
+	 * Establish enviornment for a properly rendered piece table
+	 * 
+	 * @param Entity $entity Format or Edition
+	 * @param EditionEntity $edition
+	 * @return string tools to manage the pieces (loose html dom nodes)
+	 * @throws \BadMethodCallException
+	 */
+	public function pieceTable($entity, $edition = NULL) {
+		
+		if (stristr(get_class($entity), 'Edition')) {
+			return $this->_editionPieceTable($entity);
+			
+		} elseif (stristr(get_class($entity), 'Format') && 
+				stristr(get_class($edition), 'Edition')){
+			return $this->_formatPieceTable($entity, $edition);
+			
+		} else {
+			$bad_class = get_class($entity);
+			throw new \BadMethodCallException(
+					"Argument must be an entity of type Edition. "
+					. "An Entity of type $bad_class was passed.");
+		}
+	}
+
+	/**
+	 * Return an instance of the piece filter/sort utility class
+	 * 
+	 * @return PiecesUtitlity
+	 */
+	public function pieceTool() {
+		if (!isset($this->PiecesUtitlity)) {
+			$this->PiecesUtility = new \App\Lib\PiecesUtility();
+		}
+		return $this->PiecesUtility;
+	}
+
 	protected function _editionPieceSummary($edition) {
 		return '';
 	}
@@ -120,29 +165,10 @@ class EditionFactoryHelper extends Helper {
 	 * 
 	 * @param Entity $edition
 	 */
-	protected function _editionPieceTools($edition) {
+	protected function _editionPieceTools($edition){
+		return '';
+	}// {
 		
-		$assignment_tool = 'This is REM\'d. Who\'s using it?';
-//		if ($edition->hasUnassigned()) {
-//			$label[] = 'Assign';
-//		}
-//		if ($edition->hasFluid()) {
-//			$label[] = 'Reassign';
-//		}
-//		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
-//			$label = implode('/', $label);
-//			$assignment_tool = $this->Html->link("$label pieces to formats",
-//				['controller' => 'editions', 'action' => 'assign', '?' => [
-//					'artwork' => $edition->artwork_id,
-//					'edition' => $edition->id,
-//				]]) . "\n";
-//		}
-		echo $assignment_tool;
-	}
-	
-//	protected function _formatPieceTools($format, $edition) {
-//		return '';
-//	}
 	protected function _formatPieceTools($format, $edition) {
 		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
 		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
@@ -162,12 +188,10 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 	
-//	public function editionQuantitySummary($edition) {
-//		return '';
-//	}
-	
 	public function quantityInput($edition, $edition_index) {
 		return '';
-	}
+}
+	
+	
 	
 }

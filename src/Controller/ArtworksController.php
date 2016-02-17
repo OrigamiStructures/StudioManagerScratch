@@ -175,19 +175,12 @@ class ArtworksController extends AppController
 	 */
     public function review() {
 		if ($this->SystemState->isKnown('artwork')) {
-//			$artwork_element = 'full';
 			$artwork_variable = 'artwork';
 		} else {
-//			$artwork_element = 'many';
 			$artwork_variable = 'artworks';
 		}
-//        $element_management = [
-//            'artwork' => $artwork_element,
-//            'edition' => 'many',
-//            'format' => 'many'
-//        ];
-        $this->set($artwork_variable, $this->ArtworkStack->stackQuery());
-//        $this->set('element_management', $element_management);
+
+		$this->set($artwork_variable, $this->ArtworkStack->stackQuery());
         $this->set('_serialize', [$artwork_variable]);
     }
 	
@@ -233,7 +226,6 @@ class ArtworksController extends AppController
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
-//		osd($this->request->data, 'trd');
 		$artwork = $this->ArtworkStack->creationStack(); 
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
@@ -244,20 +236,34 @@ class ArtworksController extends AppController
 					]
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
-//			osd($artwork);die('ready to go, artwork controller submitted');
             if ($this->Artworks->save($artwork)) {
-                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+//				if ($this->request->action !== 'create') {
+//					return $artwork;
+//				} else {
+					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+//				}
+                
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
+//				if ($this->request->action !== 'create') {
+//					return FALSE;
+//				}
             }
         }
-
 		$this->ArtworkStack->layerChoiceLists();
         
 		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
 		$this->render('review');
     }
+	
+	public function createUnique() {
+		$this->request->data += ['user_id' => $this->SystemState->artistId()];
+		$artwork = $this->create();
+//		$this->autoRender = FALSE;
+//		$this->redirect(['controller' => 'artworks', 'action' => 'refine', '?' => ['artwork' => $artwork->id]]);
+		$this->render('review');
+	}
 
 	/**
 	 * Display one or a page of Artworks
@@ -272,13 +278,13 @@ class ArtworksController extends AppController
 	 */
     public function validateQuantities($id) {
 		$this->request->query = ['artwork' => $id];
-        $element_management = [
-            'artwork' => 'full',
-            'edition' => 'many',
-            'format' => 'many'
-        ];
+//        $element_management = [
+//            'artwork' => 'full',
+//            'edition' => 'many',
+//            'format' => 'many'
+//        ];
         $this->set('artwork', $this->ArtworkStack->stackQuery());
-        $this->set('element_management', $element_management);
+//        $this->set('element_management', $element_management);
 //        $this->set('_serialize', [$artwork_variable]);
     }
 	

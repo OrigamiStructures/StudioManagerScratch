@@ -27,7 +27,8 @@ class MenusTable extends AppTable{
 	protected $artwork = ['Artwork' => [
             'Sample' => '/artworks/sample',
             'View All' => '/artworks/review',
-            'Create' => '/artworks/create',
+            'New Edition' => '/artworks/create',
+            'New Unique Work' => '/artworks/create_unique',
 			'Review Artwork' => [],
 			'Refine Artwork' => [],
 			'Edition' => [],

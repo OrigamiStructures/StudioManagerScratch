@@ -15,7 +15,7 @@
 		<?php
 			if ($SystemState->controller() === 'artworks' && 
 					$artwork->edition_count > 1) {
-				echo $this->Form->submit();
+				echo $this->Form->submit('Submit', ['class' => 'button']);
 			}
 		?>
 	</div>

@@ -22,10 +22,12 @@ class StateMap {
     'sample' => NULL,
     'review' => 2,
     'create' => 1,
+    'createUnique' => ARTWORK_CREATE_UNIQUE,
     'refine' => 4,
     'initialize' => NULL,
     'mapStates' => NULL,
 	'testMe' => NULL,
+	 'validateQuantities' => 2
   ),
   'Designs' => 
   array (

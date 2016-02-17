@@ -386,16 +386,48 @@ footer {
     font-size: .75rem;
     display: block;
     position: absolute;
-    top: .98rem;
-    left: 4rem;
+    top: .1rem;
+    left: 9rem;
     z-index: 1000;
     border: thin solid #ccc; }
   .top-bar-left ul.nested:hover {
     display: block;
     z-index: 1000; }
+  .top-bar-left > ul.menu > li.has-submenu:hover > ul.nested {
+    top: 1.5rem;
+    left: .2rem; }
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
+/**
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
+**/
+@media only screen {
+  /* small up */
+  div.pieces button {
+    display: none; }
+  div.pieces table {
+    display: block; } }
+@media only screen and (min-width: 40.063em) {
+  div.pieces {
+    position: relative; }
+    div.pieces button {
+      display: block; }
+    div.pieces table {
+      display: none; }
+
+  div.pieces:hover button {
+    display: none; }
+  div.pieces:hover table {
+    display: block;
+    position: absolute;
+    top: 0;
+    overflow-y: visible;
+    z-index: 1000; } }
 /**
 ==============================================================
 
@@ -443,8 +475,7 @@ div.artworks section.artwork {
     width: 50%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: red; }
+    padding-right: 0.9375rem; }
     section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.image:last-child {
@@ -455,9 +486,7 @@ div.artworks section.artwork {
     width: 100%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: firebrick;
-    font-face: serif; }
+    padding-right: 0.9375rem; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
     section.artwork > div.text h1, section.artwork > div.editions h1 {
@@ -469,28 +498,23 @@ div.artworks section.artwork {
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
-    /*@include grid-col-end();*/
-    color: green; }
+    /*@include grid-col-end();*/ }
     section.artwork > div.image:last-child:not(:first-child) {
-      float: right; }
-  section.artwork > div.text, section.artwork > div.editions {
-    color: green; } }
+      float: right; } }
 /* ARTWORK STACK large up */
 @media only screen and (min-width: 64.063em) {
   section.artwork > div.image {
     width: 16.66667%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: blue; }
+    padding-right: 0.9375rem; }
     section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
   section.artwork > div.text, section.artwork > div.editions {
     width: 83.33333%;
     float: left;
     padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
-    color: blue; }
+    padding-right: 0.9375rem; }
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
 
@@ -541,14 +565,14 @@ div.editions section.edition {
 @media only screen and (min-width: 40.063em) {
   /* medium up */
   section.edition > div.text {
-    width: 58.33333%;
+    width: 50%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
     section.edition > div.text:last-child:not(:first-child) {
       float: right; }
   section.edition > div.pieces {
-    width: 41.66667%;
+    width: 50%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
@@ -579,6 +603,8 @@ div.formats {
       display: table; }
     div.formats section.format::after {
       clear: both; }
+    div.formats section.format table {
+      /*width: 100%;*/ }
     @media screen and (max-width: 63.9375em) {
       div.formats section.format div.image .dup {
         display: none !important; } }
@@ -639,14 +665,14 @@ div.formats {
           float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format div.text {
-      width: 58.33333%;
+      width: 50%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
       div.formats section.format div.text:last-child:not(:first-child) {
         float: right; }
     div.formats section.format div.pieces {
-      width: 41.66667%;
+      width: 50%;
       float: left;
       padding-left: 0.9375rem;
       padding-right: 0.9375rem; }
@@ -683,6 +709,27 @@ div.formats {
       padding-right: 0; }
       div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.formats section.format.format_focus div.text {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.format_focus div.text:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.format_focus div.pieces {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.format_focus div.pieces:last-child:not(:first-child) {
+        float: right; }
+      div.formats section.format.format_focus div.pieces button {
+        display: none; }
+      div.formats section.format.format_focus div.pieces table {
+        display: block; }
+    div.formats section.format.format_focus div.pieces:hover table {
+      position: relative; } }
   @media only screen and (min-width: 64.063em) {
     div.formats {
       /* large up */ }
@@ -695,14 +742,14 @@ div.formats {
         div.formats section.format > div.image:last-child:not(:first-child) {
           float: right; }
       div.formats section.format > div.text {
-        width: 50%;
+        width: 41.66667%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
         div.formats section.format > div.text:last-child:not(:first-child) {
           float: right; }
       div.formats section.format > div.pieces {
-        width: 41.66667%;
+        width: 50%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
@@ -724,6 +771,22 @@ div.formats {
         padding-right: 0.9375rem; }
         div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
           float: right; } }
+
+nav.breadcrumbs {
+  /*@include grid-row();*/
+  width: 100%;
+  background-color: slategrey; }
+  nav.breadcrumbs > ul {
+    list-style: none;
+    /*@include grid-column(12);*/ }
+    nav.breadcrumbs > ul li {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a.review {
+      font-weight: bold; }
+      nav.breadcrumbs > ul a.review span {
+        font-weight: normal; }
 
 /*section.format {
 	@include grid-row;
@@ -761,5 +824,29 @@ div.radio > label input {
 
 .disabled {
   color: #ccc; }
+
+div.training {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 66.66667%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem; }
+  div.training::before, div.training::after {
+    content: ' ';
+    display: table; }
+  div.training::after {
+    clear: both; }
+  div.training:last-child:not(:first-child) {
+    float: right; }
+  div.training, div.training:last-child {
+    float: none; }
+  div.training:last-child:not(:first-child) {
+    float: right; }
 
 /*# sourceMappingURL=prime.css.map */

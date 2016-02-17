@@ -36,8 +36,8 @@ footer{
 		font-size: .75rem;
 		display: block;
 		position: absolute;
-		top: .98rem;
-		left: 4rem;
+		top: .1rem;
+		left: 9rem;
 		z-index: 1000;
 		border: thin solid #ccc;
 	}
@@ -45,10 +45,56 @@ footer{
 		display: block;
 		z-index: 1000;
 	}
+	> ul.menu > li.has-submenu:hover > ul.nested {
+		top: 1.5rem;
+		left: .2rem;
+	}
 	section.artwork:nth-of-type(2n) {
 		background-color:linen;
 	}
 }	
+
+/**
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
+**/
+@media only screen { /* small up */ 
+	div.pieces {
+		button {
+			display: none;
+		}
+		table {
+			display: block;
+		}
+	}
+}
+@media only screen and (min-width: 40.063em) {   
+	div.pieces {
+		position: relative;
+		button {
+			display: block;
+		}
+		table {
+			display: none;
+		}
+	}
+
+	div.pieces:hover {
+		button {
+			display: none;
+		}
+		table {
+			display: block;
+			position: absolute;
+			top: 0;
+			overflow-y: visible;
+			z-index: 1000;
+		}
+	}
+}
 
 /**
 ==============================================================
@@ -96,15 +142,12 @@ div.artworks {
 		> div.image {
 			@include grid-column(6);
 			@include grid-col-end();
-			color: red;
 			img {
 				width: 100%;
 			}
 		}
 		> div.text,  > div.editions {
 			@include grid-column(12);
-			color: firebrick;
-			font-face: serif;
 			
 			h1 {
 				margin: 0;
@@ -118,10 +161,8 @@ div.artworks {
 		> div.image {
 			@include grid-column(4);
 			/*@include grid-col-end();*/
-			color: green;
 		}
 		> div.text,  > div.editions {
-			color: green;
 		}
 	}
 }
@@ -130,11 +171,9 @@ div.artworks {
 	section.artwork {
 		 > div.image {
 			@include grid-column(2);
-			color: blue;
 		}
 		 > div.text,  > div.editions {
 			@include grid-column(10);
-			color: blue;
 		}
 	}
 	section.artwork.editing {
@@ -159,6 +198,7 @@ div.editions {
 		padding-top: .5rem;
 		border-top: .2rem solid #eee;
 	}
+		
 }
 	
 @media only screen { /* small up */
@@ -179,10 +219,10 @@ div.editions {
 @media only screen and (min-width:  40.063em) { /* medium up */
 	 section.edition {
 		> div.text {
-			@include grid-column(7, 0);
+			@include grid-column(6, 0);
 		}
 		> div.pieces {
-			@include grid-column(5);
+			@include grid-column(6);
 		}
 	 }
 	 
@@ -204,6 +244,10 @@ div.formats {
 		padding-top: .4rem;
 		/*border-top: thin solid #ececec;*/
 		
+		table {
+			/*width: 100%;*/
+		}
+		
 		div.image {
 			.dup {
 				@include show-for(large);
@@ -219,78 +263,121 @@ div.formats {
 		}
 	}
 	
-		@media only screen { /* small up */
-			section.format{
-				> div.image {
-					@include grid-column-row();
-					@include grid-column(2, 0);
-					margin-left: 0;
-					@include grid-col-end();
+	@media only screen { /* small up */
+		section.format{
+			> div.image {
+				@include grid-column-row();
+				@include grid-column(2, 0);
+				margin-left: 0;
+				@include grid-col-end();
+			}
+			> div.text {
+				@include grid-column(12, 0);
+			}
+			> div.pieces {
+				@include grid-column(12, 0);
+			}
+		}
+		section.format.editing > fieldset {
+			div.image {
+				/*@include grid-column-row();*/
+				@include grid-column(12, 0)
+			}
+		}
+	}
+
+	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+		section.format {
+			div.text{
+				@include grid-column(6, 0);
+			}
+			div.pieces {
+				@include grid-column(6);
+			}
+		}
+		section.format.editing > fieldset {
+			> div.image {
+				@include grid-column-row();
+				@include grid-column(6, 0);
+				margin-left: 0;
+			}
+			> div.text, div.pieces {
+				@include grid-column(12, 0)
+			}
+		}
+	}
+	
+	@media only screen and (min-width: 40.063em) {
+		section.format.format_focus {
+			div.text{
+				@include grid-column(12, 0);
+			}
+			div.pieces {
+				@include grid-column(12,0);
+				button {
+					display: none;
 				}
-				> div.text {
-					@include grid-column(12, 0);
-				}
-				> div.pieces {
-					@include grid-column(12, 0);
+				table {
+					display: block;
 				}
 			}
-			section.format.editing > fieldset {
-				div.image {
-					/*@include grid-column-row();*/
-					@include grid-column(12, 0)
+			div.pieces:hover {
+				table {
+					position: relative;
 				}
 			}
 		}
-		
-		@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-			section.format {
-				div.text{
-					@include grid-column(7, 0);
-				}
-				div.pieces {
-					@include grid-column(5);
-				}
+	}
+
+	@media only screen and (min-width: 64.063em) { /* large up */
+		section.format {
+			> div.image {
+				@include grid-column(1, 0);
+				margin-left: auto;
 			}
-			section.format.editing > fieldset {
-				> div.image {
-					@include grid-column-row();
-					@include grid-column(6, 0);
-					margin-left: 0;
-				}
-				> div.text, div.pieces {
-					@include grid-column(12, 0)
-				}
+			> div.text {
+				@include grid-column(5);
+			}
+			> div.pieces {
+				@include grid-column(6);
 			}
 		}
-		
-		@media only screen and (min-width: 64.063em) { /* large up */
-			section.format {
-				> div.image {
-					@include grid-column(1, 0);
-					margin-left: auto;
-				}
-				> div.text {
-					@include grid-column(6);
-				}
-				> div.pieces {
-					@include grid-column(5);
-				}
+		section.format.editing > fieldset {
+			> div.image {
+				/*@include grid-column-row();*/
+				@include grid-column(4, 0);
+				margin-left: auto;
 			}
-			section.format.editing > fieldset {
-				> div.image {
-					/*@include grid-column-row();*/
-					@include grid-column(4, 0);
-					margin-left: auto;
-				}
-				> div.text, div.pieces {
-					@include grid-column(8)
-				}
+			> div.text, div.pieces {
+				@include grid-column(8)
 			}
 		}
+	}
 
 }
 
-
+nav.breadcrumbs {
+	/*@include grid-row();*/
+	width: 100%;
+	background-color: slategrey;
+	
+	> ul {
+		list-style: none;
+		li {
+			color: #fcf8e3;
+		}
+		/*@include grid-column(12);*/
+		a {
+			color: #fcf8e3;
+		}
+		a.review {
+			font-weight: bold;
+			span {
+				font-weight: normal;
+			}
+		}
+	}
+}
 
 /*section.format {
 	@include grid-row;
@@ -347,4 +434,9 @@ div.radio > label {
 
 .disabled  {
 	color: #ccc;
+}
+
+div.training {
+	@include grid-column-row();
+	@include grid-column(8);
 }

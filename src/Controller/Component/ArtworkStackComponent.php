@@ -34,8 +34,8 @@ class ArtworkStackComponent extends Component {
 	public $SystemState;
 	
 	public $full_containment = [
-		'Users', 'Images', 'Editions.Users', 'Editions' => [
-			'Series', 'Pieces', 'Formats.Users', 'Formats' => [
+		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
+			'Series', 'Pieces', /*'Formats.Users',*/ 'Formats' => [
 				'Images', 'Pieces', /*'Subscriptions'*/
 				]
 			]
@@ -109,13 +109,27 @@ class ArtworkStackComponent extends Component {
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
-			return $artworks;
+			return $artworks->toArray();
 		} else {
+			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
+			// BASED ON ONGOING DISPOSITION CREATION ?????
+			// 
 			// There may be more keys known than just the 'artwork', but that's 
 			// all we need for the query.
+//			$artwork = $this->Artworks->find()
+//					->contain($this->full_containment)
+////					->cache('default')
+//					->where($this->SystemState->buildConditions(['artwork' => 'Artworks.id'], 'Artworks'))
+//					->first();
+////					->toArray();
+//					osd($artwork);die;
+//			osd($query);
+//			sql($query);die;
+//			$artwork = $query->toArray();die;
 			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
 				'contain' => $this->full_containment,
-				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
+				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
+//				'cache' => 'default',
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
