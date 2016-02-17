@@ -451,12 +451,19 @@ div.members{
 	@media only screen { /* small up */
 		section.member{
             @include grid-row();
-			> div {
-				@include grid-column(12, 0);
-			}
-			> section {
-				@include grid-column(12, 0);
-			}
+            h2{
+                @include grid-column(12);
+            }
+            div.member_left, div.member_right{
+                @include grid-column-row();
+                @include grid-column(12);
+                > div {
+                    @include grid-column(12);
+                }
+                > section {
+                    @include grid-column(12);
+                }
+            }
 		}
 	}
 
@@ -465,12 +472,9 @@ div.members{
 	
 	@media only screen and (min-width: 40.063em) {
 		section.member{
-			> div {
-				@include grid-column(6, 0);
-			}
-			> section {
-				@include grid-column(6, 0);
-			}
+            div.member_left, div.member_right{
+                @include grid-column(6);
+            }
 		}
 	}
 
