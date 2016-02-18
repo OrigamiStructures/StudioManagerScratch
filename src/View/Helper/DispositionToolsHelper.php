@@ -26,7 +26,7 @@ class DispositionToolsHelper extends Helper {
 		return $this->Html->link(
 			$label , [
 				'controller' => 'dispositions',
-				'action' => 'create',
+				'action' => 'refine',
 				'?' => $SystemState->queryArg() + ['piece' => $piece->id]
 			]);	
 	}
@@ -35,7 +35,7 @@ class DispositionToolsHelper extends Helper {
 		$label = $this->_toLabel($member->name);
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
-            'action' => 'create', 
+            'action' => 'refine', 
             '?' => [
                 'member' => $member->id,
                 ]
@@ -48,7 +48,7 @@ class DispositionToolsHelper extends Helper {
 		$label = $this->_toLabel($address->address1);
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
-            'action' => 'create', 
+            'action' => 'refine', 
             '?' => [
                 'address' => $address->id,
                 ]

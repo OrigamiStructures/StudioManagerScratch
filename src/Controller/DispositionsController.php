@@ -14,10 +14,21 @@ class DispositionsController extends AppController
 	
 	public $DispositionManager;
 	
+	/**
+	 * Manage redirects for disposition activities
+	 * 
+	 * All visits to this controller will eventually return to the original 
+	 * page. Even if the artist is locked here for several calls, the original 
+	 * page will be remembered and eventually they will be returned there.
+	 * 
+	 * @param \Cake\Event\Event $event
+	 */
 	public function beforeFilter(\Cake\Event\Event $event) {
 		parent::beforeFilter($event);
+		
 		if (!stristr($this->request->referer(), DS . 'dispositions' . DS)) {
 			$this->SystemState->referer($this->request->referer());
+			osd($this->SystemState->referer());
 		}
 	}
 
@@ -146,27 +157,40 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
-		$this->SystemState->referer($this->request->referer());
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 		if ($this->request->is('post')) {
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
-		}
-//		osd($disposition);//die;
-		if (!empty($disposition->type)) {
-			$this->autoRender = false;
-			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));	
+
 		}
 		$labels = $this->Dispositions->disposition_label;
 		$this->set(compact('disposition', 'labels'));
 	}
 	
+	public function refine() {
+		$disposition = $this->DispositionManager->get();
+		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));	
+	}
+	
+	/**
+	 * Dump the evolving disposition without saving it
+	 */
 	public function discard() {
 		$this->DispositionManager->discard();
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
 	
+	/**
+	 * Retain only the indicated address among many
+	 * 
+	 * There are several circumstances where several addresses could 
+	 * be possibilities for the dispo. They many show as links and clicking 
+	 * on one will come here to make that the final choice.
+	 */
 	public function chooseAddress() {
 		$disposition = $this->DispositionManager->get();
 		$collection = new Collection($disposition->addresses);

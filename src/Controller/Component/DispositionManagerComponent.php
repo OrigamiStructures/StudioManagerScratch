@@ -81,6 +81,10 @@ class DispositionManagerComponent extends Component {
 		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
 	}
 	
+	public function read() {
+		return Cache::read($this->SystemState->artistId(), 'dispo');
+	}
+	
 	/**
 	 * 
 	 * @param type $arguments

@@ -172,11 +172,13 @@ class EditionFactoryHelper extends Helper {
 	protected function _formatPieceTools($format, $edition) {
 		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
 		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
+		$action = $this->_View->viewVars['standing_disposition'] ? 'refine' : 'create';
+		
 		if ((((boolean) $pieces) && $format->hasSalable($edition->undisposed)) || $format->hasAssigned()) {
 			echo $this->Html->link("Add status information",
 				[/*'controller' => 'dispositions', 'action' => 'create'*/
 					'controller' => 'dispositions',
-					'action' => 'create','?' => [
+					'action' => $action,'?' => [
 						'artwork' => $edition->artwork_id,
 						'edition' => $edition->id,
 						'format' => $format->id,
