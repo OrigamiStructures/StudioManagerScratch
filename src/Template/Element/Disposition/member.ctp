@@ -1,1 +1,1 @@
-<p><?= !empty($standing_disposition->member) ? $standing_disposition->member->memberLabel('title') : '' ?></p>
+<p><?= !empty($standing_disposition->member) ? $this->DispositionTools->identity($standing_disposition->member) : '' ?></p>

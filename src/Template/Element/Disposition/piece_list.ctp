@@ -4,14 +4,7 @@ foreach ($pieces as $piece) :
 ?>
 
 		<p>
-		<?= $piece->fullyIdentified() 
-			? $piece->identityLabel() 
-			: $this->Html->link($piece->identityLabel(), [
-				'controller' => 'artworks', 
-				'action' => 'review', 
-				'?' => $piece->identityArguments()
-			]);
-		?>
+		<?= $this->DispositionTools->identity($piece); ?>
 		</p>
 		
 <?php
