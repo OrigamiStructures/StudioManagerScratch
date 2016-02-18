@@ -91,7 +91,10 @@ class DispositionManagerComponent extends Component {
 			return $this->_registerArtwork($arguments);
 		} elseif (array_key_exists('member', $arguments)) {
 			return $this->_registerMember($arguments);
+		} elseif (array_key_exists('address', $arguments)) {
+			return $this->_registerAddress($arguments);
 		}
+
 	}
 	
 	protected function _registerArtwork($arguments) {
@@ -129,6 +132,13 @@ class DispositionManagerComponent extends Component {
 		$this->_mergeAddresses($member->addresses);
 		unset($member->addresses);
 		$this->disposition->member = $member;
+	}
+	
+	protected function _registerAddress($arguments) {
+		$Addresses = TableRegistry::get('Addresses');
+		$conditions = $this->SystemState->buildConditions([]);
+		$address = $Addresses->get($arguments['address'], ['conditions' => $conditions]);
+		$this->disposition->addresses = [$address];
 	}
 	
 	protected function _mergeAddresses($addresses) {
