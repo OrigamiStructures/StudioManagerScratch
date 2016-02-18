@@ -550,3 +550,48 @@ div.members{
 section.member {
     
 }
+
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+
+div.dispositions{
+	@media only screen { /* small up */
+		section.disposition{
+            @include grid-row();
+            > div.left, > div.right{
+                @include grid-column-row();
+                @include grid-column(12);
+                > section {
+                    @include grid-column(12);
+                }
+            }
+			div.input.date {
+				@include grid-row;
+				select {
+					@include grid-column(4);
+				}
+			}
+		}
+	}
+
+/*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	}*/
+	
+	@media only screen and (min-width: 40.063em) {
+		section.disposition{
+            > div.left, > div.right{
+                @include grid-column(6);
+            }
+		}
+	}
+
+/*	@media only screen and (min-width: 64.063em) {  large up 
+	}*/
+}
+
+section.member {
+    
+}

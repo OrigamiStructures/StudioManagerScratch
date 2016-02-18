@@ -1005,4 +1005,81 @@ div.members {
       div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
         float: right; } }
 
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+div.dispositions {
+  /*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  	}*/
+  /*	@media only screen and (min-width: 64.063em) {  large up 
+  	}*/ }
+  @media only screen {
+    div.dispositions {
+      /* small up */ }
+      div.dispositions section.disposition {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto; }
+        div.dispositions section.disposition::before, div.dispositions section.disposition::after {
+          content: ' ';
+          display: table; }
+        div.dispositions section.disposition::after {
+          clear: both; }
+        div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.dispositions section.disposition > div.left::before, div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::before, div.dispositions section.disposition > div.right::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::after {
+            clear: both; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.left:last-child, div.dispositions section.disposition > div.right, div.dispositions section.disposition > div.right:last-child {
+            float: none; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left > section, div.dispositions section.disposition > div.right > section {
+            width: 100%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition > div.left > section:last-child:not(:first-child), div.dispositions section.disposition > div.right > section:last-child:not(:first-child) {
+              float: right; }
+        div.dispositions section.disposition div.input.date {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto; }
+          div.dispositions section.disposition div.input.date::before, div.dispositions section.disposition div.input.date::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition div.input.date::after {
+            clear: both; }
+          div.dispositions section.disposition div.input.date select {
+            width: 33.33333%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition div.input.date select:last-child:not(:first-child) {
+              float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+        float: right; } }
+
 /*# sourceMappingURL=prime.css.map */
