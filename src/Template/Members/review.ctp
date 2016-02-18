@@ -1,7 +1,5 @@
 <!-- Template/Member/review.ctp -->
 <?php
-osd($members);
-osd($member);
 /**
  * set values that amend tag classes for css refinement
  */
