@@ -40,7 +40,10 @@ class AppView extends View
         $this->loadHelper('Html');
 		if (isset($this->viewVars['SystemState'])) {
 			$this->SystemState = $this->viewVars['SystemState'];
-		}		
+		}
+//		if ($this->viewVars['standing_disposition']) {
+			$this->loadHelper('DispositionTools');
+//		}
     }
 	
 	/**

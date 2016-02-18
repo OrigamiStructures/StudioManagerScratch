@@ -261,13 +261,13 @@ define('PIECE_COLLECTION_RETURN', TRUE);
 // NOTES ON ADDING TO THIS SECTION
 // PieceTableHelper::_map needs matching entry to identify the
 // filter strategy callable or sort strategy callable
-define('PIECE_FILTER_COLLECTED'		, 'collected');
-define('PIECE_FILTER_NOT_COLLECTED'	, 'not_collected');
-define('PIECE_FILTER_ASSIGNED'		, 'assigned');
-define('PIECE_FILTER_UNASSIGNED'	, 'not_assigned');
-define('PIECE_FILTER_FLUID'			, 'fluid');
-define('PIECE_FILTER_NONE'			, 'none');
-define('PIECE_SORT_NONE'			, 'none');
+define('PIECE_FILTER_COLLECTED'			, 'collected');
+define('PIECE_FILTER_NOT_COLLECTED'		, 'not_collected');
+define('PIECE_FILTER_ASSIGNED'			, 'assigned');
+define('PIECE_FILTER_UNASSIGNED'		, 'not_assigned');
+define('PIECE_FILTER_FLUID'				, 'fluid');
+define('PIECE_FILTER_NONE'				, 'none');
+define('PIECE_SORT_NONE'				, 'none');
 
 define('DISPOSITION_TRANSFER'			, 'transfer');
 define('DISPOSITION_LOAN'				, 'loan');

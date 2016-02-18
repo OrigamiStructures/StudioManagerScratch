@@ -58,7 +58,7 @@ class DispositionManagerComponent extends Component {
 	public function generate() {
 		return new Disposition([
 			'id' => NULL, 
-			'label' => 'sale',
+			'label' => 'Sale',
 			'type' => 'transfer',
 			'start_date' => NULL,
 			'end_date' => NULL,
