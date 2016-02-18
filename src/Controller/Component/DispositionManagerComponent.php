@@ -73,8 +73,12 @@ class DispositionManagerComponent extends Component {
 		$this->_register($arguments);
 		$this->_setRedirect($arguments);
 //		osd($this->disposition);die;
-		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
+		$this->write();
 		return $this->disposition;
+	}
+	
+	public function write() {
+		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
 	}
 	
 	/**

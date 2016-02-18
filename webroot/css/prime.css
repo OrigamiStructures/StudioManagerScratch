@@ -867,6 +867,9 @@ DISPOSITION
 **/
 @media only screen {
   /* small up */
+  div.dispositions_panel p {
+    font-size: 85%;
+    line-height: 1; }
   div.dispositions_panel div.disposition {
     max-width: 75rem;
     margin-left: auto;
@@ -881,8 +884,8 @@ DISPOSITION
       float: left;
       padding-left: 0.9375rem;
       padding-right: 0.9375rem;
-      background-color: wheat;
-      border: thin solid firebrick; }
+      background-color: #eee;
+      padding: .3rem; }
       div.dispositions_panel div.disposition section:last-child:not(:first-child) {
         float: right; }
     div.dispositions_panel div.disposition section.prompt {

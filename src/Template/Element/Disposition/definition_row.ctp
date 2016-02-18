@@ -17,12 +17,18 @@ if(empty($standing_disposition->label)) {
 		</section>
 		<section class="member">
 			<!--<span class="warning badge">!!!</span>-->
-			<p>Member</p>
+			<p>Recipient</p>
 			<?= $this->element('Disposition/member'); ?>
 		</section>
 		<section class="address">
 			<!--<span class="warning badge">!!!</span>-->
-			<p>Address</p>
+			<p>
+				<?php if (count($standing_disposition->addresses) > 1) : ?>
+				Click the address you want to keep.
+				<?php else: ?>
+				Address
+				<?php endif; ?>
+			</p>
 			<?= $this->element('Disposition/address_list'); ?>
 		</section>
 		<section class="prompt">

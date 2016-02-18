@@ -458,12 +458,16 @@ DISPOSITION
 **/
 @media only screen { /* small up */
 	div.dispositions_panel {
+		p {
+			font-size: 85%;
+			line-height: 1;
+		}
 		div.disposition {
 			@include grid-row();
 			section {
 				@include grid-column(12);
-				background-color: wheat;
-				border: thin solid firebrick;
+				background-color: #eee;
+				padding: .3rem;
 			}
 			section.prompt {
 				@include grid-column(12);

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 
 /**
  * Dispositions Controller
@@ -12,6 +13,13 @@ class DispositionsController extends AppController
 {
 	
 	public $DispositionManager;
+	
+	public function beforeFilter(\Cake\Event\Event $event) {
+		parent::beforeFilter($event);
+		if (!stristr($this->request->referer(), DS . 'dispositions' . DS)) {
+			$this->SystemState->referer($this->request->referer());
+		}
+	}
 
 	public function initialize() {
 		parent::initialize();
@@ -138,6 +146,7 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
+		$this->SystemState->referer($this->request->referer());
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 //		osd($disposition);//die;
@@ -151,6 +160,19 @@ class DispositionsController extends AppController
 	public function discard() {
 		$this->DispositionManager->discard();
 		$this->autoRender = false;
-		$this->redirect($this->referer());
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+	}
+	
+	public function chooseAddress() {
+		$disposition = $this->DispositionManager->get();
+		$collection = new Collection($disposition->addresses);
+		$address_id = $this->SystemState->queryArg('address');
+		$choice = $collection->filter(function($address) use($address_id){
+			return $address->id == $address_id;
+		});
+		$this->DispositionManager->disposition->addresses = $choice->toArray();
+		$this->DispositionManager->write();
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
 }
