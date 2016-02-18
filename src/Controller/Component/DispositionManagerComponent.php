@@ -60,7 +60,8 @@ class DispositionManagerComponent extends Component {
 			'id' => NULL, 
 			'label' => NULL,
 			'type' => NULL,
-			'start_date' => NULL,
+			'complete' => TRUE,
+			'start_date' => date('m j, y', time()),
 			'end_date' => NULL,
 			'pieces' => [], 
 			'member' => NULL, 
@@ -172,6 +173,13 @@ class DispositionManagerComponent extends Component {
 				'action' => 'review',
 				'?' => $arguments]);
 		}
+	}
+	
+	/**
+	 * Insure the Artworks have pieces that can satisfy the disposition
+	 * 
+	 */
+	public function validatePieces() {
 	}
 	
 }
