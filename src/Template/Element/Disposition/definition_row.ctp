@@ -12,8 +12,7 @@ if(empty($standing_disposition->label)) {
 		</section>
 		<section class="disposition">
 			<!--<span class="warning badge">!!!</span>-->
-			<?= $this->Form->select('disposition_label', $disposition_label, ['empty' => 'Choose a disposition']); ?>
-			<?= $this->Form->input('disposition_type', ['type' => 'hidden']); ?>
+			<p><?= $standing_disposition->label ?></p>
 		</section>
 		<section class="member">
 			<!--<span class="warning badge">!!!</span>-->

@@ -273,6 +273,7 @@ define('DISPOSITION_TRANSFER'			, 'transfer');
 define('DISPOSITION_LOAN'				, 'loan');
 define('DISPOSITION_STORE'				, 'storage');
 define('DISPOSITION_UNAVAILABLE'		, 'unavailable');
+define('DISPOSITION_REVIEW'				, 'review');
 
 
 define('DISPOSITION_TRANSFER_SALE'		, 'Sale');
@@ -289,3 +290,5 @@ define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
 
 define('DISPOSITION_STORE_STORAGE'		, 'Storage');
+
+define('DISPOSITION_REVIEW_CONTACT'		, 'Contact');

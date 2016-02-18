@@ -149,12 +149,16 @@ class DispositionsController extends AppController
 		$this->SystemState->referer($this->request->referer());
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		if ($this->request->is('post')) {
+			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+		}
 //		osd($disposition);//die;
 		if (!empty($disposition->type)) {
 			$this->autoRender = false;
 			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 		}
-		
+		$labels = $this->Dispositions->disposition_label;
+		$this->set(compact('disposition', 'labels'));
 	}
 	
 	public function discard() {
