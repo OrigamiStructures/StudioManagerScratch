@@ -1,2 +1,8 @@
-<!-- Element/Member/fieldset.ctp -->
-<?= $this->Form->input("groups.$key.display_title");?>
+<!-- Element/Group/fieldset.ctp -->
+<?= $this->Form->input("groups.$key.id", [
+    'options' => $groups, 
+    'type' => 'select',
+    'label' => FALSE
+    ]);?>
+
+<!-- END Element/Group/fieldset.ctp -->

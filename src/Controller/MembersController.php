@@ -159,22 +159,31 @@ class MembersController extends AppController
     /**
      * Add contact or address
      * 
-     * With 'contacts' or 'addresses' in the type, add the respective new element to the
-     * return
+     * With 'contacts', 'addresses', or 'groups' in the type, add the respective 
+     * new element to the return
      * 
-     * @param string $entity_type 'contacts' or 'addresses'
+     * @param string $entity_type 'contacts', 'addresses', or 'groups'
      */
     public function addElement($entity_type) {
-        if(!in_array($entity_type, ['contacts', 'addresses'])){
+        if(!in_array($entity_type, ['contacts', 'addresses', 'groups'])){
             throw new \BadMethodCallException('Entity type must be either contacts or addresses');
         }
-        $table = Inflector::pluralize(Inflector::classify($entity_type));
-        $member = new \App\Model\Entity\Member($this->request->data);
+
+		$table = Inflector::pluralize(Inflector::classify($entity_type));
+        $entity_name = Inflector::classify($entity_type);
+        $entity = "\App\Model\Entity\\$entity_name";
+        $member = new \App\Model\Entity\Member();
+        $member = $this->Members->patchEntity($member, $this->request->data);
         
         $start = count($member->$entity_type);
 //        osd($member->$entity_type);die;
+        
+        $additional_object = new Collection($this->Members->$table->spawn(1,[], $start));
+        $additional_object = $additional_object->map(function($value) use ($entity){
+            return new $entity($value);
+        });
                 
-        $member->$entity_type = (!empty($member->$entity_type) ? $member->$entity_type : []) + $this->Members->$table->spawn(1, [], $start);
+        $member->$entity_type = (!empty($member->$entity_type) ? $member->$entity_type : []) + $additional_object->toArray();
         
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
@@ -224,6 +233,7 @@ class MembersController extends AppController
         if(empty($member->errors())){
             $this->SystemState->referer($this->referer());
         }
+        $this->retreiveAndSetGroups();
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('review');
@@ -237,7 +247,7 @@ class MembersController extends AppController
         $member_groups = $this->Members->Groups->find('memberGroups');
         $groups_list = (new Collection($member_groups))->combine('id', 'displayTitle');
         $this->set('member_groups', $member_groups);
-        $this->set('groups_list', $groups_list);
+        $this->set('groups', $groups_list);
     }
     
     public function testMe() {

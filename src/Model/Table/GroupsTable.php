@@ -109,4 +109,22 @@ class GroupsTable extends AppTable
 //        ]);
         return $query;
     }
+    
+	/**
+	 * Make the specified number of new Contact arrays (for TRD use)
+	 * 
+	 * @param integer $count How many contacts are needed
+	 * @param array $default [column => value] to control what data the pieces have
+	 * @param integer $start The index (and number) of the first of the ($count) pieces
+	 */
+	public function spawn($count, $default = [], $start = 0) {
+		$columns = $default + [
+			'id' => NULL,
+            'active' => 1,
+			'user_id' => $this->SystemState->artistId(),
+		];
+        
+        return array_fill($start, $count, $columns);
+	}
+	
 }
