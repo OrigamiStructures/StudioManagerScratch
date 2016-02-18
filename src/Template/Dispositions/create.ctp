@@ -7,7 +7,8 @@
 
 				echo $this->Form->input('id');
 				//	echo $this->Form->input('label');
-				echo $this->Form->input('label', ['empty' => 'Choose a disposition']);
+				echo $this->Form->input('label', ['empty' => 'Required choice']);
+//				echo $this->Form->input('name', ['placeholder' => 'Optional: Name to use instead of the label above.']);
 				echo $this->Form->input('disposition_type', ['type' => 'hidden']);
 				echo $this->Form->input('complete');
 				echo $this->Form->input('start_date');
