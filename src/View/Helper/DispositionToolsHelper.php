@@ -45,7 +45,7 @@ class DispositionToolsHelper extends Helper {
 	}
 	
 	public function panel($disposition) {
-		if (!$disposition || $this->request->controller == 'dispositions') {
+		if (!$disposition || strtolower($this->request->controller) == 'dispositions') {
 			return false;
 		} else {
 			return true;

@@ -88,5 +88,9 @@ class Disposition extends Entity
 		});
 		$this->pieces = $surviving_pieces->toArray();
 	}
+	
+	public function missingDates() {
+		return (empty($this->start_date) || empty($this->end_date));
+	}
 
 }
