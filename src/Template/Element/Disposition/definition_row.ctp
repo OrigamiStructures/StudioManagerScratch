@@ -18,10 +18,12 @@ if(empty($standing_disposition->label)) {
 		<section class="member">
 			<!--<span class="warning badge">!!!</span>-->
 			<p>Member</p>
+			<?= $this->element('Disposition/member'); ?>
 		</section>
 		<section class="address">
 			<!--<span class="warning badge">!!!</span>-->
 			<p>Address</p>
+			<?= $this->element('Disposition/address_list'); ?>
 		</section>
 		<section class="prompt">
 			<?= $this->Html->link('Discard disposition', ['controller' => 'dispositions', 'action' => 'discard']); ?>
