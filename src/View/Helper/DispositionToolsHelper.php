@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\View\Helper;
 
 use Cake\View\Helper;
@@ -27,8 +20,19 @@ class DispositionToolsHelper extends Helper {
 		return $this->$method($entity);
 	}
 	
+	protected function _connectPiece($piece) {
+		$SystemState = $this->_View->viewVars['SystemState'];
+		$label = $this->_fromLabel();
+		return $this->Html->link(
+			$label , [
+				'controller' => 'dispositions',
+				'action' => 'create',
+				'?' => $SystemState->queryArg() + ['piece' => $piece->id]
+			]);	
+	}
+	
 	protected function _connectMember($member) {
-		$label = $this->_label($member->name);
+		$label = $this->_toLabel($member->name);
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
             'action' => 'create', 
@@ -41,7 +45,7 @@ class DispositionToolsHelper extends Helper {
 	}
 	
 	protected function _connectAddress($address) {
-		$label = $this->_label($address->address1);
+		$label = $this->_toLabel($address->address1);
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
             'action' => 'create', 
@@ -53,7 +57,7 @@ class DispositionToolsHelper extends Helper {
 		);
 	}
 	
-	private function _label($name) {
+	private function _toLabel($name) {
 		if (!isset($this->dispo_label)) {
 			$this->dispo_label = $this->_View->viewVars['standing_disposition']->label;
 		}
@@ -70,6 +74,8 @@ class DispositionToolsHelper extends Helper {
 			case DISPOSITION_STORE_STORAGE :
 				$label = "$this->dispo_label at $name";
 				break;
+			default :
+				$label = "Dispose to $name";
 		}
 		return $label;
 		/**
@@ -77,6 +83,34 @@ class DispositionToolsHelper extends Helper {
 		define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 		define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
 		 */
+	}
+	
+	private function _fromLabel() {
+		if (!isset($this->dispo_label)) {
+			$this->dispo_label = $this->_View->viewVars['standing_disposition']->label;
+		}
+		switch ($this->dispo_label) {
+			case DISPOSITION_LOAN_CONSIGNMENT :
+			case DISPOSITION_LOAN_PRIVATE :
+			case DISPOSITION_LOAN_RENTAL :
+			case DISPOSITION_TRANSFER_DONATION :
+			case DISPOSITION_TRANSFER_SALE :
+			case DISPOSITION_TRANSFER_GIFT :
+			case DISPOSITION_LOAN_SHOW :
+				$label = "Add to $this->dispo_label";
+				break;
+			case DISPOSITION_STORE_STORAGE :
+				$label = "Send to $this->dispo_label";
+				break;
+			case DISPOSITION_UNAVAILABLE_LOST :
+			case DISPOSITION_UNAVAILABLE_DAMAGED :
+			case DISPOSITION_UNAVAILABLE_STOLEN :
+				$label = "Add to $this->dispo_label";
+				break;
+			default :
+				$label = "Dispose piece";
+		}
+		return $label;
 	}
 	
 }
