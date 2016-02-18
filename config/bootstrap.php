@@ -279,11 +279,13 @@ define('DISPOSITION_REVIEW'				, 'review');
 define('DISPOSITION_TRANSFER_SALE'		, 'Sale');
 define('DISPOSITION_TRANSFER_DONATION'	, 'Donation');
 define('DISPOSITION_TRANSFER_GIFT'		, 'Gift');
+define('DISPOSITION_TRANSFER_RIGHTS'	, 'Published');
 
 define('DISPOSITION_LOAN_SHOW'			, 'Show');
 define('DISPOSITION_LOAN_CONSIGNMENT'	, 'Consign');
 define('DISPOSITION_LOAN_PRIVATE'		, 'Private Loan');
 define('DISPOSITION_LOAN_RENTAL'		, 'Rental');
+define('DISPOSITION_LOAN_RIGHTS'		, 'Licensed');
 
 define('DISPOSITION_UNAVAILABLE_LOST'	, 'Lost');
 define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
