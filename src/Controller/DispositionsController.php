@@ -15,6 +15,14 @@ class DispositionsController extends AppController
 	public $DispositionManager;
 	
 	/**
+	 * create() will lead the user through evolving screens. This names the next one
+	 *
+	 * @var string
+	 */
+	protected $_view_name;
+
+
+	/**
 	 * Manage redirects for disposition activities
 	 * 
 	 * All visits to this controller will eventually return to the original 
@@ -28,7 +36,6 @@ class DispositionsController extends AppController
 		
 		if (!stristr($this->request->referer(), DS . 'dispositions' . DS)) {
 			$this->SystemState->referer($this->request->referer());
-			osd($this->SystemState->referer());
 		}
 	}
 
@@ -157,15 +164,36 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
+		$this->_view_name = 'create';
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 		if ($this->request->is('post')) {
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
-			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));	
-
+			if ($this->postComplete($disposition)) {
+				$this->autoRender = FALSE;
+				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+			}
 		}
 		$labels = $this->Dispositions->disposition_label;
 		$this->set(compact('disposition', 'labels'));
+		$this->render($this->_view_name);
+	}
+	
+	/**
+	 * In the future this can implement more complex rules
+	 * 
+	 * @param entity $disposition
+	 * @return boolean
+	 */
+	public function postComplete($disposition) {
+		if (empty($disposition->type)) {
+			$disposition->type = $this->Dispositions->map($disposition->label);
+		}
+		if ($disposition->type = DISPOSITION_LOAN && $disposition->missingDates()) {
+			$this->_view_name = 'loan';
+		}
+		$this->DispositionManager->write();
+		return true;
 	}
 	
 	public function refine() {
