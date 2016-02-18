@@ -38,12 +38,10 @@ class AppView extends View
     {
 		$this->loadHelper('DropDown');
         $this->loadHelper('Html');
+		$this->loadHelper('DispositionTools');
 		if (isset($this->viewVars['SystemState'])) {
 			$this->SystemState = $this->viewVars['SystemState'];
 		}
-//		if ($this->viewVars['standing_disposition']) {
-			$this->loadHelper('DispositionTools');
-//		}
     }
 	
 	/**

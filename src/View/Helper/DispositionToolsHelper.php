@@ -44,6 +44,14 @@ class DispositionToolsHelper extends Helper {
 		);
 	}
 	
+	public function panel($disposition) {
+		if (!$disposition || $this->request->controller == 'dispositions') {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	protected function _connectAddress($address) {
 		$label = $this->_toLabel($address->address1);
 		return $this->Html->link($label, [
