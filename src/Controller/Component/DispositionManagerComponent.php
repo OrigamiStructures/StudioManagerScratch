@@ -14,6 +14,10 @@ use Cake\Collection\Collection;
 class DispositionManagerComponent extends Component {
 	
 	public $disposition;
+	
+	protected $controller;
+	
+	protected $SystemState;
 
 	public function initialize(array $config) 
 	{
