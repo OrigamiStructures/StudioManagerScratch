@@ -6,6 +6,7 @@ use Cake\Cache\Cache;
 use App\Model\Entity\Disposition;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use DateTime;
 
 /**
  * CakePHP DispositionManagerComponent
@@ -61,7 +62,8 @@ class DispositionManagerComponent extends Component {
 			'label' => NULL,
 			'type' => NULL,
 			'complete' => TRUE,
-			'start_date' => date('m j, y', time()),
+			'start_date' => new DateTime('now'),
+//			'end_date' => new DateTime(),
 			'end_date' => NULL,
 			'pieces' => [], 
 			'member' => NULL, 

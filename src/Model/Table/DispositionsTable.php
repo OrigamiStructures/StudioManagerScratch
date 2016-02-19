@@ -114,7 +114,12 @@ class DispositionsTable extends AppTable
     }
 	
 	public function map($label) {
-		return $this->_map[$label];
+		if (isset($this->_map[$label])) {
+			return $this->_map[$label];
+		} else {
+			return FALSE;
+		}
+		
 	}
 
     /**

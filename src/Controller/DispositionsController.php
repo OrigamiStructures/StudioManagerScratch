@@ -19,7 +19,7 @@ class DispositionsController extends AppController
 	 *
 	 * @var string
 	 */
-	protected $_view_name;
+	protected $_view_name = 'create';
 
 
 	/**
@@ -164,7 +164,6 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
-		$this->_view_name = 'create';
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 		if ($this->request->is('post')) {
@@ -186,14 +185,20 @@ class DispositionsController extends AppController
 	 * @return boolean
 	 */
 	public function postComplete($disposition) {
+		$status = true;
 		if (empty($disposition->type)) {
-			$disposition->type = $this->Dispositions->map($disposition->label);
+			if ($this->Dispositions->map($disposition->label)) {
+				$disposition->type = $this->Dispositions->map($disposition->label);
+			} else {
+				$status = FALSE;
+			}
 		}
-		if ($disposition->type = DISPOSITION_LOAN && $disposition->missingDates()) {
+		if ($disposition->type === DISPOSITION_LOAN && is_null($disposition->end_date)) {
 			$this->_view_name = 'loan';
+			$status = FALSE;
 		}
 		$this->DispositionManager->write();
-		return true;
+		return $status;
 	}
 	
 	public function refine() {
