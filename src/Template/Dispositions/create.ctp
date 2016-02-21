@@ -9,9 +9,11 @@
 				//	echo $this->Form->input('label');
 				echo $this->Form->input('label', ['empty' => 'Required choice']);
 				echo $this->Form->input('name', ['placeholder' => 'Optional name for this placement']);
-				echo $this->Form->input('disposition_type', ['type' => 'hidden']);
+				echo $this->Form->input('type', ['type' => 'hidden']);
 				echo $this->Form->input('complete');
 				echo $this->Form->input('start_date');
+				$options = empty($disposition->type) ? ['type' => 'hidden'] : [];
+				echo $this->Form->input('end_date', $options);
 			?>
 			<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 			</section>

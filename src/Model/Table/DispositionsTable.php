@@ -130,14 +130,38 @@ class DispositionsTable extends AppTable
      */
     public function validationDefault(Validator $validator)
     {
+		osd($validator);
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmpty('id', 'create')
+				
+//			->requirePresence('label', 'create')
+//            ->notEmpty('label');
+//		
+			->requirePresence('label', 'create')
+            ->notEmpty('label')
+			->add('label', 'valid_label', [
+				'rule' => [$this, 'validLabel'],
+				'message' => 'The disposition must be chosen from the provided list',
+			])
+			->add('end_date', 'end_of_loan', [
+				'rule' => [$this, 'endOfLoan'],
+				'message' => 'Loans are finite. Please provide a end date.',
+			]);
 
         return $validator;
     }
+	
+	public function validLabel ($value, $context) {
+		return array_key_exists($value, $this->_map);
+	}
+	
+	public function endOfLoan($value, $context) {
+		osd($value);
+		osd($context['data']); die('context data');
+	}
 
-    /**
+	/**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
