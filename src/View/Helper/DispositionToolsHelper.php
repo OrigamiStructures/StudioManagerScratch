@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use Cake\Cache\Cache;
 
 /**
  * CakePHP DispositionToolsHelper
@@ -14,6 +15,12 @@ class DispositionToolsHelper extends Helper {
 	protected $dispo_label;
 	
 	protected $_disposition;
+
+	
+	public function __construct(\Cake\View\View $View, array $config = array()) {
+		parent::__construct($View, $config);
+		$this->SystemState = $View->SystemState;
+	}
 
 	/**
 	 * Should the disposition panel be displayed?

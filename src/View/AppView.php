@@ -36,12 +36,12 @@ class AppView extends View
      */
     public function initialize()
     {
-		$this->loadHelper('DropDown');
-        $this->loadHelper('Html');
-		$this->loadHelper('DispositionTools');
 		if (isset($this->viewVars['SystemState'])) {
 			$this->SystemState = $this->viewVars['SystemState'];
 		}
+		$this->loadHelper('DropDown', ['SystemState' => $this->SystemState]);
+        $this->loadHelper('Html', ['SystemState' => $this->SystemState]);
+		$this->loadHelper('DispositionTools', ['SystemState' => $this->SystemState]);
     }
 	
 	/**
