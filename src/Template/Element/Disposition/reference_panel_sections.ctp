@@ -1,7 +1,3 @@
-			<section class="pieces">
-				<?= $this->element('Disposition/piece_list'); ?>
-			</section>
-
 			<section class="disposition">
 				<p><?= $standing_disposition->label ?></p>
 			</section>
@@ -12,12 +8,11 @@
 			</section>
 
 			<section class="address">
-				<p>
-					<?php if (count($disposition->addresses) > 1) : ?>
-					Pending Addresses
-					<?php else: ?>
-					Address
-					<?php endif; ?>
-				</p>
+				<?= $this->DispositionTools->addressLabel($standing_disposition); ?>
 				<?= $this->element('Disposition/address_list'); ?>
 			</section>
+
+			<section class="pieces">
+				<?= $this->element('Disposition/piece_list'); ?>
+			</section>
+

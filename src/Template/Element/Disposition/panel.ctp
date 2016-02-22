@@ -1,3 +1,14 @@
 <div class="dispositions_panel">
-	<?= $this->element('Disposition/definition_row'); ?>
+<?php 
+if(empty($standing_disposition->label)) {
+	$DispositionTable = Cake\ORM\TableRegistry::get('Dispositions');
+	$disposition_label = $DispositionTable->disposition_label;
+//	osd($disposition_label);
+}
+?>	
+	<div class="disposition">
+		
+		<?= $this->element('Disposition/reference_panel_sections'); ?>
+		
+	</div>
 </div>

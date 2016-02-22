@@ -22,9 +22,25 @@ class DispositionToolsHelper extends Helper {
 	
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
-		$this->SystemState = $View->SystemState;
+		$this->SystemState = $config['SystemState'];
 	}
 
+	/**
+	 * Fatal error: [Cake\View\Exception\MissingHelperException] Helper class SystemStateHelper could not be found. 
+	 * #0 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/Core/ObjectRegistry.php(91): 
+	 *		Cake\View\HelperRegistry->_throwMissingClassError('SystemState', NULL) 
+	 * #1 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/HelperRegistry.php(66): 
+	 *		Cake\Core\ObjectRegistry->load('SystemState') 
+	 * #2 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/View.php(888): 
+	 *		Cake\View\HelperRegistry->__isset('SystemState') 
+	 * #3 /Library/WebServer/Documents/StudioManagerScratch/src/View/AppView.php(42): 
+	 *		Cake\View\View->__get('SystemState') 
+	 * #4 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/View.php(344): 
+	 *		App\View\AppView->initialize() 
+	 * #5 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/ViewBuilder.php(350): 
+	 *		Cake\View\View->__construct(Object(Cake\Network\Request), Object(Cake\Network\Response), 
+	 *		O in /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/Error/ErrorHandler.php on line 156
+	 */
 	/**
 	 * Should the disposition panel be displayed?
 	 * 
@@ -207,6 +223,16 @@ class DispositionToolsHelper extends Helper {
 		define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 		define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
 		 */
+	}
+	
+	public function addressLabel($disposition) {
+		$multiple = count($disposition->addresses) > 1;
+		if ($this->SystemState->controller === 'dispositions') {
+			$text_node = $multiple ? 'Pending Addresses' : 'Address' ;
+		} else {
+			$text_node = $multiple ? 'Click the address you want to keep.' : 'Address' ;
+		}
+		return $this->Html->tag('p', $text_node);
 	}
 	
 	/**

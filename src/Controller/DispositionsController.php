@@ -169,6 +169,7 @@ class DispositionsController extends AppController
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 		if ($this->request->is('post')) {
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+			$this->DispositionManager->write();
 			$errors = $disposition->errors();
 //			osd($disposition->errors());
 			if (empty($disposition->errors())) {
