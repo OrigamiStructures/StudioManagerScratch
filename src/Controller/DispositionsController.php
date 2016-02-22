@@ -164,43 +164,24 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
+		$errors = [];
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 		if ($this->request->is('post')) {
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
-			if ($this->postComplete($disposition)) {
+			$errors = $disposition->errors();
+//			osd($disposition->errors());
+			if (empty($disposition->errors())) {
 				$this->autoRender = FALSE;
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 			}
 		}
+		
 		$labels = $this->Dispositions->disposition_label;
-		$this->set(compact('disposition', 'labels'));
+		$this->set(compact('disposition', 'labels', 'errors'));
 		$this->render($this->_view_name);
 	}
-	
-	/**
-	 * In the future this can implement more complex rules
-	 * 
-	 * @param entity $disposition
-	 * @return boolean
-	 */
-	public function postComplete($disposition) {
-		$status = true;
-		if (empty($disposition->type)) {
-			if ($this->Dispositions->map($disposition->label)) {
-				$disposition->type = $this->Dispositions->map($disposition->label);
-			} else {
-				$status = FALSE;
-			}
-		}
-		if ($disposition->type === DISPOSITION_LOAN && is_null($disposition->end_date)) {
-			$this->_view_name = 'loan';
-			$status = FALSE;
-		}
-		$this->DispositionManager->write();
-		return $status;
-	}
-	
+		
 	public function refine() {
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());

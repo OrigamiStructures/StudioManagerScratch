@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use ArrayObject;
 
 /**
  * Dispositions Model
@@ -130,24 +132,19 @@ class DispositionsTable extends AppTable
      */
     public function validationDefault(Validator $validator)
     {
-		osd($validator);
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create')
-				
-//			->requirePresence('label', 'create')
-//            ->notEmpty('label');
-//		
-			->requirePresence('label', 'create')
-            ->notEmpty('label')
+			->requirePresence('start_date');
+		$validator
 			->add('label', 'valid_label', [
 				'rule' => [$this, 'validLabel'],
 				'message' => 'The disposition must be chosen from the provided list',
 			])
-			->add('end_date', 'end_of_loan', [
-				'rule' => [$this, 'endOfLoan'],
-				'message' => 'Loans are finite. Please provide a end date.',
-			]);
+            ->notEmpty('label');
+		$validator
+			->notEmpty('end_date', 'Loans are for a limited time. Please provide an end date greater than the start date.', [$this, 'endOfLoan'])
+			->requirePresence('end_date');
 
         return $validator;
     }
@@ -156,9 +153,31 @@ class DispositionsTable extends AppTable
 		return array_key_exists($value, $this->_map);
 	}
 	
-	public function endOfLoan($value, $context) {
-		osd($value);
-		osd($context['data']); die('context data');
+	public function endOfLoan($context) {
+		$data = $context['data'];
+		if (!isset($data['start_date'])) {
+			return TRUE;
+		}
+		$start = implode('', $data['start_date']);
+		$end = is_array($data['end_date']) ? implode('', $data['end_date']) : 0 ;
+		if ($data['type'] !== DISPOSITION_LOAN) {
+			return FALSE;
+		} else {
+			return $end <= $start;
+		}
+	}
+	
+	/**
+	 * Lookup and set the disposition type
+	 * 
+	 * @param Event $event
+	 * @param ArrayObject $data
+	 * @param ArrayObject $options
+	 */
+	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
+		if (array_key_exists($data['label'], $this->_map)) {
+		 $data['type'] = $this->_map[$data['label']];
+		}
 	}
 
 	/**

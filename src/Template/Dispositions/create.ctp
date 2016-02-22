@@ -12,9 +12,16 @@
 				echo $this->Form->input('type', ['type' => 'hidden']);
 				echo $this->Form->input('complete');
 				echo $this->Form->input('start_date');
-				$options = empty($disposition->type) ? ['type' => 'hidden'] : [];
-				echo $this->Form->input('end_date', $options);
+				if (empty($disposition->type)) {
+					$options = ['type' => 'hidden'] ;
+					
+				} else {
+					$options = [];
+					$disposition->end_date = is_null($disposition->end_date) ? new DateTime('now') : $disposition->end_date ;
+				}
+				echo $this->Form->input('end_date', $options + ['empty' => TRUE]);
 			?>
+				<?= $this->DispositionTools->validationError('end_date', $errors); ?>
 			<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 			</section>
 		</div>

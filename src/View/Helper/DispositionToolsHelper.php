@@ -3,12 +3,15 @@ namespace App\View\Helper;
 
 use Cake\View\Helper;
 use Cake\Cache\Cache;
+use App\View\Helper\Traits\ValidationErrors;
 
 /**
  * CakePHP DispositionToolsHelper
  * @author dondrake
  */
 class DispositionToolsHelper extends Helper {
+	
+	use ValidationErrors;
 	
 	public $helpers = ['Html'];
 	
