@@ -128,12 +128,21 @@ class EditionsController extends AppController
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
-		$element_management = [
-			'artwork' => 'full',
-			'edition' => 'many',
-			'format' => 'many',
-		];
-		$this->set('element_management', $element_management);
+//		$element_management = [
+//			'artwork' => 'full',
+//			'edition' => 'many',
+//			'format' => 'many',
+//		];
+//		$this->set('element_management', $element_management);
+		
+		$edition = $artwork->returnEdition($this->SystemState->queryArg('edition'));
+		if ($edition->isFlat()) {
+			$this->autoRender = FALSE;
+			$arguments = $this->SystemState->queryArg() + [
+				'format' => $edition->formats[0]->id];
+			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
+		}
+		
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');
 	}

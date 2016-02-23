@@ -156,8 +156,4 @@ class AppController extends Controller
 		osd($art1->stack->returnEdition(6));
 	}
 	
-	public function call() {
-		return $this->c++;
-	}
-	
 }

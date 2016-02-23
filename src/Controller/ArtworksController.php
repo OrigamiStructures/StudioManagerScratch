@@ -180,7 +180,16 @@ class ArtworksController extends AppController
 			$artwork_variable = 'artworks';
 		}
 
-		$this->set($artwork_variable, $this->ArtworkStack->stackQuery());
+		$result = $this->ArtworkStack->stackQuery();
+		if ($artwork_variable === 'artwork' && $result->isflat()) {
+			$this->autoRender = FALSE;
+			$arguments = $this->SystemState->queryArg() + [
+				'edition' => $result->editions[0]->id, 
+				'format' => $result->editions[0]->formats[0]->id];
+			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
+		}
+		
+		$this->set($artwork_variable, $result);
         $this->set('_serialize', [$artwork_variable]);
     }
 	

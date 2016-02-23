@@ -49,4 +49,8 @@ class Artwork extends Entity
 		return $this->title;
 	}
 	
+	public function isFlat() {
+		return ($this->edition_count === 1 && $this->editions[0]->isFlat());
+	}
+	
 }

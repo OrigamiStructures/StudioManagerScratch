@@ -202,4 +202,7 @@ class Edition extends Entity
 		return ['edition' => $this->id, 'artwork' => $this->artwork_id];
 	}
 	
+	public function isFlat() {
+		return $this->format_count === 1;
+	}
 }
