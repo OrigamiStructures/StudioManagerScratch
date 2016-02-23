@@ -19,9 +19,13 @@
 			</section>
 
 			<section class="prompt">
-				<?= $this->Html->link('Save disposition', 
+				<?php
+				if ($SystemState->controller() !== 'dispositions') {
+					echo $this->Html->link('Save disposition', 
 					['controller' => 'dispositions', 'action' => 'save'], 
-					['class' => 'button']); ?>
+					['class' => 'button']);
+				}
+				?>
 				<?= $this->Html->link('Discard disposition', 
 					['controller' => 'dispositions', 'action' => 'discard'], 
 					['class' => 'button']); ?>
