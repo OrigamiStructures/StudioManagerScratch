@@ -329,6 +329,22 @@ class EditionedHelper extends EditionFactoryHelper {
 		}
 	}
 	
+	/**
+	 * Make variables that can support rendering the 'disposition' piece table
+	 * 
+	 * If the disposition type is known, show all appropriate pieces. 
+	 * 
+	 * We're clear down to a single format display now and will show all the 
+	 * appropriate pieces for that format even if they are not currently assigned. 
+	 * This 'live reassignment' means we will want to label each offered piece 
+	 * to show where it is currently assigned. All possible pieces are on the 
+	 * edition but we'll need the formats to be able to label the pieces. The 
+	 * problem is, we only have one (the target) format available. So we have 
+	 * to read in additional data. 
+	 * 
+	 * @param entity $format
+	 * @param entity $edition
+	 */
 	private function _dispositionModeFormatPieceTable($format, $edition){
 		$disposition = $this->SystemState->standing_disposition;
 		if (!is_null($disposition->type)) {
@@ -338,7 +354,15 @@ class EditionedHelper extends EditionFactoryHelper {
 			$pieces = $format->pieces;
 		}
 		$caption = "Indicate the pieces you want to include in this $disposition->display_label";
-		$providers = ['edition' => $edition] + $edition->formats;
+		
+		// ALL THESE PIECE TABLES COULD BE REFACTORED TO USE CELLS
+		$EditionTable = TableRegistry::get('Editions');
+		$conditions = $this->_View->SystemState->buildConditions([]);
+		$provider_set = $EditionTable->get($this->_View->SystemState->queryArg('edition'), [
+				'conditions' => $conditions,
+				'contain' => ['Formats']]);
+		$providers = ['edition' => $provider_set] + $provider_set->formats;
+		
 		$this->_View->set(compact('caption', 'pieces', 'providers'));
 	}
 
