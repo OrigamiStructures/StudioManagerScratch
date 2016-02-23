@@ -371,7 +371,7 @@ footer {
   	color: #ddd;
   }*/ }
   .top-bar-left ul.menu li {
-    width: 10rem; }
+    width: 9rem; }
   .top-bar-left li.has-submenu {
     /*border: thin solid black;*/
     position: relative; }
@@ -390,7 +390,7 @@ footer {
     display: block;
     position: absolute;
     top: .1rem;
-    left: 9rem;
+    left: 8rem;
     z-index: 1000;
     border: thin solid #ccc; }
   .top-bar-left ul.nested:hover {
