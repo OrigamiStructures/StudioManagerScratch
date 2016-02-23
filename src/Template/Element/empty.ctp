@@ -1,4 +1,6 @@
 
 <!-- empty.ctp -->
-<p class="empty_caption"><?php echo isset($caption) ? $caption : ''; ?></p>
+<?php if (!isset($caption)) : ?>
+<!--<p class="empty_caption"><?= $caption; ?></p>-->
+<?php endif; ?>
 <!-- END empty.ctp -->

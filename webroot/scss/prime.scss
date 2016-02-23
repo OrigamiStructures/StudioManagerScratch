@@ -125,6 +125,7 @@ div.artworks {
 	section.artwork {
 		@include grid-row();
 		margin-top: 0rem;
+		margin-bottom: 1rem;
 		padding-top: 1rem;
 		border-top: .4rem solid #ccc;
 		
@@ -370,6 +371,7 @@ nav.breadcrumbs {
 	/*@include grid-row();*/
 	width: 100%;
 	background-color: slategrey;
+	margin-bottom: 0;
 	
 	> ul {
 		list-style: none;
@@ -458,7 +460,7 @@ DISPOSITION
 **/
 @media only screen { /* small up */
 	div.dispositions_panel {
-		margin-top: -1rem;
+		/*margin-top: -1rem;*/
 		
 		p {
 			font-size: 85%;

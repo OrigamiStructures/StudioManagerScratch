@@ -459,6 +459,7 @@ div.artworks section.artwork {
   margin-left: auto;
   margin-right: auto;
   margin-top: 0rem;
+  margin-bottom: 1rem;
   padding-top: 1rem;
   border-top: .4rem solid #ccc; }
   div.artworks section.artwork::before, div.artworks section.artwork::after {
@@ -786,7 +787,8 @@ div.formats {
 nav.breadcrumbs {
   /*@include grid-row();*/
   width: 100%;
-  background-color: slategrey; }
+  background-color: slategrey;
+  margin-bottom: 0; }
   nav.breadcrumbs > ul {
     list-style: none;
     /*@include grid-column(12);*/ }
@@ -868,7 +870,7 @@ DISPOSITION
 @media only screen {
   /* small up */
   div.dispositions_panel {
-    margin-top: -1rem; }
+    /*margin-top: -1rem;*/ }
     div.dispositions_panel p {
       font-size: 85%;
       line-height: 1; }
