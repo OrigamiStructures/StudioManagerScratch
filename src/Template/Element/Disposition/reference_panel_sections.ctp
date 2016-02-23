@@ -16,3 +16,6 @@
 				<?= $this->element('Disposition/piece_list'); ?>
 			</section>
 
+			<section class="prompt">
+				<?= $this->Html->link('Discard disposition', ['controller' => 'dispositions', 'action' => 'discard']); ?>
+			</section>
