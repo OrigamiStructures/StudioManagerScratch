@@ -124,7 +124,7 @@ ARTWORK
 div.artworks {
 	section.artwork {
 		@include grid-row();
-		margin-top: 1rem;
+		margin-top: 0rem;
 		padding-top: 1rem;
 		border-top: .4rem solid #ccc;
 		
@@ -458,6 +458,8 @@ DISPOSITION
 **/
 @media only screen { /* small up */
 	div.dispositions_panel {
+		margin-top: -1rem;
+		
 		p {
 			font-size: 85%;
 			line-height: 1;

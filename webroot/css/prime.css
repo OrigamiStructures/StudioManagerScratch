@@ -458,7 +458,7 @@ div.artworks section.artwork {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 1rem;
+  margin-top: 0rem;
   padding-top: 1rem;
   border-top: .4rem solid #ccc; }
   div.artworks section.artwork::before, div.artworks section.artwork::after {
@@ -867,38 +867,40 @@ DISPOSITION
 **/
 @media only screen {
   /* small up */
-  div.dispositions_panel p {
-    font-size: 85%;
-    line-height: 1; }
-  div.dispositions_panel div.disposition {
-    max-width: 75rem;
-    margin-left: auto;
-    margin-right: auto; }
-    div.dispositions_panel div.disposition::before, div.dispositions_panel div.disposition::after {
-      content: ' ';
-      display: table; }
-    div.dispositions_panel div.disposition::after {
-      clear: both; }
-    div.dispositions_panel div.disposition section {
-      width: 100%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem;
-      /*background-color: #eee;*/
-      padding: .3rem; }
-      div.dispositions_panel div.disposition section:last-child:not(:first-child) {
-        float: right; }
-    div.dispositions_panel div.disposition section.prompt {
-      width: 100%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem; }
-      div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
-        float: right; }
-    div.dispositions_panel div.disposition .warning {
-      color: firebrick;
-      font-size: 1rem;
-      font-weight: bold; } }
+  div.dispositions_panel {
+    margin-top: -1rem; }
+    div.dispositions_panel p {
+      font-size: 85%;
+      line-height: 1; }
+    div.dispositions_panel div.disposition {
+      max-width: 75rem;
+      margin-left: auto;
+      margin-right: auto; }
+      div.dispositions_panel div.disposition::before, div.dispositions_panel div.disposition::after {
+        content: ' ';
+        display: table; }
+      div.dispositions_panel div.disposition::after {
+        clear: both; }
+      div.dispositions_panel div.disposition section {
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        /*background-color: #eee;*/
+        padding: .3rem; }
+        div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+          float: right; }
+      div.dispositions_panel div.disposition section.prompt {
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+          float: right; }
+      div.dispositions_panel div.disposition .warning {
+        color: firebrick;
+        font-size: 1rem;
+        font-weight: bold; } }
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
   div.dispositions_panel div.disposition section.disposition {
     width: 100%;
