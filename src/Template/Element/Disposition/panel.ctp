@@ -1,5 +1,6 @@
 <div class="dispositions_panel">
 <?php 
+$this->loadHelper('DispositionTools');
 if(empty($standing_disposition->label)) {
 	$DispositionTable = Cake\ORM\TableRegistry::get('Dispositions');
 	$disposition_label = $DispositionTable->disposition_label;
