@@ -19,5 +19,10 @@
 			</section>
 
 			<section class="prompt">
-				<?= $this->Html->link('Discard disposition', ['controller' => 'dispositions', 'action' => 'discard']); ?>
+				<?= $this->Html->link('Save disposition', 
+					['controller' => 'dispositions', 'action' => 'save'], 
+					['class' => 'button']); ?>
+				<?= $this->Html->link('Discard disposition', 
+					['controller' => 'dispositions', 'action' => 'discard'], 
+					['class' => 'button']); ?>
 			</section>
