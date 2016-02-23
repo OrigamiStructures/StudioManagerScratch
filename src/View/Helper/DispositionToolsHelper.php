@@ -26,22 +26,6 @@ class DispositionToolsHelper extends Helper {
 	}
 
 	/**
-	 * Fatal error: [Cake\View\Exception\MissingHelperException] Helper class SystemStateHelper could not be found. 
-	 * #0 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/Core/ObjectRegistry.php(91): 
-	 *		Cake\View\HelperRegistry->_throwMissingClassError('SystemState', NULL) 
-	 * #1 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/HelperRegistry.php(66): 
-	 *		Cake\Core\ObjectRegistry->load('SystemState') 
-	 * #2 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/View.php(888): 
-	 *		Cake\View\HelperRegistry->__isset('SystemState') 
-	 * #3 /Library/WebServer/Documents/StudioManagerScratch/src/View/AppView.php(42): 
-	 *		Cake\View\View->__get('SystemState') 
-	 * #4 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/View.php(344): 
-	 *		App\View\AppView->initialize() 
-	 * #5 /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/View/ViewBuilder.php(350): 
-	 *		Cake\View\View->__construct(Object(Cake\Network\Request), Object(Cake\Network\Response), 
-	 *		O in /Library/WebServer/Documents/StudioManagerScratch/vendor/cakephp/cakephp/src/Error/ErrorHandler.php on line 156
-	 */
-	/**
 	 * Should the disposition panel be displayed?
 	 * 
 	 * @param Entity $disposition
@@ -60,7 +44,6 @@ class DispositionToolsHelper extends Helper {
 			$this->_disposition = Cache::read($this->SystemState->artistId(), 'dispo');
 		}
 		return $this->_disposition;
-		
 	}
 /**
 	 * Call point to generate a label or resolution link for disposition participants
@@ -115,6 +98,13 @@ class DispositionToolsHelper extends Helper {
 		return $member->memberLabel('title');
 	}
 
+	public function dispositionLabel($disposition) {
+		if (!is_null($disposition->member)) {
+			return $this->_toLabel($disposition->member->name);
+		} else {
+			return $disposition->label;
+		}
+	}
 
 	/**
 	 * Call point to generate assignment link for various disposition participants
@@ -212,7 +202,7 @@ class DispositionToolsHelper extends Helper {
 				break;
 			case DISPOSITION_LOAN_SHOW :
 			case DISPOSITION_STORE_STORAGE :
-				$label = "$this->dispo_label at $name";
+				$label = "$this->dispo_label with $name";
 				break;
 			default :
 				$label = "Dispose to $name";
@@ -228,11 +218,11 @@ class DispositionToolsHelper extends Helper {
 	public function addressLabel($disposition) {
 		$multiple = count($disposition->addresses) > 1;
 		if ($this->SystemState->controller === 'dispositions') {
-			$text_node = $multiple ? 'Pending Addresses' : 'Address' ;
+			$text_node = $multiple ? 'Pending Addresses' : '' ;
 		} else {
-			$text_node = $multiple ? 'Click the address you want to keep.' : 'Address' ;
+			$text_node = $multiple ? 'Click the address you want to keep.' : '' ;
 		}
-		return $this->Html->tag('p', $text_node);
+		return $text_node !== '' ? $this->Html->tag('p', $text_node) : '';
 	}
 	
 	/**

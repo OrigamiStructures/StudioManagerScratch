@@ -1,4 +1,3 @@
-<div class="dispositions_panel">
 <?php 
 $this->loadHelper('DispositionTools');
 if(empty($standing_disposition->label)) {
@@ -7,9 +6,12 @@ if(empty($standing_disposition->label)) {
 //	osd($disposition_label);
 }
 ?>	
-	<div class="disposition">
-		
-		<?= $this->element('Disposition/reference_panel_sections'); ?>
-		
+<div class="dispositions_panel">
+	<div class="dispositions">
+		<div class="disposition">
+
+			<?= $this->element('Disposition/reference_panel_sections'); ?>
+
+		</div>
 	</div>
 </div>

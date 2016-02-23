@@ -884,7 +884,7 @@ DISPOSITION
       float: left;
       padding-left: 0.9375rem;
       padding-right: 0.9375rem;
-      background-color: #eee;
+      /*background-color: #eee;*/
       padding: .3rem; }
       div.dispositions_panel div.disposition section:last-child:not(:first-child) {
         float: right; }
@@ -900,12 +900,19 @@ DISPOSITION
       font-size: 1rem;
       font-weight: bold; } }
 @media only screen and (min-width: 40.063em) and (max-width: 64em) {
-  div.dispositions_panel div.disposition section {
+  div.dispositions_panel div.disposition section.disposition {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.disposition:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.address, div.dispositions_panel div.disposition section.pieces {
     width: 50%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+    div.dispositions_panel div.disposition section.address:last-child:not(:first-child), div.dispositions_panel div.disposition section.pieces:last-child:not(:first-child) {
       float: right; }
   div.dispositions_panel div.disposition section.prompt {
     width: 100%;
@@ -917,7 +924,7 @@ DISPOSITION
 @media only screen and (min-width: 64.063em) {
   /*large up */
   div.dispositions_panel div.disposition section {
-    width: 25%;
+    width: 33.33333%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
@@ -1015,6 +1022,12 @@ div.dispositions {
   	}*/
   /*	@media only screen and (min-width: 64.063em) {  large up 
   	}*/ }
+  div.dispositions h1 {
+    font-size: 1.25rem;
+    margin-top: 0; }
+  div.dispositions h2 {
+    font-size: 1rem;
+    margin-top: 2px; }
   @media only screen {
     div.dispositions {
       /* small up */ }

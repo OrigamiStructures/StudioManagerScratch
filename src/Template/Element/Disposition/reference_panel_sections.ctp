@@ -1,18 +1,20 @@
 			<section class="disposition">
-				<p><?= $standing_disposition->label ?></p>
+				<h1><?= $this->DispositionTools->dispositionLabel($standing_disposition) ?></h1>
 			</section>
 
-			<section class="member">
+<!--			<section class="member">
 				<p>Recipient</p>
-				<?= $this->element('Disposition/member'); ?>
-			</section>
+			</section>-->
 
 			<section class="address">
+				<h2>Recipient</h2>
+				<?= $this->element('Disposition/member'); ?>
 				<?= $this->DispositionTools->addressLabel($standing_disposition); ?>
 				<?= $this->element('Disposition/address_list'); ?>
 			</section>
 
 			<section class="pieces">
+				<h2>Pieces</h2>
 				<?= $this->element('Disposition/piece_list'); ?>
 			</section>
 
