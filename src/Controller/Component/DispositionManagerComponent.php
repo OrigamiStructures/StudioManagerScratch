@@ -104,14 +104,27 @@ class DispositionManagerComponent extends Component {
 
 	}
 	
+	/**
+	 * Merge a piece into the disposition
+	 * 
+	 * 3 scenarios
+	 *	piece is already there; do nothing
+	 *  format containing the piece is there; replace format with the piece
+	 *  piece is not there; add the piece
+	 * 
+	 * @param type $arguments
+	 */
 	protected function _registerArtwork($arguments) {
 		if (isset($arguments['piece'])) {
-			if (!$this->disposition->hasPiece($arguments['piece'])) {
+			if ($this->disposition->indexOfPiece($arguments['piece']) === FALSE) {
+				// piece is not there
 				$this->disposition->pieces[] = $this->pieceStack($arguments['piece']);
 				$this->disposition->dropFormat($arguments['format']);
+			} else {
+				// piece is already there
 			}
 		} else { // presence of 'format' arg is assumed now
-			if (!$this->disposition->hasFormat($arguments['format'])) {
+			if ($this->disposition->indexOfFormat($arguments['format']) === FALSE) {
 				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}

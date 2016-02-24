@@ -139,14 +139,34 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	protected function _connectPiece($piece) {
-		$SystemState = $this->_View->viewVars['SystemState'];
-		$label = $this->_fromLabel();
-		return $this->Html->link(
-			$label , [
-				'controller' => 'dispositions',
-				'action' => 'refine',
-				'?' => $SystemState->queryArg() + ['piece' => $piece->id]
-			]);	
+//		$SystemState = $this->_View->viewVars['SystemState'];
+		$in_disposition = $this->_pieceInDisposition($piece);
+		if (!$in_disposition) {
+			$label = $this->_fromLabel();
+			return $this->Html->link(
+				$label,
+				[
+					'controller' => 'dispositions',
+					'action' => 'refine',
+					'?' => $this->SystemState->queryArg() + ['piece' => $piece->id]
+			]);
+		} elseif ($this->disposition()) {
+			$label = 'Remove from ' . $this->disposition()->label;
+			return $this->Html->link(
+				$label,
+				[
+					'controller' => 'dispositions',
+					'action' => 'remove',
+					'?' => $this->SystemState->queryArg() + ['piece' => $piece->id]
+			]);
+		} else {
+			return 'unknown status';
+		}
+	}
+	
+	public function _pieceInDisposition($piece) {
+		$disposition = $this->_View->viewVars['standing_disposition'];
+		return !($this->disposition()->indexOfPiece($piece->id) === FALSE);
 	}
 	
 	/**

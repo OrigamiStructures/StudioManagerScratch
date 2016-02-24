@@ -171,7 +171,7 @@ class DispositionsController extends AppController
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
 			$this->DispositionManager->write();
 			$errors = $disposition->errors();
-//			osd($disposition->errors());
+//			$this->Dispositions->checkRules($disposition);
 			if (empty($disposition->errors())) {
 				$this->autoRender = FALSE;
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
@@ -218,4 +218,20 @@ class DispositionsController extends AppController
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
+	
+	/**
+	 * Remove piece from the disposition
+	 * 
+	 * @param type $element
+	 */
+	public function remove() {
+		$disposition = $this->DispositionManager->get();
+		$index = $disposition->indexOfPiece($this->SystemState->queryArg('piece'));
+		unset($disposition->pieces[$index]);
+		$this->DispositionManager->write();
+
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+	}
+	
 }

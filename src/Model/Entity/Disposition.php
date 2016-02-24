@@ -3,6 +3,7 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\Collection\Collection;
+use App\Model\Entity\Traits\ParentEntityTrait;
 
 /**
  * Disposition Entity.
@@ -21,6 +22,8 @@ use Cake\Collection\Collection;
  */
 class Disposition extends Entity
 {
+	
+	use ParentEntityTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -42,16 +45,16 @@ class Disposition extends Entity
 	 * @param type $piece_id
 	 * @return boolean
 	 */
-	public function hasPiece($piece_id) {
-		if (is_array($this->pieces)) {
-			$candidates = new Collection($this->pieces);
-			$existing_piece = $candidates->filter(function($piece) use ($piece_id) {
-					return $piece->fullyIdentified() && $piece->id == $piece_id;
-				});
-			return iterator_count($existing_piece) > 0;
-		}
-		return FALSE;
-	}
+//	public function hasPiece($piece_id) {
+//		if (is_array($this->pieces)) {
+//			$candidates = new Collection($this->pieces);
+//			$existing_piece = $candidates->filter(function($piece) use ($piece_id) {
+//					return $piece->fullyIdentified() && $piece->id == $piece_id;
+//				});
+//			return iterator_count($existing_piece) > 0;
+//		}
+//		return FALSE;
+//	}
 	
 	/**
 	 * Is there a Format in the Pieces list that has this id?
@@ -62,16 +65,16 @@ class Disposition extends Entity
 @param integer $format_id
 	 * @return boolean
 	 */
-	public function hasFormat($format_id) {
-		if (is_array($this->pieces)) {
-			$candidates = new Collection($this->pieces);
-			$existing_format = $candidates->filter(function($piece) use ($format_id) {
-					return !$piece->fullyIdentified() && $piece->id == $format_id;
-				});
-			return iterator_count($existing_format) > 0;
-		}
-		return FALSE;
-	}
+//	public function hasFormat($format_id) {
+//		if (is_array($this->pieces)) {
+//			$candidates = new Collection($this->pieces);
+//			$existing_format = $candidates->filter(function($piece) use ($format_id) {
+//					return !$piece->fullyIdentified() && $piece->id == $format_id;
+//				});
+//			return iterator_count($existing_format) > 0;
+//		}
+//		return FALSE;
+//	}
 	
 	/**
 	 * Remove a Format from the piece list
