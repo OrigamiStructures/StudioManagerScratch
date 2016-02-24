@@ -22,7 +22,7 @@ class DispositionToolsHelper extends Helper {
 	
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
-		$this->SystemState = $config['SystemState'];
+		$this->SystemState = $View->SystemState;
 	}
 
 	/**

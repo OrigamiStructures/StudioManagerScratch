@@ -4,6 +4,7 @@
 /**
  * set values that amend tag classes for css refinement
  */
+$this->loadHelper('DispositionTools');
 $editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
 if ($SystemState->isKnown('format')) {
 	$focus = 'format_focus';
