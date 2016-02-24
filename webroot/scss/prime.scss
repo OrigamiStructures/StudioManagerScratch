@@ -1,5 +1,6 @@
 @import '_settings';
 @import '../bower_components/foundation-sites/scss/foundation';
+@import '../fonts/foundation-icons/foundation-icons.css';
 
 footer{
 	height: 10rem;
@@ -630,4 +631,14 @@ div.dispositions{
 
 section.member {
     
+}
+div.input-with-toollabel{
+    @include grid-row();
+    label {
+       @include grid-column(2); 
+       text-align: right;
+    }
+    div.input{
+        @include grid-column(10);
+    }
 }

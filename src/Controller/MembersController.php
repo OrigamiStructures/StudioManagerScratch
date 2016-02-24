@@ -149,7 +149,6 @@ class MembersController extends AppController
         $member = $this->Members->defaultMemberEntity($member, $type);
         if ($this->request->is('post') || $this->request->is('put')) {
             $member = $this->Members->patchEntity($member, $this->request->data);
-//            osd($member, 'member');die;
             if ($this->Members->save($member)) {
                 $this->Flash->success(__('The member has been saved.'));
                 return $this->redirect(['action' => 'review', '?' => ['member' => $member->id]]);
