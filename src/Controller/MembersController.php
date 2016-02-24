@@ -141,7 +141,6 @@ class MembersController extends AppController
      */
     public function create($type) {
 		$member = new \App\Model\Entity\Member();
-        $member = $this->Members->defaultMemberEntity($member, $type);
         if ($this->request->is('post') || $this->request->is('put')) {
             $member = $this->Members->patchEntity($member, $this->request->data);
             if ($this->Members->save($member)) {
@@ -151,6 +150,7 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
+        $member = $this->Members->defaultMemberEntity($member, $type);
         $this->set(compact('member'));
         $this->set('_serialize', ['member']);
         $this->render('review');
