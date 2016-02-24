@@ -36,14 +36,12 @@ class AppView extends View
      */
     public function initialize()
     {
+		$this->loadHelper('DropDown');
+        $this->loadHelper('Html');
 		if (isset($this->viewVars['SystemState'])) {
 			$this->SystemState = $this->viewVars['SystemState'];
-		} else {
-			throw new \CakeDC\Users\Exception\BadConfigurationException('System State must be set to view vars before rendering');
 		}
-		$this->loadHelper('DropDown', ['SystemState' => $this->SystemState]);
-        $this->loadHelper('Html', ['SystemState' => $this->SystemState]);
-		$this->loadHelper('DispositionTools', ['SystemState' => $this->SystemState]);
+//		$this->loadHelper('DispositionTools');
     }
 	
 	/**
