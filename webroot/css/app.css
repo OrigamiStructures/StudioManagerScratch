@@ -1,5 +1,8 @@
 @charset "UTF-8";
 /*@import 'util/util';*/
+/*$badge-padding: 0.3em;
+$badge-minwidth: 2.1em;
+$badge-font-size: 0.6rem;*/
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -2266,9 +2269,9 @@ select {
 
 .badge {
   display: inline-block;
-  padding: 0.3em;
-  min-width: 2.1em;
-  font-size: 0.6rem;
+  padding: 0.1em;
+  min-width: 1.8em;
+  font-size: 1rem;
   text-align: center;
   border-radius: 50%;
   background: #2199e8;

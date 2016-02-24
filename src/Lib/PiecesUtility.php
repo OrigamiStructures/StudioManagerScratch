@@ -29,11 +29,11 @@ class PiecesUtility {
 	protected $_state = [
 		'edition' => [
 			'filter' => PIECE_FILTER_UNASSIGNED,
-			'sort' => PIECE_FILTER_NONE,
+			'sort' => PIECE_SORT_NONE,
 		],
 		'format' => [
 			'filter' => PIECE_FILTER_NONE,
-			'sort' => PIECE_FILTER_NONE,],
+			'sort' => PIECE_SORT_NONE,],
 	];
 
 

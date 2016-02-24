@@ -1,52 +1,42 @@
-<?php 
-$this->append('css');
-echo $this->Html->css('disposition');
-$this->end();
-?>
-<div class="components">
-	<div class="works">
-		<div>
-			
-		<section class="artwork">
-			<p>artwork</p>
-		</section>
-		<section class="search">
-			<p>artworks search</p>
-			<ul>
-				<li>search result</li>
-				<li>search result</li>
-				<li>search result</li>
-			</ul>
-		</section>
+<div class="dispositions">
+	<?= $this->Form->create($disposition); ?>
+	<section class="disposition">
+		
+		<div class="left">
+			<section class="event">
+			<?php	
+				echo $this->Form->input('id');
+				//	echo $this->Form->input('label');
+				echo $this->Form->input('label', ['empty' => 'Required choice']);
+				echo $this->Form->input('name', ['placeholder' => 'Optional name for this placement']);
+				echo $this->Form->input('type', ['type' => 'hidden']);
+				echo $this->Form->input('complete');
+				echo $this->Form->input('start_date');
+				
+				if (empty($disposition->type)) {
+					$options = ['type' => 'hidden'];
+					
+				} else {
+					$options = [];
+					$disposition->end_date = is_null($disposition->end_date) ? new DateTime('now') : $disposition->end_date ;
+				}
+				
+				echo $this->Form->input('end_date', $options + ['empty' => TRUE]);
+			?>
+			<?= $this->DispositionTools->validationError('end_date', $errors); ?>
+				
+			<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
+			</section>
 		</div>
-	</div>
-	<div class="places">
-		<div>
-			
-		<section class="member">
-			<p>member</p>
-		</section>
-		<section class="search">
-			<p>members search</p>
-			<ul>
-				<li>search result</li>
-				<li>search result</li>
-				<li>search result</li>
-			</ul>
-		</section>
+		
+		<div class="right">
+			<div class="disposition">
+
+				<?= $this->element('Disposition/reference_panel_sections'); ?>
+
+			</div>
 		</div>
-	</div>
-	<div class="dispositions">
-		<section class="disposition">
-			<p>disposition</p>
-		</section>
-		<section class="search">
-			<p>disposition search</p>
-			<ul>
-				<li>search result</li>
-				<li>search result</li>
-				<li>search result</li>
-			</ul>
-		</section>
-	</div>	
+		
+	</section>
+	<?= $this->Form->end(); ?>
 </div>

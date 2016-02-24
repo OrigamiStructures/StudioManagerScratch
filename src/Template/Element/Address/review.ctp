@@ -1,10 +1,13 @@
 
 <!-- Element/Address/full.ctp -->
+<h4>Addresses</h4>
+
 <?php
-echo $this->Html->tag('h4', 'Addresses');
-foreach ($member->addresses as $key => $address) {
+foreach ($member->addresses as $key => $address) :
     $this->set('address', $address);
-    echo $this->element('Address/display');
-}
 ?>
+    <?= $this->element('Address/display'); ?>
+	<?= $standing_disposition ? $this->DispositionTools->connect($address) : ''; ?>
+
+<?php endforeach; ?>
 <!-- END Element/Address/full.ctp -->

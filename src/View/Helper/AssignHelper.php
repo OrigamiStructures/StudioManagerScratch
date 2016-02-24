@@ -3,6 +3,7 @@ namespace App\View\Helper;
 
 use Cake\View\Helper;
 use App\Lib\SystemState;
+use App\View\Helper\Traits\ValidationErrors;
 
 /**
  * AssignHelper supports the EditionController::assign() modelless form
@@ -11,8 +12,9 @@ use App\Lib\SystemState;
  */
 class AssignHelper extends Helper {
 	
+	use ValidationErrors;
+	
 	public $helpers = ['Html'];
-
 
 	public function assignmentSources() {
 		
@@ -35,21 +37,5 @@ class AssignHelper extends Helper {
 		}
 		return $this->Html->tag('span', $text, ['class' => 'range']);
 		
-	}
-	
-	/** 
-	 * This error message packager may have more general use. 
-	 * 
-	 * CONSIDER FINDING A NEW CLASS FOR THIS
-	 * 
-	 * @param type $column
-	 * @param type $errors
-	 * @return type
-	 */
-	public function validationError($column, $errors) {
-//		osd($errors);
-		if (isset($errors[$column])) {
-			return $this->Html->div('error-message', $errors[$column]);
-		}
 	}
 }

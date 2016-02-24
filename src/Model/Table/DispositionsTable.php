@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use ArrayObject;
 
 /**
  * Dispositions Model
@@ -17,6 +19,55 @@ use Cake\Validation\Validator;
  */
 class DispositionsTable extends AppTable
 {
+	
+	/**
+	 * Map specific disposition labels to their underlying types
+	 * 
+	 * Should this be in the Table class?
+	 * 
+	 * @var array
+	 */
+	protected $_map = [
+		DISPOSITION_TRANSFER_SALE		=> DISPOSITION_TRANSFER,	
+		DISPOSITION_TRANSFER_DONATION	=> DISPOSITION_TRANSFER,	
+		DISPOSITION_TRANSFER_GIFT		=> DISPOSITION_TRANSFER,
+		DISPOSITION_TRANSFER_RIGHTS		=> DISPOSITION_TRANSFER,
+		
+		DISPOSITION_LOAN_SHOW			=> DISPOSITION_LOAN,
+		DISPOSITION_LOAN_CONSIGNMENT	=> DISPOSITION_LOAN,
+		DISPOSITION_LOAN_PRIVATE		=> DISPOSITION_LOAN,	
+		DISPOSITION_LOAN_RENTAL			=> DISPOSITION_LOAN,
+		DISPOSITION_LOAN_RIGHTS			=> DISPOSITION_LOAN,
+		
+		DISPOSITION_STORE_STORAGE		=> DISPOSITION_STORE,
+
+		DISPOSITION_UNAVAILABLE_LOST	=> DISPOSITION_UNAVAILABLE,
+		DISPOSITION_UNAVAILABLE_DAMAGED => DISPOSITION_UNAVAILABLE,
+		DISPOSITION_UNAVAILABLE_STOLEN  => DISPOSITION_UNAVAILABLE,
+	];
+	
+	public $disposition_label = [
+		'Transfer ownership' =>
+		[DISPOSITION_TRANSFER_SALE		=> DISPOSITION_TRANSFER_SALE,	
+		DISPOSITION_TRANSFER_DONATION	=> DISPOSITION_TRANSFER_DONATION,	
+		DISPOSITION_TRANSFER_GIFT		=> DISPOSITION_TRANSFER_GIFT,
+		DISPOSITION_TRANSFER_RIGHTS		=> DISPOSITION_TRANSFER_RIGHTS,],
+		
+		'Temporary placement' => 
+		[DISPOSITION_LOAN_SHOW			=> DISPOSITION_LOAN_SHOW,
+		DISPOSITION_LOAN_CONSIGNMENT	=> DISPOSITION_LOAN_CONSIGNMENT,
+		DISPOSITION_LOAN_PRIVATE		=> DISPOSITION_LOAN_PRIVATE,	
+		DISPOSITION_LOAN_RENTAL			=> DISPOSITION_LOAN_RENTAL,
+		DISPOSITION_LOAN_RIGHTS			=> DISPOSITION_LOAN_RIGHTS,],
+		
+		'Storage' => 
+		[DISPOSITION_STORE_STORAGE		=> DISPOSITION_STORE_STORAGE,],
+
+		'Out of circulation' => 
+		[DISPOSITION_UNAVAILABLE_LOST	=> DISPOSITION_UNAVAILABLE_LOST,
+		DISPOSITION_UNAVAILABLE_DAMAGED => DISPOSITION_UNAVAILABLE_DAMAGED,
+		DISPOSITION_UNAVAILABLE_STOLEN  => DISPOSITION_UNAVAILABLE_STOLEN,],
+	];
 
     /**
      * Initialize method
@@ -54,13 +105,24 @@ class DispositionsTable extends AppTable
         $this->belongsTo('Members', [
             'foreignKey' => 'member_id'
         ]);
-        $this->belongsTo('Locations', [
-            'foreignKey' => 'location_id'
+        $this->belongsTo('Addresses', [
+            'foreignKey' => 'address_id'
         ]);
-        $this->belongsTo('Pieces', [
-            'foreignKey' => 'piece_id'
+        $this->belongsToMany('Pieces', [
+            'foreignKey' => 'disposition_id',
+            'targetForeignKey' => 'piece_id',
+            'joinTable' => 'dispositions_pieces',
         ]);
     }
+	
+	public function map($label) {
+		if (isset($this->_map[$label])) {
+			return $this->_map[$label];
+		} else {
+			return FALSE;
+		}
+		
+	}
 
     /**
      * Default validation rules.
@@ -72,12 +134,53 @@ class DispositionsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmpty('id', 'create')
+			->requirePresence('start_date');
+		$validator
+			->add('label', 'valid_label', [
+				'rule' => [$this, 'validLabel'],
+				'message' => 'The disposition must be chosen from the provided list',
+			])
+            ->notEmpty('label');
+		$validator
+			->notEmpty('end_date', 'Loans are for a limited time. Please provide an end date greater than the start date.', [$this, 'endOfLoan'])
+			->requirePresence('end_date');
 
         return $validator;
     }
+	
+	public function validLabel ($value, $context) {
+		return array_key_exists($value, $this->_map);
+	}
+	
+	public function endOfLoan($context) {
+		$data = $context['data'];
+		if (!isset($data['start_date'])) {
+			return TRUE;
+		}
+		$start = implode('', $data['start_date']);
+		$end = is_array($data['end_date']) ? implode('', $data['end_date']) : 0 ;
+		if ($data['type'] !== DISPOSITION_LOAN) {
+			return FALSE;
+		} else {
+			return $end <= $start;
+		}
+	}
+	
+	/**
+	 * Lookup and set the disposition type
+	 * 
+	 * @param Event $event
+	 * @param ArrayObject $data
+	 * @param ArrayObject $options
+	 */
+	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
+		if (array_key_exists($data['label'], $this->_map)) {
+		 $data['type'] = $this->_map[$data['label']];
+		}
+	}
 
-    /**
+	/**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *

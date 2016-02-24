@@ -65,18 +65,18 @@ class Member extends Entity
      * @return string the formatted label
      */
     public function memberLabel($case) {
-        switch ($case) {
-            case "title":
-                $label = ucwords($this->member_type) . " " . $this->name;
-                break;
-            
-            case "lower":
-                $label = strtolower($this->member_type) . " " . $this->name;
-                
-            default:
-                $label = strtolower($this->member_type) . " " . $this->name;
-                break;
-        }
-        return $label;
+		return $this->name;
+//        switch ($case) {
+//            case "title":
+//                $label = ucwords($this->member_type) . " " . $this->name;
+//                break;
+//            case "lower":
+//                $label = strtolower($this->member_type) . " " . $this->name;
+//                break;
+//            default:
+//                $label = strtolower($this->member_type) . " " . $this->name;
+//                break;
+//        }
+//        return $label;
     }
 }

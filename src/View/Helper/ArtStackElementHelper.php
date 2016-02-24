@@ -229,6 +229,8 @@ class ArtStackElementHelper extends Helper {
 	 * Data specific to the edition type and current task/context is 
 	 * decided on by the EditionFactoryHelper. This just sets the template.
 	 * 
+	 * $pieces MUST BE SET BY EditionHelper HEIRARCHY FIRST
+	 * 
 	 * @return string Name of the element to render
 	 */
 	public function _formatPieceTable($format, $edition) {
@@ -239,9 +241,14 @@ class ArtStackElementHelper extends Helper {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
 					if (count($this->SystemState->pieces) > 0) {
-						if ($this->SystemState->controller() === 'formats') {
+						if ($this->SystemState->isKnown('format')) {
 							// single format focus allows detailed piece work
-							$element = 'Pieces/overview_table';
+							if ($this->SystemState->standing_disposition) {
+								// artist is defining a disposition. show those tools in the table
+								$element = 'Pieces/dispose_pieces_table';
+							} else {
+								$element = 'Pieces/overview_table';
+							}							
 						} else {
 							$element = 'Pieces/owners_table';
 						}

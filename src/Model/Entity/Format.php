@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 use App\Model\Entity\Traits\ParentEntityTrait;
 use Cake\Utility\Text;
 use App\Model\Entity\Traits\AssignmentTrait;
+use App\Model\Entity\Traits\DispositionTrait;
 
 /**
  * Format Entity.
@@ -30,6 +31,7 @@ class Format extends Entity
 	
 	use ParentEntityTrait;
 	use AssignmentTrait;
+	use DispositionTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -166,6 +168,32 @@ class Format extends Entity
 //		}
 //		return $display_value;
 		return Text::truncate($this->description, 10);
+	}
+	
+	/**
+	 * From an inverted stack, identify the tip-of-the-iceberg
+	 * 
+	 * A normal artwork stack begins with the Artwork and sees all the children. 
+	 * An inverted stack, such as that linked to a disposition, starts art the 
+	 * child and contains the specific entity chain up to the Artwork. This method 
+	 * creates the unique path/name label for this format or adds to the label 
+	 * for the child piece
+	 * 
+	 * @return string
+	 */
+	public function identityLabel() {
+		$label = $this->display_title;
+		if (is_object($this->edition)) {
+			$label = "{$this->edition->identityLabel()}, $label";
+		}
+		return $label;
+	}
+	public function identityArguments() {
+		$args = ['format' => $this->id];
+		if (is_object($this->edition)) {
+			$args = $this->edition->identityArguments() + $args;
+		}
+		return $args;
 	}
 	
 }

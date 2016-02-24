@@ -169,17 +169,37 @@ class EditionFactoryHelper extends Helper {
 		return '';
 	}// {
 		
+	/**
+	 * Generate 'format' layer tools for 'review' pages
+	 * 
+	 * This is currently written to allow dispo assignment of pieces, but it will 
+	 * need to allow portfolio or publication assignments too.
+	 * 
+	 * @param type $format
+	 * @param type $edition
+	 */
 	protected function _formatPieceTools($format, $edition) {
+		$disposition = $this->_View->viewVars['standing_disposition'];
+		if ($disposition && $this->SystemState->isKnown('format')) {
+			// in this case we can see the individual pieces with link-up tools included
+			// because of redirect for flat art/edition, queryArg, not controller is our check point
+			return '';
+		}
+		
 		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
 		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
+		$action = $disposition ? 'refine' : 'create';
+		
 		if ((((boolean) $pieces) && $format->hasSalable($edition->undisposed)) || $format->hasAssigned()) {
 			echo $this->Html->link("Add status information",
 				[/*'controller' => 'dispositions', 'action' => 'create'*/
-					'controller' => 'pieces', '?' => [
-					'artwork' => $edition->artwork_id,
-					'edition' => $edition->id,
-					'format' => $format->id,
-				]]);
+					'controller' => 'dispositions',
+					'action' => $action,'?' => [
+						'artwork' => $edition->artwork_id,
+						'edition' => $edition->id,
+						'format' => $format->id,
+					]
+				]);
 		} else {
 			echo $this->Html->tag('p', 
 				'You can\'t change the status of this artwork.', 

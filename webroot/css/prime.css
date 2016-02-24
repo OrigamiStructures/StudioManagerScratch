@@ -1,4 +1,7 @@
 /*@import 'util/util';*/
+/*$badge-padding: 0.3em;
+$badge-minwidth: 2.1em;
+$badge-font-size: 0.6rem;*/
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -368,7 +371,7 @@ footer {
   	color: #ddd;
   }*/ }
   .top-bar-left ul.menu li {
-    width: 10rem; }
+    width: 9rem; }
   .top-bar-left li.has-submenu {
     /*border: thin solid black;*/
     position: relative; }
@@ -387,7 +390,7 @@ footer {
     display: block;
     position: absolute;
     top: .1rem;
-    left: 9rem;
+    left: 8rem;
     z-index: 1000;
     border: thin solid #ccc; }
   .top-bar-left ul.nested:hover {
@@ -455,7 +458,8 @@ div.artworks section.artwork {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 1rem;
+  margin-top: 0rem;
+  margin-bottom: 1rem;
   padding-top: 1rem;
   border-top: .4rem solid #ccc; }
   div.artworks section.artwork::before, div.artworks section.artwork::after {
@@ -709,14 +713,15 @@ div.formats {
       padding-right: 0; }
       div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
-  @media only screen and (min-width: 40.063em) {
+  @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format.format_focus div.text {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
       div.formats section.format.format_focus div.text:last-child:not(:first-child) {
-        float: right; }
+        float: right; } }
+  @media only screen and (min-width: 40.063em) {
     div.formats section.format.format_focus div.pieces {
       width: 100%;
       float: left;
@@ -770,12 +775,20 @@ div.formats {
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
         div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.format_focus div.text {
+        width: 83.33333%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format.format_focus div.text:last-child:not(:first-child) {
           float: right; } }
 
 nav.breadcrumbs {
   /*@include grid-row();*/
   width: 100%;
-  background-color: slategrey; }
+  background-color: slategrey;
+  margin-bottom: 0; }
   nav.breadcrumbs > ul {
     list-style: none;
     /*@include grid-column(12);*/ }
@@ -851,6 +864,101 @@ div.training {
 
 /**
 ==============================================================
+DISPOSITION
+==============================================================
+**/
+@media only screen {
+  /* small up */
+  div.dispositions_panel {
+    /*margin-top: -1rem;*/ }
+    div.dispositions_panel p {
+      font-size: 85%;
+      line-height: 1;
+      margin-bottom: 0.125rem; }
+    div.dispositions_panel div.disposition {
+      max-width: 75rem;
+      margin-left: auto;
+      margin-right: auto; }
+      div.dispositions_panel div.disposition::before, div.dispositions_panel div.disposition::after {
+        content: ' ';
+        display: table; }
+      div.dispositions_panel div.disposition::after {
+        clear: both; }
+      div.dispositions_panel div.disposition section {
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        /*background-color: #eee;*/
+        padding: .3rem; }
+        div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+          float: right; }
+      div.dispositions_panel div.disposition section.prompt {
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        margin-top: .5rem;
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        background-color: #a9b3bd; }
+        div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+          float: right; }
+        div.dispositions_panel div.disposition section.prompt .button {
+          /*					margin: 0;
+          					padding: .15rem .8rem;*/
+          background-color: #a9b3bd;
+          font-size: 0.75rem;
+          font-weight: bold;
+          margin: -0.25rem 0 0;
+          padding: 0.15rem 0.8rem;
+          text-transform: uppercase; }
+        div.dispositions_panel div.disposition section.prompt .button:hover {
+          background-color: slategray; }
+      div.dispositions_panel div.disposition .warning {
+        color: firebrick;
+        font-size: 1rem;
+        font-weight: bold; } }
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  div.dispositions_panel div.disposition section.disposition {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.disposition:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.address, div.dispositions_panel div.disposition section.pieces {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.address:last-child:not(:first-child), div.dispositions_panel div.disposition section.pieces:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.prompt {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+      float: right; } }
+@media only screen and (min-width: 64.063em) {
+  /*large up */
+  div.dispositions_panel div.disposition section {
+    width: 33.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.prompt {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+      float: right; } }
+/**
+==============================================================
 MEMBERS
 ==============================================================
 **/
@@ -922,6 +1030,90 @@ div.members {
       padding-left: 0.9375rem;
       padding-right: 0.9375rem; }
       div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+        float: right; } }
+
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+div.dispositions {
+  /*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  	}*/
+  /*	@media only screen and (min-width: 64.063em) {  large up 
+  	}*/ }
+  div.dispositions h1 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 0.3125rem; }
+  div.dispositions h2 {
+    font-size: 1rem;
+    margin-top: 2px; }
+  @media only screen {
+    div.dispositions {
+      /* small up */ }
+      div.dispositions section.disposition {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto; }
+        div.dispositions section.disposition::before, div.dispositions section.disposition::after {
+          content: ' ';
+          display: table; }
+        div.dispositions section.disposition::after {
+          clear: both; }
+        div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.dispositions section.disposition > div.left::before, div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::before, div.dispositions section.disposition > div.right::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::after {
+            clear: both; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.left:last-child, div.dispositions section.disposition > div.right, div.dispositions section.disposition > div.right:last-child {
+            float: none; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left > section, div.dispositions section.disposition > div.right > section {
+            width: 100%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition > div.left > section:last-child:not(:first-child), div.dispositions section.disposition > div.right > section:last-child:not(:first-child) {
+              float: right; }
+        div.dispositions section.disposition div.input.date {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto; }
+          div.dispositions section.disposition div.input.date::before, div.dispositions section.disposition div.input.date::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition div.input.date::after {
+            clear: both; }
+          div.dispositions section.disposition div.input.date select {
+            width: 33.33333%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition div.input.date select:last-child:not(:first-child) {
+              float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
         float: right; } }
 
 /*# sourceMappingURL=prime.css.map */

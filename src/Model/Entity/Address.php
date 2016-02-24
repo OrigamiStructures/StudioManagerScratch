@@ -37,4 +37,8 @@ class Address extends Entity
         '*' => true,
         'id' => false,
     ];
+	
+	public function _getAddressLine() {
+		return "$this->address1, $this->city, $this->state $this->zip";
+	}
 }

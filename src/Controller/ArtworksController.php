@@ -180,7 +180,16 @@ class ArtworksController extends AppController
 			$artwork_variable = 'artworks';
 		}
 
-		$this->set($artwork_variable, $this->ArtworkStack->stackQuery());
+		$result = $this->ArtworkStack->stackQuery();
+		if ($artwork_variable === 'artwork' && $result->isflat()) {
+			$this->autoRender = FALSE;
+			$arguments = $this->SystemState->queryArg() + [
+				'edition' => $result->editions[0]->id, 
+				'format' => $result->editions[0]->formats[0]->id];
+			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
+		}
+		
+		$this->set($artwork_variable, $result);
         $this->set('_serialize', [$artwork_variable]);
     }
 	
@@ -237,17 +246,10 @@ class ArtworksController extends AppController
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
             if ($this->Artworks->save($artwork)) {
-//				if ($this->request->action !== 'create') {
-//					return $artwork;
-//				} else {
 					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
-//				}
                 
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
-//				if ($this->request->action !== 'create') {
-//					return FALSE;
-//				}
             }
         }
 		$this->ArtworkStack->layerChoiceLists();
@@ -257,11 +259,15 @@ class ArtworksController extends AppController
 		$this->render('review');
     }
 	
+	/**
+	 * Simplify to UX for making unique artwork
+	 * 
+	 * arrive here with a postLink and TRD that makes 
+	 * the normal create method and form simpler. 
+	 */
 	public function createUnique() {
 		$this->request->data += ['user_id' => $this->SystemState->artistId()];
 		$artwork = $this->create();
-//		$this->autoRender = FALSE;
-//		$this->redirect(['controller' => 'artworks', 'action' => 'refine', '?' => ['artwork' => $artwork->id]]);
 		$this->render('review');
 	}
 
