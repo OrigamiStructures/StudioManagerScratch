@@ -128,7 +128,9 @@ class DispositionManagerComponent extends Component {
 				// piece is already there
 			}
 		} else { // presence of 'format' arg is assumed now
+//			osd('format');
 			if ($this->disposition->indexOfFormat($arguments['format']) === FALSE) {
+//				osd('not there');
 				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}
