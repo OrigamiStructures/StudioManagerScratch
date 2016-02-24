@@ -27,6 +27,11 @@ class MembersController extends AppController
         parent::initialize();
         $this->set('member_types', $this->_memberTypes);
     }
+    
+    public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->retreiveAndSetGroups();
+    }
 
 // <editor-fold defaultstate="collapsed" desc="CRUD Methods">
     /**
@@ -141,8 +146,10 @@ class MembersController extends AppController
      */
     public function create($type) {
 		$member = new \App\Model\Entity\Member();
+        $member = $this->Members->defaultMemberEntity($member, $type);
         if ($this->request->is('post') || $this->request->is('put')) {
             $member = $this->Members->patchEntity($member, $this->request->data);
+//            osd($member, 'member');die;
             if ($this->Members->save($member)) {
                 $this->Flash->success(__('The member has been saved.'));
                 return $this->redirect(['action' => 'review', '?' => ['member' => $member->id]]);
@@ -150,7 +157,6 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
-        $member = $this->Members->defaultMemberEntity($member, $type);
         $this->set(compact('member'));
         $this->set('_serialize', ['member']);
         $this->render('review');
@@ -204,7 +210,6 @@ class MembersController extends AppController
     public function review() {
         $this->SystemState->referer($this->referer());
         $query = $this->Members->find('memberReview');
-        $this->retreiveAndSetGroups();
         $this->set('members', $this->paginate($query));
         $this->set('_serialize', ['members']);
     }
@@ -233,7 +238,6 @@ class MembersController extends AppController
         if(empty($member->errors())){
             $this->SystemState->referer($this->referer());
         }
-        $this->retreiveAndSetGroups();
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('review');

@@ -253,6 +253,7 @@ class MembersTable extends AppTable
     public function defaultMemberEntity($entity, $type) {
         $dme = [
             'member_type' => $type,
+            'first_name' => NULL,
             'contacts' => [
                 [
                     'user_id' => $this->SystemState->artistId(),

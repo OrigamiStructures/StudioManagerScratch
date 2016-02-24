@@ -2,7 +2,8 @@
 <?= $this->Form->input("groups.$key.id", [
     'options' => $groups, 
     'type' => 'select',
-    'label' => FALSE
+    'label' => FALSE,
+    'empty' => 'Choose a group'
     ]);?>
 
 <!-- END Element/Group/fieldset.ctp -->
