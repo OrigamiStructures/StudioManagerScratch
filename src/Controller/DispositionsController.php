@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Collection\Collection;
 
 /**
  * Dispositions Controller
@@ -10,6 +11,38 @@ use App\Controller\AppController;
  */
 class DispositionsController extends AppController
 {
+	
+	public $DispositionManager;
+	
+	/**
+	 * create() will lead the user through evolving screens. This names the next one
+	 *
+	 * @var string
+	 */
+	protected $_view_name = 'create';
+
+
+	/**
+	 * Manage redirects for disposition activities
+	 * 
+	 * All visits to this controller will eventually return to the original 
+	 * page. Even if the artist is locked here for several calls, the original 
+	 * page will be remembered and eventually they will be returned there.
+	 * 
+	 * @param \Cake\Event\Event $event
+	 */
+	public function beforeFilter(\Cake\Event\Event $event) {
+		parent::beforeFilter($event);
+		
+		if (!stristr($this->request->referer(), DS . 'dispositions' . DS)) {
+			$this->SystemState->referer($this->request->referer());
+		}
+	}
+
+	public function initialize() {
+		parent::initialize();
+		$this->loadComponent('DispositionManager');
+	}
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
@@ -131,6 +164,74 @@ class DispositionsController extends AppController
 	 * 
 	 */
 	public function create() {
+		$errors = [];
+		$disposition = $this->DispositionManager->get();
+		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		if ($this->request->is('post')) {
+			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+			$this->DispositionManager->write();
+			$errors = $disposition->errors();
+//			$this->Dispositions->checkRules($disposition);
+			if (empty($disposition->errors())) {
+				$this->autoRender = FALSE;
+				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+			}
+		}
 		
+		$labels = $this->Dispositions->disposition_label;
+		$this->set(compact('disposition', 'labels', 'errors'));
+		$this->render($this->_view_name);
 	}
+		
+	public function refine() {
+		$disposition = $this->DispositionManager->get();
+		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));	
+	}
+	
+	/**
+	 * Dump the evolving disposition without saving it
+	 */
+	public function discard() {
+		$this->DispositionManager->discard();
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+	}
+	
+	/**
+	 * Retain only the indicated address among many
+	 * 
+	 * There are several circumstances where several addresses could 
+	 * be possibilities for the dispo. They many show as links and clicking 
+	 * on one will come here to make that the final choice.
+	 */
+	public function chooseAddress() {
+		$disposition = $this->DispositionManager->get();
+		$collection = new Collection($disposition->addresses);
+		$address_id = $this->SystemState->queryArg('address');
+		$choice = $collection->filter(function($address) use($address_id){
+			return $address->id == $address_id;
+		});
+		$this->DispositionManager->disposition->addresses = $choice->toArray();
+		$this->DispositionManager->write();
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+	}
+	
+	/**
+	 * Remove piece from the disposition
+	 * 
+	 * @param type $element
+	 */
+	public function remove() {
+		$disposition = $this->DispositionManager->get();
+		$index = $disposition->indexOfPiece($this->SystemState->queryArg('piece'));
+		unset($disposition->pieces[$index]);
+		$this->DispositionManager->write();
+
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+	}
+	
 }

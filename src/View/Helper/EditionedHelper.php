@@ -316,25 +316,75 @@ class EditionedHelper extends EditionFactoryHelper {
 	 * @param Entity $edition
 	 */
 	protected function _formatPieceTable($format, $edition) {
-		if (is_null($this->SystemState->artworks)) {
-			
-			// the filter strategy is assumed to have been set at this point
-			// and format->pieces is assumed to be the working set. Seems 
-			// like a lot of coupling. And some bad assumptions.
-			$pieces = $this->pieceTool()->filter($format->pieces, 'format');
+		if (!is_null($this->SystemState->artworks)) {
+			$caption = '';
+			$this->_View->set('caption', $caption);
+			return;
+		}
 		
-			if ($format->hasAssigned()) {
-				$caption = 'Pieces in this format.';
-				
-			} else {
+		if (!$this->SystemState->standing_disposition) {
+			$this->_mainModeFormatPieceTable($format, $edition);
+		} else {
+			$this->_dispositionModeFormatPieceTable($format, $edition);
+		}
+	}
+	
+	/**
+	 * Make variables that can support rendering the 'disposition' piece table
+	 * 
+	 * If the disposition type is known, show all appropriate pieces. 
+	 * 
+	 * We're clear down to a single format display now and will show all the 
+	 * appropriate pieces for that format even if they are not currently assigned. 
+	 * This 'live reassignment' means we will want to label each offered piece 
+	 * to show where it is currently assigned. All possible pieces are on the 
+	 * edition but we'll need the formats to be able to label the pieces. The 
+	 * problem is, we only have one (the target) format available. So we have 
+	 * to read in additional data. 
+	 * 
+	 * @param entity $format
+	 * @param entity $edition
+	 */
+	private function _dispositionModeFormatPieceTable($format, $edition){
+		$disposition = $this->SystemState->standing_disposition;
+		if (!is_null($disposition->type)) {
+			$pieces = $edition->pieces;
+		} else {
+			// set the pieceTool filter and do the filtration
+			$pieces = $format->pieces;
+		}
+		$caption = "Indicate the pieces you want to include in this $disposition->display_label";
+		
+		// ALL THESE PIECE TABLES COULD BE REFACTORED TO USE CELLS
+		$EditionTable = TableRegistry::get('Editions');
+		$conditions = $this->_View->SystemState->buildConditions([]);
+		$provider_set = $EditionTable->get($this->_View->SystemState->queryArg('edition'), [
+				'conditions' => $conditions,
+				'contain' => ['Formats']]);
+		$providers = ['edition' => $provider_set] + $provider_set->formats;
+		
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
+	}
+
+
+	private function _mainModeFormatPieceTable($format, $edition) {
+		// the filter strategy is assumed to have been set at this point
+		// and format->pieces is assumed to be the working set. Seems 
+		// like a lot of coupling. And some bad assumptions.
+		// possibly this is just falling through on default settings?
+		$pieces = $this->pieceTool()->filter($format->pieces, 'format');
+
+		if ($format->hasAssigned()) {
+			$caption = 'Pieces in this format.';
+
+		} else {
 //				// this information is already shown for empty formats
 //				$caption = 'No pieces have been assigned to this format.';
-				$caption = '';
-			}
-			
-			$providers = [$format];
-			$this->_View->set(compact('caption', 'pieces', 'providers'));
-		}		
+			$caption = '';
+		}
+
+		$providers = [$format];
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
 	}
 
 }

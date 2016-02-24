@@ -21,6 +21,7 @@ use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Lib\SState;
 use App\Controller\Component\PieceAllocationComponent;
+use Cake\Cache\Cache;
 
 /**
  * Application Controller
@@ -84,7 +85,6 @@ class AppController extends Controller
      * Initialization hook method.
      *
      * Use this method to add common initialization code like loading components.
-     *
      * e.g. `$this->loadComponent('Security');`
      *
      * @return void
@@ -114,6 +114,9 @@ class AppController extends Controller
     {
 		$menu = TableRegistry::get('Menus');
 		$this->set('menus', $menu->assemble());
+		
+		$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
+		
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
         ) {
@@ -151,10 +154,6 @@ class AppController extends Controller
 		osd($art1->stack->indexOfEdition(6), 'index of edition 6');
 		osd($art1->stack->indexOfEdition(2), 'index of edition 1');
 		osd($art1->stack->returnEdition(6));
-	}
-	
-	public function call() {
-		return $this->c++;
 	}
 	
 }

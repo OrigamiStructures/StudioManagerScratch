@@ -79,7 +79,11 @@ class EditionStackComponent extends Component {
 		$edition_condition = $this->SystemState->buildConditions(['edition' => 'id']);	
 		$child_condition = $this->SystemState->buildConditions(['edition']);
 //		
-		$edition = $Editions->find()->where($edition_condition)->toArray()[0];
+		$edition = $Editions->find()
+				->where($edition_condition)
+//				->contain('Format')
+				->toArray()[0];
+		//osd($edition);
 		$unassigned = $Pieces->find('unassigned', $child_condition);
 		$edition->unassigned = $unassigned->toArray();
 		

@@ -178,4 +178,31 @@ class Edition extends Entity
 		return $this->_properties['fluid_piece_count'] > 0;
 	}
 	
+	/**
+	 * From an inverted stack, identify the tip-of-the-iceberg
+	 * 
+	 * A normal artwork stack begins with the Artwork and sees all the children. 
+	 * An inverted stack, such as that linked to a disposition, starts art the 
+	 * child and contains the specific entity chain up to the Artwork. This method 
+	 * adds to the label for the child piece
+	 * 
+	 * @return string
+	 */
+	public function identityLabel() {
+		$type = strtolower($this->_properties['type']) === 'unique' 
+				? 'Unique Work' 
+				: ucwords($this->_properties['type']);
+		$label = empty($this->_properties['title']) ? $type : ucwords($this->_properties['title']);
+		if (is_object($this->artwork)) {
+			$label = "{$this->artwork->identityLabel()}, $label";
+		}
+		return $label;
+	}
+	public function identityArguments() {
+		return ['edition' => $this->id, 'artwork' => $this->artwork_id];
+	}
+	
+	public function isFlat() {
+		return $this->format_count === 1;
+	}
 }

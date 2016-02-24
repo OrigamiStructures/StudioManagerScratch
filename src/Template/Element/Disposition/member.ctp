@@ -1,0 +1,1 @@
+<p><?= !empty($standing_disposition->member) ? $this->DispositionTools->identity($standing_disposition->member) : '' ?></p>

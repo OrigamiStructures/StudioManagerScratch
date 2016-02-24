@@ -63,8 +63,10 @@ class PiecesTable extends AppTable
 				'bindingKey' => ['id', 'edition_id'],
 			]);
 //		}
-        $this->hasMany('Dispositions', [
-            'foreignKey' => 'piece_id'
+        $this->belongsToMany('Dispositions', [
+            'foreignKey' => 'piece_id',
+            'targetForeignKey' => 'disposition_id',
+            'joinTable' => 'dispositions_pieces'
         ]);
     }
 

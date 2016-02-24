@@ -120,12 +120,12 @@ class FormatsController extends AppController
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
-		$element_management = [
-			'artwork' => 'full',
-			'edition' => 'many',
-			'format' => 'many',
-		];
-		$this->set('element_management', $element_management);
+//		$element_management = [
+//			'artwork' => 'full',
+//			'edition' => 'many',
+//			'format' => 'many',
+//		];
+//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');
 	}

@@ -8,7 +8,7 @@ footer{
 .top-bar-left {
 	
 	ul.menu li {
-		width: 10rem;
+		width: 9rem;
 	}
 	li.has-submenu {
 		/*border: thin solid black;*/
@@ -37,7 +37,7 @@ footer{
 		display: block;
 		position: absolute;
 		top: .1rem;
-		left: 9rem;
+		left: 8rem;
 		z-index: 1000;
 		border: thin solid #ccc;
 	}
@@ -124,7 +124,8 @@ ARTWORK
 div.artworks {
 	section.artwork {
 		@include grid-row();
-		margin-top: 1rem;
+		margin-top: 0rem;
+		margin-bottom: 1rem;
 		padding-top: 1rem;
 		border-top: .4rem solid #ccc;
 		
@@ -307,13 +308,18 @@ div.formats {
 		}
 	}
 	
-	@media only screen and (min-width: 40.063em) {
+	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
 		section.format.format_focus {
 			div.text{
 				@include grid-column(12, 0);
 			}
+		}
+	}
+
+	@media only screen and (min-width: 40.063em) {
+		section.format.format_focus {
 			div.pieces {
-				@include grid-column(12,0);
+				@include grid-column(12, 0);
 				button {
 					display: none;
 				}
@@ -328,7 +334,7 @@ div.formats {
 			}
 		}
 	}
-
+	
 	@media only screen and (min-width: 64.063em) { /* large up */
 		section.format {
 			> div.image {
@@ -352,6 +358,11 @@ div.formats {
 				@include grid-column(8)
 			}
 		}
+		section.format.format_focus {
+			div.text{
+				@include grid-column(10);
+			}
+		}
 	}
 
 }
@@ -360,6 +371,7 @@ nav.breadcrumbs {
 	/*@include grid-row();*/
 	width: 100%;
 	background-color: slategrey;
+	margin-bottom: 0;
 	
 	> ul {
 		list-style: none;
@@ -439,4 +451,183 @@ div.radio > label {
 div.training {
 	@include grid-column-row();
 	@include grid-column(8);
+}
+
+/**
+==============================================================
+DISPOSITION
+==============================================================
+**/
+@media only screen { /* small up */
+	div.dispositions_panel {
+		/*margin-top: -1rem;*/
+		
+		p {
+			font-size: 85%;
+			line-height: 1;
+			margin-bottom: rem-calc(2);
+		}
+		div.disposition {
+			@include grid-row();
+			section {
+				@include grid-column(12);
+				/*background-color: #eee;*/
+				padding: .3rem;
+			}
+			section.prompt {
+				@include grid-column(12);
+				margin-top: .5rem;
+				padding-top: 0rem;
+				padding-bottom: 0rem;
+				background-color: lighten(slategray, 20%);
+				.button {
+/*					margin: 0;
+					padding: .15rem .8rem;*/
+					background-color: lighten(slategray, 20%);
+					font-size: 0.75rem;
+					font-weight: bold;
+					margin: -0.25rem 0 0;
+					padding: 0.15rem 0.8rem;
+					text-transform: uppercase;
+					
+				}
+				.button:hover {
+					background-color: slategray;
+				}
+			}
+			.warning {
+				color: firebrick;
+				font-size: 1rem;
+				font-weight: bold;
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	div.dispositions_panel {
+		div.disposition {
+			section.disposition {
+				@include grid-column(12);
+			}
+			section.address, section.pieces {
+				@include grid-column(6);
+			}
+			section.prompt {
+				@include grid-column(12);
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 64.063em) {  /*large up */
+	div.dispositions_panel {
+		div.disposition {
+			section {
+				@include grid-column(4);
+			}
+			section.prompt {
+				@include grid-column(12);
+			}
+		}
+	}
+}
+/**
+==============================================================
+MEMBERS
+==============================================================
+**/
+
+div.members{
+	@media only screen { /* small up */
+		section.member{
+            @include grid-row();
+            h2{
+                @include grid-column(12);
+            }
+            div.member_left, div.member_right{
+                @include grid-column-row();
+                @include grid-column(12);
+                > div {
+                    @include grid-column(12);
+                }
+                > section {
+                    @include grid-column(12);
+                }
+            }
+		}
+	}
+
+/*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	}*/
+	
+	@media only screen and (min-width: 40.063em) {
+		section.member{
+            div.member_left, div.member_right{
+                @include grid-column(6);
+            }
+		}
+	}
+
+/*	@media only screen and (min-width: 64.063em) {  large up 
+	}*/
+}
+
+section.member {
+    
+}
+
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+
+div.dispositions{
+	h1 {
+		font-size: 1.25rem;
+		margin-top: 0;
+		margin-bottom: rem-calc(5);
+	}
+	h2 {
+		font-size: 1rem;
+		margin-top: 2px;
+	}
+	
+	@media only screen { /* small up */
+		section.disposition {
+           @include grid-row();
+            > div.left, > div.right{
+                @include grid-column-row();
+                @include grid-column(12);
+                > section {
+                    @include grid-column(12);
+                }
+            }
+			div.input.date {
+				@include grid-row;
+				select {
+					@include grid-column(4);
+				}
+			}
+		}
+	}
+
+/*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	}*/
+	
+	@media only screen and (min-width: 40.063em) {
+		section.disposition{
+            > div.left, > div.right{
+                @include grid-column(6);
+            }
+		}
+	}
+
+/*	@media only screen and (min-width: 64.063em) {  large up 
+	}*/
+}
+
+section.member {
+    
 }
