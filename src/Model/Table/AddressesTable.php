@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use ArrayObject;
 
 /**
  * Addresses Model
@@ -90,6 +92,17 @@ class AddressesTable extends AppTable
         $rules->add($rules->existsIn(['member_id'], 'Members'));
         return $rules;
     }
+    
+    /**
+     * Implemented beforeMarshal event
+     * 
+     * @param \App\Model\Table\Event $event
+     * @param \App\Model\Table\ArrayObject $data
+     * @param \App\Model\Table\ArrayObject $options
+     */
+	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
+        $data['user_id'] = $this->SystemState->artistId();
+	}
     
 	/**
 	 * Make the specified number of new Contact arrays (for TRD use)

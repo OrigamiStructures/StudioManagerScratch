@@ -251,22 +251,25 @@ class MembersTable extends AppTable
      * @return Entity
      */
     public function defaultMemberEntity($entity, $type) {
-        $contacts = [
-            [
-                'user_id' => $this->SystemState->artistId(),
-                'label' => 'email',
-                'primary' => 1
+        $dme = [
+            'member_type' => $type,
+            'contacts' => [
+                [
+                    'user_id' => $this->SystemState->artistId(),
+                    'label' => 'email',
+                    'primary' => 1
+                ],
+                [
+                    'user_id' => $this->SystemState->artistId(),
+                    'label' => 'phone'
+                ]
             ],
-            [
-                'user_id' => $this->SystemState->artistId(),
-                'label' => 'phone'
-            ]
-        ];
-        $addresses = [
-            [
-                'user_id' => $this->SystemState->artistId(),
-                'label' => 'main',
-                'primary' => 1
+            'addresses' => [
+                [
+                    'user_id' => $this->SystemState->artistId(),
+                    'label' => 'main',
+                    'primary' => 1
+                ]
             ]
         ];
         if(in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION]) && $this->SystemState->is(MEMBER_CREATE)){
@@ -276,9 +279,7 @@ class MembersTable extends AppTable
             $proxy_group_entity = new \Cake\ORM\Entity($proxy_group);
             $entity->set('proxy_group', $proxy_group_entity);
         }
-        $entity->set('member_type', $type);
-        $entity->set('contacts', $contacts);
-        $entity->set('addresses', $addresses);
+        $entity = $this->patchEntity($entity, $dme);
         return $entity;
     }
 	
