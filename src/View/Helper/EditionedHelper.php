@@ -322,7 +322,9 @@ class EditionedHelper extends EditionFactoryHelper {
 			return;
 		}
 		
-		if (!$this->SystemState->standing_disposition) {
+//		osd($this->SystemState->controller());
+//		osd($this->SystemState->controller() !== 'formats');die;
+		if (!$this->SystemState->standing_disposition || $this->SystemState->controller() !== 'formats') {
 			$this->_mainModeFormatPieceTable($format, $edition);
 		} else {
 			$this->_dispositionModeFormatPieceTable($format, $edition);
