@@ -33,7 +33,33 @@ class ImagesTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-
+        $this->addBehavior('Proffer.Proffer', [
+            'image_file' => [    // The name of your upload field
+                'root' => WWW_ROOT . 'files', // Customise the root upload folder here, or omit to use the default
+                'dir' => 'image_dir',   // The name of the field to store the folder
+                'thumbnailSizes' => [ // Declare your thumbnails
+                    'large' => [   // Define the prefix of your thumbnail
+                        'w' => 1500, // Width
+                        'h' => 1500, // Height
+                        'jpeg_quality'  => 100,
+                        'png_compression_level' => 9
+                    ],
+                    'medium' => [   // Define the prefix of your thumbnail
+                        'w' => 750, // Width
+                        'h' => 750, // Height
+                        'jpeg_quality'  => 100,
+                        'png_compression_level' => 9
+                    ],
+                    'small' => [   // Define the prefix of your thumbnail
+                        'w' => 250, // Width
+                        'h' => 250, // Height
+                        'jpeg_quality'  => 100,
+                        'png_compression_level' => 9
+                    ],
+                ],
+                'thumbnailMethod' => 'Gd'  // Options are Imagick, Gd or Gmagick
+            ]
+        ]);
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
 		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
