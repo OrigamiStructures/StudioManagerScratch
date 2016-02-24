@@ -171,7 +171,7 @@ class ArtworkStackBehavior extends Behavior {
 		if ($record['image']['image_file']['name'] !== '') {
 			if ($record['image']['image_file']['error'] === 0) {
 				// I'm not sure if this is the right thing to do for the upload plugin
-				$this->_images_to_delete[] = $record['image_id'];
+				$this->_images_to_delete[] = $record['image']['id'];
 //				unset($record['image_id']);
 //				unset($record['image_id']);
 //				$record->_image_id = $record->image->id = NULL;
@@ -217,6 +217,8 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return array
 	 */
 	public function mapIDs($record) {
+//        osd($record);
+//        osd($record['id']);
 		
 		// if we're on the top 'artwork' level, recurse into editions level
 		if (isset($record['editions'])) {
@@ -232,10 +234,13 @@ class ArtworkStackBehavior extends Behavior {
 		// if we're on an edition level, recurse into formats level
 			$record['image'] = (new Collection($record['image']))
 					->map([$this, 'mapIDs'])->toArray();
-		}
+		} /*elseif (isset($record['image_file'])) {
+        //if we're on the uploaded new image
+             return $record;   
+        }*/
 		
 		// only change id data for brand new records
-		if ($record['id'] === '') {
+		if (isset($record['id']) && $record['id'] === '') {
 			$record['user_id'] = $this->_table->SystemState->artistId();
 		}
 		return $record;
