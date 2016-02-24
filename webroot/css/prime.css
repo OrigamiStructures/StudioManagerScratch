@@ -873,7 +873,8 @@ DISPOSITION
     /*margin-top: -1rem;*/ }
     div.dispositions_panel p {
       font-size: 85%;
-      line-height: 1; }
+      line-height: 1;
+      margin-bottom: 0.125rem; }
     div.dispositions_panel div.disposition {
       max-width: 75rem;
       margin-left: auto;
@@ -897,6 +898,7 @@ DISPOSITION
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem;
+        margin-top: .5rem;
         padding-top: 0rem;
         padding-bottom: 0rem;
         background-color: #a9b3bd; }
@@ -1042,7 +1044,8 @@ div.dispositions {
   	}*/ }
   div.dispositions h1 {
     font-size: 1.25rem;
-    margin-top: 0; }
+    margin-top: 0;
+    margin-bottom: 0.3125rem; }
   div.dispositions h2 {
     font-size: 1rem;
     margin-top: 2px; }
