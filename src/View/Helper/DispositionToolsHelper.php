@@ -148,7 +148,7 @@ class DispositionToolsHelper extends Helper {
 				[
 					'controller' => 'dispositions',
 					'action' => 'refine',
-					'?' => $this->SystemState->queryArg() + ['piece' => $piece->id]
+					'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
 			]);
 		} elseif ($this->disposition()) {
 			$label = 'Remove from ' . $this->disposition()->label;
@@ -157,7 +157,7 @@ class DispositionToolsHelper extends Helper {
 				[
 					'controller' => 'dispositions',
 					'action' => 'remove',
-					'?' => $this->SystemState->queryArg() + ['piece' => $piece->id]
+					'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
 			]);
 		} else {
 			return 'unknown status';
