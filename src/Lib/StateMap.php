@@ -109,6 +109,7 @@ class StateMap {
     'review' => 2,
     'create' => 1,
     'refine' => 4,
+      'addElement' => MEMBER_REFINE,
   ),
   'Menus' => 
   array (
