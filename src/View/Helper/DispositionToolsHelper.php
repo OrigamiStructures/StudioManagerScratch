@@ -105,6 +105,14 @@ class DispositionToolsHelper extends Helper {
 			return $disposition->label;
 		}
 	}
+	
+	public function eventName($disposition) {
+		if (!empty($disposition->name)) {
+			return $this->Html->tag('p', $disposition->name);
+		} else {
+			return '';
+		}
+	}
 
 	/**
 	 * Call point to generate assignment link for various disposition participants
