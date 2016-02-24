@@ -115,12 +115,16 @@ class DispositionManagerComponent extends Component {
 	 * @param type $arguments
 	 */
 	protected function _registerArtwork($arguments) {
+//		osd($arguments);//die;
 		if (isset($arguments['piece'])) {
+//			osd('piece');
 			if ($this->disposition->indexOfPiece($arguments['piece']) === FALSE) {
+//				osd('not there');
 				// piece is not there
 				$this->disposition->pieces[] = $this->pieceStack($arguments['piece']);
 				$this->disposition->dropFormat($arguments['format']);
 			} else {
+//				osd('already there');
 				// piece is already there
 			}
 		} else { // presence of 'format' arg is assumed now
@@ -128,6 +132,8 @@ class DispositionManagerComponent extends Component {
 				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}
+//		osd($this->disposition);
+//		die;
 	}
 	
 	public function pieceStack($piece_id) {
