@@ -44,6 +44,8 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
+	  'create' => DISPOSITION_CREATE,
+	  'refine' => DISPOSITION_REFINE,
   ),
   'Editions' => 
   array (
