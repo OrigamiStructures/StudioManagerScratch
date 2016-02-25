@@ -107,18 +107,28 @@ class DispositionManagerComponent extends Component {
 	/**
 	 * Merge a piece into the disposition
 	 * 
-	 * 3 scenarios
-	 *	piece is already there; do nothing
-	 *  format containing the piece is there; replace format with the piece
-	 *  piece is not there; add the piece
+	 * Many scenarios
+	 *	CREATE
+	 *		Only format assignment can happen here because of view/tool filtering
+	 *		Format with no valid pieces for the dispo type, flash message
+	 *		New Format with many valid pieces, add format
+	 *		New Format with one valid piece, add piece
+	 *	REFINE
+	 *		Format is already there, do nothing
+	 *		New Format with many valid pieces, add format
+	 *		New Format with one valid piece, add piece
+	 *		(Format with no valid pieces prevented by view/tool filtering)
+	 *		Piece is already there; do nothing
+	 *		Piece is not there; add the piece
 	 * 
 	 * @param type $arguments
 	 */
 	protected function _registerArtwork($arguments) {
 //		osd($arguments);//die;
 		if (isset($arguments['piece'])) {
+//			osd('piece');
 			if ($this->disposition->indexOfPiece($arguments['piece']) === FALSE) {
-				osd('not there');
+//				osd('not there');
 				// piece is not there
 				$this->disposition->pieces[] = $this->pieceStack($arguments['piece']);
 				$this->disposition->dropFormat($arguments['format']);
@@ -136,9 +146,16 @@ class DispositionManagerComponent extends Component {
 				// piece is already there
 			}
 		} else { // presence of 'format' arg is assumed now
-//			osd('format');
-			if ($this->disposition->indexOfFormat($arguments['format']) === FALSE) {
-//				osd('not there');
+			$node = $this->disposition->returnPiece($arguments['format']);
+			if (!$node || $node->fullyIdentified()) {
+				
+				/**
+				 * On CREATE we only just learned the dispo type and now, we may or 
+				 * may not have valid pieces for the requested type in this format. 
+				 * Additionally, we may have a unique piece or a format with only one 
+				 * piece valid for this dispo. In those cases we'd want to set the 
+				 * piece not the format.
+				 */
 				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}

@@ -15,14 +15,6 @@ class DispositionsController extends AppController
 	public $DispositionManager;
 	
 	/**
-	 * create() will lead the user through evolving screens. This names the next one
-	 *
-	 * @var string
-	 */
-	protected $_view_name = 'create';
-
-
-	/**
 	 * Manage redirects for disposition activities
 	 * 
 	 * All visits to this controller will eventually return to the original 
@@ -167,7 +159,9 @@ class DispositionsController extends AppController
 		$errors = [];
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+
 		if ($this->request->is('post')) {
+
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
 			$this->DispositionManager->write();
 			$errors = $disposition->errors();
@@ -180,7 +174,6 @@ class DispositionsController extends AppController
 		
 		$labels = $this->Dispositions->disposition_label;
 		$this->set(compact('disposition', 'labels', 'errors'));
-		$this->render($this->_view_name);
 	}
 		
 	public function refine() {
