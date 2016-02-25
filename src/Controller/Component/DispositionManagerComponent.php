@@ -124,29 +124,44 @@ class DispositionManagerComponent extends Component {
 	 * @param type $arguments
 	 */
 	protected function _registerArtwork($arguments) {
-//		osd($arguments);//die;
 		if (isset($arguments['piece'])) {
-//			osd('piece');
+			
+			// piece was provided to register
 			if ($this->disposition->indexOfPiece($arguments['piece']) === FALSE) {
-//				osd('not there');
-				// piece is not there
+				
+				// nothing matches the id
+				// this piece is not yet in the dispo 
 				$this->disposition->pieces[] = $this->pieceStack($arguments['piece']);
+				osd('add piece');
 				$this->disposition->dropFormat($arguments['format']);
 			} else {
+				
+				// something matching the piece id was found in the dispo
 				// is the 'match' actually a format?
 				$node = $this->disposition->returnPiece($arguments['piece']);
 				if (!$node->fullyIdentified()) {
-					// and does the format contain this piece (coincidentally with the same id)?
+					
+					// the match was a format, not a piece
+					// does the format contain this piece (coincidentally with the same id)?
 					$piece = $this->pieceStack($arguments['piece']);
 					if ($piece->edition_id === $node->edition_id) {
-						$this->disposition->pieces[] = $this->pieceStack($arguments['piece']);
+						
+						// the match was a format that contains the piece with the same id. 
+						// substitute the piece
+						$this->disposition->pieces[] = $piece;
+						osd('sub piece for format');
 						$this->disposition->dropFormat($arguments['format']);
 					}
+					// it was an unrealed format that happened to have the same id
+					// this piece really is not in the dispo
+					$this->disposition->pieces[] = $piece;
+					osd('add piece not format');
 				}
-				// piece is already there
+				// the match was actually a piece. piece is already in dispo
 			}
-		} else { // presence of 'format' arg is assumed now
-			$node = empty($this->disposition->pieces) ? FALSE : $this->disposition->returnPiece($arguments['format']);
+		} else { 
+			// no piece was provided so presence of 'format' arg is assumed now
+			$node = count($this->disposition->pieces) === 0 ? FALSE : $this->disposition->returnPiece($arguments['format']);
 			if (!$node || $node->fullyIdentified()) {
 				
 				/**
@@ -156,7 +171,11 @@ class DispositionManagerComponent extends Component {
 				 * piece valid for this dispo. In those cases we'd want to set the 
 				 * piece not the format.
 				 */
-				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
+				$format_stack = $this->formatStack($arguments['format']);
+//				osd($format_stack);
+				$this->disposition->pieces[] = $format_stack;
+//				osd('add format');
+//				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}
 //		osd($this->disposition);
@@ -170,10 +189,13 @@ class DispositionManagerComponent extends Component {
 	}
 
 	public function formatStack($format_id) {
-		$Pieces = TableRegistry::get('Formats');
-		return $Pieces->get($format_id, [
-			'contain' => 'Editions.Artworks',
+		$Formats = TableRegistry::get('Formats');
+		$format = $Formats->get($format_id, [
+			'contain' => ['Editions.Pieces','Editions.Artworks'],
+//			'contain' => 'Editions.Artworks',
 		]);
+//		osd($format);
+		return $format;
 	}
 
 

@@ -169,11 +169,11 @@ class DispositionsController extends AppController
 			$errors = $disposition->errors();
 //			$this->Dispositions->checkRules($disposition);
 			if (empty($disposition->errors())) {
+
 				$this->autoRender = FALSE;
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 			}
 		}
-		
 		$labels = $this->Dispositions->disposition_label;
 		$this->set(compact('disposition', 'labels', 'errors'));
 	}

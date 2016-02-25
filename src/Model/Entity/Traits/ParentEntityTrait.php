@@ -22,14 +22,15 @@ trait ParentEntityTrait {
 			list($id) = $arguments;
 			$association = strtolower(Inflector::pluralize($match[1]));
 			if (is_array($this->$association)) {
-				return $this->{$association}[$this->indexOfRelated($association, $id)];
+				$index = $this->indexOfRelated($association, $id);
+				$node = $index !== FALSE ? $this->{$association}[$index] : FALSE;
+				
 			}
-			return FALSE;
+			return $node;
 		}
 	}
 	
 	public function indexOfRelated($association, $format_id) {
-//		osd($this->$association);die;
 		if (is_array($this->$association)) {
 			foreach ($this->$association as $index => $entity) {
 				if ($this->{$association}[$index]->id == $format_id) {
