@@ -1,6 +1,7 @@
 			<section class="disposition">
 				<h1><?= $this->DispositionTools->dispositionLabel($standing_disposition) ?></h1>
 				<?= $this->DispositionTools->eventName($standing_disposition); ?>
+				<p><?= ((boolean) $standing_disposition->complete) ? 'Complete' : 'Incomplete'; ?></p>
 			</section>
 
 <!--			<section class="member">
