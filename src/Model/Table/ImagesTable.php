@@ -157,6 +157,10 @@ class ImagesTable extends AppTable
 		if ($entity->dirty()) {
 			$this->_new_image = $entity->image_file;
 		}
+		if ($entity->isNew()) {
+			$entity->user_id = $this->SystemState->artistId();
+			$entity->dirty('user_id');
+		}
 		return true;
 	}
 	
@@ -173,10 +177,11 @@ class ImagesTable extends AppTable
 			$settings = $this->behaviors()->get('Proffer')->config('image_file');
 			$path = new ProfferPath($this, $entity, 'image_file', $settings);
 			$folder = $path->getFolder();
+			$base_image = $folder . $this->_new_image;
 			
 			$collection = new \Cake\Collection\Collection(glob($folder . "*"));
-			$collection->each(function($value) {
-				if (!stristr($value, $this->_new_image)) {
+			$collection->each(function($value) use ($base_image) {
+				if (!stristr($value, $this->_new_image) || $value === $base_image) {
 					unlink($value);
 				}
 			});
