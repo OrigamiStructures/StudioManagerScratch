@@ -6,6 +6,10 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use App\Model\Entity;
+use ArrayObject;
+use Proffer\Lib\ProfferPath;
 
 /**
  * Images Model
@@ -17,8 +21,10 @@ use Cake\Validation\Validator;
  */
 class ImagesTable extends AppTable
 {
+	
+	protected $_new_image = FALSE;
 
-    /**
+	/**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -137,4 +143,30 @@ class ImagesTable extends AppTable
 //        $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
+	
+	public function beforeSave(Event $event, $entity, ArrayObject $options) {
+		$this->_new_image = FALSE;
+		if ($entity->dirty()) {
+			$this->_new_image = $entity->image_file;
+		}
+		return true;
+	}
+	
+	public function afterSave(Event $event, $entity, ArrayObject $options) {
+		if ($this->_new_image) {
+			$settings = $this->behaviors()->get('Proffer')->config('image_file');
+			$path = new ProfferPath($this, $entity, 'image_file', $settings);
+			$folder = $path->getFolder();
+			
+			$collection = new \Cake\Collection\Collection(glob($folder . "*"));
+			$collection->each(function($value) {
+				if (!stristr($value, $this->_new_image)) {
+					unlink($value);
+				}
+			});
+			$this->_new_image = FALSE;
+		}
+		return true;
+	}
+
 }
