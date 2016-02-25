@@ -143,7 +143,9 @@ class FormatsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions.Formats.Images']
 			]);
-            if ($this->Artworks->save($artwork)) {
+//			osd($artwork);die;
+			$deletions = []; // CAN THIS BE RIGHT? WHAT ARE DELETIONS?
+			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->redirect([
 					'controller' => 'artworks', 
 					'action' => 'review',

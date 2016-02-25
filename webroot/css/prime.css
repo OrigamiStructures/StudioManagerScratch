@@ -8,6 +8,7 @@ $badge-font-size: 0.6rem;*/
  * 2. Prevent iOS and IE text size adjust after device orientation change,
  *    without disabling user zoom.
  */
+@import url(../fonts/foundation-icons/foundation-icons.css);
 html {
   font-family: sans-serif;
   /* 1 */
@@ -1115,5 +1116,30 @@ div.dispositions {
       padding-right: 0.9375rem; }
       div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
         float: right; } }
+
+div.input-with-toollabel {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto; }
+  div.input-with-toollabel::before, div.input-with-toollabel::after {
+    content: ' ';
+    display: table; }
+  div.input-with-toollabel::after {
+    clear: both; }
+  div.input-with-toollabel label {
+    width: 16.66667%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    text-align: right; }
+    div.input-with-toollabel label:last-child:not(:first-child) {
+      float: right; }
+  div.input-with-toollabel div.input {
+    width: 83.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.input-with-toollabel div.input:last-child:not(:first-child) {
+      float: right; }
 
 /*# sourceMappingURL=prime.css.map */

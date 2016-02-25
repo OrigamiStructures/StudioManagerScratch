@@ -51,14 +51,14 @@ class Image extends Entity
      * 
      * @return string
      */
-    public function _getFullPath() {
+    public function fullPath($size = "small") {
         $path = "";
         $image = "NoImage.png";
         if(!empty($this->image_dir)){
-            $path = $this->image_dir . DS;
+            $path = '../files/images/image_file/' . $this->image_dir . DS;
         }
         if(!empty($this->image_file)){
-            $image = $this->image_file;
+            $image = $size . '_' . $this->image_file;
         }
         return $path . $image;
     }

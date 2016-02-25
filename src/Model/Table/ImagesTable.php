@@ -6,6 +6,10 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\Event;
+use App\Model\Entity;
+use ArrayObject;
+use Proffer\Lib\ProfferPath;
 
 /**
  * Images Model
@@ -17,8 +21,10 @@ use Cake\Validation\Validator;
  */
 class ImagesTable extends AppTable
 {
+	
+	protected $_new_image = FALSE;
 
-    /**
+	/**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -33,7 +39,33 @@ class ImagesTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
-
+        $this->addBehavior('Proffer.Proffer', [
+            'image_file' => [    // The name of your upload field
+                'root' => WWW_ROOT . 'files', // Customise the root upload folder here, or omit to use the default
+                'dir' => 'image_dir',   // The name of the field to store the folder
+                'thumbnailSizes' => [ // Declare your thumbnails
+                    'large' => [   // Define the prefix of your thumbnail
+                        'w' => 1500, // Width
+                        'h' => 1500, // Height
+                        'jpeg_quality'  => 100,
+                        'png_compression_level' => 9
+                    ],
+                    'medium' => [   // Define the prefix of your thumbnail
+                        'w' => 750, // Width
+                        'h' => 750, // Height
+                        'jpeg_quality'  => 100,
+                        'png_compression_level' => 9
+                    ],
+                    'small' => [   // Define the prefix of your thumbnail
+                        'w' => 250, // Width
+                        'h' => 250, // Height
+                        'jpeg_quality'  => 100,
+                        'png_compression_level' => 9
+                    ],
+                ],
+                'thumbnailMethod' => 'Gd'  // Options are Imagick, Gd or Gmagick
+            ]
+        ]);
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
 		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
@@ -108,7 +140,49 @@ class ImagesTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+//        $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
+	
+	/**
+	 * If an override image is being uploaded, remember it's name for afterSave processing
+	 * 
+	 * @param Event $event
+	 * @param type $entity
+	 * @param ArrayObject $options
+	 * @return boolean
+	 */
+	public function beforeSave(Event $event, $entity, ArrayObject $options) {
+		$this->_new_image = FALSE;
+		if ($entity->dirty()) {
+			$this->_new_image = $entity->image_file;
+		}
+		return true;
+	}
+	
+	/**
+	 * Delete previous image if an override image was uploaded
+	 * 
+	 * @param Event $event
+	 * @param type $entity
+	 * @param ArrayObject $options
+	 * @return boolean
+	 */
+	public function afterSave(Event $event, $entity, ArrayObject $options) {
+		if ($this->_new_image) {
+			$settings = $this->behaviors()->get('Proffer')->config('image_file');
+			$path = new ProfferPath($this, $entity, 'image_file', $settings);
+			$folder = $path->getFolder();
+			
+			$collection = new \Cake\Collection\Collection(glob($folder . "*"));
+			$collection->each(function($value) {
+				if (!stristr($value, $this->_new_image)) {
+					unlink($value);
+				}
+			});
+			$this->_new_image = FALSE;
+		}
+		return true;
+	}
+
 }

@@ -139,7 +139,7 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	protected function _connectPiece($piece) {
-//		$SystemState = $this->_View->viewVars['SystemState'];
+		// 
 		$in_disposition = $this->_pieceInDisposition($piece);
 		if (!$in_disposition) {
 			$label = $this->_fromLabel();
@@ -165,8 +165,13 @@ class DispositionToolsHelper extends Helper {
 	}
 	
 	public function _pieceInDisposition($piece) {
+		$piece_exists = FALSE;
 		$disposition = $this->_View->viewVars['standing_disposition'];
-		return !($this->disposition()->indexOfPiece($piece->id) === FALSE);
+		$index = $this->disposition()->indexOfPiece($piece->id);
+		if ($index) {
+			$piece_exists = $this->disposition()->pieces[$index]->fullyIdentified();
+		}
+		return $piece_exists;
 	}
 	
 	/**

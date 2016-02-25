@@ -146,7 +146,7 @@ class EditionsController extends AppController
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');
 	}
-	
+
 	/**
 	 * Refine that data for a single Edition
 	 * 

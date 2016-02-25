@@ -27,6 +27,11 @@ class MembersController extends AppController
         parent::initialize();
         $this->set('member_types', $this->_memberTypes);
     }
+    
+    public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->retreiveAndSetGroups();
+    }
 
 // <editor-fold defaultstate="collapsed" desc="CRUD Methods">
     /**
@@ -204,7 +209,6 @@ class MembersController extends AppController
     public function review() {
         $this->SystemState->referer($this->referer());
         $query = $this->Members->find('memberReview');
-        $this->retreiveAndSetGroups();
         $this->set('members', $this->paginate($query));
         $this->set('_serialize', ['members']);
     }
@@ -233,7 +237,6 @@ class MembersController extends AppController
         if(empty($member->errors())){
             $this->SystemState->referer($this->referer());
         }
-        $this->retreiveAndSetGroups();
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('review');

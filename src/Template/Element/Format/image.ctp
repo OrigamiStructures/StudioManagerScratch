@@ -2,10 +2,10 @@
 <?php 
 //osd($format);
 if ($format->image === NULL) {
-	$image = $artwork->image == NULL ? "NoImage.png" : $artwork->image->fullPath;
+	$image = $artwork->image == NULL ? "NoImage.png" : $artwork->image->fullPath('medium');
 	$attributes = ['class' => 'dup'];
 } else {
-	$image = $format->image->fullPath;
+	$image = $format->image->fullPath('medium');
 	$attributes = [];
 }
 ?>
