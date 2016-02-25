@@ -144,6 +144,14 @@ class ImagesTable extends AppTable
         return $rules;
     }
 	
+	/**
+	 * If an override image is being uploaded, remember it's name for afterSave processing
+	 * 
+	 * @param Event $event
+	 * @param type $entity
+	 * @param ArrayObject $options
+	 * @return boolean
+	 */
 	public function beforeSave(Event $event, $entity, ArrayObject $options) {
 		$this->_new_image = FALSE;
 		if ($entity->dirty()) {
@@ -152,6 +160,14 @@ class ImagesTable extends AppTable
 		return true;
 	}
 	
+	/**
+	 * Delete previous image if an override image was uploaded
+	 * 
+	 * @param Event $event
+	 * @param type $entity
+	 * @param ArrayObject $options
+	 * @return boolean
+	 */
 	public function afterSave(Event $event, $entity, ArrayObject $options) {
 		if ($this->_new_image) {
 			$settings = $this->behaviors()->get('Proffer')->config('image_file');
