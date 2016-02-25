@@ -146,7 +146,7 @@ class DispositionManagerComponent extends Component {
 				// piece is already there
 			}
 		} else { // presence of 'format' arg is assumed now
-			$node = $this->disposition->returnPiece($arguments['format']);
+			$node = empty($this->disposition->pieces) ? FALSE : $this->disposition->returnPiece($arguments['format']);
 			if (!$node || $node->fullyIdentified()) {
 				
 				/**
