@@ -39,7 +39,7 @@ $config = [
         ],
         'Social' => [
             //enable social login
-            'login' => true,
+//            'login' => true,
         ],
         'Profile' => [
             //Allow view other users profiles

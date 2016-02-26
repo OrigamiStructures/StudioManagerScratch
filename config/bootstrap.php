@@ -205,6 +205,7 @@ Type::build('datetime')->useLocaleParser();
 Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
 Configure::write('Users.config', ['users']);
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
+Plugin::load('Proffer');
 
 
 /**
@@ -253,6 +254,11 @@ define('ADMIN_ARTIST', 'artist_admin');
 define('SYSTEM_VOID_REFERER'	, TRUE);
 define('SYSTEM_CONSUME_REFERER' , FALSE);
 
+//Disposition State
+define('DISPOSITION_CREATE', 1);
+define('DISPOSITION_REVIEW', 2);
+define('DISPOSITION_REFINE', 4);
+
 //AssignemtTrait Constants
 // boolean argument to control the kind of return value from a method
 define('PIECE_ENTITY_RETURN'	, FALSE);
@@ -273,7 +279,7 @@ define('DISPOSITION_TRANSFER'			, 'transfer');
 define('DISPOSITION_LOAN'				, 'loan');
 define('DISPOSITION_STORE'				, 'storage');
 define('DISPOSITION_UNAVAILABLE'		, 'unavailable');
-define('DISPOSITION_REVIEW'				, 'review');
+//define('DISPOSITION_REVIEW'				, 'review');
 
 
 define('DISPOSITION_TRANSFER_SALE'		, 'Sale');

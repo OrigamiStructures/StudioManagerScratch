@@ -15,14 +15,6 @@ class DispositionsController extends AppController
 	public $DispositionManager;
 	
 	/**
-	 * create() will lead the user through evolving screens. This names the next one
-	 *
-	 * @var string
-	 */
-	protected $_view_name = 'create';
-
-
-	/**
 	 * Manage redirects for disposition activities
 	 * 
 	 * All visits to this controller will eventually return to the original 
@@ -167,20 +159,23 @@ class DispositionsController extends AppController
 		$errors = [];
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+
 		if ($this->request->is('post')) {
+			
+			$this->request->data = $this->completeRule($this->request->data);
+
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
 			$this->DispositionManager->write();
 			$errors = $disposition->errors();
 //			$this->Dispositions->checkRules($disposition);
 			if (empty($disposition->errors())) {
+
 				$this->autoRender = FALSE;
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 			}
 		}
-		
 		$labels = $this->Dispositions->disposition_label;
 		$this->set(compact('disposition', 'labels', 'errors'));
-		$this->render($this->_view_name);
 	}
 		
 	public function refine() {
@@ -232,6 +227,20 @@ class DispositionsController extends AppController
 
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+	}
+	
+	public function completeRule($data) {
+		$pattern = '%s/%s/%s';
+		$date = empty($data['end_date']) ? $data['start_date'] : $data['end_date'];
+		$timestamp = strtotime(sprintf($pattern, $date['month'], $date['day'], $date['year']));
+//		osd($date);
+//		osd($timestamp);
+//		osd(time());
+//		osd($timestamp > time());die;
+		if ((boolean) $data['complete'] && $timestamp > time()) {
+			$data['complete'] = 0;
+		}
+		return $data;
 	}
 	
 }

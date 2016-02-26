@@ -115,7 +115,11 @@ class AppController extends Controller
 		$menu = TableRegistry::get('Menus');
 		$this->set('menus', $menu->assemble());
 		
-		$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
+		if (!is_null($this->request->session()->read('Auth'))) {
+			$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
+		} else {
+			$this->set('standing_disposition', FALSE);
+		}
 		
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
