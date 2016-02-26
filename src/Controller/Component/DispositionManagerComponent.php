@@ -198,7 +198,6 @@ class DispositionManagerComponent extends Component {
 		return $format;
 	}
 
-
 	protected function _registerMember($arguments) {
 		$Memebers = TableRegistry::get('Members');
 		$conditions = $this->SystemState->buildConditions([]);
@@ -233,7 +232,6 @@ class DispositionManagerComponent extends Component {
 		}
 		$this->disposition->addresses = array_merge($this->disposition->addresses, $new_addresses);
 	}
-
 
 	protected function _setRedirect($arguments) {
 		if (array_key_exists('artwork', $arguments)) {

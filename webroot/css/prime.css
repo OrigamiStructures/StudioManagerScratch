@@ -877,6 +877,7 @@ DISPOSITION
       line-height: 1;
       margin-bottom: 0.125rem; }
     div.dispositions_panel div.disposition {
+      background-color: #fbf2e0;
       max-width: 75rem;
       margin-left: auto;
       margin-right: auto; }

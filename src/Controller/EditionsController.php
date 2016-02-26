@@ -128,12 +128,6 @@ class EditionsController extends AppController
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
-//		$element_management = [
-//			'artwork' => 'full',
-//			'edition' => 'many',
-//			'format' => 'many',
-//		];
-//		$this->set('element_management', $element_management);
 		
 		$edition = $artwork->returnEdition($this->SystemState->queryArg('edition'));
 		if ($edition->isFlat()) {
@@ -190,9 +184,6 @@ class EditionsController extends AppController
 	 * Create an new Edition and a single Format for it
 	 * 
 	 * The artwork will be shown as reference info on the page
-	 * 
-	 * SAVE HAS NOT BEEN WRITTEN
-	 * 
 	 */
 	public function create() {
 //		osd($this->request->data, 'trd');

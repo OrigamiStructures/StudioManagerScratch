@@ -469,6 +469,7 @@ DISPOSITION
 			margin-bottom: rem-calc(2);
 		}
 		div.disposition {
+			background-color: lighten(wheat, 10%);
 			@include grid-row();
 			section {
 				@include grid-column(12);
