@@ -210,10 +210,9 @@ class ArtworksController extends AppController
 				$index = array_keys($this->request->data['editions'])[0];
 				$deletions = $this->ArtworkStack->refinePieces($artwork, 
 						$this->request->data['editions'][$index]['id']);
-			}	
-//			osd($artwork);die;
-			
-			$deletions = $this->ArtworkStack->refinePieces($artwork, $this->request->data);
+			} else {
+				$deletions = [];
+			}
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
 //				$this->ArtworkStack->allocatePieces($artwork);
