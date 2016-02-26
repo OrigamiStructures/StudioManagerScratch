@@ -115,7 +115,7 @@ class AppController extends Controller
 		$menu = TableRegistry::get('Menus');
 		$this->set('menus', $menu->assemble());
 		
-		osd($this->request->session()->read('Auth.User'));die;
+//		osd($this->request->session()->read('Auth.User'));die;
 		if (!is_null($this->request->session()->read('Auth.User'))) {
 			$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
 		} else {
