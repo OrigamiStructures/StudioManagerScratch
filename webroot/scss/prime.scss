@@ -248,6 +248,15 @@ div.formats {
 		
 		table {
 			/*width: 100%;*/
+			td.tools div.input {
+				label, input {
+					display: inline-block;
+				}
+				input[id*='quantity'] {
+					width: 3rem;
+					margin-left: .5rem;
+				}
+			}
 		}
 		
 		div.image {
@@ -311,7 +320,7 @@ div.formats {
 	
 	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
 		section.format.format_focus {
-			div.text{
+			> div.text{
 				@include grid-column(12, 0);
 			}
 		}
@@ -360,7 +369,7 @@ div.formats {
 			}
 		}
 		section.format.format_focus {
-			div.text{
+			> div.text{
 				@include grid-column(10);
 			}
 		}

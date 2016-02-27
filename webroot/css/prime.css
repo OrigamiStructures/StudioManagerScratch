@@ -610,6 +610,11 @@ div.formats {
       clear: both; }
     div.formats section.format table {
       /*width: 100%;*/ }
+      div.formats section.format table td.tools div.input label, div.formats section.format table td.tools div.input input {
+        display: inline-block; }
+      div.formats section.format table td.tools div.input input[id*='quantity'] {
+        width: 3rem;
+        margin-left: .5rem; }
     @media screen and (max-width: 63.9375em) {
       div.formats section.format div.image .dup {
         display: none !important; } }
@@ -715,12 +720,12 @@ div.formats {
       div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
-    div.formats section.format.format_focus div.text {
+    div.formats section.format.format_focus > div.text {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.format_focus div.text:last-child:not(:first-child) {
+      div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) {
     div.formats section.format.format_focus div.pieces {
@@ -777,12 +782,12 @@ div.formats {
         padding-right: 0.9375rem; }
         div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.format_focus div.text {
+      div.formats section.format.format_focus > div.text {
         width: 83.33333%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
-        div.formats section.format.format_focus div.text:last-child:not(:first-child) {
+        div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
           float: right; } }
 
 nav.breadcrumbs {
