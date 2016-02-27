@@ -18,7 +18,7 @@ $l = "<span class='nav'>[$nav|$ed] </span>";
  * 
  */
 ?>
-							<?= $this->Form->input($format->id, ['type' => 'hidden']); ?>
+							<?= $this->Form->input("editions.$edition_index.formats.$format_index.id", ['type' => 'hidden', 'value' => $format->id]); ?>
 
 							<?= $this->Html->tag('p', "{$l}$format->displayTitle", ['class' => 'format']); ?>
 

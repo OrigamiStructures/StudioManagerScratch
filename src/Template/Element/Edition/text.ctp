@@ -21,7 +21,7 @@ $l = "<span class='nav'>[$nav|$ed] </span>";
  */
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 ?>
-					<?= $this->Form->input("editions.$edition_index.id", ['type' => 'hidden']); ?>
+					<?= $this->Form->input("editions.$edition_index.id", ['type' => 'hidden', 'value' => $edition->id]); ?>
 
 					<?php
 					if (!empty($edition->series_id)) {
