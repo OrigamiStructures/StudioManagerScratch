@@ -151,7 +151,8 @@ class FormatsController extends AppController
 					'action' => 'review',
 					'?' => [
 						'artwork' => $this->SystemState->queryArg('artwork'),
-						'format' => $this->SystemState->queryArg('edition')
+						'edition' => $this->SystemState->queryArg('edition'),
+						'format' => $this->SystemState->queryArg('format'),
 					]]);
             } else {
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
