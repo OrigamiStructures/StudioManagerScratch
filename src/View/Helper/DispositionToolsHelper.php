@@ -4,6 +4,7 @@ namespace App\View\Helper;
 use Cake\View\Helper;
 use Cake\Cache\Cache;
 use App\View\Helper\Traits\ValidationErrors;
+use App\Lib\SystemState;
 
 /**
  * CakePHP DispositionToolsHelper
@@ -13,7 +14,7 @@ class DispositionToolsHelper extends Helper {
 	
 	use ValidationErrors;
 	
-	public $helpers = ['Html'];
+	public $helpers = ['Html', 'Form'];
 	
 	protected $dispo_label;
 	
@@ -139,29 +140,79 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	protected function _connectPiece($piece) {
-		// 
+		// This assumes we came in through some 'review/ArtworkStack' pathway
+		$edition = $this->SystemState->edition;
+		
 		$in_disposition = $this->_pieceInDisposition($piece);
 		if (!$in_disposition) {
-			$label = $this->_fromLabel();
-			return $this->Html->link(
-				$label,
-				[
-					'controller' => 'dispositions',
-					'action' => 'refine',
-					'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
-			]);
+			if (SystemState::isOpenEdition($edition->type)) {
+				return $this->_connectOpenPiece($piece);
+				
+			} else {
+				return $this->_connectLimitedPiece($piece);
+			}
+			
 		} elseif ($this->disposition()) {
-			$label = 'Remove from ' . $this->disposition()->label;
-			return $this->Html->link(
-				$label,
-				[
-					'controller' => 'dispositions',
-					'action' => 'remove',
-					'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
-			]);
+			return $this->_disconnectPiece($piece);
+			
 		} else {
 			return 'unknown status';
 		}
+	}
+	
+	/**
+	 * Create a form to assign n open edition pieces to a disposition
+	 * 
+	 * This is displayed with a Piece that is appropriate to the current 
+	 * Dispositon type and only when the dispo in live-editing. 
+	 * 
+	 * @param Entity $piece
+	 * @return string The form
+	 */
+	private function _connectOpenPiece($piece) {
+		$label = $this->_fromLabel();
+		$input = $this->Form->input("piece.$piece->id.quantity", ['value' => 1, 'label' => $label, 'div' => FALSE]);
+		return $input;
+	}
+	
+	/**
+	 * Create a link to assign a limited edition piece to a disposition
+	 * 
+	 * This is displayed with a single Piece that is appropriate to 
+	 * the current Dispositon type and only when the dispo in live-editing. 
+	 * 
+	 * @param Entity $piece
+	 * @return string The link
+	 */
+	private function _connectLimitedPiece($piece) {
+		$label = $this->_fromLabel();
+		return $this->Html->link(
+			$label,
+			[
+				'controller' => 'dispositions',
+				'action' => 'refine',
+				'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
+		]);
+	}
+	
+	/**
+	 * Create a link to remove a piece from a disposition
+	 * 
+	 * This is expected to remove both Limited and Open edition pieces. 
+	 * It displays with a single piece that is in the live-edit dispo
+	 * 
+	 * @param type $piece
+	 * @return type
+	 */
+	private function _disconnectPiece($piece) {
+		$label = 'Remove from ' . $this->disposition()->label;
+		return $this->Html->link(
+			$label,
+			[
+				'controller' => 'dispositions',
+				'action' => 'remove',
+				'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
+		]);
 	}
 	
 	public function _pieceInDisposition($piece) {

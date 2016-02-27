@@ -22,7 +22,7 @@ foreach($pieces as $piece) :
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
 		<td><?= $piece->collected ? 'Yes' : '-'; ?></td>
 		<?php // osd($piece->id);?>
-		<td><?= $standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?></td>
+		<td class="tools"><?= $standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?></td>
 	</tr>
 <?php
 endforeach;

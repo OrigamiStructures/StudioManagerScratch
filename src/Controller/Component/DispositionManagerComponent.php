@@ -121,6 +121,11 @@ class DispositionManagerComponent extends Component {
 	 *		Piece is already there; do nothing
 	 *		Piece is not there; add the piece
 	 * 
+	 * Additionally, this needs to reassign the piece if it's not in the 
+	 * current format. And if the edition is an open, we'll be getting a value 
+	 * indicating how many pieces to assign to the disposition and they may 
+	 * also need to be moved to this format from another source.
+	 * 
 	 * @param type $arguments
 	 */
 	protected function _registerArtwork($arguments) {
