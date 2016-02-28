@@ -15,7 +15,7 @@ use App\Lib\PiecesUtility;
  */
 class EditionFactoryHelper extends Helper {
 	
-	public $helpers = ['Html'];
+	public $helpers = ['Html', 'DispositionTools'];
 	
 	protected $PiecesUtility;
 
@@ -125,6 +125,8 @@ class EditionFactoryHelper extends Helper {
 			
 		} elseif (stristr(get_class($entity), 'Format') && 
 				stristr(get_class($edition), 'Edition')){
+			// detection of disposition or other piece assignment
+			// processes is done at the next stage
 			return $this->_formatPieceTable($entity, $edition);
 			
 		} else {
@@ -210,8 +212,10 @@ class EditionFactoryHelper extends Helper {
 	
 	public function quantityInput($edition, $edition_index) {
 		return '';
-}
+	}
 	
-	
+	protected function _chooseFilter($disposition_type) {
+		return PIECE_FILTER_NONE;
+	}
 	
 }

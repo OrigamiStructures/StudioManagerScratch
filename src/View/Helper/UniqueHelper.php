@@ -51,9 +51,18 @@ class UniqueHelper extends EditionFactoryHelper {
 	}
 
 	protected function _formatPieceTable($format, $edition) {
+		$disposition = $this->SystemState->standing_disposition;
 		if (is_null($this->SystemState->artworks)) {
-			$caption = 'Details about this work';
-			$pieces = $format->pieces;
+			if ($disposition) {
+				$pieces = $this->pieceTool()
+					->filter($edition->pieces, 'edition', $this->_chooseFilter($disposition->type));
+				$caption = count($pieces) !==0 ?
+						"Available to include in this {$this->DispositionTools->dispositionLabel($disposition)}" :
+						"This piece is not available ot include in this {$this->DispositionTools->dispositionLabel($disposition)}";
+			} else {
+				$caption = 'Details about this work';
+				$pieces = $format->pieces;
+			}
 			$providers = [$format];
 
 			$this->_View->set(compact('caption', 'pieces', 'providers'));
