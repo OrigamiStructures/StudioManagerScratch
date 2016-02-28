@@ -171,8 +171,9 @@ class DispositionToolsHelper extends Helper {
 	 */
 	private function _connectOpenPiece($piece) {
 		$label = $this->_fromLabel();
-		$input = $this->Form->input("piece.$piece->id.quantity", ['value' => 1, 'label' => $label, 'div' => FALSE]);
-		return $input;
+		return $this->_View->element('Disposition/connect_open_piece', ['label' => $label, 'piece' => $piece]);
+//		$input = $this->Form->input("piece.$piece->id.quantity", ['value' => 1, 'label' => $label, 'div' => FALSE]);
+//		return $input;
 	}
 	
 	/**
