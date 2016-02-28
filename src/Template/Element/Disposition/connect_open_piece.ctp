@@ -3,6 +3,7 @@ $this->Form->create(NULL, [
 	'url' => [
 		'controller' => 'dispositions',
 		'action' => 'refine',
+		'?' => $SystemState->queryArg(),
 	]
 ]); 
 ?>

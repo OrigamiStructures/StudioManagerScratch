@@ -347,13 +347,13 @@ class EditionedHelper extends EditionFactoryHelper {
 		$pieces = $this->pieceTool()
 			->filter($edition->pieces, 'edition', $this->_chooseFilter($disposition->type));
 		$caption = "Indicate the pieces you want to include in this {$this->DispositionTools->dispositionLabel($disposition)}";
-		$provider_set = $this->_prepareProviders();
+		$providers = $this->_prepareProviders();
 		
 		$this->_View->set(compact('caption', 'pieces', 'providers'));
 	}
 
 	/**
-	 * Prepare 'providers' object that can give the owner name for each piece
+	 * Prepare 'providers' object that can give the owner name for each piece in the edition
 	 * 
 	 * In processes that allow the assignment of pieces to other structures, a format 
 	 * will be show with more than just its assigned pieces (in many cases). When 
@@ -369,7 +369,7 @@ class EditionedHelper extends EditionFactoryHelper {
 		$provider_set = $EditionTable->get($this->_View->SystemState->queryArg('edition'), [
 				'conditions' => $conditions,
 				'contain' => ['Formats']]);
-		$providers = ['edition' => $provider_set] + $provider_set->formats;
+		return ['edition' => $provider_set] + $provider_set->formats;
 	}
 
 
