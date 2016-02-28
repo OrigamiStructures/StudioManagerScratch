@@ -248,13 +248,20 @@ div.formats {
 		
 		table {
 			/*width: 100%;*/
-			td.tools div.input {
-				label, input {
+			td.tools div.input.text, div.submit {
+				display: inline-block;
+				label, input, div.submit {
 					display: inline-block;
+				}
+				input {
+					margin-left: .5rem;
 				}
 				input[id*='quantity'] {
 					width: 3rem;
-					margin-left: .5rem;
+					height: auto;
+					padding: rem-calc(1) 0 rem-calc(1) .5rem;
+					margin-bottom: 0;
+					/*margin-left: .5rem;*/
 				}
 			}
 		}

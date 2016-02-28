@@ -610,11 +610,18 @@ div.formats {
       clear: both; }
     div.formats section.format table {
       /*width: 100%;*/ }
-      div.formats section.format table td.tools div.input label, div.formats section.format table td.tools div.input input {
+      div.formats section.format table td.tools div.input.text, div.formats section.format table div.submit {
         display: inline-block; }
-      div.formats section.format table td.tools div.input input[id*='quantity'] {
-        width: 3rem;
-        margin-left: .5rem; }
+        div.formats section.format table td.tools div.input.text label, div.formats section.format table td.tools div.input.text input, div.formats section.format table td.tools div.input.text div.submit, div.formats section.format table div.submit label, div.formats section.format table div.submit input, div.formats section.format table div.submit div.submit {
+          display: inline-block; }
+        div.formats section.format table td.tools div.input.text input, div.formats section.format table div.submit input {
+          margin-left: .5rem; }
+        div.formats section.format table td.tools div.input.text input[id*='quantity'], div.formats section.format table div.submit input[id*='quantity'] {
+          width: 3rem;
+          height: auto;
+          padding: 0.0625rem 0 0.0625rem 0.5rem;
+          margin-bottom: 0;
+          /*margin-left: .5rem;*/ }
     @media screen and (max-width: 63.9375em) {
       div.formats section.format div.image .dup {
         display: none !important; } }
