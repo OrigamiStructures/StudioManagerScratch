@@ -39,6 +39,7 @@ class Address extends Entity
     ];
 	
 	public function _getAddressLine() {
-		return "$this->address1, $this->city, $this->state $this->zip";
+		$address = trim("$this->address1, $this->city, $this->state $this->zip", ' ,');
+		return empty($address) ? 'Address unknown' : $address;
 	}
 }
