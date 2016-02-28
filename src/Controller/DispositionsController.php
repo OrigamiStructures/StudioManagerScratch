@@ -187,6 +187,17 @@ class DispositionsController extends AppController
 	
 	/**
 	 * Dump the evolving disposition without saving it
+	 * 
+	 * Since some piece assignment changes are made during the disposition 
+	 * creation process to keep the choices accurate in the display as the 
+	 * artist proceeds, some changes will need to be 'unmade' but others 
+	 * will remain because the original state will be lost (and only 
+	 * of slight interest).
+	 * 
+	 * Open edition piece configuration will be restored to 'one record for 
+	 * pieces at each state'.
+	 * 
+	 * Piece assignment will remain in any newly assigned condition.
 	 */
 	public function discard() {
 		$this->DispositionManager->discard();
