@@ -7,6 +7,7 @@ use App\Model\Entity\Disposition;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 use DateTime;
+use App\Form\AssignmentForm;
 
 /**
  * CakePHP DispositionManagerComponent
@@ -14,6 +15,8 @@ use DateTime;
  */
 class DispositionManagerComponent extends Component {
 	
+	public $components = ['EditionStack'];
+
 	public $disposition;
 	
 	protected $controller;
@@ -74,6 +77,7 @@ class DispositionManagerComponent extends Component {
 	public function merge(Disposition $dispostion, array $arguments) {
 //		osd($arguemnts);
 		$this->_register($arguments);
+		//die('dead in merge');
 		$this->_setRedirect($arguments);
 //		osd($this->disposition);die;
 		$this->write();
@@ -129,17 +133,22 @@ class DispositionManagerComponent extends Component {
 	 * @param type $arguments
 	 */
 	protected function _registerArtwork($arguments) {
+		$result = true;
+//		die('register artwork');
 		if (isset($arguments['piece'])) {
+//			die('piece');
+			$piece = $this->pieceStack($arguments['piece']);
 			
 			// piece was provided to register
 			if ($this->disposition->indexOfPiece($arguments['piece']) === FALSE) {
+//				die('not match');
 				
 				// nothing matches the id
 				// this piece is not yet in the dispo 
-				$this->disposition->pieces[] = $this->pieceStack($arguments['piece']);
+				$result = $this->_registerPiece($piece, $arguments);
 				osd('add piece');
-				$this->disposition->dropFormat($arguments['format']);
 			} else {
+//				die('some match');
 				
 				// something matching the piece id was found in the dispo
 				// is the 'match' actually a format?
@@ -148,23 +157,22 @@ class DispositionManagerComponent extends Component {
 					
 					// the match was a format, not a piece
 					// does the format contain this piece (coincidentally with the same id)?
-					$piece = $this->pieceStack($arguments['piece']);
 					if ($piece->edition_id === $node->edition_id) {
 						
 						// the match was a format that contains the piece with the same id. 
 						// substitute the piece
-						$this->disposition->pieces[] = $piece;
+						$result = $this->_registerPiece($piece, $arguments);
 						osd('sub piece for format');
-						$this->disposition->dropFormat($arguments['format']);
 					}
 					// it was an unrealed format that happened to have the same id
 					// this piece really is not in the dispo
-					$this->disposition->pieces[] = $piece;
+					$result = $this->_registerPiece($piece, $arguments);
 					osd('add piece not format');
 				}
 				// the match was actually a piece. piece is already in dispo
 			}
 		} else { 
+			die('format');
 			// no piece was provided so presence of 'format' arg is assumed now
 			$node = count($this->disposition->pieces) === 0 ? FALSE : $this->disposition->returnPiece($arguments['format']);
 			if (!$node || $node->fullyIdentified()) {
@@ -178,14 +186,87 @@ class DispositionManagerComponent extends Component {
 				 */
 				$format_stack = $this->formatStack($arguments['format']);
 //				osd($format_stack);
-				$this->disposition->pieces[] = $format_stack;
+				$result = $this->disposition->pieces[] = $format_stack;
 //				osd('add format');
 //				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}
+//		die('trying to return??');
+		return $result;
 //		osd($this->disposition);
 	}
 	
+	/**
+	 * Do the final storage of a piece int the dispo
+	 * 
+	 * Move it to the current format if necessary
+	 * 
+	 */
+	protected function _registerPiece($piece, $arguments) {
+//		osd($piece->format_id);
+//		osd((integer) $arguments['format']);//die('register piece');
+		if ($piece->format_id !== (integer) $arguments['format']) {
+			$this->_reassign($piece, $arguments['format']);
+		}
+//		die('never did reassign');
+		$this->disposition->pieces[] = $piece;
+		$this->disposition->dropFormat($arguments['format']);
+		return TRUE;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * [
+ 	 *	'source_for_pieces_1' => 'App\Model\Entity\Format\2',
+ 	 *	'source_for_pieces_2' => 'App\Model\Entity\Format\7',
+ 	 *	'to_move' => '6',
+ 	 *	'destinations_for_pieces' => 'App\Model\Entity\Format\2'
+	 * ]
+	 *
+	 * @param type $piece
+	 * @param type $format_id
+	 */
+	private function _reassign($piece, $format_id) {
+		$source = is_null($piece->format_id) ? "Edition\\$piece->edition_id" : "Format\\$piece->format_id";
+		$post_data = [
+			'destinations_for_pieces' => "App\Model\Entity\Format\\$format_id",
+			'source_for_pieces_1' => "App\Model\Entity\\$source",
+		];
+		if (!$this->request->is('post')) {
+			$post_data = $post_data + [
+				'to_move' => $piece->number,
+			];
+		}
+		$this->request->data = $this->request->data + $post_data;
+		
+		$data = $this->EditionStack->stackQuery();
+		extract($data); // providers, pieces
+		$assignment = new AssignmentForm($providers);
+		
+		if ($assignment->execute($this->request->data)) {
+			if($this->EditionStack->reassignPieces($assignment, $providers)) {
+				return TRUE;
+			} else {
+				$this->Flash->error(__('There was a problem reassigning the pieces and '
+						. 'since the requested piece(s) are not yet part of this format, '
+						. 'they must be reassigned before being placed in the disposition. '
+						. 'Please try again'));
+			}
+
+		} else {
+			// have use correct input errors
+			$errors= $assignment->errors();
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Get a piece and its ancestors
+	 * 
+	 * @param integer $piece_id
+	 * @return ResultObject
+	 */
 	public function pieceStack($piece_id) {
 		$Pieces = TableRegistry::get('Pieces');
 		return $Pieces->get($piece_id, [
@@ -193,6 +274,12 @@ class DispositionManagerComponent extends Component {
 		]);
 	}
 
+	/**
+	 * Get a format and its ancestors
+	 * 
+	 * @param integer $format_id
+	 * @return ResultObject
+	 */
 	public function formatStack($format_id) {
 		$Formats = TableRegistry::get('Formats');
 		$format = $Formats->get($format_id, [
