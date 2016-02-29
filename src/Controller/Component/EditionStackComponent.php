@@ -186,6 +186,18 @@ class EditionStackComponent extends Component {
 		$this->pieces_to_save = $this->pieces_to_save + $trigger_pieces;
 	}
 	
+	/**
+	 * Move a quantity of OpenEdition pieces from source(s) to a destination
+	 * 
+	 * During reassignment multiple sources might be indicated. They will have 
+	 * avaialble quantity drawn unitl the move request is satisfied
+	 * 
+	 * @param FormObject $assignment
+	 * @param array $patch
+	 * @param integer $edition_id
+	 * @return array
+	 * @throws \Cake\Network\Exception\BadRequestException
+	 */
 	protected function _prepareOpenPieces($assignment, $patch, $edition_id) {
 		
 		$this->pieces_to_save = $pieces = $assignment->source_pieces;
