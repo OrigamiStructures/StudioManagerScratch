@@ -99,11 +99,11 @@ class DispositionManagerComponent extends Component {
 	 */
 	protected function _register($arguments) {
 		if (array_key_exists('artwork', $arguments)) {
-			return $this->_registerArtwork($arguments);
+			$this->_registerArtwork($arguments);
 		} elseif (array_key_exists('member', $arguments)) {
-			return $this->_registerMember($arguments);
+			$this->_registerMember($arguments);
 		} elseif (array_key_exists('address', $arguments)) {
-			return $this->_registerAddress($arguments);
+			$this->_registerAddress($arguments);
 		}
 
 	}
@@ -133,7 +133,6 @@ class DispositionManagerComponent extends Component {
 	 * @param type $arguments
 	 */
 	protected function _registerArtwork($arguments) {
-		$result = true;
 //		die('register artwork');
 		if (isset($arguments['piece'])) {
 //			die('piece');
@@ -145,7 +144,7 @@ class DispositionManagerComponent extends Component {
 				
 				// nothing matches the id
 				// this piece is not yet in the dispo 
-				$result = $this->_registerPiece($piece, $arguments);
+				$this->_registerPiece($piece, $arguments);
 				osd('add piece');
 			} else {
 //				die('some match');
@@ -161,18 +160,17 @@ class DispositionManagerComponent extends Component {
 						
 						// the match was a format that contains the piece with the same id. 
 						// substitute the piece
-						$result = $this->_registerPiece($piece, $arguments);
+						$this->_registerPiece($piece, $arguments);
 						osd('sub piece for format');
 					}
 					// it was an unrealed format that happened to have the same id
 					// this piece really is not in the dispo
-					$result = $this->_registerPiece($piece, $arguments);
+					$this->_registerPiece($piece, $arguments);
 					osd('add piece not format');
 				}
 				// the match was actually a piece. piece is already in dispo
 			}
 		} else { 
-			die('format');
 			// no piece was provided so presence of 'format' arg is assumed now
 			$node = count($this->disposition->pieces) === 0 ? FALSE : $this->disposition->returnPiece($arguments['format']);
 			if (!$node || $node->fullyIdentified()) {
@@ -186,13 +184,12 @@ class DispositionManagerComponent extends Component {
 				 */
 				$format_stack = $this->formatStack($arguments['format']);
 //				osd($format_stack);
-				$result = $this->disposition->pieces[] = $format_stack;
+				$this->disposition->pieces[] = $format_stack;
 //				osd('add format');
 //				$this->disposition->pieces[] = $this->formatStack($arguments['format']);
 			}
 		}
 //		die('trying to return??');
-		return $result;
 //		osd($this->disposition);
 	}
 	
@@ -206,31 +203,39 @@ class DispositionManagerComponent extends Component {
 //		osd($piece->format_id);
 //		osd((integer) $arguments['format']);//die('register piece');
 		if ($piece->format_id !== (integer) $arguments['format']) {
-			$this->_reassign($piece, $arguments['format']);
+			$result = $this->_reassign($piece, $arguments['format']);
+			if ($result === TRUE) {
+				// update piece for accurate description
+				$piece = $this->pieceStack($piece->id);
+			} else {
+				throw new \BadMethodCallException(print_r($result, TRUE));
+			}
 		}
-//		die('never did reassign');
 		$this->disposition->pieces[] = $piece;
 		$this->disposition->dropFormat($arguments['format']);
 		return TRUE;
 	}
 	
 	/**
+	 * Do in-line piece reassignment during disposition
 	 * 
+	 * Formats show all appropriate pieces for the disposition, not just 
+	 * those currently in the Format. So dispo may also establish the assignment. 
+	 * The Edition::assign() process is leveraged for this. First build an array 
+	 * that approximates the post data, establish the other environmental aspects, 
+	 * then call for form validation and save. Errors are handled differently 
+	 * from Edition::assign() because we're in so deep in a different process.
 	 * 
-	 * [
- 	 *	'source_for_pieces_1' => 'App\Model\Entity\Format\2',
- 	 *	'source_for_pieces_2' => 'App\Model\Entity\Format\7',
- 	 *	'to_move' => '6',
- 	 *	'destinations_for_pieces' => 'App\Model\Entity\Format\2'
-	 * ]
-	 *
 	 * @param type $piece
 	 * @param type $format_id
 	 */
 	private function _reassign($piece, $format_id) {
+		// get the expected data environment
 		$data = $this->EditionStack->stackQuery();
 		extract($data); // providers, pieces
+		$assignment = new AssignmentForm($providers);
 		
+		// hand create the POST data
 		$this->request->data['destinations_for_pieces'] = "App\Model\Entity\Format\\$format_id";
 		foreach($providers as $key => $provider) {
 			$count = $key === 'edition' ? 0 : $key + 1;
@@ -241,24 +246,22 @@ class DispositionManagerComponent extends Component {
 		}
 		$this->request->data['to_move'] = (string)  $this->request->data['to_move'];
 	
-		$assignment = new AssignmentForm($providers);
-		
+		// make the call to do the reassignment
 		if ($assignment->execute($this->request->data)) {
 			if($this->EditionStack->reassignPieces($assignment, $providers)) {
 				return TRUE;
 			} else {
-				osd('save error. set flash message');
-				$this->Flash->error(__('There was a problem reassigning the pieces and '
+				$errors = ['save_error' => __('There was a problem reassigning the pieces and '
 						. 'since the requested piece(s) are not yet part of this format, '
 						. 'they must be reassigned before being placed in the disposition. '
-						. 'Please try again'));
+						. 'Please try again')];
 			}
 
 		} else {
 			// have use correct input errors
 			$errors= $assignment->errors();
 		}
-		return FALSE;
+		return $errors;
 	}
 	
 	/**
