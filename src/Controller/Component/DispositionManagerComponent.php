@@ -238,8 +238,12 @@ class DispositionManagerComponent extends Component {
 		// hand create the POST data
 		$this->request->data['destinations_for_pieces'] = "App\Model\Entity\Format\\$format_id";
 		foreach($providers as $key => $provider) {
-			$count = $key === 'edition' ? 0 : $key + 1;
-			$this->request->data["source_for_pieces_$count"] = get_class($provider) . '\\' . $provider->id;
+			// allowing the destination to be a source doesn't work right. 
+			// and editions are never dispo destinations
+			if ($provider->id != $format_id && $key !== 'edition') {
+				$count = $key === 'edition' ? 0 : $key + 1;
+				$this->request->data["source_for_pieces_$count"] = get_class($provider) . '\\' . $provider->id;
+			}			
 		}
 		if (!$this->request->is('post')) {
 			$this->request->data['to_move'] = $piece->number;
