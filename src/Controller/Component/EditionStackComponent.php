@@ -13,6 +13,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 use App\Model\Entity\Piece;
 use Cake\I18n\Time;
+use Cake\Cache\Cache;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -258,6 +259,7 @@ class EditionStackComponent extends Component {
 	 */
 	public function reassignmentTransaction() {
 		$PiecesTable = TableRegistry::get('Pieces');
+		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
 		$result = $PiecesTable->connection()->transactional(function () use ($PiecesTable) {
 			$result = TRUE;
 			if (is_array($this->pieces_to_save)) {
