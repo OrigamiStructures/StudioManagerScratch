@@ -616,7 +616,7 @@ div.formats {
           display: inline-block; }
         div.formats section.format table td.tools div.input.text input, div.formats section.format table div.submit input {
           margin-left: .5rem; }
-        div.formats section.format table td.tools div.input.text input[id*='quantity'], div.formats section.format table div.submit input[id*='quantity'] {
+        div.formats section.format table td.tools div.input.text input#to-move, div.formats section.format table div.submit input#to-move {
           width: 3rem;
           height: auto;
           padding: 0.0625rem 0 0.0625rem 0.5rem;
