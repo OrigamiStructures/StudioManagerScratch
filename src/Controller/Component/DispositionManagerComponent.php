@@ -228,26 +228,26 @@ class DispositionManagerComponent extends Component {
 	 * @param type $format_id
 	 */
 	private function _reassign($piece, $format_id) {
-		$source = is_null($piece->format_id) ? "Edition\\$piece->edition_id" : "Format\\$piece->format_id";
-		$post_data = [
-			'destinations_for_pieces' => "App\Model\Entity\Format\\$format_id",
-			'source_for_pieces_1' => "App\Model\Entity\\$source",
-		];
-		if (!$this->request->is('post')) {
-			$post_data = $post_data + [
-				'to_move' => $piece->number,
-			];
-		}
-		$this->request->data = $this->request->data + $post_data;
-		
 		$data = $this->EditionStack->stackQuery();
 		extract($data); // providers, pieces
+		
+		$this->request->data['destinations_for_pieces'] = "App\Model\Entity\Format\\$format_id";
+		foreach($providers as $key => $provider) {
+			$count = $key === 'edition' ? 0 : $key + 1;
+			$this->request->data["source_for_pieces_$count"] = get_class($provider) . '\\' . $provider->id;
+		}
+		if (!$this->request->is('post')) {
+			$this->request->data['to_move'] = $piece->number;
+		}
+		$this->request->data['to_move'] = (string)  $this->request->data['to_move'];
+	
 		$assignment = new AssignmentForm($providers);
 		
 		if ($assignment->execute($this->request->data)) {
 			if($this->EditionStack->reassignPieces($assignment, $providers)) {
 				return TRUE;
 			} else {
+				osd('save error. set flash message');
 				$this->Flash->error(__('There was a problem reassigning the pieces and '
 						. 'since the requested piece(s) are not yet part of this format, '
 						. 'they must be reassigned before being placed in the disposition. '
