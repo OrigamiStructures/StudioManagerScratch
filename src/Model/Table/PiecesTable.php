@@ -410,7 +410,7 @@ class PiecesTable extends AppTable
 			$new_piece->isNew(True);
 			$new_piece->quantity = $quantity;
 			$source_piece->quantity = $source_piece->quantity - $quantity;
-			$result = $this->saveAll([$source_piece, $new_piece]);
+			$result = $this->persistAll([$source_piece, $new_piece]);
 			if (!$result) {
 				$source_piece = $new_piece = FALSE;
 			}
@@ -427,11 +427,70 @@ class PiecesTable extends AppTable
 		return $this->get($piece_id, ['contain' => ['Formats.Editions.Artworks']]);
 	}
 	
-	public function saveAll($pieces) {
-		return $this->connection()->transactional(function() use ($pieces){
+	/**
+	 * Merge OpenEdition pieces back to source pieces on dispo destruction
+	 * 
+	 * splitPiece() divides an Open Edition piece for attachment of some quantity 
+	 * to a disposition. This is the other side of the process. For when a piece 
+	 * is removed from the disposition or the dispo os discarded.
+	 * 
+	 * The pieces have been given a source_piece property that tells who spawned 
+	 * them. If that property is missing then there is no merge to be done. 
+	 * 
+	 * @param array $pieces array of entities
+	 * @return boolean did the process succeed
+	 */
+	public function merge($pieces) {
+		$result = TRUE;
+		$delete_set = [];
+		$source_set = [];
+		foreach ($pieces as $piece) {
+			
+			// many cases just don't qualify for examination
+			if (!isset($piece->source_piece)) {
+				continue;
+			}
+			if (key_exists($piece->source_piece, $source_set)) {
+				// we already know about the source. just add our qty to it
+				$source_set[$piece->source_piece]->increase($piece->quantity);
+				
+			} elseif ($this->exists(['id' => $piece->source_piece])) {
+				$source = $this->get($piece->source_piece);
+				// the source was in the db. pull it out and add our qty to it
+				$source->increase($piece->quantity);
+				$source_set[$source->id] = $source;
+				
+			} else {
+				// this will restablish the source in case there are other 
+				// pieces that need to merge to it also.
+				$source = clone $piece;
+				$source->isNew(TRUE);
+				$source->id = $piece->source_piece;
+				$source_set[$piece->source_piece] = $source;
+			}
+			
+			// now mark our original for deletion
+			$delete_set[$piece->id] = $piece;
+		}
+		
+		return $this->persistAll($source_set, $delete_set);
+	}
+
+	/**
+	 * Create/Update pieces and or delete pieces
+	 * 
+	 * @param array $pieces The entities to be saved or created
+	 * @param array $deletions The entities to be deleted
+	 * @return boolean Did the transaction succeed?
+	 */
+	public function persistAll($pieces = [], $deletions = []) {
+		return $this->connection()->transactional(function() use ($pieces, $deletions){
 			$result = TRUE;
 			foreach($pieces as $piece) {
 				$result = $result && $this->save($piece);
+			}
+			foreach($deletions as $entity) {
+				$result = $result && $this->delete($entity);
 			}
 			return $result;
 		});
