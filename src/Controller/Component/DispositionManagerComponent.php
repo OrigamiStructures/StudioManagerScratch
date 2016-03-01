@@ -182,11 +182,12 @@ class DispositionManagerComponent extends Component {
 						// substitute the piece
 						$this->_registerPiece($piece, $arguments);
 						osd('sub piece for format');
+					} else {
+						// it was an unrealed format that happened to have the same id
+						// this piece really is not in the dispo
+						$this->_registerPiece($piece, $arguments);
+						osd('add piece not format');
 					}
-					// it was an unrealed format that happened to have the same id
-					// this piece really is not in the dispo
-					$this->_registerPiece($piece, $arguments);
-					osd('add piece not format');
 				}
 				// the match was actually a piece. piece is already in dispo
 			}
@@ -217,7 +218,11 @@ class DispositionManagerComponent extends Component {
 	 * Do the final storage of a piece int the dispo
 	 * 
 	 * Move it to the current format if necessary
+	 * Split off the required quantity if it is an Open Edition
 	 * 
+	 * @param Entity $piece
+	 * @param array $arguments
+	 * @throws \BadMethodCallException
 	 */
 	protected function _registerPiece($piece, $arguments) {
 //		osd($piece->format_id);
@@ -234,14 +239,16 @@ class DispositionManagerComponent extends Component {
 		// if this is an OPEN edition and the to_move is < piece->quantity 
 		// we need to segment off the move pieces and merge them into the dispo
 		// Inequality can only exist WHEN edition is open
-		if ($this->request->data['to_move'] < $piece->quantity) {
-			$PiecesTable = TableRegistry::get('Pieces');
+		if (isset($this->request->data['to_move']) && $this->request->data['to_move'] < $piece->quantity) {
 			
-			// To keep the id of the clicked-on piece, we're going to make that original 
-			// become our to_move piece and let the 'new' piece be the one left 
-			// behind, linked to the format and available for future dispos.
-			$quantity = $piece->quantity - $this->request->data['to_move'];
-			$piece = $PiecesTable->splitPiece($piece->id, $quantity, PIECE_SPLIT_RETURN_BOTH)[0];
+			$quantity = $this->request->data['to_move'];
+			// The source piece is stored with information about its source 
+			// piece so they can be merged back if the dispo is discarded 
+			// or the pieces are removed from the dispo
+// -------------------------------------------------------
+// AT THIS POINT $PIECE MAY DIVERGE FROM THE ID IN QUERY ARGS
+			$piece = $this->Pieces->splitPiece($piece->id, $quantity);
+			$piece->source_piece = $this->SystemState->queryArg('piece');
 			if ($piece) {
 				Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
 			}
