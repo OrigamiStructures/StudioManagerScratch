@@ -71,7 +71,28 @@ class DispositionManagerComponent extends Component {
 	 * 
 	 */
 	public function discard() {
-		Cache::delete($this->SystemState->artistId(), 'dispo');
+		$disposition = $this->get();
+		
+		// look for open edition pieces that need to merge back to their source
+		if ($this->Pieces->merge($disposition->pieces)) {
+			Cache::delete($this->SystemState->artistId(), 'dispo');
+		} else {
+			$this->controller->Flash->error('Open Edition pieces could not be restored to their orginal places. Please try again');
+		}
+	}
+	
+	public function remove() {
+		$disposition = $this->get();
+		$index = $disposition->indexOfPiece($this->SystemState->queryArg('piece'));
+		$piece = $disposition->pieces[$index];
+		if ($this->Pieces->merge([$piece])) {
+			unset($disposition->pieces[$index]);
+			$this->DispositionManager->write();
+		} else {
+			$this->controller->Flash->error('Open Edition pieces could not be restored to their orginal places. Please try again');
+		}
+		
+		
 	}
 	
 	/**
@@ -225,6 +246,7 @@ class DispositionManagerComponent extends Component {
 	 * @throws \BadMethodCallException
 	 */
 	protected function _registerPiece($piece, $arguments) {
+//		osd($piece);die;
 //		osd($piece->format_id);
 //		osd((integer) $arguments['format']);//die('register piece');
 		if ($piece->format_id !== (integer) $arguments['format']) {

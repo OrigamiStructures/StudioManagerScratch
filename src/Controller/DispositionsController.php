@@ -231,15 +231,15 @@ class DispositionsController extends AppController
 	 * @param type $element
 	 */
 	public function remove() {
-		$disposition = $this->DispositionManager->get();
-		$index = $disposition->indexOfPiece($this->SystemState->queryArg('piece'));
-		unset($disposition->pieces[$index]);
-		$this->DispositionManager->write();
-
+		$this->DispositionManager->remove();
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
-	
+	/**
+	 * 
+	 * @param array $data
+	 * @return array
+	 */
 	public function completeRule($data) {
 		$pattern = '%s/%s/%s';
 		$date = empty($data['end_date']) ? $data['start_date'] : $data['end_date'];
