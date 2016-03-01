@@ -403,7 +403,7 @@ class PiecesTable extends AppTable
 	 */
 	public function splitPiece($piece_id, $quantity, $return = PIECE_SPLIT_RETURN_NEW) {
 		$new_piece = FALSE;
-		$source_piece = $this->get($piece_id, ['contain' => ['Formats.Editions.Artworks']]);
+		$source_piece = $this->stack($piece_id);
 		if ($quantity < $source_piece->quantity) {
 			$new_piece = clone $source_piece;
 			unset($new_piece->id);
@@ -421,6 +421,10 @@ class PiecesTable extends AppTable
 			$piece = [$source_piece, $new_piece];
 		}
 		return $piece;
+	}
+	
+	public function stack($piece_id) {
+		return $this->get($piece_id, ['contain' => ['Formats.Editions.Artworks']]);
 	}
 	
 	public function saveAll($pieces) {
