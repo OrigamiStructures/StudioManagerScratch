@@ -218,9 +218,8 @@ class DispositionToolsHelper extends Helper {
 	
 	public function _pieceInDisposition($piece) {
 		$piece_exists = FALSE;
-		$disposition = $this->_View->viewVars['standing_disposition'];
 		$index = $this->disposition()->indexOfPiece($piece->id);
-		if ($index) {
+		if (!($index === FALSE)) {
 			$piece_exists = $this->disposition()->pieces[$index]->fullyIdentified();
 		}
 		return $piece_exists;
