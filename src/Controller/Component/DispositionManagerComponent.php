@@ -16,7 +16,26 @@ use App\Form\AssignmentForm;
 class DispositionManagerComponent extends Component {
 	
 	public $components = ['EditionStack'];
+	
+	/**
+	 * Transport errors out of reassignment back to the calling method
+	 *
+	 * @var array
+	 */
+	protected $errors;
 
+	/**
+	 * Pieces Table
+	 *
+	 * @var Table 
+	 */
+	public $Pieces;
+
+	/**
+	 * Storage for the cached, evolving disposition
+	 *
+	 * @var Entity
+	 */
 	public $disposition;
 	
 	protected $controller;
@@ -27,6 +46,7 @@ class DispositionManagerComponent extends Component {
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
+		$this->Pieces = TableRegistry::get('Pieces');
 	}
 
 	/**
@@ -136,7 +156,7 @@ class DispositionManagerComponent extends Component {
 //		die('register artwork');
 		if (isset($arguments['piece'])) {
 //			die('piece');
-			$piece = $this->pieceStack($arguments['piece']);
+			$piece = $this->Pieces->stack($arguments['piece']);
 			
 			// piece was provided to register
 			if ($this->disposition->indexOfPiece($arguments['piece']) === FALSE) {
@@ -145,7 +165,7 @@ class DispositionManagerComponent extends Component {
 				// nothing matches the id
 				// this piece is not yet in the dispo 
 				$this->_registerPiece($piece, $arguments);
-				osd('add piece');
+//				osd('add piece');
 			} else {
 //				die('some match');
 				
@@ -206,7 +226,7 @@ class DispositionManagerComponent extends Component {
 			$result = $this->_reassign($piece, $arguments['format']);
 			if ($result === TRUE) {
 				// update piece for accurate description
-				$piece = $this->pieceStack($piece->id);
+				$piece = $this->Pieces->stack($piece->id);
 			} else {
 				throw new \BadMethodCallException(print_r($result, TRUE));
 			}
@@ -235,7 +255,6 @@ class DispositionManagerComponent extends Component {
 			$this->disposition->pieces[] = $piece;
 			$this->disposition->dropFormat($arguments['format']);
 		}
-		return TRUE;
 	}
 	
 	/**
@@ -287,22 +306,10 @@ class DispositionManagerComponent extends Component {
 			// have use correct input errors
 			$errors= $assignment->errors();
 		}
-		return $errors;
+		$this->errors = $errors;
+		return FALSE;
 	}
 	
-	/**
-	 * Get a piece and its ancestors
-	 * 
-	 * @param integer $piece_id
-	 * @return ResultObject
-	 */
-	public function pieceStack($piece_id) {
-		$Pieces = TableRegistry::get('Pieces');
-		return $Pieces->get($piece_id, [
-			'contain' => 'Formats.Editions.Artworks',
-		]);
-	}
-
 	/**
 	 * Get a format and its ancestors
 	 * 
