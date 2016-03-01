@@ -22,7 +22,7 @@ class DispositionManagerComponent extends Component {
 	protected $controller;
 	
 	protected $SystemState;
-
+	
 	public function initialize(array $config) 
 	{
 		$this->controller = $this->_registry->getController();
@@ -211,8 +211,30 @@ class DispositionManagerComponent extends Component {
 				throw new \BadMethodCallException(print_r($result, TRUE));
 			}
 		}
-		$this->disposition->pieces[] = $piece;
-		$this->disposition->dropFormat($arguments['format']);
+		// if this is an OPEN edition and the to_move is < piece->quantity 
+		// we need to segment off the move pieces and merge them into the dispo
+		// Inequality can only exist WHEN edition is open
+		if ($this->request->data['to_move'] < $piece->quantity) {
+			$PiecesTable = TableRegistry::get('Pieces');
+			
+			// To keep the id of the clicked-on piece, we're going to make that original 
+			// become our to_move piece and let the 'new' piece be the one left 
+			// behind, linked to the format and available for future dispos.
+			$quantity = $piece->quantity - $this->request->data['to_move'];
+			$piece = $PiecesTable->splitPiece($piece->id, $quantity, PIECE_SPLIT_RETURN_BOTH)[0];
+			if ($piece) {
+				Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
+			}
+		}
+		if (!$piece) {
+			$this->Flash->error("The required number of pieces ($quantity) "
+					. "couldn't be isolated for the disposition. Probably just "
+					. "a transient network problem. Please try again." );
+		} else {
+//			osd($piece);die;
+			$this->disposition->pieces[] = $piece;
+			$this->disposition->dropFormat($arguments['format']);
+		}
 		return TRUE;
 	}
 	

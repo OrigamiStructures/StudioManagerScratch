@@ -387,4 +387,49 @@ class PiecesTable extends AppTable
 		}
 		return $result;
 	}
+	
+	/**
+	 * Split the IDd piece so the new piece has $quantity
+	 * 
+	 * Only has an effect on Open Edition pieces with $quantity > 1
+	 * Get one or both pieces back with the third argument
+	 * PIECE_SPLIT_RETURN_NEW
+	 * PIECE_SPLIT_RETURN_BOTH
+	 * 
+	 * @param integer $piece_id
+	 * @param integer $quantity
+	 * @param string $return
+	 * @return Entity
+	 */
+	public function splitPiece($piece_id, $quantity, $return = PIECE_SPLIT_RETURN_NEW) {
+		$new_piece = FALSE;
+		$source_piece = $this->get($piece_id, ['contain' => ['Formats.Editions.Artworks']]);
+		if ($quantity < $source_piece->quantity) {
+			$new_piece = clone $source_piece;
+			unset($new_piece->id);
+			$new_piece->isNew(True);
+			$new_piece->quantity = $quantity;
+			$source_piece->quantity = $source_piece->quantity - $quantity;
+			$result = $this->saveAll([$source_piece, $new_piece]);
+			if (!$result) {
+				$source_piece = $new_piece = FALSE;
+			}
+		}
+		if ($return === PIECE_SPLIT_RETURN_NEW) {
+			$piece = $new_piece;
+		} else {
+			$piece = [$source_piece, $new_piece];
+		}
+		return $piece;
+	}
+	
+	public function saveAll($pieces) {
+		return $this->connection()->transactional(function() use ($pieces){
+			$result = TRUE;
+			foreach($pieces as $piece) {
+				$result = $result && $this->save($piece);
+			}
+			return $result;
+		});
+	}
 }

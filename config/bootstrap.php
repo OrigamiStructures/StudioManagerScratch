@@ -287,17 +287,20 @@ define('DISPOSITION_TRANSFER_SALE'		, 'Sale');
 define('DISPOSITION_TRANSFER_DONATION'	, 'Donation');
 define('DISPOSITION_TRANSFER_GIFT'		, 'Gift');
 define('DISPOSITION_TRANSFER_RIGHTS'	, 'Published');
-
+//
 define('DISPOSITION_LOAN_SHOW'			, 'Show');
 define('DISPOSITION_LOAN_CONSIGNMENT'	, 'Consignment');
 define('DISPOSITION_LOAN_PRIVATE'		, 'Private Loan');
 define('DISPOSITION_LOAN_RENTAL'		, 'Rental');
 define('DISPOSITION_LOAN_RIGHTS'		, 'Licensed');
-
+//
 define('DISPOSITION_UNAVAILABLE_LOST'	, 'Lost');
 define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
-
+//
 define('DISPOSITION_STORE_STORAGE'		, 'Storage');
-
+//
 define('DISPOSITION_REVIEW_CONTACT'		, 'Contact');
+
+define('PIECE_SPLIT_RETURN_NEW', 'new');
+define('PIECE_SPLIT_RETURN_BOTH', 'both');
