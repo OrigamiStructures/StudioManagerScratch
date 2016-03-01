@@ -101,4 +101,8 @@ class Piece extends Entity
 		}
 		return $args;
 	}
+	
+	public function increase($quantity) {
+		$this->quantity = $this->quantity + $quantity;
+	}
 }
