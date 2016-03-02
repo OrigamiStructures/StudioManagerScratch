@@ -992,12 +992,13 @@ div.members {
           display: table; }
         div.members section.member::after {
           clear: both; }
-        div.members section.member h2 {
+        div.members section.member h1 {
           width: 100%;
           float: left;
           padding-left: 0.9375rem;
-          padding-right: 0.9375rem; }
-          div.members section.member h2:last-child:not(:first-child) {
+          padding-right: 0.9375rem;
+          margin-top: 0; }
+          div.members section.member h1:last-child:not(:first-child) {
             float: right; }
         div.members section.member div.member_left, div.members section.member div.member_right {
           max-width: 75rem;
@@ -1025,17 +1026,24 @@ div.members {
           div.members section.member div.member_left > div, div.members section.member div.member_right > div {
             width: 100%;
             float: left;
-            padding-left: 0.9375rem;
-            padding-right: 0.9375rem; }
+            padding-left: 0;
+            padding-right: 0; }
             div.members section.member div.member_left > div:last-child:not(:first-child), div.members section.member div.member_right > div:last-child:not(:first-child) {
               float: right; }
           div.members section.member div.member_left > section, div.members section.member div.member_right > section {
             width: 100%;
             float: left;
-            padding-left: 0.9375rem;
-            padding-right: 0.9375rem; }
+            padding-left: 0;
+            padding-right: 0; }
             div.members section.member div.member_left > section:last-child:not(:first-child), div.members section.member div.member_right > section:last-child:not(:first-child) {
               float: right; }
+        div.members section.member div.member.left {
+          width: 100%;
+          float: left;
+          padding-left: 0;
+          padding-right: 0; }
+          div.members section.member div.member.left:last-child:not(:first-child) {
+            float: right; }
         div.members section.member div.member_controls {
           max-width: 75rem;
           margin-left: auto;
@@ -1119,6 +1127,13 @@ div.members {
       padding-left: 0.9375rem;
       padding-right: 0.9375rem; }
       div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+        float: right; }
+    div.members div.member.left {
+      width: 33.33333%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.members div.member.left:last-child:not(:first-child) {
         float: right; }
     div.members section.member_entry .name {
       width: 33.33333%;
@@ -1244,7 +1259,7 @@ div.input-with-toollabel {
     div.input-with-toollabel div.input:last-child:not(:first-child) {
       float: right; }
 
-.inline_icon {
+.inline_icon, .inline_nav {
   margin-right: 0.5rem; }
 
 span.inline_icon.nav {

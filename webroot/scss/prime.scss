@@ -564,19 +564,29 @@ div.members{
 	@media only screen { /* small up */
 		section.member{
             @include grid-row();
-            h2{
+            h1{
                 @include grid-column(12);
+				margin-top: 0;
             }
+			h2 {
+				
+			}
+			h3 {
+				
+			}
             div.member_left, div.member_right{
                 @include grid-column-row();
                 @include grid-column(12);
                 > div {
-                    @include grid-column(12);
+                    @include grid-column(12, 0);
                 }
                 > section {
-                    @include grid-column(12);
+                    @include grid-column(12, 0);
                 }
             }
+			div.member.left{
+				@include grid-column(12, 0);
+			}
             div.member_controls{
                 @include grid-column-row();
                 @include grid-column(75%);
@@ -625,6 +635,9 @@ div.members{
                 @include grid-column(4);
             }
 		}
+			div.member.left{
+				@include grid-column(4, 0);
+			}
         section.member_entry{
             .name{
                 @include grid-column(4);
@@ -705,7 +718,7 @@ div.input-with-toollabel{
     }
 }
 
-.inline_icon {
+.inline_icon, .inline_nav {
     margin-right: 0.5rem;
 }
 
