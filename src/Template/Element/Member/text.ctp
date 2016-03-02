@@ -9,6 +9,6 @@ $q = [
 ?>
 <p>
     <?=$this->InlineTools->inlineReviewRefine($q); ?>
-    <?=h($member->name); ?>
+    <?=$this->MemberView->identifier($member); ?>
 </p>
 <!-- END Element/Member/text.ctp -->

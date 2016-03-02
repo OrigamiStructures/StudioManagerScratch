@@ -72,7 +72,7 @@ class InlineToolsHelper extends Helper {
         $refine_url = (is_null($refine_url)) ? $url : $refine_url;
         $review = $this->reviewLink($url);
         $refine = $this->refineLink($refine_url);
-        return $this->Html->tag('span', "$review $refine", ['class' => 'inline_nav']);
+        return $this->Html->tag('span', "$review $refine", ['class' => 'inline_icon nav']);
     }
     
     /**

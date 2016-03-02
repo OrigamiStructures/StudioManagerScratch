@@ -42,6 +42,7 @@ class AppView extends View
 			$this->SystemState = $this->viewVars['SystemState'];
 		}
         $this->loadHelper('InlineTools');
+        $this->loadHelper('MemberView');
 //		$this->loadHelper('DispositionTools');
     }
 	

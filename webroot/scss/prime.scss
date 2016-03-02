@@ -660,11 +660,15 @@ div.input-with-toollabel{
     }
 }
 
-span.inline_nav {
-    font-size: 80%;
+.inline_icon {
     margin-right: 0.5rem;
+}
+
+span.inline_icon.nav {
+    font-size: 80%;
     i.fi-pencil {
         font-size: 85%;
     }
 }
+
 
