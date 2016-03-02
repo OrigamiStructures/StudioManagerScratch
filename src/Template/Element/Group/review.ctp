@@ -15,5 +15,9 @@ if(!empty($member->groups)):
         echo $this->element('Member/text');
     }
 endif;
+//The member variable had to be reset to the group's proxy member to allow
+//us to reuse the element Member/text for the group display name
+
+$this->set('member', $member);
 ?>
 <!-- END Element/Group/review.ctp -->
