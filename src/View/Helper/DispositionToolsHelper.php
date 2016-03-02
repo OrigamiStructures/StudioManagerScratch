@@ -244,6 +244,10 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	protected function _connectMember($member) {
+        $disposition = $this->disposition();
+        if($disposition && $this->disposition()->member->id === $member->id){
+            return $this->_disconnectMember($member);
+        }
 		$label = $this->_toLabel($member->name);
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
@@ -251,10 +255,20 @@ class DispositionToolsHelper extends Helper {
             '?' => [
                 'member' => $member->id,
                 ]
-            ]//, 
-//            ['class' => 'button']
+            ]
 		);
 	}
+    
+    protected function _disconnectMember($member) {
+		$label = 'Remove from ' . $this->disposition()->label;
+		return $this->Html->link(
+			$label,
+			[
+				'controller' => 'dispositions',
+				'action' => 'remove',
+				'?' => ['member' => $member->id] + $this->SystemState->queryArg()
+		]);
+    }
 	
 	/**
 	 * Create a link to assign this address to the current disposition
@@ -285,7 +299,9 @@ class DispositionToolsHelper extends Helper {
 	 */
 	private function _toLabel($name) {
 		if (!isset($this->dispo_label)) {
-			$this->dispo_label = $this->_View->viewVars['standing_disposition']->label;
+            $this->dispo_label = isset($this->SystemState->standing_disposition) 
+                    ? $this->SystemState->standing_disposition->label
+                    : 'unknown';
 		}
 		switch ($this->dispo_label) {
 			case DISPOSITION_LOAN_CONSIGNMENT :
