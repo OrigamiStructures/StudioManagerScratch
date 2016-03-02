@@ -977,10 +977,9 @@ MEMBERS
 ==============================================================
 **/
 div.members {
-  /*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-  	}*/
-  /*	@media only screen and (min-width: 64.063em) {  large up 
-  	}*/ }
+  padding-top: 1rem; }
+  div.members p {
+    margin-bottom: 0px; }
   @media only screen {
     div.members {
       /* small up */ }
@@ -1036,7 +1035,36 @@ div.members {
             padding-left: 0.9375rem;
             padding-right: 0.9375rem; }
             div.members section.member div.member_left > section:last-child:not(:first-child), div.members section.member div.member_right > section:last-child:not(:first-child) {
-              float: right; } }
+              float: right; }
+      div.members section.member_entry {
+        padding-bottom: 0.4rem;
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto; }
+        div.members section.member_entry::before, div.members section.member_entry::after {
+          content: ' ';
+          display: table; }
+        div.members section.member_entry::after {
+          clear: both; }
+        div.members section.member_entry .name {
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.members section.member_entry .name:last-child:not(:first-child) {
+            float: right; }
+        div.members section.member_entry .controls {
+          width: 91.66667%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          margin-left: 8.33333%;
+          line-height: 1; }
+          div.members section.member_entry .controls:last-child:not(:first-child) {
+            float: right; }
+          div.members section.member_entry .controls a {
+            font-size: 80%;
+            margin-bottom: 0.2rem; } }
   @media only screen and (min-width: 40.063em) {
     div.members section.member div.member_left, div.members section.member div.member_right {
       width: 50%;
@@ -1044,6 +1072,36 @@ div.members {
       padding-left: 0.9375rem;
       padding-right: 0.9375rem; }
       div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .name {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .name:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .controls {
+      margin-left: 0%;
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .controls:last-child:not(:first-child) {
+        float: right; } }
+  @media only screen and (min-width: 64.063em) {
+    div.members section.member_entry .name {
+      width: 33.33333%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .name:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .controls {
+      width: 66.66667%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .controls:last-child:not(:first-child) {
         float: right; } }
 
 /**
