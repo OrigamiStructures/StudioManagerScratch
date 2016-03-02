@@ -1,10 +1,11 @@
 <?php 
 $pieces = $standing_disposition->pieces;
 foreach ($pieces as $piece) :
+    $artwork_id = $piece->fullyIdentified() ? $piece->format->edition->artwork_id : $piece->edition->artwork_id;
     $review_url = [
         'controller' => 'artworks', 
         '?' => [
-            'artwork' => $piece->format->edition->artwork_id,
+            'artwork' => $artwork_id,
             'edition' => $piece->edition_id,
             'format' => $piece->format_id,
         ]];
@@ -12,7 +13,7 @@ foreach ($pieces as $piece) :
     $remove_url = [
         'controller' => 'dispositions', 
         '?' => [
-            'artwork' => $piece->format->edition->artwork_id,
+            'artwork' => $artwork_id,
             'edition' => $piece->edition_id,
             'format' => $piece->format_id,
             'piece' => $piece->id,

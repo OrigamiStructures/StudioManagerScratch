@@ -3,7 +3,7 @@
     $mode = ($editing) ? 'refine' : 'review';
 ?>
 <section class="member">
-    <?= $this->element('Member/text') ?>
+    <?= $this->element('Member/heading') ?>
     <div class="member_left">
         <section class="identity">
             <?= $this->element("Member/identity_$mode") ?>

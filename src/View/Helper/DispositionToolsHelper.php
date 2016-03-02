@@ -248,10 +248,16 @@ class DispositionToolsHelper extends Helper {
         if($disposition && $this->disposition()->member->id === $member->id){
             return $this->_disconnectMember($member);
         }
-		$label = $this->_toLabel($member->name);
+        if($disposition){
+            $action = 'refine';
+            $label = $this->_toLabel($member->name);
+        } else {
+            $action = 'create';
+            $label = "Create a disposition for $member->name";
+        }
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
-            'action' => 'refine', 
+            'action' => $action, 
             '?' => [
                 'member' => $member->id,
                 ]
