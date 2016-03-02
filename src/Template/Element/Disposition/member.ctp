@@ -15,5 +15,5 @@
 
 <p>
     <?= $this->ArtworkReview->inlineReviewDelete($review_url, $remove_url); ?>
-    <?= !empty($standing_disposition->member) ? $this->DispositionTools->identity($standing_disposition->member) : '' ?>
+    <?= $this->DispositionTools->identity($standing_disposition->member); ?>
 </p>

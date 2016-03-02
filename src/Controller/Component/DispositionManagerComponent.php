@@ -81,7 +81,23 @@ class DispositionManagerComponent extends Component {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param type $arguments
+	 * @return 
+	 */
 	public function remove() {
+		if ($this->SystemState->isKnown('artwork')) {
+			$this->_removeArtwork();
+		} elseif ($this->SystemState->isKnown('member')) {
+			$this->_removeMember();
+		} elseif ($this->SystemState->isKnown('address')) {
+			$this->_removeAddress($this->SystemState->queryArg('address'));
+		}
+
+	}
+	
+	protected function _removeArtwork() {
 		$disposition = $this->get();
 		$index = $disposition->indexOfPiece($this->SystemState->queryArg('piece'));
 		$piece = $disposition->pieces[$index];
@@ -95,8 +111,21 @@ class DispositionManagerComponent extends Component {
 		
 		
 	}
-	
-	/**
+    
+    protected function _removeMember() {
+        unset($this->get()->member);
+        $this->write();
+    }
+    
+    protected function _removeAddress($address_id) {
+        $disposition = $this->get();
+        $index = $disposition->indexOfAddress($address_id);
+        unset($disposition->addresses[$index]);
+        $this->write();
+    }
+
+
+    /**
 	 * Callable to make a brand new Disposition Entity
 	 * 
 	 * @return Disposition

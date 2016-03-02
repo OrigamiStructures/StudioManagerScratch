@@ -10,7 +10,7 @@
 
 			<section class="address">
 				<h2>Recipient</h2>
-				<?= $this->element('Disposition/member'); ?>
+				<?= !empty($standing_disposition->member) ? $this->element('Disposition/member') : ''; ?>
 				<?= $this->DispositionTools->addressLabel($standing_disposition); ?>
 				<?= $this->element('Disposition/address_list'); ?>
 			</section>
