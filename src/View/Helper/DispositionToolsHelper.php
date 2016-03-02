@@ -84,7 +84,19 @@ class DispositionToolsHelper extends Helper {
 	
 	protected function _identifyAddress($address) {
 		if (count($this->disposition()->addresses) == 1) {
-			$label = $this->Html->tag('p', $address->address_line);
+            $review_url = [
+                'controller' => 'members', 
+                '?' => [
+                    'member' => $address->member_id,
+                ]];
+
+            $remove_url = [
+                'controller' => 'dispositions', 
+                '?' => [
+                    'address' => $address->id,
+                ]];
+            $controls = $this->InlineTools->inlineReviewDelete($review_url, $remove_url);
+			$label = $this->Html->tag('p', $controls . $address->address_line);
 		} else {
 			$label = $this->Html->link($address->address_line, [
 				'controller' => 'dispositions', 
