@@ -87,7 +87,8 @@ class DispositionManagerComponent extends Component {
 		$piece = $disposition->pieces[$index];
 		if ($this->Pieces->merge([$piece])) {
 			unset($disposition->pieces[$index]);
-			$this->DispositionManager->write();
+			$this->write();
+			Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
 		} else {
 			$this->controller->Flash->error('Open Edition pieces could not be restored to their orginal places. Please try again');
 		}
@@ -246,18 +247,6 @@ class DispositionManagerComponent extends Component {
 	 * @throws \BadMethodCallException
 	 */
 	protected function _registerPiece($piece, $arguments) {
-//		osd($piece);die;
-//		osd($piece->format_id);
-//		osd((integer) $arguments['format']);//die('register piece');
-		if ($piece->format_id !== (integer) $arguments['format']) {
-			$result = $this->_reassign($piece, $arguments['format']);
-			if ($result === TRUE) {
-				// update piece for accurate description
-				$piece = $this->Pieces->stack($piece->id);
-			} else {
-				throw new \BadMethodCallException(print_r($result, TRUE));
-			}
-		}
 		// if this is an OPEN edition and the to_move is < piece->quantity 
 		// we need to segment off the move pieces and merge them into the dispo
 		// Inequality can only exist WHEN edition is open
@@ -271,19 +260,33 @@ class DispositionManagerComponent extends Component {
 // AT THIS POINT $PIECE MAY DIVERGE FROM THE ID IN QUERY ARGS
 			$piece = $this->Pieces->splitPiece($piece->id, $quantity);
 			$piece->source_piece = $this->SystemState->queryArg('piece');
-			if ($piece) {
-				Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
-			}
 		}
+		
 		if (!$piece) {
 			$this->Flash->error("The required number of pieces ($quantity) "
 					. "couldn't be isolated for the disposition. Probably just "
 					. "a transient network problem. Please try again." );
-		} else {
-//			osd($piece);die;
-			$this->disposition->pieces[] = $piece;
-			$this->disposition->dropFormat($arguments['format']);
+			return;
+		}		
+		
+//		osd($piece);die;
+//		osd($piece->format_id);
+//		osd((integer) $arguments['format']);//die('register piece');
+		if ($piece->format_id !== (integer) $arguments['format']) {
+			$result = $this->_reassign($piece, $arguments['format']);
+			if ($result === TRUE) {
+				// update piece for accurate description
+				$piece = $this->Pieces->stack($piece->id);
+			} else {
+				throw new \BadMethodCallException(print_r($result, TRUE));
+			}
 		}
+		
+//		osd($piece);die;
+		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
+		$this->disposition->pieces[] = $piece;
+		$this->disposition->dropFormat($arguments['format']);
+		
 	}
 	
 	/**
