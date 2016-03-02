@@ -1036,6 +1036,30 @@ div.members {
             padding-right: 0.9375rem; }
             div.members section.member div.member_left > section:last-child:not(:first-child), div.members section.member div.member_right > section:last-child:not(:first-child) {
               float: right; }
+        div.members section.member div.member_controls {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          margin-top: 1rem;
+          background-color: #eee; }
+          div.members section.member div.member_controls::before, div.members section.member div.member_controls::after {
+            content: ' ';
+            display: table; }
+          div.members section.member div.member_controls::after {
+            clear: both; }
+          div.members section.member div.member_controls:last-child:not(:first-child) {
+            float: right; }
+          div.members section.member div.member_controls, div.members section.member div.member_controls:last-child {
+            float: none; }
+          div.members section.member div.member_controls:last-child:not(:first-child) {
+            float: right; }
       div.members section.member_entry {
         padding-bottom: 0.4rem;
         max-width: 75rem;
@@ -1089,6 +1113,13 @@ div.members {
       div.members section.member_entry .controls:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 64.063em) {
+    div.members section.member div.member_left, div.members section.member div.member_right {
+      width: 33.33333%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+        float: right; }
     div.members section.member_entry .name {
       width: 33.33333%;
       float: left;

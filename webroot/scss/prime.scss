@@ -577,6 +577,12 @@ div.members{
                     @include grid-column(12);
                 }
             }
+            div.member_controls{
+                @include grid-column-row();
+                @include grid-column(75%);
+                margin-top: 1rem;
+                background-color: #eee;
+            }
 		}
         section.member_entry{
             padding-bottom: 0.4rem;
@@ -614,6 +620,11 @@ div.members{
 	}
 
 	@media only screen and (min-width: 64.063em) {
+		section.member{
+            div.member_left, div.member_right{
+                @include grid-column(4);
+            }
+		}
         section.member_entry{
             .name{
                 @include grid-column(4);

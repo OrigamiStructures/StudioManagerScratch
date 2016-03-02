@@ -20,7 +20,7 @@
             <?= $this->element("Group/$mode") ?>
         </div>
     </div>
-    <div class="controls">
+    <div class="member_controls">
         <?= $this->element("Member/{$mode}_controls") ?>
     </div>
 </section>
