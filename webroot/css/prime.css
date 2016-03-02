@@ -1155,4 +1155,10 @@ div.input-with-toollabel {
     div.input-with-toollabel div.input:last-child:not(:first-child) {
       float: right; }
 
+span.inline_nav {
+  font-size: 80%;
+  margin-right: 0.5rem; }
+  span.inline_nav i.fi-pencil {
+    font-size: 85%; }
+
 /*# sourceMappingURL=prime.css.map */

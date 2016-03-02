@@ -2,15 +2,12 @@
 <?php
 $q = [
 	'controller' => 'formats', 
-//	'action' => 'review', 
 	'?' => [
 		'artwork' => $artwork->id,
 		'edition' => $edition->id,
 		'format' => $format->id,
 	]];
-$nav = $this->Html->link('v', $q + ['action' => 'review']);
-$ed = $this->Html->link('f', $q + ['action' => 'refine']);
-$l = "<span class='nav'>[$nav|$ed] </span>";
+$l = $this->ArtworkReview->inlineReviewRefine($q);
 ?>
 <?php
 /**

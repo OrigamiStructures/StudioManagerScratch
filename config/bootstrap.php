@@ -304,3 +304,7 @@ define('DISPOSITION_REVIEW_CONTACT'		, 'Contact');
 
 define('PIECE_SPLIT_RETURN_NEW', 'new');
 define('PIECE_SPLIT_RETURN_BOTH', 'both');
+
+define('ICON_REVIEW', 'fi-eye');
+define('ICON_REFINE', 'fi-pencil');
+define('ICON_DELETE', 'fi-trash');

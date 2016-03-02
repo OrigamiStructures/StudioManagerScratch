@@ -659,3 +659,12 @@ div.input-with-toollabel{
         @include grid-column(10);
     }
 }
+
+span.inline_nav {
+    font-size: 80%;
+    margin-right: 0.5rem;
+    i.fi-pencil {
+        font-size: 85%;
+    }
+}
+

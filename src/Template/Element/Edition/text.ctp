@@ -1,14 +1,11 @@
 <?php
 $q = [
 	'controller' => 'editions', 
-//	'action' => 'review', 
 	'?' => [
 		'artwork' => $artwork->id,
 		'edition' => $edition->id,
 	]];
-$nav = $this->Html->link('v', $q + ['action' => 'review']);
-$ed = $this->Html->link('f', $q + ['action' => 'refine']);
-$l = "<span class='nav'>[$nav|$ed] </span>";
+$l = $this->ArtworkReview->inlineReviewRefine($q);
 ?>
 <!-- Element/Edition/text.ctp -->
 <?php
