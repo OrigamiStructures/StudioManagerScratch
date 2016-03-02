@@ -43,8 +43,8 @@ class ArtworkReviewHelper extends Helper {
      * @param array $url
      * @return string
      */
-    public function deleteLink($url) {
-        return $this->Html->link($this->icon(ICON_DELETE, 'medium'), $url + ['action' => 'delete'], ['escape' => FALSE]);
+    public function removeLink($url) {
+        return $this->Html->link($this->icon(ICON_REMOVE, 'medium'), $url + ['action' => 'remove'], ['escape' => FALSE]);
     }
     
     /**
@@ -62,7 +62,7 @@ class ArtworkReviewHelper extends Helper {
     }
     
     /**
-     * Returns the entire inline navigation span for an artwork element
+     * Returns an inline review/refine control set
      * 
      * @param array $url
      * @param array $refine_url, an optional second array for a different url for refines
@@ -73,6 +73,20 @@ class ArtworkReviewHelper extends Helper {
         $review = $this->reviewLink($url);
         $refine = $this->refineLink($refine_url);
         return $this->Html->tag('span', "$review $refine", ['class' => 'inline_nav']);
+    }
+    
+    /**
+     * Returns an inline review/delete control set
+     * 
+     * @param array $url
+     * @param array $refine_url, an optional second array for a different url for refines
+     * @return string
+     */
+    public function inlineReviewDelete($url, $remove_url = NULL) {
+        $remove_url = (is_null($remove_url)) ? $url : $remove_url;
+        $review = $this->reviewLink($url);
+        $remove = $this->removeLink($remove_url);
+        return $this->Html->tag('span', "$review $remove", ['class' => 'inline_nav']);
     }
     
 }

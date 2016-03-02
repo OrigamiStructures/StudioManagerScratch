@@ -307,4 +307,4 @@ define('PIECE_SPLIT_RETURN_BOTH', 'both');
 
 define('ICON_REVIEW', 'fi-eye');
 define('ICON_REFINE', 'fi-pencil');
-define('ICON_DELETE', 'fi-trash');
+define('ICON_REMOVE', 'fi-trash');
