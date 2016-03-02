@@ -23,6 +23,8 @@ use App\Lib\SystemState;
 class MenusTable extends AppTable{
 	
     public $menu = ['Artwork' => []];
+    
+    protected $clearStudio = ['ClearStudio' => '/artworks/review'];
 	
 	protected $artwork = ['Artwork' => [
             'Sample' => '/artworks/sample',
@@ -77,7 +79,7 @@ class MenusTable extends AppTable{
 	 * Establish the main menu keys and thier order
 	 */
 	protected function template() {
-		$this->menu = $this->artwork + 
+		$this->menu = $this->clearStudio + $this->artwork + 
 			$this->member + $this->disposition +
 			$this->account + $this->admin;
 	}
