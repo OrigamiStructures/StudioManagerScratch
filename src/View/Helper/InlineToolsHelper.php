@@ -13,7 +13,7 @@ use Cake\View\Helper\HtmlHelper;
  * CakePHP ArtworkReviewHelper
  * @author jasont
  */
-class ArtworkReviewHelper extends Helper {
+class InlineToolsHelper extends Helper {
     
     public $helpers = ['Html'];
     

@@ -14,7 +14,7 @@ class DispositionToolsHelper extends Helper {
 	
 	use ValidationErrors;
 	
-	public $helpers = ['Html', 'Form'];
+	public $helpers = ['Html', 'Form', 'InlineTools'];
 	
 	protected $dispo_label;
 	

@@ -4,7 +4,7 @@ $q = [
 	'?' => [
 		'artwork' => $artwork->id
 	]];
-$l = $this->ArtworkReview->inlineReviewRefine($q);
+$l = $this->InlineTools->inlineReviewRefine($q);
 ?>
 <!-- Element/Artwork/text.ctp -->
 		<?= $this->Form->input('id', ['type' => 'hidden']); ?>

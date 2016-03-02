@@ -20,7 +20,7 @@ foreach ($pieces as $piece) :
 ?>
 
 		<p>
-            <?= $this->ArtworkReview->inlineReviewDelete($review_url, $remove_url); ?>
+            <?= $this->InlineTools->inlineReviewDelete($review_url, $remove_url); ?>
             <?= $this->DispositionTools->identity($piece); ?>
 		</p>
 		
