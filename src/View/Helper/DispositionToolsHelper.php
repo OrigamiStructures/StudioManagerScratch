@@ -15,11 +15,8 @@ class DispositionToolsHelper extends Helper {
 	use ValidationErrors;
 	
 	public $helpers = ['Html', 'Form', 'InlineTools'];
-	
-	protected $dispo_label;
-	
+		
 	protected $_disposition;
-
 	
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
@@ -245,16 +242,20 @@ class DispositionToolsHelper extends Helper {
 	 */
 	protected function _connectMember($member) {
         $disposition = $this->disposition();
-        if($disposition && $this->disposition()->member->id === $member->id){
+        if($disposition && 
+				isset($disposition->member->id) && 
+				$disposition->member->id === $member->id){
             return $this->_disconnectMember($member);
         }
+		
+        $label = $this->_toLabel($member->name);
+		
         if($disposition){
             $action = 'refine';
-            $label = $this->_toLabel($member->name);
         } else {
             $action = 'create';
-            $label = "Create a disposition for $member->name";
         }
+		
 		return $this->Html->link($label, [
 			'controller' => 'dispositions',
             'action' => $action, 
@@ -288,13 +289,15 @@ class DispositionToolsHelper extends Helper {
         if($disposition && $disposed_address_index !== FALSE){
             return $this->_disconnectAddress($address);
         }
+		
+		$label = $this->_toLabel($address->address1);
+		
 		if ($disposition) {
 			$action = 'refine';
-			$label = $this->_toLabel($address->address1);
 		} else {
 			$action = 'create';
-            $label = empty($label) ? '' : "Create a disposition to $address->address1";
 		}
+		
 		if (empty($label)) {
 			$link = '';
 		} else {
@@ -330,26 +333,24 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	private function _toLabel($name) {
-		if (!isset($this->dispo_label)) {
-            $this->dispo_label = isset($this->SystemState->standing_disposition) 
-                    ? $this->SystemState->standing_disposition->label
-                    : 'unknown';
-		}
-		switch ($this->dispo_label) {
+		$disposition = $this->disposition();
+		$disposition_type = $disposition ? $disposition->label : 'unknown';
+
+		switch ($disposition_type) {
 			case DISPOSITION_LOAN_CONSIGNMENT :
 			case DISPOSITION_LOAN_PRIVATE :
 			case DISPOSITION_LOAN_RENTAL :
 			case DISPOSITION_TRANSFER_DONATION :
 			case DISPOSITION_TRANSFER_SALE :
 			case DISPOSITION_TRANSFER_GIFT :
-				$label = "$this->dispo_label to $name";
+				$label = "$disposition_type to $name";
 				break;
 			case DISPOSITION_LOAN_SHOW :
 			case DISPOSITION_STORE_STORAGE :
-				$label = "$this->dispo_label with $name";
+				$label = "$disposition_type with $name";
 				break;
 			default :
-				$label = "Dispose to $name";
+				$label = "Send work to $name";
 		}
 		return $label;
 		/**
@@ -375,10 +376,10 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	private function _fromLabel() {
-		if (!isset($this->dispo_label)) {
-			$this->dispo_label = $this->_View->viewVars['standing_disposition']->label;
-		}
-		switch ($this->dispo_label) {
+		$disposition = $this->disposition();
+		$disposition_type = $disposition ? $disposition->label : 'unknown';
+		
+		switch ($disposition_type) {
 			case DISPOSITION_LOAN_CONSIGNMENT :
 			case DISPOSITION_LOAN_PRIVATE :
 			case DISPOSITION_LOAN_RENTAL :
@@ -386,18 +387,18 @@ class DispositionToolsHelper extends Helper {
 			case DISPOSITION_TRANSFER_SALE :
 			case DISPOSITION_TRANSFER_GIFT :
 			case DISPOSITION_LOAN_SHOW :
-				$label = "Add to $this->dispo_label";
+				$label = "Add to $disposition_type";
 				break;
 			case DISPOSITION_STORE_STORAGE :
-				$label = "Send to $this->dispo_label";
+				$label = "Send to $disposition_type";
 				break;
 			case DISPOSITION_UNAVAILABLE_LOST :
 			case DISPOSITION_UNAVAILABLE_DAMAGED :
 			case DISPOSITION_UNAVAILABLE_STOLEN :
-				$label = "Add to $this->dispo_label";
+				$label = "Add to $disposition_type";
 				break;
 			default :
-				$label = "Dispose piece";
+				$label = "Transfer piece";
 		}
 		return $label;
 	}
