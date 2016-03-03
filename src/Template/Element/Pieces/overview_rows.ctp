@@ -1,4 +1,4 @@
-<!-- Element/Edition/overview_rows.ctp -->
+<!-- Element/Pieces/overview_rows.ctp -->
 <?php
 $owners = new \Cake\Collection\Collection($providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
@@ -24,4 +24,4 @@ foreach($pieces as $piece) :
 <?php
 endforeach;
 ?>
-<!-- END Element/Edition/overview_rows.ctp -->
+<!-- END Element/Pieces/overview_rows.ctp -->
