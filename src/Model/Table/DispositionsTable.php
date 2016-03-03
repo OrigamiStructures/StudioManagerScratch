@@ -191,7 +191,7 @@ class DispositionsTable extends AppTable
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['member_id'], 'Members'));
-        $rules->add($rules->existsIn(['location_id'], 'Locations'));
+        $rules->add($rules->existsIn(['address_id'], 'Addresses'));
         $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
         return $rules;
     }

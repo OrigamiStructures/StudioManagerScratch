@@ -256,6 +256,38 @@ class DispositionsController extends AppController
 	
 	public function save() {
 		$disposition = $this->DispositionManager->get();
+		unset($disposition->member->contacts);
+		unset($disposition->member->id);
+		unset($disposition->member->created);
+		unset($disposition->member->modified);
+		$disposition->member->isNew(TRUE);
+		$disposition->member->dirty('created', FALSE);
+		$disposition->member->dirty('modified', FALSE);
+		
+		$disposition->address = array_shift($disposition->addresses);
+		unset($disposition->address->id);
+		unset($disposition->address->created);
+		unset($disposition->address->modified);
+		unset($disposition->address->primary);
+		$disposition->address->isNew(TRUE);
+		$disposition->address->dirty('created', FALSE);
+		$disposition->address->dirty('modified', FALSE);
+		unset($disposition->addresses);
+		
+//		osd($disposition->toArray());
+		$d = $this->Dispositions->newEntity($disposition->toArray());//die;
+//		osd($d);//die;
+		if($this->Dispositions->save($d)){
+			$pieces = $d->pieces;
+			foreach ($pieces as $piece) {
+				Cache::delete("get_default_artworks[_{$piece->format->edition->artwork->id}_]", 'artwork');
+			}
+			Cache::delete($this->SystemState->artistId(), 'dispo');
+		//die;
+		} else {
+			$this->Flash->error('The disposition could not be saved. Please try again.');
+		}
+		//die;
 		
 	}
 	
