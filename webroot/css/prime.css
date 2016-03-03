@@ -884,6 +884,14 @@ DISPOSITION
   /* small up */
   div.dispositions_panel {
     /*margin-top: -1rem;*/ }
+    div.dispositions_panel p.prompt {
+      /*font-size: 80%;*/
+      color: firebrick;
+      font-size: 0.75rem;
+      margin: -0.25rem 0 0;
+      padding: 0.15rem 0.8rem;
+      display: inline-block;
+      vertical-align: middle; }
     div.dispositions_panel p {
       font-size: 85%;
       line-height: 1;

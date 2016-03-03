@@ -403,4 +403,72 @@ class DispositionToolsHelper extends Helper {
 		return $label;
 	}
 	
+	public function saveLink() {
+		$disposition = $this->disposition();
+		
+		// all true = minimum requirement for saving a disposition
+		$member_message = $this->_memberMessage($disposition);
+		$address_message = $this->_addressMessage($disposition);
+		$piece_message = $this->_pieceMessage($disposition);
+		$message = trim("$member_message$address_message$piece_message");
+			
+		if ($this->SystemState->controller() !== 'dispositions' && $message === '') {
+			return $this->Html->link('Save disposition', 
+			['controller' => 'dispositions', 'action' => 'save'], 
+			['class' => 'button']);
+		} else {
+			return $this->Html->tag('p', $message, ['class' => 'prompt']);
+		}
+	}
+	
+	/**
+	 * Make a prompt message for completing the 'message' part of a disposition
+	 * 
+	 * @param Entity $disposition
+	 * @return string
+	 */
+	protected function _memberMessage($disposition) {
+		return isset($disposition->member) ? '' : 'Member still needed. ';
+	}
+	
+	/**
+	 * Make a prompt message for completing the 'address' part of a disposition
+	 * 
+	 * @param Entity $disposition
+	 * @return string
+	 */
+	protected function _addressMessage($disposition) {
+		if (empty($disposition->addresses) 
+				|| count($disposition->addresses) > 1) {
+			$prompt = 'A single address is needed. ';
+		} elseif (count($disposition->addresses) === 1 
+				&& stristr(array_shift($disposition->addresses)->address_line, 'unknown')) {
+			$prompt = 'A single address is needed. ';
+		} else {
+			$prompt = '';
+		}
+		return $prompt;
+	}
+	
+	/**
+	 * Make a prompt message for completing the 'piece' part of a disposition
+	 * 
+	 * @param Entity $disposition
+	 * @return string
+	 */
+	protected function _pieceMessage($disposition) {
+		$prompt = '';
+		if (empty($disposition->pieces)) {
+			$prompt = 'At least one piece is needed';
+		}
+		if ($prompt === '') {
+			foreach ($disposition->pieces as $piece) {
+				if (!$piece->fullyIdentified()) {
+					$prompt = 'At least one piece isn\'t identified';
+				}
+			}
+		}
+		return $prompt;
+	}
+	
 }

@@ -254,4 +254,9 @@ class DispositionsController extends AppController
 		return $data;
 	}
 	
+	public function save() {
+		$disposition = $this->DispositionManager->get();
+		
+	}
+	
 }

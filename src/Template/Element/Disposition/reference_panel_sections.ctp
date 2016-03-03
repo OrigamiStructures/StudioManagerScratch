@@ -21,14 +21,8 @@
 			</section>
 
 			<section class="prompt">
-				<?php
-				if ($SystemState->controller() !== 'dispositions') {
-					echo $this->Html->link('Save disposition', 
-					['controller' => 'dispositions', 'action' => 'save'], 
-					['class' => 'button']);
-				}
-				?>
 				<?= $this->Html->link('Discard disposition', 
 					['controller' => 'dispositions', 'action' => 'discard'], 
 					['class' => 'button']); ?>
+				<?= $this->DispositionTools->saveLink(); ?>
 			</section>
