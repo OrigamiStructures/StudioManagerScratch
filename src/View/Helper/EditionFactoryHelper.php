@@ -193,7 +193,12 @@ class EditionFactoryHelper extends Helper {
 		$action = $disposition ? 'refine' : 'create';
 		
 		if ((((boolean) $pieces) && $format->hasSalable($edition->undisposed)) || $format->hasAssigned()) {
-			echo $this->Html->link("Add status information",
+			if ($this->SystemState->standing_disposition) {
+				$label = $this->DispositionTools->fromLabel();
+			} else {
+				$label = 'Transfer a piece';
+			}
+			echo $this->Html->link($label,
 				[/*'controller' => 'dispositions', 'action' => 'create'*/
 					'controller' => 'dispositions',
 					'action' => $action,'?' => [

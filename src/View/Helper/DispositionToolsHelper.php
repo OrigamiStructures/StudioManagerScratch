@@ -179,7 +179,7 @@ class DispositionToolsHelper extends Helper {
 	 * @return string The form
 	 */
 	private function _connectOpenPiece($piece) {
-		$label = $this->_fromLabel();
+		$label = $this->fromLabel();
 		return $this->_View->element('Disposition/connect_open_piece', ['label' => $label, 'piece' => $piece]);
 //		$input = $this->Form->input("piece.$piece->id.quantity", ['value' => 1, 'label' => $label, 'div' => FALSE]);
 //		return $input;
@@ -195,7 +195,7 @@ class DispositionToolsHelper extends Helper {
 	 * @return string The link
 	 */
 	private function _connectLimitedPiece($piece) {
-		$label = $this->_fromLabel();
+		$label = $this->fromLabel();
 		return $this->Html->link(
 			$label,
 			[
@@ -375,7 +375,7 @@ class DispositionToolsHelper extends Helper {
 	 * 
 	 * @return string
 	 */
-	private function _fromLabel() {
+	public function fromLabel() {
 		$disposition = $this->disposition();
 		$disposition_type = $disposition ? $disposition->label : 'unknown';
 		

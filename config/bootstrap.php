@@ -290,7 +290,7 @@ define('DISPOSITION_TRANSFER_RIGHTS'	, 'Published');
 //
 define('DISPOSITION_LOAN_SHOW'			, 'Show');
 define('DISPOSITION_LOAN_CONSIGNMENT'	, 'Consignment');
-define('DISPOSITION_LOAN_PRIVATE'		, 'Private Loan');
+define('DISPOSITION_LOAN_PRIVATE'		, 'Loan');
 define('DISPOSITION_LOAN_RENTAL'		, 'Rental');
 define('DISPOSITION_LOAN_RIGHTS'		, 'Licensed');
 //
