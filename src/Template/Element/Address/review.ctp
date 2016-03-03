@@ -1,6 +1,6 @@
 
 <!-- Element/Address/full.ctp -->
-<h4>Addresses</h4>
+<h2>Addresses</h2>
 
 <?php
 foreach ($member->addresses as $key => $address) :

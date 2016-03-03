@@ -7,7 +7,7 @@ if($editing){
 }
 
 if(!empty($member->groups)):
-    echo $this->Html->tag('h4', 'Groups');
+    echo $this->Html->tag('h2', 'Groups');
     foreach ($member->groups as $key => $group) {
 //        $this->set('group', $group);
 //        echo $this->element('Group/display');

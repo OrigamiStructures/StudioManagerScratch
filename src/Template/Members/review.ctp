@@ -1,4 +1,4 @@
-<!-- Template/Member/review.ctp -->
+<!-- Template/Members/review.ctp -->
 <?php
 /**
  * set values that amend tag classes for css refinement
@@ -39,7 +39,7 @@ if($SystemState->now() == MEMBER_CREATE){
 
 
 <div class="members">
-    <?php if ($editing){echo $this->Form->create($member, ['url' => $url]);}?>
+    <?php if ($editing){echo $this->Form->create($member, ['url' => $url]);} ?>
     <?= $this->element($element); ?>
     <?php if ($editing){ echo $this->Form->end();}?>
 </div>

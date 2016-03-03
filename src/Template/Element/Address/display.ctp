@@ -1,12 +1,12 @@
 <!-- Element/Address/display.ctp -->
 <?php
 $csv = !empty($address->city) ? 
-        h("$address->city, $address->state $address->zip") :
+        '<p>' . h("$address->city, $address->state $address->zip") . '</p>' :
         "";
 ?>
-<h5><?= h($address->label); ?></h5>
-<p><?= h($address->address1); ?></p>
-<p><?= h($address->address2); ?></p>
-<p><?= h($address->address3); ?></p>
-<p><?= $csv ?></p>
+<h3><?= h(ucwords($address->label)); ?></h3>
+<?= empty($address->address1) ? '' : '<p>' . h($address->address1) . '</p>'; ?>
+<?= empty($address->address2) ? '' : '<p>' . h($address->address2) . '</p>'; ?>
+<?= empty($address->address3) ? '' : '<p>' . h($address->address3) . '</p>'; ?>
+<?= $csv ?>
 <!-- END Element/Address/display.ctp -->
