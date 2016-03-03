@@ -37,13 +37,13 @@ class MenusTable extends AppTable{
 			'Format' => [],
         ]];
 	protected $member = ['Market' => [
+			'View Members' => '/members/review',
+			'View Categories' => '/groups/categories',
             'Create Institution' => '/members/create/Institution',
             'Create Person' => '/members/create/Person',
-			'View Members' => '/members/review',
-			'View Categories' => '/groups/categories'
 		]];
-	protected $disposition = ['Dispostion' => [
-			'Go to Dispo' => '/disposition/index',
+	protected $disposition = ['Work Status' => [
+			'Review' => '/disposition/index',
         ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',
