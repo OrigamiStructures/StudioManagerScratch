@@ -1267,7 +1267,11 @@ div.input-with-toollabel {
       float: right; }
 
 .inline_icon, .inline_nav {
-  margin-right: 0.5rem; }
+  margin-right: 0.5rem;
+  /*	i {
+  		background-color: #eee;
+  		
+  	}*/ }
 
 span.inline_icon.nav {
   font-size: 80%; }
