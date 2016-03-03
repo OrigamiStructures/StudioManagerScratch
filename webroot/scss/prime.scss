@@ -566,13 +566,16 @@ div.members{
             @include grid-row();
             h1{
                 @include grid-column(12);
-				margin-top: 0;
+				margin: 0;
             }
 			h2 {
-				
+				border-top: 2px solid #eee;
+				font-size: 1.5rem;
+				margin: 0.5rem 0 0;
 			}
 			h3 {
-				
+				font-size: 1rem;
+				margin: 0.5rem 0 0;
 			}
             div.member_left, div.member_right{
                 @include grid-column-row();

@@ -997,9 +997,16 @@ div.members {
           float: left;
           padding-left: 0.9375rem;
           padding-right: 0.9375rem;
-          margin-top: 0; }
+          margin: 0; }
           div.members section.member h1:last-child:not(:first-child) {
             float: right; }
+        div.members section.member h2 {
+          border-top: 2px solid #eee;
+          font-size: 1.5rem;
+          margin: 0.5rem 0 0; }
+        div.members section.member h3 {
+          font-size: 1rem;
+          margin: 0.5rem 0 0; }
         div.members section.member div.member_left, div.members section.member div.member_right {
           max-width: 75rem;
           margin-left: auto;
