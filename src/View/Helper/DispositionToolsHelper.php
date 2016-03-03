@@ -283,17 +283,43 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	protected function _connectAddress($address) {
-		$label = $this->_toLabel($address->address1);
-		return $this->Html->link($label, [
-			'controller' => 'dispositions',
-            'action' => 'refine', 
-            '?' => [
-                'address' => $address->id,
-                ]
-            ]//, 
-//            ['class' => 'button']
-		);
+		$disposition = $this->disposition();
+		$disposed_address_index = $disposition->indexOfAddress($address->id);
+        if($disposition && $disposed_address_index !== FALSE){
+            return $this->_disconnectAddress($address);
+        }
+		if ($disposition) {
+			$action = 'refine';
+			$label = $this->_toLabel($address->address1);
+		} else {
+			$action = 'create';
+            $label = empty($label) ? '' : "Create a disposition to $address->address1";
+		}
+		if (empty($label)) {
+			$link = '';
+		} else {
+			$link = $this->Html->link($label, [
+				'controller' => 'dispositions',
+				'action' => 'refine', 
+				'?' => [
+					'address' => $address->id,
+					]
+				]
+			);
+		}
+		return $link;
 	}
+	
+    protected function _disconnectAddress($address) {
+		$label = 'Remove from ' . $this->disposition()->label;
+		return $this->Html->link(
+			$label,
+			[
+				'controller' => 'dispositions',
+				'action' => 'remove',
+				'?' => ['address' => $address->id] + $this->SystemState->queryArg()
+		]);
+    }
 	
 	/**
 	 * Create a 'to' label for a disposition link
