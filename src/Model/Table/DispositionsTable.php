@@ -14,13 +14,15 @@ use ArrayObject;
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\BelongsTo $Members
- * @property \Cake\ORM\Association\BelongsTo $Locations
- * @property \Cake\ORM\Association\BelongsTo $Pieces
+ * @property \Cake\ORM\Association\BelongsTo $Addresses
+ * @property \Cake\ORM\Association\BelongsTo $Dispositions
+ * @property \Cake\ORM\Association\HasMany $Dispositions
+ * @property \Cake\ORM\Association\BelongsToMany $Pieces
  */
 class DispositionsTable extends AppTable
 {
-	
-	/**
+
+    /**
 	 * Map specific disposition labels to their underlying types
 	 * 
 	 * Should this be in the Table class?
@@ -99,7 +101,7 @@ class DispositionsTable extends AppTable
 				'collected' => [$this, 'markCollected'],
 				/*'internal_dispo_count'*/]
         ]);
-		$this->belongsTo('Users', [
+        $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
         $this->belongsTo('Members', [
@@ -108,13 +110,19 @@ class DispositionsTable extends AppTable
         $this->belongsTo('Addresses', [
             'foreignKey' => 'address_id'
         ]);
+        $this->belongsTo('Dispositions', [
+            'foreignKey' => 'disposition_id'
+        ]);
+        $this->hasMany('Dispositions', [
+            'foreignKey' => 'disposition_id'
+        ]);
         $this->belongsToMany('Pieces', [
             'foreignKey' => 'disposition_id',
             'targetForeignKey' => 'piece_id',
-            'joinTable' => 'dispositions_pieces',
+            'joinTable' => 'dispositions_pieces'
         ]);
     }
-	
+
 	public function map($label) {
 		if (isset($this->_map[$label])) {
 			return $this->_map[$label];
@@ -136,23 +144,23 @@ class DispositionsTable extends AppTable
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create')
 			->requirePresence('start_date');
-		$validator
+        $validator
 			->add('label', 'valid_label', [
 				'rule' => [$this, 'validLabel'],
 				'message' => 'The disposition must be chosen from the provided list',
 			])
             ->notEmpty('label');
-		$validator
+        $validator
 			->notEmpty('end_date', 'Loans are for a limited time. Please provide an end date greater than the start date.', [$this, 'endOfLoan'])
 			->requirePresence('end_date');
 
         return $validator;
     }
-	
+
 	public function validLabel ($value, $context) {
 		return array_key_exists($value, $this->_map);
 	}
-	
+
 	public function endOfLoan($context) {
 		$data = $context['data'];
 		if (!isset($data['start_date'])) {
@@ -166,7 +174,7 @@ class DispositionsTable extends AppTable
 			return $end <= $start;
 		}
 	}
-	
+
 	/**
 	 * Lookup and set the disposition type
 	 * 
@@ -177,10 +185,10 @@ class DispositionsTable extends AppTable
 	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
 		if (array_key_exists($data['label'], $this->_map)) {
 		 $data['type'] = $this->_map[$data['label']];
-		}
+    }
 	}
 
-	/**
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -192,6 +200,7 @@ class DispositionsTable extends AppTable
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['member_id'], 'Members'));
         $rules->add($rules->existsIn(['address_id'], 'Addresses'));
+        $rules->add($rules->existsIn(['disposition_id'], 'Dispositions'));
         $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
         return $rules;
     }
@@ -199,5 +208,5 @@ class DispositionsTable extends AppTable
 	public function markCollected($event, $entity, $table) {
 		// this search must find dispositions that would be considered 'collected'
 		return (boolean) 0;
-	}
+}
 }
