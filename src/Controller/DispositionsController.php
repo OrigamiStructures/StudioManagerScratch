@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Collection\Collection;
+use Cake\Cache\Cache;
 
 /**
  * Dispositions Controller
@@ -256,6 +257,7 @@ class DispositionsController extends AppController
 	
 	public function save() {
 		$disposition = $this->DispositionManager->get();
+		osd($disposition->member);die;
 		unset($disposition->member->contacts);
 		unset($disposition->member->id);
 		unset($disposition->member->created);
