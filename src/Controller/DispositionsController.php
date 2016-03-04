@@ -39,97 +39,100 @@ class DispositionsController extends AppController
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
-	 * Index method
-	 *
-	 * @return void
-	     */
-	public function index()     {
-		$this->paginate = [
-			'contain' => ['Users', 'Members', 'Locations', 'Pieces']
-		];
-		$this->set('dispositions', $this->paginate($this->Dispositions));
-		$this->set('_serialize', ['dispositions']);
-	}
+     * Index method
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function index()
+    {
+        $this->paginate = [
+            'contain' => ['Users', 'Members', 'Addresses']
+        ];
+        $dispositions = $this->paginate($this->Dispositions);
 
-	/**
-	 * View method
-	 *
-	 * @param string|null $id Disposition id.
-	 * @return void
-	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
-	     */
-	public function view($id = null)     {
-		$disposition = $this->Dispositions->get($id,
-				[
-			'contain' => ['Users', 'Members', 'Locations', 'Pieces']
-		]);
-		$this->set('disposition', $disposition);
-		$this->set('_serialize', ['disposition']);
-	}
+        $this->set(compact('dispositions'));
+        $this->set('_serialize', ['dispositions']);
+    }
 
-	/**
-	 * Add method
-	 *
-	 * @return void Redirects on successful add, renders view otherwise.
-	     */
-	public function add()     {
-		$disposition = $this->Dispositions->newEntity();
-		if ($this->request->is('post')) {
-			$disposition = $this->Dispositions->patchEntity($disposition,
-					$this->request->data);
-			if ($this->Dispositions->save($disposition)) {
-				$this->Flash->success(__('The disposition has been saved.'));
-				return $this->redirect(['action' => 'index']);
-			} else {
-				$this->Flash->error(__('The disposition could not be saved. Please, try again.'));
-			}
-		}
-		$users = $this->Dispositions->Users->find('list', ['limit' => 200]);
-		$members = $this->Dispositions->Members->find('list', ['limit' => 200]);
-		$locations = $this->Dispositions->Locations->find('list', ['limit' => 200]);
-		$pieces = $this->Dispositions->Pieces->find('list', ['limit' => 200]);
-		$this->set(compact('disposition', 'users', 'members', 'locations', 'pieces'));
-		$this->set('_serialize', ['disposition']);
-	}
+    /**
+     * View method
+     *
+     * @param string|null $id Disposition id.
+     * @return \Cake\Network\Response|null
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $disposition = $this->Dispositions->get($id, [
+            'contain' => ['Users', 'Members', 'Addresses', 'Pieces']
+        ]);
 
-	/**
-	 * Edit method
-	 *
-	 * @param string|null $id Disposition id.
-	 * @return void Redirects on successful edit, renders view otherwise.
-	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
-	     */
-	public function edit($id = null)     {
-		$disposition = $this->Dispositions->get($id,
-				[
-			'contain' => []
-		]);
-		if ($this->request->is(['patch', 'post', 'put'])) {
-			$disposition = $this->Dispositions->patchEntity($disposition,
-					$this->request->data);
-			if ($this->Dispositions->save($disposition)) {
-				$this->Flash->success(__('The disposition has been saved.'));
-				return $this->redirect(['action' => 'index']);
-			} else {
-				$this->Flash->error(__('The disposition could not be saved. Please, try again.'));
-			}
-		}
-		$users = $this->Dispositions->Users->find('list', ['limit' => 200]);
-		$members = $this->Dispositions->Members->find('list', ['limit' => 200]);
-		$locations = $this->Dispositions->Locations->find('list', ['limit' => 200]);
-		$pieces = $this->Dispositions->Pieces->find('list', ['limit' => 200]);
-		$this->set(compact('disposition', 'users', 'members', 'locations', 'pieces'));
-		$this->set('_serialize', ['disposition']);
-	}
+        $this->set('disposition', $disposition);
+        $this->set('_serialize', ['disposition']);
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+        $disposition = $this->Dispositions->newEntity();
+        if ($this->request->is('post')) {
+            $disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+            if ($this->Dispositions->save($disposition)) {
+                $this->Flash->success(__('The disposition has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The disposition could not be saved. Please, try again.'));
+            }
+        }
+        $users = $this->Dispositions->Users->find('list', ['limit' => 200]);
+        $members = $this->Dispositions->Members->find('list', ['limit' => 200]);
+        $addresses = $this->Dispositions->Addresses->find('list', ['limit' => 200]);
+        $pieces = $this->Dispositions->Pieces->find('list', ['limit' => 200]);
+        $this->set(compact('disposition', 'users', 'members', 'addresses', 'pieces'));
+        $this->set('_serialize', ['disposition']);
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Disposition id.
+     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $disposition = $this->Dispositions->get($id, [
+            'contain' => ['Pieces']
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+            if ($this->Dispositions->save($disposition)) {
+                $this->Flash->success(__('The disposition has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The disposition could not be saved. Please, try again.'));
+            }
+        }
+        $users = $this->Dispositions->Users->find('list', ['limit' => 200]);
+        $members = $this->Dispositions->Members->find('list', ['limit' => 200]);
+        $addresses = $this->Dispositions->Addresses->find('list', ['limit' => 200]);
+        $pieces = $this->Dispositions->Pieces->find('list', ['limit' => 200]);
+        $this->set(compact('disposition', 'users', 'members', 'addresses', 'pieces'));
+        $this->set('_serialize', ['disposition']);
+    }
 
 // </editor-fold>
 	
-	/**
+    /**
      * Delete method
      *
      * @param string|null $id Disposition id.
      * @return \Cake\Network\Response|null Redirects to index.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -178,13 +181,13 @@ class DispositionsController extends AppController
 		$labels = $this->Dispositions->disposition_label;
 		$this->set(compact('disposition', 'labels', 'errors'));
 	}
-		
+	
 	public function refine() {
 		$disposition = $this->DispositionManager->get();
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));	
-	}
+}
 	
 	/**
 	 * Dump the evolving disposition without saving it
