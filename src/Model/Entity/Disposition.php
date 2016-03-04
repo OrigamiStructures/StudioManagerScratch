@@ -2,6 +2,8 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Collection\Collection;
+use App\Model\Entity\Traits\ParentEntityTrait;
 
 /**
  * Disposition Entity.
