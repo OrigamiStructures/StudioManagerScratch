@@ -364,9 +364,6 @@ body.is-reveal-open {
 .foundation-mq {
   font-family: "small=0em&medium=40em&large=64em&xlarge=75em&xxlarge=90em"; }
 
-footer {
-  height: 10rem; }
-
 .top-bar-left {
   /*li.menu-text:hover {
   	color: #ddd;
@@ -403,35 +400,23 @@ footer {
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
-/**
+nav.breadcrumbs {
+  /*@include grid-row();*/
+  width: 100%;
+  background-color: slategrey;
+  margin-bottom: 0; }
+  nav.breadcrumbs > ul {
+    list-style: none;
+    /*@include grid-column(12);*/ }
+    nav.breadcrumbs > ul li {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a.review {
+      font-weight: bold; }
+      nav.breadcrumbs > ul a.review span {
+        font-weight: normal; }
 
-Review phase management of piece tables for editions and formats 
-This hover system keeps the page information density low when 
-there are many elements shown on the page. 
-
-**/
-@media only screen {
-  /* small up */
-  div.pieces button {
-    display: none; }
-  div.pieces table {
-    display: block; } }
-@media only screen and (min-width: 40.063em) {
-  div.pieces {
-    position: relative; }
-    div.pieces button {
-      display: block; }
-    div.pieces table {
-      display: none; }
-
-  div.pieces:hover button {
-    display: none; }
-  div.pieces:hover table {
-    display: block;
-    position: absolute;
-    top: 0;
-    overflow-y: visible;
-    z-index: 1000; } }
 /**
 ==============================================================
 
@@ -797,84 +782,6 @@ div.formats {
         div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
           float: right; } }
 
-nav.breadcrumbs {
-  /*@include grid-row();*/
-  width: 100%;
-  background-color: slategrey;
-  margin-bottom: 0; }
-  nav.breadcrumbs > ul {
-    list-style: none;
-    /*@include grid-column(12);*/ }
-    nav.breadcrumbs > ul li {
-      color: #fcf8e3; }
-    nav.breadcrumbs > ul a {
-      color: #fcf8e3; }
-    nav.breadcrumbs > ul a.review {
-      font-weight: bold; }
-      nav.breadcrumbs > ul a.review span {
-        font-weight: normal; }
-
-/*section.format {
-	@include grid-row;
-	padding-top: 1em;
-}*/
-p.policy_statement {
-  padding-top: .8em;
-  font-size: 90%;
-  color: #444; }
-
-form legend {
-  background: #ccc none repeat scroll 0 0;
-  color: #7a7a7a;
-  padding-left: 0.3rem;
-  width: 100%; }
-form img {
-  width: 30%; }
-form .form-error, form .error-message {
-  color: #ec5840;
-  display: block;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  margin-top: 0; }
-
-span.nav {
-  font-size: .9rem; }
-
-div.radio > label .disabled {
-  color: #ccc; }
-div.radio > label input {
-  margin: .5rem; }
-  div.radio > label input .disabled {
-    color: #ccc; }
-
-.disabled {
-  color: #ccc; }
-
-div.training {
-  max-width: 75rem;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  float: left;
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem;
-  width: 66.66667%;
-  float: left;
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem; }
-  div.training::before, div.training::after {
-    content: ' ';
-    display: table; }
-  div.training::after {
-    clear: both; }
-  div.training:last-child:not(:first-child) {
-    float: right; }
-  div.training, div.training:last-child {
-    float: none; }
-  div.training:last-child:not(:first-child) {
-    float: right; }
-
 /**
 ==============================================================
 DISPOSITION
@@ -979,6 +886,90 @@ DISPOSITION
     padding-right: 0.9375rem; }
     div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
       float: right; } }
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+div.dispositions {
+  /*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  	}*/
+  /*	@media only screen and (min-width: 64.063em) {  large up 
+  	}*/ }
+  div.dispositions h1 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 0.3125rem; }
+  div.dispositions h2 {
+    font-size: 1rem;
+    margin-top: 2px; }
+  @media only screen {
+    div.dispositions {
+      /* small up */ }
+      div.dispositions section.disposition {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto; }
+        div.dispositions section.disposition::before, div.dispositions section.disposition::after {
+          content: ' ';
+          display: table; }
+        div.dispositions section.disposition::after {
+          clear: both; }
+        div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.dispositions section.disposition > div.left::before, div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::before, div.dispositions section.disposition > div.right::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::after {
+            clear: both; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.left:last-child, div.dispositions section.disposition > div.right, div.dispositions section.disposition > div.right:last-child {
+            float: none; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left > section, div.dispositions section.disposition > div.right > section {
+            width: 100%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition > div.left > section:last-child:not(:first-child), div.dispositions section.disposition > div.right > section:last-child:not(:first-child) {
+              float: right; }
+        div.dispositions section.disposition div.input.date {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto; }
+          div.dispositions section.disposition div.input.date::before, div.dispositions section.disposition div.input.date::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition div.input.date::after {
+            clear: both; }
+          div.dispositions section.disposition div.input.date select {
+            width: 33.33333%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition div.input.date select:last-child:not(:first-child) {
+              float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+        float: right; } }
+
 /**
 ==============================================================
 MEMBERS
@@ -1165,89 +1156,98 @@ div.members {
       div.members section.member_entry .controls:last-child:not(:first-child) {
         float: right; } }
 
+footer {
+  height: 10rem; }
+
 /**
-==============================================================
-DISPOSITION FORMS
-==============================================================
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
 **/
-div.dispositions {
-  /*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-  	}*/
-  /*	@media only screen and (min-width: 64.063em) {  large up 
-  	}*/ }
-  div.dispositions h1 {
-    font-size: 1.25rem;
-    margin-top: 0;
-    margin-bottom: 0.3125rem; }
-  div.dispositions h2 {
-    font-size: 1rem;
-    margin-top: 2px; }
-  @media only screen {
-    div.dispositions {
-      /* small up */ }
-      div.dispositions section.disposition {
-        max-width: 75rem;
-        margin-left: auto;
-        margin-right: auto; }
-        div.dispositions section.disposition::before, div.dispositions section.disposition::after {
-          content: ' ';
-          display: table; }
-        div.dispositions section.disposition::after {
-          clear: both; }
-        div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
-          max-width: 75rem;
-          margin-left: auto;
-          margin-right: auto;
-          width: 100%;
-          float: left;
-          padding-left: 0.9375rem;
-          padding-right: 0.9375rem;
-          width: 100%;
-          float: left;
-          padding-left: 0.9375rem;
-          padding-right: 0.9375rem; }
-          div.dispositions section.disposition > div.left::before, div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::before, div.dispositions section.disposition > div.right::after {
-            content: ' ';
-            display: table; }
-          div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::after {
-            clear: both; }
-          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
-            float: right; }
-          div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.left:last-child, div.dispositions section.disposition > div.right, div.dispositions section.disposition > div.right:last-child {
-            float: none; }
-          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
-            float: right; }
-          div.dispositions section.disposition > div.left > section, div.dispositions section.disposition > div.right > section {
-            width: 100%;
-            float: left;
-            padding-left: 0.9375rem;
-            padding-right: 0.9375rem; }
-            div.dispositions section.disposition > div.left > section:last-child:not(:first-child), div.dispositions section.disposition > div.right > section:last-child:not(:first-child) {
-              float: right; }
-        div.dispositions section.disposition div.input.date {
-          max-width: 75rem;
-          margin-left: auto;
-          margin-right: auto; }
-          div.dispositions section.disposition div.input.date::before, div.dispositions section.disposition div.input.date::after {
-            content: ' ';
-            display: table; }
-          div.dispositions section.disposition div.input.date::after {
-            clear: both; }
-          div.dispositions section.disposition div.input.date select {
-            width: 33.33333%;
-            float: left;
-            padding-left: 0.9375rem;
-            padding-right: 0.9375rem; }
-            div.dispositions section.disposition div.input.date select:last-child:not(:first-child) {
-              float: right; } }
-  @media only screen and (min-width: 40.063em) {
-    div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
-      width: 50%;
-      float: left;
-      padding-left: 0.9375rem;
-      padding-right: 0.9375rem; }
-      div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
-        float: right; } }
+@media only screen {
+  /* small up */
+  div.pieces button {
+    display: none; }
+  div.pieces table {
+    display: block; } }
+@media only screen and (min-width: 40.063em) {
+  div.pieces {
+    position: relative; }
+    div.pieces button {
+      display: block; }
+    div.pieces table {
+      display: none; }
+
+  div.pieces:hover button {
+    display: none; }
+  div.pieces:hover table {
+    display: block;
+    position: absolute;
+    top: 0;
+    overflow-y: visible;
+    z-index: 1000; } }
+/*section.format {
+	@include grid-row;
+	padding-top: 1em;
+}*/
+p.policy_statement {
+  padding-top: .8em;
+  font-size: 90%;
+  color: #444; }
+
+form legend {
+  background: #ccc none repeat scroll 0 0;
+  color: #7a7a7a;
+  padding-left: 0.3rem;
+  width: 100%; }
+form img {
+  width: 30%; }
+form .form-error, form .error-message {
+  color: #ec5840;
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-top: 0; }
+
+span.nav {
+  font-size: .9rem; }
+
+div.radio > label .disabled {
+  color: #ccc; }
+div.radio > label input {
+  margin: .5rem; }
+  div.radio > label input .disabled {
+    color: #ccc; }
+
+.disabled {
+  color: #ccc; }
+
+div.training {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 66.66667%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem; }
+  div.training::before, div.training::after {
+    content: ' ';
+    display: table; }
+  div.training::after {
+    clear: both; }
+  div.training:last-child:not(:first-child) {
+    float: right; }
+  div.training, div.training:last-child {
+    float: none; }
+  div.training:last-child:not(:first-child) {
+    float: right; }
 
 div.input-with-toollabel {
   max-width: 75rem;
