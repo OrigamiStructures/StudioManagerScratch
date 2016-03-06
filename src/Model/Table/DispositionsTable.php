@@ -8,6 +8,8 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\Event;
 use ArrayObject;
+use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
 
 /**
  * Dispositions Model
@@ -217,4 +219,47 @@ class DispositionsTable extends AppTable
 		$members = $table->find()->where($conditions);
 		return $members->count();
 	}
+	
+	/**
+	 * Set counter cache fields on pieces
+	 * 
+	 * Because of the kind of association, CounterCache doesn't handle pieces 
+	 * so I put this in to take care of those counts
+	 * 
+	 * @param Event $event
+	 * @param type $entity
+	 */
+    public function afterSave(Event $event, $entity)
+    {
+		$table = \Cake\ORM\TableRegistry::get('Pieces');
+		foreach ($entity->pieces as $piece) {
+			$status_events = $this->DispositionsPieces
+				->find()
+				->where(['piece_id' => $piece->id])
+				->contain('Dispositions');
+			$events = new Collection($status_events);
+			$counts = $events->reduce(function($accum, $event){
+				$accum['collected'] += $event->disposition->type === DISPOSITION_TRANSFER;
+				$accum['disposition_count'] += $event->disposition->type !== DISPOSITION_TRANSFER;
+				return $accum;
+			}, ['collected' => 0, 'disposition_count' => 0]);
+			$piece = $table->patchEntity($piece, $counts);
+			$table->save($piece);
+		}
+    }
+	
+	/**
+	 * Do counter cache reductions for pieces
+	 * 
+	 * Because of the kind of association, CounterCache doesn't handle pieces 
+	 * so I put this in to take care of those counts
+	 * 
+	 * @param Event $event
+	 * @param type $entity
+	 */
+    public function afterDelete(Event $event, $entity)
+    {
+		$this->afterSave($event, $entity);
+    }
+
 }

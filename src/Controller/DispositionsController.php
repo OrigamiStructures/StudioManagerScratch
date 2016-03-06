@@ -138,7 +138,7 @@ class DispositionsController extends AppController
 		$this->Dispositions->hasMany('DispositionsPieces', [
             'foreignKey' => 'disposition_id'
         ]);
-        $disposition = $this->Dispositions->get($id);
+        $disposition = $this->Dispositions->get($id, ['contain' => ['Pieces']]);
 //		osd($disposition);die;
 		$result = $this->Dispositions->connection()->transactional(function () use ($disposition) {
 			$result = TRUE;
@@ -310,7 +310,7 @@ class DispositionsController extends AppController
 			foreach ($pieces as $piece) {
 				Cache::delete("get_default_artworks[_{$piece->format['edition']['artwork']['id']}_]", 'artwork');
 			}
-			Cache::delete($this->SystemState->artistId(), 'dispo');
+//			Cache::delete($this->SystemState->artistId(), 'dispo');
 		} else {
 			$this->Flash->error('The disposition could not be saved. Please try again.');
 		}
