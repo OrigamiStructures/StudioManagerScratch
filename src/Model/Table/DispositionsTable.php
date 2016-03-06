@@ -96,10 +96,14 @@ class DispositionsTable extends AppTable
 			 * In this case we could just do a smart disposition_count 
 			 * instead of doing two count fields.
 			 */
-            'Pieces' => [
+//            'Pieces' => [
+//				'disposition_count',
+//				'collected' => [$this, 'markCollected'],
+//				/*'internal_dispo_count'*/],
+			'Members' => [
 				'disposition_count',
-				'collected' => [$this, 'markCollected'],
-				/*'internal_dispo_count'*/]
+				'collector' => [$this, 'markCollected']
+			]
         ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -184,9 +188,9 @@ class DispositionsTable extends AppTable
 	 * @param ArrayObject $options
 	 */
 	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
-		if (array_key_exists($data['label'], $this->_map)) {
-		 $data['type'] = $this->_map[$data['label']];
-    }
+		if (isset($data['label']) && array_key_exists($data['label'], $this->_map)) {
+			$data['type'] = $this->_map[$data['label']];
+		}
 	}
 
     /**
@@ -200,14 +204,17 @@ class DispositionsTable extends AppTable
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['member_id'], 'Members'));
-        $rules->add($rules->existsIn(['address_id'], 'Addresses'));
         $rules->add($rules->existsIn(['disposition_id'], 'Dispositions'));
         $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
         return $rules;
     }
 	
 	public function markCollected($event, $entity, $table) {
-		// this search must find dispositions that would be considered 'collected'
-		return (boolean) 0;
-}
+		$conditions = [
+			'type' => DISPOSITION_TRANSFER,
+			'member_id' => $entity->member_id
+		];
+		$members = $table->find()->where($conditions);
+		return $members->count();
+	}
 }
