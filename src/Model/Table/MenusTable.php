@@ -43,7 +43,7 @@ class MenusTable extends AppTable{
             'Create Person' => '/members/create/Person',
 		]];
 	protected $disposition = ['Work Status' => [
-			'Review' => '/disposition/index',
+			'Review' => '/dispositions/index',
         ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',
