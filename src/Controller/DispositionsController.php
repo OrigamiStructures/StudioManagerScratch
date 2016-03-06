@@ -137,8 +137,25 @@ class DispositionsController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
+		$this->Dispositions->hasMany('DispositionsPieces', [
+            'foreignKey' => 'disposition_id'
+        ]);
         $disposition = $this->Dispositions->get($id);
-        if ($this->Dispositions->delete($disposition)) {
+//		osd($disposition);die;
+		$result = $this->Dispositions->connection()->transactional(function () use ($disposition) {
+			$result = TRUE;
+			$result = $result && $this->Dispositions->Members->deleteAll(['id' => $disposition->member_id]);
+			$result = $result && $this->Dispositions->Addresses->deleteAll(['id' => $disposition->address_id]);
+			
+//			$DispositionsPieces = \Cake\ORM\TableRegistry::get('DispositionsPieces');
+//			$pieces = $DispositionsPieces->find(['disposition_id' => $disposition->id])->toArray();
+			
+//			$result = $result && $DispositionsPieces->deleteAll(['disposition_id' => $disposition->id]);
+			$result = $result && $this->Dispositions->delete($disposition);
+			
+			return $result;
+		});
+        if ($result) {
             $this->Flash->success(__('The disposition has been deleted.'));
         } else {
             $this->Flash->error(__('The disposition could not be deleted. Please, try again.'));
@@ -260,7 +277,6 @@ class DispositionsController extends AppController
 	
 	public function save() {
 		$disposition = $this->DispositionManager->get();
-		osd($disposition->member);die;
 		unset($disposition->member->contacts);
 		unset($disposition->member->id);
 		unset($disposition->member->created);
@@ -284,8 +300,9 @@ class DispositionsController extends AppController
 //		osd($d);//die;
 		if($this->Dispositions->save($d)){
 			$pieces = $d->pieces;
+//			osd($pieces);die;
 			foreach ($pieces as $piece) {
-				Cache::delete("get_default_artworks[_{$piece->format->edition->artwork->id}_]", 'artwork');
+				Cache::delete("get_default_artworks[_{$piece->format['edition']['artwork']['id']}_]", 'artwork');
 			}
 			Cache::delete($this->SystemState->artistId(), 'dispo');
 		//die;
@@ -293,7 +310,8 @@ class DispositionsController extends AppController
 			$this->Flash->error('The disposition could not be saved. Please try again.');
 		}
 		//die;
-		
+		$this->autoRender = false;
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
 	
 }
