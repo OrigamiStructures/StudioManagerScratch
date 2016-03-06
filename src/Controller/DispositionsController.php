@@ -271,6 +271,17 @@ class DispositionsController extends AppController
 		return $data;
 	}
 	
+	/**
+	 * Save the fully defined dispositon
+	 * 
+	 * The disposition at this point is fully an object so that the construction 
+	 * process could be managed efficiently. This save process converts the parts
+	 * into arrays and patches them into a new entity that will be properly 
+	 * constructed for the save. Member and Address data, previously separate 
+	 * entities, will now be column data on the disposition. This data will 
+	 * stand as the member/address snapshot. The disposition also links to the 
+	 * Member so that record can have an ongoing history of all activity.
+	 */
 	public function save() {
 		$disposition = $this->DispositionManager->get();
 		
