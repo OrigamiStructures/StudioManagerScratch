@@ -273,39 +273,37 @@ class DispositionsController extends AppController
 	
 	public function save() {
 		$disposition = $this->DispositionManager->get();
-		unset($disposition->member->contacts);
-		unset($disposition->member->id);
-		unset($disposition->member->created);
-		unset($disposition->member->modified);
-		$disposition->member->isNew(TRUE);
-		$disposition->member->dirty('created', FALSE);
-		$disposition->member->dirty('modified', FALSE);
 		
-		$disposition->address = array_shift($disposition->addresses);
-		unset($disposition->address->id);
-		unset($disposition->address->created);
-		unset($disposition->address->modified);
-		unset($disposition->address->primary);
-		$disposition->address->isNew(TRUE);
-		$disposition->address->dirty('created', FALSE);
-		$disposition->address->dirty('modified', FALSE);
-		unset($disposition->addresses);
+		$data = [
+			'user_id' => $this->SystemState->artistId(),
+			'member_id' => $disposition->member->id,
+			] + $disposition->toArray();
+		$member_data = array_intersect_key($data['member'], ['first_name' => NULL, 'last_name' => NULL]);
+		$address_data = array_intersect_key(array_pop($data['addresses']), [
+			'address1' => NULL, 
+			'address2' => NULL,
+			'address3' => NULL,
+			'city' => NULL,
+			'state' => NULL,
+			'zip' => NULL,
+			'country' => NULL,
+			]);
 		
-//		osd($disposition->toArray());
-		$d = $this->Dispositions->newEntity($disposition->toArray());//die;
-//		osd($d);//die;
-		if($this->Dispositions->save($d)){
-			$pieces = $d->pieces;
-//			osd($pieces);die;
+		$entity = $this->Dispositions->newEntity($data);
+		$entity->dirty('member', FALSE);
+		$entity = $this->Dispositions->patchEntity($entity, $member_data, ['validate' => FALSE]);
+		$entity = $this->Dispositions->patchEntity($entity, $address_data, ['validate' => FALSE]);
+
+		if($this->Dispositions->save($entity)){
+			$pieces = $entity->pieces;
 			foreach ($pieces as $piece) {
 				Cache::delete("get_default_artworks[_{$piece->format['edition']['artwork']['id']}_]", 'artwork');
 			}
 			Cache::delete($this->SystemState->artistId(), 'dispo');
-		//die;
 		} else {
 			$this->Flash->error('The disposition could not be saved. Please try again.');
 		}
-		//die;
+		
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
