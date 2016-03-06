@@ -46,7 +46,7 @@ class DispositionsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users', 'Members', 'Addresses']
+            'contain' => ['Users', 'Members']
         ];
         $dispositions = $this->paginate($this->Dispositions);
 
@@ -64,7 +64,7 @@ class DispositionsController extends AppController
     public function view($id = null)
     {
         $disposition = $this->Dispositions->get($id, [
-            'contain' => ['Users', 'Members', 'Addresses', 'Pieces']
+            'contain' => ['Users', 'Members', 'Pieces']
         ]);
 
         $this->set('disposition', $disposition);
@@ -90,9 +90,8 @@ class DispositionsController extends AppController
         }
         $users = $this->Dispositions->Users->find('list', ['limit' => 200]);
         $members = $this->Dispositions->Members->find('list', ['limit' => 200]);
-        $addresses = $this->Dispositions->Addresses->find('list', ['limit' => 200]);
         $pieces = $this->Dispositions->Pieces->find('list', ['limit' => 200]);
-        $this->set(compact('disposition', 'users', 'members', 'addresses', 'pieces'));
+        $this->set(compact('disposition', 'users', 'members', 'pieces'));
         $this->set('_serialize', ['disposition']);
     }
 
@@ -119,9 +118,8 @@ class DispositionsController extends AppController
         }
         $users = $this->Dispositions->Users->find('list', ['limit' => 200]);
         $members = $this->Dispositions->Members->find('list', ['limit' => 200]);
-        $addresses = $this->Dispositions->Addresses->find('list', ['limit' => 200]);
         $pieces = $this->Dispositions->Pieces->find('list', ['limit' => 200]);
-        $this->set(compact('disposition', 'users', 'members', 'addresses', 'pieces'));
+        $this->set(compact('disposition', 'users', 'members', 'pieces'));
         $this->set('_serialize', ['disposition']);
     }
 
@@ -144,8 +142,6 @@ class DispositionsController extends AppController
 //		osd($disposition);die;
 		$result = $this->Dispositions->connection()->transactional(function () use ($disposition) {
 			$result = TRUE;
-			$result = $result && $this->Dispositions->Members->deleteAll(['id' => $disposition->member_id]);
-			$result = $result && $this->Dispositions->Addresses->deleteAll(['id' => $disposition->address_id]);
 			
 //			$DispositionsPieces = \Cake\ORM\TableRegistry::get('DispositionsPieces');
 //			$pieces = $DispositionsPieces->find(['disposition_id' => $disposition->id])->toArray();

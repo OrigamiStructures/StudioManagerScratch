@@ -6,8 +6,6 @@
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Addresses'), ['controller' => 'Addresses', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Address'), ['controller' => 'Addresses', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Piece'), ['controller' => 'Pieces', 'action' => 'add']) ?></li>
     </ul>
@@ -22,7 +20,6 @@
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('user_id') ?></th>
                 <th><?= $this->Paginator->sort('member_id') ?></th>
-                <th><?= $this->Paginator->sort('address_id') ?></th>
                 <th><?= $this->Paginator->sort('start_date') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
@@ -35,7 +32,6 @@
                 <td><?= h($disposition->modified) ?></td>
                 <td><?= $disposition->has('user') ? $this->Html->link($disposition->user->id, ['controller' => 'Users', 'action' => 'view', $disposition->user->id]) : '' ?></td>
                 <td><?= $disposition->has('member') ? $this->Html->link($disposition->member->name, ['controller' => 'Members', 'action' => 'view', $disposition->member->id]) : '' ?></td>
-                <td><?= $disposition->has('address') ? $this->Html->link($disposition->address->id, ['controller' => 'Addresses', 'action' => 'view', $disposition->address->id]) : '' ?></td>
                 <td><?= h($disposition->start_date) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $disposition->id]) ?>
