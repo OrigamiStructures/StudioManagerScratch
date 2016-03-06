@@ -162,7 +162,11 @@ class DispositionsTable extends AppTable
 		$data = $context['data'];
 		if (!isset($data['start_date'])) {
 			return TRUE;
+		} elseif (is_object($data['start_date'])) {
+			// already took care of this stuff at 'create' 
+			return FALSE;
 		}
+			
 		$start = implode('', $data['start_date']);
 		$end = is_array($data['end_date']) ? implode('', $data['end_date']) : 0 ;
 		if ($data['type'] !== DISPOSITION_LOAN) {
