@@ -9,6 +9,6 @@ $piece_element = $ArtStackElement->choosePieceTable($format, $edition);
 if ($piece_element != 'empty') :
 ?>
 					<button class="button tiny secondary">Reveal Pieces</button>
-					<?php endif; ?>
+<?php endif; ?>
 					<?= $this->element($piece_element); ?>
 					<!-- END Element/Format/pieces.ctp -->
