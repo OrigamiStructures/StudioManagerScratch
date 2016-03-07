@@ -457,6 +457,8 @@ div.artworks section.artwork {
     margin-bottom: 0; }
   div.artworks section.artwork img {
     margin-top: .4rem; }
+    div.artworks section.artwork img.dup {
+      opacity: .5; }
 
 /* ARTWORK STACK small up */
 @media only screen {

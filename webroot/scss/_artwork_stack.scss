@@ -36,6 +36,9 @@ div.artworks {
 		}
 		img {
 			margin-top: .4rem;
+			&.dup {
+				opacity: .5;
+			}
 		}
 	}
 }
