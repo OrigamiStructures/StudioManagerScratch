@@ -244,7 +244,7 @@ class ArtworksController extends AppController
 					]
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
-            if ($this->Artworks->save($artwork)) {
+			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
 					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
                 
             } else {
