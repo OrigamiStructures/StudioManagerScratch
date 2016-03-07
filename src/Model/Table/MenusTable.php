@@ -27,7 +27,7 @@ class MenusTable extends AppTable{
     protected $clearStudio = ['ClearStudio' => '/artworks/review'];
 	
 	protected $artwork = ['Artwork' => [
-            'Sample' => '/artworks/sample',
+//            'Sample' => '/artworks/sample',
             'View All' => '/artworks/review',
             'New Edition' => '/artworks/create',
             'New Unique Work' => '/artworks/create_unique',
@@ -182,10 +182,17 @@ class MenusTable extends AppTable{
 			function($editions) { return $editions->display_title; },
 			function($editions) { return "/editions/review?artwork={$editions->artwork_id}&edition={$editions->id}"; }
 		);
+			$refine = $refine->toArray();
+			$review = $review->toArray();
+		if (count($refine) === 1) {
+			$refine = array_pop($refine);
+			$review = array_pop($review);
+		}
+
 		$this->menu['Artwork']['Edition'] = [
 			'Create' => "/editions/create?artwork={$this->SystemState->menu_artwork->id}",
-			'Refine' => $refine->toArray(),
-			'Review' => $review->toArray(),
+			'Refine' => $refine,
+			'Review' => $review,
 		];
 	}
 	
@@ -207,6 +214,10 @@ class MenusTable extends AppTable{
 			foreach ($edition->formats as $index => $format) {
 				$refine[$format->display_title] = "/formats/refine$query_args&format={$format->id}";
 				$review[$format->display_title] = "/formats/review$query_args&format={$format->id}";
+			}
+			if (count($refine) === 1) {
+				$refine = array_pop($refine);
+				$review = array_pop($review);
 			}
 			
 			if ($many_editions) {
