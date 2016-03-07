@@ -238,7 +238,7 @@ class ArtworksController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => [
-					/*'Images', */'Editions', 
+					'Images', 'Editions', 
 						'Editions.Pieces', 'Editions.Formats', 
 							'Editions.Formats.Images', 'Editions.Formats.Pieces'
 					]
