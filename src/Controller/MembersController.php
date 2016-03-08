@@ -177,8 +177,7 @@ class MembersController extends AppController
 		$table = Inflector::pluralize(Inflector::classify($entity_type));
         $entity_name = Inflector::classify($entity_type);
         $entity = "\App\Model\Entity\\$entity_name";
-        $member = new \App\Model\Entity\Member();
-        $member = $this->Members->patchEntity($member, $this->request->data);
+        $member = new \App\Model\Entity\Member($this->request->data);
         
         $start = count($member->$entity_type);
 //        osd($member->$entity_type);die;

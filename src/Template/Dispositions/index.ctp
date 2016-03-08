@@ -6,8 +6,6 @@
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Piece'), ['controller' => 'Pieces', 'action' => 'add']) ?></li>
     </ul>
@@ -22,8 +20,7 @@
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('user_id') ?></th>
                 <th><?= $this->Paginator->sort('member_id') ?></th>
-                <th><?= $this->Paginator->sort('location_id') ?></th>
-                <th><?= $this->Paginator->sort('piece_id') ?></th>
+                <th><?= $this->Paginator->sort('start_date') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -35,8 +32,7 @@
                 <td><?= h($disposition->modified) ?></td>
                 <td><?= $disposition->has('user') ? $this->Html->link($disposition->user->id, ['controller' => 'Users', 'action' => 'view', $disposition->user->id]) : '' ?></td>
                 <td><?= $disposition->has('member') ? $this->Html->link($disposition->member->name, ['controller' => 'Members', 'action' => 'view', $disposition->member->id]) : '' ?></td>
-                <td><?= $disposition->has('location') ? $this->Html->link($disposition->location->name, ['controller' => 'Locations', 'action' => 'view', $disposition->location->id]) : '' ?></td>
-                <td><?= $disposition->has('piece') ? $this->Html->link($disposition->piece->id, ['controller' => 'Pieces', 'action' => 'view', $disposition->piece->id]) : '' ?></td>
+                <td><?= h($disposition->start_date) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $disposition->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $disposition->id]) ?>

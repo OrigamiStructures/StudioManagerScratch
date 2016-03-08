@@ -196,11 +196,13 @@ class EditionsController extends AppController
 			]);
 			$this->ArtworkStack->allocatePieces($artwork);
 //			osd($artwork, 'after adding pieces'); die;
-            if ($this->Artworks->save($artwork)) {
+			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
                 $this->redirect([
-					'controller' => 'editions', 
+					'controller' => 'artworks', 
 					'action' => 'review', 
-					'?' => ['artwork' => $this->SystemState->queryArg('artwork')]
+					'?' => [
+						'artwork' => $this->SystemState->queryArg('artwork'),
+						]
 				]);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));

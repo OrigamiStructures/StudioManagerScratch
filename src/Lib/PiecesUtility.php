@@ -5,7 +5,7 @@ use Cake\View\Helper;
 use Cake\Collection\Collection;
 
 /**
- * PieceTableHelper will coordinate piece filtration and selection of tabel structures
+ * PieceTableHelper will coordinate piece filtration to support tabel structures
  * 
  * Depending on the task the artist is engaged in, they may need to see different 
  * sub-sets of the available pieces and they may need different presentation and 
@@ -67,6 +67,11 @@ class PiecesUtility {
 //		
 //	}
 	
+	
+	public function chooseFilter($disposition_type) {
+		return PIECE_FILTER_NONE;
+	}
+
 	public function filterStrategy($layer, $filter = FALSE) {
 		if ($filter && in_array($filter, array_keys($this->_filter_map))) {
 			$this->_state[$layer]['filter'] = $filter;

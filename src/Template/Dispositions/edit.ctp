@@ -12,8 +12,6 @@
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Piece'), ['controller' => 'Pieces', 'action' => 'add']) ?></li>
     </ul>
@@ -25,8 +23,14 @@
         <?php
             echo $this->Form->input('user_id', ['options' => $users, 'empty' => true]);
             echo $this->Form->input('member_id', ['options' => $members, 'empty' => true]);
-            echo $this->Form->input('location_id', ['options' => $locations, 'empty' => true]);
-            echo $this->Form->input('piece_id', ['options' => $pieces, 'empty' => true]);
+            echo $this->Form->input('start_date', ['empty' => true]);
+            echo $this->Form->input('end_date', ['empty' => true]);
+            echo $this->Form->input('type');
+            echo $this->Form->input('label');
+            echo $this->Form->input('complete');
+            echo $this->Form->input('disposition_id');
+            echo $this->Form->input('name');
+            echo $this->Form->input('pieces._ids', ['options' => $pieces]);
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

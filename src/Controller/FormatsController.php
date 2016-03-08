@@ -181,13 +181,13 @@ class FormatsController extends AppController
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 //			osd($artwork, 'artwork for format submit');die;
-            if ($this->Artworks->save($artwork)) {
+			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
                 $this->redirect([
-					'controller' => 'artworks', 
+					'controller' => 'editions', 
 					'action' => 'review',
 					'?' => [
 						'artwork' => $this->SystemState->queryArg('artwork'),
-						'format' => $this->SystemState->queryArg('edition')
+						'edition' => $this->SystemState->queryArg('edition')
 					]]);
             } else {
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));

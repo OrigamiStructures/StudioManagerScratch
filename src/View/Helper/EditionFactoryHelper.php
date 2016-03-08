@@ -219,8 +219,4 @@ class EditionFactoryHelper extends Helper {
 		return '';
 	}
 	
-	protected function _chooseFilter($disposition_type) {
-		return PIECE_FILTER_NONE;
-	}
-	
 }

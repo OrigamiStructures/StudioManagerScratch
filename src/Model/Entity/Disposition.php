@@ -11,18 +11,24 @@ use App\Model\Entity\Traits\ParentEntityTrait;
  * @property int $id
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property int $user_id
+ * @property string $user_id
  * @property \App\Model\Entity\User $user
  * @property int $member_id
  * @property \App\Model\Entity\Member $member
- * @property int $location_id
- * @property \App\Model\Entity\Location $location
- * @property int $piece_id
- * @property \App\Model\Entity\Piece $piece
+ * @property int $address_id
+ * @property \App\Model\Entity\Address $address
+ * @property \Cake\I18n\Time $start_date
+ * @property \Cake\I18n\Time $end_date
+ * @property string $type
+ * @property string $label
+ * @property bool $complete
+ * @property int $disposition_id
+ * @property string $name
+ * @property \App\Model\Entity\Piece[] $pieces
  */
 class Disposition extends Entity
 {
-	
+
 	use ParentEntityTrait;
 
     /**
@@ -90,7 +96,7 @@ class Disposition extends Entity
 			return !$piece->fullyIdentified() && $piece->id == $format_id;
 		});
 		$this->pieces = $surviving_pieces->toArray();
-	}
+}
 	
 	public function missingDates() {
 		return (empty($this->start_date) || empty($this->end_date));

@@ -12,6 +12,13 @@ class DispositionsTableTest extends TestCase
 {
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\DispositionsTable
+     */
+    public $Dispositions;
+
+    /**
      * Fixtures
      *
      * @var array
@@ -20,13 +27,21 @@ class DispositionsTableTest extends TestCase
         'app.dispositions',
         'app.users',
         'app.members',
-        'app.locations',
-        'app.groups',
-        'app.groups_members',
+        'app.images',
         'app.artworks',
         'app.editions',
+        'app.series',
         'app.formats',
-        'app.pieces'
+        'app.subscriptions',
+        'app.pieces',
+        'app.dispositions_pieces',
+        'app.locations',
+        'app.addresses',
+        'app.contacts',
+        'app.groups',
+        'app.groups_members',
+        'app.proxy_members',
+        'app.proxy_groups'
     ];
 
     /**
@@ -64,6 +79,16 @@ class DispositionsTableTest extends TestCase
     }
 
     /**
+     * Test map method
+     *
+     * @return void
+     */
+    public function testMap()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
      * Test validationDefault method
      *
      * @return void
@@ -74,11 +99,51 @@ class DispositionsTableTest extends TestCase
     }
 
     /**
+     * Test validLabel method
+     *
+     * @return void
+     */
+    public function testValidLabel()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test endOfLoan method
+     *
+     * @return void
+     */
+    public function testEndOfLoan()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test beforeMarshal method
+     *
+     * @return void
+     */
+    public function testBeforeMarshal()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
      * Test buildRules method
      *
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test markCollected method
+     *
+     * @return void
+     */
+    public function testMarkCollected()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
