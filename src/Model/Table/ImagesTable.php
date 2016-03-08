@@ -63,7 +63,7 @@ class ImagesTable extends AppTable
                         'png_compression_level' => 9
                     ],
                 ],
-                'thumbnailMethod' => 'Gd'  // Options are Imagick, Gd or Gmagick
+                'thumbnailMethod' => 'imagick'   // Options are Imagick, Gd or Gmagick
             ]
         ]);
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
