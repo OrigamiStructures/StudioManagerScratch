@@ -134,6 +134,16 @@ class DispositionsTable extends AppTable
 		}
 		
 	}
+	
+	/**
+	 * Is the label a Rights type of disposition
+	 * 
+	 * @param string $label
+	 * @return boolean
+	 */
+	public function isRights($label) {
+		return in_array($label, [DISPOSITION_TRANSFER_RIGHTS, DISPOSITION_LOAN_RIGHTS]);
+	}
 
     /**
      * Default validation rules.
