@@ -3,6 +3,7 @@ namespace App\Lib;
 
 use Cake\View\Helper;
 use Cake\Collection\Collection;
+use App\Model\Entity\Disposition;
 
 /**
  * PieceTableHelper will coordinate piece filtration to support tabel structures
@@ -13,7 +14,7 @@ use Cake\Collection\Collection;
  * 
  * @author dondrake
  */
-class PiecesUtility {
+class PiecesFilter {
 	
 	/**
 	 * Map filter constants to actual method names
@@ -57,22 +58,57 @@ class PiecesUtility {
 			'sort' => PIECE_SORT_NONE,],
 	];
 
-
 	/**
+	 * Decide on the filter based on a context object
 	 * 
-	 * @param type $pieces
-	 * @param type $filter_strategy
+	 * Given some object that describes the current context requiring pieces, 
+	 * figure out what filtering strategy will be approprate. This is the 
+	 * simple name of the strategy, the constant that serves as a key to 
+	 * lookup the actual filter method name.
+	 * 
+	 * @param object $context
+	 * @return string
 	 */
-//	public function render($pieces, $layer) {
-//		
-//	}
-	
-	
-	public function chooseFilter($disposition_type) {
+	public function chooseFilter($context) {
+		if (get_class($context) === 'App\Model\Entity\Disposition') {
+			return $this->_chooseDispositionFilter($context);
+		}
 		return PIECE_FILTER_NONE;
 	}
+	
+	protected function _chooseDispositionFilter($disposition) {
+		switch ($disposition->type) {
+			case DISPOSITION_TRANSFER:
+				return PIECE_FILTER_NOT_COLLECTED;
+				break;
+			case DISPOSITION_LOAN:
+				
+				break;
+			case DISPOSITION_STORE:
+				
+				break;
+			case DISPOSITION_UNAVAILABLE:
+				
+				break;
 
-	public function filterStrategy($layer, $filter = FALSE) {
+			default:
+				break;
+		}
+	}
+
+	/**
+	 * Lookup the method that will satisfy the indicated filter
+	 * 
+	 * Filters are identified by Constants. The constants are used as lookup 
+	 * keys to discover the method that implements them. This keeps things 
+	 * losely coupled.
+	 * 
+	 * @param type $layer
+	 * @param type $filter
+	 * @return type
+	 * @throws \BadMethodCallException
+	 */
+	protected function _filterStrategy($layer, $filter = FALSE) {
 		if ($filter && in_array($filter, array_keys($this->_filter_map))) {
 			$this->_state[$layer]['filter'] = $filter;
 		} elseif ($filter) {
@@ -81,8 +117,10 @@ class PiecesUtility {
 		return $this->_filter_map[$this->_state[$layer]['filter']];
 	}
 	
+	
 	public function filter($pieces, $layer, $filter = FALSE) {
-		$method = $this->filterStrategy($layer, $filter);
+		$filter = 
+		$method = $this->_filterStrategy($layer, $filter);
 		
 		if ($method) {
 			$filtered_pieces = (new Collection($pieces))->filter([$this, $method])->toArray();
@@ -96,6 +134,12 @@ class PiecesUtility {
 		return $piece->collected === 1;
 	}
 	
+	/**
+	 * 
+	 * @param type $piece
+	 * @param type $key
+	 * @return type
+	 */
 	public function filterNotCollected($piece, $key = NULL) {
 		return $piece->collected !== 1;
 	}
