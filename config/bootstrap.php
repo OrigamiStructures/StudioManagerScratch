@@ -267,6 +267,7 @@ define('PIECE_COLLECTION_RETURN', TRUE);
 // NOTES ON ADDING TO THIS SECTION
 // PieceTableHelper::_map needs matching entry to identify the
 // filter strategy callable or sort strategy callable
+define('PIECE_FILTER_FOR_SALE_ON_DATE'	, 'for_sale_on_date');
 define('PIECE_FILTER_COLLECTED'			, 'collected');
 define('PIECE_FILTER_NOT_COLLECTED'		, 'not_collected');
 define('PIECE_FILTER_ASSIGNED'			, 'assigned');
