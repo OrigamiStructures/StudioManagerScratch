@@ -164,7 +164,10 @@ class DispositionsTable extends AppTable
 			])
             ->notEmpty('label');
         $validator
-			->notEmpty('end_date', 'Loans are for a limited time. Please provide an end date greater than the start date.', [$this, 'endOfLoan'])
+			->add('end_date', 'end_of_loan', [
+				'rule' => [$this, 'endOfLoan'], 
+				'message' => 'Loans are for a limited time. Please provide an end date greater than the start date.'
+				])
 			->requirePresence('end_date');
 
         return $validator;
@@ -174,7 +177,7 @@ class DispositionsTable extends AppTable
 		return array_key_exists($value, $this->_map);
 	}
 
-	public function endOfLoan($context) {
+	public function endOfLoan($context, $context) {
 		$data = $context['data'];
 		if (!isset($data['start_date'])) {
 			return TRUE;
@@ -186,10 +189,11 @@ class DispositionsTable extends AppTable
 		$start = implode('', $data['start_date']);
 		$end = is_array($data['end_date']) ? implode('', $data['end_date']) : 0 ;
 		if ($data['type'] !== DISPOSITION_LOAN) {
-			return FALSE;
+			$result = TRUE;
 		} else {
-			return $end <= $start;
+			$result = $start < $end;
 		}
+		return $result;
 	}
 
 	/**
