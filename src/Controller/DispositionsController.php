@@ -252,14 +252,19 @@ class DispositionsController extends AppController
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
 	}
+	
 	/**
+	 * Automatically set the 'complete' value if dates force the issue
 	 * 
 	 * @param array $data
 	 * @return array
 	 */
 	public function completeRule($data) {
 		$pattern = '%s/%s/%s';
-		$date = empty($data['end_date']) ? $data['start_date'] : $data['end_date'];
+		if (empty($data['end_date'])) {
+			$data['end_date'] = $data['start_date'];
+		}
+		$date = $data['end_date'];
 		$timestamp = strtotime(sprintf($pattern, $date['month'], $date['day'], $date['year']));
 //		osd($date);
 //		osd($timestamp);
