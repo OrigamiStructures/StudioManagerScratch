@@ -149,6 +149,9 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	protected function _connectPiece($piece) {
+        if(isset($piece->rejected)){
+            return $this->_rejectedReason($piece);
+        }
 		// This assumes we came in through some 'review/ArtworkStack' pathway
 		$edition = $this->SystemState->edition;
 		
@@ -470,5 +473,9 @@ class DispositionToolsHelper extends Helper {
 		}
 		return $prompt;
 	}
+    
+    protected function _rejectedReason($piece) {
+        return $this->Html->tag('span', $piece->rejected, ['class' => 'rejected']);
+    }
 	
 }

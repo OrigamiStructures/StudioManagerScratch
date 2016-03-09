@@ -76,7 +76,7 @@ trait PieceFilterTrait {
 	 */
 	public function filterNotCollected($piece, $key = NULL) {
 		$result = $piece->collected == 0;
-        $this->saveReject($piece, $key, $result, 'Not collected');
+        $this->saveReject($piece, $key, $result, 'Collected');
 		return $result;
 	}
 	
@@ -141,7 +141,7 @@ trait PieceFilterTrait {
 		}
 		
 		// this skips out if the piece has attached dispositions at all
-		if ($this->filterFluid($piece)) {
+		if ($piece->disposition_count === 0) {
 			return TRUE;
 		}
 		
@@ -181,7 +181,7 @@ trait PieceFilterTrait {
 	 */
 	public function filterNotUnavailable($piece, $key = NULL) {
 		// this skips out if the piece has attached dispositions at all
-		if ($this->filterFluid($piece)) {
+		if ($piece->disposition_count === 0) {
 			return TRUE;
 		}
 		
