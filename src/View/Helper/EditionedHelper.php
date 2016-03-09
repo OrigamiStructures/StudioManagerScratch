@@ -348,7 +348,8 @@ class EditionedHelper extends EditionFactoryHelper {
 		$disposition = $this->SystemState->standing_disposition;
 		
 		$pieces = $this->pieceTool()
-			->filter($edition->pieces, 'edition', $this->pieceTool()->chooseFilter($disposition));
+			->filter($edition, $disposition);
+        $pieces = array_merge($pieces, $this->pieceTool()->rejected());
 		$caption = "Indicate the pieces you want to include in this {$this->DispositionTools->dispositionLabel($disposition)}";
 		$providers = $this->_prepareProviders();
 		

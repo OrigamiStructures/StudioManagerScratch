@@ -2,7 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
-use App\Lib\PiecesUtility;
+use App\Lib\PieceFilter;
 
 /**
  * FactoryHelper swaps Edition and Format helper subclasses onto a common call point
@@ -143,8 +143,8 @@ class EditionFactoryHelper extends Helper {
 	 * @return PiecesUtitlity
 	 */
 	public function pieceTool() {
-		if (!isset($this->PiecesUtitlity)) {
-			$this->PiecesUtility = new \App\Lib\PiecesUtility();
+		if (!isset($this->PiecesUtility)) {
+			$this->PiecesUtility = new \App\Lib\PieceFilter();
 		}
 		return $this->PiecesUtility;
 	}
