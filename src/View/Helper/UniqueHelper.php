@@ -56,6 +56,7 @@ class UniqueHelper extends EditionFactoryHelper {
 			if ($disposition) {
 				$pieces = $this->pieceTool()
 					->filter($edition, $disposition);
+                osd($this->pieceTool()->rejected());
 				$caption = count($pieces) !==0 ?
 						"Available to include in this {$this->DispositionTools->dispositionLabel($disposition)}" :
 						"This piece is not available ot include in this {$this->DispositionTools->dispositionLabel($disposition)}";

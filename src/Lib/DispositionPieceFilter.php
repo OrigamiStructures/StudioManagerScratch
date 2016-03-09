@@ -103,6 +103,8 @@ class DispositionPieceFilter {
 	 */
 	protected function _forSaleOnDate($entity, $disposition) {
 		$this->target_date = $disposition->start_date->i18nFormat('yyyy-MM-dd');
+//        osd($this->target_date, 'target date');
+//        osd($entity->pieces, 'entity->pieces');
 		$collection = new Collection($entity->pieces);
 		$pieces = $collection->filter([$this, 'forSaleOnDate'])->toArray();
 		

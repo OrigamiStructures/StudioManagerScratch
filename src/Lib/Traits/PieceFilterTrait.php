@@ -18,6 +18,13 @@ use App\Model\Entity\Disposition;
  * @author dondrake
  */
 trait PieceFilterTrait {
+    
+    /**
+     * Rejected pieces collection array
+     * 
+     * @var array
+     */
+    public $rejected = [];
 	
 	/**
 	 * Access point for the Pieces table
@@ -30,6 +37,20 @@ trait PieceFilterTrait {
 		}
 		return $this->Pieces;
 	}
+    
+    /**
+     * Process and store the pieces that fail individual tests
+     * 
+     * @param object $piece
+     * @param int $key
+     * @param boolean $result
+     */
+    public function saveReject($piece, $key, $result, $reason) {
+        if(!$result){
+            $piece->rejected = $reason;
+            $this->rejected[] = $piece;
+        }
+    }
 	
 	/**
 	 * Is the piece collected
@@ -39,7 +60,9 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterCollected($piece, $key = NULL) {
-		return $piece->collected === 1;
+        $result = $piece->collected === 1;
+        $this->saveReject($piece, $key, $result, 'Already collected');
+		return $result;
 	}
 	
 	/**
@@ -52,7 +75,9 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterNotCollected($piece, $key = NULL) {
-		return is_null($piece->collected);
+		$result = $piece->collected == 0;
+        $this->saveReject($piece, $key, $result, 'Not collected');
+		return $result;
 	}
 	
 	/**
@@ -63,7 +88,9 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterAssigned($piece, $key = NULL) {
-		return !is_null($piece->format_id);
+		$result = !is_null($piece->format_id);
+        $this->saveReject($piece, $key, $result, 'Not assigned to a format');
+		return $result;
 	}
 	
 	/**
@@ -76,7 +103,9 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterUnassigned($piece, $key = NULL) {
-		return is_null($piece->format_id);
+		$result = is_null($piece->format_id);
+        $this->saveReject($piece, $key, $result, 'Assigned to a format');
+		return $result;
 	}
 	
 	/**
@@ -90,7 +119,9 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterFluid($piece, $key = NULL) {
-		return $piece->disposition_count === 0;
+		$result = $piece->disposition_count === 0;
+        $this->saveReject($piece, $key, $result, 'Can\'t be reassigned');
+        return $result;
 	}
 	
 	/**
@@ -124,15 +155,18 @@ trait PieceFilterTrait {
 				}])
 				->first();
 				
-				return empty($proxy->toArray()['dispositions']);
+            $result = empty($proxy->toArray()['dispositions']);
 
 		} else {
 			
 			// This works for pieces that have contained dispositions
 			$collection = new Collection($piece->dispositions);
 			$future_obligations = $collection->filter([$this, 'filterFutureDispositions']);
-			return $future_obligations->count() == 0;
+            
+			$result = $future_obligations->count() == 0;
 		}
+        $this->saveReject($piece, $key, $result, "Unavailable on $this->target_date");
+        return $result;
 	}
 	
 	/**
@@ -161,15 +195,17 @@ trait PieceFilterTrait {
 				}])
 				->first();
 				
-				return empty($proxy->toArray()['dispositions']);
+				$result = empty($proxy->toArray()['dispositions']);
 
 		} else {
 			
 			// This works for pieces that have contained dispositions
 			$collection = new Collection($piece->dispositions);
 			$unavailable = $collection->filter([$this, 'filterUnavailableDispositions']);
-			return $future_obligations->count() == 0;
+			$result = $future_obligations->count() == 0;
 		}
+        $this->saveReject($piece, $key, $result, "Unavailable through damage or loss");
+        return $result;
 	}
 	
 	/**
@@ -194,6 +230,10 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function forSaleOnDate($piece, $key) {
+//				osd($this->filterNotCollected($piece), 'filter Not Collected');
+//				osd($this->filterAvailableOnDate($piece), 'filter Available on Date');
+//				osd($this->filterNotUnavailable($piece), 'filter Not unAvailable');
+//                die;
 		if (
 				$this->filterNotCollected($piece) &&
 				$this->filterAvailableOnDate($piece) &&

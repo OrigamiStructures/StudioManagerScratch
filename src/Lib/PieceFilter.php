@@ -23,6 +23,8 @@ class PieceFilter {
 	use PieceFilterTrait;
 	
 	protected $Pieces;
+    
+    public $FilterClass;
 
 	public function __construct() {
 		$this->Pieces = \Cake\ORM\TableRegistry::get('Pieces');
@@ -41,8 +43,9 @@ class PieceFilter {
 	 */
 	public function filter($data, $context = 'none') {
 		if (is_object($context)) {
-			$FilterClass = $this->_selectRuleClass($context);
-			$pieces = $FilterClass->filter($data, $context);
+			$this->FilterClass = $this->_selectRuleClass($context);
+            osd($this->FilterClass);
+			$pieces = $this->FilterClass->filter($data, $context);
 		} else {
 			$pieces = $this->_extractPieces($data);
 		}
@@ -88,5 +91,10 @@ class PieceFilter {
 		}
 		return $pieces;
 	}
+    
+    public function rejected() {
+//        osd($this->FilterClass);
+        return $this->FilterClass->rejected;
+    }
 	
 }
