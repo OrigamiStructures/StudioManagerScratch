@@ -44,7 +44,6 @@ class PieceFilter {
 	public function filter($data, $context = 'none') {
 		if (is_object($context)) {
 			$this->FilterClass = $this->_selectRuleClass($context);
-            osd($this->FilterClass);
 			$pieces = $this->FilterClass->filter($data, $context);
 		} else {
 			$pieces = $this->_extractPieces($data);
@@ -93,7 +92,6 @@ class PieceFilter {
 	}
     
     public function rejected() {
-//        osd($this->FilterClass);
         return $this->FilterClass->rejected;
     }
 	
