@@ -320,7 +320,7 @@ class DispositionToolsHelper extends Helper {
 			[
 				'controller' => 'dispositions',
 				'action' => 'remove',
-				'?' => ['address' => $address->id] + $this->SystemState->queryArg()
+				'?' => ['address' => $address->id]
 		]);
     }
 	
