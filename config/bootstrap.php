@@ -285,6 +285,7 @@ define('DISPOSITION_UNAVAILABLE'		, 'unavailable');
 
 
 define('DISPOSITION_TRANSFER_SALE'		, 'Sale');
+define('DISPOSITION_TRANSFER_SUBSCRIPTION', 'Subscription');
 define('DISPOSITION_TRANSFER_DONATION'	, 'Donation');
 define('DISPOSITION_TRANSFER_GIFT'		, 'Gift');
 define('DISPOSITION_TRANSFER_RIGHTS'	, 'Published');
