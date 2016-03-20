@@ -25,9 +25,9 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 	<?php
 	if ($editing) : 
 		if ($SystemState->is(ARTWORK_CREATE_UNIQUE)) {
-			echo $this->Form->create($artwork, ['type' => 'file', 'action' => 'create']);
+			echo $this->Form->create($artwork, ['type' => 'file', 'action' => 'create', 'class' => 'dropzone', 'id' => 'artwork_stack']);
 		} else {
-			echo $this->Form->create($artwork, ['type' => 'file']);
+			echo $this->Form->create($artwork, ['type' => 'file', 'class' => 'dropzone', 'id' => 'artwork_stack']);
 		}	
 	endif; ?>
 	

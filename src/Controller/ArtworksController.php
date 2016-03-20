@@ -201,6 +201,7 @@ class ArtworksController extends AppController
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
+		osd($this->request->data);die;
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
@@ -226,6 +227,11 @@ class ArtworksController extends AppController
 		$this->set('artwork', $artwork);
 //		$this->set('element_management', $element_management);
 		$this->render('review');
+	}
+	
+	public function upload() {
+		$this->viewBuilder()->layout('ajax');
+//		osd($this->request->data);die;
 	}
 	
     /**
