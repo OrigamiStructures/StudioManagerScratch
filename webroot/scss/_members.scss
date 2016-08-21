@@ -25,7 +25,7 @@ div.members{
 				font-size: 1rem;
 				margin: 0.5rem 0 0;
 			}
-            div.member_left, div.member_right{
+            div.member_left, div.member_right, div.members {
                 @include grid-column-row();
                 @include grid-column(12);
                 > div {
@@ -46,18 +46,22 @@ div.members{
             }
 		}
         section.member_entry{
-            padding-bottom: 0.4rem;
+			$line-height: 1;
+            /*padding-bottom: 0.4rem;*/
             @include grid-row();
+			border-bottom: solid thin $light-gray;
             .name{
                 @include grid-column(12);
+                line-height: $line-height;
             }
             .controls{
                 @include grid-column(11);
                 @include grid-column-offset(1);
-                line-height: 1;
+                line-height: $line-height;
+				padding-top: rem-calc(3);
                 a{
                     font-size: 80%;
-                    margin-bottom: 0.2rem;
+                    /*margin-top: -0.2rem;*/
                 }
             }
         }

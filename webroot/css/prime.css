@@ -1008,7 +1008,7 @@ div.members {
         div.members section.member h3 {
           font-size: 1rem;
           margin: 0.5rem 0 0; }
-        div.members section.member div.member_left, div.members section.member div.member_right {
+        div.members section.member div.member_left, div.members section.member div.member_right, div.members section.member div.members {
           max-width: 75rem;
           margin-left: auto;
           margin-right: auto;
@@ -1020,30 +1020,30 @@ div.members {
           float: left;
           padding-left: 0.9375rem;
           padding-right: 0.9375rem; }
-          div.members section.member div.member_left::before, div.members section.member div.member_left::after, div.members section.member div.member_right::before, div.members section.member div.member_right::after {
+          div.members section.member div.member_left::before, div.members section.member div.member_left::after, div.members section.member div.member_right::before, div.members section.member div.member_right::after, div.members section.member div.members::before, div.members section.member div.members::after {
             content: ' ';
             display: table; }
-          div.members section.member div.member_left::after, div.members section.member div.member_right::after {
+          div.members section.member div.member_left::after, div.members section.member div.member_right::after, div.members section.member div.members::after {
             clear: both; }
-          div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+          div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child), div.members section.member div.members:last-child:not(:first-child) {
             float: right; }
-          div.members section.member div.member_left, div.members section.member div.member_left:last-child, div.members section.member div.member_right, div.members section.member div.member_right:last-child {
+          div.members section.member div.member_left, div.members section.member div.member_left:last-child, div.members section.member div.member_right, div.members section.member div.member_right:last-child, div.members section.member div.members, div.members section.member div.members:last-child {
             float: none; }
-          div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+          div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child), div.members section.member div.members:last-child:not(:first-child) {
             float: right; }
-          div.members section.member div.member_left > div, div.members section.member div.member_right > div {
+          div.members section.member div.member_left > div, div.members section.member div.member_right > div, div.members section.member div.members > div {
             width: 100%;
             float: left;
             padding-left: 0;
             padding-right: 0; }
-            div.members section.member div.member_left > div:last-child:not(:first-child), div.members section.member div.member_right > div:last-child:not(:first-child) {
+            div.members section.member div.member_left > div:last-child:not(:first-child), div.members section.member div.member_right > div:last-child:not(:first-child), div.members section.member div.members > div:last-child:not(:first-child) {
               float: right; }
-          div.members section.member div.member_left > section, div.members section.member div.member_right > section {
+          div.members section.member div.member_left > section, div.members section.member div.member_right > section, div.members section.member div.members > section {
             width: 100%;
             float: left;
             padding-left: 0;
             padding-right: 0; }
-            div.members section.member div.member_left > section:last-child:not(:first-child), div.members section.member div.member_right > section:last-child:not(:first-child) {
+            div.members section.member div.member_left > section:last-child:not(:first-child), div.members section.member div.member_right > section:last-child:not(:first-child), div.members section.member div.members > section:last-child:not(:first-child) {
               float: right; }
         div.members section.member div.member.left {
           width: 100%;
@@ -1077,10 +1077,11 @@ div.members {
           div.members section.member div.member_controls:last-child:not(:first-child) {
             float: right; }
       div.members section.member_entry {
-        padding-bottom: 0.4rem;
+        /*padding-bottom: 0.4rem;*/
         max-width: 75rem;
         margin-left: auto;
-        margin-right: auto; }
+        margin-right: auto;
+        border-bottom: solid thin #e6e6e6; }
         div.members section.member_entry::before, div.members section.member_entry::after {
           content: ' ';
           display: table; }
@@ -1090,7 +1091,8 @@ div.members {
           width: 100%;
           float: left;
           padding-left: 0.9375rem;
-          padding-right: 0.9375rem; }
+          padding-right: 0.9375rem;
+          line-height: 1; }
           div.members section.member_entry .name:last-child:not(:first-child) {
             float: right; }
         div.members section.member_entry .controls {
@@ -1099,12 +1101,13 @@ div.members {
           padding-left: 0.9375rem;
           padding-right: 0.9375rem;
           margin-left: 8.33333%;
-          line-height: 1; }
+          line-height: 1;
+          padding-top: 0.1875rem; }
           div.members section.member_entry .controls:last-child:not(:first-child) {
             float: right; }
           div.members section.member_entry .controls a {
             font-size: 80%;
-            margin-bottom: 0.2rem; } }
+            /*margin-top: -0.2rem;*/ } }
   @media only screen and (min-width: 40.063em) {
     div.members section.member div.member_left, div.members section.member div.member_right {
       width: 50%;
@@ -1158,6 +1161,10 @@ div.members {
       div.members section.member_entry .controls:last-child:not(:first-child) {
         float: right; } }
 
+/*[type="text"], [type="password"], [type="date"], [type="datetime"], [type="datetime-local"], [type="month"], [type="week"], [type="email"], [type="tel"], [type="time"], [type="url"], [type="color"], [type="number"], [type="search"], textarea {
+	padding: $input-padding;
+	line-height: 1;
+}*/
 footer {
   height: 10rem; }
 

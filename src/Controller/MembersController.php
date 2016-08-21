@@ -236,6 +236,7 @@ class MembersController extends AppController
         if(empty($member->errors())){
             $this->SystemState->referer($this->referer());
         }
+//		osd($member);
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
         $this->render('review');
