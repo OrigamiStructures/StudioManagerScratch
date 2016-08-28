@@ -1,6 +1,7 @@
 
 						<!-- Element/Format/full.ctp -->
 <?php 
+$focus = isset($focus) ? $focus : FALSE;
 $format_element = $ArtStackElement->choose('formatContent');
 $class = ($editing ? ' editing' : '') . ($focus ? " $focus" : '');
 ?>
