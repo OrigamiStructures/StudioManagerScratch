@@ -256,7 +256,7 @@ class DispositionsTable extends AppTable
 			$events = new Collection($status_events);
 			$counts = $events->reduce(function($accum, $event){
 				$accum['collected'] += $event->disposition->type === DISPOSITION_TRANSFER;
-				$accum['disposition_count'] += $event->disposition->type !== DISPOSITION_TRANSFER;
+				$accum['disposition_count']++;// += $event->disposition->type !== DISPOSITION_TRANSFER;
 				return $accum;
 			}, ['collected' => 0, 'disposition_count' => 0]);
 			$piece = $table->patchEntity($piece, $counts);
