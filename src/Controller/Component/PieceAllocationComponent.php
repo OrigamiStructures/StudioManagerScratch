@@ -10,6 +10,10 @@ use CakeDC\Users\Exception\BadConfigurationException;
 /**
  * PieceAllocation Handles allocation/deletion of pieces during create/refine
  * 
+ * The rules for piece management are too complex to include in the 
+ * Artwork Stack Component which manages Artwork CRUD tasks. So they've 
+ * all been delegated to this class.
+ * 
  * Allocation of new pieces and deletion of existing pieces are processes that 
  * are trigged by change to Editions->quantity. Both piece increase and decrease 
  * are performed according to set rules and those rules are defined in this class.
@@ -33,23 +37,34 @@ class PieceAllocationComponent extends Component {
 	private $multiple_formats;
 	private $pieces;
 	
+	/**
+	 * Build the required component internals
+	 * 
+	 * Makes controller, SystemState, and artwork available
+	 * 
+	 * @param array $config
+	 * @throws Exception Requires and Artwork Entity
+	 */
 	public function initialize(array $config = array()) {
+		if (!isset($config['artwork'])) {
+			throw new Exception('An Artwork Entity stack must be provided to the Piece Allocation Component');
+		}
 		parent::initialize($config);
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
-
 		$this->artwork = $config['artwork'];
-		if (isset($this->artwork->multiple)) {
-			$this->multiple_formats = (boolean) $this->artwork->multiple; // an input value from creation forms
-		}
-//		$this->stack = $this->stackCounts($this->artwork->id);
-//		$this->mostRecentEdition();
-//		$this->mostRecentFormat();
 	}
 	
+	/**
+	 * 
+	 */
 	public function allocate() {
 		$index = array_keys($this->artwork->editions)[0];
 		$this->edition = $this->artwork->editions[$index];
+//		osd($this->artwork->multiple);die;
+//		if (isset($this->artwork->multiple)) {
+//			$this->multiple_formats = (boolean) $this->artwork->multiple; // an input value from creation forms
+//		}
 		unset($this->pieces);
 		if ($this->SystemState->is(ARTWORK_CREATE) && ($this->onePiece() || !$this->multiple_formats)) {
 			$this->piecesToFormat();
