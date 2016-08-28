@@ -7,5 +7,5 @@ config/app.php
 logs
 nbproject/project.properties
 nbproject/project.xml
-/files
-/img
+webroot/files
+webroot/img
