@@ -97,7 +97,8 @@ class EditionStackComponent extends Component {
 		$providers = ['edition' => $edition] + $formats->toArray();
 		
 		// this may need ->order() later for piece-table reporting of open editions
-		$pieces = $Pieces->find()->where($child_condition); 
+		$pieces = $Pieces->find()->where($child_condition)->contain('Dispositions'); 
+		sql($pieces);
 		
 		return ['providers' => $providers, 'pieces' => $pieces];
 				

@@ -102,4 +102,7 @@ class Disposition extends Entity
 		return (empty($this->start_date) || empty($this->end_date));
 	}
 
+	public function _getMemberName() {
+		return $this->first_name . ' ' . $this->last_name;
+	}
 }

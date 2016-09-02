@@ -1,5 +1,9 @@
-<!-- Element/Edition/dispose_pieces_rows.ctp -->
+<!-- Element/Pieces/dispose_pieces_rows.ctp -->
 <?php
+/**
+ * $providers is believed to be the Edition entities generated from 
+ * the EditionStackComponent->stackQuery() - 8/2016
+ */
 $owners = new \Cake\Collection\Collection($providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
 	$accumulator[$owner->key()] = $owner->display_title;
@@ -7,7 +11,7 @@ $owner_title = $owners->reduce(function($accumulator, $owner) {
 }, []);
 
 foreach($pieces as $piece) :
-//	osd($piece);
+	osd($piece);//die;
 ?>
 	<tr>
 		<?php 
@@ -24,7 +28,8 @@ foreach($pieces as $piece) :
 		<?php // osd($piece->id);?>
 		<td class="tools"><?= $standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?></td>
 	</tr>
+	<?= $this->element('Pieces/disposition_event_rows'); ?>
 <?php
 endforeach;
 ?>
-<!-- END Element/Edition/dispose_pieces_rows.ctp -->
+<!-- END Element/Pieces/dispose_pieces_rows.ctp -->

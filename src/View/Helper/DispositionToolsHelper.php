@@ -444,9 +444,9 @@ class DispositionToolsHelper extends Helper {
 		if (empty($disposition->addresses) 
 				|| count($disposition->addresses) > 1) {
 			$prompt = 'A single address is needed. ';
-		} elseif (count($disposition->addresses) === 1 
-				&& stristr(array_shift($disposition->addresses)->address_line, 'unknown')) {
-			$prompt = 'A single address is needed. ';
+//		} elseif (count($disposition->addresses) === 1 
+//				&& stristr(array_shift($disposition->addresses)->address_line, 'unknown')) {
+//			$prompt = 'A single address is needed. ';
 		} else {
 			$prompt = '';
 		}

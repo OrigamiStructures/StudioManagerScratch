@@ -972,6 +972,10 @@ div.dispositions {
       div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
         float: right; } }
 
+.disposition-detail > td {
+  font-size: 80%;
+  padding: 0; }
+
 /**
 ==============================================================
 MEMBERS
