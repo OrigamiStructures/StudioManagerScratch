@@ -195,14 +195,43 @@ class DispositionsController extends AppController
 		$this->set(compact('disposition', 'labels', 'errors'));
 	}
 	
+	/**
+	 * Refine an evolving or existing Disposition
+	 * 
+	 * 
+	 */
 	public function refine() {
-		$disposition = $this->DispositionManager->get();
+		$disposition_id = $this->SystemState->queryArg('disposition');
+//		osd($disposition_id);
+		if (is_null($disposition_id)) {
+			$disposition = $this->DispositionManager->get();
+//			die('wrong place');
+		} else {
+			$disposition = $this->Dispositions->get($disposition_id, [
+				'contain' => ['Pieces' => [
+					'Editions' => ['Artworks', 'Pieces'], 
+					'Formats' => [
+						'Editions' => ['Artworks', 'Pieces']]
+					], 
+					'Members', 
+					'Dispositions']
+			]);
+			$this->DispositionManager->write($disposition);
+		}
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));	
-}
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+	}
 	
 	/**
+	 * Refine an existing Disposition
+	 */
+	protected function _refine() {
+		
+	}
+
+		/**
 	 * Dump the evolving disposition without saving it
 	 * 
 	 * Since some piece assignment changes are made during the disposition 

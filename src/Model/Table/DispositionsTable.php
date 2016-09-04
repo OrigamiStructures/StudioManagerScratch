@@ -115,9 +115,9 @@ class DispositionsTable extends AppTable
         $this->belongsTo('Members', [
             'foreignKey' => 'member_id'
         ]);
-        $this->belongsTo('Dispositions', [
-            'foreignKey' => 'disposition_id'
-        ]);
+//        $this->belongsTo('OwnerDisposition', [
+//            'foreignKey' => 'disposition_id'
+//        ]);
         $this->hasMany('Dispositions', [
             'foreignKey' => 'disposition_id'
         ]);

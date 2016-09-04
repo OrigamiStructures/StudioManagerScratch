@@ -10,6 +10,11 @@ use DateTime;
 use App\Form\AssignmentForm;
 
 /**
+ * Provide services for preparation of a new Disposition through the Disposition Panel
+ * 
+ * This Component works with the cached and evolving dispostion. Once the Disposition 
+ * is saved to the DB, the Controller will handle things.
+ * 
  * CakePHP DispositionManagerComponent
  * @author dondrake
  */
@@ -155,7 +160,8 @@ class DispositionManagerComponent extends Component {
 		return $this->disposition;
 	}
 	
-	public function write() {
+	public function write($disposition = NULL) {
+		$this->disposition = is_null($disposition) ? $this->disposition : $disposition;
 		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
 	}
 	

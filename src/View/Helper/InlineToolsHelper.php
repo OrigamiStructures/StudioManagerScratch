@@ -88,5 +88,14 @@ class InlineToolsHelper extends Helper {
         $remove = $this->removeLink($remove_url);
         return $this->Html->tag('span', "$review $remove", ['class' => 'inline_nav']);
     }
+	
+	public function inlineReviewRefineDelete($url, $refine_url = NULL, $remove_url = NULL) {
+        $refine_url = (is_null($refine_url)) ? $url : $refine_url;
+        $remove_url = (is_null($remove_url)) ? $url : $remove_url;
+        $review = $this->reviewLink($url);
+        $refine = $this->refineLink($refine_url);
+        $remove = $this->removeLink($remove_url);		
+        return $this->Html->tag('span', "$review $refine $remove", ['class' => 'inline_nav']);
+	}
     
 }
