@@ -31,7 +31,7 @@ class PieceFilter {
 	}
 	
 	/**
-	 * Return some set of Piece Entities containe in the composite structure $data
+	 * Return some set of Piece Entities contained in the composite structure $data
 	 * 
 	 * If a $context object is provided, that will determine both the class that 
 	 * will handle the request, and what filtering strategy that class uses. 
@@ -51,6 +51,10 @@ class PieceFilter {
 		
 		return $pieces;
 	}
+    
+    public function rejected() {
+        return $this->FilterClass->rejected;
+    }
 	
 	protected function _selectRuleClass($context) {
 		$namespace = '\App\Lib\\';
@@ -68,7 +72,7 @@ class PieceFilter {
 	 * @param array $pieces
 	 * @return array
 	 */
-	public function _extractPieces($data, $pieces = []) {
+	protected function _extractPieces($data, $pieces = []) {
 		if (is_object($data)) {
 			if (get_class($data) == 'App\Model\Entity\Piece') {
 				$pieces[] = $data;
@@ -90,9 +94,5 @@ class PieceFilter {
 		}
 		return $pieces;
 	}
-    
-    public function rejected() {
-        return $this->FilterClass->rejected;
-    }
 	
 }
