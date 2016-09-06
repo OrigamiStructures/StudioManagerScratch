@@ -293,7 +293,7 @@ class DispositionToolsHelper extends Helper {
             return $this->_disconnectAddress($address);
         }
 		
-		$label = $this->_toLabel($address->address1);
+		$label = $this->_toLabel($address->addressLine);
 		
 		if ($disposition) {
 			$action = 'refine';
