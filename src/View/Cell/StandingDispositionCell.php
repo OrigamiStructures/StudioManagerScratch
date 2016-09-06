@@ -31,7 +31,7 @@ class StandingDispositionCell extends Cell
 			EventManager $eventManager = null, array $cellOptions = array()) {
 		parent::__construct($request, $response, $eventManager, $cellOptions);
 		$this->SystemState = $SystemState = $cellOptions['SystemState'];
-		$this->standing_disposition = $standing_disposition = Cache::read($this->SystemState->artistId(), 'dispo');
+		$this->standing_disposition = $standing_disposition = $this->SystemState->standing_disposition;
 		$this->set(compact('standing_disposition', 'SystemState'));
 	}
 

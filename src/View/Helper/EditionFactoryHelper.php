@@ -181,7 +181,7 @@ class EditionFactoryHelper extends Helper {
 	 * @param type $edition
 	 */
 	protected function _formatPieceTools($format, $edition) {
-		$disposition = $this->_View->viewVars['standing_disposition'];
+		$disposition = $this->SystemState->standing_disposition;
 		if ($disposition && $this->SystemState->isKnown('format')) {
 			// in this case we can see the individual pieces with link-up tools included
 			// because of redirect for flat art/edition, queryArg, not controller is our check point
@@ -193,7 +193,7 @@ class EditionFactoryHelper extends Helper {
 		$action = $disposition ? 'refine' : 'create';
 		
 		if ((((boolean) $pieces) && $format->hasSalable($edition->undisposed)) || $format->hasAssigned()) {
-			if ($this->SystemState->standing_disposition) {
+			if ($disposition) {
 				$label = $this->DispositionTools->fromLabel();
 			} else {
 				$label = 'Transfer a piece';
