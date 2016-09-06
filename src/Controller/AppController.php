@@ -116,11 +116,11 @@ class AppController extends Controller
 		$this->set('menus', $menu->assemble());
 		
 //		osd($this->request->session()->read('Auth.User'));die;
-		if (!is_null($this->request->session()->read('Auth.User')) && !is_null($this->SystemState->artistId())) {
-			$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
-		} else {
-			$this->set('standing_disposition', FALSE);
-		}
+//		if (!is_null($this->request->session()->read('Auth.User')) && !is_null($this->SystemState->artistId())) {
+//			$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
+//		} else {
+//			$this->set('standing_disposition', FALSE);
+//		}
 		
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
