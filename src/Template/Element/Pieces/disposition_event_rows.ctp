@@ -10,7 +10,9 @@
 ?>
 <!-- Element/Pieces/disposition_event_rows.ctp -->
 <?php 
-	foreach($piece->dispositions as $disposition) : 
+	$dispositions = $piece->dispositions;
+
+	foreach($dispositions as $disposition) : 
 		$q['?'] = ['disposition' => $disposition->id];
 		$l = $this->InlineTools->inlineReviewRefineDelete($q);
 ?>
