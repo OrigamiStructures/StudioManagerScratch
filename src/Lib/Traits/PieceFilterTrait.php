@@ -4,16 +4,39 @@ namespace App\Lib\Traits;
 use Cake\View\Helper;
 use Cake\Collection\Collection;
 use App\Model\Entity\Disposition;
+use App\Lib\SystemState;
 
 /**
- * PieceTableHelper will coordinate piece filtration to support tabel structures
+ * PieceFilterTrait provides yes/no tests for Piece Entities
  * 
- * Depending on the task the artist is engaged in, they may need to see different 
- * sub-sets of the available pieces and they may need different presentation and 
- * functionality for the pieces they see.
- * This class hold a bunch of simple filter callables that concrete rule classes 
- * can use. This class will decide which concrete rule class should handle the 
- * request, will make that object and pass itself as an argument
+ * These filters can be used by iterators that are working on piece collections. 
+ * These simple tests will return pieces that satisfy the filter method name 
+ * (eg: ::filterUncollected() will return the piece if it has no dispositions of
+ * type = 'collected'). The rejected pieces will be available in an array on 
+ * $this->rejects(), indexed by the piece->id. Each rejected piece will have 
+ * the reason(s) for its rejection recorded in piece->rejection_reason with a \n 
+ * between each reason if there is more than one.
+ * 
+ * 
+ * The filters work as the callable argument for a Filter (or other) Iterators. 
+ * They expect Entity $piece and $key (the orinating array's index for the entry). 
+ * 
+ * <pre>
+ * $collection = new Collection($edition->pieces);
+ * $fluid = $collection->filter([$this, 'filterFluid'])->toArray();
+ * $not_fluid = $this->rejects();
+ * </pre>
+ * 
+ * Many of the filters are simple state-checks (eg: if($piece->isAssigned()){} )
+ *  
+ * A more complex variety of filter will create a disposition iterator for the 
+ * piece and pass/fail the piece based on disposition examination.
+ * 
+ * More advanced filters require start and end dates be set so deeper analysis 
+ * of time based dispositions can be done. 
+ * 
+ * Some filters will combine other simpler filters to implement complex piece 
+ * selection rules.
  * 
  * @author dondrake
  */

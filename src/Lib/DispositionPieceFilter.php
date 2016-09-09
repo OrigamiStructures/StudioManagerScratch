@@ -7,14 +7,34 @@ use App\Model\Entity\Disposition;
 use App\Lib\Traits\PieceFilterTrait;
 
 /**
- * PieceTableHelper will coordinate piece filtration to support tabel structures
+ * DispositionPieceFilter returns pieces that can receive a given disposition
  * 
- * Depending on the task the artist is engaged in, they may need to see different 
- * sub-sets of the available pieces and they may need different presentation and 
- * functionality for the pieces they see.
- * This class hold a bunch of simple filter callables that concrete rule classes 
- * can use. This class will decide which concrete rule class should handle the 
- * request, will make that object and pass itself as an argument
+ * If this class wasn't selected by a string assembly factory, it might better 
+ * be called DispositionCandidateRules.
+ * 
+ * There is a need to identify which pieces are valid canditates to recieve 
+ * a disposition. The range of possible disposition types and the history of 
+ * the individual pieces make this a complex rule problem. This class implements 
+ * the rules for all cases.
+ * 
+ * It has one public call point that requires two arguments:
+ *		::filter($data, $disposition)
+ * 
+ * $data will carry the pieces (as documented on the method).
+ * $disposition properities will be used to choose the rules to apply. 
+ * 
+ * Remeber that Dispostion entities have two 'type' columns:
+ *		->type = general type, Transfer, Loan, etc
+ *		->label = specific name of the event, Sale, Consignment, etc.
+ * 
+ * The disposition->type is used as a factory parameter to determine which 
+ * method to call. All labeled varieties of each type will follow the same rules 
+ * so disposition->label is not used in the factory process. 
+ * 
+ * The factory method is chosen by a switch statement on $dispostion->type and 
+ * the method name is looked up in the _filter_map array.
+ * 
+ * 
  * 
  * @author dondrake
  */
@@ -22,7 +42,8 @@ class DispositionPieceFilter {
 	
 	use PieceFilterTrait;
 	
-	public $target_date;
+	public $start_date;
+	public $end_date;
 
 	/**
 	 * Map filter constants to actual method names
@@ -33,6 +54,11 @@ class DispositionPieceFilter {
 	 * called to do date work? This would be fine if the dates were always a 
 	 * subtractive process. But they may be additive, for example a piece 
 	 * out on loan may be coming back for later storage.
+	 * 
+	 * !!!!!
+	 * GOOD IDEA
+	 * !!!!!
+	 * 
 	 * ANOTHER POSSIBLITY: A basic filter is done based on simple factors like 
 	 * cache counter values. Then a new query is done on the excluded pieces 
 	 * to get their dispos and do deeper analysis, keeping the complex work 
