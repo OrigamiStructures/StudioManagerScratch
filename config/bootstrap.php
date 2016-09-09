@@ -267,6 +267,8 @@ define('PIECE_COLLECTION_RETURN', TRUE);
 // NOTES ON ADDING TO THIS SECTION
 // PieceTableHelper::_map needs matching entry to identify the
 // filter strategy callable or sort strategy callable
+
+define('PIECE_FILTER_LOAN_FOR_RANGE'	, 'for_loan_in_range');
 define('PIECE_FILTER_FOR_SALE_ON_DATE'	, 'for_sale_on_date');
 define('PIECE_FILTER_COLLECTED'			, 'collected');
 define('PIECE_FILTER_NOT_COLLECTED'		, 'not_collected');
@@ -315,3 +317,7 @@ define('ICON_MEMBER_TYPE_INSTITUTION', 'fi-results-demographics');
 define('ICON_MEMBER_TYPE_PERSON', 'fi-torsos-female-male');
 define('ICON_MEMBER_TYPE_USER', 'fi-torsos-all');
 define('ICON_MEMBER_TYPE_CATEGORY', 'fi-results');
+
+define('REJECTION_RECORD', TRUE);
+define('REJECTION_DONT_RECORD', FALSE);
+

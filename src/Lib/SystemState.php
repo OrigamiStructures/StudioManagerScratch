@@ -110,6 +110,21 @@ class SystemState implements EventListenerInterface {
 		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
 				EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
 	}
+	
+	static function collectedDispositionTypes() {
+		return [DISPOSITION_TRANSFER_SALE,  DISPOSITION_TRANSFER_SUBSCRIPTION, 
+			DISPOSITION_TRANSFER_DONATION,  DISPOSITION_TRANSFER_GIFT, 
+			DISPOSITION_TRANSFER_RIGHTS
+			];
+	}
+	static function scrappedDispositionTypes() {
+		return [DISPOSITION_UNAVAILABLE_LOST, DISPOSITION_UNAVAILABLE_DAMAGED, 
+			DISPOSITION_UNAVAILABLE_STOLEN];
+	}
+	
+	static function unavailableDispositionTypes() {
+		return array_merge(self::collectedDispositionTypes(), self::scrappedDispositionTypes());
+	}
 
 	/**
 	 * Make stored viewVars available

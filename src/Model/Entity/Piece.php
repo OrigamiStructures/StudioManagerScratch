@@ -71,7 +71,7 @@ class Piece extends Entity
 	/**
 	 * provide a key that relates Pieces back to their Format or Edition
 	 * 
-	 * @return type
+	 * @return array edition_id, format_id
 	 */
 	public function key() {
 		return $this->_key([$this->edition_id, $this->format_id]);
@@ -94,6 +94,15 @@ class Piece extends Entity
 		}
 		return $label;
 	}
+	
+	/**
+	 * Get url query arguments that identify this piece
+	 * 
+	 * This process will cascade up the ownership chain to include 
+	 * the owners up to the Artwork
+	 * 
+	 * @return array
+	 */
 	public function identityArguments() {
 		$args = ['piece' => $this->id];
 		if (is_object($this->format)) {
@@ -102,7 +111,62 @@ class Piece extends Entity
 		return $args;
 	}
 	
-	public function increase($quantity) {
+	/**
+	 * Change the quantity by some value
+	 * 
+	 * $quantity can be a positive or negative
+	 * 
+	 * @param integer $quantity
+	 * @param boolean $constrain Constrain results to >= 0
+	 */
+	public function increase($quantity, $constrain = FALSE) {
 		$this->quantity = $this->quantity + $quantity;
+		if ($constrain && $this->quantity < 0) {
+			$this->quantity = 0;
+		}
+	}
+	
+	/**
+	 * Getter for dispositions insures they're always available
+	 * 
+	 * Just the act of looking at dispositions sets them if they don't exist
+	 * 
+	 * 
+	 * @return array The dispositions for this piece
+	 */
+	public function _getDispositions() {
+		if (!isset($this->_properties['dispositions'])) {
+			$Pieces = \Cake\ORM\TableRegistry::get('Pieces');
+			$existing_dispositions = $Pieces->get($this->id, ['contain' => ['Dispositions']]);
+			$this->_properties['dispositions'] = $existing_dispositions->dispositions;
+		}
+		return $this->_properties['dispositions'];
+	}
+	
+	/**
+	 * Is the piece assigned to a format
+	 * 
+	 * @return boolean
+	 */
+	public function isAssigned() {
+		return !is_null($this->properties['format_id']);
+	}
+	
+	/**
+	 * Is the piece collected or slated for collection in the future
+	 * 
+	 * @return boolean
+	 */
+	public function isCollected() {
+		return (boolean) $this->properties['collected'];
+	}
+	
+	/**
+	 * Is the piece free of dispositions
+	 * 
+	 * @return boolean
+	 */
+	public function isFluid() {
+		return (boolean) $this->properties['disposition_count'];
 	}
 }
