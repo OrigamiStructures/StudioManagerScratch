@@ -1,10 +1,9 @@
 <?php 
 $this->loadHelper('DispositionTools');
-if(empty($standing_disposition->label)) {
+if($standing_disposition) :
 	$DispositionTable = Cake\ORM\TableRegistry::get('Dispositions');
 	$disposition_label = $DispositionTable->disposition_label;
-//	osd($disposition_label);
-}
+
 ?>	
 <div class="dispositions_panel">
 	<div class="dispositions">
@@ -15,3 +14,4 @@ if(empty($standing_disposition->label)) {
 		</div>
 	</div>
 </div>
+<?php endif ?>
