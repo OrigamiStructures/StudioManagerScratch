@@ -147,7 +147,7 @@ class SystemState implements EventListenerInterface {
 	 * from the cache so it will be available.
 	 */
 	protected function _standingDisposition() {
-		if (!isset($this->_standing_disposition)) {
+		if (!($this->_standing_disposition)) {
 			$this->_standing_disposition = Cache::read($this->artistId(), 'dispo');
 		}
 		return $this->_standing_disposition;

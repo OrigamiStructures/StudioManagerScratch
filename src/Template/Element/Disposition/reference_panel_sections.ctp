@@ -1,3 +1,9 @@
+<?php 
+$standing_disposition = $SystemState->standing_disposition;
+//osd($standing_disposition);die;
+$this->set('standing_disposition', $standing_disposition);
+
+?>			
 			<section class="disposition">
 				<h1><?= $this->DispositionTools->dispositionLabel($standing_disposition) ?></h1>
 				<?= $this->DispositionTools->eventName($standing_disposition); ?>

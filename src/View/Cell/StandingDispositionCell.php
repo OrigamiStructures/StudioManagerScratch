@@ -47,6 +47,8 @@ class StandingDispositionCell extends Cell
 			// we wouldn't show a standing disposition even if one existed
 			// otherwise it was already set in construction if it existed. 
 			$this->set('standing_disposition', FALSE);
+		} else {
+			$this->set('standing_disposition', $this->SystemState->standing_disposition);
 		}
     }
 	
