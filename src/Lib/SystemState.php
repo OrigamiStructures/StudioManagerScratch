@@ -50,7 +50,7 @@ class SystemState implements EventListenerInterface {
 	 */
 	protected $_viewVars;
 	
-	protected $_standing_disposition;
+	protected $_standing_disposition = FALSE;
 
 
 	/**
@@ -149,7 +149,7 @@ class SystemState implements EventListenerInterface {
 	protected function _standingDisposition() {
 		if (!isset($this->_standing_disposition)) {
 			$this->_standing_disposition = Cache::read($this->artistId(), 'dispo');
-		}		
+		}
 		return $this->_standing_disposition;
 	}
 
