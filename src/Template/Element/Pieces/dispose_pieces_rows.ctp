@@ -11,7 +11,8 @@ $owner_title = $owners->reduce(function($accumulator, $owner) {
 }, []);
 
 foreach($pieces as $piece) :
-	osd($piece);//die;
+	$this->set('piece', $piece);
+//	osd($piece);//die;
 ?>
 	<tr>
 		<?php 
@@ -26,7 +27,7 @@ foreach($pieces as $piece) :
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
 		<td><?= $piece->collected ? 'Yes' : '-'; ?></td>
 		<?php // osd($piece->id);?>
-		<td class="tools"><?= $standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?></td>
+		<td class="tools"><?= $SystemState->standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?></td>
 	</tr>
 	<?= $this->element('Pieces/disposition_event_rows'); ?>
 <?php
