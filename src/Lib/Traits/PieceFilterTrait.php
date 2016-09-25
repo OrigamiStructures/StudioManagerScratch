@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
+use App\Lib\Traits\DispositionFilterTrait;
 use Cake\View\Helper;
 use Cake\Collection\Collection;
 use App\Model\Entity\Disposition;
@@ -41,26 +42,16 @@ use App\Lib\SystemState;
  * @author dondrake
  */
 trait PieceFilterTrait {
+	
+	use DispositionFilterTrait;
     
     /**
      * Rejected pieces collection array
      * 
      * @var array
      */
-    public $rejected = [];
+    protected $_rejected = [];
 	
-	/**
-	 * Access point for the Pieces table
-	 * 
-	 * @return Table
-	 */
-	public function PiecesTable() {
-		if (!isset($this->Pieces)) {
-			$this->Pieces = \Cake\ORM\TableRegistry::get('Pieces');
-		}
-		return $this->Pieces;
-	}
-    
     /**
      * Process and store the pieces that fail individual tests
      * 
@@ -68,24 +59,42 @@ trait PieceFilterTrait {
      * @param int $key
      * @param boolean $result
      */
-    public function saveReject($piece, $key, $result, $reason) {
-        if(!$result){
-            $piece->rejected = $reason;
-            $this->rejected[] = $piece;
-        }
+    protected function _reject($piece, $key, $reason) {
+        $piece->rejection_reason = (!isset($piece->rejection_reason) ? '' : "\n") . $reason;
+        $this->_rejected[$piece->id] = $piece;
+		return FALSE;
     }
+	
+	/**
+	 * Get the rejected pieces
+	 * 
+	 * Each rejected includes at least one reason for its rejection 
+	 * at piece->rejection_reason
+	 * 
+	 * @param boolean $reset Reset the results array
+	 * @return array
+	 */
+	public function rejects($reset = FALSE) {
+		if ($reset) {
+			$this->_rejected = [];
+		}
+		return $this->_rejected;
+	}
 	
 	/**
 	 * Is the piece collected
 	 * 
 	 * @param entity $piece
-	 * @param string $key
+	 * @param string $key 
 	 * @return boolean
 	 */
 	public function filterCollected($piece, $key = NULL) {
-        $result = $piece->collected === 1;
-        $this->saveReject($piece, $key, $result, 'Already collected');
-		return $result;
+        if ($piece->isCollected()) {
+			osd($piece->isCollected()); osd($piece);die;
+			return TRUE;
+		} else {
+			return $this->_reject($piece, $key, 'Already collected');
+		}
 	}
 	
 	/**
@@ -98,10 +107,12 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterNotCollected($piece, $key = NULL) {
-		$result = $piece->collected == 0;
-        $this->saveReject($piece, $key, $result, 'Collected');
-		return $result;
-	}
+		if (!$piece->isCollected()) {
+			return TRUE;
+		} else {
+			return $this->_reject($piece, $key, 'Collected');
+		}
+   	}
 	
 	/**
 	 * Is the piece assigned to a format
@@ -111,9 +122,11 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterAssigned($piece, $key = NULL) {
-		$result = !is_null($piece->format_id);
-        $this->saveReject($piece, $key, $result, 'Not assigned to a format');
-		return $result;
+		if ($piece->isAssigned()) {
+			return TRUE;
+		} else {
+			return $this->_reject($piece, $key, 'Not assigned to a format');
+		}
 	}
 	
 	/**
@@ -126,9 +139,11 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterUnassigned($piece, $key = NULL) {
-		$result = is_null($piece->format_id);
-        $this->saveReject($piece, $key, $result, 'Assigned to a format');
-		return $result;
+		if (!$piece->isAssigned()) {
+			return TRUE;
+		} else {
+			return $this->_reject($piece, $key, 'Assigned to a format');
+		}
 	}
 	
 	/**
@@ -142,54 +157,27 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function filterFluid($piece, $key = NULL) {
-		$result = $piece->disposition_count === 0;
-        $this->saveReject($piece, $key, $result, 'Can\'t be reassigned');
-        return $result;
+		if ($piece->isFluid()) {
+			return TRUE;
+		} else {
+			$s = $piece->disposition_count > 1 ? 's' : '';
+			return $this->_reject($piece, $key, "Has $piece->disposition_count disposition$s");
+		}
 	}
 	
 	/**
-	 * Is the piece free of future disposition obligations as of $this->_target_date?
-	 * 
-	 * This does not account for disposition type. 
-	 * It strictly filters according to date. 
+	 * Does the piece have some disposition
 	 * 
 	 * @param entity $piece
 	 * @param string $key
 	 * @return boolean
-	 * @throws \BadMethodCallException
 	 */
-	public function filterAvailableOnDate($piece, $key = NULL) {
-		if (!isset($this->target_date)) {
-			throw new \BadMethodCallException('The \'target_date\' property must be set for this filter.');
-		}
-		
-		// this skips out if the piece has attached dispositions at all
-		if ($piece->disposition_count === 0) {
+	public function filterNotFluid($piece, $key = NULL) {
+		if (!$piece->isFluid()) {
 			return TRUE;
-		}
-		
-		if (!isset($piece->dispositions)) {
-			
-			// this works for pieces that don't have contained dispositions
-			$proxy = $this->PiecesTable()->find()
-				->where(['Pieces.id' => $piece->id])
-				->contain(['Dispositions' => function ($q) {
-					return $q->where(['end_date > ' => $this->target_date]);
-				}])
-				->first();
-				
-            $result = empty($proxy->toArray()['dispositions']);
-
 		} else {
-			
-			// This works for pieces that have contained dispositions
-			$collection = new Collection($piece->dispositions);
-			$future_obligations = $collection->filter([$this, 'filterFutureDispositions']);
-            
-			$result = $future_obligations->count() == 0;
+			return $this->_reject($piece, $key, 'Is fluid');
 		}
-        $this->saveReject($piece, $key, $result, "Unavailable on $this->target_date");
-        return $result;
 	}
 	
 	/**
@@ -225,25 +213,109 @@ trait PieceFilterTrait {
 			// This works for pieces that have contained dispositions
 			$collection = new Collection($piece->dispositions);
 			$unavailable = $collection->filter([$this, 'filterUnavailableDispositions']);
-			$result = $future_obligations->count() == 0;
+			$result = iterator_count($unavailable) == 0;
 		}
-        $this->saveReject($piece, $key, $result, "Unavailable through damage or loss");
+        $this->_reject($piece, $key, $result, "Unavailable through damage or loss");
         return $result;
 	}
 	
 	/**
-	 * Is the disposition in the future relative to $this->target_date?
+	 * Do all existing dispositions allow the piece to proceed?
 	 * 
-	 * @param object $disposition
+	 * @param entity $piece
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function filterUnavailableDispositions($disposition, $key) {
-		return $disposition->type == DISPOSITION_UNAVAILABLE;
+	public function filterDispositions($piece, $key) {
+		$dispositions = $piece->dispositions;
+		$collection = new Collection($dispositions);
+		$unavailable = $collection->filter(function($disposition, $key){
+			return in_array($disposition->type, SystemState::scrappedDispositionTypes());
+		});
+		
+		if ((boolean) iterator_count($unavailable)) {
+			return TRUE;
+		} elseif ($record) {
+			return $this->_reject($piece, $key, 'Available');
+		} else {
+			return FALSE;
+		}
 	}
 	
 	/**
-	 * Is the piece free to be sold on $this->target_date
+	 * Is the piece free of future disposition obligations as of $this->_start_date?
+	 * 
+	 * This does not account for disposition type. 
+	 * It strictly filters according to date. 
+	 * 
+	 * @param entity $piece
+	 * @param string $key
+	 * @return boolean
+	 * @throws \BadMethodCallException
+	 */
+	public function filterAvailableOnDate($piece, $key = NULL) {
+		if (!isset($this->start_date)) {
+			throw new \BadMethodCallException('The \'start_date\' property must be set for this filter.');
+		}
+		
+		// this skips out if the piece has attached dispositions at all
+		if ($piece->disposition_count === 0) {
+			return TRUE;
+		}
+		
+//		if (!isset($piece->dispositions)) {
+//			
+//			// this works for pieces that don't have contained dispositions
+//			// 09/2016 - This probably doesn't run any more because I changed 
+//			// $piece->dispositions so it will always populate the property
+//			$proxy = $this->PiecesTable()->find()
+//				->where(['Pieces.id' => $piece->id])
+//				->contain(['Dispositions' => function ($q) {
+//					return $q->where(['end_date > ' => $this->start_date]);
+//				}])
+//				->first();
+//				
+//            $result = empty($proxy->toArray()['dispositions']);
+//
+//		} else {
+			
+			// This works for pieces that have contained dispositions
+		$collection = new Collection($piece->dispositions);
+		$future_obligations = $collection->filter([$this, 'filterFutureDispositions']);
+
+		if (iterator_count($future_obligations) == 0) {
+			return TRUE;
+		} else {
+			return $this->_reject($piece, $key, "Unavailable on $this->start_date");
+		}
+//		}
+        
+	}
+	
+	/**
+	 * Is Disposition unavailable 
+	 * 
+	 * @param type $entity
+	 * @param type $piece
+	 * @return boolean
+	 * @throws \BadMethodCallException
+	 */
+	public function filterFutureDispositions($entity) {
+		osd(func_get_args());
+//		$piece->reason = 'arbitrary';
+		return;
+		if (!isset($this->start_date)) {
+			throw new \BadMethodCallException('The \'start_date\' property must be set for this filter.');
+		}
+		
+		
+		osd($this->start_date);
+		osd($entity);
+		return;
+	}
+
+	/**
+	 * Is the piece free to be sold on $this->start_date
 	 * 
 	 * If the piece has any dispostion obligations in the future, it will 
 	 * be disqualified from the sale set
@@ -253,18 +325,30 @@ trait PieceFilterTrait {
 	 * @return boolean
 	 */
 	public function forSaleOnDate($piece, $key) {
-//				osd($this->filterNotCollected($piece), 'filter Not Collected');
-//				osd($this->filterAvailableOnDate($piece), 'filter Available on Date');
-//				osd($this->filterNotUnavailable($piece), 'filter Not unAvailable');
-//                die;
-		if (
-				$this->filterNotCollected($piece) &&
-				$this->filterAvailableOnDate($piece) &&
-				$this->filterNotUnavailable($piece)
-		) {
+		
+		// no dispos is an automatic pass
+		if ($this->filterFluid($piece, $key)) {
 			return TRUE;
-		} else {
+			
+		// already is or scheduled for collection is automatic fail
+		} elseif ($this->filterCollected($piece, $key)) {
 			return FALSE;
 		}
+		
+		// must be available and not required for future event
+		$DispositionFilter = new \App\Lib\DispositionFilter();
+		$DispositionFilter->addFilter('filterAvailable')
+				->addFilter('filterNotFutureEvent');
+		$disposition = $piece->dispostions;
+		
+		
+
+		
+		$DispositionFilter->runFilter(new Disposition(), 0);
+
+	}
+	
+	public function forLoanInDateRange($piece) {
+		
 	}
 }

@@ -144,7 +144,7 @@ class EditionFactoryHelper extends Helper {
 	 */
 	public function pieceTool() {
 		if (!isset($this->PiecesUtility)) {
-			$this->PiecesUtility = new \App\Lib\PieceFilter();
+			$this->PiecesUtility = new PieceFilter();
 		}
 		return $this->PiecesUtility;
 	}

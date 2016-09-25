@@ -73,6 +73,7 @@ class DispositionPieceFilter {
 		PIECE_FILTER_COLLECTED => 'filterCollected',
 		PIECE_FILTER_NOT_COLLECTED => 'filterNotCollected',
 		PIECE_FILTER_FOR_SALE_ON_DATE => '_forSaleOnDate',
+		PIECE_FILTER_LOAN_FOR_RANGE => '_forLoanInDateRange',
 		PIECE_FILTER_ASSIGNED => 'filterAssigned',
 		PIECE_FILTER_UNASSIGNED => 'filterUnassigned',
 		PIECE_FILTER_FLUID => 'filterFluid',
@@ -82,31 +83,50 @@ class DispositionPieceFilter {
 
 	/**
 	 * 
+	 * 
 	 * @param mixed $data
 	 * @param object $disposition
 	 * @return array
 	 */
 	public function filter($data, $disposition) {
+		
+		// some filter rules examine dates
+		$this->start_date = $disposition->start_date;
+		$this->end_date = $disposition->end_date;
+
 		$method = $this->_chooseDispositionFilter($disposition);
 		$pieces = $this->$method($data, $disposition);
 		
 		return $pieces;
 	}
 		
+	/**
+	 * Choose a filter to determine availability for disposition
+	 * 
+	 * All except the first case appear to be stubs
+	 * 
+	 * @param type $disposition
+	 * @return type
+	 */
 	protected function _chooseDispositionFilter($disposition) {
 		switch ($disposition->type) {
 			case DISPOSITION_TRANSFER:
 				return $this->_filter_map[PIECE_FILTER_FOR_SALE_ON_DATE];
 				break;
 			case DISPOSITION_LOAN:
-				return $this->_filter_map[PIECE_FILTER_FOR_SALE_ON_DATE];
+				return $this->_filter_map[PIECE_FILTER_LOAN_FOR_RANGE];
 				break;
 			case DISPOSITION_STORE:
-				return $this->_filter_map[PIECE_FILTER_FOR_SALE_ON_DATE];
+				return $this->_filter_map[PIECE_FILTER_IN_STUDIO_ON_DATE];
 				break;
 			case DISPOSITION_UNAVAILABLE:
-				return $this->_filter_map[PIECE_FILTER_FOR_SALE_ON_DATE];
+				return $this->_filter_map[PIECE_FILTER_EXTANT];
 				break;
+			
+			// ????????
+			// what are the rules for Rights pieces. They can get multiple 
+			// dispositions, can't they?
+			
 
 			default:
 				break;
@@ -128,15 +148,21 @@ class DispositionPieceFilter {
 	 * @param object $disposition
 	 */
 	protected function _forSaleOnDate($entity, $disposition) {
-		$this->target_date = $disposition->start_date->i18nFormat('yyyy-MM-dd');
-//        osd($this->target_date, 'target date');
+		osd('reroute');
+		$this->start_date = $disposition->start_date->i18nFormat('yyyy-MM-dd');
+//        osd($this->start_date, 'target date');
 //        osd($entity->pieces, 'entity->pieces');
 		$collection = new Collection($entity->pieces);
 		$pieces = $collection->filter([$this, 'forSaleOnDate'])->toArray();
 		
 		// because of collection lazy-loading of data, toArray() must happen before unset!!
-		unset($this->target_date);
+		unset($this->start_date);
 		
 		return $pieces;
 	}
+	
+	protected function _forLoanInDateRange($entity, $disposition) {
+		
+	}
+	
 }
