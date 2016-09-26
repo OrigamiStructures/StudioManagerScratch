@@ -1,4 +1,5 @@
 <?php
+use App\Lib\PieceFilter;
 ?>
 <table>
 	<caption>
@@ -39,6 +40,20 @@
 			<td><?= tf($edition->hasSalable()); ?></td>
 			<td><?= $edition->salable_piece_count; ?></td>
 		</tr>
+		<?php 
+			if ($edition->hasUnassigned()) : 
+//				$PieceFilter = new App\Lib\PieceFilter();
+//				$pieces = $PieceFilter->filter($edition->pieces, 'filterUnassigned');
+//				osd($pieces->toArray());
+				$this->set('pieces', $edition->pieces);
+		?>
+		<tr>
+			<td>Fluid Pieces</td>
+			<td colspan="13">
+				<?= $this->element('Artwork/validation/piece_table'); ?>
+			</td>
+		</tr>
+		<?php endif; ?>
 		
 <?php 
 foreach($edition->formats as $format) {

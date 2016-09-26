@@ -45,15 +45,21 @@ class PieceFilter {
 		if (is_object($context)) {
 			$this->FilterClass = $this->_selectRuleClass($context);
 			$pieces = $this->FilterClass->filter($data, $context);
+		} elseif ($context === 'none') {
+			$pieces = $this->_extractPieces($data);
+		} elseif (is_string($context) && method_exists($this, $context)) {
+			$pieces = new Collection($data);
+			$pieces->filter([$this, $context]);
 		} else {
 			$pieces = $this->_extractPieces($data);
+//			throw new \BadMethodCallException('Unknown filter method');
 		}
 		
 		return $pieces;
 	}
     
     public function rejected() {
-        return $this->FilterClass->rejected;
+        return $this->FilterClass->rejects();
     }
 	
 	protected function _selectRuleClass($context) {

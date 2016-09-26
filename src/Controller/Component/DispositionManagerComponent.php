@@ -396,7 +396,12 @@ class DispositionManagerComponent extends Component {
 	protected function _registerMember($arguments) {
 		$Memebers = TableRegistry::get('Members');
 		$conditions = $this->SystemState->buildConditions([]);
-		$member = $Memebers->get($arguments['member'], ['conditions' => $conditions, 'contain' => ['Contacts', 'Addresses']]);
+		$member = $Memebers->get(
+				$arguments['member'], 
+				[
+					'conditions' => $conditions, 
+					'contain' => ['Contacts', 'Addresses']
+				]);
 		$this->_mergeAddresses($member->addresses);
 		unset($member->addresses);
 		$this->disposition->member = $member;
