@@ -294,7 +294,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			
 			// the filter strategy is assumed to have been set at this point . 
 			// Seems like a lot of coupling. 
-			$pieces = $this->pieceTool()->filter($edition->pieces, 'edition');
+			$pieces = $this->pieceFilter()->filter($edition->pieces, 'edition');
 			
 			if ($edition->hasUnassigned()) {
 				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
@@ -347,9 +347,9 @@ class EditionedHelper extends EditionFactoryHelper {
 	private function _dispositionModeFormatPieceTable($format, $edition){
 		$disposition = $this->SystemState->standing_disposition;
 		
-		$pieces = $this->pieceTool()
+		$pieces = $this->pieceFilter()
 			->filter($edition, $disposition);
-        $pieces = array_merge($pieces, $this->pieceTool()->rejected());
+        $pieces = array_merge($pieces, $this->pieceFilter()->rejected());
 		$caption = "Indicate the pieces you want to include in this {$this->DispositionTools->dispositionLabel($disposition)}";
 		$providers = $this->_prepareProviders();
 		
@@ -382,7 +382,7 @@ class EditionedHelper extends EditionFactoryHelper {
 		// and format->pieces is assumed to be the working set. Seems 
 		// like a lot of coupling. And some bad assumptions.
 		// possibly this is just falling through on default settings?
-		$pieces = $this->pieceTool()->filter($format->pieces, 'format');
+		$pieces = $this->pieceFilter()->filter($format->pieces, 'format');
 
 		if ($format->hasAssigned()) {
 			$caption = 'Pieces in this format.';

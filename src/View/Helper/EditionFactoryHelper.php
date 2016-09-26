@@ -17,7 +17,7 @@ class EditionFactoryHelper extends Helper {
 	
 	public $helpers = ['Html', 'DispositionTools'];
 	
-	protected $PiecesUtility;
+	protected $_pieceFilter;
 
 	/**
 	 * Map specific edition types to more general helper strategies
@@ -142,11 +142,11 @@ class EditionFactoryHelper extends Helper {
 	 * 
 	 * @return PiecesUtitlity
 	 */
-	public function pieceTool() {
-		if (!isset($this->PiecesUtility)) {
-			$this->PiecesUtility = new PieceFilter();
+	public function pieceFilter() {
+		if (!isset($this->_pieceFilter)) {
+			$this->_pieceFilter = new PieceFilter();
 		}
-		return $this->PiecesUtility;
+		return $this->_pieceFilter;
 	}
 
 	protected function _editionPieceSummary($edition) {
