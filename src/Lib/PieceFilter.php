@@ -31,42 +31,51 @@ class PieceFilter {
 	}
 	
 	/**
-	 * Return some set of Piece Entities contained in the composite structure $data
+	 * Return some set of Piece Entities contained in the composite structure $pieces
 	 * 
-	 * If a $context object is provided, that will determine both the class that 
+	 * If a $filter object is provided, that will determine both the class that 
 	 * will handle the request, and what filtering strategy that class uses. 
 	 * If none is provided, all the Piece Entities will be extracted and returned. 
 	 * 
-	 * @param mixed $data
-	 * @param object $context
+	 * @param mixed $pieces
+	 * @param object $filter
 	 * @return array
 	 */
-	public function filter($data, $context = 'none') {
-		if (is_object($context)) {
-			$this->FilterClass = $this->_selectRuleClass($context);
-			$pieces = $this->FilterClass->filter($data, $context);
-		} elseif ($context === 'none') {
-			$pieces = $this->_extractPieces($data);
-		} elseif (is_string($context) && method_exists($this, $context)) {
-			$pieces = new Collection($data);
-			$pieces->filter([$this, $context]);
+	public function filter($pieces, $filter) {
+		if (is_object($filter)) {
+			$this->FilterClass = $this->_selectRuleClass($filter);
+			$valid_pieces = $this->FilterClass->filter($pieces, $filter);
+		} elseif (is_string($filter) && method_exists($this, $filter)) {
+			$valid_pieces = new Collection($pieces);
+			$valid_pieces->filter([$this, $filter]);
 		} else {
-			$pieces = $this->_extractPieces($data);
+			$valid_pieces = $this->_extractPieces($pieces);
 //			throw new \BadMethodCallException('Unknown filter method');
 		}
 		
-		return $pieces;
+		return $valid_pieces;
 	}
     
     public function rejected() {
         return $this->FilterClass->rejects();
     }
 	
-	protected function _selectRuleClass($context) {
+	/**
+	 * Select a filter class appropriated to a provided context class
+	 * 
+	 * This assumes there is a whole suite of xPieceFilter classes ready to 
+	 * handle things for named classes of... what? Right now the only valid 
+	 * entry that comes here is 'Disposition'. But I don't know of another 
+	 * case where a different class would be provided. 
+	 * 
+	 * @param object $filter
+	 * @return \App\Lib\filter_class
+	 */
+	protected function _selectRuleClass($filter) {
 		$namespace = '\App\Lib\\';
-		$segments = explode('\\', get_class($context));
-		$context_class = array_pop($segments);
-		$filter_class = "{$namespace}{$context_class}PieceFilter";
+		$segments = explode('\\', get_class($filter));
+		$filter_class = array_pop($segments);
+		$filter_class = "{$namespace}{$filter_class}PieceFilter";
 		
 		return new $filter_class;
 	}
