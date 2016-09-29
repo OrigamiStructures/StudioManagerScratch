@@ -21,20 +21,39 @@ use App\Lib\Traits\PieceFilterTrait;
 class PieceFilter {
 	
 	use PieceFilterTrait;
+	    
+	protected $_start_date = FALSE;
 	
-	protected $Pieces;
-    
-    public $FilterClass;
-
-	public $start_date = FALSE;
+	protected $_end_date = FALSE;
 	
-	public $end_date = FALSE;
-
-
-	public function __construct() {
-		$this->Pieces = \Cake\ORM\TableRegistry::get('Pieces');
+	/**
+	 * Setter, handles start or end dates
+	 * 
+	 * @param string $name any name with 's|Start or e|End 
+	 * @param mixed $value Time object or string to create one
+	 * @return mixed False or Time object
+	 */
+	public function __set($name, $value) {
+		if (preg_match('/start/i', $name)) {
+			$name = '_start_date';
+		} elseif (preg_match('/end/i', $name)) {
+			$name = '_end_date';
+		} else {
+			return FALSE;
+		}
+		
+		if (is_object($value) && get_class($value) === 'Cake\I18n\Time') {
+			$this->$name = $value;
+		} elseif (is_string($value)) {
+			$this->$name = new \Cake\I18n\Time($value);
+		} else {
+			return FALSE;
+		}
+		
+		return $this->$name;
+		
 	}
-	
+
 	/**
 	 * Return some set of Piece Entities contained in the composite structure $pieces
 	 * 
@@ -47,21 +66,21 @@ class PieceFilter {
 	 * @return array
 	 */
 	public function filter($pieces, $filter = FALSE) {
+		$this->rejected(CLEAR);
+		
 		if (is_object($filter) && get_class($filter) === 'App\Model\Entity\Disposition') {
+			// 
 			$disposition = $filter;
-			$this->start_date = $disposition->start_date;
-			$this->end_date = $disposition->end_date;
+			$this->_start_date = $disposition->start_date;
+			$this->_end_date = $disposition->end_date;
 			$filter = $this->_chooseFilter($disposition->type);
-//			$this->FilterClass = $this->_selectRuleClass($filter);
-//			$valid_pieces = $this->FilterClass->filter($pieces, $filter);
+
 		} elseif (is_string($filter) && method_exists($this, $filter)) {
-//			$valid_pieces = new Collection($pieces);
-//			$valid_pieces->filter([$this, $filter]);
+			// in this case everything is set properly
+
 		} else {
 			$filter = FALSE;
 			$valid_pieces = $pieces;
-//			$valid_pieces = $this->_extractPieces($pieces);
-//			throw new \BadMethodCallException('Unknown filter method');
 		} 
 		
 		if ((boolean) $filter) {
@@ -72,10 +91,36 @@ class PieceFilter {
 		return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
 	}
     
-    public function rejected() {
+	/**
+	 * Return the pieces that failed the filter
+	 * 
+	 * Passing TRUE will reset the array. 
+	 * The array will only contain a valid data set after filter() is run. 
+	 * 
+	 * @param boolean $reset
+	 * @return array
+	 */
+    public function rejected($reset = FALSE) {
+		if ($reset) {
+			$this->_rejected = [];
+		}
         return $this->_rejected;
     }
 	
+	
+	/**
+	 * Choose a filter method based on a string that sent from the context
+	 * 
+	 * The public filter method can be told directly what filter to use. But 
+	 * sometimes an object (like a disposition entity) will be sent and that 
+	 * will provide context which will determine what filter to use.
+	 * 
+	 * In these cases, filter() prepares a string that describes the context 
+	 * and this becomes the 'switch' used to select the filter method
+	 * 
+	 * @param string $switch some context indicator
+	 * @return string filter method name
+	 */
 	protected function _chooseFilter($switch) {
 		switch ($switch) {
 			// switches on disposition->type
@@ -99,56 +144,6 @@ class PieceFilter {
 			default:
 				break;
 		}
-	}
-	
-	/**
-	 * Select a filter class appropriated to a provided context class
-	 * 
-	 * This assumes there is a whole suite of xPieceFilter classes ready to 
-	 * handle things for named classes of... what? Right now the only valid 
-	 * entry that comes here is 'Disposition'. But I don't know of another 
-	 * case where a different class would be provided. 
-	 * 
-	 * @param object $filter
-	 * @return \App\Lib\filter_class
-	 */
-	protected function _selectRuleClass($filter) {
-		$namespace = '\App\Lib\\';
-		$segments = explode('\\', get_class($filter));
-		$filter_class = array_pop($segments);
-		$filter_class = "{$namespace}{$filter_class}PieceFilter";
-		
-		return new $filter_class;
-	}
-	
-	/**
-	 * Given an arbitrary composite structure, return the Piece entities it contains
-	 * 
-	 * @param mixed $data
-	 * @param array $pieces
-	 * @return array
-	 */
-	protected function _extractPieces($data, $pieces = []) {
-		if (is_object($data)) {
-			if (get_class($data) == 'App\Model\Entity\Piece') {
-				$pieces[] = $data;
-				return $pieces;
-			}
-			if (method_exists($data, 'toArray')){
-				$data = $data->toArray();
-			}
-		}
-		foreach ($data as $key => $node) {
-			if ($key === 'pieces') {
-				$nodes = $this->Pieces->newEntities($node);
-				$pieces = array_merge($pieces, $nodes);
-				return $pieces;
-			}
-			if (is_object($node) || is_array($node)) {
-				$pieces = $this->_extractPieces($node, $pieces);
-			}
-		}
-		return $pieces;
 	}
 	
 }

@@ -321,3 +321,5 @@ define('ICON_MEMBER_TYPE_CATEGORY', 'fi-results');
 define('REJECTION_RECORD', TRUE);
 define('REJECTION_DONT_RECORD', FALSE);
 
+define('CLEAR', TRUE);
+
