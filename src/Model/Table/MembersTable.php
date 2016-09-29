@@ -284,4 +284,10 @@ class MembersTable extends AppTable
         return $entity;
     }
 	
+	public function findSearch(Query $query, $options) {
+		$query->where(['first_name LIKE' => "%{$options[0]}%"])
+			  ->orWhere(['last_name LIKE' => "%{$options[0]}%"]);
+		return $query->toArray();
+	}
+	
 }

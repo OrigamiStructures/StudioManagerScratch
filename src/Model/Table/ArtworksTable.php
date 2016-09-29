@@ -114,4 +114,10 @@ class ArtworksTable extends AppTable
 		$this->initPieces($data);
 	}
 	
+	public function findSearch(Query $query, $options) {
+		$query->where(['title LIKE' => "%{$options[0]}%"]);
+//		sql($query);
+		return $query->toArray();
+	}
+	
 }

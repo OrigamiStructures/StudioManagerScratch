@@ -37,10 +37,12 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 		<?= $this->element('Menu/menu'); ?>
 	  </div>
 	  <div class="top-bar-right">
-		<ul class="menu">
-		  <li><input placeholder="Search"></li>
-		  <li><button type="button" class="button tiny">Search</button></li>
-		</ul>
+		  <form id="search" action="/search" method="post">
+			<ul class="menu">
+			  <li><input placeholder="Search" name="search"></li>
+			  <li><button form="search" type="submit" class="button tiny">Search</button></li>
+			</ul>
+		  </form>
 	  </div>
 	</nav>
 	<nav class="breadcrumbs">
