@@ -26,6 +26,11 @@ class PieceFilter {
     
     public $FilterClass;
 
+	public $start_date = FALSE;
+	
+	public $end_date = FALSE;
+
+
 	public function __construct() {
 		$this->Pieces = \Cake\ORM\TableRegistry::get('Pieces');
 	}
@@ -37,28 +42,64 @@ class PieceFilter {
 	 * will handle the request, and what filtering strategy that class uses. 
 	 * If none is provided, all the Piece Entities will be extracted and returned. 
 	 * 
-	 * @param mixed $pieces
-	 * @param object $filter
+	 * @param array $pieces
+	 * @param mixed $filter
 	 * @return array
 	 */
-	public function filter($pieces, $filter) {
-		if (is_object($filter)) {
-			$this->FilterClass = $this->_selectRuleClass($filter);
-			$valid_pieces = $this->FilterClass->filter($pieces, $filter);
+	public function filter($pieces, $filter = FALSE) {
+		if (is_object($filter) && get_class($filter) === 'App\Model\Entity\Disposition') {
+			$disposition = $filter;
+			$this->start_date = $disposition->start_date;
+			$this->end_date = $disposition->end_date;
+			$filter = $this->_chooseFilter($disposition->type);
+//			$this->FilterClass = $this->_selectRuleClass($filter);
+//			$valid_pieces = $this->FilterClass->filter($pieces, $filter);
 		} elseif (is_string($filter) && method_exists($this, $filter)) {
+//			$valid_pieces = new Collection($pieces);
+//			$valid_pieces->filter([$this, $filter]);
+		} else {
+			$filter = FALSE;
+			$valid_pieces = $pieces;
+//			$valid_pieces = $this->_extractPieces($pieces);
+//			throw new \BadMethodCallException('Unknown filter method');
+		} 
+		
+		if ((boolean) $filter) {
 			$valid_pieces = new Collection($pieces);
 			$valid_pieces->filter([$this, $filter]);
-		} else {
-			$valid_pieces = $this->_extractPieces($pieces);
-//			throw new \BadMethodCallException('Unknown filter method');
 		}
 		
-		return $valid_pieces;
+		return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
 	}
     
     public function rejected() {
-        return $this->FilterClass->rejects();
+        return $this->_rejected;
     }
+	
+	protected function _chooseFilter($switch) {
+		switch ($switch) {
+			// switches on disposition->type
+			case DISPOSITION_TRANSFER:
+				return 'forSaleOnDate';
+				break;
+			case DISPOSITION_LOAN:
+				return 'forLoanInDateRange';
+				break;
+			case DISPOSITION_STORE:
+				return 'inStudioOnDate';
+				break;
+			case DISPOSITION_UNAVAILABLE:
+				return 'isExtant';
+				break;
+			// ????????
+			// what are the rules for Rights pieces. They can get multiple 
+			// dispositions, can't they?
+			
+			// switches on other strings (none defined yet)
+			default:
+				break;
+		}
+	}
 	
 	/**
 	 * Select a filter class appropriated to a provided context class
