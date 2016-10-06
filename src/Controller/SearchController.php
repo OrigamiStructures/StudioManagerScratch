@@ -12,6 +12,11 @@ use Cake\ORM\TableRegistry;
 class SearchController extends AppController
 {
 
+//	public function initialize() {
+//		parent::initialize();
+//		$this->loadComponent('ArtworkStack');
+//	}
+	
     /**
      * Index method
      *
@@ -26,13 +31,14 @@ class SearchController extends AppController
 			$Artworks = TableRegistry::get('Artworks');
 			$Members = TableRegistry::get('Members');
 			
-			$art = $Artworks->find('search', [$query_string]);
+			$artworks = $Artworks->find('search', [$query_string]);
+//			osd($art);
 //			$edition = '';
 //			$format = '';
 			$members = $Members->find('search', [$query_string]);;
 		}
 		
-		$this->set(compact('art', 'members'));
+		$this->set(compact('artworks', 'members'));
 //		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
     }
 

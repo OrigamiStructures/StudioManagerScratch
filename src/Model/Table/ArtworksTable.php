@@ -115,7 +115,21 @@ class ArtworksTable extends AppTable
 	}
 	
 	public function findSearch(Query $query, $options) {
-		$query->where(['title LIKE' => "%{$options[0]}%"]);
+		$query->where([
+			'Artworks.title LIKE' => "%{$options[0]}%",
+			'Artworks.user_id' => $this->SystemState->artistId()
+			])
+		// CONTAINMENT IS FROM THE COMPONENT.
+		// ABSTRACT THIS
+				->contain([
+		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
+			'Series', 'Pieces', /*'Formats.Users',*/ 'Formats' => [
+				'Images', 'Pieces' => ['Dispositions'], /*'Subscriptions'*/
+				]
+			]
+		]);
+//				->where(['Artworks.user_id' => $this->SystemState->artistId()])
+//				->cache('artwork');
 //		sql($query);
 		return $query->toArray();
 	}
