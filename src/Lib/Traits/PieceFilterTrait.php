@@ -351,4 +351,8 @@ trait PieceFilterTrait {
 	public function forLoanInDateRange($piece) {
 		
 	}
+	
+	public function inStudioOnDate($piece, $key) {
+		
+	}
 }

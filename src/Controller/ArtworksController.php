@@ -201,7 +201,7 @@ class ArtworksController extends AppController
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-		osd($this->request->data);die;
+//		osd($this->request->data);die;
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
