@@ -199,4 +199,14 @@ class FormatsController extends AppController
 		$this->render('/Artworks/review');		
 	}
 	
+	public function testMe() {
+		$conditions = [11, 12, 13, 14, 25, 26];
+		$contain = ['Pieces' => ['Dispositions'], 'Editions' => ['Artworks']];
+		$formats = $this->Formats->find()
+				->where(['Formats.id IN' => $conditions])
+				->contain($contain);
+		$this->set('formats', $formats);
+//		osd($formats->toArray());
+	}
+	
 }
