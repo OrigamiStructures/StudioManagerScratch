@@ -149,7 +149,7 @@ class Piece extends Entity
 	 * @return boolean
 	 */
 	public function isAssigned() {
-		return !is_null($this->properties['format_id']);
+		return !is_null($this->_properties['format_id']);
 	}
 	
 	/**
@@ -158,7 +158,7 @@ class Piece extends Entity
 	 * @return boolean
 	 */
 	public function isCollected() {
-		return (boolean) $this->properties['collected'];
+		return (boolean) $this->_properties['collected'];
 	}
 	
 	/**
@@ -167,6 +167,6 @@ class Piece extends Entity
 	 * @return boolean
 	 */
 	public function isFluid() {
-		return (boolean) $this->properties['disposition_count'];
+		return (boolean) !$this->_properties['disposition_count'];
 	}
 }
