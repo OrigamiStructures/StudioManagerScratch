@@ -214,8 +214,10 @@ class DispositionsController extends AppController
 						'Editions' => ['Artworks', 'Pieces']]
 					], 
 					'Members', 
+					'Addresses',
 					'Dispositions']
 			]);
+			$disposition->addresses = [$disposition->address];
 			$this->DispositionManager->write($disposition);
 		}
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
@@ -318,13 +320,16 @@ class DispositionsController extends AppController
 	 */
 	public function save() {
 		$disposition = $this->DispositionManager->get();
+		$address = array_pop($disposition->addresses)->toArray();
+		unset($disposition->addresses);
 		
 		$data = [
 			'user_id' => $this->SystemState->artistId(),
 			'member_id' => $disposition->member->id,
+			'address_id' => $address['id'],
 			] + $disposition->toArray();
 		$member_data = array_intersect_key($data['member'], ['first_name' => NULL, 'last_name' => NULL]);
-		$address_data = array_intersect_key(array_pop($data['addresses']), [
+		$address_data = array_intersect_key($address, [
 			'address1' => NULL, 
 			'address2' => NULL,
 			'address3' => NULL,
@@ -336,6 +341,7 @@ class DispositionsController extends AppController
 		
 		$entity = $this->Dispositions->newEntity($data);
 		$entity->dirty('member', FALSE);
+		$entity->dirty('addresses', FALSE);
 		$entity = $this->Dispositions->patchEntity($entity, $member_data, ['validate' => FALSE]);
 		$entity = $this->Dispositions->patchEntity($entity, $address_data, ['validate' => FALSE]);
 
