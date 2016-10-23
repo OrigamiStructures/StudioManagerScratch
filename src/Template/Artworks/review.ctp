@@ -25,9 +25,9 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
 	<?php
 	if ($editing) : 
 		if ($SystemState->is(ARTWORK_CREATE_UNIQUE)) {
-			echo $this->Form->create($artwork, ['type' => 'file', 'action' => 'create', 'class' => 'dropzone', 'id' => 'artwork_stack']);
+			echo $this->Form->create($artwork, ['type' => 'file', 'action' => 'create', 'class' => 'droppzone', 'id' => 'artwork_stack']);
 		} else {
-			echo $this->Form->create($artwork, ['type' => 'file', 'class' => 'dropzone', 'id' => 'artwork_stack']);
+			echo $this->Form->create($artwork, ['type' => 'file', 'class' => 'droppzone', 'id' => 'artwork_stack']);
 		}	
 	endif; ?>
 	
@@ -45,7 +45,8 @@ foreach (['artwork', 'edition', 'format'] as $crumb) {
 		$edit_link = $this->Html->link('Edit', ['controller' => $controller, 'action' => 'refine', '?' => $q]);
 		$new_link = $this->Html->link('New', ['controller' => $controller, 'action' => 'create', '?' => $q]); 
 		$tools = " <span>[$edit_link • $new_link]</span>";
-		$this->Html->addCrumb(ucwords($crumb). $tools, ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
+//		$this->Html->addCrumb(ucwords($crumb). $tools, ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
+		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
 //		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
 	}
 }
