@@ -24,7 +24,7 @@ class MembersTable extends AppTable
     private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
     
     private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
-    
+	
     public function implementedEvents()
     {
 		$events = [
@@ -165,14 +165,22 @@ class MembersTable extends AppTable
      */
     public function findContainment(Query $query, array $options) {
         if($this->SystemState->isKnown('member')){
+			$member_id = $this->SystemState->queryArg('member');
             $query->where([
-               'Members.id' => $this->SystemState->queryArg('member')
+               'Members.id' => $member_id
             ]);
-            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
-                $query->contain($this->_person_containment);
-            } else {
+			
+			/**
+			 * The type arg is never included so this always does 'group' containment
+			 * and Disposition containment doesn't work
+			 */
+//            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
+//                $query->contain($this->_person_containment);
+//                $query->contain($this->_persons_disposition);
+//            } else {
                 $query->contain($this->_complete_containment);
-            }
+//                $query->contain($this->_groups_disposition);
+//            }
         } else {
             $query->contain($this->_complete_containment);
         }
