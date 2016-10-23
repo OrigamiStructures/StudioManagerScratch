@@ -207,9 +207,17 @@ class MembersController extends AppController
 	 */
     public function review() {
         $this->SystemState->referer($this->referer());
+		$dispositions = [];
         $query = $this->Members->find('memberReview');
-        $this->set('members', $this->paginate($query));
-        $this->set('_serialize', ['members']);
+		$members = $this->paginate($query);
+		
+        if($this->SystemState->isKnown('member')){
+			$dispositions = $this->Members->Dispositions->find()
+					->where(['member_id' => $this->SystemState->isKnown('member')]);
+		}
+		
+		$this->set(compact('members', 'dispositions'));
+        $this->set('_serialize', ['members', 'dispositions']);
     }
     
     /**
