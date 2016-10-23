@@ -9,8 +9,8 @@
 			<?= $this->Form->input('description', [
 				'placeholder' => 'Optional artwork description', 
 				'label' => 'Artwork Description']); ?>
-			<?= $this->Form->input('image_id', 
-					['type' => 'hidden']); ?>
+			<?php // echo $this->Form->input('image_id', 
+//					['type' => 'hidden']); ?>
 		</fieldset>
 		<?php
 			if ($SystemState->controller() === 'artworks' && 
