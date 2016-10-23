@@ -213,7 +213,8 @@ class MembersController extends AppController
 		
         if($this->SystemState->isKnown('member')){
 			$dispositions = $this->Members->Dispositions->find()
-					->where(['member_id' => $this->SystemState->isKnown('member')]);
+					->where(['member_id' => $this->SystemState->queryArg('member')])
+					->contain(['Pieces']);
 		}
 		
 		$this->set(compact('members', 'dispositions'));

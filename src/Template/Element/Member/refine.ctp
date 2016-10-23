@@ -31,5 +31,19 @@
     <div class="member_controls">
         <?= $this->element("Member/{$mode}_controls") ?>
     </div>
+	<?php if (isset($dispositions) && !empty($dispositions)) : ?>
+	<div class="dispositions">
+		
+		<?php 
+		foreach($dispositions as $disposition) : 
+			$this->set('disposition', $disposition);
+		?>
+		<?= $this->Html->para(NULL, $disposition->label . ' ' . $disposition->name); ?>
+
+		<?php endforeach; ?>
+		
+	</div>
+	<?php endif; ?>
 </section>
+	<?php // osd($dispositions->toArray()); ?>
 <!-- END Element/Member/refine.ctp -->
