@@ -4,6 +4,7 @@ namespace App\View\Helper;
 use App\View\Helper\EditionFactoryHelper;
 use Cake\ORM\TableRegistry;
 
+
 /**
  * EditionedHelper: rule based view/tool rendering for Limited and Open Editions
  * 
@@ -89,7 +90,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			$label = implode('/', $label);
 		
 			$assignment_tool = $this->Html->link("$label pieces to formats",
-				['controller' => 'pieces', '?' => [
+				['controller' => 'editions', 'action' => 'assign', '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
 				]]) . "\n";
@@ -150,9 +151,9 @@ class EditionedHelper extends EditionFactoryHelper {
 					$grammar[0], $grammar[1], $grammar[2], $grammar[3]);
 		} else {
 			if ($format->hasSalable($edition->undisposed_piece_count)) {
-				$assigned = "<p>This fomat has no pieces assigned.</p>\n";
+				$assigned = "<p>This format has no pieces assigned.</p>\n";
 			} else {
-				$assigned = "<p>This fomat was never implemented.</p>\n";
+				$assigned = "<p>This format was never implemented.</p>\n";
 			}
 			
 		}
@@ -282,5 +283,118 @@ class EditionedHelper extends EditionFactoryHelper {
 		return $output;
 		
 	}
+
+	/**
+	 * Decide what piece table display is right for this edition and context
+	 * 
+	 * @param Entity $edition
+	 */
+	protected function _editionPieceTable($edition) {
+		if (is_null($this->SystemState->artworks)) {
+			
+			// the filter strategy is assumed to have been set at this point . 
+			// Seems like a lot of coupling. 
+			$pieces = $this->pieceFilter()->filter($edition->pieces, 'edition');
+			
+			if ($edition->hasUnassigned()) {
+				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
+			} else {
+				$caption = '';
+//				// this information is already shown for empty editions
+//				$caption = 'All the pieces in this edition are assigned to formats';
+			}
+			
+			$providers = ['edition' => $edition];
+			$this->_View->set(compact('caption', 'pieces', 'providers'));
+		}		
+	}
+
+	/**
+	 * Decide what piece table display is right for this format and context 
+	 * 
+	 * @param Entity $format
+	 * @param Entity $edition
+	 */
+	protected function _formatPieceTable($format, $edition) {
+		if (!is_null($this->SystemState->artworks)) {
+			$caption = '';
+			$this->_View->set('caption', $caption);
+			return;
+		}
+		
+//		osd($this->SystemState->standing_disposition);
+//		osd($this->SystemState->controller() !== 'formats');die;
+		
+		// detecting when we're fully qualified to the format level has been uncertain. 
+		// controller() can't be relied on because of redirecting that happens
+		if ($this->SystemState->standing_disposition && $this->SystemState->isKnown('format')) {
+			$this->_dispositionModeFormatPieceTable($format, $edition);
+		} else {
+			$this->_mainModeFormatPieceTable($format, $edition);
+		}
+	}
 	
+	/**
+	 * Make variables that can support rendering the 'disposition' piece table
+	 * 
+	 * The disposition type is always known and we're clear down to a single 
+	 * format display now. Show all the appropriate pieces for that format even 
+	 * if they are not currently assigned. 
+	 * 
+	 * @param entity $format
+	 * @param entity $edition
+	 */
+	private function _dispositionModeFormatPieceTable($format, $edition){
+		$disposition = $this->SystemState->standing_disposition;
+		
+		$pieces = $this->pieceFilter()
+			->filter($edition->pieces, $disposition);
+        $pieces = array_merge($pieces, $this->pieceFilter()->rejected());
+		$caption = "Indicate the pieces you want to include in this {$this->DispositionTools->dispositionLabel($disposition)}";
+		$providers = $this->_prepareProviders();
+		
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
+	}
+
+	/**
+	 * Prepare 'providers' object that can give the owner name for each piece in the edition
+	 * 
+	 * In processes that allow the assignment of pieces to other structures, a format 
+	 * will be show with more than just its assigned pieces (in many cases). When 
+	 * that happens, the artist needs to know where the piece is from so they can 
+	 * decide whether to reassign it to this format and then to the new structure. 
+	 * However, these views are rendered from data returned by ArtworkStack not 
+	 * PieceAssignment, so we have to construct the knowledge base.
+	 */
+	private function _prepareProviders() {
+		$EditionTable = TableRegistry::get('Editions');
+		$conditions = $this->_View->SystemState->buildConditions([]);
+		
+		$provider_set = $EditionTable->get($this->_View->SystemState->queryArg('edition'), [
+				'conditions' => $conditions,
+				'contain' => ['Formats']]);
+		return ['edition' => $provider_set] + $provider_set->formats;
+	}
+
+
+	private function _mainModeFormatPieceTable($format, $edition) {
+		// the filter strategy is assumed to have been set at this point
+		// and format->pieces is assumed to be the working set. Seems 
+		// like a lot of coupling. And some bad assumptions.
+		// possibly this is just falling through on default settings?
+		$pieces = $this->pieceFilter()->filter($format->pieces, 'format');
+
+		if ($format->hasAssigned()) {
+			$caption = 'Pieces in this format.';
+
+		} else {
+//				// this information is already shown for empty formats
+//				$caption = 'No pieces have been assigned to this format.';
+			$caption = '';
+		}
+
+		$providers = [$format];
+		$this->_View->set(compact('caption', 'pieces', 'providers'));
+	}
+
 }

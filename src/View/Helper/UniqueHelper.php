@@ -34,24 +34,44 @@ class UniqueHelper extends EditionFactoryHelper {
 	 * @param FormatEntity $format
 	 * @param EditionEntity $edition
 	 */
-	protected function _formatPieceTools($format, $edition) {
-		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
-		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
-		if ((boolean) $pieces) {
-			echo $this->Html->link("Add status information",
-				['controller' => 'dispositions', 'action' => 'create', '?' => [
-					'artwork' => $edition->artwork_id,
-					'edition' => $edition->id,
-					'format' => $format->id,
-					'piece' => $pieces[0]->id
-				]]);
-		} else {
-			echo $this->Html->tag('p', 
-				'You can\'t change the status of this artwork.', 
-				['class' => 'current_disposition']
-			);
-		}
+	protected function _editionPieceTools($edition) {
+		return '';
 	}
-	
+
+	protected function _editionPieceSummary($edition) {
+		return '';
+	}
+
+	public function quantityInput($edition, $edition_index) {
+		return '';
+	}
+
+	protected function _editionPieceTable($edition) {
+		return '';
+	}
+
+	protected function _formatPieceTable($format, $edition) {
+		$disposition = $this->SystemState->standing_disposition;
+		if (is_null($this->SystemState->artworks)) {
+			if ($disposition) {
+				$pieces = $this->pieceFilter()
+					->filter($edition, $disposition);
+                $pieces = array_merge($pieces, $this->pieceFilter()->rejected());
+				$caption = count($pieces) !==0 ?
+						"Available to include in this {$this->DispositionTools->dispositionLabel($disposition)}" :
+						"This piece is not available ot include in this {$this->DispositionTools->dispositionLabel($disposition)}";
+			} else {
+				$caption = 'Details about this work';
+				$pieces = $format->pieces;
+			}
+			$providers = [$format];
+
+			$this->_View->set(compact('caption', 'pieces', 'providers'));
+		} else {
+			$caption = '';
+			$this->_View->set('caption', $caption);
+		}	
+	}
+
 }
 	

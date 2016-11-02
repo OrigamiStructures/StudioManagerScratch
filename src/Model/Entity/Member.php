@@ -37,13 +37,14 @@ class Member extends Entity
     public function _getName(){
         switch ($this->_properties['member_type']) {
             case MEMBER_TYPE_PERSON:
-                return $this->_properties['first_name'] . ' ' . $this->_properties['last_name'];
+                $name = $this->_properties['first_name'] . ' ' . $this->_properties['last_name'];
                 break;
 
             default:
-                return $this->_properties['first_name'];
+                $name = $this->_properties['first_name'];
                 break;
         }
+		return trim($name);
     }
     
     public function _getSortName(){
@@ -56,5 +57,27 @@ class Member extends Entity
                 return $this->_properties['first_name'];
                 break;
         }
+    }
+    
+    /**
+     * Return a properly cased concatenation of the member type and its name.
+     * 
+     * @param string $case either 'title' or 'lower'
+     * @return string the formatted label
+     */
+    public function memberLabel($case) {
+		return $this->name;
+//        switch ($case) {
+//            case "title":
+//                $label = ucwords($this->member_type) . " " . $this->name;
+//                break;
+//            case "lower":
+//                $label = strtolower($this->member_type) . " " . $this->name;
+//                break;
+//            default:
+//                $label = strtolower($this->member_type) . " " . $this->name;
+//                break;
+//        }
+//        return $label;
     }
 }

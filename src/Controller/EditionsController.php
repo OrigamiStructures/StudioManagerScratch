@@ -4,6 +4,9 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Collection\Collection;
+use App\Form\AssignmentForm;
+use Cake\View\Form\FormContext;
 
 /**
  * Editions Controller
@@ -125,16 +128,19 @@ class EditionsController extends AppController
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
 		$this->ArtworkStack->layerChoiceLists();
-		$element_management = [
-			'artwork' => 'full',
-			'edition' => 'many',
-			'format' => 'many',
-		];
-		$this->set('element_management', $element_management);
+		
+		$edition = $artwork->returnEdition($this->SystemState->queryArg('edition'));
+		if ($edition->isFlat()) {
+			$this->autoRender = FALSE;
+			$arguments = $this->SystemState->queryArg() + [
+				'format' => $edition->formats[0]->id];
+			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
+		}
+		
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');
 	}
-	
+
 	/**
 	 * Refine that data for a single Edition
 	 * 
@@ -157,8 +163,6 @@ class EditionsController extends AppController
 			$index = array_keys($this->request->data['editions'])[0];
 			$deletions = $this->ArtworkStack->refinePieces($artwork, 
 					$this->request->data['editions'][$index]['id']);
-//			osd($artwork);die;
-//			die;
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));
@@ -173,18 +177,16 @@ class EditionsController extends AppController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->render('/Artworks/create_dev');
+		$this->render('/Artworks/review');
 	}
 	
 	/**
 	 * Create an new Edition and a single Format for it
 	 * 
 	 * The artwork will be shown as reference info on the page
-	 * 
-	 * SAVE HAS NOT BEEN WRITTEN
-	 * 
 	 */
 	public function create() {
+//		osd($this->request->data, 'trd');
 		$this->Artworks = TableRegistry::get('Artworks');
 		
 		$artwork = $this->ArtworkStack->stackQuery();
@@ -192,13 +194,15 @@ class EditionsController extends AppController
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
 			]);
-			$this->ArtworkStack->assignPieces($artwork);
-			
-            if ($this->Artworks->save($artwork)) {
+			$this->ArtworkStack->allocatePieces($artwork);
+//			osd($artwork, 'after adding pieces'); die;
+			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
                 $this->redirect([
-					'controller' => 'editions', 
+					'controller' => 'artworks', 
 					'action' => 'review', 
-					'?' => ['artwork' => $this->SystemState->queryArg('artwork')]
+					'?' => [
+						'artwork' => $this->SystemState->queryArg('artwork'),
+						]
 				]);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
@@ -207,6 +211,42 @@ class EditionsController extends AppController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->render('/Artworks/create_dev');		
+		$this->render('/Artworks/review');		
 	}
+	
+	public function assign() {
+		$this->SystemState->referer($this->SystemState->referer());
+		if (!$this->SystemState->isKnown('artwork')) {
+			$this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
+			$this->redirect($this->SystemState->referer());
+		}
+		$errors = [];
+		
+		$EditionStack = $this->loadComponent('EditionStack');
+		$data = $EditionStack->stackQuery();
+		extract($data); // providers, pieces
+		
+		$assignment = new AssignmentForm($data['providers']);
+		$assign = new FormContext($this->request, $this->request->data);
+		
+        if ($this->request->is('post') || $this->request->is('put')) {
+			if ($assignment->execute($this->request->data)) {
+				if($this->EditionStack->reassignPieces($assignment, $providers)) {
+					$this->Flash->error(__('The reassignments were completed.'));
+					$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+				} else {
+					$this->Flash->error(__('There was a problem reassigning the pieces. Please try again'));
+				}
+
+			} else {
+				// have use correct input errors
+				$errors= $assignment->errors();
+			}
+        }
+			
+		$this->set(compact(array_keys($data)));	
+		$this->set('errors', $errors);
+		$this->set('assign', $assign);
+	}
+	
 }

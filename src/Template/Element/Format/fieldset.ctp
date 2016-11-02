@@ -14,21 +14,40 @@
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 $format_index = isset($format_index) ? $format_index : 0 ; 
 ?>
-<fieldset>
-	<legend>Format Details</legend>
+						<fieldset>
+							<legend>Format Details</legend>
+							<div class="image">
+								<?= $this->element('Image/format_fieldset'); ?>
+							</div>
+							<div class="text">
+								<?= $this->Form->input("editions.$edition_index.formats.$format_index.id"); ?>
+								<?= $this->Form->input("editions.$edition_index.formats.$format_index.edition_id", 
+										['type' => 'hidden']); ?>
+
+								<?= $this->element('Format/title_input'); // complex title input logic ?>
+								<?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
+										['placeholder' => 'Media, size and other format details']); ?>
+							</div>
+							<div class="pieces">
+								<!-- no pieces during creation -->
+							</div>
+						</fieldset>
+						<?php 
+						/**
+						 * PENDING FURTHER STUDY
+						 * While this last form fieldset may not exist for some layer refinement 
+						 * they always appear during creation. And since the 'unique' tailored creation 
+						 * is actualy a refinement of a empty stubbed record, we'll need a special 
+						 * cancel button to delete that stub. Other special buttons may turn up.
+						 */
+//						echo $ArtStackElement->choose('artFinalFormButtons'); 
+						?>
+						<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 	<?php // osd($artwork); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.id"); ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.edition_id", 
-			['type' => 'hidden']); ?>
-	
-    <?= $this->element('Format/title_input'); // complex title input logic ?>
-    <?= $this->Form->input("editions.$edition_index.formats.$format_index.description", 
-			['placeholder' => 'Media, size and other format details']); ?>
 	
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_flag"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_start"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.range_end"); ?>
     <?php //  echo $this->Form->input("editions.$edition_index.formats.$format_index.image_id", 
 //			['type' => 'hidden']); ?>
-</fieldset>
-<?= $this->element('Image/format_fieldset'); ?>
+

@@ -12,7 +12,6 @@ class DispositionForm extends Form
     protected function _buildSchema(Schema $schema)
     {
         return $schema->addField('multiple_venues', 'boolean')
-            ->addField('venues', ['type' => 'string'])
 			->addField('date', ['type' => 'datetime'])
             ->addField('return_to', ['type' => 'string'])
 			->addField('storage', ['type' => 'string']);

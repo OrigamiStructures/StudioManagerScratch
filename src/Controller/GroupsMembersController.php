@@ -96,19 +96,18 @@ class GroupsMembersController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Groups Member id.
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete()
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $groupsMember = $this->GroupsMembers->get($id);
-        if ($this->GroupsMembers->delete($groupsMember)) {
-            $this->Flash->success(__('The groups member has been deleted.'));
+        $this->SystemState->referer($this->referer());
+        $conditions = $this->SystemState->buildConditions(['member', 'group'], FALSE);
+        if ($this->GroupsMembers->deleteAll($conditions)) {
+            $this->Flash->success(__('The member has been removed from the group.'));
         } else {
-            $this->Flash->error(__('The groups member could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The member could not be removed from the group. Please, try again.'));
         }
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
     }
 }

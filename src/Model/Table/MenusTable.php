@@ -14,6 +14,7 @@ namespace App\Model\Table;
 use Cake\ORM\Table;
 use App\Model\Table\AppTable;
 use Cake\Collection\Collection;
+use App\Lib\SystemState;
 
 /**
  * CakePHP MenusTable
@@ -22,24 +23,27 @@ use Cake\Collection\Collection;
 class MenusTable extends AppTable{
 	
     public $menu = ['Artwork' => []];
+    
+    protected $clearStudio = ['ClearStudio' => '/artworks/review'];
 	
 	protected $artwork = ['Artwork' => [
-            'Sample' => '/artworks/sample',
+//            'Sample' => '/artworks/sample',
             'View All' => '/artworks/review',
-            'Create' => '/artworks/create',
+            'New Edition' => '/artworks/create',
+            'New Unique Work' => '/artworks/create_unique',
 			'Review Artwork' => [],
 			'Refine Artwork' => [],
 			'Edition' => [],
 			'Format' => [],
         ]];
 	protected $member = ['Market' => [
+			'View Members' => '/members/review',
+			'View Categories' => '/groups/categories',
             'Create Institution' => '/members/create/Institution',
             'Create Person' => '/members/create/Person',
-			'View Members' => '/members/review',
-			'View Categories' => '/groups/categories'
 		]];
-	protected $disposition = ['Dispostion' => [
-			'Go to Dispo' => '/disposition/index',
+	protected $disposition = ['Work Status' => [
+			'Review' => '/dispositions/index',
         ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',
@@ -75,7 +79,7 @@ class MenusTable extends AppTable{
 	 * Establish the main menu keys and thier order
 	 */
 	protected function template() {
-		$this->menu = $this->artwork + 
+		$this->menu = $this->clearStudio + $this->artwork + 
 			$this->member + $this->disposition +
 			$this->account + $this->admin;
 	}
@@ -178,10 +182,17 @@ class MenusTable extends AppTable{
 			function($editions) { return $editions->display_title; },
 			function($editions) { return "/editions/review?artwork={$editions->artwork_id}&edition={$editions->id}"; }
 		);
+			$refine = $refine->toArray();
+			$review = $review->toArray();
+		if (count($refine) === 1) {
+			$refine = array_pop($refine);
+			$review = array_pop($review);
+		}
+
 		$this->menu['Artwork']['Edition'] = [
 			'Create' => "/editions/create?artwork={$this->SystemState->menu_artwork->id}",
-			'Refine' => $refine->toArray(),
-			'Review' => $review->toArray(),
+			'Refine' => $refine,
+			'Review' => $review,
 		];
 	}
 	
@@ -204,6 +215,10 @@ class MenusTable extends AppTable{
 				$refine[$format->display_title] = "/formats/refine$query_args&format={$format->id}";
 				$review[$format->display_title] = "/formats/review$query_args&format={$format->id}";
 			}
+			if (count($refine) === 1) {
+				$refine = array_pop($refine);
+				$review = array_pop($review);
+			}
 			
 			if ($many_editions) {
 				$this->menu['Artwork']['Format'][$edition->display_title] = [
@@ -222,7 +237,7 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function allowNewFormat($edition) {
-		return in_array($edition->type, $this->SystemState->multiFormatEditionTypes());
+		return in_array($edition->type, SystemState::multiFormatEditionTypes());
 	}
 
 }

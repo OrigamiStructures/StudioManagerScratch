@@ -9,10 +9,23 @@ use App\Model\Table\SubscriptionsTable;
 use App\Model\Table\SeriesTable;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
+use Cake\Cache\Cache;
 //use Cake\Controller\Component\PaginatorComponent;
 
 /**
- * CakePHP ArtworkStackComponent
+ * ArtworkStackComponent provides a unified interface for the three layers, Artwork, Edition, and Format
+ * 
+ * The creation and refinement of Artworks is a process that may effect 1, 2 or 3 
+ * the layers. So, depending on context, we may be in any of 3 controllers. 
+ * This component provides the basic services that allow them all to behave 
+ * in the same way. Queries are always performed from the top of the stack 
+ * even if we are working on a Format. Saves are always done from the top also. 
+ * All the views and elements are designed to cascade through all the layers.
+ * 
+ * Refinement of editions that involves quantity changes trigger the application 
+ * of a special rule set to manage piece records. This task is passed off to 
+ * a separate component.
+ * 
  * @author dondrake
  */
 class ArtworkStackComponent extends Component {
@@ -22,9 +35,9 @@ class ArtworkStackComponent extends Component {
 	public $SystemState;
 	
 	public $full_containment = [
-		'Users', 'Images', 'Editions.Users', 'Editions' => [
-			'Series', 'Pieces', 'Formats.Users', 'Formats' => [
-				'Images', 'Pieces', /*'Subscriptions'*/
+		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
+			'Series', 'Pieces', /*'Formats.Users',*/ 'Formats' => [
+				'Images', 'Pieces' => ['Dispositions'], /*'Subscriptions'*/
 				]
 			]
 		];
@@ -58,9 +71,19 @@ class ArtworkStackComponent extends Component {
 		}
 	}
 	
-	
+	/**
+	 * Wrap both refinement save and deletions in a single transaction
+	 * 
+	 * Creation is a simple Table->save() but refinement may involve deletion 
+	 * of piece records. This method provides refinement for all layers of the stack.
+	 * 
+	 * @param Entity $artwork
+	 * @param array $deletions
+	 * @return boolean
+	 */
 	public function refinementTransaction($artwork, $deletions) {
 		$ArtworkTable = TableRegistry::get('Artworks');
+		Cache::delete("get_default_artworks[_{$artwork->id}_]", 'artwork');//die;
 //		osd($artwork);die;
 		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
 			$result = $ArtworkTable->save($artwork, ['atomic' => false]);
@@ -83,32 +106,52 @@ class ArtworkStackComponent extends Component {
 		// no 'artwork' query value indicates a paginated page
 		if (!$this->SystemState->isKnown('artwork')) {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
-				'contain' => $this->full_containment
+				'contain' => $this->full_containment,
+				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
-			return $artworks;
+			return $artworks->toArray();
 		} else {
+			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
+			// BASED ON ONGOING DISPOSITION CREATION ?????
+			// 
 			// There may be more keys known than just the 'artwork', but that's 
 			// all we need for the query.
+//			$artwork = $this->Artworks->find()
+//					->contain($this->full_containment)
+////					->cache('default')
+//					->where($this->SystemState->buildConditions(['artwork' => 'Artworks.id'], 'Artworks'))
+//					->first();
+////					->toArray();
+//					osd($artwork);die;
+//			osd($query);
+//			sql($query);die;
+//			$artwork = $query->toArray();die;
 			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'), [
-				'contain' => $this->full_containment
+				'contain' => $this->full_containment,
+				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
+				'cache' => 'artwork',
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
 				return $this->pruneEntities($artwork);
-			} else if ($this->SystemState->is(ARTWORK_REVIEW) || $this->SystemState->is(ARTWORK_REFINE)) {
+			} else if ($this->SystemState->is(ARTWORK_REFINE)) {
+				// make the nodes to edit be at the top. show others for context
+				return $this->filterEntities($artwork); // TO BE WRITTEN
+			} else if ($this->SystemState->is(ARTWORK_REVIEW)) {
+				// filter to the specific case the user requested
 				return $this->filterEntities($artwork);
 			}
 			return $artwork;
 		}
 	}
 	
-	public function assignPieces($artwork) {
-		$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
-		$this->PieceAssignment->assign();
+	public function allocatePieces($artwork) {
+		$this->PieceAllocation = $this->controller->loadComponent('PieceAllocation', ['artwork' => $artwork]);
+		$this->PieceAllocation->allocate();
 	}
 	
 	/**
@@ -118,7 +161,7 @@ class ArtworkStackComponent extends Component {
 	 * the edition size. The is the method that detects if quantity 
 	 * was edited. All edition types pass through this check. The 
 	 * handling will be parsed out to specialized code in the 
-	 * PieceAssignmentComponent if there was an edit of this value.
+	 * PieceAllocationComponent if there was an edit of this value.
 	 * 
 	 * @param entity $artwork The full artwork stack
 	 * @param integer $edition_id ID of the edition that was up for editing
@@ -133,8 +176,8 @@ class ArtworkStackComponent extends Component {
 					'id' => $edition->id,
 				];
 		if ($quantity_tuple) {
-			$this->PieceAssignment = $this->controller->loadComponent('PieceAssignment', ['artwork' => $artwork]);
-			return $this->PieceAssignment->refine($quantity_tuple); // return [deletions required]
+			$this->PieceAllocation = $this->controller->loadComponent('PieceAllocation', ['artwork' => $artwork]);
+			return $this->PieceAllocation->refine($quantity_tuple); // return [deletions required]
 		}
 //		osd($quantity_tuple, 'after call');//die;
 		return []; // deletions required
@@ -189,11 +232,12 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function pruneEntities($artwork) {
-//		$artwork = $this->filterEntities($artwork);
-		$controller = strtolower($this->SystemState->request->controller);
+		$artwork = $this->filterEntities($artwork);
+		$controller = $this->SystemState->controller();
 
 		if ($controller == 'editions') {
 			$artwork->editions = [new \App\Model\Entity\Edition()];
+			$artwork->editions[0]->formats = [new \App\Model\Entity\Format()];
 		} else {
 			$edition_index = $artwork->indexOfRelated('editions', $this->SystemState->queryArg('edition'));
 			$artwork->editions[$edition_index]->formats = [new \App\Model\Entity\Format()];

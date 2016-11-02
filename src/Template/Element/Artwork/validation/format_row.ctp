@@ -6,7 +6,7 @@ $links = $this->Html->link($artwork->id, ['controller' => 'pieces', '?' => ['art
 		$this->Html->link($format->id, ['controller' => 'pieces', '?' => ['artwork' => $artwork->id, 'edition' => $edition->id, 'format' => $format->id]]);
 ?>
 		<tr class='format'>
-			<td><?= $links; ?></td>
+			<td><?= 'Format '.$links; ?></td>
 			<td><?= $format->quantity; ?></td>
 			<td><?= tf($format->hasAssigned()); ?></td>
 			<td><?= $format->assigned_piece_count; ?></td>
@@ -21,3 +21,14 @@ $links = $this->Html->link($artwork->id, ['controller' => 'pieces', '?' => ['art
 			<td><?= tf($format->hasSalable($edition->undisposed_piece_count)); ?></td>
 			<td><?= $format->salable_piece_count($edition->undisposed_piece_count); ?></td>
 		</tr>
+		<?php 
+			if ($format->hasAssigned()) : 
+				$this->set('pieces', $format->pieces);
+		?>
+		<tr>
+			<td>Fluid Pieces</td>
+			<td colspan="13">
+				<?= $this->element('Artwork/validation/piece_table'); ?>
+			</td>
+		</tr>
+		<?php endif; ?>

@@ -1,10 +1,11 @@
 <!-- Element/Format/image.ctp -->
 <?php 
+//osd($format);
 if ($format->image === NULL) {
-	$image = $artwork->image == NULL ? "NoImage.png" : $artwork->image->fullPath;
-	$attributes = ['class' => 'dup_image'];
+	$image = $artwork->image == NULL ? "NoImage.png" : $artwork->image->fullPath('medium');
+	$attributes = ['class' => 'dup'];
 } else {
-	$image = $format->image->fullPath;
+	$image = $format->image->fullPath('medium');
 	$attributes = [];
 }
 ?>

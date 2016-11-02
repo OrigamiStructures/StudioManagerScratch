@@ -1,105 +1,65 @@
-@import 'settings';
+@import '_settings';
 @import '../bower_components/foundation-sites/scss/foundation';
-
+@import '../fonts/foundation-icons/foundation-icons.css';
+@import '_header';
+@import '_artwork_stack';
+@import '_dispositions';
+@import '_members';
+@import '_forms';
 
 footer{
 	height: 10rem;
 }
 
-.top-bar-left {
-	
-	ul.menu li {
-		width: 10rem;
+/**
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
+**/
+@media only screen { /* small up */ 
+	div.pieces {
+		button {
+			display: none;
+		}
+		table {
+			display: block;
+		}
 	}
-	li.has-submenu {
-		/*border: thin solid black;*/
+}
+@media only screen and (min-width: 40.063em) {   
+	div.pieces {
 		position: relative;
-		ul.nested {
+		button {
+			display: block;
+		}
+		table {
 			display: none;
 		}
 	}
-	li:hover {
-		background-color: gray;
-		> a {
-			color: #a1ffff;
+
+	div.pieces:hover {
+		button {
+			display: none;
+		}
+		table {
+			display: block;
+			position: absolute;
+			top: 0;
+			overflow-y: visible;
+			z-index: 1000;
 		}
 	}
-	/*li.menu-text:hover {
-		color: #ddd;
-	}*/
-	li.disabled {
-		color: #bbb;
-	}
-	li.disabled:hover {
-		color: #666;
-	}
-	li.has-submenu:hover > ul.nested {
-		font-size: .75rem;
-		display: block;
-		position: absolute;
-		top: .98rem;
-		left: 4rem;
-		z-index: 1000;
-		border: thin solid #ccc;
-	}
-	ul.nested:hover {
-		display: block;
-		z-index: 1000;
-	}
-	section.artwork:nth-of-type(2n) {
-		background-color:linen;
-	}
-}	
-section.artwork {
-	padding: 1rem 0;
-	
-	div.row {
-		padding: 0;
-	}
-	
-	p {
-		line-height: normal;
-		margin: 0;
-		padding: 0;
-	}
-	
-	img {
-		/*margin-top: 0.8em;*/
-	}
-	
-	@media only screen and (min-width: 40.063em) {
-/*		h1, h2, h3, h4, h5, h6 {
-			line-height: 1.4;
-		}*/
-
-		h2 {
-			font-size: 1.5rem;
-			margin: 1rem 0 0;
-		}
-		
-		h1 {
-			margin-bottom: 0;
-		}
-	}
-	
-}
-.column, .columns {
-	padding-left: 0;
 }
 
-img {
-	width: 100%;
-}
-img.dup_image {
-	opacity: .3;
-}
 
-section.format {
+/*section.format {
 	@include grid-row;
 	padding-top: 1em;
-}
+}*/
 
-section.assignment, section.disposition, p.policy_statement {
+p.policy_statement {
 	padding-top: .8em;
 	font-size: 90%;
 	color: #444;
@@ -130,3 +90,56 @@ form {
 span.nav {
 	font-size: .9rem;
 }
+
+div.radio > label {
+	
+	.disabled {
+		color: #ccc;
+	}
+	
+	input {
+		margin: .5rem;
+
+		.disabled {
+			color: #ccc;
+		}
+		
+	}
+}
+
+.disabled  {
+	color: #ccc;
+}
+
+div.training {
+	@include grid-column-row();
+	@include grid-column(8);
+}
+
+
+div.input-with-toollabel{
+    @include grid-row();
+    label {
+       @include grid-column(2); 
+       text-align: right;
+    }
+    div.input{
+        @include grid-column(10);
+    }
+}
+
+.inline_icon, .inline_nav {
+    margin-right: 0.5rem;
+/*	i {
+		background-color: #eee;
+		
+	}*/
+}
+
+span.inline_icon.nav {
+    font-size: 80%;
+    i.fi-pencil {
+        font-size: 85%;
+    }
+}
+

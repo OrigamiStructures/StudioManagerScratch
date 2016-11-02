@@ -1,10 +1,14 @@
 /*@import 'util/util';*/
+/*$badge-padding: 0.3em;
+$badge-minwidth: 2.1em;
+$badge-font-size: 0.6rem;*/
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
  * 2. Prevent iOS and IE text size adjust after device orientation change,
  *    without disabling user zoom.
  */
+@import url(../fonts/foundation-icons/foundation-icons.css);
 html {
   font-family: sans-serif;
   /* 1 */
@@ -360,15 +364,12 @@ body.is-reveal-open {
 .foundation-mq {
   font-family: "small=0em&medium=40em&large=64em&xlarge=75em&xxlarge=90em"; }
 
-footer {
-  height: 10rem; }
-
 .top-bar-left {
   /*li.menu-text:hover {
   	color: #ddd;
   }*/ }
   .top-bar-left ul.menu li {
-    width: 10rem; }
+    width: 9rem; }
   .top-bar-left li.has-submenu {
     /*border: thin solid black;*/
     position: relative; }
@@ -386,58 +387,825 @@ footer {
     font-size: .75rem;
     display: block;
     position: absolute;
-    top: .98rem;
-    left: 4rem;
+    top: .1rem;
+    left: 8rem;
     z-index: 1000;
     border: thin solid #ccc; }
   .top-bar-left ul.nested:hover {
     display: block;
     z-index: 1000; }
+  .top-bar-left > ul.menu > li.has-submenu:hover > ul.nested {
+    top: 1.5rem;
+    left: .2rem; }
   .top-bar-left section.artwork:nth-of-type(2n) {
     background-color: linen; }
 
-section.artwork {
-  padding: 1rem 0; }
-  section.artwork div.row {
-    padding: 0; }
-  section.artwork p {
-    line-height: normal;
-    margin: 0;
-    padding: 0; }
-  section.artwork img {
-    /*margin-top: 0.8em;*/ }
-  @media only screen and (min-width: 40.063em) {
-    section.artwork {
-      /*		h1, h2, h3, h4, h5, h6 {
-      			line-height: 1.4;
-      		}*/ }
-      section.artwork h2 {
-        font-size: 1.5rem;
-        margin: 1rem 0 0; }
-      section.artwork h1 {
-        margin-bottom: 0; } }
+nav.breadcrumbs {
+  /*@include grid-row();*/
+  width: 100%;
+  background-color: slategrey;
+  margin-bottom: 0; }
+  nav.breadcrumbs > ul {
+    list-style: none;
+    /*@include grid-column(12);*/ }
+    nav.breadcrumbs > ul li {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a {
+      color: #fcf8e3; }
+    nav.breadcrumbs > ul a.review {
+      font-weight: bold; }
+      nav.breadcrumbs > ul a.review span {
+        font-weight: normal; }
 
-.column, .columns {
-  padding-left: 0; }
+/**
+==============================================================
 
-img {
-  width: 100%; }
+ARTWORK STACK 
+// @include grid-column(12, 0) second arg is gutter setting
 
-img.dup_image {
-  opacity: .3; }
+==============================================================
+**/
+section.assignment, section.disposition {
+  padding-top: 0; }
+  section.assignment p, section.assignment p.policy_statement, section.disposition p, section.disposition p.policy_statement {
+    margin-bottom: 0;
+    font-size: 90%;
+    color: #444; }
 
-section.format {
+p.policy_statement {
+  padding-top: .8em; }
+
+/**
+==============================================================
+ARTWORK
+==============================================================
+**/
+div.artworks section.artwork {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 1em; }
-  section.format::before, section.format::after {
+  margin-top: 0rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: .4rem solid #ccc; }
+  div.artworks section.artwork::before, div.artworks section.artwork::after {
     content: ' ';
     display: table; }
-  section.format::after {
+  div.artworks section.artwork::after {
+    clear: both; }
+  div.artworks section.artwork h1, div.artworks section.artwork h2, div.artworks section.artwork p {
+    margin-bottom: 0; }
+  div.artworks section.artwork img {
+    margin-top: .4rem; }
+    div.artworks section.artwork img.dup {
+      opacity: .5; }
+
+/* ARTWORK STACK small up */
+@media only screen {
+  /* small up */
+  section.artwork > div.image {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+    section.artwork > div.image:last-child {
+      float: left; }
+    section.artwork > div.image img {
+      width: 100%; }
+  section.artwork > div.text, section.artwork > div.editions {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; }
+    section.artwork > div.text h1, section.artwork > div.editions h1 {
+      margin: 0; } }
+/* ARTWORK STACK medium only */
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  section.artwork > div.image {
+    width: 33.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    /*@include grid-col-end();*/ }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; } }
+/* ARTWORK STACK large up */
+@media only screen and (min-width: 64.063em) {
+  section.artwork > div.image {
+    width: 16.66667%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork > div.text, section.artwork > div.editions {
+    width: 83.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
+      float: right; }
+
+  section.artwork.editing > div.image {
+    width: 25%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork.editing > div.image:last-child:not(:first-child) {
+      float: right; }
+  section.artwork.editing > div.text, section.artwork.editing > div.editions {
+    width: 75%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.artwork.editing > div.text:last-child:not(:first-child), section.artwork.editing > div.editions:last-child:not(:first-child) {
+      float: right; } }
+/**
+==============================================================
+EDITIONS
+==============================================================
+**/
+div.editions section.edition {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: .5rem;
+  padding-top: .5rem;
+  border-top: .2rem solid #eee; }
+  div.editions section.edition::before, div.editions section.edition::after {
+    content: ' ';
+    display: table; }
+  div.editions section.edition::after {
     clear: both; }
 
-section.assignment, section.disposition, p.policy_statement {
+@media only screen {
+  /* small up */
+  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats {
+    width: 100%;
+    float: left;
+    padding-left: 0;
+    padding-right: 0; }
+    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child) {
+      float: right; }
+  section.edition > div.text h2 {
+    font-size: 1.5rem; } }
+/*div.editions {*/
+@media only screen and (min-width: 40.063em) {
+  /* medium up */
+  section.edition > div.text {
+    width: 50%;
+    float: left;
+    padding-left: 0;
+    padding-right: 0; }
+    section.edition > div.text:last-child:not(:first-child) {
+      float: right; }
+  section.edition > div.pieces {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    section.edition > div.pieces:last-child:not(:first-child) {
+      float: right; } }
+/*}*/
+/**
+==============================================================
+FORMAT
+==============================================================
+**/
+div.formats {
+  width: 100%;
+  float: left;
+  padding-left: 0;
+  padding-right: 0; }
+  div.formats:last-child:not(:first-child) {
+    float: right; }
+  div.formats section.format {
+    max-width: 75rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: .4rem;
+    padding-top: .4rem;
+    /*border-top: thin solid #ececec;*/ }
+    div.formats section.format::before, div.formats section.format::after {
+      content: ' ';
+      display: table; }
+    div.formats section.format::after {
+      clear: both; }
+    div.formats section.format table {
+      /*width: 100%;*/ }
+      div.formats section.format table td.tools div.input.text, div.formats section.format table div.submit {
+        display: inline-block; }
+        div.formats section.format table td.tools div.input.text label, div.formats section.format table td.tools div.input.text input, div.formats section.format table td.tools div.input.text div.submit, div.formats section.format table div.submit label, div.formats section.format table div.submit input, div.formats section.format table div.submit div.submit {
+          display: inline-block; }
+        div.formats section.format table td.tools div.input.text input, div.formats section.format table div.submit input {
+          margin-left: .5rem; }
+        div.formats section.format table td.tools div.input.text input#to-move, div.formats section.format table div.submit input#to-move {
+          width: 3rem;
+          height: auto;
+          padding: 0.0625rem 0 0.0625rem 0.5rem;
+          margin-bottom: 0;
+          /*margin-left: .5rem;*/ }
+    @media screen and (max-width: 63.9375em) {
+      div.formats section.format div.image .dup {
+        display: none !important; } }
+    div.formats section.format div.image img {
+      width: 100%; }
+    div.formats section.format div.text p {
+      margin-bottom: 0; }
+  @media only screen {
+    div.formats {
+      /* small up */ }
+      div.formats section.format > div.image {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        width: 16.66667%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0; }
+        div.formats section.format > div.image::before, div.formats section.format > div.image::after {
+          content: ' ';
+          display: table; }
+        div.formats section.format > div.image::after {
+          clear: both; }
+        div.formats section.format > div.image:last-child:not(:first-child) {
+          float: right; }
+        div.formats section.format > div.image, div.formats section.format > div.image:last-child {
+          float: none; }
+        div.formats section.format > div.image:last-child:not(:first-child) {
+          float: right; }
+        div.formats section.format > div.image:last-child {
+          float: left; }
+      div.formats section.format > div.text {
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format > div.text:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format > div.pieces {
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format > div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset div.image {
+        /*@include grid-column-row();*/
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0; }
+        div.formats section.format.editing > fieldset div.image:last-child:not(:first-child) {
+          float: right; } }
+  @media only screen and (min-width: 40.063em) and (max-width: 64em) {
+    div.formats section.format div.text {
+      width: 50%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format div.text:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format div.pieces {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.formats section.format div.pieces:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.editing > fieldset > div.image {
+      max-width: 75rem;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem;
+      width: 50%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0; }
+      div.formats section.format.editing > fieldset > div.image::before, div.formats section.format.editing > fieldset > div.image::after {
+        content: ' ';
+        display: table; }
+      div.formats section.format.editing > fieldset > div.image::after {
+        clear: both; }
+      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        float: right; }
+      div.formats section.format.editing > fieldset > div.image, div.formats section.format.editing > fieldset > div.image:last-child {
+        float: none; }
+      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        float: right; }
+    div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+        float: right; } }
+  @media only screen and (min-width: 40.063em) and (max-width: 64em) {
+    div.formats section.format.format_focus > div.text {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
+        float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.formats section.format.format_focus div.pieces {
+      width: 100%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.formats section.format.format_focus div.pieces:last-child:not(:first-child) {
+        float: right; }
+      div.formats section.format.format_focus div.pieces button {
+        display: none; }
+      div.formats section.format.format_focus div.pieces table {
+        display: block; }
+    div.formats section.format.format_focus div.pieces:hover table {
+      position: relative; } }
+  @media only screen and (min-width: 64.063em) {
+    div.formats {
+      /* large up */ }
+      div.formats section.format > div.image {
+        width: 8.33333%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto; }
+        div.formats section.format > div.image:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format > div.text {
+        width: 41.66667%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format > div.text:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format > div.pieces {
+        width: 50%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format > div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset > div.image {
+        /*@include grid-column-row();*/
+        width: 33.33333%;
+        float: left;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto; }
+        div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+        width: 66.66667%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+          float: right; }
+      div.formats section.format.format_focus > div.text {
+        width: 83.33333%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem; }
+        div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
+          float: right; } }
+
+/**
+==============================================================
+DISPOSITION
+==============================================================
+**/
+@media only screen {
+  /* small up */
+  div.dispositions_panel {
+    /*margin-top: -1rem;*/ }
+    div.dispositions_panel p.prompt {
+      /*font-size: 80%;*/
+      color: firebrick;
+      font-size: 0.75rem;
+      margin: -0.25rem 0 0;
+      padding: 0.15rem 0.8rem;
+      display: inline-block;
+      vertical-align: middle; }
+    div.dispositions_panel p {
+      font-size: 85%;
+      line-height: 1;
+      margin-bottom: 0.125rem; }
+    div.dispositions_panel div.disposition {
+      background-color: #fbf2e0;
+      max-width: 75rem;
+      margin-left: auto;
+      margin-right: auto; }
+      div.dispositions_panel div.disposition::before, div.dispositions_panel div.disposition::after {
+        content: ' ';
+        display: table; }
+      div.dispositions_panel div.disposition::after {
+        clear: both; }
+      div.dispositions_panel div.disposition section {
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        /*background-color: #eee;*/
+        padding: .3rem; }
+        div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+          float: right; }
+      div.dispositions_panel div.disposition section.prompt {
+        width: 100%;
+        float: left;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+        margin-top: .5rem;
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        background-color: #a9b3bd; }
+        div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+          float: right; }
+        div.dispositions_panel div.disposition section.prompt .button {
+          /*					margin: 0;
+          					padding: .15rem .8rem;*/
+          background-color: #a9b3bd;
+          font-size: 0.75rem;
+          font-weight: bold;
+          margin: -0.25rem 0 0;
+          padding: 0.15rem 0.8rem;
+          text-transform: uppercase; }
+        div.dispositions_panel div.disposition section.prompt .button:hover {
+          background-color: slategray; }
+      div.dispositions_panel div.disposition .warning {
+        color: firebrick;
+        font-size: 1rem;
+        font-weight: bold; } }
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  div.dispositions_panel div.disposition section.disposition {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.disposition:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.address, div.dispositions_panel div.disposition section.pieces {
+    width: 50%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.address:last-child:not(:first-child), div.dispositions_panel div.disposition section.pieces:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.prompt {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+      float: right; } }
+@media only screen and (min-width: 64.063em) {
+  /*large up */
+  div.dispositions_panel div.disposition section {
+    width: 33.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section:last-child:not(:first-child) {
+      float: right; }
+  div.dispositions_panel div.disposition section.prompt {
+    width: 100%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.dispositions_panel div.disposition section.prompt:last-child:not(:first-child) {
+      float: right; } }
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+div.dispositions {
+  /*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  	}*/
+  /*	@media only screen and (min-width: 64.063em) {  large up 
+  	}*/ }
+  div.dispositions h1 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 0.3125rem; }
+  div.dispositions h2 {
+    font-size: 1rem;
+    margin-top: 2px; }
+  @media only screen {
+    div.dispositions {
+      /* small up */ }
+      div.dispositions section.disposition {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto; }
+        div.dispositions section.disposition::before, div.dispositions section.disposition::after {
+          content: ' ';
+          display: table; }
+        div.dispositions section.disposition::after {
+          clear: both; }
+        div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.dispositions section.disposition > div.left::before, div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::before, div.dispositions section.disposition > div.right::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition > div.left::after, div.dispositions section.disposition > div.right::after {
+            clear: both; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.left:last-child, div.dispositions section.disposition > div.right, div.dispositions section.disposition > div.right:last-child {
+            float: none; }
+          div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+            float: right; }
+          div.dispositions section.disposition > div.left > section, div.dispositions section.disposition > div.right > section {
+            width: 100%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition > div.left > section:last-child:not(:first-child), div.dispositions section.disposition > div.right > section:last-child:not(:first-child) {
+              float: right; }
+        div.dispositions section.disposition div.input.date {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto; }
+          div.dispositions section.disposition div.input.date::before, div.dispositions section.disposition div.input.date::after {
+            content: ' ';
+            display: table; }
+          div.dispositions section.disposition div.input.date::after {
+            clear: both; }
+          div.dispositions section.disposition div.input.date select {
+            width: 33.33333%;
+            float: left;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem; }
+            div.dispositions section.disposition div.input.date select:last-child:not(:first-child) {
+              float: right; } }
+  @media only screen and (min-width: 40.063em) {
+    div.dispositions section.disposition > div.left, div.dispositions section.disposition > div.right {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.dispositions section.disposition > div.left:last-child:not(:first-child), div.dispositions section.disposition > div.right:last-child:not(:first-child) {
+        float: right; } }
+
+.disposition-detail > td {
+  font-size: 80%;
+  padding: 0; }
+
+/**
+==============================================================
+MEMBERS
+==============================================================
+**/
+div.members {
+  padding-top: 1rem; }
+  div.members p {
+    margin-bottom: 0px; }
+  @media only screen {
+    div.members {
+      /* small up */ }
+      div.members section.member {
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto; }
+        div.members section.member::before, div.members section.member::after {
+          content: ' ';
+          display: table; }
+        div.members section.member::after {
+          clear: both; }
+        div.members section.member h1 {
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          margin: 0; }
+          div.members section.member h1:last-child:not(:first-child) {
+            float: right; }
+        div.members section.member h2 {
+          border-top: 2px solid #eee;
+          font-size: 1.5rem;
+          margin: 0.5rem 0 0; }
+        div.members section.member h3 {
+          font-size: 1rem;
+          margin: 0.5rem 0 0; }
+        div.members section.member div.member_left, div.members section.member div.member_right, div.members section.member div.members {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem; }
+          div.members section.member div.member_left::before, div.members section.member div.member_left::after, div.members section.member div.member_right::before, div.members section.member div.member_right::after, div.members section.member div.members::before, div.members section.member div.members::after {
+            content: ' ';
+            display: table; }
+          div.members section.member div.member_left::after, div.members section.member div.member_right::after, div.members section.member div.members::after {
+            clear: both; }
+          div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child), div.members section.member div.members:last-child:not(:first-child) {
+            float: right; }
+          div.members section.member div.member_left, div.members section.member div.member_left:last-child, div.members section.member div.member_right, div.members section.member div.member_right:last-child, div.members section.member div.members, div.members section.member div.members:last-child {
+            float: none; }
+          div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child), div.members section.member div.members:last-child:not(:first-child) {
+            float: right; }
+          div.members section.member div.member_left > div, div.members section.member div.member_right > div, div.members section.member div.members > div {
+            width: 100%;
+            float: left;
+            padding-left: 0;
+            padding-right: 0; }
+            div.members section.member div.member_left > div:last-child:not(:first-child), div.members section.member div.member_right > div:last-child:not(:first-child), div.members section.member div.members > div:last-child:not(:first-child) {
+              float: right; }
+          div.members section.member div.member_left > section, div.members section.member div.member_right > section, div.members section.member div.members > section {
+            width: 100%;
+            float: left;
+            padding-left: 0;
+            padding-right: 0; }
+            div.members section.member div.member_left > section:last-child:not(:first-child), div.members section.member div.member_right > section:last-child:not(:first-child), div.members section.member div.members > section:last-child:not(:first-child) {
+              float: right; }
+        div.members section.member div.member.left {
+          width: 100%;
+          float: left;
+          padding-left: 0;
+          padding-right: 0; }
+          div.members section.member div.member.left:last-child:not(:first-child) {
+            float: right; }
+        div.members section.member div.member_controls {
+          max-width: 75rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          margin-top: 1rem;
+          background-color: #eee; }
+          div.members section.member div.member_controls::before, div.members section.member div.member_controls::after {
+            content: ' ';
+            display: table; }
+          div.members section.member div.member_controls::after {
+            clear: both; }
+          div.members section.member div.member_controls:last-child:not(:first-child) {
+            float: right; }
+          div.members section.member div.member_controls, div.members section.member div.member_controls:last-child {
+            float: none; }
+          div.members section.member div.member_controls:last-child:not(:first-child) {
+            float: right; }
+      div.members section.member_entry {
+        /*padding-bottom: 0.4rem;*/
+        max-width: 75rem;
+        margin-left: auto;
+        margin-right: auto;
+        border-bottom: solid thin #e6e6e6; }
+        div.members section.member_entry::before, div.members section.member_entry::after {
+          content: ' ';
+          display: table; }
+        div.members section.member_entry::after {
+          clear: both; }
+        div.members section.member_entry .name {
+          width: 100%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          line-height: 1; }
+          div.members section.member_entry .name:last-child:not(:first-child) {
+            float: right; }
+        div.members section.member_entry .controls {
+          width: 91.66667%;
+          float: left;
+          padding-left: 0.9375rem;
+          padding-right: 0.9375rem;
+          margin-left: 8.33333%;
+          line-height: 1;
+          padding-top: 0.1875rem; }
+          div.members section.member_entry .controls:last-child:not(:first-child) {
+            float: right; }
+          div.members section.member_entry .controls a {
+            font-size: 80%;
+            /*margin-top: -0.2rem;*/ } }
+  @media only screen and (min-width: 40.063em) {
+    div.members section.member div.member_left, div.members section.member div.member_right {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .name {
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .name:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .controls {
+      margin-left: 0%;
+      width: 50%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .controls:last-child:not(:first-child) {
+        float: right; } }
+  @media only screen and (min-width: 64.063em) {
+    div.members section.member div.member_left, div.members section.member div.member_right {
+      width: 33.33333%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member div.member_left:last-child:not(:first-child), div.members section.member div.member_right:last-child:not(:first-child) {
+        float: right; }
+    div.members div.member.left {
+      width: 33.33333%;
+      float: left;
+      padding-left: 0;
+      padding-right: 0; }
+      div.members div.member.left:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .name {
+      width: 33.33333%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .name:last-child:not(:first-child) {
+        float: right; }
+    div.members section.member_entry .controls {
+      width: 66.66667%;
+      float: left;
+      padding-left: 0.9375rem;
+      padding-right: 0.9375rem; }
+      div.members section.member_entry .controls:last-child:not(:first-child) {
+        float: right; } }
+
+/*[type="text"], [type="password"], [type="date"], [type="datetime"], [type="datetime-local"], [type="month"], [type="week"], [type="email"], [type="tel"], [type="time"], [type="url"], [type="color"], [type="number"], [type="search"], textarea {
+	padding: $input-padding;
+	line-height: 1;
+}*/
+footer {
+  height: 10rem; }
+
+/**
+
+Review phase management of piece tables for editions and formats 
+This hover system keeps the page information density low when 
+there are many elements shown on the page. 
+
+**/
+@media only screen {
+  /* small up */
+  div.pieces button {
+    display: none; }
+  div.pieces table {
+    display: block; } }
+@media only screen and (min-width: 40.063em) {
+  div.pieces {
+    position: relative; }
+    div.pieces button {
+      display: block; }
+    div.pieces table {
+      display: none; }
+
+  div.pieces:hover button {
+    display: none; }
+  div.pieces:hover table {
+    display: block;
+    position: absolute;
+    top: 0;
+    overflow-y: visible;
+    z-index: 1000; } }
+/*section.format {
+	@include grid-row;
+	padding-top: 1em;
+}*/
+p.policy_statement {
   padding-top: .8em;
   font-size: 90%;
   color: #444; }
@@ -459,5 +1227,76 @@ form .form-error, form .error-message {
 
 span.nav {
   font-size: .9rem; }
+
+div.radio > label .disabled {
+  color: #ccc; }
+div.radio > label input {
+  margin: .5rem; }
+  div.radio > label input .disabled {
+    color: #ccc; }
+
+.disabled {
+  color: #ccc; }
+
+div.training {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 66.66667%;
+  float: left;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem; }
+  div.training::before, div.training::after {
+    content: ' ';
+    display: table; }
+  div.training::after {
+    clear: both; }
+  div.training:last-child:not(:first-child) {
+    float: right; }
+  div.training, div.training:last-child {
+    float: none; }
+  div.training:last-child:not(:first-child) {
+    float: right; }
+
+div.input-with-toollabel {
+  max-width: 75rem;
+  margin-left: auto;
+  margin-right: auto; }
+  div.input-with-toollabel::before, div.input-with-toollabel::after {
+    content: ' ';
+    display: table; }
+  div.input-with-toollabel::after {
+    clear: both; }
+  div.input-with-toollabel label {
+    width: 16.66667%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+    text-align: right; }
+    div.input-with-toollabel label:last-child:not(:first-child) {
+      float: right; }
+  div.input-with-toollabel div.input {
+    width: 83.33333%;
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem; }
+    div.input-with-toollabel div.input:last-child:not(:first-child) {
+      float: right; }
+
+.inline_icon, .inline_nav {
+  margin-right: 0.5rem;
+  /*	i {
+  		background-color: #eee;
+  		
+  	}*/ }
+
+span.inline_icon.nav {
+  font-size: 80%; }
+  span.inline_icon.nav i.fi-pencil {
+    font-size: 85%; }
 
 /*# sourceMappingURL=prime.css.map */

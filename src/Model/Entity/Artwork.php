@@ -35,4 +35,22 @@ class Artwork extends Entity
         'id' => false,
     ];
     
+	/**
+	 * From an inverted artwork stack, identify the tip-of-the-iceberg
+	 * 
+	 * A normal artwork stack begins with the Artwork and sees all the children. 
+	 * An inverted stack, such as that linked to a disposition, starts art the 
+	 * child and contains the specific entity chain up to the Artwork. This method 
+	 * adds to the label for the child piece
+	 * 
+	 * @return string
+	 */
+	public function identityLabel() {
+		return $this->title;
+	}
+	
+	public function isFlat() {
+		return ($this->edition_count === 1 && $this->editions[0]->isFlat());
+	}
+	
 }

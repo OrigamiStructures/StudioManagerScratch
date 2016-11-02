@@ -35,15 +35,16 @@ class PiecesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('CounterCache', [
+            'Editions' => [
+				'assigned_piece_count' => [$this, 'assignedEditionPieces'],
+				'fluid_piece_count'  => [$this, 'fluidEditionPieces'],
+					
+			],
             'Formats' => [
 				'assigned_piece_count'=> [$this, 'assignedFormatPieces'],
 				'fluid_piece_count'  => [$this, 'fluidFormatPieces'],
 				'collected_piece_count' => ['conditions' => ['collected' => 1]],
 			],
-            'Editions' => [
-				'assigned_piece_count' => [$this, 'assignedEditionPieces'],
-				'fluid_piece_count'  => [$this, 'fluidEditionPieces'],
-			]
         ]);
 //		$this->addBehavior('ArtworkStack');
 
@@ -62,8 +63,10 @@ class PiecesTable extends AppTable
 				'bindingKey' => ['id', 'edition_id'],
 			]);
 //		}
-        $this->hasMany('Dispositions', [
-            'foreignKey' => 'piece_id'
+        $this->belongsToMany('Dispositions', [
+            'foreignKey' => 'piece_id',
+            'targetForeignKey' => 'disposition_id',
+            'joinTable' => 'dispositions_pieces'
         ]);
     }
 
@@ -107,6 +110,11 @@ class PiecesTable extends AppTable
 			'edition_id' => $entity->edition_id,
 			'format_id IS NOT NULL',
 			]);
+		/**
+		 * THIS NEEDS TO BUMP ASSIGNED FORMAT COUNTING
+		 * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+		 * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
+		 */
 		return $this->assignedPieces($pieces);
 	}
 
@@ -122,15 +130,14 @@ class PiecesTable extends AppTable
 	 * @param Table $table
 	 * @return int
 	 */
-	public function assignedPieces($query) {
+	public function assignedPieces(Query $query) {
 		$query->select(['id', 'format_id', 'edition_id', 'quantity']);
-		$sum = (new Collection($query->toArray()))->reduce(
-				function($accumulate, $value) {
-					return $accumulate + $value->quantity;
-				}, 0
+		$sum = (new Collection($query->toArray()))->sumOf(
+				function($value) {
+					return $value->quantity;
+				}
 			);
-		return $sum;//die;
-//		}
+		return $sum;
 	}
 	
 	public function fluidFormatPieces($event, $entity, $table) {
@@ -148,6 +155,11 @@ class PiecesTable extends AppTable
 			'format_id IS NOT NULL',
 			'disposition_count' => 0,
 			]);
+		/**
+		 * THIS NEEDS TO BUMP FLUID FORMAT PIECES
+		 * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+		 * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
+		 */
 		return $this->fluidPieces($pieces);
 	}
 
@@ -164,10 +176,10 @@ class PiecesTable extends AppTable
 	 */
 	public function fluidPieces($query) {
 		$query->select(['id', 'format_id', 'edition_id', 'quantity']);
-		$sum = (new Collection($query->toArray()))->reduce(
-				function($accumulate, $value) {
-					return $accumulate + $value->quantity;
-				}, 0
+		$sum = (new Collection($query->toArray()))->sumOf(
+				function($value) {
+					return $value->quantity;
+				}
 			);
 		return $sum;//die;
 //		}
@@ -182,7 +194,7 @@ class PiecesTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
-		osd(\Cake\Error\Debugger::trace());
+//		osd(\Cake\Error\Debugger::trace());
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['edition_id'], 'Editions'));
         $rules->add($rules->existsIn(['format_id', 'edition_id'], 'Formats'));
@@ -241,7 +253,7 @@ class PiecesTable extends AppTable
 	 */
 	public function findCanDispose(Query $query, $options) {
 		if (!isset($options['format_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['format_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
 		$format_id = $options['format_id'];
 		$edition_id = $this->Formats->find('parentEdition', $options)
@@ -267,13 +279,14 @@ class PiecesTable extends AppTable
 	 */
 	public function findUnassigned(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
-		return $query->where([
+		$query = $query->where([
 			'edition_id' => $options['edition_id'],
 			'format_id IS NULL',
 			'user_id' => $this->SystemState->artistId(),
 		]);
+		return $query;
 	}
 	
 	/**
@@ -286,14 +299,21 @@ class PiecesTable extends AppTable
 	 */
 	public function findFluid(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
-		return $query->where([
-			'edition_id' => $options['edition_id'],
-			'format_id IS NOT NULL',
-			'disposition_count' => 0,
-			'user_id' => $this->SystemState->artistId(),
-		]);
+		if (!isset($options['format_id'])) {
+				$option = $options + ['format_id IS NOT NULL',
+				'disposition_count' => 0,
+				'user_id' => $this->SystemState->artistId(),
+			];
+		} else {
+			$options = $options + [
+				'disposition_count' => 0,
+				'user_id' => $this->SystemState->artistId(),
+			];
+		}
+		$query->where($options);
+		return $query;
 	}
 	
 	/**
@@ -306,7 +326,7 @@ class PiecesTable extends AppTable
 	 */
 	public function findUndisposed(Query $query, $options) {
 		if (!isset($options['edition_id'])) {
-			throw new \BadMethodCallException("You must pass \$option['edition_id']");
+			throw new \BadMethodCallException("You must pass \$option['edition_id' => (integer)]");
 		}
 		$query = $query->where([
 			'edition_id' => $options['edition_id'],
@@ -336,7 +356,7 @@ class PiecesTable extends AppTable
 			'disposition_count > 0',
 			'user_id' => $this->SystemState->artistId(),
 		]);
-//		osd($query);die;
+
 		return $query;
 	}
 	
@@ -366,5 +386,113 @@ class PiecesTable extends AppTable
 			$result = parent::save($entity, $options);
 		}
 		return $result;
+	}
+	
+	/**
+	 * Split the IDd piece so the new piece has $quantity
+	 * 
+	 * Only has an effect on Open Edition pieces with $quantity > 1
+	 * Get one or both pieces back with the third argument
+	 * PIECE_SPLIT_RETURN_NEW
+	 * PIECE_SPLIT_RETURN_BOTH
+	 * 
+	 * @param integer $piece_id
+	 * @param integer $quantity
+	 * @param string $return
+	 * @return Entity
+	 */
+	public function splitPiece($piece_id, $quantity, $return = PIECE_SPLIT_RETURN_NEW) {
+		$new_piece = FALSE;
+		$source_piece = $this->stack($piece_id);
+		if ($quantity < $source_piece->quantity) {
+			$new_piece = clone $source_piece;
+			unset($new_piece->id);
+			$new_piece->isNew(True);
+			$new_piece->quantity = $quantity;
+			$source_piece->quantity = $source_piece->quantity - $quantity;
+			$result = $this->persistAll([$source_piece, $new_piece]);
+			if (!$result) {
+				$source_piece = $new_piece = FALSE;
+			}
+		}
+		if ($return === PIECE_SPLIT_RETURN_NEW) {
+			$piece = $new_piece;
+		} else {
+			$piece = [$source_piece, $new_piece];
+		}
+		return $piece;
+	}
+	
+	public function stack($piece_id) {
+		return $this->get($piece_id, ['contain' => ['Formats.Editions.Artworks']]);
+	}
+	
+	/**
+	 * Merge OpenEdition pieces back to source pieces on dispo destruction
+	 * 
+	 * splitPiece() divides an Open Edition piece for attachment of some quantity 
+	 * to a disposition. This is the other side of the process. For when a piece 
+	 * is removed from the disposition or the dispo os discarded.
+	 * 
+	 * The pieces have been given a source_piece property that tells who spawned 
+	 * them. If that property is missing then there is no merge to be done. 
+	 * 
+	 * @param array $pieces array of entities
+	 * @return boolean did the process succeed
+	 */
+	public function merge($pieces) {
+		$result = TRUE;
+		$delete_set = [];
+		$source_set = [];
+		foreach ($pieces as $piece) {
+			
+			// many cases just don't qualify for examination
+			if (!isset($piece->source_piece)) {
+				continue;
+			}
+			if (key_exists($piece->source_piece, $source_set)) {
+				// we already know about the source. just add our qty to it
+				$source_set[$piece->source_piece]->increase($piece->quantity);
+				
+			} elseif ($this->exists(['id' => $piece->source_piece])) {
+				$source = $this->get($piece->source_piece);
+				// the source was in the db. pull it out and add our qty to it
+				$source->increase($piece->quantity);
+				$source_set[$source->id] = $source;
+				
+			} else {
+				// this will restablish the source in case there are other 
+				// pieces that need to merge to it also.
+				$source = clone $piece;
+				$source->isNew(TRUE);
+				$source->id = $piece->source_piece;
+				$source_set[$piece->source_piece] = $source;
+			}
+			
+			// now mark our original for deletion
+			$delete_set[$piece->id] = $piece;
+		}
+		
+		return $this->persistAll($source_set, $delete_set);
+	}
+
+	/**
+	 * Create/Update pieces and or delete pieces
+	 * 
+	 * @param array $pieces The entities to be saved or created
+	 * @param array $deletions The entities to be deleted
+	 * @return boolean Did the transaction succeed?
+	 */
+	public function persistAll($pieces = [], $deletions = []) {
+		return $this->connection()->transactional(function() use ($pieces, $deletions){
+			$result = TRUE;
+			foreach($pieces as $piece) {
+				$result = $result && $this->save($piece);
+			}
+			foreach($deletions as $entity) {
+				$result = $result && $this->delete($entity);
+			}
+			return $result;
+		});
 	}
 }

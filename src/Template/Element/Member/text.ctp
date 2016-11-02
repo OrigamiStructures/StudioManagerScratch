@@ -1,8 +1,14 @@
 
 <!-- Element/Member/text.ctp -->
 <?php
-    if(isset($member->first_name)){
-        echo h($member->name);
-    }
+$q = [
+	'controller' => 'members', 
+	'?' => [
+		'member' => $member->id
+	]];
 ?>
+<p>
+    <?=$this->InlineTools->inlineReviewRefine($q); ?>
+    <?=$this->MemberView->identifier($member); ?>
+</p>
 <!-- END Element/Member/text.ctp -->

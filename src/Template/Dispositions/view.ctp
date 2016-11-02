@@ -9,8 +9,6 @@
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Pieces'), ['controller' => 'Pieces', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Piece'), ['controller' => 'Pieces', 'action' => 'add']) ?> </li>
     </ul>
@@ -27,16 +25,24 @@
             <td><?= $disposition->has('member') ? $this->Html->link($disposition->member->name, ['controller' => 'Members', 'action' => 'view', $disposition->member->id]) : '' ?></td>
         </tr>
         <tr>
-            <th><?= __('Location') ?></th>
-            <td><?= $disposition->has('location') ? $this->Html->link($disposition->location->name, ['controller' => 'Locations', 'action' => 'view', $disposition->location->id]) : '' ?></td>
+            <th><?= __('Type') ?></th>
+            <td><?= h($disposition->type) ?></td>
         </tr>
         <tr>
-            <th><?= __('Piece') ?></th>
-            <td><?= $disposition->has('piece') ? $this->Html->link($disposition->piece->id, ['controller' => 'Pieces', 'action' => 'view', $disposition->piece->id]) : '' ?></td>
+            <th><?= __('Label') ?></th>
+            <td><?= h($disposition->label) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Name') ?></th>
+            <td><?= h($disposition->name) ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($disposition->id) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Disposition Id') ?></th>
+            <td><?= $this->Number->format($disposition->disposition_id) ?></td>
         </tr>
         <tr>
             <th><?= __('Created') ?></th>
@@ -46,5 +52,61 @@
             <th><?= __('Modified') ?></th>
             <td><?= h($disposition->modified) ?></td>
         </tr>
+        <tr>
+            <th><?= __('Start Date') ?></th>
+            <td><?= h($disposition->start_date) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('End Date') ?></th>
+            <td><?= h($disposition->end_date) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Complete') ?></th>
+            <td><?= $disposition->complete ? __('Yes') : __('No'); ?></td>
+         </tr>
     </table>
+    <div class="related">
+        <h4><?= __('Related Pieces') ?></h4>
+        <?php if (!empty($disposition->pieces)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th><?= __('Id') ?></th>
+                <th><?= __('Created') ?></th>
+                <th><?= __('Modified') ?></th>
+                <th><?= __('User Id') ?></th>
+                <th><?= __('Number') ?></th>
+                <th><?= __('Quantity') ?></th>
+                <th><?= __('Made') ?></th>
+                <th><?= __('Edition Id') ?></th>
+                <th><?= __('Format Id') ?></th>
+                <th><?= __('Disposition Count') ?></th>
+                <th><?= __('Collected') ?></th>
+                <th class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($disposition->pieces as $pieces): ?>
+            <tr>
+                <td><?= h($pieces->id) ?></td>
+                <td><?= h($pieces->created) ?></td>
+                <td><?= h($pieces->modified) ?></td>
+                <td><?= h($pieces->user_id) ?></td>
+                <td><?= h($pieces->number) ?></td>
+                <td><?= h($pieces->quantity) ?></td>
+                <td><?= h($pieces->made) ?></td>
+                <td><?= h($pieces->edition_id) ?></td>
+                <td><?= h($pieces->format_id) ?></td>
+                <td><?= h($pieces->disposition_count) ?></td>
+                <td><?= h($pieces->collected) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Pieces', 'action' => 'view', $pieces->id]) ?>
+
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Pieces', 'action' => 'edit', $pieces->id]) ?>
+
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Pieces', 'action' => 'delete', $pieces->id], ['confirm' => __('Are you sure you want to delete # {0}?', $pieces->id)]) ?>
+
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+    </div>
 </div>

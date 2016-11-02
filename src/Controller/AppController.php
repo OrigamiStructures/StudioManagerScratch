@@ -20,7 +20,8 @@ use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Lib\SState;
-use App\Controller\Component\PieceAssignmentComponent;
+use App\Controller\Component\PieceAllocationComponent;
+use Cake\Cache\Cache;
 
 /**
  * Application Controller
@@ -84,7 +85,6 @@ class AppController extends Controller
      * Initialization hook method.
      *
      * Use this method to add common initialization code like loading components.
-     *
      * e.g. `$this->loadComponent('Security');`
      *
      * @return void
@@ -114,6 +114,14 @@ class AppController extends Controller
     {
 		$menu = TableRegistry::get('Menus');
 		$this->set('menus', $menu->assemble());
+		
+//		osd($this->request->session()->read('Auth.User'));die;
+//		if (!is_null($this->request->session()->read('Auth.User')) && !is_null($this->SystemState->artistId())) {
+//			$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
+//		} else {
+//			$this->set('standing_disposition', FALSE);
+//		}
+		
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
         ) {
@@ -137,7 +145,7 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
-		$art1 = $this->loadComponent('PieceAssignment', ['artwork_id' => 2]);
+		$art1 = $this->loadComponent('PieceAllocation', ['artwork_id' => 2]);
 		osd($art1->stack, 'art1 stack');
 //		$art1->initialize(['artwork_id' => 2]);
 //		osd($art1);
@@ -151,10 +159,6 @@ class AppController extends Controller
 		osd($art1->stack->indexOfEdition(6), 'index of edition 6');
 		osd($art1->stack->indexOfEdition(2), 'index of edition 1');
 		osd($art1->stack->returnEdition(6));
-	}
-	
-	public function call() {
-		return $this->c++;
 	}
 	
 }

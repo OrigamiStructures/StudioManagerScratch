@@ -1,13 +1,10 @@
 <?php 
 $q = [
 	'controller' => 'artworks', 
-//	'action' => 'review', 
 	'?' => [
 		'artwork' => $artwork->id
 	]];
-$nav = $this->Html->link('v', $q + ['action' => 'review']);
-$ed = $this->Html->link('f', $q + ['action' => 'refine']);
-$l = "<span class='nav'>[$nav|$ed] </span>"
+$l = $this->InlineTools->inlineReviewRefine($q);
 ?>
 <!-- Element/Artwork/text.ctp -->
 		<?= $this->Form->input('id', ['type' => 'hidden']); ?>

@@ -1,0 +1,105 @@
+/**
+==============================================================
+MEMBERS
+==============================================================
+**/
+
+div.members{
+    padding-top: 1rem;
+    p{
+        margin-bottom: 0px;
+    }
+	@media only screen { /* small up */
+		section.member{
+            @include grid-row();
+            h1{
+                @include grid-column(12);
+				margin: 0;
+            }
+			h2 {
+				border-top: 2px solid #eee;
+				font-size: 1.5rem;
+				margin: 0.5rem 0 0;
+			}
+			h3 {
+				font-size: 1rem;
+				margin: 0.5rem 0 0;
+			}
+            div.member_left, div.member_right, div.members {
+                @include grid-column-row();
+                @include grid-column(12);
+                > div {
+                    @include grid-column(12, 0);
+                }
+                > section {
+                    @include grid-column(12, 0);
+                }
+            }
+			div.member.left{
+				@include grid-column(12, 0);
+			}
+            div.member_controls{
+                @include grid-column-row();
+                @include grid-column(75%);
+                margin-top: 1rem;
+                background-color: #eee;
+            }
+		}
+        section.member_entry{
+			$line-height: 1;
+            /*padding-bottom: 0.4rem;*/
+            @include grid-row();
+			border-bottom: solid thin $light-gray;
+            .name{
+                @include grid-column(12);
+                line-height: $line-height;
+            }
+            .controls{
+                @include grid-column(11);
+                @include grid-column-offset(1);
+                line-height: $line-height;
+				padding-top: rem-calc(3);
+                a{
+                    font-size: 80%;
+                    /*margin-top: -0.2rem;*/
+                }
+            }
+        }
+	}
+
+	@media only screen and (min-width: 40.063em){
+		section.member{
+            div.member_left, div.member_right{
+                @include grid-column(6);
+            }
+		}
+        section.member_entry{
+            .name{
+                @include grid-column(6);
+            }
+            .controls{
+                @include grid-column-offset(0);
+                @include grid-column(6);
+            }
+        }
+	}
+
+	@media only screen and (min-width: 64.063em) {
+		section.member{
+            div.member_left, div.member_right{
+                @include grid-column(4);
+            }
+		}
+			div.member.left{
+				@include grid-column(4, 0);
+			}
+        section.member_entry{
+            .name{
+                @include grid-column(4);
+            }
+            .controls{
+                @include grid-column(8);
+            }
+        }
+	}
+}

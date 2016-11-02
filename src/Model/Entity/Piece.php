@@ -2,6 +2,8 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\DispositionTrait;
 
 /**
  * Piece Entity.
@@ -23,6 +25,9 @@ use Cake\ORM\Entity;
 class Piece extends Entity
 {
 
+	use ParentEntityTrait;
+	use DispositionTrait;
+	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -43,7 +48,7 @@ class Piece extends Entity
 	 * Format -> Pieces uses two keys so that pieces will completely hook up 
 	 * when new pieces are saved directly on pieces. But later when count cache 
 	 * process runs and an existing edition-linked piece is move to a format, 
-	 * only on key changes... but counter cache only asks for 'changed' keys. 
+	 * only one key changes... but counter cache only asks for 'changed' keys. 
 	 * Then it tries to merge that array with the assoc-keys array. Of course 
 	 * one doesn't match two so there is a failure. 
 	 * 
@@ -61,5 +66,107 @@ class Piece extends Entity
 			$result = parent::extractOriginalChanged($properties);
 		}
 		return $result;
+	}
+	
+	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return array [edition_id, format_id]
+	 */
+	public function key() {
+		return $this->_key([$this->edition_id, $this->format_id]);
+	}
+	
+	/**
+	 * From an inverted artwork stack, identify the tip-of-the-iceberg
+	 * 
+	 * A normal artwork stack begins with the Artwork and sees all the children. 
+	 * An inverted stack, such as that linked to a disposition, starts art the 
+	 * child and contains the specific entity chain up to the Artwork. This method 
+	 * creates the unique path/name label for this piece
+	 * 
+	 * @return string
+	 */
+	public function identityLabel() {
+		$label = (!is_null($this->number) ? "#$this->number" : "$this->quantity pieces");
+		if (is_object($this->format)) {
+			$label = "{$this->format->identityLabel()}, $label";
+		}
+		return $label;
+	}
+	
+	/**
+	 * Get url query arguments that identify this piece
+	 * 
+	 * This process will cascade up the ownership chain to include 
+	 * the owners up to the Artwork
+	 * 
+	 * @return array
+	 */
+	public function identityArguments() {
+		$args = ['piece' => $this->id];
+		if (is_object($this->format)) {
+			$args = $this->format->identityArguments() + $args;
+		}
+		return $args;
+	}
+	
+	/**
+	 * Change the quantity by some value
+	 * 
+	 * $quantity can be a positive or negative
+	 * 
+	 * @param integer $quantity
+	 * @param boolean $constrain Constrain results to >= 0
+	 */
+	public function increase($quantity, $constrain = FALSE) {
+		$this->quantity = $this->quantity + $quantity;
+		if ($constrain && $this->quantity < 0) {
+			$this->quantity = 0;
+		}
+	}
+	
+	/**
+	 * Getter for dispositions insures they're always available
+	 * 
+	 * Just the act of looking at dispositions sets them if they don't exist
+	 * 
+	 * 
+	 * @return array The dispositions for this piece
+	 */
+	public function _getDispositions() {
+		if (!isset($this->_properties['dispositions'])) {
+			$Pieces = \Cake\ORM\TableRegistry::get('Pieces');
+			$existing_dispositions = $Pieces->get($this->id, ['contain' => ['Dispositions']]);
+			$this->_properties['dispositions'] = $existing_dispositions->dispositions;
+		}
+		return $this->_properties['dispositions'];
+	}
+	
+	/**
+	 * Is the piece assigned to a format
+	 * 
+	 * @return boolean
+	 */
+	public function isAssigned() {
+		return !is_null($this->_properties['format_id']);
+	}
+	
+	/**
+	 * Is the piece collected or slated for collection in the future
+	 * 
+	 * @return boolean
+	 */
+	public function isCollected() {
+		return (boolean) $this->_properties['collected'];
+	}
+	
+	/**
+	 * Is the piece free of dispositions
+	 * 
+	 * @return boolean
+	 */
+	public function isFluid() {
+		return (boolean) !$this->_properties['disposition_count'];
 	}
 }

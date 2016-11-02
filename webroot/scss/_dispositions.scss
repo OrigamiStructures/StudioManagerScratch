@@ -1,0 +1,145 @@
+/**
+==============================================================
+DISPOSITION
+==============================================================
+**/
+@media only screen { /* small up */
+	div.dispositions_panel {
+		/*margin-top: -1rem;*/
+		
+		p.prompt {
+			/*font-size: 80%;*/
+			color: firebrick;
+			font-size: 0.75rem;
+			margin: -0.25rem 0 0;
+			padding: 0.15rem 0.8rem;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		p {
+			font-size: 85%;
+			line-height: 1;
+			margin-bottom: rem-calc(2);
+		}
+		div.disposition {
+			background-color: lighten(wheat, 10%);
+			@include grid-row();
+			section {
+				@include grid-column(12);
+				/*background-color: #eee;*/
+				padding: .3rem;
+			}
+			section.prompt {
+				@include grid-column(12);
+				margin-top: .5rem;
+				padding-top: 0rem;
+				padding-bottom: 0rem;
+				background-color: lighten(slategray, 20%);
+				.button {
+/*					margin: 0;
+					padding: .15rem .8rem;*/
+					background-color: lighten(slategray, 20%);
+					font-size: 0.75rem;
+					font-weight: bold;
+					margin: -0.25rem 0 0;
+					padding: 0.15rem 0.8rem;
+					text-transform: uppercase;
+					
+				}
+				.button:hover {
+					background-color: slategray;
+				}
+			}
+			.warning {
+				color: firebrick;
+				font-size: 1rem;
+				font-weight: bold;
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	div.dispositions_panel {
+		div.disposition {
+			section.disposition {
+				@include grid-column(12);
+			}
+			section.address, section.pieces {
+				@include grid-column(6);
+			}
+			section.prompt {
+				@include grid-column(12);
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: 64.063em) {  /*large up */
+	div.dispositions_panel {
+		div.disposition {
+			section {
+				@include grid-column(4);
+			}
+			section.prompt {
+				@include grid-column(12);
+			}
+		}
+	}
+}
+
+/**
+==============================================================
+DISPOSITION FORMS
+==============================================================
+**/
+
+div.dispositions{
+	h1 {
+		font-size: 1.25rem;
+		margin-top: 0;
+		margin-bottom: rem-calc(5);
+	}
+	h2 {
+		font-size: 1rem;
+		margin-top: 2px;
+	}
+	
+	@media only screen { /* small up */
+		section.disposition {
+           @include grid-row();
+            > div.left, > div.right{
+                @include grid-column-row();
+                @include grid-column(12);
+                > section {
+                    @include grid-column(12);
+                }
+            }
+			div.input.date {
+				@include grid-row;
+				select {
+					@include grid-column(4);
+				}
+			}
+		}
+	}
+
+/*	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+	}*/
+	
+	@media only screen and (min-width: 40.063em) {
+		section.disposition{
+            > div.left, > div.right{
+                @include grid-column(6);
+            }
+		}
+	}
+
+/*	@media only screen and (min-width: 64.063em) {  large up 
+	}*/
+}
+
+.disposition-detail > td {
+    font-size: 80%;
+    padding: 0;
+}

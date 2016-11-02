@@ -3,6 +3,10 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Utility\Inflector;
+use Cake\Core\Configure;
+use Cake\Controller\Component\CookieComponent;
+use Cake\Collection\Collection;
+use App\Model\Entity\Member;
 
 /**
  * Members Controller
@@ -19,8 +23,14 @@ class MembersController extends AppController
     ];
     
     public function initialize() {
+        $this->loadComponent('Cookie');
         parent::initialize();
         $this->set('member_types', $this->_memberTypes);
+    }
+    
+    public function beforeRender(\Cake\Event\Event $event) {
+        parent::beforeRender($event);
+        $this->retreiveAndSetGroups();
     }
 
 // <editor-fold defaultstate="collapsed" desc="CRUD Methods">
@@ -101,6 +111,8 @@ class MembersController extends AppController
         $this->set('_serialize', ['member']);
     }
 
+    // </editor-fold>
+
     /**
      * Delete method
      *
@@ -110,16 +122,22 @@ class MembersController extends AppController
      */
     public function delete($id = null)     {
         $this->request->allowMethod(['post', 'delete']);
+        $this->SystemState->referer($this->referer());
         $member = $this->Members->get($id);
+        //Update relationships to remove many to many relation records
+        $this->Members->hasMany('GroupsMembers', [
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE
+        ]);
+
         if ($this->Members->delete($member)) {
             $this->Flash->success(__('The member has been deleted.'));
         } else {
             $this->Flash->error(__('The member could not be deleted. Please, try again.'));
         }
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
     }
 
-    // </editor-fold>
     
     /**
      * Creates member records in element based state
@@ -140,30 +158,40 @@ class MembersController extends AppController
         }
         $this->set(compact('member'));
         $this->set('_serialize', ['member']);
+        $this->render('review');
     }
     
     /**
      * Add contact or address
      * 
-     * With 'contacts' or 'addresses' in the type, add the respective new element to the
-     * return
+     * With 'contacts', 'addresses', or 'groups' in the type, add the respective 
+     * new element to the return
      * 
-     * @param string $entity_type 'contacts' or 'addresses'
+     * @param string $entity_type 'contacts', 'addresses', or 'groups'
      */
     public function addElement($entity_type) {
-        if(!in_array($entity_type, ['contacts', 'addresses'])){
+        if(!in_array($entity_type, ['contacts', 'addresses', 'groups'])){
             throw new \BadMethodCallException('Entity type must be either contacts or addresses');
         }
-        $table = Inflector::pluralize(Inflector::classify($entity_type));
+
+		$table = Inflector::pluralize(Inflector::classify($entity_type));
+        $entity_name = Inflector::classify($entity_type);
+        $entity = "\App\Model\Entity\\$entity_name";
         $member = new \App\Model\Entity\Member($this->request->data);
         
         $start = count($member->$entity_type);
+//        osd($member->$entity_type);die;
         
-        $member->$entity_type = $member->$entity_type + $this->Members->$table->spawn(1, [], $start);
+        $additional_object = new Collection($this->Members->$table->spawn(1,[], $start));
+        $additional_object = $additional_object->map(function($value) use ($entity){
+            return new $entity($value);
+        });
+                
+        $member->$entity_type = (!empty($member->$entity_type) ? $member->$entity_type : []) + $additional_object->toArray();
         
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
-        $this->render('create');
+        $this->render('review');
     }
 	
 	/**
@@ -179,12 +207,18 @@ class MembersController extends AppController
 	 */
     public function review() {
         $this->SystemState->referer($this->referer());
+		$dispositions = [];
         $query = $this->Members->find('memberReview');
-        $query->contain(['Addresses', 'Contacts', 'Groups', 'ProxyGroups']);
-        $query->orderAsc('last_name');
-        $this->retreiveAndSetGroups();
-        $this->set('members', $this->paginate($query));
-        $this->set('_serialize', ['members']);
+		$members = $this->paginate($query);
+		
+        if($this->SystemState->isKnown('member')){
+			$dispositions = $this->Members->Dispositions->find()
+					->where(['member_id' => $this->SystemState->queryArg('member')])
+					->contain(['Pieces']);
+		}
+		
+		$this->set(compact('members', 'dispositions'));
+        $this->set('_serialize', ['members', 'dispositions']);
     }
     
     /**
@@ -211,10 +245,10 @@ class MembersController extends AppController
         if(empty($member->errors())){
             $this->SystemState->referer($this->referer());
         }
+//		osd($member);
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
-        $this->render('create');
-
+        $this->render('review');
     }
     
     /**
@@ -223,6 +257,17 @@ class MembersController extends AppController
      */
     private function retreiveAndSetGroups() {
         $member_groups = $this->Members->Groups->find('memberGroups');
+        $groups_list = (new Collection($member_groups))->combine('id', 'displayTitle');
         $this->set('member_groups', $member_groups);
+        $this->set('groups', $groups_list);
+    }
+    
+    public function testMe() {
+        $cookie_name = Configure::read('Users.RememberMe.Cookie.name');
+        $cookie = $this->Cookie->read($cookie_name);
+        osd($cookie, 'the cookie');
+        osd($this->request->session()->read(), 'session before');
+        $this->request->session()->destroy();
+        osd($this->request->session()->read(), 'session after destroy');
     }
 }

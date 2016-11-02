@@ -8,6 +8,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use App\Model\Behavior\FamilyBehavior;
 use Cake\ORM\TableRegistry;
+use App\Lib\SystemState;
 
 /**
  * Editions Model
@@ -26,8 +27,6 @@ class EditionsTable extends AppTable
 	 * @var array
 	 */
 	protected $types = [
-		EDITION_UNIQUE => 'Unique Work',
-		EDITION_RIGHTS => 'Rights',
 		'Edition' => [
 			EDITION_LIMITED => 'Limited (numbered)',
 			EDITION_OPEN => 'Open (un-numbered)',			
@@ -40,6 +39,8 @@ class EditionsTable extends AppTable
 			PUBLICATION_LIMITED => 'Limited (numbered)',
 			PUBLICATION_OPEN => 'Open (un-numbered)',
 		],
+		EDITION_UNIQUE => 'Unique Work',
+		EDITION_RIGHTS => 'Rights',
 	];
 
 
@@ -176,7 +177,7 @@ class EditionsTable extends AppTable
 					. 'could lead to an Edition entity was required.');
 		}		
 		
-		if (in_array($edition->type, $this->SystemState->limitedEditionTypes())) {
+		if (in_array($edition->type, SystemState::limitedEditionTypes())) {
 			/**
 			 * Limited editions nip undisposed pieces from the end of the edition
 			 */

@@ -175,46 +175,48 @@ class ArtworksController extends AppController
 	 */
     public function review() {
 		if ($this->SystemState->isKnown('artwork')) {
-			$artwork_element = 'full';
 			$artwork_variable = 'artwork';
 		} else {
-			$artwork_element = 'many';
 			$artwork_variable = 'artworks';
 		}
-        $element_management = [
-            'artwork' => $artwork_element,
-            'edition' => 'many',
-            'format' => 'many'
-        ];
-        $this->set($artwork_variable, $this->ArtworkStack->stackQuery());
-        $this->set('element_management', $element_management);
+
+		$result = $this->ArtworkStack->stackQuery();
+		if ($artwork_variable === 'artwork' && $result->isflat()) {
+			$this->autoRender = FALSE;
+			$arguments = $this->SystemState->queryArg() + [
+				'edition' => $result->editions[0]->id, 
+				'format' => $result->editions[0]->formats[0]->id];
+			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
+		}
+		
+		$this->set($artwork_variable, $result);
         $this->set('_serialize', [$artwork_variable]);
     }
 	
 	/**
 	 * Edit the Artwork layer and deeper layers if the work is 'flat'
 	 * 
-	 * A 'flat' artwork would have one Edition with one Format
+	 * A 'flat' artwork would have one Edition possibly with one Format
 	 */
 	public function refine() {
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
+//		osd($this->request->data);die;
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 			
-			// if the count is > 1, there were no edition inputs
+			// if there is 1 edition, the quantity input could have been present
 			if ($artwork->edition_count === 1) {
 				$index = array_keys($this->request->data['editions'])[0];
 				$deletions = $this->ArtworkStack->refinePieces($artwork, 
 						$this->request->data['editions'][$index]['id']);
-			}	
-//			osd($artwork);die;
-			
-			$deletions = $this->ArtworkStack->refinePieces($artwork, $this->request->data);
+			} else {
+				$deletions = [];
+			}
 
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
-				$this->ArtworkStack->assignPieces($artwork);
+//				$this->ArtworkStack->allocatePieces($artwork);
                 $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
             } else {
                 $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
@@ -224,7 +226,12 @@ class ArtworksController extends AppController
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
 //		$this->set('element_management', $element_management);
-		$this->render('create_dev');
+		$this->render('review');
+	}
+	
+	public function upload() {
+		$this->viewBuilder()->layout('ajax');
+//		osd($this->request->data);die;
 	}
 	
     /**
@@ -237,26 +244,37 @@ class ArtworksController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
 				'associated' => [
-					/*'Images', */'Editions', 
+					'Images', 'Editions', 
 						'Editions.Pieces', 'Editions.Formats', 
 							'Editions.Formats.Images', 'Editions.Formats.Pieces'
 					]
 			]);
-			$this->ArtworkStack->assignPieces($artwork);
-//			osd($artwork);die('ready to go');
-            if ($this->Artworks->save($artwork)) {
-                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+			$this->ArtworkStack->allocatePieces($artwork);
+			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
+					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+                
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
-
 		$this->ArtworkStack->layerChoiceLists();
         
 		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
-		$this->render('create_dev');
+		$this->render('review');
     }
+	
+	/**
+	 * Simplify to UX for making unique artwork
+	 * 
+	 * arrive here with a postLink and TRD that makes 
+	 * the normal create method and form simpler. 
+	 */
+	public function createUnique() {
+		$this->request->data += ['user_id' => $this->SystemState->artistId()];
+		$artwork = $this->create();
+		$this->render('review');
+	}
 
 	/**
 	 * Display one or a page of Artworks
@@ -271,13 +289,13 @@ class ArtworksController extends AppController
 	 */
     public function validateQuantities($id) {
 		$this->request->query = ['artwork' => $id];
-        $element_management = [
-            'artwork' => 'full',
-            'edition' => 'many',
-            'format' => 'many'
-        ];
+//        $element_management = [
+//            'artwork' => 'full',
+//            'edition' => 'many',
+//            'format' => 'many'
+//        ];
         $this->set('artwork', $this->ArtworkStack->stackQuery());
-        $this->set('element_management', $element_management);
+//        $this->set('element_management', $element_management);
 //        $this->set('_serialize', [$artwork_variable]);
     }
 	

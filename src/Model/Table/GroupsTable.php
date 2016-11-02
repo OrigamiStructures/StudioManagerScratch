@@ -36,16 +36,13 @@ class GroupsTable extends AppTable
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-//        $this->belongsTo('Members', [
-//            'className' => 'Members',
-//            'foreignKey' => 'id',
-//            'bindingKey' => 'member_id',
-//            'dependent' => TRUE,
-//        ]);
         $this->belongsToMany('Members', [
             'foreignKey' => 'group_id',
             'targetForeignKey' => 'member_id',
             'joinTable' => 'groups_members',
+        ]);
+        $this->belongsTo('ProxyMembers',[
+            'foreignKey' => 'member_id',
         ]);
     }
 
@@ -92,7 +89,7 @@ class GroupsTable extends AppTable
             'Groups.active' => 1,
             'Groups.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain(['Members']);
+        $query->contain(['Members', 'ProxyMembers']);
 //        osd($query->toArray());
         return $query;
     }
@@ -112,4 +109,22 @@ class GroupsTable extends AppTable
 //        ]);
         return $query;
     }
+    
+	/**
+	 * Make the specified number of new Contact arrays (for TRD use)
+	 * 
+	 * @param integer $count How many contacts are needed
+	 * @param array $default [column => value] to control what data the pieces have
+	 * @param integer $start The index (and number) of the first of the ($count) pieces
+	 */
+	public function spawn($count, $default = [], $start = 0) {
+		$columns = $default + [
+			'id' => NULL,
+            'active' => 1,
+			'user_id' => $this->SystemState->artistId(),
+		];
+        
+        return array_fill($start, $count, $columns);
+	}
+	
 }

@@ -22,10 +22,12 @@ class StateMap {
     'sample' => NULL,
     'review' => 2,
     'create' => 1,
+    'createUnique' => ARTWORK_CREATE_UNIQUE,
     'refine' => 4,
     'initialize' => NULL,
     'mapStates' => NULL,
 	'testMe' => NULL,
+	 'validateQuantities' => 2
   ),
   'Designs' => 
   array (
@@ -42,6 +44,8 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
+	  'create' => DISPOSITION_CREATE,
+	  'refine' => DISPOSITION_REFINE,
   ),
   'Editions' => 
   array (
@@ -104,9 +108,10 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-      'create' => NULL,
-      'review' => NULL,
-      'refine' => NULL
+    'review' => 2,
+    'create' => 1,
+    'refine' => 4,
+      'addElement' => MEMBER_REFINE,
   ),
   'Menus' => 
   array (

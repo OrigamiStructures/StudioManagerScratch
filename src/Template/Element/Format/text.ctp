@@ -1,28 +1,21 @@
+							<!-- Element/Format/text.ctp -->
 <?php
 $q = [
 	'controller' => 'formats', 
-//	'action' => 'review', 
 	'?' => [
 		'artwork' => $artwork->id,
 		'edition' => $edition->id,
 		'format' => $format->id,
 	]];
-$nav = $this->Html->link('v', $q + ['action' => 'review']);
-$ed = $this->Html->link('f', $q + ['action' => 'refine']);
-$l = "<span class='nav'>[$nav|$ed] </span>";
+$l = $this->InlineTools->inlineReviewRefine($q);
 ?>
-<!-- Element/Format/text.ctp -->
 <?php
 /**
  * $artwork, $edition and $format are assumed to have been set by an upstream process
  * 
- * Edition Helper concrete classes are called on to administer 
- * display and tool-availability rulings.
  */
-$factory = $this->loadHelper('EditionFactory');
-$helper = $factory->load($edition->type);
 ?>
-							<?= $this->Form->input($format->id, ['type' => 'hidden']); ?>
+							<?= $this->Form->input("editions.$edition_index.formats.$format_index.id", ['type' => 'hidden', 'value' => $format->id]); ?>
 
 							<?= $this->Html->tag('p', "{$l}$format->displayTitle", ['class' => 'format']); ?>
 
@@ -30,8 +23,8 @@ $helper = $factory->load($edition->type);
 							
 							<section class="disposition">
 								<?php $format->potential_pieces = $edition->unassigned_piece_count; ?>
-								<?= $helper->pieceSummary($format, $edition) ?>
-								<?= $helper->pieceTools($format, $edition) ?>
+								<?= $EditionHelper->pieceSummary($format, $edition) ?>
+								<?= $EditionHelper->pieceTools($format, $edition) ?>
 							</section>
 							<!-- END Element/Format/text.ctp -->
  

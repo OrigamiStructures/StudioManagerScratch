@@ -7,6 +7,11 @@ use Cake\Filesystem\File;
 use Cake\Collection\Collection;
 use App\Lib\StateMap;
 use Cake\Event\EventListenerInterface;
+use Cake\Utility\Inflector;
+use App\Model\Table\UsersTable;
+use App\Model\Entity\User;
+use Cake\ORM\TableRegistry;
+use Cake\Cache\Cache;
 
 /**
  * Description of SystemState
@@ -45,6 +50,9 @@ class SystemState implements EventListenerInterface {
 	 */
 	protected $_viewVars;
 	
+	protected $_standing_disposition = FALSE;
+
+
 	/**
 	 * Array of types of 'admin' access
 	 * 
@@ -70,25 +78,52 @@ class SystemState implements EventListenerInterface {
     public function implementedEvents()
     {
         return [
-            'Users.Component.UsersAuth.afterLogin' => 'afterLogin'
+            'Users.Component.UsersAuth.afterLogin' => 'afterLogin',
         ];
     }
 	
-	public function limitedEditionTypes() {
+	static function limitedEditionTypes() {
 		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
 	}
-
-	public function openEditionTypes() {
+	
+	static function isNumberedEdition($edition_type) {
+		return in_array(
+			$edition_type, 
+			[EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED]);
+	}
+	
+	static function openEditionTypes() {
 		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
 	}
 
-	public function singleFormatEditionTypes() {
+	static function isOpenEdition($edition_type) {
+		return in_array(
+			$edition_type, 
+			[EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
+	}
+	
+	static function singleFormatEditionTypes() {
 		return [EDITION_UNIQUE, EDITION_RIGHTS];
 	}
 	
-	public function multiFormatEditionTypes() {
+	static function multiFormatEditionTypes() {
 		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
 				EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
+	}
+	
+	static function collectedDispositionTypes() {
+		return [DISPOSITION_TRANSFER_SALE,  DISPOSITION_TRANSFER_SUBSCRIPTION, 
+			DISPOSITION_TRANSFER_DONATION,  DISPOSITION_TRANSFER_GIFT, 
+			DISPOSITION_TRANSFER_RIGHTS
+			];
+	}
+	static function scrappedDispositionTypes() {
+		return [DISPOSITION_UNAVAILABLE_LOST, DISPOSITION_UNAVAILABLE_DAMAGED, 
+			DISPOSITION_UNAVAILABLE_STOLEN];
+	}
+	
+	static function unavailableDispositionTypes() {
+		return array_merge(self::collectedDispositionTypes(), self::scrappedDispositionTypes());
 	}
 
 	/**
@@ -98,7 +133,24 @@ class SystemState implements EventListenerInterface {
 	 * @return mixed
 	 */
 	public function __get($name) {
+		if ($name === 'standing_disposition') {
+			return $this->_standingDisposition();
+		}
 		return isset($this->_viewVars[$name]) ? $this->_viewVars[$name] : null;
+	}
+	
+	/**
+	 * See if there is a disposition cached
+	 * 
+	 * Standing Dispositions may exist by may not have been put into viewVars. 
+	 * So in this special case, when there value is requested we'll pull it 
+	 * from the cache so it will be available.
+	 */
+	protected function _standingDisposition() {
+		if (!($this->_standing_disposition) && !is_null($this->artistId())) {
+			$this->_standing_disposition = Cache::read($this->artistId(), 'dispo');
+		}
+		return $this->_standing_disposition;
 	}
 
 	/**
@@ -171,6 +223,12 @@ class SystemState implements EventListenerInterface {
 		}
 		if ($target_artist) {
 			$this->request->session()->write('Auth.User.artist_id', $target_artist);
+            $Users = TableRegistry::get('Users');
+            $user = new User([
+                'id' => $this->request->session()->read('Auth.User.id'),
+                'artist_id' => $target_artist
+                ]);
+            $Users->save($user);
 		}
 	}
 	
@@ -179,11 +237,12 @@ class SystemState implements EventListenerInterface {
 	 * @param type $event
 	 */
 	public function afterLogin($event) {
+//        osd($data, 'the data from after login');
+        // die(__LINE__);
 		$this->artistId('user');
 //		osd($event); die;
 	}
-
-
+    
 	/**
 	 * Determine the degree (if any) of admin access
 	 * 
@@ -313,4 +372,49 @@ CLASS;
         }
         return $r;
     }
+	
+	/**
+	 * Build a conditions array from query args based on a provided list of arg names
+	 * 
+	 * The provided list names the args to try to include. The conditions array will 
+	 * include values for any entries that did exist.  If the column corresponding to 
+	 * an argument is know by a name other than {$arg}_id, the the argument should 
+	 * be an array key with a value equal to the column name you need.
+	 * <pre>
+	 * $this->SystemState->buildConditions(['edition' => 'id', 'artwork'])
+	 * yeilds
+	 * [
+	 *	'id' => '2',
+	 *	'artwork_id' => '2',
+	 *	'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2'
+	 * ]
+	 * </pre>
+	 * By default, the user_id value will also be returned in the conditions. 
+	 * 
+	 * @param array $arg_list
+	 * @param boolean $user_filter Should the user_id be added to the condition?
+	 * @return array
+	 */
+	public function buildConditions(array $arg_list, $user_filter = TRUE) {
+		$args = array_values($arg_list);
+		$keys = array_keys($arg_list);
+		$conditions = (new Collection($keys))->reduce(function($accumulate, $key) use($arg_list) {
+			if (is_string($key)) {
+				$arg = $key;
+				$key_name = $arg_list[$key];
+			} else {
+				$arg = $arg_list[$key];
+				$key_name = "{$arg}_id";
+			}
+			if ($this->isKnown($arg)) {
+				$accumulate[$key_name] = $this->queryArg($arg);
+			}
+			return $accumulate;
+		}, []);
+		if ($user_filter) {
+		$table = is_string($user_filter) ? "{$user_filter}." : '' ;
+			$conditions["{$table}user_id"] = $this->artistId();
+		}
+		return $conditions;
+	}
 }

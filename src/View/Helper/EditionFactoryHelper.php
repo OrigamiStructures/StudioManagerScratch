@@ -2,6 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use App\Lib\PieceFilter;
 
 /**
  * FactoryHelper swaps Edition and Format helper subclasses onto a common call point
@@ -14,8 +15,10 @@ use Cake\View\Helper;
  */
 class EditionFactoryHelper extends Helper {
 	
-	public $helpers = ['Html'];
+	public $helpers = ['Html', 'DispositionTools'];
 	
+	protected $_pieceFilter;
+
 	/**
 	 * Map specific edition types to more general helper strategies
 	 * 
@@ -36,6 +39,11 @@ class EditionFactoryHelper extends Helper {
 		PUBLICATION_LIMITED => 'Packaged',
 		PUBLICATION_OPEN => 'Packaged',
 			];
+	
+	public function __construct(\Cake\View\View $View, array $config = array()) {
+		parent::__construct($View, $config);
+		$this->SystemState = $View->SystemState;
+	}
 	
 	/**
 	 * Factory to generate a specific helper
@@ -102,6 +110,45 @@ class EditionFactoryHelper extends Helper {
 		}
 	}
 
+	/**
+	 * Establish enviornment for a properly rendered piece table
+	 * 
+	 * @param Entity $entity Format or Edition
+	 * @param EditionEntity $edition
+	 * @return string tools to manage the pieces (loose html dom nodes)
+	 * @throws \BadMethodCallException
+	 */
+	public function pieceTable($entity, $edition = NULL) {
+		
+		if (stristr(get_class($entity), 'Edition')) {
+			return $this->_editionPieceTable($entity);
+			
+		} elseif (stristr(get_class($entity), 'Format') && 
+				stristr(get_class($edition), 'Edition')){
+			// detection of disposition or other piece assignment
+			// processes is done at the next stage
+			return $this->_formatPieceTable($entity, $edition);
+			
+		} else {
+			$bad_class = get_class($entity);
+			throw new \BadMethodCallException(
+					"Argument must be an entity of type Edition. "
+					. "An Entity of type $bad_class was passed.");
+		}
+	}
+
+	/**
+	 * Return an instance of the piece filter/sort utility class
+	 * 
+	 * @return PiecesUtitlity
+	 */
+	public function pieceFilter() {
+		if (!isset($this->_pieceFilter)) {
+			$this->_pieceFilter = new PieceFilter();
+		}
+		return $this->_pieceFilter;
+	}
+
 	protected function _editionPieceSummary($edition) {
 		return '';
 	}
@@ -120,40 +167,46 @@ class EditionFactoryHelper extends Helper {
 	 * 
 	 * @param Entity $edition
 	 */
-	protected function _editionPieceTools($edition) {
+	protected function _editionPieceTools($edition){
+		return '';
+	}// {
 		
-		$assignment_tool = '';
-		if ($edition->hasUnassigned()) {
-			$label[] = 'Assign';
-		}
-		if ($edition->hasFluid()) {
-			$label[] = 'Reassign';
-		}
-		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
-			$label = implode('/', $label);
-			$assignment_tool = $this->Html->link("$label pieces to formats",
-				['controller' => 'pieces'/*, 'action' => 'review'*/, '?' => [
-					'artwork' => $edition->artwork_id,
-					'edition' => $edition->id,
-				]]) . "\n";
-		}
-		echo $assignment_tool;
-	}
-	
-//	protected function _formatPieceTools($format, $edition) {
-//		return '';
-//	}
+	/**
+	 * Generate 'format' layer tools for 'review' pages
+	 * 
+	 * This is currently written to allow dispo assignment of pieces, but it will 
+	 * need to allow portfolio or publication assignments too.
+	 * 
+	 * @param type $format
+	 * @param type $edition
+	 */
 	protected function _formatPieceTools($format, $edition) {
+		$disposition = $this->SystemState->standing_disposition;
+		if ($disposition && $this->SystemState->isKnown('format')) {
+			// in this case we can see the individual pieces with link-up tools included
+			// because of redirect for flat art/edition, queryArg, not controller is our check point
+			return '';
+		}
+		
 		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
 		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
+		$action = $disposition ? 'refine' : 'create';
+		
 		if ((((boolean) $pieces) && $format->hasSalable($edition->undisposed)) || $format->hasAssigned()) {
-			echo $this->Html->link("Add status information",
+			if ($disposition) {
+				$label = $this->DispositionTools->fromLabel();
+			} else {
+				$label = 'Transfer a piece';
+			}
+			echo $this->Html->link($label,
 				[/*'controller' => 'dispositions', 'action' => 'create'*/
-					'controller' => 'pieces', '?' => [
-					'artwork' => $edition->artwork_id,
-					'edition' => $edition->id,
-					'format' => $format->id,
-				]]);
+					'controller' => 'dispositions',
+					'action' => $action,'?' => [
+						'artwork' => $edition->artwork_id,
+						'edition' => $edition->id,
+						'format' => $format->id,
+					]
+				]);
 		} else {
 			echo $this->Html->tag('p', 
 				'You can\'t change the status of this artwork.', 
@@ -161,10 +214,6 @@ class EditionFactoryHelper extends Helper {
 			);
 		}
 	}
-	
-//	public function editionQuantitySummary($edition) {
-//		return '';
-//	}
 	
 	public function quantityInput($edition, $edition_index) {
 		return '';

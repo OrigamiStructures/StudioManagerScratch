@@ -21,6 +21,10 @@ use ArrayObject;
  */
 class MembersTable extends AppTable
 {
+    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
+    
+    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
+	
     public function implementedEvents()
     {
 		$events = [
@@ -59,10 +63,12 @@ class MembersTable extends AppTable
             'foreignKey' => 'member_id'
         ]);
         $this->hasMany('Addresses', [
-            'foreignKey' => 'member_id'
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE
         ]);
         $this->hasMany('Contacts', [
-            'foreignKey' => 'member_id'
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE
         ]);
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
@@ -73,12 +79,11 @@ class MembersTable extends AppTable
             'targetForeignKey' => 'group_id',
             'joinTable' => 'groups_members'
         ]);
-        
         $this->hasOne('ProxyGroups',[
-//            'targetTable' => \Cake\ORM\TableRegistry::get('ProxyGroups'),
             'className' => 'ProxyGroups',
             'foreignKey' => 'member_id',
-            'propertyName' => 'proxy_group'
+            'propertyName' => 'proxy_group',
+            'dependent' => TRUE
         ]);
     }
 
@@ -111,7 +116,12 @@ class MembersTable extends AppTable
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['image_id'], 'Images'));
+        $rules->addDelete([$this, 'deleteRule']);
         return $rules;
+    }
+    
+    public function deleteRule($entity, $options) {
+        return $entity->user_id === $this->SystemState->artistId();
     }
     
     /**
@@ -126,11 +136,8 @@ class MembersTable extends AppTable
      */
     public function findMemberReview(Query $query, array $options) {
         $query = $this->findMemberList($query, $options);
-        if($this->SystemState->isKnown('member')){
-            $query->where([
-               'Members.id' => $this->SystemState->queryArg('member')
-            ]);
-        }
+        $query = $this->findContainment($query, $options);
+        $query->orderAsc('last_name');
         return $query;
     }
     
@@ -146,7 +153,37 @@ class MembersTable extends AppTable
             'Members.active' => 1,
             'Members.user_id' => $this->SystemState->artistId()
         ]);
-        $query->contain(['Addresses', 'Contacts', 'Groups']);
+        return $query;
+    }
+    
+    /**
+     * Custom finder to setup containment based upon member type
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findContainment(Query $query, array $options) {
+        if($this->SystemState->isKnown('member')){
+			$member_id = $this->SystemState->queryArg('member');
+            $query->where([
+               'Members.id' => $member_id
+            ]);
+			
+			/**
+			 * The type arg is never included so this always does 'group' containment
+			 * and Disposition containment doesn't work
+			 */
+//            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
+//                $query->contain($this->_person_containment);
+//                $query->contain($this->_persons_disposition);
+//            } else {
+                $query->contain($this->_complete_containment);
+//                $query->contain($this->_groups_disposition);
+//            }
+        } else {
+            $query->contain($this->_complete_containment);
+        }
         return $query;
     }
     
@@ -222,28 +259,43 @@ class MembersTable extends AppTable
      * @return Entity
      */
     public function defaultMemberEntity($entity, $type) {
-        $contacts = [
-            [
-                'user_id' => $this->SystemState->artistId(),
-                'label' => 'email',
-                'primary' => 1
+        $dme = [
+            'member_type' => $type,
+            'first_name' => NULL,
+            'contacts' => [
+                [
+                    'user_id' => $this->SystemState->artistId(),
+                    'label' => 'email',
+                    'primary' => 1
+                ],
+                [
+                    'user_id' => $this->SystemState->artistId(),
+                    'label' => 'phone'
+                ]
             ],
-            [
-                'user_id' => $this->SystemState->artistId(),
-                'label' => 'phone'
+            'addresses' => [
+                [
+                    'user_id' => $this->SystemState->artistId(),
+                    'label' => 'main',
+                    'primary' => 1
+                ]
             ]
         ];
-        $addresses = [
-            [
-                'user_id' => $this->SystemState->artistId(),
-                'label' => 'main',
-                'primary' => 1
-            ]
-        ];
-        $entity->set('member_type', $type);
-        $entity->set('contacts', $contacts);
-        $entity->set('addresses', $addresses);
+        if(in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION]) && $this->SystemState->is(MEMBER_CREATE)){
+            $proxy_group = [
+                'user_id' => $this->SystemState->artistId()
+            ];
+            $proxy_group_entity = new \Cake\ORM\Entity($proxy_group);
+            $entity->set('proxy_group', $proxy_group_entity);
+        }
+        $entity = $this->patchEntity($entity, $dme);
         return $entity;
     }
+	
+	public function findSearch(Query $query, $options) {
+		$query->where(['first_name LIKE' => "%{$options[0]}%"])
+			  ->orWhere(['last_name LIKE' => "%{$options[0]}%"]);
+		return $query->toArray();
+	}
 	
 }

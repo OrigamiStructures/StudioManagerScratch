@@ -2,7 +2,8 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\AssignmentTrait;
 
 /**
  * Edition Entity.
@@ -24,7 +25,8 @@ use App\Model\Entity\Traits\ParentEntity;
 class Edition extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
+	use AssignmentTrait;
 	
 	protected $_collected;
 
@@ -53,6 +55,15 @@ class Edition extends Entity
 				: ucwords($this->_properties['type']) . " ({$this->_properties['quantity']})";
 		$title = empty($this->_properties['title']) ? ucwords($this->_properties['title']) : ucwords("{$this->_properties['title']}, ");
 		return  $title . $type;
+	}
+	
+	/**
+	 * provide a key that relates Pieces back to their Format or Edition
+	 * 
+	 * @return type
+	 */
+	public function key() {
+		return $this->_key([$this->id, '']);
 	}
 	
 	/**
@@ -167,4 +178,45 @@ class Edition extends Entity
 		return $this->_properties['fluid_piece_count'] > 0;
 	}
 	
+	/**
+	 * From an inverted artwork stack, identify the tip-of-the-iceberg
+	 * 
+	 * A normal artwork stack begins with the Artwork and sees all the children. 
+	 * An inverted stack, such as that linked to a disposition, starts at the 
+	 * child and contains the specific entity chain up to the Artwork. This method 
+	 * adds to the label for the child piece
+	 * 
+	 * @return string
+	 */
+	public function identityLabel() {
+		$type = strtolower($this->_properties['type']) === 'unique' 
+				? 'Unique Work' 
+				: ucwords($this->_properties['type']);
+		$label = empty($this->_properties['title']) ? $type : ucwords($this->_properties['title']);
+		if (is_object($this->artwork)) {
+			$label = "{$this->artwork->identityLabel()}, $label";
+		}
+		return $label;
+	}
+	
+	/**
+	 * Return url query breadbrumbs to this Edition
+	 * 
+	 * Can be used to construct a url like:
+	 * :controller/:action?artwork=xx&edition=yy
+	 * 
+	 * @return array
+	 */
+	public function identityArguments() {
+		return ['edition' => $this->id, 'artwork' => $this->artwork_id];
+	}
+	
+	/**
+	 * Is there only one Format for this Edition
+	 * 
+	 * @return boolean
+	 */
+	public function isFlat() {
+		return $this->format_count === 1;
+	}
 }

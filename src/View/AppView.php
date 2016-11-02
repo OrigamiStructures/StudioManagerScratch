@@ -40,7 +40,10 @@ class AppView extends View
         $this->loadHelper('Html');
 		if (isset($this->viewVars['SystemState'])) {
 			$this->SystemState = $this->viewVars['SystemState'];
-		}		
+		}
+        $this->loadHelper('InlineTools');
+        $this->loadHelper('MemberView');
+//		$this->loadHelper('DispositionTools');
     }
 	
 	/**

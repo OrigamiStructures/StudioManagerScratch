@@ -1,16 +1,17 @@
 <!-- Element/Edition/describe.ctp -->
-<section class="edition">
-	<div class="text">
 <?php
-
-if (!isset($edition)) {
-	$edition_index = $SystemState->isKnown('edition') ?
-		$artwork->indexOfRelated('editions', $SystemState->queryArg('edition')) :
-		0 ;
-	$this->set('edition', $artwork->editions[$edition_index]);
-}
-echo $this->element('Edition/text'); 
+/**
+ * THE UNIVERSAL FULL EDITION DESCRIPTION
+ * Swaps places with 'fieldset' (and a future simple version?)
+ */
 ?>
+
+	<div class="text">
+		<?= $this->element('Edition/text'); ?>
 	</div>
-</section>
+
+	<div class="pieces">
+		<?= $this->element('Edition/pieces'); ?>
+	</div>
+
 <!-- END Element/Edition/describe.ctp -->
