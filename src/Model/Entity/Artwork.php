@@ -36,7 +36,7 @@ class Artwork extends Entity
     ];
     
 	/**
-	 * From an inverted stack, identify the tip-of-the-iceberg
+	 * From an inverted artwork stack, identify the tip-of-the-iceberg
 	 * 
 	 * A normal artwork stack begins with the Artwork and sees all the children. 
 	 * An inverted stack, such as that linked to a disposition, starts art the 

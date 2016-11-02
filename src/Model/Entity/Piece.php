@@ -71,14 +71,14 @@ class Piece extends Entity
 	/**
 	 * provide a key that relates Pieces back to their Format or Edition
 	 * 
-	 * @return array edition_id, format_id
+	 * @return array [edition_id, format_id]
 	 */
 	public function key() {
 		return $this->_key([$this->edition_id, $this->format_id]);
 	}
 	
 	/**
-	 * From an inverted stack, identify the tip-of-the-iceberg
+	 * From an inverted artwork stack, identify the tip-of-the-iceberg
 	 * 
 	 * A normal artwork stack begins with the Artwork and sees all the children. 
 	 * An inverted stack, such as that linked to a disposition, starts art the 

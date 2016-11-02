@@ -179,10 +179,10 @@ class Edition extends Entity
 	}
 	
 	/**
-	 * From an inverted stack, identify the tip-of-the-iceberg
+	 * From an inverted artwork stack, identify the tip-of-the-iceberg
 	 * 
 	 * A normal artwork stack begins with the Artwork and sees all the children. 
-	 * An inverted stack, such as that linked to a disposition, starts art the 
+	 * An inverted stack, such as that linked to a disposition, starts at the 
 	 * child and contains the specific entity chain up to the Artwork. This method 
 	 * adds to the label for the child piece
 	 * 
@@ -198,10 +198,24 @@ class Edition extends Entity
 		}
 		return $label;
 	}
+	
+	/**
+	 * Return url query breadbrumbs to this Edition
+	 * 
+	 * Can be used to construct a url like:
+	 * :controller/:action?artwork=xx&edition=yy
+	 * 
+	 * @return array
+	 */
 	public function identityArguments() {
 		return ['edition' => $this->id, 'artwork' => $this->artwork_id];
 	}
 	
+	/**
+	 * Is there only one Format for this Edition
+	 * 
+	 * @return boolean
+	 */
 	public function isFlat() {
 		return $this->format_count === 1;
 	}
