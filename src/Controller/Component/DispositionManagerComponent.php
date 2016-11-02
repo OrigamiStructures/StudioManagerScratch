@@ -77,9 +77,12 @@ class DispositionManagerComponent extends Component {
 	 */
 	public function discard() {
 		$disposition = $this->get();
-		
+//		osd($disposition);die;
 		// look for open edition pieces that need to merge back to their source
 		if ($this->Pieces->merge($disposition->pieces)) {
+			if (is_int($disposition->id)) {
+				$this->controller->Dispositions->delete($disposition);
+			}
 			Cache::delete($this->SystemState->artistId(), 'dispo');
 		} else {
 			$this->controller->Flash->error('Open Edition pieces could not be restored to their orginal places. Please try again');
