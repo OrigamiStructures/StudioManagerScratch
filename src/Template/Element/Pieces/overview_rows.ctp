@@ -6,6 +6,7 @@ $owner_title = $owners->reduce(function($accumulator, $owner) {
 	return $accumulator;
 }, []);
 
+osd($pieces);
 foreach($pieces as $piece) :
 	if ((boolean) $piece->disposition_count) {
 //		osd($piece);
@@ -25,6 +26,7 @@ foreach($pieces as $piece) :
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
 		<td><?= $piece->collected ? 'Yes' : '-'; ?></td>
 	</tr>
+		<?php // osd($piece); ?>
 	<?= $this->element('Pieces/disposition_event_rows', ['piece' => $piece]); ?>
 <?php
 endforeach;
