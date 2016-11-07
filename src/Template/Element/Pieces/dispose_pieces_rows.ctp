@@ -23,13 +23,14 @@ foreach($pieces as $piece) :
 		 endif;
 		 ?>
 		<td><?= $piece->quantity; ?></td>
-		<td><?= $owner_title[$piece->key()] ?></td>
+		<!-- <td><?= $owner_title[$piece->key()] ?></td>
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
 		<td><?= $piece->collected ? 'Yes' : '-'; ?></td>
-		<?php // osd($piece->id);?>
-		<td class="tools"><?= $SystemState->standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?></td>
+		<?php // osd($piece->id);?> -->
+		<td class="tools"><?= $SystemState->standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?>
+			<?= $this->element('Disposition/disposition_event_descriptions'); ?>
+		</td>
 	</tr>
-	<?= $this->element('Pieces/disposition_event_rows'); ?>
 <?php
 endforeach;
 ?>

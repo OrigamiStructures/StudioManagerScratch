@@ -13,9 +13,9 @@
 			endif;
 			?>
 			<th>Qty</th>
-			<th>Owner</th>
-			<th>History</th>
-			<th>Sold</th>
+			<th>Dispositions</th>
+<!--			<th>History</th>
+			<th>Sold</th>-->
 		</tr>
 	</thead>
 	<tbody>
