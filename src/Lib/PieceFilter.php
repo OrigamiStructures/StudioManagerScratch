@@ -86,9 +86,17 @@ class PieceFilter {
 		if ((boolean) $filter) {
 			$valid_pieces = new Collection($pieces);
 			$valid_pieces->filter([$this, $filter]);
+		} else {
+			$valid_pieces = $pieces;
+		}
+				
+		if (is_array($valid_pieces)) {
+			return $valid_pieces;
+		} else {
+			return $valid_pieces->toArray();
 		}
 		
-		return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
+		//return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
 	}
     
 	/**
