@@ -250,6 +250,8 @@ class ArtworkStackComponent extends Component {
 	 * 
 	 * NEEDS TO BE 'STATE' AWARE TO GENERATE PROPERLY FILTERED AND 
 	 * CONSTRUCTED LISTS FOR 'CREATION' VS 'SELECTION' PROCESSES
+	 * These are processes that assemble choice-list arrays
+	 * for form construction
 	 * 
 	 * @return array
 	 */
