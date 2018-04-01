@@ -10,6 +10,8 @@ use App\Controller\AppController;
  */
 class PiecesController extends AppController
 {
+	
+	public $components = ['ArtworkStack'];
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD">
 	/**
@@ -128,5 +130,11 @@ class PiecesController extends AppController
 	
 	public function review() {
 		
+	}
+	
+	public function renumber() {
+		$artwork = $this->ArtworkStack->stackQuery();
+		$this->ArtworkStack->layerChoiceLists();
+		$this->set('artwork', $artwork);
 	}
 }
