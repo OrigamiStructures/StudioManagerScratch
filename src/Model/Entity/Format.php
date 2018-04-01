@@ -159,15 +159,15 @@ class Format extends Entity
 	 * @return string
 	 */
 	protected function _gutDescription() {
-//		$display_value = $this->description;
-//		if (strlen($this->description) > 33) {
-//			$lead = Text::truncate($this->description, 15, ['ellipsis' => ' ... ']);
-//			$tail = Text::tail($this->description, 10, ['ellipsis' => '', 'exact' => FALSE]);
-//			
-//			$display_value = "$lead$tail";
-//		}
-//		return $display_value;
-		return Text::truncate($this->description, 10);
+		$display_value = $this->description;
+		if (strlen($display_value) > 33) {
+			$lead = Text::truncate($display_value, 15, ['ellipsis' => ' ... ']);
+			$tail = Text::tail($display_value, 15, ['ellipsis' => '', 'exact' => FALSE]);
+			
+			$display_value = "$lead$tail";
+		}
+		return $display_value;
+//		return Text::truncate($display_value, 10);
 	}
 	
 	/**
