@@ -355,4 +355,30 @@ trait PieceFilterTrait {
 	public function inStudioOnDate($piece, $key) {
 		
 	}
+	
+	/**
+	 * Is piece-number in the range?
+	 * 
+	 * Range must have the values as the keys because 
+	 * isset() is 4.3x faster than in_array()
+	 * 
+	 * @param object $piece The piece entity
+	 * @param array $range Array of allowable numbers [x=>x, y=>y]
+	 */
+	public function inRange($piece, array $range) {
+		return isset($range[$piece->number]);
+	}
+	
+	/**
+	 * Is piece-number excluded from the range?
+	 * 
+	 * Range must have the values as the keys because 
+	 * isset() is 4.3x faster than in_array()
+	 * 
+	 * @param object $piece The piece entity
+	 * @param array $range Array of allowable numbers [x=>x, y=>y]
+	 */
+	public function notInRange(object $piece, array $range) {
+		return !isset($range[$piece->number]);
+	}
 }
