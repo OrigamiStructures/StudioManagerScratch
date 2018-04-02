@@ -9,6 +9,41 @@ use ArrayIterator;
  * @author dondrake
  */
 class Range {
+	
+	/**
+	 * The string describing the range
+	 * 
+	 * 1-7, 13, 20, 23-30
+	 *
+	 * @var string
+	 */
+	protected $range_string;
+	
+	/**
+	 * A numeric array with range as the values
+	 *
+	 * @var array
+	 */
+	protected $range_array;
+	
+	/**
+	 * An associative array
+	 * 
+	 * Range values are the keys.
+	 * 
+	 * @var array
+	 */
+	protected $range_assoc;
+	
+	public function __get($param) {
+		
+		if (in_array($param, ['string', 'array', 'assoc'])){
+			$name = "range_$param";
+			return $this->$name;
+		} else {
+			throw new \BadMethodCallException("Range::__get() argument must be the string 'string', 'array' or 'assoc'.");
+		}
+	}
 
 	/**
 	 * Build a range string from an element in an array
@@ -27,11 +62,13 @@ class Range {
 	 * @param string $path
 	 * @return string
 	 */
-	static function constructRange($data = array(), $path = '') {
+	public function arrayToString($data = array(), $path = '') {
 		if (!is_array($data)) {
 			$data = array();
 		}
 		$numbers = Hash::extract($data, $path);
+		sort($numbers);
+		
 		foreach ($numbers as $index => $value) {
 			$numbers[$index] = intval($value);
 		}
@@ -41,30 +78,30 @@ class Range {
 		while ($list->valid()) {
 			
 			// if this is the first entry
-			if (!$range) {
-				$range = $previous = $list->current();
+			if (!$this->range_string) {
+				$this->range_string = $previous = $list->current();
 				$list->next();
 				continue;
 			}
 			
 			// if this is the next number in a sequence
 			if ($list->current() === ($previous + 1)) {
-				switch ($range[strlen($range)-1]) {
+				switch ($this->range_string[strlen($this->range_string)-1]) {
 					case '-':
 						break;
 					default:
-						$range .= '-';
+						$this->range_string .= '-';
 						break;
 				}
 				
 			// if we jumped more than one number
 			} else {
-				switch ($range[strlen($range)-1]) {
+				switch ($this->range_string[strlen($this->range_string)-1]) {
 					case '-':
-						$range .= "$previous, {$list->current()}";
+						$this->range_string .= "$previous, {$list->current()}";
 						break;
 					default:
-						$range .= ", {$list->current()}";
+						$this->range_string .= ", {$list->current()}";
 						break;
 				}
 			}
@@ -74,22 +111,34 @@ class Range {
 		}
 		
 		// check to see if we left a range unfinished
-		if ($range[strlen($range)-1] === '-') {
-			$range .= $previous;
+		if ($this->range_string[strlen($this->range_string)-1] === '-') {
+			$this->range_string .= $previous;
 		}
 		
-		return $range;
+		return $this->range_string;
 	}
 	
 	/**
 	 * Turn a range string into an array with the sequence values
 	 * 
 	 * format: x-y, z, r, i-j
+	 * This will populate both array properties of the class
+	 * but will only return one based on the $type parameter.
+	 * Default: assoc
 	 * 
 	 * @param string $range
+	 * @param string $type 'assoc' or 'array' to get key=>values or values only
 	 * @return array
 	 */
-	static function parseRange($range) {
+	public function stringToArray($range, $type = 'assoc') {
+//		var_dump(func_get_args());
+//		var_dump($type);
+//		echo 
+//				die();
+		
+		if (!in_array($type, ['assoc', 'array'])){
+			throw new \BadMethodCallException('Range::stringToArray \'$type\' must be the string \'assoc\' or \'array\'');
+		}
 		
 		$sequence = array();
 		
@@ -124,7 +173,12 @@ class Range {
 		}
 		
 		// filter out the duplicates
-		return array_flip(array_flip($sequence));
+		$this->range_array = array_flip(array_flip($sequence));
+		$this->range_assoc = array_flip($this->range_array);
+		
+		$type = 'range_'.$type;
+		
+		return $this->$type;
 	}
 	
 }
