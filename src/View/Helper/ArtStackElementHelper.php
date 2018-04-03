@@ -65,7 +65,7 @@ class ArtStackElementHelper extends Helper {
 				break;
 			case ARTWORK_CREATE :
 			case ARTWORK_REFINE :
-				// Refinement much choose based on the context of the edit
+				// Refinement must choose based on the context of the edit
 				// Always display if the target is downstream
 				// Always fieldset if this is the target
 				if ($this->SystemState->controller() === 'artworks') {
