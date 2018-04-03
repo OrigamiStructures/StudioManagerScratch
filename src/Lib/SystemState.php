@@ -267,6 +267,8 @@ class SystemState implements EventListenerInterface {
 	/**
 	 * Is the value one of the URL query arguements?
 	 * 
+	 * These are the variables after the '?' in a URL
+	 * 
 	 * @param string $name
 	 * @return boolean
 	 */

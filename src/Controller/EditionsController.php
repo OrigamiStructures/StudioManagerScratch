@@ -125,9 +125,16 @@ class EditionsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
+	/**
+	 * Display an Edition, its Artwork, and its Format(s)
+	 * 
+	 * If the edition is found to be flat (only one format) 
+	 * the format id is added to the query and rendering 
+	 * is redirected to FormatController->review()
+	 */
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
-		$this->ArtworkStack->layerChoiceLists();
+		$this->ArtworkStack->layerChoiceLists(); // only needed for editing?
 		
 		$edition = $artwork->returnEdition($this->SystemState->queryArg('edition'));
 		if ($edition->isFlat()) {

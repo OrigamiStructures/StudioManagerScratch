@@ -49,6 +49,11 @@ class Artwork extends Entity
 		return $this->title;
 	}
 	
+	/**
+	 * Is there one and only one edition with one and only one format for the Artwork
+	 * 
+	 * @return boolean
+	 */
 	public function isFlat() {
 		return ($this->edition_count === 1 && $this->editions[0]->isFlat());
 	}

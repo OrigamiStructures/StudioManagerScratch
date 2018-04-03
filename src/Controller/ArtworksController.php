@@ -167,7 +167,11 @@ class ArtworksController extends AppController
 	 * 
 	 * Single record vs multiple record will be chosen based on whether the 
 	 * URL query value 'artwork' is set. If it is, we know the specific 
-	 * Artwork to display. If not, we'll get a page of them (the current page). 
+	 * Artwork to display. If not, we'll get a page of them (the current page).
+	 * 
+	 * Also, if the Artwork is flat (has only one edition with only one 
+	 * format) then the URL query is beefed up with the proper id data 
+	 * and FormatController->review() is called instead. 
 	 * 
 	 * Later, some accomodation for Search sets must be made. That may be  
 	 * redirected through here for rendering once the records are found 
@@ -180,7 +184,9 @@ class ArtworksController extends AppController
 			$artwork_variable = 'artworks';
 		}
 
+		// $result will be an Artwork entity containing entities and other data
 		$result = $this->ArtworkStack->stackQuery();
+		
 		if ($artwork_variable === 'artwork' && $result->isflat()) {
 			$this->autoRender = FALSE;
 			$arguments = $this->SystemState->queryArg() + [
@@ -190,7 +196,7 @@ class ArtworksController extends AppController
 		}
 		
 		$this->set($artwork_variable, $result);
-        $this->set('_serialize', [$artwork_variable]);
+        $this->set('_serialize', [$artwork_variable]); // meaningless code?
     }
 	
 	/**

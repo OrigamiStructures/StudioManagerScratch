@@ -5,6 +5,7 @@
  * set values that amend tag classes for css refinement
  */
 $this->loadHelper('DispositionTools');
+// centralized here? how about in the controllers. I might forget this location for logic set-up
 $editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
 if ($SystemState->isKnown('format')) {
 	$focus = 'format_focus';
