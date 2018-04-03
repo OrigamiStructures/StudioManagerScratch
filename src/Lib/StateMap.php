@@ -20,14 +20,14 @@ class StateMap {
     'edit' => NULL,
     'delete' => NULL,
     'sample' => NULL,
-    'review' => 2,
-    'create' => 1,
+    'review' => ARTWORK_REVIEW,
+    'create' => ARTWORK_CREATE,
     'createUnique' => ARTWORK_CREATE_UNIQUE,
-    'refine' => 4,
+    'refine' => ARTWORK_REFINE,
     'initialize' => NULL,
     'mapStates' => NULL,
 	'testMe' => NULL,
-	 'validateQuantities' => 2
+	'validateQuantities' => ARTWORK_REVIEW // never checked/used?
   ),
   'Designs' => 
   array (
@@ -54,9 +54,9 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'review' => 2,
-    'create' => 1,
-    'refine' => 4,
+    'review' => ARTWORK_REVIEW,
+    'create' => ARTWORK_CREATE,
+    'refine' => ARTWORK_REFINE,
   ),
   'Formats' => 
   array (
@@ -65,9 +65,9 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'review' => 2,
-    'create' => 1,
-    'refine' => 4,
+    'review' => ARTWORK_REVIEW,
+    'create' => ARTWORK_CREATE,
+    'refine' => ARTWORK_REFINE,
   ),
   'Groups' => 
   array (
@@ -108,10 +108,10 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-    'review' => 2,
-    'create' => 1,
-    'refine' => 4,
-      'addElement' => MEMBER_REFINE,
+    'review' => MEMBER_REVIEW,
+    'create' => MEMBER_CREATE,
+    'refine' => MEMBER_REFINE,
+    'addElement' => MEMBER_REFINE,
   ),
   'Menus' => 
   array (

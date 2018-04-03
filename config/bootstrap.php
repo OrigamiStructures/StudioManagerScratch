@@ -218,11 +218,25 @@ define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
 
+// <editor-fold defaultstate="collapsed" desc="SYSTEM STATES">
 //Member State
 define('MEMBER_CREATE', 1);
 define('MEMBER_REVIEW', 2);
 define('MEMBER_REFINE', 4);
 define('MEMBER_SAVE', 8);
+
+// Artwork State
+define('ARTWORK_CREATE', 1);
+define('ARTWORK_REVIEW', 2);
+define('ARTWORK_REFINE', 4);
+define('ARTWORK_SAVE', 8);
+define('ARTWORK_CREATE_UNIQUE', 3);
+
+//Disposition State
+define('DISPOSITION_CREATE', 1);
+define('DISPOSITION_REVIEW', 2);
+define('DISPOSITION_REFINE', 4); 
+// </editor-fold>
 
 //Edition Types
 define('EDITION_UNIQUE'			, 'Unique');
@@ -238,12 +252,6 @@ define('PUBLICATION_OPEN'		, 'Open Publication');
 define('NUMBERED_PIECES', 1);
 define('OPEN_PIECES', 0);
 
-define('ARTWORK_CREATE', 1);
-define('ARTWORK_REVIEW', 2);
-define('ARTWORK_REFINE', 4);
-define('ARTWORK_SAVE', 8);
-define('ARTWORK_CREATE_UNIQUE', 3);
-
 // These will need to be change to something meaningful
 // For now, we can act as admins even though we're users
 define('ADMIN_SYSTEM', 'user'); // 'admin'
@@ -253,11 +261,6 @@ define('ADMIN_ARTIST', 'artist_admin');
 // Serves as a boolean argument in method call(s)
 define('SYSTEM_VOID_REFERER'	, TRUE);
 define('SYSTEM_CONSUME_REFERER' , FALSE);
-
-//Disposition State
-define('DISPOSITION_CREATE', 1);
-define('DISPOSITION_REVIEW', 2);
-define('DISPOSITION_REFINE', 4);
 
 //AssignemtTrait Constants
 // boolean argument to control the kind of return value from a method
