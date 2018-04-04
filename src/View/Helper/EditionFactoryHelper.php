@@ -182,7 +182,7 @@ class EditionFactoryHelper extends Helper {
 	 */
 	protected function _formatPieceTools($format, $edition) {
 		$disposition = $this->SystemState->standing_disposition;
-		if ($disposition && $this->SystemState->isKnown('format')) {
+		if ($disposition && $this->SystemState->urlArgIsKnown('format')) {
 			// in this case we can see the individual pieces with link-up tools included
 			// because of redirect for flat art/edition, queryArg, not controller is our check point
 			return '';

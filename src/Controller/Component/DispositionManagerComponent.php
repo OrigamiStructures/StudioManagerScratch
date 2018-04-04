@@ -95,11 +95,11 @@ class DispositionManagerComponent extends Component {
 	 * @return 
 	 */
 	public function remove() {
-		if ($this->SystemState->isKnown('artwork')) {
+		if ($this->SystemState->urlArgIsKnown('artwork')) {
 			$this->_removeArtwork();
-		} elseif ($this->SystemState->isKnown('member')) {
+		} elseif ($this->SystemState->urlArgIsKnown('member')) {
 			$this->_removeMember();
-		} elseif ($this->SystemState->isKnown('address')) {
+		} elseif ($this->SystemState->urlArgIsKnown('address')) {
 			$this->_removeAddress($this->SystemState->queryArg('address'));
 		}
 

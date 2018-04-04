@@ -104,7 +104,7 @@ class ArtworkStackComponent extends Component {
 	 */
 	public function stackQuery() {
 		// no 'artwork' query value indicates a paginated page
-		if (!$this->SystemState->isKnown('artwork')) {
+		if (!$this->SystemState->urlArgIsKnown('artwork')) {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
 				'contain' => $this->full_containment,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
@@ -197,9 +197,9 @@ class ArtworkStackComponent extends Component {
 	 * @return Entity
 	 */
 	protected function filterEntities($artwork) {
-		if ($this->SystemState->isKnown('edition')) {
+		if ($this->SystemState->urlArgIsKnown('edition')) {
 			$edition_id = $this->SystemState->queryArg('edition');
-			$format_id = $this->SystemState->isKnown('format') ? $this->SystemState->queryArg('format') : FALSE;
+			$format_id = $this->SystemState->urlArgIsKnown('format') ? $this->SystemState->queryArg('format') : FALSE;
 			$editions = new Collection($artwork->editions);
 			
 			$edition_result = $editions->filter(function($edition) use ($edition_id, $format_id) {

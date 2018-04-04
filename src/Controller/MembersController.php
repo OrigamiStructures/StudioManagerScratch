@@ -211,7 +211,7 @@ class MembersController extends AppController
         $query = $this->Members->find('memberReview');
 		$members = $this->paginate($query);
 		
-        if($this->SystemState->isKnown('member')){
+        if($this->SystemState->urlArgIsKnown('member')){
 			$dispositions = $this->Members->Dispositions->find()
 					->where(['member_id' => $this->SystemState->queryArg('member')])
 					->contain(['Pieces']);
@@ -226,7 +226,7 @@ class MembersController extends AppController
      * 
      */
     public function refine() {
-        if(!$this->SystemState->isKnown('member')){
+        if(!$this->SystemState->urlArgIsKnown('member')){
             $this->Flash->error(__('You must provide a single member id to edit'));
             return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
         }

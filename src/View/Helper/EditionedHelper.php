@@ -327,7 +327,7 @@ class EditionedHelper extends EditionFactoryHelper {
 		
 		// detecting when we're fully qualified to the format level has been uncertain. 
 		// controller() can't be relied on because of redirecting that happens
-		if ($this->SystemState->standing_disposition && $this->SystemState->isKnown('format')) {
+		if ($this->SystemState->standing_disposition && $this->SystemState->urlArgIsKnown('format')) {
 			$this->_dispositionModeFormatPieceTable($format, $edition);
 		} else {
 			$this->_mainModeFormatPieceTable($format, $edition);

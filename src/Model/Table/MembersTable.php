@@ -164,7 +164,7 @@ class MembersTable extends AppTable
      * @return Query
      */
     public function findContainment(Query $query, array $options) {
-        if($this->SystemState->isKnown('member')){
+        if($this->SystemState->urlArgIsKnown('member')){
 			$member_id = $this->SystemState->queryArg('member');
             $query->where([
                'Members.id' => $member_id

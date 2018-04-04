@@ -241,7 +241,7 @@ class ArtStackElementHelper extends Helper {
 			switch ($this->SystemState->now()) {
 				case ARTWORK_REVIEW:
 					if (count($this->SystemState->pieces) > 0) {
-						if ($this->SystemState->isKnown('format')) {
+						if ($this->SystemState->urlArgIsKnown('format')) {
 							// single format focus allows detailed piece work
 							if ($this->SystemState->standing_disposition) {
 								// artist is defining a disposition. show those tools in the table

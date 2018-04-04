@@ -21,11 +21,11 @@ class PiecesController extends AppController
 	     */
 	public function index() {
 		$conditions = [];
-		if ($this->SystemState->isKnown('format')) {
+		if ($this->SystemState->urlArgIsKnown('format')) {
 			$conditions = ['Pieces.format_id' => $this->SystemState->queryArg('format')];
-		} elseif ($this->SystemState->isKnown('edition')) {
+		} elseif ($this->SystemState->urlArgIsKnown('edition')) {
 			$conditions = ['Pieces.edition_id' => $this->SystemState->queryArg('edition')];
-		} elseif ($this->SystemState->isKnown('artwork')) {
+		} elseif ($this->SystemState->urlArgIsKnown('artwork')) {
 			$conditions = ['Artworks.id' => $this->SystemState->queryArg('artwork')];
 		}
 		$query = $this->Pieces->find('all')

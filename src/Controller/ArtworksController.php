@@ -178,7 +178,7 @@ class ArtworksController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
-		if ($this->SystemState->isKnown('artwork')) {
+		if ($this->SystemState->urlArgIsKnown('artwork')) {
 			$artwork_variable = 'artwork';
 		} else {
 			$artwork_variable = 'artworks';

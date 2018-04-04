@@ -7,7 +7,7 @@
 	<?= $this->Html->link('Video', ['?' => ['video' => 'unique_create.mp4']], ['class' => 'button']); ?>
 
 	<?php
-	if ($SystemState->isKnown('video')) {
+	if ($SystemState->urlArgIsKnown('video')) {
 		echo $this->Html->media($SystemState->queryArg('video'), ['pathPrefix' => 'files/training_videos/', 'controls' => true, 'autoplay' => true]);
 	}
 	?>

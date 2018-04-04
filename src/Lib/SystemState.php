@@ -272,7 +272,7 @@ class SystemState implements EventListenerInterface {
 	 * @param string $name
 	 * @return boolean
 	 */
-	public function isKnown($name) {
+	public function urlArgIsKnown($name) {
 		return !is_null($this->request->query($name));
 	}
 	
@@ -408,7 +408,7 @@ CLASS;
 				$arg = $arg_list[$key];
 				$key_name = "{$arg}_id";
 			}
-			if ($this->isKnown($arg)) {
+			if ($this->urlArgIsKnown($arg)) {
 				$accumulate[$key_name] = $this->queryArg($arg);
 			}
 			return $accumulate;

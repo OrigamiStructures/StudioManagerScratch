@@ -10,7 +10,7 @@ if (in_array($SystemState->now(), [MEMBER_CREATE, MEMBER_REFINE])):
     $url = (!empty($member->id)) 
             ? ['action' => 'refine', '?' => ['member' => $member->id]] 
             : ['action' => "create", $member->member_type];
-elseif($SystemState->isKnown('member')):
+elseif($SystemState->urlArgIsKnown('member')):
     $element = "Member/refine";
     if(!isset($member)){
         $members = $members->toArray();
@@ -26,7 +26,7 @@ endif;
  * Setup breadcrumbs
  */
 $this->Html->addCrumb('All Members', ['action' => 'review']);
-if($SystemState->isKnown('member')){
+if($SystemState->urlArgIsKnown('member')){
     $this->Html->addCrumb($member->name, ['action' => 'review', '?' => ['member' => $member->id]]);
 }
 if($SystemState->now() == MEMBER_REFINE){
