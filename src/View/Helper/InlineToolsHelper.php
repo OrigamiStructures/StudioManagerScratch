@@ -63,6 +63,10 @@ class InlineToolsHelper extends Helper {
     
     /**
      * Returns an inline review/refine control set
+	 * 
+	 * receives something like this:
+	 * [ 'controller' => 'artworks, ? => [ 'artwork' => 3 ] ]
+	 * and the tools will add the proper action node to the array
      * 
      * @param array $url
      * @param array $refine_url, an optional second array for a different url for refines
@@ -77,6 +81,10 @@ class InlineToolsHelper extends Helper {
     
     /**
      * Returns an inline review/delete control set
+	 * 
+	 * receives something like this:
+	 * [ 'controller' => 'artworks, ? => [ 'artwork' => 3 ] ]
+	 * and the tools will add the proper action node to the array
      * 
      * @param array $url
      * @param array $refine_url, an optional second array for a different url for refines
@@ -89,6 +97,18 @@ class InlineToolsHelper extends Helper {
         return $this->Html->tag('span', "$review $remove", ['class' => 'inline_nav']);
     }
 	
+	/**
+	 * Returns an inline review/refine/delete control set
+	 * 
+	 * receives something like this:
+	 * [ 'controller' => 'artworks, ? => [ 'artwork' => 3 ] ]
+	 * and the tools will add the proper action node to the array
+	 * 
+	 * @param type $url
+	 * @param type $refine_url
+	 * @param type $remove_url
+	 * @return type
+	 */
 	public function inlineReviewRefineDelete($url, $refine_url = NULL, $remove_url = NULL) {
         $refine_url = (is_null($refine_url)) ? $url : $refine_url;
         $remove_url = (is_null($remove_url)) ? $url : $remove_url;
