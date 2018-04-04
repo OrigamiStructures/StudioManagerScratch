@@ -91,7 +91,7 @@ class AppController extends Controller
      */
     public function initialize()
     {
-        parent::initialize();
+//        parent::initialize(); // parent is empty
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
