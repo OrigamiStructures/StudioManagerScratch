@@ -132,7 +132,8 @@ class StateMap {
     'add' => NULL,
     'edit' => NULL,
     'delete' => NULL,
-	  'review' => NULL,
+	'review' => NULL,
+	'renumber' => PIECE_RENUMBER,
   ),
   'Series' => 
   array (

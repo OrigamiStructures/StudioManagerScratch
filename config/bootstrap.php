@@ -236,6 +236,9 @@ define('ARTWORK_CREATE_UNIQUE', 3);
 define('DISPOSITION_CREATE', 1);
 define('DISPOSITION_REVIEW', 2);
 define('DISPOSITION_REFINE', 4); 
+
+// Piece State
+define('PIECE_RENUMBER', 5);
 // </editor-fold>
 
 //Edition Types
