@@ -98,7 +98,7 @@ class EditionStackComponent extends Component {
 		
 		// this may need ->order() later for piece-table reporting of open editions
 		$pieces = $Pieces->find()->where($child_condition)->contain('Dispositions'); 
-		sql($pieces);
+//		sql($pieces);
 		
 		return ['providers' => $providers, 'pieces' => $pieces];
 				
