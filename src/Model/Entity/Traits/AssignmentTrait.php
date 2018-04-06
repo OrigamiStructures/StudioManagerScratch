@@ -33,7 +33,8 @@ trait AssignmentTrait {
 				$accumulate[] = $piece->number;
 				return $accumulate;
 			}, []);
-			$range = Range::constructRange($numbers, '{n}');
+//			$range = Range::arrayToString($numbers, '{n}');
+			$range = Range::arrayToString($numbers, '{n}');
 		} else {
 			$range = $pieces->sumOf(function ($piece) {
 				return $piece->quantity;

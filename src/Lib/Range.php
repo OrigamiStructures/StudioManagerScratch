@@ -17,14 +17,14 @@ class Range {
 	 *
 	 * @var string
 	 */
-	protected $range_string;
+	static $range_string;
 	
 	/**
 	 * A numeric array with range as the values
 	 *
 	 * @var array
 	 */
-	protected $range_array;
+	static $range_array;
 	
 	/**
 	 * An associative array
@@ -33,7 +33,7 @@ class Range {
 	 * 
 	 * @var array
 	 */
-	protected $range_assoc;
+	static $range_assoc;
 	
 	public function __get($param) {
 		
@@ -62,7 +62,7 @@ class Range {
 	 * @param string $path
 	 * @return string
 	 */
-	public function arrayToString($data = array(), $path = '') {
+	static function arrayToString($data = array(), $path = '') {
 		if (!is_array($data)) {
 			$data = array();
 		}
@@ -78,30 +78,30 @@ class Range {
 		while ($list->valid()) {
 			
 			// if this is the first entry
-			if (!$this->range_string) {
-				$this->range_string = $previous = $list->current();
+			if (!self::$range_string) {
+				self::$range_string = $previous = $list->current();
 				$list->next();
 				continue;
 			}
 			
 			// if this is the next number in a sequence
 			if ($list->current() === ($previous + 1)) {
-				switch ($this->range_string[strlen($this->range_string)-1]) {
+				switch (self::$range_string[strlen(self::$range_string)-1]) {
 					case '-':
 						break;
 					default:
-						$this->range_string .= '-';
+						self::$range_string .= '-';
 						break;
 				}
 				
 			// if we jumped more than one number
 			} else {
-				switch ($this->range_string[strlen($this->range_string)-1]) {
+				switch (self::$range_string[strlen(self::$range_string)-1]) {
 					case '-':
-						$this->range_string .= "$previous, {$list->current()}";
+						self::$range_string .= "$previous, {$list->current()}";
 						break;
 					default:
-						$this->range_string .= ", {$list->current()}";
+						self::$range_string .= ", {$list->current()}";
 						break;
 				}
 			}
@@ -111,11 +111,11 @@ class Range {
 		}
 		
 		// check to see if we left a range unfinished
-		if ($this->range_string[strlen($this->range_string)-1] === '-') {
-			$this->range_string .= $previous;
+		if (self::$range_string[strlen(self::$range_string)-1] === '-') {
+			self::$range_string .= $previous;
 		}
 		
-		return $this->range_string;
+		return self::$range_string;
 	}
 	
 	/**
@@ -130,7 +130,7 @@ class Range {
 	 * @param string $type 'assoc' or 'array' to get key=>values or values only
 	 * @return array
 	 */
-	public function stringToArray($range, $type = 'assoc') {
+	static function stringToArray($range, $type = 'array') {
 //		var_dump(func_get_args());
 //		var_dump($type);
 //		echo 
@@ -173,12 +173,12 @@ class Range {
 		}
 		
 		// filter out the duplicates
-		$this->range_array = array_flip(array_flip($sequence));
-		$this->range_assoc = array_flip($this->range_array);
+		self::$range_array = array_flip(array_flip($sequence));
+		self::$range_assoc = array_flip(self::$range_array);
 		
 		$type = 'range_'.$type;
 		
-		return $this->$type;
+		return self::$$type;
 	}
 	
 }

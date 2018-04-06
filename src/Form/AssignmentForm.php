@@ -169,7 +169,7 @@ class AssignmentForm extends Form
 		if (stristr($keys[$count], 'source_for_pieces_')) {
 			$context['data'][$keys[$count]] = '0';
 		}
-		
+				
 		return $context;
 	}
 
@@ -210,17 +210,18 @@ class AssignmentForm extends Form
 	 */
 		protected function checkNumberedAvailability($context){
 		$this->_sourcePieces($context);
+
 		$this->source_numbers = (new Collection($this->source_pieces))->combine('{n}', 'number');
-		$this->request_numbers = \App\Lib\Range::parseRange($context['data']['to_move']);
+		$this->request_numbers = \App\Lib\Range::stringToArray($context['data']['to_move']);
 		$bad_request = array_diff($this->request_numbers, $this->source_numbers->toArray());
 		if (!empty($bad_request)) {
 			$result = FALSE;
 			$grammar = count($bad_request) > 1 ? 'are' : 'is';
-			$bad_range = \App\Lib\Range::constructRange($bad_request);
+			$bad_range = \App\Lib\Range::arrayToString($bad_request);
 			
 			$good_request = array_intersect($this->source_numbers->toArray(), $this->request_numbers);
-			$good_range = \App\Lib\Range::constructRange($good_request);
-			
+			$good_range = \App\Lib\Range::arrayToString($good_request);
+
 			if ($good_range) {
 				$try_this = '.<br />The available pieces in your request: ' . $good_range;
 			} else {
