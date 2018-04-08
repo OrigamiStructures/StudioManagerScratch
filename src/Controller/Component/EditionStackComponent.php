@@ -122,9 +122,9 @@ class EditionStackComponent extends Component {
 	 */
 	public function reassignPieces($assignment, $providers) {
 		$edition = $providers['edition'];
-		preg_match('/(.*)(\d+)/', $assignment->destination, $match);
-		if (stristr($match[1], 'Format')) {
-			$patch = ['format_id' => $match[2]];
+		$split = preg_split('/\\\/', $assignment->destination);
+		if (stristr($split[count($split)-2], 'Format')) {
+			$patch = ['format_id' => $split[count($split)-1]];
 		} else {
 			$patch = ['format_id' => NULL];
 		}
