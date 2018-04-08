@@ -63,6 +63,7 @@ class Range {
 	 * @return string
 	 */
 	static function arrayToString($data = array(), $path = '') {
+		self::$range_string = NULL;
 		if (!is_array($data)) {
 			$data = array();
 		}
