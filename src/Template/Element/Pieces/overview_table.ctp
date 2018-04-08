@@ -1,4 +1,4 @@
-<!-- Element/Edition/overview_table.ctp -->
+<!-- Element/Pieces/overview_table.ctp -->
 <table>
 	<caption>
 		<?= $caption ?>

@@ -21,9 +21,9 @@ foreach($pieces as $piece) :
 		 endif;
 		 ?>
 		<td><?= $piece->quantity; ?></td>
-		<td> <!-- <?= $owner_title[$piece->key()] ?></td>
+		<td>  <?= $owner_title[$piece->key()] ?></td>
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
-		<td><?= $piece->collected ? 'Yes' : '-'; ?> -->
+		<td><?= $piece->collected ? 'Yes' : '-'; ?> 
 			<?= $this->element('Disposition/disposition_event_descriptions', ['piece' => $piece]); ?>
 		</td>
 	</tr>
