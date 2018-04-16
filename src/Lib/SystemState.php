@@ -208,6 +208,7 @@ class SystemState implements EventListenerInterface {
 	 * would allow both variations to be found in the same way. 
 	 * 'yyyy' could be some random string or a name. id's always hidden at 'xxx'
 	 * 
+	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/66
 	 * @return string
 	 */
 	public function artistId($id = NULL) {
@@ -390,6 +391,14 @@ CLASS;
 	 *	'artwork_id' => '2',
 	 *	'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2'
 	 * ]
+	 * 
+	 * $this->SystemState->buildConditions(['format' => 'Formats.id'], 'Formats')
+	 * yeilds
+	 * [
+	 *	'Formats.id' => '2',
+	 *	'Formats.user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2'
+	 * ]
+	 * 
 	 * </pre>
 	 * By default, the user_id value will also be returned in the conditions. 
 	 * 
