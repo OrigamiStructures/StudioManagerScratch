@@ -153,27 +153,34 @@ class PiecesController extends AppController
 		$cache_prefix = $this->SystemState->artistId() . '-' . 
 					$this->SystemState->queryArg('edition');
 		
+		// prevent inappropriate entry
+		if (!in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) {
+			$this->Flash->set('Only numbered editions may be renumbered.');
+			$this->request->referer();
+		}	
+		
 		if ($this->request->is('post')) {
 
 			if (isset($this->request->data['do_move'])) {
-				$renumbered_pieces = Cache::read($cache_prefix . '.data','renumber');
-				// user already confirmed accuracy, try to save data
-				if (True || $this->save($renumbered_pieces)) {
+				// user confirmed accuracy of summary, try to save data
+				$renumbered_pieces = Cache::read($cache_prefix . '.save_data','renumber');
+				if ($this->save($renumbered_pieces)) {
 					$this->Flash->set('The save was successful');
-					osd($renumbered_pieces);
-//					$this->redirect('edition review?');
 					Cache::deleteMany([
 						$cache_prefix . '.summary', 
 						$cache_prefix . '.save_data',
 						$cache_prefix . '.request_data'],
 					'renumber');
+//					$this->redirect('edition review?');
 				} else {
+					// attempted save failed. Restore the request form data 
+					// which was in a form that didn't post and so, was lost
 					$this->request->data['number'] = 
-							Cache::read($cache_prefix . '.request_data','renumber');
+						Cache::read($cache_prefix . '.request_data','renumber');
 					$this->Flash->set('The save was unsuccessful');
 				}
 			} else {
-				// user made requests, now needs to confirm accuracy of summary
+				// user made new requests, now needs to confirm accuracy of summary
 				$this->_renumber($this->request->data);
 			}
 		}
@@ -181,7 +188,7 @@ class PiecesController extends AppController
 		$summary = Cache::read($cache_prefix . '.summary','renumber');
 		$renumber_summary =  $summary ? $summary : FALSE;
 		
-		// At this point we have one of tree situations, i
+		// At this point we have one of tree situations, 
 		// in all cases $renumber_summary has a value.
 		// 1. $renumber_summary is False, a brand new request form will render
 		// 2. $renumber_summary summary is truthy, a confirmation section will render 
@@ -196,13 +203,17 @@ class PiecesController extends AppController
 	 * 
 	 * After the user request piece renumbering, we'll smooth out 
 	 * the request and make a simple, human readible summary 
-	 * for approval or rejection.
+	 * for approval or rejection. Cache the message
 	 * 
 	 * Also, we'll either make the full save entity set or make 
 	 * data that makes it easy, an we'll cache this data. If the user 
 	 * approves the changes, we'll read the cache and finish up.
 	 * 
-	 * @param type $post_data 
+	 * Finally, the request data is in a different form from the 
+	 * approval. We'll have to cache that form's data so the inputs 
+	 * can stay properly populated as the process continues
+	 * 
+	 * @param array $post_data the user's renumbering requests, this-request-data
 	 */
 	protected function _renumber($post_data) {
 		$cache_prefix = $this->SystemState->artistId() . '-' . 
