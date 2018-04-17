@@ -1,13 +1,4 @@
 <!-- Element/Pieces/renumber_table.ctp -->
-<?php
-$edition = $providers['edition'];
-if (!in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) {
-?>
-	Only numbered editions may be renumbered.
-<?php
-} else {
-?>
-	
 	
 <table>
 	<caption>
@@ -27,8 +18,5 @@ if (!in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) {
 		<?= $this->element('Pieces/renumber_rows'); ?>
 	</tbody>
 </table>
-	
-	
-<?php } ?>
 	
 <!-- END Element/Edition/renumber_table.ctp -->
