@@ -17,6 +17,22 @@ class PiecesController extends AppController
 {
 	
 	public $components = ['ArtworkStack'];
+	
+	/**
+	 * Before filter
+	 * 
+	 * Renumbering will take at least two page visits, but we want to 
+	 * eventually return to the referring page. We'll remember that here 
+	 * for latter recall.
+	 * 
+	 * @param \Cake\Event\Event $event
+	 */
+	public function beforeFilter(\Cake\Event\Event $event) {
+		parent::beforeFilter($event);
+		if (!stristr($this->request->referer(), DS . 'renumber?')) {
+			$this->SystemState->referer($this->request->referer());
+		}
+	}
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD">
 	/**
@@ -141,9 +157,13 @@ class PiecesController extends AppController
 	 * Renumber pieces in a Limited Edition
 	 * 
 	 * The URL query has all the relevant IDs
+	 * beforeFilter memorized the refering page for eventual return
 	 * 
 	 */
 	public function renumber() {
+		osd($this->SystemState->referer());//die;
+//		osd($this->request);
+		
 		$cache_prefix = $this->SystemState->artistId() . '-' . 
 					$this->SystemState->queryArg('edition');
 		
@@ -153,7 +173,7 @@ class PiecesController extends AppController
 		// prevent inappropriate entry
 		if (!in_array($providers['edition']->type, $this->SystemState->limitedEditionTypes())) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
-			$this->redirect($this->request->referer());
+			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 		}	
 		
 		/*
@@ -162,6 +182,13 @@ class PiecesController extends AppController
 		 */
 		if ($this->request->is('post')) {
 			
+			if (isset($this->request->data['cancel'])) {
+				$this->_clear_renumber_caches($cache_prefix);
+//				osd($this->request->data);
+				osd($this->SystemState->referer(), 'this is the referer just before jump');
+				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+				die('how did we get here?');
+			}
 			/*
 			 * If it is a post, there are two possibile TRDs because 
 			 * the page can have up to two different forms. 
@@ -175,19 +202,24 @@ class PiecesController extends AppController
 				// retreive the cached entities
 				// and try to save them
 				$renumbered_pieces = Cache::read($cache_prefix . '.save_data','renumber');
-				if ($this->save($renumbered_pieces)) {
+				$pieceTable = $this->Pieces;
+				$result = $pieceTable->connection()->transactional(
+						function () use ($pieceTable, $renumbered_pieces) {
+							$result = TRUE;
+							foreach ($renumbered_pieces as $entity) {
+								$result = $result && $pieceTable->save($entity, ['atomic' => false]);
+							}
+							return $result;
+						});
+				if ($result) {
+					Cache::delete(
+							"get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]",
+							'artwork');
 					$this->Flash->set('The save was successful');
 					// On success we can clear the cached values
 					// and return to wherever we started
-					Cache::deleteMany([
-						$cache_prefix . '.error', 
-						$cache_prefix . '.summary', 
-						$cache_prefix . '.save_data',
-						$cache_prefix . '.request_data',
-						$cache_prefix . '.fresh_entities',
-						],
-					'renumber');
-					$this->redirect($this->request->referer());
+					$this->_clear_renumber_caches($cache_prefix);
+					$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 				} else {
 					// attempted save failed. Restore the request form data 
 					// which was in a different <Form> that didn't post
@@ -201,7 +233,10 @@ class PiecesController extends AppController
 				 */
 				$this->_renumber($this->request->data['number'], $pieces->toArray());
 			}
+		} else {
+			// this is the non-posting arrival slot
 		}
+		// this is common fall-through code for all modes of request
 		
 		$summary = Cache::read($cache_prefix . '.summary','renumber');
 		$error = Cache::read($cache_prefix . '.error','renumber');
@@ -242,27 +277,7 @@ class PiecesController extends AppController
 		$summary = [];
 		$save_data = [];
 		$error = FALSE;
-		/*
-		 * All involved pieces must be used once as a reciever 
-		 * and once as a provider. We'll assemble two lists and 
-		 * remove items as they get used. The left overs will 
-		 * allow completion or error reporting
-		 * 
-		 * @todo invalid number-value error
-		 * https://github.com/OrigamiStructures/StudioManagerScratch/issues/67 
-		 * explains the need for and technique to do filtering to ensure 
-		 * only valid piece numbers are considered. See the 4th comment
-		 */
-		$receive_number = $provide_number = (new Collection(array_flip(array_flip($post_data))))
-				->reduce(function($accumulator, $value, $key) {
-					if ($value) {
-						$accumulator[$key] = $key;
-						$accumulator[$value] = $value;
-					}
-					return $accumulator;
-				}, []);
-		
-		
+			
 		/*
 		 * We need a master set of piece entities to reference. 
 		 * These will provide id and number data as recorded in 
@@ -282,6 +297,40 @@ class PiecesController extends AppController
 				}, []);
 			Cache::write($cache_prefix . '.fresh_entities', $fresh_piece_entities, 'renumber');
 		}
+		
+		/*
+		 * All involved pieces must be used once as a reciever 
+		 * and once as a provider. We'll assemble two lists and 
+		 * remove items as they get used. The left overs will 
+		 * allow completion or error reporting 
+		 * 
+		 * Also, we'll scan all user entered values to insure they 
+		 * are valid piece numbers. Any that are not will be 
+		 * isolated and used for error reporting.
+		 * 
+		 * @todo invalid number-value error
+		 * https://github.com/OrigamiStructures/StudioManagerScratch/issues/67 
+		 * explains the need for and technique to do filtering to ensure 
+		 * only valid piece numbers are considered. See the 4th comment
+		 */
+		$reduction = (new Collection(array_flip(array_flip($post_data))))
+				->reduce(function($accumulator, $value, $key) use ($fresh_piece_entities) {
+					if ($value) {
+						if (array_key_exists($value, $fresh_piece_entities)) {
+							$accumulator['mentions'][$key] = $key;
+							$accumulator['mentions'][$value] = $value;
+						} else {
+							$accumulator['error'][$value] = $value;
+						}
+					}
+					return $accumulator;
+				}, []);
+		if (empty($reduction['mentions'])) {
+			$this->_clear_renumber_caches($cache_prefix);
+			return; 
+		}
+		$receive_number = $provide_number = $reduction['mentions'];
+		$symbol_error = (isset($reduction['error'])) ? $reduction['error'] : [] ;
 
 		/*
 		 * Go through the post data and make the renumbering changes 
@@ -290,12 +339,12 @@ class PiecesController extends AppController
 		 * provider arrays to winnow down to any implied moves (or errors).
 		 */
 		foreach ($post_data as $old_number => $new_number) {
-			if (!empty($new_number)) { // if a request has been made
+			if (!empty($new_number) && !array_key_exists($new_number, $symbol_error)) { // if a request has been made
 				
 				$save_data[$new_number] = (new Piece([
 							'id' => $fresh_piece_entities[$old_number]->id,
 							'number' => $new_number,
-						]))->dirty('id', FALSE);
+						]));
 				$summary[] = "Piece #$old_number becomes #$new_number";
 				unset($receive_number[$old_number]);
 				unset($provide_number[$new_number]);				
@@ -303,8 +352,22 @@ class PiecesController extends AppController
 		}
 		
 		/*
-		 * Now asses the remaining recievers and providers
+		 * Now asses the remaining recievers, providers, and errors
 		 */
+				
+		if (!empty($symbol_error)) {
+			switch (count($symbol_error)) {
+				case 1:
+					$error[] = '<span class=\'symbol-errors\'>' . array_pop($symbol_error) . '</span>' . 
+						' is not a valid number for this set of pieces.';
+					break;
+				default:
+					$error[] = '<span class=\'symbol-errors\'>' . Text::toList($symbol_error) .'</span>' .  
+						' are not a valid numbers for this set of pieces.';
+					break;
+			}
+		}
+		
 		$final_change = count($receive_number) + count($provide_number);
 		// a fix just in case one is 0 and the other is 2, an error condition
 		if ($final_change == 2 && count($receive_number) != count($provide_number)) {
@@ -335,18 +398,18 @@ class PiecesController extends AppController
 				 * 
 				 * @todo invalid number-value error from above
 				 */
-				$error = ['There was a mismatch between the number of pieces that you want to renumber and the pieces who\'s numbers were reassigned to other pieces. Please resolve and continue.'];
+				$error = ['There was a mismatch between the number of pieces that you want to renumber and the pieces who\'s numbers were reassigned to other pieces. Please resolve and re-submit.'];
 				
 				switch (count($provide_number)) {
 					case 0:
 						break;
 					case 1:
 						$error[] = 'There is no way to determine which piece should recieve number ' .
-							array_pop($provide_number);
+							'<span class=\'symbol-errors\'>' . array_pop($provide_number) . '</span>';
 						break;
 					default:
 						$error[] = 'There is no way to determine where the numbers ' . 
-							Text::toList($provide_number) . ' should be used.';
+							'<span class=\'symbol-errors\'>' . Text::toList($provide_number) . '</span> should be used.';
 						break;
 				}
 				
@@ -387,4 +450,14 @@ class PiecesController extends AppController
 		'renumber');
 	}
 	
+	protected function _clear_renumber_caches($cache_prefix) {
+					Cache::deleteMany([
+						$cache_prefix . '.error', 
+						$cache_prefix . '.summary', 
+						$cache_prefix . '.save_data',
+						$cache_prefix . '.request_data',
+						$cache_prefix . '.fresh_entities',
+						],
+					'renumber');
+	}
 }
