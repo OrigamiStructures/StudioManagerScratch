@@ -1,6 +1,7 @@
 <!-- Element/Pieces/renumber_rows.ctp -->
 <tr><td>
 	<?= $this->Form->button('submit'); ?>
+	<?= $this->Form->button('cancel', ['type' => 'submit', 'form' => 'cancel']); ?>
 </td></tr>
 
 <?php

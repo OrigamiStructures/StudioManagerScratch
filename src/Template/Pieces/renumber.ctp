@@ -26,6 +26,10 @@ if ($renumber_summary) :
 	<?= $this->Form->end(); ?>
 	
 <?php endif ?>
+<?= $this->Form->create('', ['id' => 'cancel', 'formmethod' => 'post']); ?>
+	<?= $this->Form->input('cancel', ['type' => 'hidden', 'value' => TRUE])?>
+<?= $this->Form->end(); ?>
+
 <?= $this->Form->create('Pieces', ['id' => 'request']); ?>
 
 	<?= $this->element('Pieces/renumber_table', ['caption' => 'Pieces in this edition']); ?>
