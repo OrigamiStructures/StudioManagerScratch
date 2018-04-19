@@ -354,14 +354,26 @@ CLASS;
 	}
     
     /**
-     * Manage persistent session-based referer
+     * Support logic-based referer to suppliment standard request->referer
 	 * 
-	 * In Controller->_beforeFilter(), a controller action, the 
+	 * In Controller->_beforeFilter() or a controller action, the 
 	 * request->referer() can be examined for key values and 
-	 * conditionally included or excluded from SystemState->referer. 
+	 * conditionally included or excluded in SystemState->referer (in Session). 
 	 * 
 	 * This will allow us to ignore multiple page requests and 
 	 * return to some originating page.
+	 * 
+	 * Calling with a url arguemnt will store that 'referer' and return it
+	 * 
+	 * Calling with no arguemnt:
+	 *	will always return at least the current request->referer but 
+	 *	will preferentially return the url that was tucked away in Session
+	 * 
+	 * Call with (SYSTEM_VOID_REFERER) will return the request->referer 
+	 *	and dump the session stored url
+	 * 
+	 * Call with (SYSTEM_CONSUME_REFERER) will return the session 
+	 *	stored url and delete it also
      * 
      * @param string $referer
      * @return string
