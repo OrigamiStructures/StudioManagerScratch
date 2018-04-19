@@ -355,6 +355,13 @@ CLASS;
     
     /**
      * Manage persistent session-based referer
+	 * 
+	 * In Controller->_beforeFilter(), a controller action, the 
+	 * request->referer() can be examined for key values and 
+	 * conditionally included or excluded from SystemState->referer. 
+	 * 
+	 * This will allow us to ignore multiple page requests and 
+	 * return to some originating page.
      * 
      * @param string $referer
      * @return string
