@@ -19,7 +19,7 @@ class EditionsController extends AppController
 	public $components = ['ArtworkStack'];
 	
 	
-	public function initialize() {
+	public function initialize() {		
 		parent::initialize();
 		$this->loadComponent('ArtworkStack');
 	}
@@ -240,6 +240,14 @@ class EditionsController extends AppController
 			if ($assignment->execute($this->request->data)) {
 				if($this->EditionStack->reassignPieces($assignment, $providers)) {
 					$this->Flash->error(__('The reassignments were completed.'));
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
+// and issue 24
+					// on success, try triggering an event that fixes all counter cache values
+					// here are to approches. The second one would need a new listener action
+					// because the one mentioned is tied into Cache behavior and its context
+//					$this->_refreshFormatCounterCaches($this->request->data);
+//					$this->dispatchEvent('Pieces.fluidFormatPieces');
+//					die;
 					$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 				} else {
 					$this->Flash->error(__('There was a problem reassigning the pieces. Please try again'));
@@ -255,5 +263,11 @@ class EditionsController extends AppController
 		$this->set('errors', $errors);
 		$this->set('assign', $assign);
 	}
+	
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
+// and issue 24
+//	protected function _refreshFormatCounterCaches($form_data) {
+//		
+//	}
 	
 }

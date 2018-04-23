@@ -77,28 +77,30 @@ class EditionStackComponent extends Component {
 		$Formats = TableRegistry::get('Formats');
 		$Editions = TableRegistry::get('Editions');
 		
-		$edition_condition = $this->SystemState->buildConditions(['edition' => 'id']);	
-		$child_condition = $this->SystemState->buildConditions(['edition']);
-//		
+		$edition_condition = $this->SystemState->buildConditions(['edition' => 'Editions.id'], 'Editions');	
+		$format_condition = $this->SystemState->buildConditions(['edition'], 'Formats');
+		$piece_condition = $this->SystemState->buildConditions(['edition'], 'Pieces');
+		
 		$edition = $Editions->find()
 				->where($edition_condition)
-//				->contain('Format')
+				->contain('Artworks')
 				->toArray()[0];
 		//osd($edition);
-		$unassigned = $Pieces->find('unassigned', $child_condition);
+		$unassigned = $Pieces->find('unassigned', $piece_condition);
 		$edition->unassigned = $unassigned->toArray();
 		
-		$formats = $Formats->find()->where($child_condition);
-		$formats = $formats->each(function($format) use($child_condition, $Pieces) {
-			$conditions = $child_condition + ['format_id' => $format->id];
+		$formats = $Formats->find()->where($format_condition);
+		$formats = $formats->each(function($format) use($piece_condition, $Pieces) {
+			$conditions = $piece_condition + ['format_id' => $format->id];
 			$format->fluid = $Pieces->find('fluid', $conditions)->toArray();
 		});
 
 		$providers = ['edition' => $edition] + $formats->toArray();
 		
 		// this may need ->order() later for piece-table reporting of open editions
-		$pieces = $Pieces->find()->where($child_condition)->contain('Dispositions'); 
+		$pieces = $Pieces->find()->where($piece_condition)->contain('Dispositions')->order('Pieces.number'); 
 //		sql($pieces);
+//		osd($pieces->toArray());die;
 		
 		return ['providers' => $providers, 'pieces' => $pieces];
 				
@@ -168,6 +170,9 @@ class EditionStackComponent extends Component {
 
 	}
 	
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
+// and issue 24
+	// try to elimate with an event triggered by controller after save
 	public function _getFormatTriggerPieces(\App\Form\AssignmentForm $assignment) {
 		$Pieces = TableRegistry::get('Pieces');
 		$update_trigger_value = [

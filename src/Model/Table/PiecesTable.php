@@ -70,7 +70,15 @@ class PiecesTable extends AppTable
         ]);
     }
 
-    /**
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
+// and issue 24
+//	public function implementedEvents() {
+//		return [
+//			'Pieces.fluidFormatPieces' => 'fluidFormatPieces',
+//		];
+//	}
+
+	/**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
