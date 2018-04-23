@@ -108,7 +108,7 @@ class ArtworkStackComponent extends Component {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
 				'contain' => $this->full_containment,
 				// https://github.com/OrigamiStructures/StudioManagerScratch/issues/70
-				'limit' => 5,
+//				'limit' => 5,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
 			]);
 			// menus need an untouched copy of the query for nav construction
