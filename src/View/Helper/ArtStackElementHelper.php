@@ -201,6 +201,18 @@ class ArtStackElementHelper extends Helper {
 					. "$first_class and $second_class were passed.");
 		}
 	}
+	
+	/**
+	 * Based on the system state and edition, choose a piece table element
+	 * 
+	 * @todo This method is a functional stub. 
+	 *		See _formatPieceTable() docblock for other possibly relevant details
+	 *		We need to work out a rule set to flesh out 
+	 *		the desired and required system function
+	 * 
+	 * @param entity $edition 
+	 * @return string Name of the Piece Table wrapper element
+	 */
 	protected function _editionPieceTable($edition) {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
@@ -224,12 +236,15 @@ class ArtStackElementHelper extends Helper {
 	}
 	
 	/**
-	 * Choose wich pieces element has the info needed in this context
+	 * Based on the system state and format, choose a piece table element
 	 * 
 	 * Data specific to the edition type and current task/context is 
 	 * decided on by the EditionFactoryHelper. This just sets the template.
 	 * 
 	 * $pieces MUST BE SET BY EditionHelper HEIRARCHY FIRST
+	 * 
+	 * @todo Can't this logic elimiate the need for the logic that sets 
+	 *			class tag 'format_focus' in Elements/Format/full.ctp?
 	 * 
 	 * @return string Name of the element to render
 	 */
