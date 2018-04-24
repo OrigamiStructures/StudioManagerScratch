@@ -1,22 +1,14 @@
 <!-- Template/Artwork/review.ctp -->
 <?php 
-use App\View\Helper\ArtStackElementHelper;
-/**
- * Set values that amend tag classes for css refinement
- */
 $this->loadHelper('DispositionTools');
-$focus = '';
-// centralized here? how about in the controllers. I might forget this location for logic set-up
-$editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
-if ($SystemState->urlArgIsKnown('format')) {
-	$focus = 'format_focus';
-}
+$ArtStackElement = $this->loadHelper('ArtStackElement');
+$this->set(compact('ArtStackElement'));
 
 /**
- * Store the newly created variables (and helper) and choose an element
+ * $editing is used to control rendering of a wrapping form tag
  */
-$ArtStackElement = $this->loadHelper('ArtStackElement');
-$this->set(compact('ArtStackElement', 'editing', 'focus'));
+$editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
+
 $artworks_element = $ArtStackElement->choose('artworksContent');
 
 /**

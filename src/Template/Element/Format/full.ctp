@@ -1,10 +1,14 @@
-
-						<!-- Element/Format/full.ctp -->
 <?php 
-$focus = isset($focus) ? $focus : '';
 $format_element = $ArtStackElement->choose('formatContent');
-$class = ($editing ? ' editing' : '') . $focus;
+
+/**
+ * format_focus controls visibility of the piece table. This might be done 
+ *	with the piece table factory method instead.
+ * 
+ */
+$class = ($SystemState->urlArgIsKnown('format')) ? ' format_focus' : '';
 ?>
+						<!-- Element/Format/full.ctp -->
 						<section class="format<?= $class; ?>">
 							<?= $this->element($format_element); ?>
 						</section>

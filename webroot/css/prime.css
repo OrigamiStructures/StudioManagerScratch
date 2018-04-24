@@ -510,19 +510,19 @@ div.artworks section.artwork {
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
 
-  section.artwork.editing > div.image {
+  form section.artwork > div.image {
     width: 25%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.artwork.editing > div.image:last-child:not(:first-child) {
+    form section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
-  section.artwork.editing > div.text, section.artwork.editing > div.editions {
+  form section.artwork > div.text, form section.artwork > div.editions {
     width: 75%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.artwork.editing > div.text:last-child:not(:first-child), section.artwork.editing > div.editions:last-child:not(:first-child) {
+    form section.artwork > div.text:last-child:not(:first-child), form section.artwork > div.editions:last-child:not(:first-child) {
       float: right; } }
 /**
 ==============================================================
@@ -659,13 +659,13 @@ div.formats {
         padding-right: 0; }
         div.formats section.format > div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.editing > fieldset div.image {
+      div.formats section.format > fieldset div.image {
         /*@include grid-column-row();*/
         width: 100%;
         float: left;
         padding-left: 0;
         padding-right: 0; }
-        div.formats section.format.editing > fieldset div.image:last-child:not(:first-child) {
+        div.formats section.format > fieldset div.image:last-child:not(:first-child) {
           float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format div.text {
@@ -682,7 +682,7 @@ div.formats {
       padding-right: 0.9375rem; }
       div.formats section.format div.pieces:last-child:not(:first-child) {
         float: right; }
-    div.formats section.format.editing > fieldset > div.image {
+    div.formats section.format > fieldset > div.image {
       max-width: 75rem;
       margin-left: auto;
       margin-right: auto;
@@ -695,23 +695,23 @@ div.formats {
       padding-left: 0;
       padding-right: 0;
       margin-left: 0; }
-      div.formats section.format.editing > fieldset > div.image::before, div.formats section.format.editing > fieldset > div.image::after {
+      div.formats section.format > fieldset > div.image::before, div.formats section.format > fieldset > div.image::after {
         content: ' ';
         display: table; }
-      div.formats section.format.editing > fieldset > div.image::after {
+      div.formats section.format > fieldset > div.image::after {
         clear: both; }
-      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+      div.formats section.format > fieldset > div.image:last-child:not(:first-child) {
         float: right; }
-      div.formats section.format.editing > fieldset > div.image, div.formats section.format.editing > fieldset > div.image:last-child {
+      div.formats section.format > fieldset > div.image, div.formats section.format > fieldset > div.image:last-child {
         float: none; }
-      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+      div.formats section.format > fieldset > div.image:last-child:not(:first-child) {
         float: right; }
-    div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+    div.formats section.format > fieldset > div.text, div.formats section.format > fieldset div.pieces {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+      div.formats section.format > fieldset > div.text:last-child:not(:first-child), div.formats section.format > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format.format_focus > div.text {
@@ -760,21 +760,21 @@ div.formats {
         padding-right: 0.9375rem; }
         div.formats section.format > div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.editing > fieldset > div.image {
+      div.formats section.format > fieldset > div.image {
         /*@include grid-column-row();*/
         width: 33.33333%;
         float: left;
         padding-left: 0;
         padding-right: 0;
         margin-left: auto; }
-        div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        div.formats section.format > fieldset > div.image:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+      div.formats section.format > fieldset > div.text, div.formats section.format > fieldset div.pieces {
         width: 66.66667%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
-        div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+        div.formats section.format > fieldset > div.text:last-child:not(:first-child), div.formats section.format > fieldset div.pieces:last-child:not(:first-child) {
           float: right; }
       div.formats section.format.format_focus > div.text {
         width: 83.33333%;

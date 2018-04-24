@@ -82,7 +82,7 @@ div.artworks {
 			@include grid-column(10);
 		}
 	}
-	section.artwork.editing {
+	form section.artwork {
 		> div.image {
 			@include grid-column(3);
 		}
@@ -200,7 +200,7 @@ div.formats {
 				@include grid-column(12, 0);
 			}
 		}
-		section.format.editing > fieldset {
+		section.format > fieldset {
 			div.image {
 				/*@include grid-column-row();*/
 				@include grid-column(12, 0)
@@ -217,7 +217,7 @@ div.formats {
 				@include grid-column(6);
 			}
 		}
-		section.format.editing > fieldset {
+		section.format > fieldset {
 			> div.image {
 				@include grid-column-row();
 				@include grid-column(6, 0);
@@ -269,7 +269,7 @@ div.formats {
 				@include grid-column(6);
 			}
 		}
-		section.format.editing > fieldset {
+		section.format > fieldset {
 			> div.image {
 				/*@include grid-column-row();*/
 				@include grid-column(4, 0);
