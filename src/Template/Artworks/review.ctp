@@ -5,7 +5,7 @@ use App\View\Helper\ArtStackElementHelper;
  * Set values that amend tag classes for css refinement
  */
 $this->loadHelper('DispositionTools');
-$focus = FALSE;
+$focus = '';
 // centralized here? how about in the controllers. I might forget this location for logic set-up
 $editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
 if ($SystemState->urlArgIsKnown('format')) {
