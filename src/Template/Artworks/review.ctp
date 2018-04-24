@@ -15,7 +15,7 @@ if ($SystemState->urlArgIsKnown('format')) {
 /**
  * Store the newly created variables (and helper) and choose an element
  */
-$ArtStackElement = $this->loadHelper('ArtStackElementHelper');
+$ArtStackElement = $this->loadHelper('ArtStackElement');
 $this->set(compact('ArtStackElement', 'editing', 'focus'));
 $artworks_element = $ArtStackElement->choose('artworksContent');
 
