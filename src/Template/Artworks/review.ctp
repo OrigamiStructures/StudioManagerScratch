@@ -1,42 +1,51 @@
 <!-- Template/Artwork/review.ctp -->
-
 <?php 
+use App\View\Helper\ArtStackElementHelper;
 /**
- * set values that amend tag classes for css refinement
+ * Set values that amend tag classes for css refinement
  */
 $this->loadHelper('DispositionTools');
+$focus = FALSE;
 // centralized here? how about in the controllers. I might forget this location for logic set-up
 $editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
 if ($SystemState->urlArgIsKnown('format')) {
 	$focus = 'format_focus';
-//} elseif ($SystemState->isKnown('edition')) {
-//	$focus = 'edition_focus';
-} else {
-	$focus = FALSE;
 }
 
-
-$ArtStackElement
-		= $this->loadHelper('App\View\Helper\ArtStackElementHelper');
+/**
+ * Store the newly created variables (and helper) and choose an element
+ */
+$ArtStackElement = $this->loadHelper('ArtStackElementHelper');
 $this->set(compact('ArtStackElement', 'editing', 'focus'));
 $artworks_element = $ArtStackElement->choose('artworksContent');
-?>
 
+/**
+ * This renders the whole enchilada for the 9 major pages (defined above). 
+ * Everything is wrapped in a form if we're creating or editing
+ */
+?>
 <div class="artworks">
 	<?php
 	if ($editing) : 
-		if ($SystemState->is(ARTWORK_CREATE_UNIQUE)) {
-			echo $this->Form->create($artwork, ['type' => 'file', 'action' => 'create', 'class' => 'droppzone', 'id' => 'artwork_stack']);
-		} else {
-			echo $this->Form->create($artwork, ['type' => 'file', 'class' => 'droppzone', 'id' => 'artwork_stack']);
-		}	
+	$options = ['type' => 'file', 'class' => 'droppzone', 'id' => 'artwork_stack'];
+		if ($SystemState->is(ARTWORK_CREATE_UNIQUE)) { 
+			$options['action'] = 'create'; 
+		}
+		echo $this->Form->create($artwork, $options);
 	endif; ?>
 	
 	<?= $this->element($artworks_element);?>
-	<?php if (in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE])) : echo $this->Form->end(); endif; ?>
+	
+	<?php if ($editing) : echo $this->Form->end(); endif; ?>
 </div>
 
 <?php 
+/**
+ * This section creates the breadcrums. 
+ * A lot of complication if this is going to go on many pages. 
+ * As it stands, this is the one template for the 9 main page actions: 
+ * Artworks, Editions, Formats; create, review, refine
+ */
 $args = $SystemState->queryArg(); 
 $q = [];
 foreach (['artwork', 'edition', 'format'] as $crumb) {
@@ -46,10 +55,6 @@ foreach (['artwork', 'edition', 'format'] as $crumb) {
 		$edit_link = $this->Html->link('Edit', ['controller' => $controller, 'action' => 'refine', '?' => $q]);
 		$new_link = $this->Html->link('New', ['controller' => $controller, 'action' => 'create', '?' => $q]); 
 		$tools = " <span>[$edit_link • $new_link]</span>";
-//		$this->Html->addCrumb(ucwords($crumb). $tools, ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
 		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q], ['escape' => FALSE, 'class' => 'review']);
-//		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
 	}
 }
-
-//osd($SystemState);
