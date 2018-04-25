@@ -5,7 +5,7 @@
 // is used by ArtStackElement in the table choice logic
 // HELPER CALL ORDER IS CRITICAL
 $EditionHelper->pieceTable($edition);
-$piece_element = $ArtStackElement->choosePieceTable($edition);
+$piece_element = $this->ArtElement->choosePieceTable($edition);
 if ($piece_element != 'empty') :
 ?>
 					<button class="button tiny secondary">Reveal Pieces</button>

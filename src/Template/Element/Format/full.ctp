@@ -1,5 +1,5 @@
 <?php 
-$format_element = $ArtStackElement->choose('formatContent');
+$format_element = $this->ArtElement->choose('formatContent');
 
 /**
  * format_focus controls visibility of the piece table. This might be done 

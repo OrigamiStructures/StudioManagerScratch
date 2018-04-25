@@ -1,10 +1,9 @@
 <!-- Template/Artwork/review.ctp -->
 <?php 
 $this->loadHelper('DispositionTools');
-$ArtStackElement = $this->loadHelper('ArtStackElement');
-$this->set(compact('ArtStackElement'));
+$this->loadHelper('ArtElement',['className' => 'ArtStackElement']);
 
-$decorated_element = $ArtStackElement->choose('contentDecoration');
+$decorated_element = $this->ArtElement->choose('contentDecoration');
 
 /**
  * This renders the whole enchilada for the 9 major pages (defined above). 

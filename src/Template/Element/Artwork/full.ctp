@@ -2,7 +2,7 @@
 
 <?php 
 // Gets the name of the element based on SystemState->now()
-$artwork_element = $ArtStackElement->choose('artworkContent');
+$artwork_element = $this->ArtElement->choose('artworkContent');
 ?>
 
 <section class="artwork">

@@ -7,7 +7,7 @@
  * 
  * 'action' attribute is the one difference between the two form versions.
  */
-$artworks_element = $ArtStackElement->choose('artworksContent');
+$artworks_element = $this->ArtElement->choose('artworksContent');
 ?>
 
 	<!-- Template/Artwork/createunique_decoration.ctp -->

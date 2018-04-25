@@ -16,7 +16,7 @@ if (!is_null($edition->type)) { // CREATE doesn't know type
  * This helper choose which elements to use but has nothing to do with 
  * more detailed output of specific data.
  */
-$edition_element = $ArtStackElement->choose('editionContent');
+$edition_element = $this->ArtElement->choose('editionContent');
 ?>
 			
 			<section class="edition">
