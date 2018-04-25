@@ -4,12 +4,7 @@ $this->loadHelper('DispositionTools');
 $ArtStackElement = $this->loadHelper('ArtStackElement');
 $this->set(compact('ArtStackElement'));
 
-/**
- * $editing is used to control rendering of a wrapping form tag
- */
-$editing = in_array($SystemState->now(), [ARTWORK_CREATE, ARTWORK_REFINE, ARTWORK_CREATE_UNIQUE]);
-
-$artworks_element = $ArtStackElement->choose('artworksContent');
+$decorated_element = $ArtStackElement->choose('contentDecoration');
 
 /**
  * This renders the whole enchilada for the 9 major pages (defined above). 
@@ -17,18 +12,9 @@ $artworks_element = $ArtStackElement->choose('artworksContent');
  */
 ?>
 <div class="artworks">
-	<?php
-	if ($editing) : 
-	$options = ['type' => 'file', 'class' => 'droppzone', 'id' => 'artwork_stack'];
-		if ($SystemState->is(ARTWORK_CREATE_UNIQUE)) { 
-			$options['action'] = 'create'; 
-		}
-		echo $this->Form->create($artwork, $options);
-	endif; ?>
 	
-	<?= $this->element($artworks_element);?>
+	<?= $this->element($decorated_element);?>
 	
-	<?php if ($editing) : echo $this->Form->end(); endif; ?>
 </div>
 
 <?php 

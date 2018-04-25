@@ -43,6 +43,32 @@ class ArtStackElementHelper extends Helper {
 	}
 	
 	/**
+	 * Choose Form wrapper in creation/refinement cases
+	 * 
+	 * Review will get no decorating wrapper
+	 * 
+	 * Most Creation and all Refine calls set wrap the page content 
+	 *		in a form with a default 'action' attribute
+	 * 
+	 * CreateUnique must wrap and set 'action' manually 
+	 *		because it borrows Artworks->create() for processing
+	 */
+	protected function contentDecorationRule() {
+		switch ($this->SystemState->now()) {
+			case ARTWORK_CREATE_UNIQUE:
+				$element = 'Artwork/createunique_decoration';
+				break;
+			case ARTWORK_CREATE:
+			case ARTWORK_REFINE:
+				$element = 'Artwork/form_decoration';
+				break;
+			default:
+				$element = 'Artwork/no_decoration';
+				break;
+		}
+		return $element;
+	}
+	/**
 	 * The artworks div may be destined to have one or many artwork sections
 	 */
 	protected function artworksContentRule() {
