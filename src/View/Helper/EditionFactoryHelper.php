@@ -181,21 +181,10 @@ class EditionFactoryHelper extends Helper {
 	 * @param type $edition
 	 */
 	protected function _formatPieceTools($format, $edition) {
-		if($edition->type === EDITION_LIMITED && $edition->quantity > 1) {
-			echo $this->Html->link("Renumber pieces",
-				[
-					'controller' => 'pieces',
-					'action' => 'renumber','?' => [
-						'artwork' => $edition->artwork_id,
-						'edition' => $edition->id,
-						'format' => $format->id,
-					]
-				]) . ' ';
-		}
 		$disposition = $this->SystemState->standing_disposition;
 		if ($disposition && $this->SystemState->urlArgIsKnown('format')) {
 			// in this case we can see the individual pieces with link-up tools included
-			// because of redirect for flat art/edition, urlQueryArg, not controller is our check point
+			// because of redirect for flat art/edition, queryArg, not controller is our check point
 			return '';
 		}
 		

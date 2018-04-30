@@ -79,6 +79,16 @@ class EditionedHelper extends EditionFactoryHelper {
 	 */
 	protected function _editionPieceTools($edition) {
 		$assignment_tool = '';
+		if ($edition->type === EDITION_LIMITED) {
+			$assignment_tool = $this->Html->link("Renumber pieces",
+					[
+				'controller' => 'pieces',
+				'action' => 'renumber', '?' => [
+					'artwork' => $edition->artwork_id,
+					'edition' => $edition->id,
+				]
+			]);
+		}		
 		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
 			
 			if ($edition->hasUnassigned()) {
@@ -87,9 +97,9 @@ class EditionedHelper extends EditionFactoryHelper {
 			if ($edition->hasFluid() && ($edition->fluid_piece_count !== $edition->unassigned_piece_count)) {
 				$label[] = 'Reassign';
 			}
-			$label = implode('/', $label);
+			$label = ' | ' . implode('/', $label);
 		
-			$assignment_tool = $this->Html->link("$label pieces to formats",
+			$assignment_tool .= $this->Html->link("$label pieces to formats",
 				['controller' => 'editions', 'action' => 'assign', '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
