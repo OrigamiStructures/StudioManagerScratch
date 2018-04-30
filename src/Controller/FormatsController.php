@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
+use App\Lib\Traits\ArtReviewTrait;
 
 /**
  * Formats Controller
@@ -12,6 +13,8 @@ use Cake\ORM\TableRegistry;
 class FormatsController extends AppController
 {
 
+	use ArtReviewTrait;
+	
 	public $components = ['ArtworkStack'];
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD">
@@ -119,7 +122,7 @@ class FormatsController extends AppController
 	
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
-		$this->ArtworkStack->layerChoiceLists();
+//		$this->ArtworkStack->layerChoiceLists();
 //		$element_management = [
 //			'artwork' => 'full',
 //			'edition' => 'many',

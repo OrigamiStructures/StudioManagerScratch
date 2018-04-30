@@ -6,6 +6,7 @@ use App\Model\Table\EditionsTable;
 use App\Model\Table\FormatsTable;
 use App\Model\Table\PiecesTable;
 use Cake\ORM\TableRegistry;
+use App\Lib\Traits\ArtReviewTrait;
 
 /**
  * Artworks Controller
@@ -14,6 +15,8 @@ use Cake\ORM\TableRegistry;
  */
 class ArtworksController extends AppController
 {
+	
+	use ArtReviewTrait;
 
 //	public $components = ['ArtworkStack'];
 	
@@ -180,20 +183,14 @@ class ArtworksController extends AppController
     public function review() {
 		if ($this->SystemState->urlArgIsKnown('artwork')) {
 			$artwork_variable = 'artwork';
+			$this->_try_flatness_redirect(
+				$this->SystemState->queryArg('artwork'), 
+				$this->SystemState->queryArg('edition'));
 		} else {
 			$artwork_variable = 'artworks';
 		}
 
-		// $result will be an Artwork entity containing entities and other data
 		$result = $this->ArtworkStack->stackQuery();
-		
-		if ($artwork_variable === 'artwork' && $result->isflat()) {
-			$this->autoRender = FALSE;
-			$arguments = $this->SystemState->queryArg() + [
-				'edition' => $result->editions[0]->id, 
-				'format' => $result->editions[0]->formats[0]->id];
-			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
-		}
 		
 		$this->set($artwork_variable, $result);
         $this->set('_serialize', [$artwork_variable]); // meaningless code?

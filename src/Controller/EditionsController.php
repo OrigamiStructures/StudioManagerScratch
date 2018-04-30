@@ -7,6 +7,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 use App\Form\AssignmentForm;
 use Cake\View\Form\FormContext;
+use App\Lib\Traits\ArtReviewTrait;
 
 /**
  * Editions Controller
@@ -15,6 +16,8 @@ use Cake\View\Form\FormContext;
  */
 class EditionsController extends AppController
 {
+	
+	use ArtReviewTrait;
 	
 	public $components = ['ArtworkStack'];
 	
@@ -133,16 +136,12 @@ class EditionsController extends AppController
 	 * is redirected to FormatController->review()
 	 */
 	public function review() {
-		$artwork = $this->ArtworkStack->stackQuery();
-		$this->ArtworkStack->layerChoiceLists(); // only needed for editing?
+		$this->_try_flatness_redirect(
+				$this->SystemState->queryArg('artwork'), 
+				$this->SystemState->queryArg('edition'));
 		
+		$artwork = $this->ArtworkStack->stackQuery();
 		$edition = $artwork->returnEdition($this->SystemState->queryArg('edition'));
-		if ($edition->isFlat()) {
-			$this->autoRender = FALSE;
-			$arguments = $this->SystemState->queryArg() + [
-				'format' => $edition->formats[0]->id];
-			$this->redirect(['controller' => 'formats', 'action' => 'review', '?' => $arguments]);
-		}
 		
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');
