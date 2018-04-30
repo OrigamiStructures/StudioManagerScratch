@@ -141,7 +141,6 @@ class EditionsController extends AppController
 				$this->SystemState->queryArg('edition'));
 		
 		$artwork = $this->ArtworkStack->stackQuery();
-		$edition = $artwork->returnEdition($this->SystemState->queryArg('edition'));
 		
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');

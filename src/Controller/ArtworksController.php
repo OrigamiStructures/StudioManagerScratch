@@ -193,7 +193,6 @@ class ArtworksController extends AppController
 		$result = $this->ArtworkStack->stackQuery();
 		
 		$this->set($artwork_variable, $result);
-        $this->set('_serialize', [$artwork_variable]); // meaningless code?
     }
 	
 	/**

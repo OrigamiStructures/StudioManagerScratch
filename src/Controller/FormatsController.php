@@ -120,15 +120,16 @@ class FormatsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
+	/**
+	 * Show detailed view of a single Format
+	 * 
+	 * Provides Artwork and Edition summaries, full explanation of 
+	 * the Format, and full Piece display with basic information
+	 * 
+	 * Driven by artwork, edition, format IDs in URL query
+	 */
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
-//		$this->ArtworkStack->layerChoiceLists();
-//		$element_management = [
-//			'artwork' => 'full',
-//			'edition' => 'many',
-//			'format' => 'many',
-//		];
-//		$this->set('element_management', $element_management);
 		$this->set('artwork', $artwork);
 		$this->render('/Artworks/review');
 	}

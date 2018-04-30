@@ -21,12 +21,11 @@ trait ArtReviewTrait {
 	/**
 	 * Is the Artwork single-edition or single-edition + single-format
 	 * 
-	 * Depending on the flatness and the controller that was called we 
+	 * Depending on the flatness and the controller that called we 
 	 * may want to redirect to a different controller to give the 
 	 * most detailed view (without requiring navigation)
 	 */
 	protected function _try_flatness_redirect($artwork_id, $edition_id = FALSE) {
-		$s = microtime();
 		$redirect_needed = Cache::read($this->_cache_name($artwork_id, $edition_id), 'flatness');
 		if ($redirect_needed === FALSE) {
 			$redirect_needed = $this->_flatness_determination($artwork_id, $edition_id);
@@ -48,11 +47,23 @@ trait ArtReviewTrait {
 	 * Return the cache key that holds calculated 'flatness' information
 	 * 
 	 * @param string $artwork_id
+	 * @param FALSE|string $edition_id
 	 * @return string
 	 */
 	private function _cache_name($artwork_id, $edition_id) {
 		return "_{$this->SystemState->artistId()}_$artwork_id" . 
 			$edition_id ? "_$edition_id" : '';
+	}
+	
+	/**
+	 * Clear a single flatness cache entry
+	 * 
+	 * @param string $artwork_id
+	 * @param FALSE|string $edition_id
+	 * @return boolean
+	 */
+	protected function _drop_flatness_cache($artwork_id, $edition_id = FALSE) {
+		return Cache::delete($this->_cache_name($artwork_id, $edition_id), 'flatness');
 	}
 	
 	/**
@@ -67,7 +78,7 @@ trait ArtReviewTrait {
 	 * 
 	 * @param string $artwork_id
 	 * @param string|FALSE $edition_id
-	 * @return boolean|array FALSE (no redirect) or url values for redirect
+	 * @return null|array NULL (no redirect) or url values for redirect
 	 */
 	private function _flatness_determination($artwork_id, $edition_id) {
 		$redirect_needed = NULL;
