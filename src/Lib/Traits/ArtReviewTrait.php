@@ -3,7 +3,7 @@ namespace App\Lib\Traits;
 
 use Cake\Cache\Cache;
 use Cake\ORM\TableRegistry;
-use Cake\Network\Exception;
+use Cake\Network\Exception\NotImplementedException;
 
 
 /**
@@ -52,10 +52,11 @@ trait ArtReviewTrait {
 				'action' => 'review', 
 				'?' => $query_args]
 			);
-		}
-		throw new NotImplementedException(
+		} else {
+			throw new NotImplementedException(
 				'Artwork flatness determination must return NULL or an array. A '. 
 				gettype($redirect_needed) . ' was received.');
+		}
 	}
 	
 	/**
@@ -67,7 +68,7 @@ trait ArtReviewTrait {
 	 */
 	private function _cache_name($artwork_id, $edition_id) {
 		return "_{$this->SystemState->artistId()}_$artwork_id" . 
-			$edition_id ? "_$edition_id" : '';
+			($edition_id ? "_$edition_id" : '');
 	}
 	
 	/**
