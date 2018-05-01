@@ -3,6 +3,7 @@ namespace App\Lib\Traits;
 
 use Cake\Cache\Cache;
 use Cake\ORM\TableRegistry;
+use Cake\Network\Exception;
 
 
 /**
@@ -30,6 +31,17 @@ trait ArtReviewTrait {
 		if ($redirect_needed === FALSE) {
 			$redirect_needed = $this->_flatness_determination($artwork_id, $edition_id);
 			Cache::write($this->_cache_name($artwork_id, $edition_id), $redirect_needed, 'flatness');
+			if (!$edition_id && $redirect_needed['controller'] === 'editions') {
+				/*
+				 * If the call was from ArtworksController and flatness was found 
+				 * at Edition level, the redirect will call this process again 
+				 * but we already know Edition is flat. So we can write the cache 
+				 * to record that knowledge.
+				 */
+				Cache::write($this->
+					_cache_name($artwork_id, $redirect_needed['query_args']['edition']), 
+					NULL, 'flatness');
+			}
 		}
 		if (is_null($redirect_needed)) {
 			return;
@@ -41,6 +53,9 @@ trait ArtReviewTrait {
 				'?' => $query_args]
 			);
 		}
+		throw new NotImplementedException(
+				'Artwork flatness determination must return NULL or an array. A '. 
+				gettype($redirect_needed) . ' was received.');
 	}
 	
 	/**
