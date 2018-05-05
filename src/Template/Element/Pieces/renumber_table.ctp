@@ -8,6 +8,7 @@
 		<tr>
 			<th>New number</th>
 			<th>Original number</th>
+			<th>Format</th>
 			<th>Assignment</th>
 			<th>Dispositions</th>
 <!--			<th>History</th>

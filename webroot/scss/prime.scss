@@ -39,13 +39,18 @@ there are many elements shown on the page.
 		}
 	}
 
-	div.pieces:hover {
+/**
+@todo This is in flux while 'focus' and general table display is resolved
+		The rem's were to make pieces->renumber work
+*/
+
+div.pieces:hover {
 		button {
-			display: none;
+			/*display: none;*/
 		}
 		table {
 			display: block;
-			position: absolute;
+			/*position: absolute;*/
 			top: 0;
 			overflow-y: visible;
 			z-index: 1000;

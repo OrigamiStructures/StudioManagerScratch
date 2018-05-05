@@ -22,7 +22,13 @@ foreach($pieces as $piece) :
 				]); ?></td>
 		<td><?= $piece->number; ?></td>
 		<td>  <?= $owner_title[$piece->key()] ?></td>
-		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
+		
+		<?php 
+		$c = $piece->disposition_count;
+		$plural = ($c > 1) ? 's' : '';
+		?>
+		<td><?= (boolean) $c ? "$c event$plural" : '-'; ?></td>
+		
 		<td><?= $piece->collected ? 'Yes' : '-'; ?> 
 			<?= $this->element('Disposition/disposition_event_descriptions', ['piece' => $piece]); ?>
 		</td>

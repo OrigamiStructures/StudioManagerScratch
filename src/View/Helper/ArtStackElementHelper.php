@@ -87,6 +87,7 @@ class ArtStackElementHelper extends Helper {
 	protected function artworkContentRule() {
 		switch ($this->SystemState->now()) {
 			case ARTWORK_REVIEW :
+			case PIECE_RENUMBER :
 					$element = 'Artwork/describe';
 				break;
 			case ARTWORK_CREATE :

@@ -108,7 +108,7 @@ div.editions {
 }
 	
 @media only screen { /* small up */
-	section.edition {
+	section.edition, section.edition.focus {
 		> div.text, > div.pieces, > div.formats {
 			@include grid-column(12, 0);
 		}
@@ -116,6 +116,16 @@ div.editions {
 			h2 {
 				font-size: 1.5rem;
 			}
+		}
+	}
+}
+
+section.edition.focus {
+	table {
+		display: inline-block;
+		/*width: 100%;*/
+		td.tools div.input.text, div.submit {
+			display: inline-block;
 		}
 	}
 }
@@ -131,10 +141,8 @@ div.editions {
 			@include grid-column(6);
 		}
 	 }
-	 
+
 }
-	
-/*}*/
 
 /**
 ==============================================================

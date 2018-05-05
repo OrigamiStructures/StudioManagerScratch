@@ -161,6 +161,7 @@ class PiecesController extends AppController
 	 */
 	public function renumber() {
 		$cache_prefix = $this->_renumber_cache_prefix();
+		$artwork = $this->ArtworkStack->stackQuery();
 		$EditionStack = $this->loadComponent('EditionStack');
 		extract($EditionStack->stackQuery()); // providers, pieces
 		/* prevent inappropriate entry */
@@ -246,7 +247,7 @@ class PiecesController extends AppController
 		 * 2. An error message says the change could not be saved
 		 *      and the confirmation section renders again
 		*/
-		$this->set(compact(['providers', 'pieces', 'number', 'renumber_summary', 'error']));	
+		$this->set(compact(['artwork', 'providers', 'pieces', 'number', 'renumber_summary', 'error']));
 	}
 	
 	/**
