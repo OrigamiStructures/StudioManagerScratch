@@ -2,11 +2,11 @@
 $format_element = $this->ArtElement->choose('formatContent');
 
 /**
- * format_focus controls visibility of the piece table. This might be done 
+ * focus controls visibility of the piece table. This might be done 
  *	with the piece table factory method instead.
  * 
  */
-$class = ($SystemState->urlArgIsKnown('format')) ? ' format_focus' : '';
+$class = ($SystemState->urlArgIsKnown('format')) ? ' focus' : '';
 ?>
 						<!-- Element/Format/full.ctp -->
 						<section class="format<?= $class; ?>">

@@ -270,7 +270,7 @@ class ArtStackElementHelper extends Helper {
 	 * $pieces MUST BE SET BY EditionHelper HEIRARCHY FIRST
 	 * 
 	 * @todo Can't this logic elimiate the need for the logic that sets 
-	 *			class tag 'format_focus' in Elements/Format/full.ctp?
+	 *			class tag 'focus' in Elements/Format/full.ctp?
 	 * 
 	 * @return string Name of the element to render
 	 */

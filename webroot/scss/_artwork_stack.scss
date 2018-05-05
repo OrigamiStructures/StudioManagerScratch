@@ -230,7 +230,7 @@ div.formats {
 	}
 	
 	@media only screen and (min-width: 40.063em) and (max-width: 64em) {
-		section.format.format_focus {
+		section.format.focus {
 			> div.text{
 				@include grid-column(12, 0);
 			}
@@ -238,7 +238,7 @@ div.formats {
 	}
 
 	@media only screen and (min-width: 40.063em) {
-		section.format.format_focus {
+		section.format.focus {
 			div.pieces {
 				@include grid-column(12, 0);
 				button {
@@ -250,7 +250,7 @@ div.formats {
 			}
 			div.pieces:hover {
 				table {
-					position: relative;
+					/*position: relative;*/
 				}
 			}
 		}
@@ -279,7 +279,7 @@ div.formats {
 				@include grid-column(8)
 			}
 		}
-		section.format.format_focus {
+		section.format.focus {
 			> div.text{
 				@include grid-column(10);
 			}

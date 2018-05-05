@@ -544,15 +544,21 @@ div.editions section.edition {
 
 @media only screen {
   /* small up */
-  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats {
+  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats, section.edition.focus > div.text, section.edition.focus > div.pieces, section.edition.focus > div.formats {
     width: 100%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
-    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child) {
+    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child), section.edition.focus > div.text:last-child:not(:first-child), section.edition.focus > div.pieces:last-child:not(:first-child), section.edition.focus > div.formats:last-child:not(:first-child) {
       float: right; }
-  section.edition > div.text h2 {
+  section.edition > div.text h2, section.edition.focus > div.text h2 {
     font-size: 1.5rem; } }
+section.edition.focus table {
+  display: inline-block;
+  /*width: 100%;*/ }
+  section.edition.focus table td.tools div.input.text, section.edition.focus table div.submit {
+    display: inline-block; }
+
 /*div.editions {*/
 @media only screen and (min-width: 40.063em) {
   /* medium up */
@@ -570,7 +576,6 @@ div.editions section.edition {
     padding-right: 0.9375rem; }
     section.edition > div.pieces:last-child:not(:first-child) {
       float: right; } }
-/*}*/
 /**
 ==============================================================
 FORMAT
@@ -714,27 +719,27 @@ div.formats {
       div.formats section.format > fieldset > div.text:last-child:not(:first-child), div.formats section.format > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
-    div.formats section.format.format_focus > div.text {
+    div.formats section.format.focus > div.text {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
+      div.formats section.format.focus > div.text:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) {
-    div.formats section.format.format_focus div.pieces {
+    div.formats section.format.focus div.pieces {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.format_focus div.pieces:last-child:not(:first-child) {
+      div.formats section.format.focus div.pieces:last-child:not(:first-child) {
         float: right; }
-      div.formats section.format.format_focus div.pieces button {
+      div.formats section.format.focus div.pieces button {
         display: none; }
-      div.formats section.format.format_focus div.pieces table {
+      div.formats section.format.focus div.pieces table {
         display: block; }
-    div.formats section.format.format_focus div.pieces:hover table {
-      position: relative; } }
+    div.formats section.format.focus div.pieces:hover table {
+      /*position: relative;*/ } }
   @media only screen and (min-width: 64.063em) {
     div.formats {
       /* large up */ }
@@ -776,12 +781,12 @@ div.formats {
         padding-right: 0.9375rem; }
         div.formats section.format > fieldset > div.text:last-child:not(:first-child), div.formats section.format > fieldset div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.format_focus > div.text {
+      div.formats section.format.focus > div.text {
         width: 83.33333%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
-        div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
+        div.formats section.format.focus > div.text:last-child:not(:first-child) {
           float: right; } }
 
 /**
@@ -1193,11 +1198,15 @@ there are many elements shown on the page.
     div.pieces table {
       display: none; }
 
+  /**
+  @todo This is in flux while 'focus' and general table display is resolved
+  		The rem's were to make pieces->renumber work
+  */
   div.pieces:hover button {
-    display: none; }
+    /*display: none;*/ }
   div.pieces:hover table {
     display: block;
-    position: absolute;
+    /*position: absolute;*/
     top: 0;
     overflow-y: visible;
     z-index: 1000; } }
