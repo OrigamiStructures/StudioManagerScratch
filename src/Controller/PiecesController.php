@@ -236,6 +236,10 @@ class PiecesController extends AppController
 			/* this is the non-posting arrival slot */
 		}
 		/* this is common fall-through code for all modes of request */
+		if (!isset($this->request->data['number']) && 
+				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
+			$this->request->data['number'] = $request_data;
+		}
 		$summary = Cache::read($cache_prefix . '.summary','renumber');
 		$error = Cache::read($cache_prefix . '.error','renumber');
 		$renumber_summary =  $summary ? $summary : FALSE;
