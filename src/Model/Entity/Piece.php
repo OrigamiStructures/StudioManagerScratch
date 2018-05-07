@@ -71,7 +71,13 @@ class Piece extends Entity
 	/**
 	 * provide a key that relates Pieces back to their Format or Edition
 	 * 
-	 * @return array [edition_id, format_id]
+	 * for an unassigned piece, will yield something like 917_
+	 * for assigend piece, will yield something like 917_1119
+	 * 
+	 * Format and Edition entities can report thier matching key() 
+	 * values, allowing an index lookup system or other entity matching logic. 
+	 * 
+	 * @return string
 	 */
 	public function key() {
 		return $this->_key([$this->edition_id, $this->format_id]);

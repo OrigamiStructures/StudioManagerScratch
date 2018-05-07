@@ -63,6 +63,9 @@ class Format extends Entity
 	/**
 	 * provide a key that relates Pieces back to their Format or Edition
 	 * 
+	 * will yeild something like 917_1119
+	 * Piece->key() generates it's ancestory key that will match this value
+	 * 
 	 * @return string
 	 */
 	public function key() {

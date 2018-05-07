@@ -60,7 +60,10 @@ class Edition extends Entity
 	/**
 	 * provide a key that relates Pieces back to their Format or Edition
 	 * 
-	 * @return type
+	 * will yeild something like 917_
+	 * Piece->key() generates it's ancestory key that will match this value
+	 * 
+	 * @return string
 	 */
 	public function key() {
 		return $this->_key([$this->id, '']);
