@@ -7,6 +7,7 @@ use Cake\Cache\Cache;
 use App\Model\Entity\Piece;
 use Cake\Collection\Collection;
 use Cake\Utility\Text;
+use App\Lib\RenumberRequest;
 
 /**
  * Pieces Controller
@@ -277,6 +278,7 @@ class PiecesController extends AppController
 		$summary = [];
 		$save_data = [];
 		$error = FALSE;
+		
 		/*
 		 * We need a master set of piece entities to reference. 
 		 * These will provide id and number data as recorded in 
@@ -300,7 +302,9 @@ class PiecesController extends AppController
 		 * All involved pieces must be used once as a reciever 
 		 * and once as a provider. We'll assemble two lists and 
 		 * remove items as they get used. The left overs will 
-		 * allow completion or error reporting 
+		 * allow completion or error reporting. 
+		 * We'll also keep track of requests that are invalid piece numbers 
+		 * and compress the post_data down to a useful request array. 
 		 */
 		$reduction = (new Collection(array_flip(array_flip($post_data))))
 				->reduce(function($accumulator, $value, $key) use ($fresh_piece_entities) {
@@ -308,8 +312,11 @@ class PiecesController extends AppController
 						if (array_key_exists($value, $fresh_piece_entities)) {
 							$accumulator['mentions'][$key] = $key;
 							$accumulator['mentions'][$value] = $value;
+							$accumulator['requests'][$key] = 
+									new RenumberRequest($key, $value);
 						} else {
-							$accumulator['error'][$value] = $value;
+							$accumulator['error'][$key] = 
+									new RenumberRequest($key, $value, TRUE);
 						}
 					}
 					return $accumulator;
@@ -319,7 +326,14 @@ class PiecesController extends AppController
 			return; 
 		}
 		$receive_number = $provide_number = $reduction['mentions'];
+		$requests = $reduction['requests'];
 		$symbol_error = (isset($reduction['error'])) ? $reduction['error'] : [] ;
+//		osd($post_data, 'posted');
+//		osd($receive_number, 'receive');
+//		osd($provide_number, 'provide');
+//		osd($symbol_error, 'symbol errors');
+//		osd($requests, 'requests');
+//		die;
 		/*
 		 * Go through the post data and make the renumbering changes 
 		 * that have been explicitly requested. 
