@@ -1,6 +1,8 @@
 <?php
 namespace App\Lib;
 
+use Cake\Core\Configure;
+
 /**
  * RenumberRequest manages To and From values in a renumbering request
  * 
@@ -17,42 +19,146 @@ class RenumberRequest {
 	 *
 	 * @var string
 	 */
-	public $old;
+	protected $_old;
 	
 	/**
 	 * The new requested number
 	 *
 	 * @var string
 	 */
-	public $new;
+	protected $_new;
 	
 	/**
+	 * The record ID for the piece
 	 * 
+	 * This is in preparation for enfolding the entities into this class 
+	 * or using this class to drive entity creation. 
+	 *
+	 * @var string
+	 */
+	protected $_id;
+
+	/**
+	 * Indicates if the new number is not in the set of piece numbers
 	 *
 	 * @var boolean 
 	 */
-	public $error;
+	public $_bad_new_number = FALSE;
+	
+	/**
+	 * The need for this number swap was detected algoritmically
+	 *
+	 * @var boolean
+	 */
+	public $_implied_change = FALSE;
+	
+	/**
+	 * The total number of pieces that are to receive this $new number
+	 * 
+	 * A truthy value here indicates this piece cannot recieve the indicated 
+	 * new number because that number has been used for other pieces also. 
+	 *
+	 * @var int|boolean
+	 */
+	public $duplicate_new_number = FALSE;
 	
 	/**
 	 * Create and object that can provide values and messages related to renumbering pieces
 	 * 
 	 * @param string $old The original number
 	 * @param string $new The new number requested
-	 * @param boolean $error Is the new number out of range
 	 */
-	public function __construct($old, $new, $error = FALSE) {
-		$this->old = $old;
-		$this->new = $new;
-		$this->error = $error;
+	public function __construct($old, $new, $id) {
+		$this->_old = $old;
+		$this->_new = $new;
+		$this->_id = $id;
+		return $this;
 	}
 	
-	public function message() {
-		if ($this->error) {
-			return "The numbers of pieces #$this->old and #$this->new "
-						. "can't be swapped because there is no piece #$this->new.";
-		} else {
-			return "Change #$this->old to #$this->new.";
+	/**
+	 * Give limited access to internal properties
+	 * 
+	 * If we are in a debugging environment, give 
+	 * unlimited access to property reporting 
+	 * 
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get($name) {
+		if (in_array($name, ['new', 'old'])) {
+			return $this->{"_$name"};
+			
+		} elseif (Configure::read('debug')) {
+			return $this->$name;
 		}
-
+		
+		return NULL;
+	}
+		
+	/**
+	 * Set the property indicating a duplicate new-number error
+	 * 
+	 * '1' will clear the error
+	 * any other value will enable duplication error messaging
+	 * 
+	 * @param int $count
+	 */
+	public function duplicate($count) {
+		$this->duplicate_new_number = ($count === 1) ? FALSE : $count;
+	}
+	
+	/**
+	 * Is the new symbol/number valid or invalid
+	 * 
+	 * TRUE = error, invalid new number
+	 * FALSE = valid symbol
+	 * 
+	 * @param boolean $error_indication
+	 */
+	public function bad_number($error_indication) {
+		$this->_bad_new_number = $error_indication;
+	}
+	
+	/**
+	 * 
+	 * @ Change this to allow multiple error messages (and return an array?)
+	 * 
+	 * @return string
+	 */
+	public function message() {
+		$this->_message = [];
+		if ($this->_bad_new_number) {
+			$this->_message[] = "The numbers of pieces #$this->_old and #$this->_new "
+						. "can't be swapped because there is no piece #$this->_new.";
+		}
+		if ($this->duplicate_new_number) {
+			$this->_message[] = "Piece #$this->old can't be renumbered as #$this->new because you've "
+			. "requested $this->duplicate_new_number pieces be change to #$this->_new";
+		}
+		if ($this->_implied_change) {
+			$this->_message[] = "Change piece #$this->new to #$this->old "
+					. "implies the change of #$this->old to #$this->new "
+					. "so this change will be made automatically.";
+		}
+		if (empty($this->_message)) {
+			return "Change piece #$this->_old to #$this->_new.";
+		}	
+		return $this->_message;
+	}
+	
+	/**
+	 * Set this object as an auto-created one
+	 * 
+	 * If the user says change #4 to #6, we can deduce that 
+	 * #6 should become #4 even if they don't say so. If we detect 
+	 * that case then the object creation would chain this 
+	 * method like:
+	 * $request = (new RenumberRequest($old, $new, $id))->implied();
+	 * 
+	 * @return \App\Lib\RenumberRequest
+	 */
+	public function implied($boolean) {
+		$this->_implied_change = $boolean;
+		return $this;
 	}
 }

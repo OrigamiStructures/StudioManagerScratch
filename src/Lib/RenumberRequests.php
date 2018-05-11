@@ -1,0 +1,335 @@
+<?php
+namespace App\Lib;
+
+use SplHeap;
+use App\Lib\RenumberRequest;
+use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
+use App\Model\Table\PiecesTable;
+use App\Lib\SystemState;
+
+/**
+ * Description of RenumberRequests
+ *
+ * @author dondrake
+ */
+
+class RenumberRequests {
+	
+	/**
+	 * The ordered list of change requests, deductions, and error notices
+	 * 
+	 * The heap contains RenumberRequest objects that contain their 
+	 * old number, new number request value, and info about the 
+	 * validity and origin of the request. Each request has a message() 
+	 * method to report to the user.
+	 *
+	 * @var iterator
+	 */
+	private $_heap;
+	
+	/**
+	 * Reference copies of all the involved RenumberRequest objects
+	 * 
+	 * These are the same objects contained in the heap but they are 
+	 * indexed by $request->old for easy look-up
+	 *
+	 * @var array
+	 */
+	private $_indexed_list;
+	
+	private $_valid_symbols;
+	
+	private $_bad_symbols;
+
+	/**
+	 * List of piece numbers that are being explicitly assigned to new owners
+	 * 
+	 * Built from request->old
+	 * The implication is that these pieces will need to receive new numbers
+	 * 
+	 * $_explicit_receivers[number][count][target]
+	 * where 'number' is the symbol that is being assigned as a number
+	 * where 'count' contains an integer indicating how many pieces 
+	 *		will recieve the number used as an error indicator since 
+	 * the only correct answer is '1' 
+	 * where 'target' contains an array of the old pieces numbers for the 
+	 *		pieces that will receive this new number (in the form [x => x, y => y]
+	 *
+	 * @var array
+	 */
+	private $_explicit_receivers;
+	
+	/**
+	 * List of pieces explicitly recieving new numbers
+	 * 
+	 * Built from request->new
+	 * The implication is that these pieces will need to provide 
+	 * their numbers to other pieces
+	 * 
+	 * $_providers_mentioned[ x => x, y => y]
+	 *
+	 * @var array
+	 */
+	private $_providers_mentioned;
+	
+	private $_required_provider_checkoff;
+
+
+	/**
+	 * This would allow numbers that were not in the original list
+	 * 
+	 * This is a proposed feature. I guess the idea would be to just 
+	 * change the old number into the new number without the normal 'move' 
+	 * of the new number from another piece. 
+	 * 
+	 * This implies different kinds of error checking and rule 
+	 * implementation. Possibly a different class would be the best 
+	 * way to activate this new strategy.
+	 *
+	 * @var boolean
+	 */
+	private $_loose = FALSE;
+	
+	private $Pieces;
+	
+	/**
+	 * Give debugging access to internal properties
+	 * 
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get($name) {
+		if (Configure::read('debug')) {
+			return $this->$name;
+		}
+		return NULL;
+	}
+	
+	/**
+	 * If new entries go in the heap, any internal calculated values must update
+	 * 
+	 * This will tell us if the internal logic must 
+	 * run or if we can just use the analized properties as they stand
+	 *
+	 * @param array $valid_numbers Values are the full set of valid numbers
+	 * @param type $loose Future feature. There could be problems...
+	 */
+	public function __construct($valid_numbers, $edition_id/*, $loose = FALSE*/, $artist_id) {
+		$this->_edition_id = $edition_id;
+		$this->_artist_id = $artist_id;
+		$this->_valid_symbols = array_combine($valid_numbers, $valid_numbers);
+		$this->_heap = new RenumberRequestHeap();
+	}
+	
+	/**
+	 * 
+	 * @param RenumberRequest $request
+	 */
+	public function insert(RenumberRequest $request) {
+		if (!$this->_loose && !array_key_exists($request->new, $this->_valid_symbols)) {
+			$request->bad_number(TRUE);
+			$this->_bad_symbols[$request->new] = $request->new;
+		}
+		$this->_heap->insert($request);
+		$this->_indexed_list[$request->old] = $request;
+		
+		$this->_inc_providers($request);
+		$this->_inc_receivers($request);
+	}
+
+	/**
+	 * Return the current heap iterator
+	 * 
+	 * The heap will contain RenumberRequest objects 
+	 * in a convenient sort order
+	 * 
+	 * New numbers that are invalid and duplicate number errors 
+	 * have been encoded in the objects during insertion. But we 
+	 * need to make a sweep through to generate any moves that 
+	 * are implied but not explicitly requested.
+	 * 
+	 * @return iterator
+	 */
+	public function heap(){
+		$implied = [];
+		osd($this->_explicit_receivers, '_explicit_receivers');
+		osd($this->_providers_mentioned, '_providers_mentioned');
+		$this->_required_provider_checkoff = $this->_explicit_receivers;
+		$this->_required_reciever_checkoff = $this->_providers_mentioned;
+		osd($this->_required_provider_checkoff, '_required_provider_checkoff');
+		osd($this->_required_reciever_checkoff, '_required_reciever_checkoff');
+		
+		/*
+		 * Each provider number must have been received as a new number by someone
+		 * and 
+		 */
+		foreach($this->_indexed_list as $request) {
+			unset($this->_required_provider_checkoff[$request->new]);
+			unset($this->_required_reciever_checkoff[$request->old]);
+			osd((($request->_bad_new_number) ? $request : 'FALSE'), 'bad new number');
+			if ($request->_bad_new_number) {
+				osd('remove required reciever');
+				unset($this->_required_reciever_checkoff[$request->old]);
+			}
+		}
+		osd($this->_required_provider_checkoff, '_required_provider_checkoff');
+		osd($this->_required_reciever_checkoff, '_required_reciever_checkoff');
+		osd($this->_bad_symbols);
+		osd($this->_indexed_list);
+//		foreach ($this->_explicit_receivers as $old => $count) {
+//			$new = $this->_indexed_list[$old]->new;
+//			if (!$this->_indexed_list[$old]->_bad_new_number &&!isset($this->_explicit_receivers[$new])) {
+//				$id = $this->_lookup_piece_id($new);
+//				$implied[] = (new RenumberRequest($new, $old, $id))->implied(TRUE);
+//			}
+//		}
+//		foreach ($implied as $request) {
+//			$this->insert($request);
+//		}
+		return $this->_heap;
+	}
+	
+	/**
+	 * Return the request objects indexed by old number
+	 * 
+	 * Contains references to the same RenumberRequest objects 
+	 * as the heap, but indexed for easy access. 
+	 * 
+	 * @return array
+	 */
+	public function indexed() {
+		return $this->_indexed_list();
+	}
+	
+	/**
+	 * Return an array listing the count of uses of each 'new' number
+	 * 
+	 * These are the numbers that pieces will become. 
+	 * There should only be one use of each. Multiple uses 
+	 * indicate an error on in the user's input. 
+	 * 
+	 * @return array
+	 */
+//	public function to_use() {
+//		return $this->_to_usage;
+//	}
+	
+	/**
+	 * Return an array listing the count of uses of each 'old' number
+	 * 
+	 * These are the numbers that pieces started as and 
+	 * there will only be one of each. It serves as a check-off 
+	 * list so when the changes are made, we can verify that all 
+	 * changes were done and done only once 
+	 * 
+	 * @return array
+	 */
+//	public function from_use() {
+//		return $this->_explicit_receivers;
+//	}
+	
+	/**
+	 * Track errors related to multiple assignment of a new number
+	 * 
+	 * Find the cases where a new number is assigned multiple times and 
+	 * mark the pieces targeted for the new number. The number of uses 
+	 * will be recorded in the target for message purposes.
+	 * 
+	 * @todo This could be eliminated if done automatically on ->insert($request)
+	 */
+	private function _markDuplicateUse($reqest) {
+		foreach ($this->_providers_mentioned[$reqest->new]['target'] as $target) {
+			$this->_indexed_list[$target]->duplicate($this->_providers_mentioned[$reqest->new]['count']);
+		}
+	}
+	
+	/**
+	 * Increment or decrement and entry in the 'from' usage tables
+	 * 
+	 * the 'to' table became more complicated and was removed
+	 * 
+	 * @param int $index
+	 * @param string $silo
+	 * @param int $delta
+	 */
+	private function _record_use($index, $silo, $delta) {
+		if (!isset($this->{$silo}[$index])) {
+			$this->{$silo}[$index] = $delta;
+		} else {
+			$this->{$silo}[$index] += $delta;
+		}
+	}
+	
+	protected function _inc_receivers(RenumberRequest $request) {
+		$this->_explicit_receivers[$request->old] = $request->old;
+//		$this->_record_use(, '_explicit_receivers', 1);
+	}
+
+	/**
+	 * It's assumed that this will support ajax in the future
+	 * 
+	 * For now, there is no conceivable calling situation
+	 * 
+	 * @param RenumberRequest $request
+	 */
+	protected function _dec_receivers(RenumberRequest $request) {
+		$this->_record_use($request->old, '_explicit_receivers', -1);
+	}
+
+	protected function _inc_providers(RenumberRequest $request) {
+		if (!isset($this->_providers_mentioned[$request->new])) {
+			$this->_providers_mentioned[$request->new]['count'] = 1;
+			$this->_providers_mentioned[$request->new]['target'] = NULL;
+		} else {
+			$this->_providers_mentioned[$request->new]['count']++;
+		}
+		$this->_providers_mentioned[$request->new]['target'][$request->old] = $request->old;
+		if ($this->_providers_mentioned[$request->new]['count'] > 1) {
+			$this->_markDuplicateUse($request);
+		}		
+	}
+
+	/**
+	 * It's assumed that this will support ajax in the future
+	 * 
+	 * For now, there is no conceivable calling situation
+	 * 
+	 * @param RenumberRequest $request
+	 */
+	protected function _dec_providers(RenumberRequest $request) {
+		$this->_providers_mentioned[$request->new]['count']--;
+		unset($this->_providers_mentioned[$request->new]['target'][$request->old]);
+	}
+	
+	protected function _lookup_piece_id($new) {
+		if (!$this->Pieces) {
+			$this->Pieces = TableRegistry::get('Pieces');
+		}
+		$conditions = ['Pieces.number' => $new, 
+			'Pieces.edition_id' => $this->_edition_id,
+			'Pieces.user_id' => $this->_artist_id,];
+		$query = $this->Pieces->find()
+			->where($conditions)
+			->select(['Pieces.id']);
+	}
+	
+}
+
+class RenumberRequestHeap extends SplHeap {
+	
+    /**
+     * Sorting is based on the sum of the old and new number
+	 * Lowest values are first in the list 
+     */
+    protected function compare($request1, $request2)
+    {
+        $r1 = $request1->new + $request1->old;
+        $r2 = $request2->new + $request2->old;
+        if ($r1 === $r2){
+			return 0;
+		}
+        return $r1 > $r2 ? -1 : 1;
+    }
+	
+}

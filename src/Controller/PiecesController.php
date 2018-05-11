@@ -8,6 +8,7 @@ use App\Model\Entity\Piece;
 use Cake\Collection\Collection;
 use Cake\Utility\Text;
 use App\Lib\RenumberRequest;
+use App\Lib\RenumberRequests;
 
 /**
  * Pieces Controller
@@ -306,59 +307,64 @@ class PiecesController extends AppController
 		 * We'll also keep track of requests that are invalid piece numbers 
 		 * and compress the post_data down to a useful request array. 
 		 */
-		$reduction = (new Collection(array_flip(array_flip($post_data))))
-				->reduce(function($accumulator, $value, $key) use ($fresh_piece_entities) {
-					if ($value) {
-						if (array_key_exists($value, $fresh_piece_entities)) {
-							$accumulator['mentions'][$key] = $key;
-							$accumulator['mentions'][$value] = $value;
-							$accumulator['requests'][$key] = 
-									new RenumberRequest($key, $value);
-						} else {
-							$accumulator['error'][$key] = 
-									new RenumberRequest($key, $value, TRUE);
-						}
+		$requests = new RenumberRequests(
+				array_keys($post_data), 
+				$this->SystemState->queryArg('edition'),
+				$this->SystemState->artistId());
+//		$reduction = (new Collection(array_flip(array_flip($post_data))))
+//				->reduce(function($accumulator, $value, $key) use ($fresh_piece_entities) {
+		$reduction = (new Collection($post_data))
+			->reduce(function($accumulator, $value, $key) use ($fresh_piece_entities, $requests) {
+				if ($value) {
+					if (array_key_exists($value, $fresh_piece_entities)) {
+						$accumulator['mentions'][$key] = $key;
+						$accumulator['mentions'][$value] = $value;
+						$requests->insert(new RenumberRequest( //$old, $new, $piece_id
+								$key, $value, $fresh_piece_entities[$value]->id));
+					} else {
+						$accumulator['error'][$key] = 
+								new RenumberRequest($key, $value, NULL);
+						$requests->insert($accumulator['error'][$key]);
 					}
-					return $accumulator;
-				}, []);
-		if (empty($reduction['mentions'])) {
+				}
+				return $accumulator;
+			}, []);
+						
+		if ($requests->heap()->count() === 0) {
+//		if (empty($reduction['mentions'])) {
+//			osd('do we have mentions?');
 			$this->_clear_renumber_caches($cache_prefix);
 			return; 
-		}
+		} die;
 		$receive_number = $provide_number = $reduction['mentions'];
 		$requests = $reduction['requests'];
 		$symbol_error = (isset($reduction['error'])) ? $reduction['error'] : [] ;
-//		osd($post_data, 'posted');
-//		osd($receive_number, 'receive');
-//		osd($provide_number, 'provide');
-//		osd($symbol_error, 'symbol errors');
-//		osd($requests, 'requests');
-//		die;
+
 		/*
 		 * Go through the post data and make the renumbering changes 
 		 * that have been explicitly requested. 
 		 * On each move, remove the values from the receiver and 
 		 * provider arrays to winnow down to any implied moves (or errors).
 		 */
-		foreach ($post_data as $old_number => $new_number) {
-			if (!empty($new_number) && 
-					!array_key_exists($new_number, $symbol_error)) { 
-				/* if a request has been made for this piece */
-				$save_data[$new_number] = (new Piece([
-							'id' => $fresh_piece_entities[$old_number]->id,
-							'number' => $new_number,
-						]));
-				$summary[] = "Piece #$old_number becomes #$new_number";
-				unset($receive_number[$old_number]);
-				unset($provide_number[$new_number]);				
-			}
+		$request = FALSE;
+		while (!empty($requests)) {
+			$request = array_shift($requests);
+			$save_data[$request->new] = (new Piece([
+				'id' => $fresh_piece_entities[$request->old]->id,
+				'number' => $request->new,
+			]));
+			$summary[] = $request->message();
+
+			unset($receive_number[$request->old]);
+			unset($provide_number[$request->new]);//die;				
 		}
+		
 		/* Now asses the remaining recievers, providers, and errors */
 		if (!empty($symbol_error)) {
 			switch (count($symbol_error)) {
 				case 1:
 					$error[] = '<span class=\'symbol-errors\'>' . 
-						array_pop($symbol_error) . '</span> is not a valid '
+						array_pop($symbol_error)->new . '</span> is not a valid '
 						. 'number for this set of pieces.';
 					break;
 				default:
