@@ -7,6 +7,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\PiecesTable;
 use App\Lib\SystemState;
+use Cake\Utility\Text;
 
 /**
  * Description of RenumberRequests
@@ -43,27 +44,43 @@ class RenumberRequests {
 	private $_bad_symbols;
 
 	/**
-	 * List of piece numbers that are being explicitly assigned to new owners
+	 * List of piece numbers that are being assigned to new owners
 	 * 
-	 * Built from request->old
+	 * Built from request->new
 	 * The implication is that these pieces will need to receive new numbers
 	 * 
 	 * $_explicit_receivers[number][count][target]
 	 * where 'number' is the symbol that is being assigned as a number
 	 * where 'count' contains an integer indicating how many pieces 
 	 *		will recieve the number used as an error indicator since 
-	 * the only correct answer is '1' 
+	 *		the only correct answer is '1' 
 	 * where 'target' contains an array of the old pieces numbers for the 
 	 *		pieces that will receive this new number (in the form [x => x, y => y]
+	 *		'target' is included for debugging and is not used in logic. 
+	 *		But it could be used to group messages during _completness_scan()
 	 *
 	 * @var array
 	 */
-	private $_explicit_receivers;
+	private $_providers_mentioned;
+
+	/**
+	 * To verify that all providers are also recieving
+	 * 
+	 * [ x => x, y => y ]
+	 * Built from the number keys of $_providers_mentioned. The 
+	 * _explicit_receivers are ok by definition. But the providers 
+	 * were only mentioned and we'll have to use this list to 
+	 * confirm that each one is actually receiving a number to 
+	 * replace the the one it provided.
+	 *
+	 * @var array
+	 */
+	private $_reciever_checklist = FALSE;
 	
 	/**
 	 * List of pieces explicitly recieving new numbers
 	 * 
-	 * Built from request->new
+	 * Built from request->old
 	 * The implication is that these pieces will need to provide 
 	 * their numbers to other pieces
 	 * 
@@ -71,11 +88,25 @@ class RenumberRequests {
 	 *
 	 * @var array
 	 */
-	private $_providers_mentioned;
+	private $_explicit_receivers;
 	
-	private $_required_provider_checkoff;
 
-
+	/**
+	 * To verify that all recievers mentioned are also providing
+	 *
+	 * [ x => x, y => y ]
+	 * This is a duplicate of $_explicit_receivers. We'll have 
+	 * to go through each one to verify that they are also  
+	 * providing their displaced numbers.
+	 * 
+	 * @var array
+	 */
+	private $_provider_checklist = FALSE;
+	
+	private $_message = [];
+	
+	private $Pieces;
+	
 	/**
 	 * This would allow numbers that were not in the original list
 	 * 
@@ -90,8 +121,6 @@ class RenumberRequests {
 	 * @var boolean
 	 */
 	private $_loose = FALSE;
-	
-	private $Pieces;
 	
 	/**
 	 * Give debugging access to internal properties
@@ -125,6 +154,7 @@ class RenumberRequests {
 	/**
 	 * 
 	 * @param RenumberRequest $request
+	 * @return RenumberRequest 
 	 */
 	public function insert(RenumberRequest $request) {
 		if (!$this->_loose && !array_key_exists($request->new, $this->_valid_symbols)) {
@@ -152,41 +182,9 @@ class RenumberRequests {
 	 * @return iterator
 	 */
 	public function heap(){
-		$implied = [];
-		osd($this->_explicit_receivers, '_explicit_receivers');
-		osd($this->_providers_mentioned, '_providers_mentioned');
-		$this->_required_provider_checkoff = $this->_explicit_receivers;
-		$this->_required_reciever_checkoff = $this->_providers_mentioned;
-		osd($this->_required_provider_checkoff, '_required_provider_checkoff');
-		osd($this->_required_reciever_checkoff, '_required_reciever_checkoff');
-		
-		/*
-		 * Each provider number must have been received as a new number by someone
-		 * and 
-		 */
-		foreach($this->_indexed_list as $request) {
-			unset($this->_required_provider_checkoff[$request->new]);
-			unset($this->_required_reciever_checkoff[$request->old]);
-			osd((($request->_bad_new_number) ? $request : 'FALSE'), 'bad new number');
-			if ($request->_bad_new_number) {
-				osd('remove required reciever');
-				unset($this->_required_reciever_checkoff[$request->old]);
-			}
+		if ($this->_provider_checklist === FALSE) {
+			$this->_completness_scan();
 		}
-		osd($this->_required_provider_checkoff, '_required_provider_checkoff');
-		osd($this->_required_reciever_checkoff, '_required_reciever_checkoff');
-		osd($this->_bad_symbols);
-		osd($this->_indexed_list);
-//		foreach ($this->_explicit_receivers as $old => $count) {
-//			$new = $this->_indexed_list[$old]->new;
-//			if (!$this->_indexed_list[$old]->_bad_new_number &&!isset($this->_explicit_receivers[$new])) {
-//				$id = $this->_lookup_piece_id($new);
-//				$implied[] = (new RenumberRequest($new, $old, $id))->implied(TRUE);
-//			}
-//		}
-//		foreach ($implied as $request) {
-//			$this->insert($request);
-//		}
 		return $this->_heap;
 	}
 	
@@ -199,35 +197,15 @@ class RenumberRequests {
 	 * @return array
 	 */
 	public function indexed() {
-		return $this->_indexed_list();
+		return $this->_indexed_list;
 	}
 	
-	/**
-	 * Return an array listing the count of uses of each 'new' number
-	 * 
-	 * These are the numbers that pieces will become. 
-	 * There should only be one use of each. Multiple uses 
-	 * indicate an error on in the user's input. 
-	 * 
-	 * @return array
-	 */
-//	public function to_use() {
-//		return $this->_to_usage;
-//	}
-	
-	/**
-	 * Return an array listing the count of uses of each 'old' number
-	 * 
-	 * These are the numbers that pieces started as and 
-	 * there will only be one of each. It serves as a check-off 
-	 * list so when the changes are made, we can verify that all 
-	 * changes were done and done only once 
-	 * 
-	 * @return array
-	 */
-//	public function from_use() {
-//		return $this->_explicit_receivers;
-//	}
+	public function message() {
+		foreach ($this->heap() as $request) {
+			$messages[$request->old] = $request->message();
+		}
+		osd($messages);
+	}
 	
 	/**
 	 * Track errors related to multiple assignment of a new number
@@ -240,7 +218,8 @@ class RenumberRequests {
 	 */
 	private function _markDuplicateUse($reqest) {
 		foreach ($this->_providers_mentioned[$reqest->new]['target'] as $target) {
-			$this->_indexed_list[$target]->duplicate($this->_providers_mentioned[$reqest->new]['count']);
+			$this->_indexed_list[$target]->duplicate(
+					$this->_providers_mentioned[$reqest->new]['count']);
 		}
 	}
 	
@@ -302,6 +281,11 @@ class RenumberRequests {
 		unset($this->_providers_mentioned[$request->new]['target'][$request->old]);
 	}
 	
+	/**
+	 * Given a piece number (and other store properities) discover the piece ID
+	 * 
+	 * @param type $new
+	 */
 	protected function _lookup_piece_id($new) {
 		if (!$this->Pieces) {
 			$this->Pieces = TableRegistry::get('Pieces');
@@ -312,6 +296,69 @@ class RenumberRequests {
 		$query = $this->Pieces->find()
 			->where($conditions)
 			->select(['Pieces.id']);
+	}
+	
+	/**
+	 * Before releasing the heap, we do a final analysis of the data
+	 * 
+	 * This takes all the requests that were sent in and compares all the 
+	 * pieces receiving/providing numbers and makes sure they 
+	 * provide/receive in a reciprocal way. 
+	 * 
+	 * This will reveal any implied move we can guess and any implied 
+	 * moves that can't be guessed. We'll add messaging for these too.
+	 */
+	protected function _completness_scan() {
+		$this->_provider_checklist = $this->_explicit_receivers;
+		$this->_reciever_checklist = $this->_providers_mentioned;
+		foreach($this->_indexed_list as $request) {
+			if ($request->_bad_new_number) {
+				// bad providers can be disregarded. Already have error message
+				unset($this->_reciever_checklist[$request->new]);
+				unset($this->_provider_checklist[$request->old]);
+			} else {
+				unset($this->_reciever_checklist[$request->old]);
+				unset($this->_provider_checklist[$request->new]);
+			}
+		}
+		$_providers = count($this->_provider_checklist);
+		$_receivers = count($this->_reciever_checklist);
+		
+		if ($_providers === 1 && $_receivers === 1) {
+			$request = $this->_create_implied_request();
+			$this->insert($request);
+			unset($this->_reciever_checklist[$request->old]);
+			unset($this->_provider_checklist[$request->new]);
+		}
+		if (count($this->_provider_checklist) > 0) {
+			foreach ($this->_provider_checklist as $number){
+				$this->_indexed_list[$number]->vague_receiver(TRUE);
+			}
+		}
+		if (count($this->_reciever_checklist) > 0) {
+			// number reused but no new number provided
+			foreach ($this->_reciever_checklist as $number => $use) {
+				$request = (new RenumberRequest($number, NULL, NULL));
+				$this->insert($request);
+			}
+		}
+		return;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * $discovered_new should be the same value as the single 
+	 * entry remaining in _receiver_checklist. Worth checking? 
+	 * I can't think of an edge case that would require the check. 
+	 * 
+	 * @return RenumberRequest
+	 */
+	private function _create_implied_request() {
+			$discovered_old = array_keys($this->_reciever_checklist)[0];
+			$discovered_new = array_keys($this->_provider_checklist)[0];
+			$id = $this->_lookup_piece_id($discovered_old);
+			return (new RenumberRequest($discovered_old, $discovered_new, $id))->implied(TRUE);
 	}
 	
 }

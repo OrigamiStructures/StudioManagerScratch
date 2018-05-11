@@ -62,6 +62,12 @@ class RenumberRequest {
 	 */
 	public $duplicate_new_number = FALSE;
 	
+	public $_vague_receiver = FALSE;
+	
+	public $_vague_provider = FALSE;
+	
+	public $_renumber_message = TRUE;
+	
 	/**
 	 * Create and object that can provide values and messages related to renumbering pieces
 	 * 
@@ -104,7 +110,10 @@ class RenumberRequest {
 	 * @param int $count
 	 */
 	public function duplicate($count) {
-		$this->duplicate_new_number = ($count === 1) ? FALSE : $count;
+		if (!is_null($this->_new)) {
+			$this->duplicate_new_number = ($count === 1) ? FALSE : $count;
+		}
+		
 	}
 	
 	/**
@@ -119,6 +128,15 @@ class RenumberRequest {
 		$this->_bad_new_number = $error_indication;
 	}
 	
+	public function vague_receiver($error_indication) {
+		$this->_vague_receiver = $error_indication;
+	}
+	
+	public function vague_provider($error_indication) {
+		$this->_vague_receiver = $error_indication;
+		return $this;
+	}
+	
 	/**
 	 * 
 	 * @ Change this to allow multiple error messages (and return an array?)
@@ -128,20 +146,27 @@ class RenumberRequest {
 	public function message() {
 		$this->_message = [];
 		if ($this->_bad_new_number) {
-			$this->_message[] = "The numbers of pieces #$this->_old and #$this->_new "
-						. "can't be swapped because there is no piece #$this->_new.";
+			if (is_null($this->_new)) {
+				$this->_message[] = "#$this->_old was reassigned but no new number was provided.";
+			} else {
+				$this->_message[] = "There is no #$this->_new in this edition.";
+			}
+			$this->_renumber_message = FALSE;
 		}
 		if ($this->duplicate_new_number) {
-			$this->_message[] = "Piece #$this->old can't be renumbered as #$this->new because you've "
-			. "requested $this->duplicate_new_number pieces be change to #$this->_new";
+			$this->_message[] = "Can't change multiple pieces ($this->duplicate_new_number) to #$this->_new";
+			$this->_renumber_message = FALSE;
 		}
 		if ($this->_implied_change) {
-			$this->_message[] = "Change piece #$this->new to #$this->old "
-					. "implies the change of #$this->old to #$this->new "
-					. "so this change will be made automatically.";
+			$this->_message[] = "Other changes implie the change of "
+					. "#$this->old to #$this->new.";
+			$this->_renumber_message = FALSE;
 		}
-		if (empty($this->_message)) {
-			return "Change piece #$this->_old to #$this->_new.";
+		if ($this->_vague_receiver) {
+			$this->_message[] = "Can't determine which piece should receive #$this->old.";
+		}
+		if ($this->_renumber_message) {
+			array_unshift($this->_message, "Change piece #$this->_old to #$this->_new.");
 		}	
 		return $this->_message;
 	}

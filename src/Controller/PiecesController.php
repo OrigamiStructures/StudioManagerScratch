@@ -331,11 +331,24 @@ class PiecesController extends AppController
 			}, []);
 						
 		if ($requests->heap()->count() === 0) {
-//		if (empty($reduction['mentions'])) {
-//			osd('do we have mentions?');
 			$this->_clear_renumber_caches($cache_prefix);
 			return; 
-		} die;
+		}
+		if (!empty($requests->message())){
+			echo '<p>';
+			foreach($requests->message() as $message) {
+				echo "$message< /br>";
+			}
+			echo '</p>';
+		}
+		foreach ($requests->heap() as $request){
+			echo '<p>';
+			foreach($request->message() as $message) {
+				echo "$message< /br>";
+			}
+			echo '</p>';
+		}
+			
 		$receive_number = $provide_number = $reduction['mentions'];
 		$requests = $reduction['requests'];
 		$symbol_error = (isset($reduction['error'])) ? $reduction['error'] : [] ;
