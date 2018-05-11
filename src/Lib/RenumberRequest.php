@@ -91,7 +91,7 @@ class RenumberRequest {
 	 * @return mixed
 	 */
 	public function __get($name) {
-		if (in_array($name, ['new', 'old'])) {
+		if (in_array($name, ['new', 'old', 'renumber_message'])) {
 			return $this->{"_$name"};
 			
 		} elseif (Configure::read('debug')) {

@@ -46,15 +46,19 @@ if ($renumber_summary) :
 ?>
 	<?php 
 	if ($error) { 
-	 foreach ($error as $message) {
-		 echo "<p class='error'>$message</p>";
-	 }
+		echo "<p class='error'>Correct the error(s) below.</p>";
+//	 foreach ($error as $message) {
+//		 $output = implode('<br>', $message);
+//		 echo "<p class='error'>$output</p>";
+//	 }
 	} 
-	; 
-	 foreach ($renumber_summary as $message) {
+	 
+	if ($renumber_summary) {
+		foreach ($renumber_summary as $message) {
 		 echo "<p>$message</p>";
-	 }
-?>
+		}
+	
+}?>
 
 	<?= $this->Form->create('Pieces', ['id' => 'confirm']); ?>
 

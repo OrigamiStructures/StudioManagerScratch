@@ -317,8 +317,6 @@ class PiecesController extends AppController
 			->reduce(function($accumulator, $value, $key) use ($fresh_piece_entities, $requests) {
 				if ($value) {
 					if (array_key_exists($value, $fresh_piece_entities)) {
-						$accumulator['mentions'][$key] = $key;
-						$accumulator['mentions'][$value] = $value;
 						$requests->insert(new RenumberRequest( //$old, $new, $piece_id
 								$key, $value, $fresh_piece_entities[$value]->id));
 					} else {
@@ -327,128 +325,13 @@ class PiecesController extends AppController
 						$requests->insert($accumulator['error'][$key]);
 					}
 				}
-				return $accumulator;
 			}, []);
 						
 		if ($requests->heap()->count() === 0) {
 			$this->_clear_renumber_caches($cache_prefix);
 			return; 
 		}
-		if (!empty($requests->message())){
-			echo '<p>';
-			foreach($requests->message() as $message) {
-				echo "$message< /br>";
-			}
-			echo '</p>';
-		}
-		foreach ($requests->heap() as $request){
-			echo '<p>';
-			foreach($request->message() as $message) {
-				echo "$message< /br>";
-			}
-			echo '</p>';
-		}
-			
-		$receive_number = $provide_number = $reduction['mentions'];
-		$requests = $reduction['requests'];
-		$symbol_error = (isset($reduction['error'])) ? $reduction['error'] : [] ;
-
-		/*
-		 * Go through the post data and make the renumbering changes 
-		 * that have been explicitly requested. 
-		 * On each move, remove the values from the receiver and 
-		 * provider arrays to winnow down to any implied moves (or errors).
-		 */
-		$request = FALSE;
-		while (!empty($requests)) {
-			$request = array_shift($requests);
-			$save_data[$request->new] = (new Piece([
-				'id' => $fresh_piece_entities[$request->old]->id,
-				'number' => $request->new,
-			]));
-			$summary[] = $request->message();
-
-			unset($receive_number[$request->old]);
-			unset($provide_number[$request->new]);//die;				
-		}
 		
-		/* Now asses the remaining recievers, providers, and errors */
-		if (!empty($symbol_error)) {
-			switch (count($symbol_error)) {
-				case 1:
-					$error[] = '<span class=\'symbol-errors\'>' . 
-						array_pop($symbol_error)->new . '</span> is not a valid '
-						. 'number for this set of pieces.';
-					break;
-				default:
-					$error[] = '<span class=\'symbol-errors\'>' . 
-						Text::toList($symbol_error) .'</span>' .  
-						' are not a valid numbers for this set of pieces.';
-					break;
-			}
-		}
-		$final_change = count($receive_number) + count($provide_number);
-		/* a fix just in case one is 0 and the other is 2, an error condition */
-		if ($final_change == 2 && count($receive_number) != count($provide_number)) {
-			$final_change++;
-		}
-		/*
-		 * 0 = all done
-		 * 2 (as calculated above) means 1 unused receiver and 
-		 *		1 unused provider; an implied move
-		 * Any other value indicates some error state
-		 */
-		switch ($final_change) {
-			case 0:
-				break;
-			case 2:
-				$new_number = array_pop($provide_number);
-				$old_number = array_pop($receive_number);
-				$save_data[$new_number] = new Piece([
-							'id' => $fresh_piece_entities[$old_number]->id,
-							'number' => $new_number,
-						]);
-				$summary[] = "Piece #$old_number becomes #$new_number";
-				break;
-			default:
-				/*
-				 * We'll write a general error statement, the work out  
-				 * specific error summaries for providers and recievers
-				 * 
-				 * @todo invalid number-value error from above
-				 */
-				$error = ['There was a mismatch between the number of pieces '
-					. 'that you want to renumber and the pieces who\'s numbers '
-					. 'were reassigned to other pieces. Please resolve and re-submit.'];
-				switch (count($provide_number)) {
-					case 0:
-						break;
-					case 1:
-						$error[] = 'There is no way to determine which piece '
-							. 'should recieve number <span class=\'symbol-errors\'>' .
-							array_pop($provide_number) . '</span>';
-						break;
-					default:
-						$error[] = 'There is no way to determine where the '
-							. 'numbers <span class=\'symbol-errors\'>' .
-							Text::toList($provide_number) . '</span> should be used.';
-						break;
-				}	
-				switch (count($receive_number)) {
-					case 0:
-						break;
-					case 1:
-						$error[] = 'There is no way to determine which number piece ' .
-							array_pop($receive_number) . ' should recieve.';
-						break;
-					default:
-						$error[] = 'There is no way to determine the numbers pieces ' . 
-							Text::toList($receive_number) . ' should recieve.';
-						break;
-				}
-				$error[] = 'Below are the summary below is an incomplete guess.';
-				break;
-		}
 		/*
 		 * Everything goes into a cache. Will expire in 90 min.
 		 * We could return variables in some cases, but the newly 
@@ -456,9 +339,11 @@ class PiecesController extends AppController
 		 * can't be altered and don't need to be recreated 
 		 * when the user approves the summaries
 		 */
+//		osd($requests->messagePackage());
+//		osd($requests->heap()->count());
 		Cache::writeMany([
-			$cache_prefix . '.error' => $error, // variable?
-			$cache_prefix . '.summary' => $summary, // variable?
+			$cache_prefix . '.error' => $requests->messagePackage()->errors(), // variable?
+			$cache_prefix . '.summary' => $requests->messagePackage()->summaries(), // variable?
 			$cache_prefix . '.save_data' => $save_data,
 			/*
 			 * post data is needed in case the user approves a save 
