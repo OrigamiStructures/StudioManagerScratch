@@ -5,6 +5,7 @@
 </td></tr>
 
 <?php
+$error = $renumber_summary ? $renumber_summary->errors() : false ;
 $owners = new \Cake\Collection\Collection($providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
 	$accumulator[$owner->key()] = $owner->display_title;

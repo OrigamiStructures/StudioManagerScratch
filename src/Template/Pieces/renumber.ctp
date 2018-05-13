@@ -45,16 +45,13 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 if ($renumber_summary) :
 ?>
 	<?php 
-	if ($error) { 
-		echo "<p class='error'>Correct the error(s) below.</p>";
-//	 foreach ($error as $message) {
-//		 $output = implode('<br>', $message);
-//		 echo "<p class='error'>$output</p>";
-//	 }
+	if ($renumber_summary->errors()) { 
+		$s = $renumber_summary->errorCount() === 1 ? '' : 's';
+		echo "<p class='error'>Correct the {$renumber_summary->errorCount()} error$s below.</p>";
 	} 
 	 
-	if ($renumber_summary) {
-		foreach ($renumber_summary as $message) {
+	if ($renumber_summary->summaries()) {
+		foreach ($renumber_summary->summaries() as $message) {
 		 echo "<p>$message</p>";
 		}
 	
@@ -62,7 +59,7 @@ if ($renumber_summary) :
 
 	<?= $this->Form->create('Pieces', ['id' => 'confirm']); ?>
 
-<?php if(!$error) : ?>
+<?php if(!$renumber_summary->errors()) : ?>
 		<?= $this->Form->button('approve', ['type' => 'submit']); ?>
 		<?= $this->Form->input('do_move', ['value' => TRUE, 'type' => 'hidden']); ?>
 <?php endif; ?>
