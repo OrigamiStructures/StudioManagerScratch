@@ -242,9 +242,9 @@ class PiecesController extends AppController
 				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
 			$this->request->data['number'] = $request_data;
 		}
-		$summary = Cache::read($cache_prefix . '.summary','renumber');
-		$error = Cache::read($cache_prefix . '.error','renumber');
-		$renumber_summary =  $summary ? $summary : FALSE;
+		$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
+//		$error = Cache::read($cache_prefix . '.error','renumber');
+		$renumber_summary =  $messagePackage ? $messagePackage : FALSE;
 		/*
 		 * At this point we have one of tree situations, 
 		 * in all cases $renumber_summary has a value.
@@ -253,7 +253,7 @@ class PiecesController extends AppController
 		 * 2. An error message says the change could not be saved
 		 *      and the confirmation section renders again
 		*/
-		$this->set(compact(['artwork', 'providers', 'pieces', 'number', 'renumber_summary', 'error']));
+		$this->set(compact(['artwork', 'providers', 'pieces', 'number', 'renumber_summary'/*, 'error'*/]));
 	}
 	
 	/**
@@ -342,8 +342,8 @@ class PiecesController extends AppController
 //		osd($requests->messagePackage());
 //		osd($requests->heap()->count());
 		Cache::writeMany([
-			$cache_prefix . '.error' => $requests->messagePackage()->errors(), // variable?
-			$cache_prefix . '.summary' => $requests->messagePackage()->summaries(), // variable?
+//			$cache_prefix . '.error' => $requests->messagePackage()->errors(), // variable?
+			$cache_prefix . '.messagePackage' => $requests->messagePackage(), // variable?
 			$cache_prefix . '.save_data' => $save_data,
 			/*
 			 * post data is needed in case the user approves a save 
@@ -366,8 +366,8 @@ class PiecesController extends AppController
 	protected function _clear_renumber_caches() {
 		$cache_prefix = $this->_renumber_cache_prefix();
 		Cache::deleteMany([
-			$cache_prefix . '.error', 
-			$cache_prefix . '.summary', 
+//			$cache_prefix . '.error', 
+			$cache_prefix . '.messagePackage', 
 			$cache_prefix . '.save_data',
 			$cache_prefix . '.request_data',
 			$cache_prefix . '.fresh_entities',
