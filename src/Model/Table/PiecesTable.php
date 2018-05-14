@@ -20,7 +20,7 @@ use App\Lib\Traits\EditionStackCache;
 class PiecesTable extends AppTable
 {
 	
-//	use EditionStackCache;
+	use EditionStackCache;
 
     /**
      * Initialize method

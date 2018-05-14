@@ -36,7 +36,7 @@ class RenumberRequest {
 	 *
 	 * @var string
 	 */
-	protected $_id;
+//	protected $_id;
 
 	/**
 	 * Indicates if the new number is not in the set of piece numbers
@@ -74,10 +74,10 @@ class RenumberRequest {
 	 * @param string $old The original number
 	 * @param string $new The new number requested
 	 */
-	public function __construct($old, $new, $id) {
+	public function __construct($old, $new/*, $id*/) {
 		$this->_old = $old;
 		$this->_new = $new;
-		$this->_id = $id;
+//		$this->_id = $id;
 		return $this;
 	}
 	
