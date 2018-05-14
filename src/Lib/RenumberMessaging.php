@@ -71,10 +71,13 @@ class RenumberMessaging {
 	/**
 	 * 
 	 * @param int $number
-	 * @return RenumberRequest|NULL
+	 * @return RenumberRequest|FALSE
 	 */
 	public function request($number) {
-		return $this->_requests[$number];
+		if (isset($this->_requests[$number])) {
+			return $this->_requests[$number];
+		}
+		return FALSE;
 	}
 	
 	/**
