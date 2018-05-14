@@ -145,6 +145,19 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
+		$ar = [	1 => ['new' => '', 'old' => 1],
+				2 => ['new' => '3', 'old' => 2],
+				3 => ['new' => '2', 'old' => 3],
+			];
+		extract(array_shift($ar));
+		osd($new);
+		osd($old);
+		die;
+		
+			osd(array_shift($ar));
+			osd(array_shift($ar));
+			osd(array_shift($ar));
+			die;
 		$art1 = $this->loadComponent('PieceAllocation', ['artwork_id' => 2]);
 		osd($art1->stack, 'art1 stack');
 //		$art1->initialize(['artwork_id' => 2]);
