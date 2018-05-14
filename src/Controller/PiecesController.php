@@ -9,6 +9,7 @@ use Cake\Collection\Collection;
 use Cake\Utility\Text;
 use App\Lib\RenumberRequest;
 use App\Lib\RenumberRequests;
+use App\Lib\RenumberMessaging;
 
 /**
  * Pieces Controller
@@ -242,9 +243,9 @@ class PiecesController extends AppController
 				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
 			$this->request->data['number'] = $request_data;
 		}
+		new RenumberMessaging([]);
 		$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
-//		$error = Cache::read($cache_prefix . '.error','renumber');
-		$renumber_summary =  $messagePackage ? $messagePackage : FALSE;
+//		osd($messagePackage);die;
 		/*
 		 * At this point we have one of tree situations, 
 		 * in all cases $renumber_summary has a value.
@@ -253,7 +254,8 @@ class PiecesController extends AppController
 		 * 2. An error message says the change could not be saved
 		 *      and the confirmation section renders again
 		*/
-		$this->set(compact(['artwork', 'providers', 'pieces', 'number', 'renumber_summary'/*, 'error'*/]));
+//		osd($pieces->toArray(), 'pieces');
+		$this->set(compact(['artwork', 'providers', 'pieces', 'messagePackage']));
 	}
 	
 	/**
@@ -276,9 +278,9 @@ class PiecesController extends AppController
 	 */
 	protected function _renumber($post_data, $pieces) {
 		$cache_prefix = $this->_renumber_cache_prefix();
-		$summary = [];
-		$save_data = [];
-		$error = FALSE;
+//		$summary = [];
+//		$save_data = [];
+//		$error = FALSE;
 		
 		/*
 		 * We need a master set of piece entities to reference. 
@@ -299,6 +301,7 @@ class PiecesController extends AppController
 				}, []);
 			Cache::write($cache_prefix . '.fresh_entities', $fresh_piece_entities, 'renumber');
 		}
+//		osd($fresh_piece_entities, 'fresh piece entities');
 		/*
 		 * All involved pieces must be used once as a reciever 
 		 * and once as a provider. We'll assemble two lists and 
@@ -339,12 +342,10 @@ class PiecesController extends AppController
 		 * can't be altered and don't need to be recreated 
 		 * when the user approves the summaries
 		 */
-//		osd($requests->messagePackage());
-//		osd($requests->heap()->count());
 		Cache::writeMany([
 //			$cache_prefix . '.error' => $requests->messagePackage()->errors(), // variable?
 			$cache_prefix . '.messagePackage' => $requests->messagePackage(), // variable?
-			$cache_prefix . '.save_data' => $save_data,
+//			$cache_prefix . '.save_data' => $save_data,
 			/*
 			 * post data is needed in case the user approves a save 
 			 * but the save fails. The approval comes in on a form 
@@ -368,7 +369,7 @@ class PiecesController extends AppController
 		Cache::deleteMany([
 //			$cache_prefix . '.error', 
 			$cache_prefix . '.messagePackage', 
-			$cache_prefix . '.save_data',
+//			$cache_prefix . '.save_data',
 			$cache_prefix . '.request_data',
 			$cache_prefix . '.fresh_entities',
 			],

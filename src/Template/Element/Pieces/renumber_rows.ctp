@@ -1,11 +1,11 @@
 <!-- Element/Pieces/renumber_rows.ctp -->
 <tr><td>
-	<?= $this->Form->button(($renumber_summary ? 'Re-submit' : 'Submit'), ['class' => 'button']); ?>
+	<?= $this->Form->button(($messagePackage ? 'Re-submit' : 'Submit'), ['class' => 'button']); ?>
 	<?= $this->Form->button('Cancel', ['type' => 'submit', 'form' => 'cancel', 'class' => 'button']); ?>
 </td></tr>
 
 <?php
-$error = $renumber_summary ? $renumber_summary->errors() : false ;
+$error = $messagePackage ? $messagePackage->errors() : false ;
 $owners = new \Cake\Collection\Collection($providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
 	$accumulator[$owner->key()] = $owner->display_title;
