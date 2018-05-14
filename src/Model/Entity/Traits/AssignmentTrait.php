@@ -76,8 +76,8 @@ trait AssignmentTrait {
 			return $this->hasFluid();
 		} else {
 			throw new \CakeDC\Users\Exception\BadConfigurationException(
-				"{$this->_className} does not have assignable pieces, so it "
-				. "is not compatible with the AssignmentTrait.");
+				"Only Edition and Format entities can have assignable pieces. "
+				. "{$this->_className} is not compatible with the AssignmentTrait.");
 		}
 	}
 	
