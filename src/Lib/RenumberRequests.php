@@ -105,9 +105,7 @@ class RenumberRequests {
 	private $_provider_checklist = FALSE;
 	
 	private $_message = [];
-	
-	private $Pieces;
-	
+		
 	/**
 	 * This would allow numbers that were not in the original list
 	 * 
@@ -141,21 +139,10 @@ class RenumberRequests {
 	 * 
 	 * This will tell us if the internal logic must 
 	 * run or if we can just use the analized properties as they stand
-	 * 
-	 * @todo If we get $pieces from controller we can eliminate _lookup_piece_id()
-	 *		Furthermore, if we pass that data into the RenumberMessaging object, 
-	 *		that object could return the entities for saving and we should be 
-	 *		able to eliminate the _id property of RenumberRequest objects.
-	 *		On the other hand, the controller could assemble the entities itself 
-	 *		using $pieces and RenumberMessaging without passing pieces down here
-	 *		and we could still eliminate the _id property and _lookup_piece_id().
 	 *
 	 * @param array $valid_numbers Values are the full set of valid numbers
-	 * @param type $loose Future feature. There could be problems...
 	 */
-	public function __construct($valid_numbers, $edition_id/*, $loose = FALSE*/, $artist_id) {
-		$this->_edition_id = $edition_id;
-		$this->_artist_id = $artist_id;
+	public function __construct($valid_numbers) {
 		$this->_valid_symbols = array_combine($valid_numbers, $valid_numbers);
 		$this->_heap = new RenumberRequestHeap();
 	}
@@ -292,25 +279,6 @@ class RenumberRequests {
 	}
 	
 	/**
-	 * Given a piece number (and other store properities) discover the piece ID
-	 * 
-	 * @todo Controller has the pieces. This query should be unnecessary
-	 * 
-	 * @param type $new
-	 */
-	protected function _lookup_piece_id($new) {
-		if (!$this->Pieces) {
-			$this->Pieces = TableRegistry::get('Pieces');
-		}
-		$conditions = ['Pieces.number' => $new, 
-			'Pieces.edition_id' => $this->_edition_id,
-			'Pieces.user_id' => $this->_artist_id,];
-		$query = $this->Pieces->find()
-			->where($conditions)
-			->select(['Pieces.id']);
-	}
-	
-	/**
 	 * Before releasing the heap, we do a final analysis of the data
 	 * 
 	 * This takes all the requests that were sent in and compares all the 
@@ -348,7 +316,7 @@ class RenumberRequests {
 			}
 		}
 		if (count($this->_reciever_checklist) > 0) {
-			// number reused but no new number provided
+			// number transfered but no replacement number provided
 			foreach ($this->_reciever_checklist as $number => $use) {
 				$request = (new RenumberRequest($number, NULL, NULL));
 				$this->insert($request);
@@ -369,8 +337,7 @@ class RenumberRequests {
 	private function _create_implied_request() {
 			$discovered_old = array_keys($this->_reciever_checklist)[0];
 			$discovered_new = array_keys($this->_provider_checklist)[0];
-			$id = $this->_lookup_piece_id($discovered_old);
-			return (new RenumberRequest($discovered_old, $discovered_new, $id))->implied(TRUE);
+			return (new RenumberRequest($discovered_old, $discovered_new))->implied(TRUE);
 	}
 	
 }

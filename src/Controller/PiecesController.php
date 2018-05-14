@@ -198,8 +198,8 @@ class PiecesController extends AppController
 			if (isset($this->request->data['do_move'])) {
 				/*
 				 * user confirmed accuracy of summary 
-				 * retreive the cached entities
-				 * and try to save them
+				 * retreive the cached change requests, 
+				 * assemble entities, and try to save them
 				 */
 				$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
 				if ($messagePackage === FALSE) {
@@ -220,7 +220,7 @@ class PiecesController extends AppController
 						);
 					}
 				}
-				$pieceTable = $this->Pieces;
+				$pieceTable = $this->Pieces; //'use' won't accept property... ?
 				$result = $pieceTable->connection()->transactional(
 						function () use ($pieceTable, $renumbered_pieces) {
 							$result = TRUE;
@@ -256,22 +256,26 @@ class PiecesController extends AppController
 				$pieces = is_array($pieces) ? $pieces : $pieces->toArray();
 				$this->_renumber($this->request->data['number'], $pieces);
 			}
-		} else {
-			/* this is the non-posting arrival slot */
 		}
 		/* this is common fall-through code for all modes of request */
 		if (!isset($this->request->data['number']) && 
 				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
 			/*
-			 * if the user just wandered off page for a bit, restore their request data
+			 * if the user is going through the approval process, they can be 
+			 * headed back to the page with form data that doesn't include 
+			 * the renumber requests. We saved that data so the form can stay 
+			 * populated throughout the process.
 			 */
 			$this->request->data['number'] = $request_data;
 		}
-		new RenumberMessaging([]);
+		/**
+		 * Not sure how to autoald and the class is needed
+		 * for when the cached object arrives
+		 */
+		new RenumberMessaging([]); 
 		$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
-//		osd($messagePackage);die;
 		/*
-		 * At this point we have one of tree situations, 
+		 * At this point we have one of three situations, 
 		 * in all cases $messagePackage has a value.
 		 * 1. $messagePackage is False, a brand new request form will render
 		 * 2. $messagePackage summary is truthy, a confirmation section will render 
@@ -292,11 +296,12 @@ class PiecesController extends AppController
 	 * 
 	 * After the user requests piece renumbering, we'll smooth out 
 	 * the request and make a simple, human readible summary 
-	 * for approval or rejection. Cache the message
+	 * of changes and errors for approval or rejection. Cache the messages
 	 * 
 	 * Finally, the request data is in a different <Form> from the 
 	 * approval. We'll have to cache that form's data so the inputs 
-	 * can stay properly populated as the process continues
+	 * can stay properly populated as the while we show the summaries 
+	 * and wait for approval or re-submission of changes
 	 * 
 	 * @param array $post_data the user's renumbering requests
 	 * @param array $pieces array of all piece entities ordered by number
@@ -304,24 +309,12 @@ class PiecesController extends AppController
 	protected function _renumber($post_data, $pieces) {
 		$cache_prefix = $this->_renumber_cache_prefix();
 
-		/*
-		 * All involved pieces must be used once as a reciever 
-		 * and once as a provider. We'll assemble two lists and 
-		 * remove items as they get used. The left overs will 
-		 * allow completion or error reporting. 
-		 * We'll also keep track of requests that are invalid piece numbers 
-		 * and compress the post_data down to a useful request array. 
-		 */
-		$requests = new RenumberRequests(
-				array_keys($post_data), 
-				$this->SystemState->queryArg('edition'),
-				$this->SystemState->artistId());
-		$reduction = (new Collection($post_data))
-			->reduce(function($accumulator, $value, $key) use ($post_data, $requests) {
-				if ($value) {
-					$requests->insert(new RenumberRequest($key, $value)); //$old, $new
+		$requests = new RenumberRequests(array_keys($post_data));
+		foreach ($post_data as $old => $new) {
+				if ($new) {
+					$requests->insert(new RenumberRequest($old, $new));
 				}
-			}, []);
+			};
 						
 		if ($requests->heap()->count() === 0) {
 			$this->_clear_renumber_caches($cache_prefix);
@@ -330,24 +323,19 @@ class PiecesController extends AppController
 		
 		/*
 		 * Everything goes into a cache. Will expire in 90 min.
-		 * We could return variables in some cases, but the newly 
-		 * assembled entities should be kept secure here so they 
-		 * can't be altered and don't need to be recreated 
-		 * when the user approves the summaries
+		 * 
+		 * post data is needed in case the user approves a save 
+		 * but the save fails. The approval comes in on a form 
+		 * that doesn't have this data, so it would have 
+		 * been lost except for this cach
 		 */
 		Cache::writeMany([
 			$cache_prefix . '.messagePackage' => $requests->messagePackage(), // variable?
-			/*
-			 * post data is needed in case the user approves a save 
-			 * but the save fails. The approval comes in on a form 
-			 * that doesn't have this data, so it would have 
-			 * been lost except for this cach
-			 */
 			$cache_prefix . '.request_data' => $post_data],'renumber');
 	}
 	
 	/**
-	 * Centralized location to clear all renumbering caches for an edition
+	 * Clear all renumbering caches for an edition
 	 * 
 	 * Only works in contexts where there is an 'edition' id query arg
 	 */

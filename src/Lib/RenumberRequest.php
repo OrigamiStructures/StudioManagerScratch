@@ -7,8 +7,6 @@ use Cake\Core\Configure;
  * RenumberRequest manages To and From values in a renumbering request
  * 
  * One move pair is handled by each object instance
- * 
- * @todo Extend a class that knows the valid number range and make $error calculate itself
  *
  * @author dondrake
  */
@@ -28,16 +26,6 @@ class RenumberRequest {
 	 */
 	protected $_new;
 	
-	/**
-	 * The record ID for the piece
-	 * 
-	 * This is in preparation for enfolding the entities into this class 
-	 * or using this class to drive entity creation. 
-	 *
-	 * @var string
-	 */
-//	protected $_id;
-
 	/**
 	 * Indicates if the new number is not in the set of piece numbers
 	 *
@@ -74,10 +62,9 @@ class RenumberRequest {
 	 * @param string $old The original number
 	 * @param string $new The new number requested
 	 */
-	public function __construct($old, $new/*, $id*/) {
+	public function __construct($old, $new) {
 		$this->_old = $old;
 		$this->_new = $new;
-//		$this->_id = $id;
 		return $this;
 	}
 	
