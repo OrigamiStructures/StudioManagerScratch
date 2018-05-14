@@ -14,6 +14,7 @@ use Cake\Collection\Collection;
 use App\Model\Entity\Piece;
 use Cake\I18n\Time;
 use Cake\Cache\Cache;
+use App\Lib\Traits\EditionStackCache;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -27,6 +28,8 @@ use Cake\Cache\Cache;
  * @author dondrake
  */
 class EditionStackComponent extends Component {
+	
+	use EditionStackCache;
 	
 	protected $pieces_to_save ;
 	protected $pieces_to_delete;
@@ -73,6 +76,10 @@ class EditionStackComponent extends Component {
 	 * @return tuple 'providers, pieces'
 	 */
 	public function stackQuery() {
+	$cacheStart = microtime();
+	$stack = $this->readCache($this->SystemState->queryArg('edition'));
+	if ($stack === FALSE) {
+		$queryStart = microtime();
 		$Pieces = TableRegistry::get('Pieces');
 		$Formats = TableRegistry::get('Formats');
 		$Editions = TableRegistry::get('Editions');
@@ -85,7 +92,6 @@ class EditionStackComponent extends Component {
 				->where($edition_condition)
 				->contain('Artworks')
 				->toArray()[0];
-		//osd($edition);
 		$unassigned = $Pieces->find('unassigned', $piece_condition);
 		$edition->unassigned = $unassigned->toArray();
 		
@@ -98,11 +104,19 @@ class EditionStackComponent extends Component {
 		$providers = ['edition' => $edition] + $formats->toArray();
 		
 		// this may need ->order() later for piece-table reporting of open editions
-		$pieces = $Pieces->find()->where($piece_condition)->contain('Dispositions')->order('Pieces.number'); 
-//		sql($pieces);
-//		osd($pieces->toArray());die;
+		$pieces = $Pieces->find()
+				->where($piece_condition)
+				->contain('Dispositions')
+				->order('Pieces.number'); 
+		$stack = ['providers' => $providers, 'pieces' => ($pieces->toArray())];
+		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
+		$queryEnd = microtime();
+		osd($queryEnd - $queryStart, 'query timer');
+		}
+		$cacheEnd = microtime();
+		osd($cacheEnd - $cacheStart, 'cache timer');
 		
-		return ['providers' => $providers, 'pieces' => $pieces];
+		return $stack;
 				
 	}
 	

@@ -9,6 +9,7 @@ use Cake\Validation\Validator;
 use App\Model\Behavior\FamilyBehavior;
 use Cake\ORM\TableRegistry;
 use App\Lib\SystemState;
+use App\Lib\Traits\EditionStackCache;
 
 /**
  * Editions Model
@@ -21,6 +22,7 @@ use App\Lib\SystemState;
  */
 class EditionsTable extends AppTable
 {
+	use EditionStackCache;
 	/**
 	 * The allowable types of editions
 	 * 
@@ -126,6 +128,17 @@ class EditionsTable extends AppTable
         $rules->add($rules->existsIn(['series_id'], 'Series'));
         return $rules;
     }
+	
+	/**
+	 * After save, clear any effected edition stackQuery cache
+	 * 
+	 * @param type $event
+	 * @param type $entity
+	 * @param type $options
+	 */
+	public function afterSave($event, $entity, $options){
+		$this->clearCache($entity->id);
+	}
 	
 	/**
 	 * Get the current select list

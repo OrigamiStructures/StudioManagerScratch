@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Lib\Traits\EditionStackCache;
 
 /**
  * Formats Model
@@ -18,6 +19,8 @@ use Cake\Validation\Validator;
  */
 class FormatsTable extends AppTable
 {
+	
+	use EditionStackCache;
 
     /**
      * Initialize method
@@ -110,6 +113,17 @@ class FormatsTable extends AppTable
         $rules->add($rules->existsIn(['subscription_id'], 'Subscriptions'));
         return $rules;
     }
+	
+	/**
+	 * After save, clear any effected edition stackQuery cache
+	 * 
+	 * @param type $event
+	 * @param type $entity
+	 * @param type $options
+	 */
+	public function afterSave($event, $entity, $options){
+		$this->clearCache($entity->edition_id);
+	}
 	
 	/**
 	 * Get the current select list

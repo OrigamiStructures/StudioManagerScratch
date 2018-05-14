@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
+use App\Lib\Traits\EditionStackCache;
 
 /**
  * Pieces Model
@@ -18,6 +19,8 @@ use Cake\Collection\Collection;
  */
 class PiecesTable extends AppTable
 {
+	
+//	use EditionStackCache;
 
     /**
      * Initialize method
@@ -104,6 +107,17 @@ class PiecesTable extends AppTable
 
         return $validator;
     }
+	
+	/**
+	 * After save, clear any effected edition stackQuery cache
+	 * 
+	 * @param type $event
+	 * @param type $entity
+	 * @param type $options
+	 */
+	public function afterSave($event, $entity, $options){
+		$this->clearCache($entity->edition_id);
+	}
 	
 	public function assignedFormatPieces($event, $entity, $table) {
 		$pieces = $table->find('all')->where([

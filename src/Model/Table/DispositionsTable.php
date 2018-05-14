@@ -10,6 +10,7 @@ use Cake\Event\Event;
 use ArrayObject;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+//use App\Lib\Traits\EditionStackCache;
 
 /**
  * Dispositions Model
@@ -23,6 +24,8 @@ use Cake\Collection\Collection;
  */
 class DispositionsTable extends AppTable
 {
+	
+//	use EditionStackCache;
 
     /**
 	 * Map specific disposition labels to their underlying types
@@ -130,6 +133,20 @@ class DispositionsTable extends AppTable
             'joinTable' => 'dispositions_pieces'
         ]);
     }
+
+	/**
+	 * After save, clear any effected edition stackQuery cache
+	 * 
+	 * This afterSave is not needed because the counterCache saves 
+	 * upstream will get the cache (I think)
+	 * 
+	 * @param type $event
+	 * @param type $entity
+	 * @param type $options
+	 */
+//	public function afterSave($event, $entity, $options){
+//		$this->clearCache($entity->edition_id);
+//	}
 
 	public function map($label) {
 		if (isset($this->_map[$label])) {
