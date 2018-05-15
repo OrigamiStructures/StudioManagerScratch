@@ -76,10 +76,8 @@ class EditionStackComponent extends Component {
 	 * @return tuple 'providers, pieces'
 	 */
 	public function stackQuery() {
-	$cacheStart = microtime();
 	$stack = $this->readCache($this->SystemState->queryArg('edition'));
 	if ($stack === FALSE) {
-		$queryStart = microtime();
 		$Pieces = TableRegistry::get('Pieces');
 		$Formats = TableRegistry::get('Formats');
 		$Editions = TableRegistry::get('Editions');
@@ -110,11 +108,7 @@ class EditionStackComponent extends Component {
 				->order('Pieces.number'); 
 		$stack = ['providers' => $providers, 'pieces' => ($pieces->toArray())];
 		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
-		$queryEnd = microtime();
-		osd($queryEnd - $queryStart, 'query timer');
 		}
-		$cacheEnd = microtime();
-		osd($cacheEnd - $cacheStart, 'cache timer');
 		
 		return $stack;
 				
