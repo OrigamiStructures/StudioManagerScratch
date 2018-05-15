@@ -138,6 +138,7 @@ class EditionsTable extends AppTable
 	 */
 	public function afterSave($event, $entity, $options){
 		$this->clearCache($entity->id);
+		osdLog($entity, 'afterSave on this edition entity');
 	}
 	
 	/**

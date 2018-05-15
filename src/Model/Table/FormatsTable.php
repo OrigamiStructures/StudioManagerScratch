@@ -122,7 +122,14 @@ class FormatsTable extends AppTable
 	 * @param type $options
 	 */
 	public function afterSave($event, $entity, $options){
+		if (!isset($entity->edition_id)) {
+			$query = $this->find()
+					->where(['id' => $entity->id, 'user_id' => $this->SystemState->artistId()])
+					->select(['edition_id'])->toArray();
+			$entity->edition_id = $query[0]->edition_id;
+		}
 		$this->clearCache($entity->edition_id);
+		osdLog($entity, 'afterSave on this format entity');
 	}
 	
 	/**
