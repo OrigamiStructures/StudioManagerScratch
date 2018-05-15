@@ -40,43 +40,8 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 				<div class="pieces">
 					
 					<!--Original page content-->
-					
-<?php
-if ($messagePackage) :
-?>
-	<?php 
-	if ($messagePackage->errors()) { 
-		$s = $messagePackage->errorCount() === 1 ? '' : 's';
-		echo "<p class='error'>Correct the {$messagePackage->errorCount()} error$s below.</p>";
-	} 
-	 
-	if ($messagePackage->summaries()) {
-		foreach ($messagePackage->summaries() as $message) {
-		 echo "<p>$message</p>";
-		}
-	
-}?>
-
-	<?= $this->Form->create('Pieces', ['id' => 'confirm']); ?>
-
-<?php if(!$messagePackage->errors()) : ?>
-		<?= $this->Form->button('approve', ['type' => 'submit']); ?>
-		<?= $this->Form->input('do_move', ['value' => TRUE, 'type' => 'hidden']); ?>
-<?php endif; ?>
-
-	<?= $this->Form->end(); ?>
-	
-<?php endif ?>
-<?= $this->Form->create('', ['id' => 'cancel', 'formmethod' => 'post']); ?>
-	<?= $this->Form->input('cancel', ['type' => 'hidden', 'value' => TRUE])?>
-<?= $this->Form->end(); ?>
-
-<?= $this->Form->create('Pieces', ['id' => 'request']); ?>
-
-	<?= $this->element('Pieces/renumber_table', ['caption' => 'Pieces in this edition']); ?>
-
-<?= $this->Form->end(); ?>
-					
+					<?= $this->element('Pieces/renumber_table', 
+						['caption' => 'Pieces in this edition']); ?>
 					<!--END Original page content-->
 					<?php //echo $this->element('Edition/pieces'); ?>
 				</div>

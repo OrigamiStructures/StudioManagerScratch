@@ -1,7 +1,29 @@
 <!-- Element/Pieces/renumber_rows.ctp -->
-<tr><td>
-	<?= $this->Form->button(($messagePackage ? 'Re-submit' : 'Submit'), ['class' => 'button']); ?>
-	<?= $this->Form->button('Cancel', ['type' => 'submit', 'form' => 'cancel', 'class' => 'button']); ?>
+<tr>
+	<td colspan="2">
+	<?php
+	if ($messagePackage) :
+		if ($messagePackage->errors()) { 
+			$s = $messagePackage->errorCount() === 1 ? '' : 's';
+			echo "<p class='error'>Correct the {$messagePackage->errorCount()} error$s below.</p>";
+		} 
+		if ($messagePackage->summaries()) {
+			foreach ($messagePackage->summaries() as $message) {
+				echo "<p>$message</p>";
+			}
+		}
+	endif 
+	?>
+	</td>
+	<td colspan="3">
+	<?php if ($messagePackage && !$messagePackage->errors()) : ?>
+	<?= $this->Form->button('approve', [
+		'type' => 'submit', 'form' => 'cancel_renumber', 'class' => 'button success small']); ?>
+	<?php endif; ?>
+	<?= $this->Form->button(($messagePackage ? 'Re-submit' : 'Submit'), ['class' => 'button secondary small']); ?>
+	<?= $this->Form->button('Cancel', [
+		'type' => 'submit', 'form' => 'cancel_renumber', 'class' => 'button warning small']); ?>
+
 </td></tr>
 
 <?php

@@ -250,7 +250,7 @@ div.formats {
 			div.pieces {
 				@include grid-column(12, 0);
 				button {
-					display: none;
+					display: inline-block;
 				}
 				table {
 					display: block;

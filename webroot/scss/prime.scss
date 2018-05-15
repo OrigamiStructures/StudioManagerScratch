@@ -21,7 +21,7 @@ there are many elements shown on the page.
 @media only screen { /* small up */ 
 	div.pieces {
 		button {
-			display: none;
+			display: inline-block;
 		}
 		table {
 			display: block;
@@ -32,7 +32,7 @@ there are many elements shown on the page.
 	div.pieces {
 		position: relative;
 		button {
-			display: block;
+			display: inline-block;
 		}
 		table {
 			display: none;
