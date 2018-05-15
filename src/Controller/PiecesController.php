@@ -166,7 +166,6 @@ class PiecesController extends AppController
 	 */
 	public function renumber() {
 		$cache_prefix = $this->_renumber_cache_prefix();
-		$artwork = $this->ArtworkStack->stackQuery();
 		$EditionStack = $this->loadComponent('EditionStack');
 		extract($EditionStack->stackQuery()); // providers, pieces
 		/* prevent inappropriate entry */
@@ -288,7 +287,7 @@ class PiecesController extends AppController
 		 * $messagePackage is a RenumberMessaging object
 		*/
 //		osd($pieces->toArray(), 'pieces');
-		$this->set(compact(['artwork', 'providers', 'pieces', 'messagePackage']));
+		$this->set(compact(['providers', 'pieces', 'messagePackage']));
 	}
 	
 	/**
