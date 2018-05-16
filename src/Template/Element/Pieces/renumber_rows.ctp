@@ -20,7 +20,7 @@
 	<?= $this->Form->button('approve', [
 		'type' => 'submit', 'form' => 'cancel_renumber', 'class' => 'button success small']); ?>
 	<?php endif; ?>
-	<?= $this->Form->button(($messagePackage ? 'Re-submit' : 'Submit'), ['class' => 'button secondary small']); ?>
+	<?= $this->Form->button(($messagePackage ? 'Re-submit' : 'Submit'), ['class' => 'button standard small']); ?>
 	<?= $this->Form->button('Cancel', [
 		'type' => 'submit', 'form' => 'cancel_renumber', 'class' => 'button warning small']); ?>
 

@@ -1,5 +1,9 @@
 <!-- Element/Pieces/renumber_table.ctp -->
-	
+<div>
+	<?= $this->element('Pieces/renumber_approval_form') ?>
+	<?= $this->element('Pieces/renumber_cancel_form') ?>	
+</div>
+<?= $this->Form->create('Pieces', ['id' => 'request']); ?>
 <table>
 	<caption>
 		<?= $caption ?>
@@ -12,20 +16,11 @@
 			<th>Assignment</th>
 			<th>Dispositions</th>
 		</tr>
-		<tr class="hidden">
-			<th colspan="2">
-				<?= $this->element('Pieces/renumber_approval_form') ?>
-			</th>
-			<th colspan="3">
-				<?= $this->element('Pieces/renumber_cancel_form') ?>
-			</th>
-		</tr>
 	</thead>
-	<?= $this->Form->create('Pieces', ['id' => 'request']); ?>
 	<tbody>
 		<?= $this->element('Pieces/renumber_rows'); ?>
 	</tbody>
-	<?= $this->Form->end(); ?>
 </table>
+<?= $this->Form->end(); ?>
 	
 <!-- END Element/Edition/renumber_table.ctp -->
