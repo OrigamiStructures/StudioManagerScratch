@@ -25,6 +25,11 @@ there are many elements shown on the page.
 		}
 		table {
 			display: block;
+			tbody td {
+				padding: 0;
+				margin: 0;
+				font-size: 70%
+			}
 		}
 	}
 }
@@ -35,7 +40,9 @@ there are many elements shown on the page.
 			display: inline-block;
 		}
 		table {
-			display: none;
+			display: block;
+			overflow-y: scroll;
+			max-height: 15em;
 		}
 	}
 
@@ -49,11 +56,11 @@ div.pieces:hover {
 			/*display: none;*/
 		}
 		table {
-			display: block;
-			/*position: absolute;*/
+/*			display: block;
+			position: absolute;
 			top: 0;
 			overflow-y: visible;
-			z-index: 1000;
+			z-index: 1000;*/
 		}
 	}
 }
@@ -148,3 +155,27 @@ span.inline_icon.nav {
     }
 }
 
+/*    // Caption
+    caption {
+      font-weight: $global-weight-bold;
+      padding: $table-padding;
+    }
+
+    // Table head and foot
+    thead,
+    tfoot {
+      background: $table-head-background;
+      color: $table-head-font-color;
+
+      // Rows within head and foot
+      tr {
+        background: transparent;
+      }
+
+      // Cells within head and foot
+      th,
+      td {
+        padding: $table-padding;
+        font-weight: $global-weight-bold;
+        text-align: #{$global-left};
+      }*/

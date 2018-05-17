@@ -1189,14 +1189,20 @@ there are many elements shown on the page.
   div.pieces button {
     display: inline-block; }
   div.pieces table {
-    display: block; } }
+    display: block; }
+    div.pieces table tbody td {
+      padding: 0;
+      margin: 0;
+      font-size: 70%; } }
 @media only screen and (min-width: 40.063em) {
   div.pieces {
     position: relative; }
     div.pieces button {
       display: inline-block; }
     div.pieces table {
-      display: none; }
+      display: block;
+      overflow-y: scroll;
+      max-height: 15em; }
 
   /**
   @todo This is in flux while 'focus' and general table display is resolved
@@ -1205,11 +1211,11 @@ there are many elements shown on the page.
   div.pieces:hover button {
     /*display: none;*/ }
   div.pieces:hover table {
-    display: block;
-    /*position: absolute;*/
-    top: 0;
-    overflow-y: visible;
-    z-index: 1000; } }
+    /*			display: block;
+    			position: absolute;
+    			top: 0;
+    			overflow-y: visible;
+    			z-index: 1000;*/ } }
 /*section.format {
 	@include grid-row;
 	padding-top: 1em;
@@ -1307,5 +1313,30 @@ span.inline_icon.nav {
   font-size: 80%; }
   span.inline_icon.nav i.fi-pencil {
     font-size: 85%; }
+
+/*    // Caption
+    caption {
+      font-weight: $global-weight-bold;
+      padding: $table-padding;
+    }
+
+    // Table head and foot
+    thead,
+    tfoot {
+      background: $table-head-background;
+      color: $table-head-font-color;
+
+      // Rows within head and foot
+      tr {
+        background: transparent;
+      }
+
+      // Cells within head and foot
+      th,
+      td {
+        padding: $table-padding;
+        font-weight: $global-weight-bold;
+        text-align: left;
+      }*/
 
 /*# sourceMappingURL=prime.css.map */
