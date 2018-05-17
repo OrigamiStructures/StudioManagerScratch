@@ -8,7 +8,7 @@ $EditionHelper->pieceTable($format, $edition);
 $piece_element = $this->ArtElement->choosePieceTable($format, $edition);
 if ($piece_element != 'empty') :
 ?>
-					<button class="button tiny secondary">Reveal Pieces</button>
+					<!--<button class="button tiny secondary">Reveal Pieces</button>-->
 <?php endif; ?>
 					<?= $this->element($piece_element); ?>
 					<!-- END Element/Format/pieces.ctp -->

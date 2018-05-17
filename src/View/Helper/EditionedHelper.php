@@ -307,7 +307,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			$pieces = $this->pieceFilter()->filter($edition->pieces, 'edition');
 			
 			if ($edition->hasUnassigned()) {
-				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
+				$caption = 'Available to assign to a format.';
 			} else {
 				$caption = '';
 //				// this information is already shown for empty editions
