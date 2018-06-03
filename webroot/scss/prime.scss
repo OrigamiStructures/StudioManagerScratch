@@ -26,9 +26,10 @@ there are many elements shown on the page.
 		table {
 			display: block;
 			tbody td {
-				padding: 0;
-				margin: 0;
-				font-size: 70%
+/*				padding: 0;
+				margin: 0;*/
+				font-size: 90%;
+				line-height: 1;
 			}
 		}
 	}
@@ -41,6 +42,8 @@ there are many elements shown on the page.
 		}
 		table {
 			display: block;
+		}
+		table.secondary {
 			overflow-y: scroll;
 			max-height: 15em;
 		}

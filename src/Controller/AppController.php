@@ -150,28 +150,28 @@ class AppController extends Controller
 				3 => ['new' => '2', 'old' => 3],
 			];
 		extract(array_shift($ar));
-		osd($new);
-		osd($old);
-		die;
-		
-			osd(array_shift($ar));
-			osd(array_shift($ar));
-			osd(array_shift($ar));
-			die;
-		$art1 = $this->loadComponent('PieceAllocation', ['artwork_id' => 2]);
-		osd($art1->stack, 'art1 stack');
-//		$art1->initialize(['artwork_id' => 2]);
-//		osd($art1);
-		
-		$ed = 'indexOfEdition';
-		$fo = 'indexOfFormat';
-//		osd(preg_match('/indexOf(.*)/', $none, $match));
-//		osd($match);
-//		preg_match('/indexOf(.*)/', $good, $match);
-//		osd($match);
-		osd($art1->stack->indexOfEdition(6), 'index of edition 6');
-		osd($art1->stack->indexOfEdition(2), 'index of edition 1');
-		osd($art1->stack->returnEdition(6));
+//		osd($new);
+//		osd($old);
+////		die;
+//		
+//			osd(array_shift($ar));
+//			osd(array_shift($ar));
+//			osd(array_shift($ar));
+////			die;
+//		$art1 = $this->loadComponent('PieceAllocation', ['artwork_id' => 2]);
+//		osd($art1->stack, 'art1 stack');
+////		$art1->initialize(['artwork_id' => 2]);
+////		osd($art1);
+//		
+//		$ed = 'indexOfEdition';
+//		$fo = 'indexOfFormat';
+////		osd(preg_match('/indexOf(.*)/', $none, $match));
+////		osd($match);
+////		preg_match('/indexOf(.*)/', $good, $match);
+////		osd($match);
+//		osd($art1->stack->indexOfEdition(6), 'index of edition 6');
+//		osd($art1->stack->indexOfEdition(2), 'index of edition 1');
+//		osd($art1->stack->returnEdition(6));
 	}
 	
 }

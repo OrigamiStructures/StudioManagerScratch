@@ -1,0 +1,73 @@
+/*@import 'util/util';*/
+/*$badge-padding: 0.3em;
+$badge-minwidth: 2.1em;
+$badge-font-size: 0.6rem;*/
+/*$input-font-size: rem-calc(16);*/
+/*$table-padding: rem-calc(8 10 10);*/
+/* small up */
+/* small screen only */
+/* medium screen up */
+/* medium screen only */
+/* large screen up */
+/* large screen only */
+* {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box; }
+
+div.artworks {
+  width: 950px;
+  margin: 0 auto; }
+
+section.artwork, section.format {
+  display: grid;
+  grid-template-areas: "images descriptions" "images children";
+  grid-template-columns: 1fr 6fr;
+  grid-template-rows: auto auto;
+  grid-gap: 0 1rem;
+  gap: 0 1rem; }
+
+div.image {
+  /*	  display: flex;
+  	  flex-flow: row wrap;*/
+  grid-area: images; }
+  div.image img {
+    width: 6rem; }
+
+div.text {
+  grid-area: descriptions; }
+
+div.editions, div.formats {
+  grid-area: children; }
+
+nav.top-bar {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between; }
+
+ul.menu {
+  /*width: 9rem;*/
+  display: flex;
+  flex-flow: row;
+  /*	  margin: 0 2rem;*/ }
+  ul.menu > li {
+    list-style: none;
+    margin: 0 .5rem; }
+
+/* dynamically collapse submenus when not targetted */
+ul.menu > li:not(:target):not(:hover) > ul {
+  display: none;
+  position: realative;
+  /*visibility: collapse;*/ }
+
+ul.menu > li > ul {
+  display: flex;
+  flex-flow: column;
+  position: fixed; }
+
+ul {
+  margin-left: 1rem;
+  background-color: lemonchiffon; }
+
+/*# sourceMappingURL=artstack-response.css.map */

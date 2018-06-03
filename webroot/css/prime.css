@@ -2,6 +2,8 @@
 /*$badge-padding: 0.3em;
 $badge-minwidth: 2.1em;
 $badge-font-size: 0.6rem;*/
+/*$input-font-size: rem-calc(16);*/
+/*$table-padding: rem-calc(8 10 10);*/
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -1191,16 +1193,18 @@ there are many elements shown on the page.
   div.pieces table {
     display: block; }
     div.pieces table tbody td {
-      padding: 0;
-      margin: 0;
-      font-size: 70%; } }
+      /*				padding: 0;
+      				margin: 0;*/
+      font-size: 90%;
+      line-height: 1; } }
 @media only screen and (min-width: 40.063em) {
   div.pieces {
     position: relative; }
     div.pieces button {
       display: inline-block; }
     div.pieces table {
-      display: block;
+      display: block; }
+    div.pieces table.secondary {
       overflow-y: scroll;
       max-height: 15em; }
 
