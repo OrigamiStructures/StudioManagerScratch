@@ -7,13 +7,14 @@ use App\Model\Table\FormatsTable;
 use App\Model\Table\PiecesTable;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
+use App\Controller\ArtStackController;
 
 /**
  * Artworks Controller
  *
  * @property \App\Model\Table\ArtworksTable $Artworks
  */
-class ArtworksController extends AppController
+class ArtworksController extends ArtStackController
 {
 	
 	use ArtReviewTrait;
@@ -192,6 +193,7 @@ class ArtworksController extends AppController
 
 		$result = $this->ArtworkStack->stackQuery();
 		
+		$this->commonHelpers();
 		$this->set($artwork_variable, $result);
     }
 	
@@ -228,6 +230,7 @@ class ArtworksController extends AppController
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
 //		$this->set('element_management', $element_management);
+
 		$this->render('review');
 	}
 	

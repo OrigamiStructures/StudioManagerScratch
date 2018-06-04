@@ -1,7 +1,7 @@
 <!-- Template/Artwork/review.ctp -->
 <?php 
-$this->loadHelper('DispositionTools');
-$this->loadHelper('ArtElement',['className' => 'ArtStackElement']);
+//$this->loadHelper('DispositionTools');
+//$this->loadHelper('ArtElement',['className' => 'ArtStackElement']);
 
 $decorated_element = $this->ArtElement->choose('contentDecoration');
 

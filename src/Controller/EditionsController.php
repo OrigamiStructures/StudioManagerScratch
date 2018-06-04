@@ -8,13 +8,14 @@ use Cake\Collection\Collection;
 use App\Form\AssignmentForm;
 use Cake\View\Form\FormContext;
 use App\Lib\Traits\ArtReviewTrait;
+use App\Controller\ArtStackController;
 
 /**
  * Editions Controller
  *
  * @property \App\Model\Table\EditionsTable $Editions
  */
-class EditionsController extends AppController
+class EditionsController extends ArtStackController
 {
 	
 	use ArtReviewTrait;

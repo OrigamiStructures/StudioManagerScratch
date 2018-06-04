@@ -4,13 +4,14 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
+use App\Controller\ArtStackController;
 
 /**
  * Formats Controller
  *
  * @property \App\Model\Table\FormatsTable $Formats
  */
-class FormatsController extends AppController
+class FormatsController extends ArtStackController
 {
 
 	use ArtReviewTrait;

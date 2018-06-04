@@ -4,6 +4,8 @@ namespace App\Lib\Traits;
 use Cake\Cache\Cache;
 use Cake\ORM\TableRegistry;
 use Cake\Network\Exception\NotImplementedException;
+use App\View\Helper\ArtStackElementHelper;
+//use App\View\Helper\DispositionToolsHelper;
 
 
 /**
@@ -14,6 +16,21 @@ use Cake\Network\Exception\NotImplementedException;
  * the user's swift navigation to the most detailed level of display. 
  * To avoid time lost to redundant code  as the system redirects the 
  * request to the proper display context, this trait was created.
+ * 
+ * 06/18 Added Helper loading features to reduce coupling of Artwork 
+ * create/review/refine Templates and Elements. In the original 
+ * incarnation, the views all self-constructed beginning from Artworks/review. 
+ * Logic in each template or element decided the variables to pass on, the 
+ * Helpers to load, and the next elements to render. This made editing difficult 
+ * because there was no way (short of expert knowledge) to tell if a change 
+ * would effect some downstream process.
+ *		The reason for this strategy was to insure all Artwork rendering followed a 
+ * common DOM pattern (to simplify css and ajax calls). While I did accomplish 
+ * that goal, it created a coupling problem. So, I'm going to back the common  
+ * Helper loading into this Trait and other more specific loading into actions.
+ *		Part of this is accomplished by having a Artworks, Editions, and Formats 
+ * Controllers extend a new Parent class which loads a new parent View class for 
+ * rendering.
  * 
  * @author dondrake
  */
@@ -160,4 +177,5 @@ trait ArtReviewTrait {
 		 */
 		return $redirect_needed;
 	}
+	
 }
