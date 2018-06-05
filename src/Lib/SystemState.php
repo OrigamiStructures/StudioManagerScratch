@@ -119,7 +119,7 @@ class SystemState implements EventListenerInterface {
 	}
 	static function scrappedDispositionTypes() {
 		return [DISPOSITION_UNAVAILABLE_LOST, DISPOSITION_UNAVAILABLE_DAMAGED, 
-			DISPOSITION_UNAVAILABLE_STOLEN];
+			DISPOSITION_UNAVAILABLE_STOLEN, DISPOSITION_NFS];
 	}
 	
 	static function unavailableDispositionTypes() {

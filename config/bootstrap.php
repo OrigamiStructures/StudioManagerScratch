@@ -309,14 +309,14 @@ define('DISPOSITION_LOAN_CONSIGNMENT', 'Consignment');
 define('DISPOSITION_LOAN_PRIVATE', 'Loan');
 define('DISPOSITION_LOAN_RENTAL', 'Rental');
 define('DISPOSITION_LOAN_RIGHTS', 'Licensed');
+define('DISPOSITION_REVIEW_CONTACT', 'Contact'); 
 //
 define('DISPOSITION_UNAVAILABLE_LOST', 'Lost');
 define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 define('DISPOSITION_UNAVAILABLE_STOLEN', 'Stolen');
+define('DISPOSITION_NFS', 'Not For Sale');
 //
 define('DISPOSITION_STORE_STORAGE', 'Storage');
-//
-define('DISPOSITION_REVIEW_CONTACT', 'Contact'); 
 // </editor-fold>
 
 

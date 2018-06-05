@@ -360,6 +360,7 @@ class DispositionToolsHelper extends Helper {
 		define('DISPOSITION_UNAVAILABLE_LOST'	, 'Lost');
 		define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 		define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
+		define('DISPOSITION_UNAVAILABLE_NFS' , 'Not For Sale');
 		 */
 	}
 	
@@ -398,6 +399,7 @@ class DispositionToolsHelper extends Helper {
 			case DISPOSITION_UNAVAILABLE_LOST :
 			case DISPOSITION_UNAVAILABLE_DAMAGED :
 			case DISPOSITION_UNAVAILABLE_STOLEN :
+			case DISPOSITION_UNAVAILABLE_NFS :
 				$label = "Add to $disposition_type";
 				break;
 			default :
