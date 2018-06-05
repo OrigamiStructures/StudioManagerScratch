@@ -17,7 +17,8 @@ use App\View\Helper\ArtStackElementHelper;
  * To avoid time lost to redundant code  as the system redirects the 
  * request to the proper display context, this trait was created.
  * 
- * 06/18 Added Helper loading features to reduce coupling of Artwork 
+ * 06/18 This is pending further analysis:
+ *		Added Helper loading features to reduce coupling of Artwork 
  * create/review/refine Templates and Elements. In the original 
  * incarnation, the views all self-constructed beginning from Artworks/review. 
  * Logic in each template or element decided the variables to pass on, the 
