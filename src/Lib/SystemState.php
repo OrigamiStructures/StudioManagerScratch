@@ -111,6 +111,13 @@ class SystemState implements EventListenerInterface {
 				EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
 	}
 	
+	static function isValidEditionType($type) {
+		return in_array($type, [EDITION_UNIQUE, EDITION_RIGHTS, EDITION_LIMITED, 
+			PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
+			EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
+	}
+
+
 	static function collectedDispositionTypes() {
 		return [DISPOSITION_TRANSFER_SALE,  DISPOSITION_TRANSFER_SUBSCRIPTION, 
 			DISPOSITION_TRANSFER_DONATION,  DISPOSITION_TRANSFER_GIFT, 
