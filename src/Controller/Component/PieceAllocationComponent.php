@@ -66,7 +66,8 @@ class PieceAllocationComponent extends Component {
 //			$this->multiple_formats = (boolean) $this->artwork->multiple; // an input value from creation forms
 //		}
 		unset($this->pieces);
-		if ($this->SystemState->is(ARTWORK_CREATE) && ($this->onePiece() || !$this->multiple_formats)) {
+		if ($this->SystemState->is(ARTWORK_CREATE) && 
+				($this->onePiece() || !$this->multiple_formats)) {
 			$this->piecesToFormat();
 		}
 	}
@@ -126,20 +127,25 @@ class PieceAllocationComponent extends Component {
 	protected function resizeOpenEdition($original, $change) {
 		// both increase and decrease will need to do queries
 		$this->Pieces = TableRegistry::get('Pieces');
-		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
+		$piece = $this->Pieces
+				->find('unassigned', ['edition_id' => $this->edition->id])
+				->toArray();
 
 		if ($change > 0) {
 			$this->increaseOpenEdition($change, $piece);
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
-			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+			$original_edition = $editions->get($this->edition->id, 
+				['contain' => ['Formats']]);
 
 			if (abs($change) > $original_edition->undisposed_piece_count ) {
-				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
+				$this->edition->errors('quantity', 'The quantity was set '
+						. 'lower than the allowed minimum');
 				return;
 			}
-			return $this->decreaseOpenEdition($change, $original_edition); // return [] deletions required
+			// return [] deletions required
+			return $this->decreaseOpenEdition($change, $original_edition); 
 		}
 	}
 	
@@ -156,17 +162,21 @@ class PieceAllocationComponent extends Component {
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
-			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+			$original_edition = $editions->get($this->edition->id, 
+				['contain' => ['Formats']]);
 
 			$pieces = TableRegistry::get('Pieces');
-			$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $this->edition->id]);
+			$highestNumberDisposed = $pieces->highestNumberDisposed(
+				['edition_id' => $this->edition->id]);
 			$edition_tail = $original_edition->quantity - $highestNumberDisposed;
 						
 			if (abs($change) > $edition_tail ) {
-				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
+				$this->edition->errors('quantity', 'The quantity was set '
+						. 'lower than the allowed minimum');
 				return;
 			}
-			return $this->decreaseLimitedEdition($change, $pieces, $original_edition); // return [] deletions required
+			// return [] deletions required
+			return $this->decreaseLimitedEdition($change, $pieces, $original_edition); 
 		}
 	}
 	
