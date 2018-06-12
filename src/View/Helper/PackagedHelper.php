@@ -2,7 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
-use App\View\Helper\EditionFactoryHelper;
+use App\View\Helper\EditionHelper;
 
 /**
  * PackagedHelper: rule based view/tool rendering for Portfolio and Publication

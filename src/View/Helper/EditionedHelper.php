@@ -1,7 +1,7 @@
 <?php
 namespace App\View\Helper;
 
-use App\View\Helper\EditionFactoryHelper;
+use App\View\Helper\EditionHelper;
 use Cake\ORM\TableRegistry;
 
 
@@ -13,7 +13,7 @@ use Cake\ORM\TableRegistry;
  *   
  * @author dondrake
  */
-class EditionedHelper extends EditionFactoryHelper {
+class EditionedHelper extends EditionHelper {
 
 	/**
 	 * Limited/Open edition level reporting on quantity, unassigned, and reassignable

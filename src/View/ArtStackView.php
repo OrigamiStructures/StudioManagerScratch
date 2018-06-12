@@ -2,6 +2,7 @@
 namespace App\View;
 
 use App\View\AppView;
+use App\Lib\EditionHelperFactory;
 
 
 /**
@@ -15,7 +16,7 @@ class ArtStackView extends AppView{
 		parent::initialize();
 		$this->loadHelper('DispositionTools');
         $this->loadHelper('ArtElement', ['className' => 'ArtStackElement']);
-		$this->loadHelper('EditionFactory');
+		$this->EditionFactory = new EditionHelperFactory($this);
 	}
 	
 }
