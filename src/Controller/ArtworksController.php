@@ -194,6 +194,7 @@ class ArtworksController extends ArtStackController
 		$result = $this->ArtworkStack->stackQuery();
 		
 		$this->set($artwork_variable, $result);
+		$this->render('complete_review');
     }
 	
 	/**
