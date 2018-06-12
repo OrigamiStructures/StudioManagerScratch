@@ -8,12 +8,6 @@
 			echo $this->element('Artwork/text') . "\n";
 			foreach ($artwork->editions as $edition) :
 
-				// CLONE CODE FROM ELEMENT EDITION/FULL
-				if (!is_null($edition->type)) { // CREATE doesn't know type
-					$factory = $this->loadHelper('EditionFactory');
-					$this->set('EditionHelper', $factory->load($edition->type));
-				}
-				
 				$this->set('edition', $edition);
 				echo $this->element('Edition/text') . "\n"; 
 				

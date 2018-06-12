@@ -10,7 +10,7 @@
  * an this would make the called method free to both prepare the variables 
  * and execute the rule logic instead of splitting those tasks.
  */
-$EditionHelper->pieceTable($edition);
+$this->EditionFactory->concrete($edition->type)->pieceTable($edition);
 $piece_element = $this->ArtElement->choosePieceTable($edition);
 if ($piece_element != 'empty') :
 ?>

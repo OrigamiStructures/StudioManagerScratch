@@ -23,8 +23,8 @@ $l = $this->InlineTools->inlineReviewRefine($q);
 							
 							<section class="disposition">
 								<?php $format->potential_pieces = $edition->unassigned_piece_count; ?>
-								<?= $EditionHelper->pieceSummary($format, $edition) ?>
-								<?= $EditionHelper->pieceTools($format, $edition) ?>
+								<?= $this->EditionFactory->concrete($edition->type)->pieceSummary($format, $edition) ?>
+								<?= $this->EditionFactory->concrete($edition->type)->pieceTools($format, $edition) ?>
 							</section>
 							<!-- END Element/Format/text.ctp -->
  

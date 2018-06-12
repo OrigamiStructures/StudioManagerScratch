@@ -16,10 +16,6 @@ foreach ($artworks as $artwork_index => $artwork) :
 <?php 
 foreach ($artwork->editions as $edition_index => $edition) :
 	$this->set(compact('edition_index', 'edition'));
-	if (!is_null($edition->type)) : // CREATE doesn't know type
-		$factory = $this->loadHelper('EditionFactory');
-		$this->set('EditionHelper', $factory->load($edition->type));
-	endif;
 	$edition_element = $this->ArtElement->choose('editionContent');
 ?>
 			<section class="edition">

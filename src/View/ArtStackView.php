@@ -15,6 +15,7 @@ class ArtStackView extends AppView{
 		parent::initialize();
 		$this->loadHelper('DispositionTools');
         $this->loadHelper('ArtElement', ['className' => 'ArtStackElement']);
+		$this->loadHelper('EditionFactory');
 	}
 	
 }
