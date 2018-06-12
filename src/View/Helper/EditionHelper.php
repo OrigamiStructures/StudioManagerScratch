@@ -5,17 +5,16 @@ use Cake\View\Helper;
 use App\Lib\PieceFilter;
 
 /**
- * FactoryHelper swaps Edition and Format helper subclasses onto a common call point
+ * Base class for different Edition/Format type output
  * 
  * Edition and Format display and form output follow a variety of rules 
  * depending on the Edition type. All the view and fieldset elements are 
  * standardized and they all call a single helper variable for service. So the 
  * underlying helper class must be managed so the correct rule set is used.
  * 
- * @todo The factory part of this class should be isolated from the default 
- *		method implementations. Then the new class with the implementations can be 
- *		used as the Parent class for all the sub-classes. Right now, this 
- *		factory class is serving as the Parent... crazy.
+ * The class Lib\EditionHelperFactory provides access to the proper flavor 
+ * of helper based on the edition type
+ * 
  * @author dondrake
  */
 class EditionHelper extends Helper {
