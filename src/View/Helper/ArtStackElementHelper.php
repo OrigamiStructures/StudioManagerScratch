@@ -2,6 +2,8 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use CakeDC\Users\Exception\BadConfigurationException;
+use BadMethodCallException;
 
 /**
  * ArtStackElement encapsulates rendering rules to select output elements for the view
@@ -86,9 +88,8 @@ class ArtStackElementHelper extends Helper {
 	
 	protected function artworkContentRule() {
 		switch ($this->SystemState->now()) {
-			case ARTWORK_REVIEW :
-			case PIECE_RENUMBER :
-					$element = 'Artwork/describe';
+			case ARTWORK_CREATE_UNIQUE :
+				$element = 'Artwork/create_unique';
 				break;
 			case ARTWORK_CREATE :
 			case ARTWORK_REFINE :
@@ -97,13 +98,10 @@ class ArtStackElementHelper extends Helper {
 				// Always fieldset if this is the target
 				if ($this->SystemState->controller() === 'artworks') {
 					$element = 'Artwork/fieldset';
-				} else {
-					$element = 'Artwork/describe';
+					break;
 				}
-				break;
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Artwork/create_unique';
-				break;
+			case ARTWORK_REVIEW :
+			case PIECE_RENUMBER :
 			default :
 				$element = 'Artwork/describe';
 		}
@@ -154,7 +152,7 @@ class ArtStackElementHelper extends Helper {
 				}
 				break;
 			default :
-				$element = 'Artwork/describe';
+				$element = 'Edition/describe';
 		}
 		return $element;
 	}
