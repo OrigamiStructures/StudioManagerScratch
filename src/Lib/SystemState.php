@@ -285,10 +285,30 @@ class SystemState implements EventListenerInterface {
 	}
 	
 	/**
-	 * Return one of the URL query arguements
+	 * Is an ID'd record referenced in the URL arguments?
+	 * 
+	 * SystemState::hasFocus('artwork', 641)
+	 * SystemState::hasFocus('member', 1215)
 	 * 
 	 * @param string $name
-	 * @return string
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function hasFocus($name, $value) {
+		$result = $this->request->query($name);
+		if (!is_null($result)) {
+			return $result == $value;
+		}
+		return FALSE;
+	}
+	
+	/**
+	 * Return one of the URL query arguements
+	 * 
+	 * If it doesn't exist, get array of all args
+	 * 
+	 * @param string $name
+	 * @return string|array
 	 */
 	public function queryArg($name = NULL) {
 		if (!is_null($name)) {
