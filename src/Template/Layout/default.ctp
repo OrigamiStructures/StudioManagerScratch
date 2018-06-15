@@ -20,6 +20,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
     <?= $this->fetch('meta') ?>
 	
 	<?= $this->Html->css('artstack-response'); ?>
+    <?= $this->Html->css('glyphicon.css') ?>
 <!-- 	
 	<?= $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); ?> 
 	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.js'); ?> 
@@ -29,7 +30,6 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 
 	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
     <?= $this->Html->css('app.css') ?>
-    <?= $this->Html->css('glyphicon.css') ?>
     <?= $this->Html->css('prime.css') ?>
     <?= $this->fetch('css') ?>
 -->

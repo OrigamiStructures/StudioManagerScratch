@@ -324,9 +324,9 @@ define('PIECE_SPLIT_RETURN_NEW', 'new');
 define('PIECE_SPLIT_RETURN_BOTH', 'both');
 
 // <editor-fold defaultstate="collapsed" desc="FONT ICONS">
-define('ICON_REVIEW', 'fi-eye');
-define('ICON_REFINE', 'fi-pencil');
-define('ICON_REMOVE', 'fi-trash');
+define('ICON_REVIEW', 'fi eye');
+define('ICON_REFINE', 'fi pencil');
+define('ICON_REMOVE', 'fi trash');
 
 define('ICON_MEMBER_TYPE_INSTITUTION', 'fi-results-demographics');
 define('ICON_MEMBER_TYPE_PERSON', 'fi-torsos-female-male');
