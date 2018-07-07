@@ -2,7 +2,7 @@
 $edition = $providers['edition'];
 $artwork = $providers['edition']['artwork'];
 $this->set(compact('edition', 'artwork'));
-$this->loadHelper('EditionFactory');
+$this->loadHelper('Edition');
 
 // from Edition/text.ctp
 $q = [
