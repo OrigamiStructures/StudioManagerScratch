@@ -28,6 +28,8 @@
 .fi.eye:before { content: "\f147"; }
 .fi.pencil:before { content: "\f194"}
 .fi.trash:before { content: "\f204" }
+.fi.wrench:before { content: "\f215"; }
+.fi.cog:before { content: "\f123"; }
 
 /* small up */ 
 @media only screen { 

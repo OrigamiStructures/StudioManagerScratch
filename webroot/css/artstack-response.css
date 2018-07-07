@@ -31,6 +31,12 @@ $badge-font-size: 0.6rem;*/
 .fi.trash:before {
   content: ""; }
 
+.fi.wrench:before {
+  content: "\f215"; }
+
+.fi.cog:before {
+  content: "\f123"; }
+
 /* small up */
 /* small screen only */
 /* medium screen up */

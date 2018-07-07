@@ -24,7 +24,7 @@ class InlineToolsHelper extends Helper {
      * @return string
      */
     public function reviewLink($url) {
-        return $this->Html->link($this->icon(ICON_REVIEW, 'medium'), $url + ['action' => 'review'], ['escape' => FALSE]);
+        return $this->Html->link($this->icon(ICON_COG, 'medium'), $url + ['action' => 'review'], ['escape' => FALSE]);
     }
     
     /**
