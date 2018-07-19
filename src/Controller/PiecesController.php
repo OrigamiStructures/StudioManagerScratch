@@ -11,6 +11,7 @@ use App\Lib\RenumberRequest;
 use App\Lib\RenumberRequests;
 use App\Lib\RenumberMessaging;
 use Cake\Network\Exception\BadRequestException;
+use App\Controller\Component\LayersComponent;
 
 /**
  * Pieces Controller
@@ -20,7 +21,7 @@ use Cake\Network\Exception\BadRequestException;
 class PiecesController extends AppController
 {
 	
-	public $components = ['ArtworkStack'];
+	public $components = ['ArtworkStack', 'Layers'];
 	
 	/**
 	 * Before filter
@@ -287,7 +288,8 @@ class PiecesController extends AppController
 		 * $messagePackage is a RenumberMessaging object
 		*/
 //		osd($pieces->toArray(), 'pieces');
-		$this->set(compact(['providers', 'pieces', 'messagePackage']));
+		$this->set('elements', $this->Layers->setElements());
+		$this->set(compact(['providers', 'pieces', 'messagePackage', 'elements']));
 	}
 	
 	/**

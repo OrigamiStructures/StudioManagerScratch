@@ -8,6 +8,7 @@ use App\Model\Table\PiecesTable;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Controller\ArtStackController;
+use App\Controller\Component\LayersComponent;
 
 /**
  * Artworks Controller
@@ -19,11 +20,12 @@ class ArtworksController extends ArtStackController
 	
 	use ArtReviewTrait;
 
-//	public $components = ['ArtworkStack'];
+	public $components = ['ArtworkStack', 'LayersElement'];
 	
 	public function initialize() {
 		parent::initialize();
 		$this->loadComponent('ArtworkStack');
+		$this->loadComponent('LayersElement');
 	}
 	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
@@ -194,6 +196,7 @@ class ArtworksController extends ArtStackController
 		$result = $this->ArtworkStack->stackQuery();
 		
 		$this->set($artwork_variable, $result);
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('complete_review');
     }
 	
@@ -229,8 +232,7 @@ class ArtworksController extends ArtStackController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-//		$this->set('element_management', $element_management);
-
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('review');
 	}
 	
@@ -264,6 +266,7 @@ class ArtworksController extends ArtStackController
         }
 		$this->ArtworkStack->layerChoiceLists();
         
+		$this->set('elements', $this->LayerElement->setElements());
 		$this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
 		$this->render('review');
@@ -278,6 +281,7 @@ class ArtworksController extends ArtStackController
 	public function createUnique() {
 		$this->request->data += ['user_id' => $this->SystemState->artistId()];
 		$artwork = $this->create();
+		$this->set('elements', $this->LayerElement->setElements());
 		$this->render('review');
 	}
 

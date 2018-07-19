@@ -9,6 +9,7 @@ use App\Form\AssignmentForm;
 use Cake\View\Form\FormContext;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Controller\ArtStackController;
+use App\Controller\Component\LayersComponent;
 
 /**
  * Editions Controller
@@ -20,12 +21,12 @@ class EditionsController extends ArtStackController
 	
 	use ArtReviewTrait;
 	
-	public $components = ['ArtworkStack'];
+	public $components = ['ArtworkStack', 'Layers'];
 	
 	
 	public function initialize() {		
 		parent::initialize();
-		$this->loadComponent('ArtworkStack');
+//		$this->loadComponent('ArtworkStack');
 	}
 
 // <editor-fold defaultstate="collapsed" desc="BASIC CRUD">
@@ -144,6 +145,7 @@ class EditionsController extends ArtStackController
 		$artwork = $this->ArtworkStack->stackQuery();
 		
 		$this->set('artwork', $artwork);
+		$this->set('elements', $this->LayerElement->setElements());
 		$this->render('/Artworks/review');
 	}
 
@@ -183,6 +185,7 @@ class EditionsController extends ArtStackController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
+		$this->set('elements', $this->LayerElement->setElements());
 		$this->render('/Artworks/review');
 	}
 	
@@ -217,7 +220,8 @@ class EditionsController extends ArtStackController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->render('/Artworks/review');		
+		$this->set('elements', $this->LayerElement->setElements());
+		$this->render('/Artworks/review');
 	}
 	
 	public function assign() {
@@ -261,6 +265,7 @@ class EditionsController extends ArtStackController
 		$this->set(compact(array_keys($data)));	
 		$this->set('errors', $errors);
 		$this->set('assign', $assign);
+		$this->set('elements', $this->LayerElement->setElements());
 	}
 	
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
