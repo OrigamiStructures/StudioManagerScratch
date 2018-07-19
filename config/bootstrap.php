@@ -341,3 +341,15 @@ define('REJECTION_DONT_RECORD', FALSE);
 
 define('CLEAR', TRUE);
 
+// <editor-fold defaultstate="collapsed" desc="TEMPLATE LAYERS">
+/**
+ * Template layer element names are sent to the View in a 
+ * simple array. To make the elements easy to access without 
+ * resorting to an associative array, I'm using constants 
+ * to stand in for the index numbers.
+ */
+define('WRAPPER_LAYER', 0);
+define('ARTWORK_LAYER', 1);
+define('EDITION_LAYER', 2);
+define('FORMAT_LAYER', 3);
+// </editor-fold>
