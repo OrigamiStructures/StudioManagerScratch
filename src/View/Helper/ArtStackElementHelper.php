@@ -193,7 +193,7 @@ class ArtStackElementHelper extends Helper {
 				$element = 'Format/create_unique';
 				break;
 			default :
-				$element = 'Artwork/describe';
+				$element = 'Format/describe';
 		}
 		return $element;
 	}
