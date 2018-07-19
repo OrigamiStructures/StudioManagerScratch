@@ -31,3 +31,10 @@ Arrived
 	<p class="c5">content 5</p>
 	<div class="c2"><p>thing 2.1</p><p>thing 2.2</p></div>
 </div> 
+
+
+
+<?php
+osd($stuff[0]());
+osd($stuff[1]('input val'));
+?>

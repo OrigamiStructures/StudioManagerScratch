@@ -150,6 +150,20 @@ class AppController extends Controller
 				3 => ['new' => '2', 'old' => 3],
 			];
 		extract(array_shift($ar));
+		
+		
+		$stuff = [
+			function() {
+				return $this->SystemState->queryArg();
+			},
+			function($val) {
+				return ucwords($val);
+			}
+		];
+		$this->set('stuff', $stuff);
+		
+		
+		
 //		osd($new);
 //		osd($old);
 ////		die;
