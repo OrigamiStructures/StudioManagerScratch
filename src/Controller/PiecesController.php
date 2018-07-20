@@ -133,8 +133,6 @@ class PiecesController extends AppController
 		$this->set('_serialize', ['piece']);
 	}
 
-// </editor-fold>
-	
 	/**
      * Delete method
      *
@@ -154,8 +152,10 @@ class PiecesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function review() {
-		
+// </editor-fold>
+	
+ 	public function review() {
+
 	}
 	
 	/**
