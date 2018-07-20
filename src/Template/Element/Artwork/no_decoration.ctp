@@ -7,11 +7,12 @@
  * 
  * 'action' attribute is the one difference between the two form versions.
  */
-$artworks_element = $this->ArtElement->choose('artworksContent');
+//$artworks_element = $this->ArtElement->choose('artworksContent');
+//$artworks_element = $elements[ARTWORK_LAYER]($artwork);
 ?>
 
 	<!-- Template/Artwork/no_decoration.ctp -->
 	
-	<?= $this->element($artworks_element);?>
+	<?= $this->element($elements[ARTWORK_LAYER]($artwork));?>
 	
 	<!-- END Template/Artwork/no_decoration.ctp -->

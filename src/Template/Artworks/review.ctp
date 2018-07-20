@@ -1,6 +1,7 @@
 <!-- Template/Artwork/review.ctp -->
 <?php 
-$decorated_element = $this->ArtElement->choose('contentDecoration');
+//$decorated_element = $this->ArtElement->choose('contentDecoration');
+//$decorated_element = $elements[WRAPPER_LAYER]();
 
 /**
  * This renders the whole enchilada for the 9 major pages (defined above). 
@@ -9,7 +10,7 @@ $decorated_element = $this->ArtElement->choose('contentDecoration');
 ?>
 <div class="artworks">
 	
-	<?= $this->element($decorated_element);?>
+	<?= $this->element($elements[WRAPPER_LAYER]());?>
 	
 </div>
 

@@ -12,11 +12,13 @@
  * This helper chooses which elements to use but has nothing to do with 
  * more detailed output of specific data.
  */
-$edition_element = $this->ArtElement->choose('editionContent');
+//$edition_element = $this->ArtElement->choose('editionContent');
+//$edition_element = $elements[EDITION_LAYER];
+
 ?>
 			
 			<section class="edition">
-				<?= $this->element("$edition_element"); ?>
+				<?= $this->element($elements[EDITION_LAYER]($edition)); ?>
 				
 				<div class="formats">
 					<?php $this->set('formats', $edition->formats); ?>
