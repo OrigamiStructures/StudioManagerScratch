@@ -12,6 +12,7 @@ use App\Model\Table\UsersTable;
 use App\Model\Entity\User;
 use Cake\ORM\TableRegistry;
 use Cake\Cache\Cache;
+use Cake\ORM\Entity;
 
 /**
  * Description of SystemState
@@ -289,12 +290,19 @@ class SystemState implements EventListenerInterface {
 	 * 
 	 * SystemState::hasFocus('artwork', 641)
 	 * SystemState::hasFocus('member', 1215)
+	 * or
+	 * SystemState::hasFocus($artwork) // Artwork entity
+	 * SystemState::hasFocus($format) // Format entity
 	 * 
-	 * @param string $name
+	 * @param entity|string $name
 	 * @param string $value
 	 * @return boolean
 	 */
-	public function hasFocus($name, $value) {
+	public function hasFocus($name, $value = NULL) {
+		if (is_object($name) && is_a($name, 'Entity')) {
+			$value = $name->id;
+			$name = lcfirst(array_pop(explode('\\',get_class($name))));
+		} 
 		$result = $this->request->query($name);
 		if (!is_null($result)) {
 			return $result == $value;
