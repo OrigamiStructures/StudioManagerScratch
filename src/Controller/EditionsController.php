@@ -145,7 +145,7 @@ class EditionsController extends ArtStackController
 		$artwork = $this->ArtworkStack->stackQuery();
 		
 		$this->set('artwork', $artwork);
-		$this->set('elements', $this->LayerElement->setElements());
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
 
@@ -185,7 +185,7 @@ class EditionsController extends ArtStackController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->set('elements', $this->LayerElement->setElements());
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
 	
@@ -220,7 +220,7 @@ class EditionsController extends ArtStackController
 		
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('artwork', $artwork);
-		$this->set('elements', $this->LayerElement->setElements());
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
 	
@@ -265,7 +265,7 @@ class EditionsController extends ArtStackController
 		$this->set(compact(array_keys($data)));	
 		$this->set('errors', $errors);
 		$this->set('assign', $assign);
-		$this->set('elements', $this->LayerElement->setElements());
+		$this->set('elements', $this->Layers->setElements());
 	}
 	
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 

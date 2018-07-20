@@ -20,12 +20,12 @@ class ArtworksController extends ArtStackController
 	
 	use ArtReviewTrait;
 
-	public $components = ['ArtworkStack', 'LayersElement'];
+	public $components = ['ArtworkStack', 'Layers'];
 	
 	public function initialize() {
 		parent::initialize();
 		$this->loadComponent('ArtworkStack');
-		$this->loadComponent('LayersElement');
+//		$this->loadComponent('Layers');
 	}
 	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
