@@ -139,15 +139,15 @@ class ArtworkStackComponent extends Component {
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
-				return $this->pruneEntities($artwork);
+				$artwork = $this->pruneEntities($artwork);
 			} else if ($this->SystemState->is(ARTWORK_REFINE)) {
 				// make the nodes to edit be at the top. show others for context
-				return $this->filterEntities($artwork); // TO BE WRITTEN
+				$artwork = $this->filterEntities($artwork); // TO BE WRITTEN
 			} else if ($this->SystemState->is(ARTWORK_REVIEW)) {
 				// filter to the specific case the user requested
-				return $this->filterEntities($artwork);
+//				$artwork = $this->filterEntities($artwork);
 			}
-			return $artwork;
+			return [$artwork];
 		}
 	}
 	

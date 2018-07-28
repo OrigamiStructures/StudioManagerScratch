@@ -132,7 +132,7 @@ class FormatsController extends ArtStackController
 	 */
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
-		$this->set('artwork', $artwork);
+		$this->set('artworks', $artwork);
 		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}

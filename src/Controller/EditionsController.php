@@ -144,7 +144,7 @@ class EditionsController extends ArtStackController
 		
 		$artwork = $this->ArtworkStack->stackQuery();
 		
-		$this->set('artwork', $artwork);
+		$this->set('artworks', $artwork);
 		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}

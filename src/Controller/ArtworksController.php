@@ -185,19 +185,16 @@ class ArtworksController extends ArtStackController
 	 */
     public function review() {
 		if ($this->SystemState->urlArgIsKnown('artwork')) {
-			$artwork_variable = 'artwork';
 			$this->_try_flatness_redirect(
 				$this->SystemState->queryArg('artwork'), 
 				$this->SystemState->queryArg('edition'));
-		} else {
-			$artwork_variable = 'artworks';
 		}
 
 		$result = $this->ArtworkStack->stackQuery();
 		
-		$this->set($artwork_variable, $result);
+		$this->set('artworks', $result);
 		$this->set('elements', $this->Layers->setElements());
-		$this->render('complete_review');
+		$this->render('review');
     }
 	
 	/**
