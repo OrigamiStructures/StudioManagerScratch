@@ -13,6 +13,6 @@
 
 	<!-- Template/Artwork/no_decoration.ctp -->
 	
-	<?= $this->element($elements[ARTWORK_LAYER]($artwork));?>
+	<?= $this->element('Artwork/many');?>
 	
 	<!-- END Template/Artwork/no_decoration.ctp -->
