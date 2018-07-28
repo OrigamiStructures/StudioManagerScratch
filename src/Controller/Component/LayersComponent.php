@@ -49,6 +49,12 @@ use App\Model\Entity\Format;
  */
 class LayersComponent extends Component {
 	
+    public function initialize(array $config) 
+	{
+		$this->controller = $this->_registry->getController();
+		$this->SystemState = $this->controller->SystemState;
+	}
+
 	/**
 	 * The single call point for all served actions 
 	 * 
