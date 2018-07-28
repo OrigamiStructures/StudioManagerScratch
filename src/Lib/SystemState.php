@@ -299,9 +299,10 @@ class SystemState implements EventListenerInterface {
 	 * @return boolean
 	 */
 	public function hasFocus($name, $value = NULL) {
-		if (is_object($name) && is_a($name, 'Entity')) {
+		if (is_object($name)) {
 			$value = $name->id;
-			$name = lcfirst(array_pop(explode('\\',get_class($name))));
+			$class = explode('\\',get_class($name));
+			$name = lcfirst(array_pop($class));
 		} 
 		$result = $this->request->query($name);
 		if (!is_null($result)) {
