@@ -104,7 +104,7 @@ section.artwork, section.format {
 	  grid-area: descriptions;
   } 
   
-  div.editions, div.formats {
+  div.editions, div.formats, section.format.summary {
 	  grid-area: children;
   }
   
