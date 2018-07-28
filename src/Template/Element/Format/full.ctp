@@ -7,7 +7,8 @@
  *	with the piece table factory method instead.
  * 
  */
-$class = ($SystemState->urlArgIsKnown('format')) ? ' focus' : '';
+//osd($format);die;
+$class = ($SystemState->hasFocus($format)) ? ' focus' : ' summary';
 ?>
 						<!-- Element/Format/full.ctp -->
 						<section class="format<?= $class; ?>">

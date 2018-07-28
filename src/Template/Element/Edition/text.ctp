@@ -18,7 +18,8 @@ $l = $this->InlineTools->inlineReviewRefine($q);
  */
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 ?>
-					<?= $this->Form->input("editions.$edition_index.id", ['type' => 'hidden', 'value' => $edition->id]); ?>
+					<?= $this->Form->input("editions.$edition_index.id", [
+						'type' => 'hidden', 'value' => $edition->id]); ?>
 
 					<?php
 					if (!empty($edition->series_id)) {
@@ -28,9 +29,7 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 
 					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
 					<section class="assignment">
-<?php if ($this->SystemState->hasFocus('edition', $edition->id)) : ?>
 						<?= $this->EditionFactory->concrete($edition->type)->pieceSummary($edition); ?>
-<?php endif; ?>
 						<?= $this->EditionFactory->concrete($edition->type)->pieceTools($edition); ?>
 					</section>
 <!-- END Element/Edition/text.ctp -->
