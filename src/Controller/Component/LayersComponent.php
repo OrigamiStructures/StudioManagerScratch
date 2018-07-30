@@ -86,8 +86,8 @@ class LayersComponent extends Component {
 				return $this->SystemState->hasFocus($artwork) ? 
 					'Artwork/describe' : 'Artwork/summary';
 			},
-			'Edition/describe',
-			'Format/describe',
+			'Edition/summary',
+			'Format/summary',
 		];
 	}
 	

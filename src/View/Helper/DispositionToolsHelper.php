@@ -14,7 +14,7 @@ class DispositionToolsHelper extends Helper {
 	
 	use ValidationErrors;
 	
-	public $helpers = ['Html', 'Form', 'InlineTools'];
+	public $helpers = ['Html', 'Form', 'ArtStackTools'];
 		
 	protected $_disposition;
 	
@@ -92,7 +92,7 @@ class DispositionToolsHelper extends Helper {
                 '?' => [
                     'address' => $address->id,
                 ]];
-            $controls = $this->InlineTools->inlineReviewDelete($review_url, $remove_url);
+            $controls = $this->ArtStackTools->inlineReviewDelete($review_url, $remove_url);
 			$label = $this->Html->tag('p', $controls . $address->address_line);
 		} else {
 			$label = $this->Html->link($address->address_line, [

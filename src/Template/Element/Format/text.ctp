@@ -7,7 +7,7 @@ $q = [
 		'edition' => $edition->id,
 		'format' => $format->id,
 	]];
-$l = $this->InlineTools->inlineReviewRefine($q);
+$l = $this->ArtStackTools->inlineReviewRefine($q);
 ?>
 <?php
 /**

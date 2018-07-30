@@ -8,7 +8,7 @@ $q = [
 	]];
 ?>
 <p>
-    <?=$this->InlineTools->inlineReviewRefine($q); ?>
+    <?=$this->ArtStackTools->inlineReviewRefine($q); ?>
     <?=$this->MemberView->identifier($member); ?>
 </p>
 <!-- END Element/Member/text.ctp -->

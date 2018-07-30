@@ -11,7 +11,7 @@ $q = [
 		'artwork' => $artwork->id,
 		'edition' => $edition->id,
 	]];
-$l = $this->InlineTools->inlineReviewRefine($q);
+$l = $this->ArtStackTools->inlineReviewRefine($q);
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 
 ?>

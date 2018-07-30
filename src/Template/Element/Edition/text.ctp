@@ -5,7 +5,7 @@ $q = [
 		'artwork' => $artwork->id,
 		'edition' => $edition->id,
 	]];
-$l = $this->InlineTools->inlineReviewRefine($q);
+$l = $this->ArtStackTools->inlineReviewRefine($q);
 ?>
 <!-- Element/Edition/text.ctp -->
 <?php
