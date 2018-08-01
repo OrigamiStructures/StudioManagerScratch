@@ -1,65 +1,37 @@
 <?php
-
-/*
- * Copyright 2015 Origami Structures
- */
-
 namespace App\View\Helper;
 
-use Cake\View\Helper;
-use Cake\View\Helper\HtmlHelper;
+use App\View\Helper\ToolLinkHelper;
 
 /**
- * CakePHP ArtworkReviewHelper
+ * ArtworkReviewHelper returns focused action links for some artwork layer
+ * 
+ * Artworks are organized into Artwork/Edition/Format/Piece layers. The user 
+ * may want to take action on any specific node of this stack. During the 
+ * nested loop process of rendering, the current Entity for a node gets 
+ * moved to a standard variable; $artwork, $edition, $format, piece. 
+ * So, given an appropriate layer pointer, the helper can discover IDs for 
+ * the entities and construct links that can target specific nodes and 
+ * the paths to those nodes.
+ * 
+ * These facts allow this Helper to encapsulate all the processes 
+ * to generate a variety of tool links. The UX may at some point require 
+ * 'flavors' of links for different situations, but for now, all the tool 
+ * sets are returned as inline icon sets.
+ * 
  * @author jasont
+ * @author dondrake
  */
-class ArtStackToolsHelper extends Helper {
-    
-    public $helpers = ['Html'];
-    
-    /**
-     * Return the review link based upon provided url array
-     * 
-     * @param array $url
-     * @return string
-     */
-    public function reviewLink($url) {
-        return $this->Html->link($this->icon(ICON_COG, 'medium'), $url + ['action' => 'review'], ['escape' => FALSE]);
-    }
-    
-    /**
-     * Return the refine link based upon provided url array
-     * 
-     * @param array $url
-     * @return string
-     */
-    public function refineLink($url) {
-        return $this->Html->link($this->icon(ICON_REFINE, 'medium'), $url + ['action' => 'refine'], ['escape' => FALSE]);
-    }
-    
-    /**
-     * Return the delete link based upon provided url array
-     * 
-     * @param array $url
-     * @return string
-     */
-    public function removeLink($url) {
-        return $this->Html->link($this->icon(ICON_REMOVE, 'medium'), $url + ['action' => 'remove'], ['escape' => FALSE]);
-    }
-    
-    /**
-     * Return Foundation icons with size
-     * 
-     * @param string $icon
-     * @param string $size, 'small', 'medium', or 'large'
-     * @return string
-     */
-    public function icon($icon, $size = 'small') {
-        if(!in_array($size, ['small', 'medium', 'large'])){
-            $size = 'small';
-        }
-        return $this->Html->tag('i','',['class' => "$icon $size"]);
-    }
+class ArtStackToolsHelper extends ToolLinkHelper {
+	
+	protected $alias = 'ArtStackTools';
+	
+	/**
+	 * The list of layers that can get targeted tools
+	 *
+	 * @var array
+	 */
+	protected $_layers = ['artwork', 'edition', 'format', 'piece'];
     
     /**
      * Returns an inline review/refine control set
