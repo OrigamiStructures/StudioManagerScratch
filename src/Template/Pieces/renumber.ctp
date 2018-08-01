@@ -5,13 +5,6 @@ $this->set(compact('edition', 'artwork'));
 $this->loadHelper('Edition');
 
 // from Edition/text.ctp
-$q = [
-	'controller' => 'editions', 
-	'?' => [
-		'artwork' => $artwork->id,
-		'edition' => $edition->id,
-	]];
-$l = $this->ArtStackTools->inlineReviewRefine($q);
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 
 ?>
@@ -33,7 +26,9 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 					}
 					?>
 
-					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
+					<?= $this->Html->tag('h2', 
+							$this->ArtStackTools->links('edition', ['review', 'refine']) . 
+							$edition->displayTitle); ?>
 					<!--END Edition/text.ctp-->
 				</div>
 

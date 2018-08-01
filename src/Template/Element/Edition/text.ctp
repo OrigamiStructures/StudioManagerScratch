@@ -1,12 +1,3 @@
-<?php
-$q = [
-	'controller' => 'editions', 
-	'?' => [
-		'artwork' => $artwork->id,
-		'edition' => $edition->id,
-	]];
-$l = $this->ArtStackTools->inlineReviewRefine($q);
-?>
 <!-- Element/Edition/text.ctp -->
 <?php
 /**
@@ -27,7 +18,9 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 					}
 					?>
 
-					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
+					<?= $this->Html->tag('h2', 
+						$this->ArtStackTools->links('edition', ['refine', 'remove']) . 
+						"$edition->displayTitle"); ?>
 					<section class="assignment">
 						<?= $this->EditionFactory->concrete($edition->type)->pieceSummary($edition); ?>
 						<?= $this->EditionFactory->concrete($edition->type)->pieceTools($edition); ?>
