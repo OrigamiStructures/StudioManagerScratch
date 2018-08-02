@@ -169,7 +169,7 @@ class MembersController extends AppController
      * 
      * @param string $entity_type 'contacts', 'addresses', or 'groups'
      */
-    public function addElement($entity_type) {
+    public function addNode($entity_type) {
         if(!in_array($entity_type, ['contacts', 'addresses', 'groups'])){
             throw new \BadMethodCallException('Entity type must be either contacts or addresses');
         }
