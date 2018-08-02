@@ -116,12 +116,13 @@ class GroupsTable extends AppTable
 	 * @param integer $count How many contacts are needed
 	 * @param array $default [column => value] to control what data the pieces have
 	 * @param integer $start The index (and number) of the first of the ($count) pieces
+	 * @return array An array of new entity column-value arrays
 	 */
 	public function spawn($count, $default = [], $start = 0) {
 		$columns = $default + [
 			'id' => NULL,
-            'active' => 1,
 			'user_id' => $this->SystemState->artistId(),
+            'active' => 1,
 		];
         
         return array_fill($start, $count, $columns);
