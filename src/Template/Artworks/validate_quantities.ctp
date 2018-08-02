@@ -1,6 +1,6 @@
 <?php
 $editing = FALSE;
-$this->loadHelper('ArtElement',['className' => 'ArtStackElement']);
+$this->loadHelper('ArtElement',['className' => 'ArtStackElement']); //This Helper class is being deleted.
 $this->set(compact('editing'));
 function tf($value) {
 	if (is_null($value)) {
