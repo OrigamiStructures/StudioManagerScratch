@@ -56,7 +56,7 @@ class ArtStackElementHelper extends Helper {
 			
 		} else {
 			$first_class = get_class($entity);
-			$second_class = !is_null($edition) ? get_class($edition) : NULL ;
+			$second_class = !is_null($edition) ? get_class($edition) : 'NULL' ;
 			
 			throw new \BadMethodCallException(
 					"Method requires an entity of type Edition or Format, or two entities of types Format and Edition. "
