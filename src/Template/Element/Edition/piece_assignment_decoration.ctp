@@ -1,8 +1,10 @@
-<!-- Editions/assign.ctp -->
+<!-- Element/Edition/piece_assignment_decoration.ctp -->
 <?php
 $helper = $this->loadHelper('Assign');
 $edition = $providers['edition'];
-$this->set(compact('edition', 'helper'));
+$edition_index = $edition->index;
+$this->set(compact('edition', 'helper', 'artwork'));
+$edition_index = isset($edition_index) ? $edition_index : 0 ; 
 ?>
 
   <div class="row">
@@ -20,7 +22,7 @@ $this->set(compact('edition', 'helper'));
 			
 		</div>
 	</div>
-	<?= $this->Form->end(); ?>
+
 
   </div>
 	<div class="row">
@@ -28,22 +30,8 @@ $this->set(compact('edition', 'helper'));
 	<?= $this->element('Pieces/overview_table', ['caption' => 'Pieces in this edition']); ?>
 		</div>
 	</div>
-<?php
 
-//echo $this->element('Pieces/overview_table', ['caption' => 'Pieces in this edition']);
+<?= $this->element('Artwork/full');?>
+<?= $this->Form->end(); ?>		
 
-/**
- * MAKE BREADCRUMBS FOR PAGE
- */
-$args = $SystemState->queryArg(); 
-$q = [];
-foreach (['artwork', 'edition', 'format'] as $crumb) {
-	if (array_key_exists($crumb, $args)) {
-		$q = $q +[$crumb => $args[$crumb]];
-		$this->Html->addCrumb(ucwords($crumb), ['action' => 'review', '?' => $q]);
-		$this->Html->addCrumb('Edit', ['action' => 'refine', '?' => $q]);
-	}
-}
-?>
-
-<!-- END Editions/assign.ctp -->
+<!-- END Element/Edition/piece_assignment_decoration.ctp -->

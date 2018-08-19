@@ -234,7 +234,7 @@ class EditionsController extends ArtStackController
 		
 		$EditionStack = $this->loadComponent('EditionStack');
 		$data = $EditionStack->stackQuery();
-		extract($data); // providers, pieces
+		extract($data); // providers, pieces, artwork
 		
 		$assignment = new AssignmentForm($data['providers']);
 		$assign = new FormContext($this->request, $this->request->data);
@@ -261,11 +261,11 @@ class EditionsController extends ArtStackController
 				$errors= $assignment->errors();
 			}
         }
-			
 		$this->set(compact(array_keys($data)));	
 		$this->set('errors', $errors);
 		$this->set('assign', $assign);
 		$this->set('elements', $this->Layers->setElements());
+		$this->render('/Artworks/review');
 	}
 	
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 

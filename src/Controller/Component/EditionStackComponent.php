@@ -90,6 +90,7 @@ class EditionStackComponent extends Component {
 				->where($edition_condition)
 				->contain('Artworks')
 				->toArray()[0];
+		$artwork = $edition->artwork;
 		$unassigned = $Pieces->find('unassigned', $piece_condition);
 		$edition->unassigned = $unassigned->toArray();
 		
@@ -100,13 +101,19 @@ class EditionStackComponent extends Component {
 		});
 
 		$providers = ['edition' => $edition] + $formats->toArray();
+		$artwork->editions = [$edition];
+		$artwork->editions[0]->formats = $formats;
 		
 		// this may need ->order() later for piece-table reporting of open editions
 		$pieces = $Pieces->find()
 				->where($piece_condition)
 				->contain('Dispositions')
 				->order('Pieces.number'); 
-		$stack = ['providers' => $providers, 'pieces' => ($pieces->toArray())];
+		$stack = [
+			'providers' => $providers, 
+			'pieces' => ($pieces->toArray()),
+			'artwork' => $artwork,
+			];
 		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
 		}
 		

@@ -158,7 +158,7 @@ class LayersComponent extends Component {
 	
 	protected function editionsAssign() {
 		return [
-			'Artwork/form_decoration',
+			'Edition/piece_assignment_decoration',
 			'Artwork/describe',
 			'Edition/describe',
 			'Format/describe',
