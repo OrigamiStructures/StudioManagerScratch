@@ -18,8 +18,12 @@ use CakeDC\Users\Exception\BadConfigurationException;
  * are trigged by change to Editions->quantity. Both piece increase and decrease 
  * are performed according to set rules and those rules are defined in this class.
  * 
- * Piece assignment and reassignment are user directed processes and are handled 
- * in a separte class that responds to spefic user assignment requests.
+ * Piece assignment and reassignment are user directed processes that 
+ * move pieces between an Edition layer and its Format layer(s). 
+ * That process is handled in the PieceAssignmentComponent.
+ * 
+ * @todo Make this handle custom numbering schemes (see notes in Range)
+ * @todo Make this handle user-defined finite numbering schemes (see notes in Range)
  * 
  * @author dondrake
  */

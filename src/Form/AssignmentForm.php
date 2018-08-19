@@ -7,7 +7,19 @@ use Cake\Validation\Validator;
 use App\Lib\SystemState;
 use Cake\View\Form\FormContext;
 use Cake\Collection\Collection;
+use App\Lib\Range;
 
+/**
+ * @todo Has the PieceAssignmentComponent been abandoned as a concept?
+ * PieceAssignmentComponent was stubbed to centralize assingment rules. But 
+ * this single form currently takes care of it all. Is this ok? Should the 
+ * Component become a Lib class? 
+ * Superficially, since only the assign() method allows these kinds of edits, 
+ * and this Form class oversees all the associated logic, this may be the 
+ * correct place to localize the logic. But if later streamlined piece movement 
+ * is allowed, like through an ajax process, a Lib class may be the right choice.
+ * @todo Consider custom numbering schemes (see notes in App\Lig\Range)
+ */
 class AssignmentForm extends Form
 {
 	public $_providers;
@@ -111,6 +123,12 @@ class AssignmentForm extends Form
 	/**
 	 * Insure the range describing numbered pieces to move is valid
 	 * 
+	 * @todo Shouldn't App\Lib\Range do this? Yes, the method has been 
+	 *		created as a static function on that class but the one use is 
+	 *		as a callable ('rule' => [$this, 'rangePatternValidation']) 
+	 *		earlier in this class so I'll have to be make sure that I can 
+	 *		use the static function as a callable.
+	 * 
 	 * @param mixed $value
 	 * @param array $context
 	 * @return boolean
@@ -212,15 +230,15 @@ class AssignmentForm extends Form
 		$this->_sourcePieces($context);
 
 		$this->source_numbers = (new Collection($this->source_pieces))->combine('{n}', 'number');
-		$this->request_numbers = \App\Lib\Range::stringToArray($context['data']['to_move']);
+		$this->request_numbers = Range::stringToArray($context['data']['to_move']);
 		$bad_request = array_diff($this->request_numbers, $this->source_numbers->toArray());
 		if (!empty($bad_request)) {
 			$result = FALSE;
 			$grammar = count($bad_request) > 1 ? 'are' : 'is';
-			$bad_range = \App\Lib\Range::arrayToString($bad_request);
+			$bad_range = Range::arrayToString($bad_request);
 			
 			$good_request = array_intersect($this->source_numbers->toArray(), $this->request_numbers);
-			$good_range = \App\Lib\Range::arrayToString($good_request);
+			$good_range = Range::arrayToString($good_request);
 
 			if ($good_range) {
 				$try_this = '.<br />The available pieces in your request: ' . $good_range;

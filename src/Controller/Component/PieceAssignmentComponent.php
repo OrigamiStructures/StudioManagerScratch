@@ -11,6 +11,10 @@ use Cake\Controller\Component;
  * provided by the user as they explicitly move pieces to and from formats in 
  * the edition.
  * 
+ * In reality, all this code is currently in App\Form\AssignmentForm. The final 
+ * home class for the logic is up for debate. Notes about the options can 
+ * be found in AssignmentForm.
+ * 
  * @author dondrake
  */
 class PieceAssignmentComponent extends Component {

@@ -4,8 +4,29 @@ namespace App\Lib;
 use Cake\Utility\Hash;
 use ArrayIterator;
 /**
- * Description of Range
+ * Range provides a shorthand way of describing sets of numbered pieces
+ * 
+ * It can understand shorthand notation and return the proper array of 
+ * items or generate shorthand notation which describes an array.
  *
+ * @todo How can this handle non-numeric piece labeling schemes?
+ * There will have to be a lot of new abstraction to make this happen. 
+ * We'll have to decide if we want to allow:
+ *	 a finite set of numbering options 
+ *   user requested options that we then incorporate
+ *   user created options
+ * The second strategy seems best-ish. It would keep user freedom high and 
+ * user tech-savy low. 
+ * We would probably need a config file that was read by Range to get the 
+ * proper sorting and validation-regex for the custom numbering. The edition 
+ * creation routines would also want to read this config file to determine 
+ * the number of pieces to create. Better still, creation routines would query 
+ * this class for that information.
+ * A config file would let us add new schemes at will without changing the 
+ * code base. We could also use a user-prefs based system to allow user created 
+ * special schemes. In that case we would want to route new user-created 
+ * configurations to the system admin for review.
+ * 
  * @author dondrake
  */
 class Range {
@@ -180,6 +201,25 @@ class Range {
 		$type = 'range_'.$type;
 		
 		return self::$$type;
+	}
+	
+	/**
+	 * Insure the range describing numbered pieces to move is valid
+	 * 
+	 * @todo Stub from App\Form\AssignmentForm. That class uses this method 
+	 *			as a callable ('rule' => [$this, 'rangePatternValidation']). 
+	 *			That code will have to be changed to call this version but 
+	 *			I don't yet know if a static method can be a callable.
+	 * 
+	 * @param mixed $value
+	 * @param array $context
+	 * @return boolean
+	 */
+	static function rangePatternValidation($value, $context) {
+		$pattern = '/(\d+-\d+|\d+)(, *(\d+-\d+|\d+))*/'; 
+		preg_match($pattern, $value, $match);
+
+		return $value === $match[0];
 	}
 	
 }
