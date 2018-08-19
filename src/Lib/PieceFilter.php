@@ -92,8 +92,10 @@ class PieceFilter {
 				
 		if (is_array($valid_pieces)) {
 			return $valid_pieces;
-		} else {
+		} elseif (is_object($valid_pieces)) {
 			return $valid_pieces->toArray();
+		} else {
+			return [];
 		}
 		
 		//return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
