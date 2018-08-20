@@ -26,6 +26,9 @@ use Cake\Cache\Cache;
  * of a special rule set to manage piece records. This task is passed off to 
  * a separate component.
  * 
+ * @todo Exceptions in this or calling code should clear the art stack cache, probably 
+ *			a special Exception class should be written that takes care of the cache.
+ * 
  * @author dondrake
  */
 class ArtworkStackComponent extends Component {

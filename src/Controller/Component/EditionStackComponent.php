@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -24,6 +17,9 @@ use App\Lib\Traits\EditionStackCache;
  * tools required by the three controllers as they collaborate to maintain 
  * edition content. The actual movement of Pieces across the Edition/Format 
  * layers is passed of to a separate component.
+ * 
+ * @todo Exception in this or calling code should clear the edition stack cache, probably 
+ *			a special Exception class should be written that takes care of the cache.
  * 
  * @author dondrake
  */

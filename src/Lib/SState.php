@@ -10,6 +10,11 @@ use Cake\Event\EventListenerInterface;
  * strategy could have worked. But one thing is for sure:
  * 
  * THIS CLASS IS UNUSED. 
+ * 
+ * It's not clear how an Event Listener class would exist in the long run 
+ * to deliver these static properties. That feels a little flaky. I only 
+ * have a vague sense of what becomes available when an event is triggered 
+ * and I'm not convinced an SState object would be easy to see/access.
  */
 
 class SState implements EventListenerInterface {
