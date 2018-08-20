@@ -95,10 +95,14 @@ class PieceFilter {
 		} elseif (is_object($valid_pieces)) {
 			return $valid_pieces->toArray();
 		} else {
-			return [];
+			/*
+			 *  the assumption is that the Exception class will clear 
+			 *  query and element caches to prevent getting locked into 
+			 *  this error state.
+			 */
+			throw new \App\Exception\BadEditionStackContentException(
+					'PieceFilter was provided no pieces at all. The originating edition or format must not have included any and it\'s not safe to make assumptions about thier existance (or non-existance). Double check the process that created the pieces\' parent object.');
 		}
-		
-		//return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
 	}
     
 	/**
