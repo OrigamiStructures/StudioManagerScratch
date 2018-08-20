@@ -27,6 +27,25 @@ use ArrayIterator;
  * special schemes. In that case we would want to route new user-created 
  * configurations to the system admin for review.
  * 
+ * @todo Can we do a Series range? Or some other range-on-this-set?
+ * One onorous task I've had to do is transfer same-number-piece from 
+ * several Editions to a Disposition. It would be great to be able to name 
+ * a set of Edition/Formats and a piece number (or numbers) then have all 
+ * the pieces from those Editions chosen. The Series concept would represent 
+ * a pre-defined Edition/Formats set. 
+ * One implication of this idea is that there might end up being a separate 
+ * class that gathers and returns the pieces and other necessary Enities. 
+ * This class should problably focus on proper syntax (and reference validity?). 
+ * 
+ * @todo Expand this class to do validation against real data
+ * The two issues discussed above suggest:
+ * This class should receive Edition and or Format objects so the range strings 
+ * can be validated against the real data; is it the right numbering symbols; 
+ * do the pieces exist; do the editions or series members exist; etc.
+ * Validation should start with a minimal object (Edition Entity?) so the 
+ * numbering style and basic range could be used to check the basic syntax 
+ * before getting into issues of piece availability
+ * 
  * @author dondrake
  */
 class Range {

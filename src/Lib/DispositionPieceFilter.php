@@ -34,7 +34,7 @@
  * The factory method is chosen by a switch statement on $dispostion->type and 
  * the method name is looked up in the _filter_map array.
  * 
- * 
+ * @todo This class is currently dead. What should be done with it?
  * 
  * @author dondrake
  */

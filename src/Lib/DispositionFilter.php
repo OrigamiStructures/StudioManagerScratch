@@ -24,7 +24,7 @@ class DispositionFilter {
 			$this->_filters[] = $filter;
 			return $this;
 		}
-		throw new \BadFunctionCallException('Argument must be the name of a filter method or function.');
+		throw new \BadFunctionCallException('Argument must be the name of a filter method or a callable.');
 	}
 	
 	/**

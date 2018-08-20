@@ -18,7 +18,18 @@ use App\Lib\Range;
  * and this Form class oversees all the associated logic, this may be the 
  * correct place to localize the logic. But if later streamlined piece movement 
  * is allowed, like through an ajax process, a Lib class may be the right choice.
+ * 
  * @todo Consider custom numbering schemes (see notes in App\Lig\Range)
+ * 
+ * @todo Lib\Range planning is begining to touch on some validation issues 
+ * The ideas of expanded range-syntax support to include new numbering schemes 
+ * and reference to sets of Editions or use of Series will effect this Form.
+ * Also, the idea of having a separate class the validates a properly expressed 
+ * range against real-world data is breathing new life into the idea of the 
+ * PieceAssignment component or Lib class.
+ * If a class that queries for data based on the range string is also created 
+ * it would form the basis of an ajax based piece filtering tool for the UX. 
+ * This starts to implicate App\Lib\PieceFilter in the set of involved classes.
  */
 class AssignmentForm extends Form
 {

@@ -16,6 +16,16 @@ use App\Lib\Traits\PieceFilterTrait;
  * This class selects a concrete class that knows the data structures and 
  * filtering rules for the current situation. 
  * 
+ * @todo Refine thinking on the role of this class
+ * The description above mentions filtering, presentation, and function. This is 
+ * probably too broad a scope of responsibility for one class. Give some thought 
+ * to what is really needed from this class and dial it in. I believe this class 
+ * gets composed into the concrete Edition helper classes, so consider that too. 
+ * 
+ * @todo Insure inclusion of Use Cases: Range-strings, ajax based UX
+ * Changes noted in App\Lib\Range and App\Form\AssignmentForm suggest new 
+ * capabilities may be required in this class.  
+ * 
  * @author dondrake
  */
 class PieceFilter {
