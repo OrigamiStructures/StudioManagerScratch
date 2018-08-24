@@ -35,6 +35,9 @@ Arrived
 
 
 <?php
+osd($combined);
 osd($stuff[0]());
 osd($stuff[1]('input val'));
+osd($new, 'new');
+osd($old, 'old');
 ?>

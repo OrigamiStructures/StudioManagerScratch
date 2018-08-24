@@ -145,12 +145,14 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
+		
 		$ar = [	1 => ['new' => '', 'old' => 1],
 				2 => ['new' => '3', 'old' => 2],
 				3 => ['new' => '2', 'old' => 3],
 			];
-		extract(array_shift($ar));
 		
+		$result = $ar[3] + $ar[2] + $ar[1];
+		extract($result);
 		
 		$stuff = [
 			function() {
@@ -160,7 +162,15 @@ class AppController extends Controller
 				return ucwords($val);
 			}
 		];
+		
+		$a1 = ['a', 'b', 'c'];
+		$a2 = ['d', 'e', 'f'];
+		$a3 = ['a', 'g', 'h', 'i'];
+		
+		$combined = array_merge($a1, $a3, $a2);
+		
 		$this->set('stuff', $stuff);
+		$this->set(compact('new', 'old', 'combined'));
 		
 		
 		
