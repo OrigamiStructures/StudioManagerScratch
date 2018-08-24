@@ -2,7 +2,8 @@
 namespace App\Model\Entity;
 use App\Model\Entity\Image;
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
+
 /**
  * Artwork Entity.
  *
@@ -19,7 +20,7 @@ use App\Model\Entity\Traits\ParentEntity;
 class Artwork extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
