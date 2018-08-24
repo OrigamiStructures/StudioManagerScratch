@@ -13,15 +13,20 @@ class FamilyBehavior extends Behavior {
 	/**
 	 * Find the records that have a specific parent, return as a list
 	 * 
-	 * Given and id and the name portion of a link column which in 
+	 * Given an id and the name portion of a link column which in 
 	 * combination describe a parent record, return a key => value list of 
 	 * all records in this table that are linked to the identified parent.
 	 * 
+	 * @todo Unused as of 8/22/18
+	 * 
+	 * @todo The $options arg in the signature feels clunky.
+	 * 
+	 * 
 	 * @param Query $query
-	 * @param array $options [$id, $index_name, ''=>'']
+	 * @param array $options ['id' => $id, 'index_name' => $index_name, ... ''=>'']
 	 * @return array
 	 */
-	public function findMemberList(Query $query, $options) {
+	public function findSiblingList(Query $query, $options) {
 		$artist_id = $this->_table->SystemState->artistId();
 		$options += [
 			'id' => FALSE, 
@@ -57,7 +62,7 @@ class FamilyBehavior extends Behavior {
 	 * @param array $options
 	 * @return array
 	 */
-	public function findMembers(Query $query, $options) {
+	public function findSiblings(Query $query, $options) {
 		$artist_id = $this->_table->SystemState->artistId();
 		list($id, $index_name) = $options;
 		
