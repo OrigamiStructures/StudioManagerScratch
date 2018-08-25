@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 use App\Model\Entity\Traits\ParentEntityTrait;
 use App\Model\Entity\Traits\DispositionTrait;
+use App\Model\Entity\Traits\EntityDebugTrait;
 
 /**
  * Piece Entity.
@@ -27,6 +28,7 @@ class Piece extends Entity
 
 	use ParentEntityTrait;
 	use DispositionTrait;
+	use EntityDebugTrait;
 	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -42,6 +44,8 @@ class Piece extends Entity
         'id' => false,
     ];
 	
+	protected $_links = ['editions', 'user', 'formats', 'dispositions'];
+
 	/**
 	 * CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG
 	 * 

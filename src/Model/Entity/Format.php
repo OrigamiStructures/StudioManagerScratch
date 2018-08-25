@@ -6,6 +6,7 @@ use App\Model\Entity\Traits\ParentEntityTrait;
 use Cake\Utility\Text;
 use App\Model\Entity\Traits\AssignmentTrait;
 use App\Model\Entity\Traits\DispositionTrait;
+use App\Model\Entity\Traits\EntityDebugTrait;
 
 /**
  * Format Entity.
@@ -32,6 +33,7 @@ class Format extends Entity
 	use ParentEntityTrait;
 	use AssignmentTrait;
 	use DispositionTrait;
+	use EntityDebugTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -47,6 +49,8 @@ class Format extends Entity
         'id' => false,
     ];
 	
+	protected $_links = ['pieces', 'user', 'edition'];
+
 	/**
 	protected $_salable;
 

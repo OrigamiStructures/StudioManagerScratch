@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 use Cake\Collection\Collection;
 use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\EntityDebugTrait;
 
 /**
  * Disposition Entity.
@@ -30,7 +31,8 @@ class Disposition extends Entity
 {
 
 	use ParentEntityTrait;
-
+	use EntityDebugTrait;
+	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -45,6 +47,8 @@ class Disposition extends Entity
         'id' => false,
     ];
 	
+	protected $_links = ['pieces'];
+
 	/**
 	 * Is this piece already in the list of pieces for this disposition?
 	 * 
