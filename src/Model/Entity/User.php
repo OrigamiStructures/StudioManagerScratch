@@ -42,6 +42,4 @@ class User extends Entity
         'id' => false,
     ];
 	
-	protected $_links = ['artwork', 'formats', 'series', 'pieces'];
-
 }

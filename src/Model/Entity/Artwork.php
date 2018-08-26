@@ -38,10 +38,7 @@ class Artwork extends Entity
         '*' => true,
         'id' => false,
     ];
-	
-	protected $_links = ['editions', 'user', 'image', 'images'];
-
-    
+	    
 	/**
 	 * From an inverted artwork stack, identify the tip-of-the-iceberg
 	 * 

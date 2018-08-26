@@ -46,8 +46,6 @@ class Edition extends Entity
         'id' => false,
     ];
 	
-	protected $_links = ['artwork', 'user', 'formats', 'series', 'pieces'];
-
 	/**
 	 * Fully detailed descriptive label for the edition
 	 * 

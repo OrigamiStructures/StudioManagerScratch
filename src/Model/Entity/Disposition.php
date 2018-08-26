@@ -47,8 +47,6 @@ class Disposition extends Entity
         'id' => false,
     ];
 	
-	protected $_links = ['pieces'];
-
 	/**
 	 * Is this piece already in the list of pieces for this disposition?
 	 * 

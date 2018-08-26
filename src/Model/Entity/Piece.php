@@ -44,8 +44,6 @@ class Piece extends Entity
         'id' => false,
     ];
 	
-	protected $_links = ['editions', 'user', 'formats', 'dispositions'];
-
 	/**
 	 * CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG CAKE BUG
 	 * 

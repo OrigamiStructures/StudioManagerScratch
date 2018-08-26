@@ -49,8 +49,6 @@ class Format extends Entity
         'id' => false,
     ];
 	
-	protected $_links = ['pieces', 'user', 'edition'];
-
 	/**
 	protected $_salable;
 
