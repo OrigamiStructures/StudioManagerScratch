@@ -49,11 +49,7 @@ trait EntityDebugTrait {
 		foreach ($this as $property => $value) {
 			switch (gettype($value)) {
 				case 'object':
-					if ($property === '_joinData') {
-						$this->$property = $value;
-					} else {
-						$this->$property = $this->_processObject($value);
-					}
+					$this->$property = $this->_processObject($value);
 					break;
 				case 'array':
 					$this->$property = $this->_scanArray($value);
@@ -74,11 +70,7 @@ trait EntityDebugTrait {
 		foreach ($source as $key => $value) {
 			switch (gettype($value)) {
 				case 'object':
-					if ($key === '_joinData') {
-						$source[$key] = $value;
-					} else {
-						$source[$key] = $this->_processObject($value);
-					}
+					$source[$key] = $this->_processObject($value);
 					break;
 				case 'array':
 					$source[$key] = $this->_scanArray($value);
@@ -98,6 +90,11 @@ trait EntityDebugTrait {
 	 *	change Time objects into simpler time strings
 	 *	let the object remain
 	 * 
+	 * Automatically created _join tables (for HABTM) are not backed up 
+	 * by a Table object and will break if not filtered out. They are 
+	 * Entity objects of type Cake\ORM\Entity rather than 'extends' 
+	 * (instanceof) of that class 
+	 * 
 	 * In the last case, if the object is another entity, we register 
 	 * this class with it so it can watch for recursions
 	 * 
@@ -105,7 +102,9 @@ trait EntityDebugTrait {
 	 * @return mixed
 	 */
 	private function _processObject($object) {
-		if($object instanceof \Cake\ORM\Entity) {
+		
+		if($object instanceof \Cake\ORM\Entity && 
+				get_class($object) !== 'Cake\ORM\Entity') {
 			if (in_array(get_class($object), $this->upStreamLinkedObject)) {
 				$object = 'POSSIBLE RECURSION OF ' . get_class($object) . '. ID = ' . 
 					(isset($object->id) ? $object->id : 'unknown');
@@ -133,10 +132,10 @@ trait EntityDebugTrait {
 	 * @throws BadClassConfigurationException
 	 */
 	public function __debugInfo() {
-		echo '<p>' . get_class($this) . ' ::</p><p>' . var_dump($this->upStreamLinkedObject) . '</p>';
+//		echo '<p>' . get_class($this) . ' ::</p><p>' . var_dump($this->upStreamLinkedObject) . '</p>';
 		$clone = clone $this;
 		$properties = $clone->_properties;
-		echo '<p>' . get_class($this) . ' ::</p><p>' . var_dump($this->upStreamLinkedObject) . '</p>';
+//		echo '<p>' . get_class($this) . ' ::</p><p>' . var_dump($this->upStreamLinkedObject) . '</p>';
         return $properties + [
             '[new]' => $this->isNew(),
             '[accessible]' => array_filter($this->_accessible),
