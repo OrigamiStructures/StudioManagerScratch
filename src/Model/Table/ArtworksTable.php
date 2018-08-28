@@ -135,34 +135,14 @@ class ArtworksTable extends AppTable
 	}
 	
 	/**
-	 * This was just a thought. ArtReviewTrait does this now.
+	 * @todo Considering a refactor of ArtStackComponent
+	 * This could make it a regular finder query compatible with pagination
 	 * 
-	 * But that class's method does it in the context of a 
-	 * redirect process. I started this because I thought the 
-	 * process may be more generally needed. There is no 
-	 * evidence that it is at this point.
-	 * 
-	 * @param string|entity artworkId or Entity/Artwork
-	 * @return boolean
+	 * @param Query $query
+	 * @param type $options
 	 */
-	public function isFlat($artwork) {
-//		if (stristr(get_parent_class($artwork), 'Entity') && 
-//				stristr(get_class($artwork), 'Artwork')) {
-//			if (isset($artwork->edition_count)) {
-//				return $artwork->edition_count === 1;
-//			}
-//			if (isset($artwork->id)) {
-//				$artwork = $artwork->id;
-//			}
-//		}
-//		if (is_string($artwork)) {
-//			$conditions = [
-//				'user_id' => $this->SystemState->artistId(),
-//			];
-//			// stopped coding at this point
-//		}
-//
-//		return FALSE;
+	public function findArtStack(Query $query, $options){
+		
 	}
 	
 }

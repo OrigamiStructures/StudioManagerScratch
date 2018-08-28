@@ -21,6 +21,13 @@ use App\Lib\Traits\EditionStackCache;
  * @todo Exception in this or calling code should clear the edition stack cache, probably 
  *			a special Exception class should be written that takes care of the cache.
  * 
+ * @todo This Component seems to mingle PieceTable tasks and AssignmentForm services
+ * The logic of having much of this code in this component is suspect. Many parts 
+ * could be in the PieceTable class. The stackQuery() data could be extracted by 
+ * and returned from ArtworkStack::stackQuery(); either as optional return data or 
+ * through a separate method in that class. And even that Component might be 
+ * better as a Model class.  
+ * 
  * @author dondrake
  */
 class EditionStackComponent extends Component {
@@ -68,6 +75,13 @@ class EditionStackComponent extends Component {
 	 * ]
 	 * </pre>
 	 * 
+	 * @todo make providers an object?
+	 * This would allow it to contain its own ownerTitle hash map. This map 
+	 * allows piece->key() to lookup its assigned owner's display title. 
+	 * Currently, redundant code in the elements build the hash. A helper 
+	 * solution has to return the table as a variable or save it as a property. 
+	 * but it has difficulty knowing if the property is for the current 
+	 * version of $providers. 
 	 * 
 	 * @return tuple 'providers, pieces'
 	 */

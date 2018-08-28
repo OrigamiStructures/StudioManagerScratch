@@ -39,7 +39,7 @@ class ArtworkStackComponent extends Component {
 	
 	public $full_containment = [
 		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
-			'Series', 'Pieces', /*'Formats.Users',*/ 'Formats' => [
+			'Series', 'Pieces' => ['Dispositions'], /*'Formats.Users',*/ 'Formats' => [
 				'Images', 'Pieces' => ['Dispositions'], /*'Subscriptions'*/
 				]
 			]
@@ -116,6 +116,7 @@ class ArtworkStackComponent extends Component {
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
+			osd($artworks->toArray());die;
 			return $artworks->toArray();
 		} else {
 			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
@@ -137,6 +138,7 @@ class ArtworkStackComponent extends Component {
 				'contain' => $this->full_containment,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
 				'cache' => 'artwork',
+//				'key' => "{$this->SystemState->artistId()}_{$this->SystemState->queryArg('artwork')}"
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
@@ -152,6 +154,45 @@ class ArtworkStackComponent extends Component {
 			}
 			return [$artwork];
 		}
+	}
+	
+	/**
+	 * 
+	 * @throws \BadMethodCallException
+	 */
+	public function focusedStack() {
+		$query_arg = $this->SystemState->queryArg();
+		osd($this->SystemState->queryArg());
+		if (!key_exists('artwork', $query_arg) || 
+				!key_exists('edition', $query_arg)) {
+			throw new \BadMethodCallException('focusedStack() requires both \'artwork\' '
+					. 'and \'edition\' IDs in the url query. One or both are missing');
+		}
+		$artwork = $this->stackQuery();
+//		osd($artwork[0]);
+		osd($this->SystemState->queryArg('edition'));
+//		die;
+		$providers = [];
+		$pieces = [];
+		$providers['edition'] = 
+				$artwork[0]->editions[
+					$artwork[0]->indexOfEdition($this->SystemState->queryArg('edition'))
+				];
+		$providers += $providers['edition']->formats;
+		foreach ($providers as $index => $provider) {
+			if ($index === 'edition') {
+				$provider->unassigned = $provider->pieces;
+			} else {
+				$provider->fluid = $provider->pieces; 
+			}
+			$pieces = array_merge($pieces, $provider->pieces);
+		}
+//		osd($providers);die;
+		return [
+			'providers' => $providers, 
+			'pieces' => $pieces,
+			'artwork' => $artwork[0],
+			];
 	}
 	
 	public function allocatePieces($artwork) {
