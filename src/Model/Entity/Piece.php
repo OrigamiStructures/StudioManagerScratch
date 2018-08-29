@@ -28,7 +28,7 @@ class Piece extends Entity
 
 	use ParentEntityTrait;
 	use DispositionTrait;
-	use EntityDebugTrait;
+//	use EntityDebugTrait;
 	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

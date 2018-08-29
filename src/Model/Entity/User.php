@@ -26,7 +26,7 @@ use App\Model\Entity\Traits\EntityDebugTrait;
 class User extends Entity
 {
 	
-	use EntityDebugTrait;
+//	use EntityDebugTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

@@ -23,7 +23,7 @@ class Artwork extends Entity
 {
 	
 	use ParentEntityTrait;
-	use EntityDebugTrait;
+//	use EntityDebugTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

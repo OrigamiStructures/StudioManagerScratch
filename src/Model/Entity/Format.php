@@ -33,7 +33,7 @@ class Format extends Entity
 	use ParentEntityTrait;
 	use AssignmentTrait;
 	use DispositionTrait;
-	use EntityDebugTrait;
+//	use EntityDebugTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

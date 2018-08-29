@@ -28,7 +28,7 @@ class Edition extends Entity
 	
 	use ParentEntityTrait;
 	use AssignmentTrait;
-	use EntityDebugTrait;
+//	use EntityDebugTrait;
 	
 	protected $_collected;
 
