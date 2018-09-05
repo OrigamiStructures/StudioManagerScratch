@@ -6,7 +6,9 @@ use Cake\Core\Configure;
 /**
  * RenumberRequest manages To and From values in a renumbering request
  * 
- * One move pair is handled by each object instance
+ * One move pair is handled by each object instance. 
+ * This object contains all the information about the request, the old/new 
+ * numbers and any error information about the requested change.
  *
  * @author dondrake
  */
@@ -125,10 +127,13 @@ class RenumberRequest {
 	}
 	
 	/**
+	 * Return an array of error messages for this request
 	 * 
-	 * @ Change this to allow multiple error messages (and return an array?)
+	 * Select messages based on settings in various flag properties
 	 * 
-	 * @return string
+	 * @todo logic for use of _renumber_message seems suspect. also is it missnamed in RenumberMessage use?
+	 * 
+	 * @return array Empty array if no errors
 	 */
 	public function message() {
 		$this->_message = [];

@@ -11,7 +11,13 @@ use Cake\Utility\Text;
 use App\Lib\RenumberMessaging;
 
 /**
- * Description of RenumberRequests
+ * RenumberRequests
+ * 
+ * This class sorts and validates piece number change requests. 
+ * It keeps the requests in a heap and buids messages to explain 
+ * when vague or impossible combinations of moves are requested. 
+ * 
+ * The heap actually contains RenumberRequest objects, one for each request.
  *
  * @author dondrake
  */

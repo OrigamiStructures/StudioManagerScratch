@@ -10,7 +10,7 @@
 ?>
 <!-- Element/Pieces/disposition_event_rows.ctp -->
 <?php 
-osd($pieces);die;
+//osd($pieces);die;
 	$dispositions = $piece->dispositions;
 
 	foreach($dispositions as $disposition) : 

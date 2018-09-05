@@ -1,7 +1,14 @@
 <?php
 namespace App\Lib;
 
-
+/**
+ * RenumberMessaging
+ * 
+ * This class receives a set of RenumberRequest objects and provides 
+ * methods to summarize the requested moves and errors to the user.
+ *
+ * @author dondrake
+ */
 class RenumberMessaging {
 	
 	/**
@@ -28,12 +35,16 @@ class RenumberMessaging {
 	 */
 	private $_error_count = FALSE;
 
-	
+	/**
+	 * @todo Is renumber_message spelled right?
+	 * @param type $requests
+	 * @return \App\Lib\RenumberMessaging
+	 */
 	public function __construct($requests) {
 		$this->_requests = $requests;
 		foreach ($this->_requests as $request) {
 			$message = $request->message();
-			if ($request->renumber_message) {
+			if ($request->renumber_message) { 
 				$this->_summaries[$request->old] = array_shift($message);
 			}
 			if (!empty($message)) {
@@ -45,6 +56,10 @@ class RenumberMessaging {
 	}
 	
 	/**
+	 * Return array of arrays of errors
+	 * 
+	 * Outer array indexed by old piece number 
+	 * each containing an array of errors for that piece (empty if none) 
 	 * 
 	 * @return boolean|array
 	 */
@@ -57,6 +72,7 @@ class RenumberMessaging {
 	}
 	
 	/**
+	 * Return array indexed by old piece number
 	 * 
 	 * @return boolean|array
 	 */
@@ -69,8 +85,9 @@ class RenumberMessaging {
 	}
 	
 	/**
+	 * Return a specific piece request
 	 * 
-	 * @param int $number
+	 * @param int $number the old piece number
 	 * @return RenumberRequest|FALSE
 	 */
 	public function request($number) {
@@ -81,6 +98,7 @@ class RenumberMessaging {
 	}
 	
 	/**
+	 * Get the total number of errors over all requests
 	 * 
 	 * @return boolean|int
 	 */
