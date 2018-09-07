@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Lib\Providers;
+namespace App\Model\Lib;
 
 use \App\Exception\BadEditionStackContentException;
 
@@ -60,7 +60,7 @@ class Providers {
 	 * 
 	 * Provider requires an Edition Entity and all of its Format Entities
 	 * 
-	 * @param array $providers
+	 * @param array $providers Edition and all its descendant Formats
 	 * @throws BadEditionStackContentException
 	 */
 	public function __construct(array $providers) {

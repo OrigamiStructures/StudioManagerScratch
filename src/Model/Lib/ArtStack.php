@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Lib\ArtStack;
+namespace App\Model\Lib;
 
 use App\Model\Entity\Artwork;
 

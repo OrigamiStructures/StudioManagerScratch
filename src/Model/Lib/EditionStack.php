@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Lib\EditionStack;
+namespace App\Model\Lib;
 
 /**
  * Description of EditionStack
