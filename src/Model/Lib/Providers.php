@@ -2,6 +2,7 @@
 namespace App\Model\Lib;
 
 use \App\Exception\BadEditionStackContentException;
+use Cake\Utility\Text;
 
 /**
  * Providers
@@ -72,13 +73,22 @@ class Providers {
 			}
 			$this->_provider_titles[$entity->key()] = $entity->display_title;
 		}
+		$this->_providers = ['edition' => $this->_edition] + $this->_formats;
+		
+		// Exception and detailed message
 		if (!$this->_edition ||
 				count($this->_formats) != $this->_edition->format_count ||
 				!$this->_allRelated()) {
-			throw new BadEditionStackContentException('Provider requires one Edition and all of its Formats');
+			$message = !$this->_edition ? " Edition missing. " : ' ';
+			$message .= (count($this->_formats) != $this->_edition->format_count) ?
+					(count($this->_formats) . ' formats but ' . 
+					$this->_edition->format_count . ' required. ') : 
+					'';
+			$message .= !$this->_allRelated() ? 'At least one Format is not a '
+					. 'decendant of the Edition.' : '';
+			throw new BadEditionStackContentException('Provider requires one Edition and '
+					. 'all of its Formats. ' . $message);
 		}
-		$this->_providers = ['edition' => $this->_edition] + $this->_formats;
-		osd($this->_provider_titles);
 	}
 	
 	/**
@@ -121,8 +131,11 @@ class Providers {
 		if (isset($this->_provider_titles[$key])) {
 			return $this->_provider_titles[$key];
 		} else {
+		
+			// Exception and detailed message
+			$message = 'Valid keys are: ' . Text::toList(array_keys($this->_provider_titles));
 			throw new BadEditionStackContentException("The key $key is not in "
-					. "the current Provider family. No title could be returned.");
+					. "the current Provider family. No title could be returned. $message");
 		}
 		
 	}
