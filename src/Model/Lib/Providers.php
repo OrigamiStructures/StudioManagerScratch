@@ -137,6 +137,35 @@ class Providers {
 			throw new BadEditionStackContentException("The key $key is not in "
 					. "the current Provider family. No title could be returned. $message");
 		}
-		
+	}
+	
+	/**
+	 * Simplify debug output
+	 * 
+	 * @return array
+	 */
+	public function __debugInfo() {
+		$formats = [];
+		foreach ($this->_formats as $index => $format) {
+			$formats[$index] = [
+				'App\Model\Entity\Format' => [
+					'id' => $this->_formats[$index]->id,
+					'key' => $this->_formats[$index]->key(),
+					'display_title' => $this->_formats[$index]->display_title,
+					] 
+			];
+		}
+        return [
+            '[_edition]' => [
+					'App\Model\Entity\Edition' => [
+						'id' => $this->_edition->id,
+						'key' => $this->_edition->key(),
+						'display_title' => $this->_edition->display_title,
+						]
+				],
+			'[_formats]' => $formats,
+			'[_providers]' => '[\'edition\' => _edition] + _formats',
+			'[_provider_titles]' => $this->_provider_titles,
+        ];
 	}
 }
