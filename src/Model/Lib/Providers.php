@@ -150,8 +150,8 @@ class Providers {
 			$formats[$index] = [
 				'App\Model\Entity\Format' => [
 					'id' => $this->_formats[$index]->id,
-					'key' => $this->_formats[$index]->key(),
 					'display_title' => $this->_formats[$index]->display_title,
+					'key()' => $this->_formats[$index]->key(),
 					] 
 			];
 		}
@@ -159,13 +159,13 @@ class Providers {
             '[_edition]' => [
 					'App\Model\Entity\Edition' => [
 						'id' => $this->_edition->id,
-						'key' => $this->_edition->key(),
 						'display_title' => $this->_edition->display_title,
+						'key()' => $this->_edition->key(),
 						]
 				],
 			'[_formats]' => $formats,
-			'[_providers]' => '[\'edition\' => _edition] + _formats',
 			'[_provider_titles]' => $this->_provider_titles,
+			'[_providers]' => '[\'edition\' => _edition] + _formats',
         ];
 	}
 }
