@@ -66,19 +66,19 @@ class Providers {
 	public function __construct(array $providers) {
 		foreach ($providers as $entity) {
 			if (get_class($entity) === 'App\Model\Entity\Format') {
-				$this->formats[] = $entity;
+				$this->_formats[] = $entity;
 			} elseif (get_class($entity) === 'App\Model\Entity\Edition') {
-				$this->edition = $entity;
+				$this->_edition = $entity;
 			}
 			$this->_provider_titles[$entity->key()] = $entity->display_title;
 		}
-		if (!$this->edition ||
-				(count($this->formats) != $this->edition->format_count) ||
+		if (!$this->_edition ||
+				count($this->_formats) != $this->_edition->format_count ||
 				!$this->_allRelated()) {
 			throw new BadEditionStackContentException('Provider requires one Edition and all of its Formats');
 		}
-		$this->_providers = ['edition' => $this->edition] + $this->formats;
-		
+		$this->_providers = ['edition' => $this->_edition] + $this->_formats;
+		osd($this->_provider_titles);
 	}
 	
 	/**
@@ -88,7 +88,7 @@ class Providers {
 	 * @return mixed
 	 */
 	public function __get($name) {
-		if (array_key_exists($name, ['providers', 'edition', 'formats'])) {
+		if (in_array($name, ['providers', 'edition', 'formats'])) {
 			return $this->{"_$name"};
 		}
 	}
@@ -99,8 +99,8 @@ class Providers {
 	 * @return boolean
 	 */
 	private function _allRelated() {
-		for ($i = 0; $i < $this->edition->format_count; $i++) {
-			if ($this->format[$i]->edition_id !== $this->edition->id) {
+		for ($i = 0; $i < $this->_edition->format_count; $i++) {
+			if ($this->_formats[$i]->edition_id !== $this->_edition->id) {
 				return FALSE;
 			}
 		}
