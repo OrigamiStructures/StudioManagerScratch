@@ -10,6 +10,7 @@ use App\Model\Table\SeriesTable;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 use Cake\Cache\Cache;
+use App\Model\Lib\Providers;
 //use Cake\Controller\Component\PaginatorComponent;
 
 /**
@@ -162,16 +163,12 @@ class ArtworkStackComponent extends Component {
 	 */
 	public function focusedStack() {
 		$query_arg = $this->SystemState->queryArg();
-		osd($this->SystemState->queryArg());
 		if (!key_exists('artwork', $query_arg) || 
 				!key_exists('edition', $query_arg)) {
 			throw new \BadMethodCallException('focusedStack() requires both \'artwork\' '
 					. 'and \'edition\' IDs in the url query. One or both are missing');
 		}
 		$artwork = $this->stackQuery();
-//		osd($artwork[0]);
-		osd($this->SystemState->queryArg('edition'));
-//		die;
 		$providers = [];
 		$pieces = [];
 		$providers['edition'] = 
@@ -189,7 +186,7 @@ class ArtworkStackComponent extends Component {
 		}
 //		osd($providers);die;
 		return [
-			'providers' => $providers, 
+			'providers' => new Providers($provider), 
 			'pieces' => $pieces,
 			'artwork' => $artwork[0],
 			];

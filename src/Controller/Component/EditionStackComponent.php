@@ -8,6 +8,7 @@ use App\Model\Entity\Piece;
 use Cake\I18n\Time;
 use Cake\Cache\Cache;
 use App\Lib\Traits\EditionStackCache;
+use App\Model\Lib\Providers;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -120,7 +121,7 @@ class EditionStackComponent extends Component {
 				->contain('Dispositions')
 				->order('Pieces.number'); 
 		$stack = [
-			'providers' => $providers, 
+			'providers' => new Providers($providers), 
 			'pieces' => ($pieces->toArray()),
 			'artwork' => $artwork,
 			];
