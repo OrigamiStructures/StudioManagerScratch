@@ -12,6 +12,7 @@ use App\Lib\RenumberRequests;
 use App\Lib\RenumberMessaging;
 use Cake\Network\Exception\BadRequestException;
 use App\Controller\Component\LayersComponent;
+use App\Model\Lib\Providers;
 
 /**
  * Pieces Controller
@@ -170,7 +171,7 @@ class PiecesController extends AppController
 		$EditionStack = $this->loadComponent('EditionStack');
 		extract($EditionStack->stackQuery()); // providers, pieces
 		/* prevent inappropriate entry */
-		if (!in_array($providers['edition']->type, $this->SystemState->limitedEditionTypes())) {
+		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
 			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 		}	

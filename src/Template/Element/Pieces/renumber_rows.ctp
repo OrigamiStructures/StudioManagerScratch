@@ -28,11 +28,6 @@
 
 <?php
 $error = $messagePackage ? $messagePackage->errors() : false ;
-$owners = new \Cake\Collection\Collection($providers);
-$owner_title = $owners->reduce(function($accumulator, $owner) {
-	$accumulator[$owner->key()] = $owner->display_title;
-	return $accumulator;
-}, []);
 $count = 1;
 $returning = isset($this->request->data['number']);
 
@@ -53,7 +48,7 @@ foreach($pieces as $piece) :
 		?>
 		</td>
 		<td><?= $piece->number; ?></td>
-		<td>  <?= $owner_title[$piece->key()] ?></td>
+		<td>  <?= $providers->title($piece->key()) ?></td>
 		
 		<?php 
 		$c = $piece->disposition_count;
