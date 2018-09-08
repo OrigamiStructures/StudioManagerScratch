@@ -3,6 +3,7 @@ namespace App\Model\Lib;
 
 use \App\Exception\BadEditionStackContentException;
 use Cake\Utility\Text;
+use App\Lib\SystemState;
 
 /**
  * Providers
@@ -137,6 +138,22 @@ class Providers {
 			throw new BadEditionStackContentException("The key $key is not in "
 					. "the current Provider family. No title could be returned. $message");
 		}
+	}
+	
+	/**
+	 * Is this family one of the Limited Edition types?
+	 * 
+	 * @todo This concept is changing to numbered editions. The current 
+	 *		thinking is that open editions may also be numbered in the 
+	 *		future. This may mean changing the concept of Limited to Numbered 
+	 *		and letting the artist control the limits. Then Open would 
+	 *		become UnNumbered. This just amounts to terminology changes 
+	 *		but if done, this code should get fixed too.
+	 * 
+	 * @return boolean
+	 */
+	public function isLimitedEdition() {
+		return in_array($this->_edition->type, SystemState::limitedEditionTypes());
 	}
 	
 	/**
