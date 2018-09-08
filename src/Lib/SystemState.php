@@ -15,7 +15,26 @@ use Cake\Cache\Cache;
 use Cake\ORM\Entity;
 
 /**
- * Description of SystemState
+ * SystemState
+ * 
+ * This class was designed to be available in all places at all times 
+ * in order to make some commonly needed methods (like artistId()) easily 
+ * accessible. Also, it overrides Cakes viewVars system which was designed 
+ * to carry variables from the Controllers into the View layer. This class 
+ * is composed into all standard Cake classes and makes the viewVars 
+ * available all over the place.
+ * 
+ * Besides these basic goals, the class was created with the belief that 
+ * the application would use the State design pattern (“Allow an object to alter 
+ * its behavior when its internal state changes. The object will appear to 
+ * change its class.”). I missunderstood both this application and the 
+ * use of the design pattern... so...
+ * 
+ * @todo There are some static methods that organize things like Edition types 
+ *		and Disposition types. These methods could be in a separate class 
+ *		with all static methods instead of this mixed bag.
+ * @todo Carrying viewVars around like this breaks encapsulation and 
+ *		promotes coupling. Not a great idea in retrospect.
  *
  * @author dondrake
  */
