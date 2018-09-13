@@ -24,7 +24,7 @@ trait AssignmentTrait {
 	 * 1-7, 9, 12-13 style strings. Open edition pieces can only report
 	 * on the count of pieces in the collection. 
 	 * 
-	 * @param \App\Model\Entity\Traits\Collection $pieces
+	 * @param Collection $pieces
 	 * @param string $type The edition type
 	 */
 	public function range(Collection $pieces, $type) {
