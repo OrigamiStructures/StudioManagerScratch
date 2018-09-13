@@ -6,6 +6,9 @@ $assignment_source_data = [];
 /**
  * Build some data arrays to feed into the output loop. 
  * Just keeping the logic isolated. Build variables, use variables
+ * 
+ * @todo much of this should go to the AssignHelper, the 'correct' place 
+ *		for re-usable output logic.
  */
 $source = new \Cake\Collection\Collection($providers);
 $source_output = $source->reduce(function($accumulator, $provider) use($helper, $edition) {
