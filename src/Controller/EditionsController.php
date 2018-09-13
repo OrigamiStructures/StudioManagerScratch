@@ -233,7 +233,8 @@ class EditionsController extends ArtStackController
 		$errors = [];
 		
 		$EditionStack = $this->loadComponent('EditionStack');
-		$data = $EditionStack->stackQuery();
+//		$data = $EditionStack->stackQuery(); // this one has no pieces on the Edition entity
+		$data = $this->ArtworkStack->focusedStack();
 		extract($data); // providers, pieces, artwork
 		
 		$assignment = new AssignmentForm($data['providers']);
@@ -244,7 +245,8 @@ class EditionsController extends ArtStackController
 				if($this->EditionStack->reassignPieces($assignment, $providers)) {
 					$this->Flash->error(__('The reassignments were completed.'));
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
-// and issue 24
+// and 
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/24 
 					// on success, try triggering an event that fixes all counter cache values
 					// here are to approches. The second one would need a new listener action
 					// because the one mentioned is tied into Cache behavior and its context
@@ -269,8 +271,8 @@ class EditionsController extends ArtStackController
 	}
 	
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
-// and issue 24
-//	protected function _refreshFormatCounterCaches($form_data) {
+// and 
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/24 
 //		
 //	}
 	
