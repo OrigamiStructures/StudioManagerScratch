@@ -184,9 +184,9 @@ class PiecesController extends AppController
 		 * If it's not a post, we'll just render the basic form
 		 * to get the users renumbering request and give a submit button
 		 */
-		if ($this->request->is('post') &&
+		if ($this->request->is('post') /*&&
 				// don't know why this second test is necessary
-				!isset($this->request->data['cancel'])) {
+				!isset($this->request->data['cancel'])*/) {
 			/*
 			 * If it is a post, there are two possibile TRDs because 
 			 * the page can have up to two different forms. 
