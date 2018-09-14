@@ -60,7 +60,8 @@ class PieceAllocationComponent extends Component {
 	}
 	
 	/**
-	 * 
+	 * @todo Flagged as a serious issue:
+	 *		https://github.com/OrigamiStructures/StudioManagerScratch/issues/41
 	 */
 	public function allocate() {
 		$index = array_keys($this->artwork->editions)[0];
