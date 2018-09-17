@@ -102,11 +102,34 @@ class ArtworksTable extends AppTable
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
 	
-	public function findForDisplay(Query $query, $options) {
+	/**
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return Query
+	 */
+	public function findFocusedWork(Query $query, $options) {
+		
 		return $query
 			->where(['user_id' => $options['artist_id'], 'id' => $options['artwork_id']])
 			->contain(['Editions' => ['Pieces', 'Series', 'Formats' => ['Pieces', 'Subscriptions']]]);
 	}
+	
+	/**
+	 * 
+	 * @param Query $query
+	 * @param type $options
+	 * @return Query
+	 */
+	public function findWorks(Query $query, $options) {
+		
+	}
+	
+	public function findClientWorks(Query $query, $options) {
+		
+	}
+	
+	
 	
 	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
 		$this->initImages($data);
