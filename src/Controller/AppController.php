@@ -144,7 +144,7 @@ class AppController extends Controller
 		return $result;
 	}
 	
-	public function testMe() {
+	public function testMe($loops) {
 		
 		$ar = [	1 => ['new' => '', 'old' => 1],
 				2 => ['new' => '3', 'old' => 2],
