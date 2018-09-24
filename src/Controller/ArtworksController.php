@@ -319,7 +319,6 @@ class ArtworksController extends ArtStackController
 //			'pastLoans', 'open', 'overdue', 'dueDuring', 'search'];
 //		$methods = array_combine($methods, $methods);
 		$disp = TableRegistry::get('Dispositions');
-		$disp->retrieve();
 		$methods = $disp->customFinders();
 		$options = $this->request->data;
 		if (count($queries) > 0) {

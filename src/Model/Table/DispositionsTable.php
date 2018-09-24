@@ -126,6 +126,18 @@ class DispositionsTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('StartDateQuery', [
+			'className' => 'DateQuery',
+			'field' => 'start_date', 
+			'model' => $this->alias(),
+			'primary_input' => 'first_start_date',
+			'secondary_input' => 'second_start_date']);
+        $this->addBehavior('EndDateQuery', [
+			'className' => 'DateQuery',
+			'field' => 'end_date', 
+			'model' => $this->alias(),
+			'primary_input' => 'first_end_date',
+			'secondary_input' => 'second_end_date']);
 		$this->addBehavior('CounterCache', [
 			/**
 			 * Disposition count > 0 prevents Pieces from being assigned to 
@@ -339,9 +351,6 @@ class DispositionsTable extends AppTable
 		$this->afterSave($event, $entity);
     }
 	
-	public function retrieve() {
-		osd($this->behaviors());
-	}
 	/**
 	 * CUSTOM FINDER METHODS
 	 */
@@ -353,7 +362,7 @@ class DispositionsTable extends AppTable
 	 * @param Query $query
 	 * @return $query
 	 */
-	protected function _setUserId($query) {
+	public function _setUserId($query) {
 		if (!$this->_where_artist_id->contains($query)) {
 			$this->_where_artist_id->attach($query, TRUE);
 			$query->where(['Dispositions.user_id' => $this->SystemState->artistId()]);
@@ -519,71 +528,7 @@ class DispositionsTable extends AppTable
 				->find('StartDateAfter', $options)
 				->find('EndDateBefore', $options);
 	}
-
-// <editor-fold defaultstate="collapsed" desc="StartDate Finders">
-	/**
-	 * @todo There are two sets of date queries that are identical except for 
-	 *		two string values. This suggests some kind of date-finder Trait 
-	 *		that can be parameterized. The value of the current setup is 
-	 *		very explicit calls. A trait would reduce the codebase quite a bit. 
-	 *		An option might be a Behavior that gets parameterized so we 
-	 *		could have multiple versions. This would need an override find() 
-	 *		method to fold the parameters into the method names.
-	 * @param Query $query
-	 * @param type $options
-	 * @return Query
-	 */
-	public function findStartDateIs(Query $query, $options) {
-		$date = $this->_setDateParameter($options['start_date']);
-		return $query->where(['Dispositions.start_date' => $date]);
-	}
-
-	public function findStartDateBefore(Query $query, $options) {
-		$date = $this->_setDateParameter($options['start_date']);
-		return $query->where(['Dispositions.start_date <' => $date]);
-	}
-
-	public function findStartDateAfter(Query $query, $options) {
-		$date = $this->_setDateParameter($options['start_date']);
-		return $query->where(['Dispositions.start_date >' => $date]);
-	}
-
-	public function findStartDateBetween(Query $query, $options) {
-		$start_date = $this->_setDateParameter($options['start_date'])->i18nFormat('yyyy-MM-dd');
-		$end_date = $this->_setDateParameter($options['end_date'])->i18nFormat('yyyy-MM-dd');
-		return $this->_setUserId($query)->where(function ($exp, Query $q) use ($start_date, $end_date) {
-					return $exp->between('Dispositions.start_date', 
-						$start_date, $end_date);
-				});
-	}
-// </editor-fold>
 	
-// <editor-fold defaultstate="collapsed" desc="EndDate Finders">
-	public function findEndDateIs(Query $query, $options) {
-		$date = $this->_setDateParameter($options['end_date']);
-		return $query->where(['Dispositions.end_date' => $date]);
-	}
-
-	public function findEndDateBefore(Query $query, $options) {
-		$date = $this->_setDateParameter($options['end_date']);
-		return $query->where(['Dispositions.end_date <' => $date]);
-	}
-
-	public function findEndDateAfter(Query $query, $options) {
-		$date = $this->_setDateParameter($options['end_date']);
-		return $query->where(['Dispositions.end_date >' => $date]);
-	}
-
-	public function findEndDateBetween(Query $query, $options) {
-		$start_date = $this->_setDateParameter($options['start_date'])->i18nFormat('yyyy-MM-dd');
-		$end_date = $this->_setDateParameter($options['end_date'])->i18nFormat('yyyy-MM-dd');
-		return $this->_setUserId($query)->where(function ($exp, Query $q) use ($start_date, $end_date) {
-					return $exp->between('Dispositions.end_date', 
-						$start_date, $end_date);
-				});
-	}
-// </editor-fold>
-
 	/**
 	 * Return a list of (almost) all the custom finders
 	 * 
@@ -598,7 +543,12 @@ class DispositionsTable extends AppTable
 		$omit = ['', 'List', 'Threaded', 'OrCreate'];
 		$finders = preg_filter('/find(.*)/', '$1', get_class_methods($this));
 		$methods = array_diff($finders, $omit);
-		return array_combine($methods, $methods);
+		$finders = array_combine($methods, $methods);
+		foreach($this->behaviors()->loaded() as $behavior) {
+			$calls = array_keys($this->behaviors()->get($behavior)->implementedFinders());
+			$finders += array_combine($calls, $calls);
+		}
+		return $finders;
 	}
 	
 	/**
