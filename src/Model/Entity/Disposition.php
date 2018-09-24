@@ -107,4 +107,8 @@ class Disposition extends Entity
 	public function _getMemberName() {
 		return $this->first_name . ' ' . $this->last_name;
 	}
+	
+	public function properties() {
+		return $this->_properties;
+	}
 }

@@ -191,7 +191,7 @@ class DispositionsController extends AppController
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 			}
 		}
-		$labels = $this->Dispositions->disposition_label;
+		$labels = $this->Dispositions->labels();
 		$this->set(compact('disposition', 'labels', 'errors'));
 	}
 	

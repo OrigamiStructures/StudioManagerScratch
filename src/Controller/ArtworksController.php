@@ -306,149 +306,32 @@ class ArtworksController extends ArtStackController
 //        $this->set('_serialize', [$artwork_variable]);
     }
 	
-	public function testMe($loops) {
-		$art = $this->Artworks->get(13);
-		osd(get_class($art));
-		$qArt = $this->Artworks->find();
-		$qArt->where(['id' => $this->SystemState->queryArg('artwork')]);
-		
-//		$loops = 1;
-		$t = new \OSDTImer();
-		
-		$t->start('nestedQuery');
-		for ($index = 0; $index < $loops; $index++) {
-			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'),
-					[
-				'contain' => $this->ArtworkStack->full_containment,
-				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
-//				'cache' => 'artwork',
-//				'key' => "{$this->SystemState->artistId()}_{$this->SystemState->queryArg('artwork')}"
-			]);
-			
-//			osd($artwork);die;
-		}
-		$t->end('nestedQuery');
-		osd($t->result('nestedQuery'), 'Nested query with full containment');
-
-		$t->start('cachedQuery');
-		for ($index = 0; $index < $loops; $index++) {
-			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'),
-					[
-				'contain' => $this->ArtworkStack->full_containment,
-				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
-				'cache' => 'artwork',
-//				'key' => "{$this->SystemState->artistId()}_{$this->SystemState->queryArg('artwork')}"
-			]);
-		}
-		$t->end('cachedQuery');
-		osd($t->result('cachedQuery'), 'Nested query fetched from file cache');
-		
-		$this->Editions = TableRegistry::get('Editions');
-		$this->Formats = TableRegistry::get('Formats');
-		$this->Pieces = TableRegistry::get('Pieces');
-		$this->Dispositions = TableRegistry::get('Dispositions');
-		$this->DispositionsPieces = TableRegistry::get('DispositionsPieces');
-		
-		$t->start('flatQuery');
-		for ($index = 0; $index < $loops; $index++) {
-//			unset($artwork ,$editions, $formats, $pieces, $dispositions, $temp);
-			
-			$artwork = $this->Artworks->get($this->SystemState->queryArg('artwork'));
-			
-			$editions = $this->Editions->find('all')->where(['artwork_id' => $artwork->id]);
-			$id = [];
-			$temp = [];
-			foreach ($editions as $edition) {
-				$temp[$edition->id] = $edition;
-				$id[] = $edition->id;
+	public function testMe() {
+		/**
+		 * @todo multi-selection queries could be passed to the a 
+		 *		generic finder in the Model for processing of all the choices. 
+		 *		This would eliminate controller action logic that had to 
+		 *		detect and controll the process.
+		 */
+		$queries = $this->request->data('method');
+		$result = [];
+//		$methods = ['collected', 'onLoan', 'futureLoans', 
+//			'pastLoans', 'open', 'overdue', 'dueDuring', 'search'];
+//		$methods = array_combine($methods, $methods);
+		$disp = TableRegistry::get('Dispositions');
+		$disp->retrieve();
+		$methods = $disp->customFinders();
+		$options = $this->request->data;
+		if (count($queries) > 0) {
+			$index = 0;
+			$result = $disp->find($this->request->data['method'][$index++], $options);
+			while ($index < count($queries)) {
+			$result = $result->find($this->request->data['method'][$index++], $options);
 			}
-			$editions = $temp;
-			
-			$formats = $this->Formats->find('all')->where(['edition_id IN' => $id]);
-			$temp = [];
-			foreach ($formats as $format) {
-				$temp[$format->id] = $format;
-			}
-			$formats = $temp;
-			
-			$pieces = $this->Pieces->find('all')
-					->where(['edition_id IN' => $id])
-					->contain(['DispositionsPieces']);
-			$id = [];
-			$temp = [];
-			foreach ($pieces as $piece) {
-				$temp[$piece->id] = $piece;
-				$id[] = $piece->id;
-			}
-			$pieces = $temp;
-			
-			$dispositions = $this->Dispositions->find('all')
-					->contain(['DispositionsPieces'], function ($q) {
-						return $q
-							->where(['DispositionsPieces.piece_id IN' => $id]);
-					});
-			
-			$temp = [];
-			foreach ($dispositions as $disposition) {
-				$temp[$disposition->id] = $disposition;
-			}
-			$dispositions = $temp;
-			
-			$artwork = $this->composeStack([
-				'artwork' => $artwork,
-				'editions' => $editions,
-				'formats' => $formats,
-				'pieces' => $pieces,
-				'dispositions' => $dispositions,]);
-			
-			Cache::write('flat['.$this->SystemState->queryArg('artwork').']', [
-				'artwork' => $artwork,
-				'editions' => \SplFixedArray::fromArray($editions, TRUE),
-				'formats' => \SplFixedArray::fromArray($formats, TRUE),
-				'pieces' => \SplFixedArray::fromArray($pieces, TRUE),
-				'dispositions' => \SplFixedArray::fromArray($dispositions, TRUE),
-			], 'artwork');
-			
-//			$p = new \Cake\Collection\Collection($pieces);
-//			$output = $p->map(function($piece, $id) use ($editions, $formats, $dispositions) {
-					
-		}
-		$t->end('flatQuery');
-		osd($t->result('flatQuery'), 'Flat query configured with id indexes, write the cache, then composed into full nested structure');
-
-		$t->start('flatCache');
-		
-		for ($index = 0; $index < $loops; $index++) {
-			$flat = Cache::read('flat['.$this->SystemState->queryArg('artwork').']', 'artwork');
 		}
 		
-		$t->end('flatCache');
-		osd($t->result('flatCache'), 'Retrieve flat cached data');
-
-		$t->start('flatCacheCompose');
-		
-		for ($index = 0; $index < $loops; $index++) {
-			$flat = Cache::read('flat['.$this->SystemState->queryArg('artwork').']', 'artwork');
-//			$artwork = $this->composeStack($flat);
-		}
-		
-		$t->end('flatCacheCompose');
-		osd($t->result('flatCacheCompose'), 'Flat cached data composed into a full, nested structure');
-		
-		
-		osd($t);
-//		osd($artwork);
-//		osd($editions->toArray());
-//		osd($formats->toArray());
-//		osd($pieces);
-//		osd($dispositions->toArray());
-		
-		osd(count($editions), 'Number of editions');
-		osd(count($formats), 'Number of formats');
-		osd(count($pieces), 'Number of pieces');
-		osd(count($dispositions), 'Number of dispositions');
-		
-//		die;
+		$this->set(compact('result', 'methods'));
+		//		die;
 	}
 	
 	public function composeStack($flat) {
@@ -486,7 +369,7 @@ class ArtworksController extends ArtStackController
 			}
 
 		};
-			
+					
 			$artwork->editions = $editions;
 			return $artwork;
 	}
