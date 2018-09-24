@@ -108,7 +108,7 @@ class ArtworksTable extends AppTable
 	 * @param type $options
 	 * @return Query
 	 */
-	public function findFocusedWork(Query $query, $options) {
+	public function findWork(Query $query, $options) {
 		
 		return $query
 			->where(['user_id' => $options['artist_id'], 'id' => $options['artwork_id']])
@@ -155,17 +155,6 @@ class ArtworksTable extends AppTable
 //				->cache('artwork');
 //		sql($query);
 		return $query->toArray();
-	}
-	
-	/**
-	 * @todo Considering a refactor of ArtStackComponent
-	 * This could make it a regular finder query compatible with pagination
-	 * 
-	 * @param Query $query
-	 * @param type $options
-	 */
-	public function findArtStack(Query $query, $options){
-		
 	}
 	
 }
