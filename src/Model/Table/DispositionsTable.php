@@ -182,20 +182,6 @@ class DispositionsTable extends AppTable
 		
     }
 
-	/**
-	 * After save, clear any effected edition stackQuery cache
-	 * 
-	 * This afterSave is not needed because the counterCache saves 
-	 * upstream will get the cache (I think)
-	 * 
-	 * @param type $event
-	 * @param type $entity
-	 * @param type $options
-	 */
-//	public function afterSave($event, $entity, $options){
-//		$this->clearCache($entity->edition_id);
-//	}
-
 	public function map($label) {
 		if (isset($this->_map[$label])) {
 			return $this->_map[$label];
@@ -219,39 +205,55 @@ class DispositionsTable extends AppTable
 
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Validation and Rules">
+	/**
+	 * Default validation rules.
+	 *
+	 * @param \Cake\Validation\Validator $validator Validator instance.
+	 * @return \Cake\Validation\Validator
+	     */
+	public function validationDefault(Validator $validator)     {
+		$validator
+				->add('id', 'valid', ['rule' => 'numeric'])
+				->allowEmpty('id', 'create')
+				->requirePresence('start_date');
+		$validator
+				->add('label', 'valid_label',
+						[
+					'rule' => [$this, 'validLabel'],
+					'message' => 'The disposition must be chosen from the provided list',
+				])
+				->notEmpty('label');
+		$validator
+				->add('end_date', 'end_of_loan',
+						[
+					'rule' => [$this, 'endOfLoan'],
+
+					'message' => 'Loans are for a limited time. Please provide an end date greater than the start date.'
+				])
+				->requirePresence('end_date');
+
+		return $validator;
+	}
 
 	/**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create')
-			->requirePresence('start_date');
-        $validator
-			->add('label', 'valid_label', [
-				'rule' => [$this, 'validLabel'],
-				'message' => 'The disposition must be chosen from the provided list',
-			])
-            ->notEmpty('label');
-        $validator
-			->add('end_date', 'end_of_loan', [
-				'rule' => [$this, 'endOfLoan'], 
-				'message' => 'Loans are for a limited time. Please provide an end date greater than the start date.'
-				])
-			->requirePresence('end_date');
-
-        return $validator;
-    }
-
-	public function validLabel ($value, $context) {
+	 * Callable for 'label' validator rule
+	 * 
+	 * @param array $value
+	 * @param array $context
+	 * @return boolean
+	 */
+	public function validLabel($value, $context) {
 		return array_key_exists($value, $this->_map);
 	}
 
+	/**
+	 * Callable for `end_date`, `start_date` validator rule
+	 * 
+	 * @param array $data
+	 * @param array $context
+	 * @return boolean
+	 */
 	public function endOfLoan($data, $context) {
 		$data = $context['data'];
 		if (!isset($data['start_date'])) {
@@ -262,7 +264,7 @@ class DispositionsTable extends AppTable
 		}
 
 		$start = implode('', $data['start_date']);
-		$end = is_array($data['end_date']) ? implode('', $data['end_date']) : 0 ;
+		$end = is_array($data['end_date']) ? implode('', $data['end_date']) : 0;
 		if ($data['type'] !== DISPOSITION_LOAN) {
 			$result = TRUE;
 		} else {
@@ -272,41 +274,31 @@ class DispositionsTable extends AppTable
 	}
 
 	/**
-	 * Lookup and set the disposition type
-	 * 
-	 * @param Event $event
-	 * @param ArrayObject $data
-	 * @param ArrayObject $options
-	 */
-	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
-		if (isset($data['label']) && array_key_exists($data['label'], $this->_map)) {
-			$data['type'] = $this->_map[$data['label']];
-		}
-	}
-	
-	public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary) {
-		if (!$this->_where_artist_id->contains($query)) {
-			$this->_where_artist_id->attach($query, TRUE);
-			$query->where(['Dispositions.user_id' => $this->SystemState->artistId()]);
-		}
+	 * Returns a rules checker object that will be used for validating
+	 * application integrity.
+	 *
+	 * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+	 * @return \Cake\ORM\RulesChecker
+	     */
+	public function buildRules(RulesChecker $rules)     {
+		$rules->add($rules->existsIn(['user_id'], 'Users'));
+		$rules->add($rules->existsIn(['member_id'], 'Members'));
+		$rules->add($rules->existsIn(['disposition_id'], 'Dispositions'));
+		$rules->add($rules->existsIn(['piece_id'], 'Pieces'));
+		return $rules;
 	}
 
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['member_id'], 'Members'));
-        $rules->add($rules->existsIn(['disposition_id'], 'Dispositions'));
-        $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
-        return $rules;
-    }
-	
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="CounterCache callables (see events too)">
+	/**
+	 * Callable to support MembersTable counter cache behavior
+	 * 
+	 * @param Event $event
+	 * @param Entity $entity
+	 * @param Table $table
+	 * @return int
+	 */
 	public function markCollected($event, $entity, $table) {
 		$conditions = [
 			'type' => DISPOSITION_TRANSFER,
@@ -315,73 +307,110 @@ class DispositionsTable extends AppTable
 		$members = $table->find()->where($conditions);
 		return $members->count();
 	}
+
+// </editor-fold>
 	
+// <editor-fold defaultstate="collapsed" desc="LifeCylce events">
 	/**
-	 * Set counter cache fields on pieces
+	 * afterSave
 	 * 
-	 * Because of the kind of association, CounterCache doesn't handle pieces 
-	 * so I put this in to take care of those counts
+	 * Set counter cache fields on pieces. Because of the  HABTM 
+	 * association, CounterCache doesn't handle pieces so I put this in 
+	 * to take care of those counts
 	 * 
 	 * @param Event $event
-	 * @param type $entity
+	 * @param Entity $entity
 	 */
-    public function afterSave(Event $event, $entity)
-    {
+	public function afterSave(Event $event, $entity)     {
 		$table = \Cake\ORM\TableRegistry::get('Pieces');
 		foreach ($entity->pieces as $piece) {
 			$status_events = $this->DispositionsPieces
-				->find()
-				->where(['piece_id' => $piece->id])
-				->contain('Dispositions');
+					->find()
+					->where(['piece_id' => $piece->id])
+					->contain('Dispositions');
 			$events = new Collection($status_events);
-			$counts = $events->reduce(function($accum, $event){
+			$counts = $events->reduce(function($accum, $event) {
 				$accum['collected'] += $event->disposition->type === DISPOSITION_TRANSFER;
-				$accum['disposition_count']++;// += $event->disposition->type !== DISPOSITION_TRANSFER;
+				$accum['disposition_count'] ++; // += $event->disposition->type !== DISPOSITION_TRANSFER;
 				return $accum;
 			}, ['collected' => 0, 'disposition_count' => 0]);
 			$piece = $table->patchEntity($piece, $counts);
 			$table->save($piece);
 		}
-    }
-	
+	}
+
+
 	/**
-	 * Do counter cache reductions for pieces
+	 * afterDelete
 	 * 
-	 * Because of the kind of association, CounterCache doesn't handle pieces 
-	 * so I put this in to take care of those counts
+	 * Do counter cache reductions for pieces. Because of the HABTM 
+	 * association, CounterCache doesn't handle pieces so I put this in to 
+	 * take care of those counts
 	 * 
 	 * @param Event $event
 	 * @param type $entity
 	 */
-    public function afterDelete(Event $event, $entity)
-    {
+	public function afterDelete(Event $event, $entity)     {
 		$this->afterSave($event, $entity);
-    }
+	}
+
+
+	/**
+	 * beforeFind event
+	 * 
+	 * Insure that the artist_id is always included in queries. This will 
+	 * prevent bleed through of one user's data into another even if some  
+	 * crazy hack or error calls for record IDs that would otherwise cause 
+	 * the records to be exposed.
+	 * 
+	 * Since IDs are exposed in the URL, this is critical.
+	 * 
+	 * @param Event $event
+	 * @param Query $query
+	 * @param ArrayObject $options
+	 * @param boolean $primary
+	 */
+	public function beforeFind(Event $event, Query $query, ArrayObject $options,
+			$primary) {
+		if (!$this->_where_artist_id->contains($query)) {
+			$this->_where_artist_id->attach($query, TRUE);
+			$query->where(['Dispositions.user_id' => $this->SystemState->artistId()]);
+		}
+	}
+
+	/**
+	 * Lookup and set the disposition type
+	 * 
+	 * @param Event $event
+	 * @param ArrayObject $data
+	 * @param ArrayObject $options
+	 */
+	public function beforeMarshal(Event $event, ArrayObject $data,
+			ArrayObject $options) {
+		if (isset($data['label']) && array_key_exists($data['label'], $this->_map)) {
+			$data['type'] = $this->_map[$data['label']];
+		}
+	}
+
+// </editor-fold>
+
+
+	/**
+	 * DYNAMIC FINDERS
+	 * 
+	 * dynamic finders for all the major fields
+	 * type, label, name, first/last name, address 1-3, city, state, zip, country
+	 * 
+	 * I'm not sure what role these play. Will there be a single call point 
+	 * that auto works off available parameters (to support real-time user 
+	 * input) or are these always hand-written in methods?
+	 */
 	
 	/**
 	 * CUSTOM FINDER METHODS
 	 */
 	
-// <editor-fold defaultstate="collapsed" desc="Custom Finder support methods">
-
 	/**
-	 * Standardize and sanitize user date input
-	 * 
-	 * Date data will often come directly form a user input form. Turning 
-	 * this input into a Time object lets us absorb a wide variety of date 
-	 * input and should nuetralize any malicious or damaging input.
-	 * 
-	 * @todo This is probably where we want to throw an Exception. But proper 
-	 *		form validation should prevent most bad input. 
-	 * @param string $date 
-	 * @return Time
-	 */
-	protected function _setDateParameter($date) {
-		return new Time($date);
-	}
-// </editor-fold>
-
-		/**
 	 * Find the most rescent dispositions
 	 * 
 	 * @todo This depends on the most recently created disp being the current one
@@ -392,16 +421,26 @@ class DispositionsTable extends AppTable
 	 * @param array $options
 	 * @return Query
 	 */
-	public function findCurrent(Query $query, $options) {
+	public function findCurrentDisposition(Query $query, $options) {
 		$query = $query->orderAsc('Dispositions.created')
 				->$query->first();
 		return $this->_setUserId($query);
 	}
-
-	public function findOnLoan(Query $query, $options) {
-		return $query->where(['Dispositions.type' => DISPOSITION_LOAN]);
-	}
 	
+	/**
+	 * Participate in general site search feature
+	 * 
+	 * @todo Method to be determined
+	 * 
+	 * @param Query $query
+	 * @param array $options
+	 */
+	public function findSearch(Query $query, $options) {
+		
+	}
+
+// <editor-fold defaultstate="collapsed" desc="Tentative Set of Loan specific queries">
+
 	/**
 	 * 
 	 * @todo Could get a param check for a user provided date
@@ -409,7 +448,7 @@ class DispositionsTable extends AppTable
 	 * @param type $options
 	 * @return type
 	 */
-	public function findFutureLoans(Query $query, $options) {
+	public function findLoanStartsAfter(Query $query, $options) {
 		return $query->find(DISPOSITION_LOAN)->find('startDateAfter');
 	}
  
@@ -421,34 +460,59 @@ class DispositionsTable extends AppTable
 	 * @param type $options
 	 * @return type
 	 */
-	public function findPastLoans(Query $query, $options) {
+	public function findLoanEndsBefore(Query $query, $options) {
 		return $query->find(DISPOSITION_LOAN)->find('EndDateBefore');
 	}
 
-	public function findOpenLoans(Query $query, $options) {
-		return $query->where([
-			'Dispositions.type' => DISPOSITION_LOAN,
-			'Dispositions.complete' => 0,
-			]);
-		// can Disposition have a method to categorize the closeness of end_date 
-		//		to support display features (next_month, next_week, past_due)?
-		//is completed necessary give presence of start_date and end_date? 
-		//		It seems like it's one possible failure point that could be 
-		//		replaced by a method complete(). Is it used by some counter_cache 
-		//		in another Table/Entity?
-	}
-	
-	public function findOverdue(Query $query, $options) {
-		$today = date('Y-M-d', time() + DAY);
-		$query->applyOptions(
-			[
-				$this->behaviors()->get('EndDateQuery')->primary_input => 
-				date('Y-M-d', time() + DAY)
-			]);
-		return $query->find('OpenLoans')->find('EndDateBefore');
+	/**
+	 * Find loans that are out
+	 * 
+	 * These are loans that are started and not yet ended and loans that 
+	 * are started and ended but not yet complete, even if there is a 
+	 * subsiquent loan started. In this later case, there will be multiple 
+	 * loans show up for the same piece(s).
+	 * 
+	 * @param Query $query
+	 * @param array $options
+	 * @return Query
+	 */
+	public function findCurrentLoans(Query $query, $options) {
+		return $query->find('OpenLoan')
+						->find('StartDateBefore',
+								[
+							$this->behaviors()->get('StartDateQuery')->primary_input =>
+
+							date('Y-M-d', time() + DAY)
+
+		]);
 	}
 
-// <editor-fold defaultstate="collapsed" desc="Find types active or made during date ranges">
+
+	public function findLoanOverdue(Query $query, $options) {
+		return $query->find('OpenLoan')
+						->find('EndDateBefore',
+								[
+							$this->behaviors()->get('EndDateQuery')->primary_input =>
+
+							date('Y-M-d', time() + DAY)
+
+		]);
+	}
+
+
+	public function findOpenLoan(Query $query, $options) {
+		return $query->find(DISPOSITION_LOAN)
+						->where(['Dispositions.complete' => 0,]);
+	}
+
+	public function findCompletedLoan(Query $query, $options) {
+		return $query->find(DISPOSITION_LOAN)
+						->where(['Dispositions.complete' => 1,]);
+	}
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Find `types` active or made during date ranges">
 	public function findLoanDueDuring(Query $query, $options) {
 		return $query->find(DISPOSITION_LOAN)
 						->where(['Dispositions.complete' => 0,])
@@ -566,13 +630,5 @@ class DispositionsTable extends AppTable
 	}
 // </editor-fold>
 // 
-		//dynamic finders for all the major fields
-	// type, label, name, first/last name, address 1-3, city, state, zip, country
-
-	public function findSearch(Query $query, $options) {
-		
-	}
-
-
 
 }

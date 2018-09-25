@@ -4,7 +4,9 @@
 		
 ?>
 <table>
+	<?php if(is_object($result)) : ?>
 	<caption><?= 'Records found: ' . $result->count(); ?></caption>
+	<?php endif; ?>
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
 		<?php foreach ($result as $disposition): 

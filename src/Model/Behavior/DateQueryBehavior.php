@@ -60,6 +60,11 @@ use Cake\I18n\Time;
  *		// the value at $options['first_day'] would be used
  * </code>
  * 
+ * @todo Make this do NOT and OR queries? Is it better to do this with options, 
+ *		or with separate calls? Managing options could be very difficult 
+ *		because the contents of the array are invisible. Different 
+ *		method names would be nice and explicit. I don't know enough about 
+ *		these more advanced queries to even stub in methods at this point.
  * @author dondrake
  */
 class DateQueryBehavior extends Behavior {
