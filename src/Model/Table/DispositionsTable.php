@@ -283,6 +283,13 @@ class DispositionsTable extends AppTable
 			$data['type'] = $this->_map[$data['label']];
 		}
 	}
+	
+	public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary) {
+		if (!$this->_where_artist_id->contains($query)) {
+			$this->_where_artist_id->attach($query, TRUE);
+			$query->where(['Dispositions.user_id' => $this->SystemState->artistId()]);
+		}
+	}
 
     /**
      * Returns a rules checker object that will be used for validating
@@ -356,19 +363,6 @@ class DispositionsTable extends AppTable
 	 */
 	
 // <editor-fold defaultstate="collapsed" desc="Custom Finder support methods">
-	/**
-	 * Insure the artist_id is included one time
-	 * 
-	 * @param Query $query
-	 * @return $query
-	 */
-	public function _setUserId($query) {
-		if (!$this->_where_artist_id->contains($query)) {
-			$this->_where_artist_id->attach($query, TRUE);
-			$query->where(['Dispositions.user_id' => $this->SystemState->artistId()]);
-		}
-		return $query;
-	}
 
 	/**
 	 * Standardize and sanitize user date input
@@ -405,8 +399,7 @@ class DispositionsTable extends AppTable
 	}
 
 	public function findOnLoan(Query $query, $options) {
-		$query = $query->where(['Dispositions.type' => DISPOSITION_LOAN]);
-		return $this->_setUserId($query);
+		return $query->where(['Dispositions.type' => DISPOSITION_LOAN]);
 	}
 	
 	/**
@@ -417,34 +410,26 @@ class DispositionsTable extends AppTable
 	 * @return type
 	 */
 	public function findFutureLoans(Query $query, $options) {
-		return $this->_setUserId($query)
-				->find('loan')
-				->find('startDateAfter', ['start_date' => time()]);
+		return $query->find(DISPOSITION_LOAN)->find('startDateAfter');
 	}
  
 	/**
 	 * 
-	 * @todo Could get a param check for a user provided date
+	 * @todo Is this for open or closed? Both? Sorted by complete then?
+	 * 
 	 * @param Query $query
 	 * @param type $options
 	 * @return type
 	 */
 	public function findPastLoans(Query $query, $options) {
-		$today = $this->_setDateParameter(time());
-		$query = $query->where([
-			'Dispositions.type' => DISPOSITION_LOAN,
-			'Dispositions.end_date <=' => $today,
-					]);
-		return $this->_setUserId($query);
-		// uses the dispostion_id that extends a loan-type disposition
+		return $query->find(DISPOSITION_LOAN)->find('EndDateBefore');
 	}
 
-	public function findOpen(Query $query, $options) {
-		$query = $query->where([
+	public function findOpenLoans(Query $query, $options) {
+		return $query->where([
 			'Dispositions.type' => DISPOSITION_LOAN,
 			'Dispositions.complete' => 0,
 			]);
-		return $this->_setUserId($query);
 		// can Disposition have a method to categorize the closeness of end_date 
 		//		to support display features (next_month, next_week, past_due)?
 		//is completed necessary give presence of start_date and end_date? 
@@ -454,26 +439,26 @@ class DispositionsTable extends AppTable
 	}
 	
 	public function findOverdue(Query $query, $options) {
-		$today = $this->_setDateParameter(time());
-		$query = $query->where([
-			'Dispositions.type' => DISPOSITION_LOAN,
-			'Dispositions.complete' => 0,
-			'Dispositions.end_date <=' => $today, 
+		$today = date('Y-M-d', time() + DAY);
+		$query->applyOptions(
+			[
+				$this->behaviors()->get('EndDateQuery')->primary_input => 
+				date('Y-M-d', time() + DAY)
 			]);
-		return $this->_setUserId($query);
+		return $query->find('OpenLoans')->find('EndDateBefore');
 	}
 
 // <editor-fold defaultstate="collapsed" desc="Find types active or made during date ranges">
 	public function findLoanDueDuring(Query $query, $options) {
 		return $query->find(DISPOSITION_LOAN)
 						->where(['Dispositions.complete' => 0,])
-						->find('EndDateBetween', $options);
+						->find('EndDateBetween');
 	}
 
 	public function findLoanStartedDuring(Query $query, $options) {
 		return $query->find(DISPOSITION_LOAN)
 						->where(['Dispositions.complete' => 0,])
-						->find('StartDateBetween', $options);
+						->find('StartDateBetween');
 	}
 
 	public function findLoanActiveDuring(Query $query, $options) {
@@ -499,12 +484,12 @@ class DispositionsTable extends AppTable
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="TypeFinders">
-	public function findLoans(Query $query, $options) {
-		return $this->_setUserId($query)->where(['Dispositions.type' => DISPOSITION_LOAN,]);
+	public function findLoan(Query $query, $options) {
+		return $query->where(['Dispositions.type' => DISPOSITION_LOAN,]);
 	}
 
 	public function findTransfer(Query $query, $options) {
-		return $this->_setUserId($query)->where(['Dispositions.type' => DISPOSITION_TRANSFER,]);
+		return $query->where(['Dispositions.type' => DISPOSITION_TRANSFER,]);
 	}
 
 	/**
@@ -514,20 +499,21 @@ class DispositionsTable extends AppTable
 		return $query->find(DISPOSITION_TRANSFER);
 	}
 	
-	public function findStore(Query $query, $options) {
-		return $this->_setUserId($query)->where(['Dispositions.type' => DISPOSITION_STORE,]);
+	public function findStorage(Query $query, $options) {
+		return $query->where(['Dispositions.type' => DISPOSITION_STORE,]);
 	}
 
 	public function findUnavailable(Query $query, $options) {
-		return $this->_setUserId($query)->where(['Dispositions.type' => DISPOSITION_UNAVAILABLE,]);
+		return $query->where(['Dispositions.type' => DISPOSITION_UNAVAILABLE,]);
 	}
 // </editor-fold>
 
-	public function findInEffectDuringDates(Query $query, $options) {
-		return $this->_setUserId($query)
-				->find('StartDateAfter', $options)
-				->find('EndDateBefore', $options);
-	}
+// <editor-fold defaultstate="collapsed" desc="'Schema List' generating methods">
+	/**
+	 * These methods return arrays that can be used by FormHelper select-type 
+	 * input widgits. These are schema-introspection lists rather than 
+	 * user data lists and can be used to create UX toos and features.
+	 */
 	
 	/**
 	 * Return a list of (almost) all the custom finders
@@ -550,15 +536,15 @@ class DispositionsTable extends AppTable
 		}
 		return $finders;
 	}
-	
+
 	/**
 	 * Return a list of valid labels grouped by type
 	 * [ typeName1 => [
-	 *		labelName1 => labelName1,
-	 *		labelName2 => labelName2, ]
-	 *	 typeName2 => [
-	 *		labelName1 => labelName1,
-	 *		... ]
+	 * 		labelName1 => labelName1,
+	 * 		labelName2 => labelName2, ]
+	 * 	 typeName2 => [
+	 * 		labelName1 => labelName1,
+	 * 		... ]
 	 * ]
 	 * 
 	 * @return array
@@ -566,7 +552,8 @@ class DispositionsTable extends AppTable
 	public function labels() {
 		return $this->_disposition_label;
 	}
-	
+
+
 	/**
 	 * Return a list of valid disposition types
 	 * 
@@ -577,8 +564,9 @@ class DispositionsTable extends AppTable
 	public function types() {
 		return array_combine($this->_disposition_type, $this->_disposition_type);
 	}
-
-	//dynamic finders for all the major fields
+// </editor-fold>
+// 
+		//dynamic finders for all the major fields
 	// type, label, name, first/last name, address 1-3, city, state, zip, country
 
 	public function findSearch(Query $query, $options) {

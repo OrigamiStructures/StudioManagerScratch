@@ -4,6 +4,7 @@
 		
 ?>
 <table>
+	<caption><?= 'Records found: ' . $result->count(); ?></caption>
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
 		<?php foreach ($result as $disposition): 

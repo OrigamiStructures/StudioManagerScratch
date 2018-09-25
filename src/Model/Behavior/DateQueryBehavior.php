@@ -68,14 +68,42 @@ class DateQueryBehavior extends Behavior {
 		'implementedMethods' => [],
 		'implementedFinders' => [],
 		'primary_input' => 'start_date',
-		'secondary_imput' => 'end_date'];
+		'secondary_input' => 'end_date'
+		];
 	
+	/**
+	 * Construct
+	 * 
+	 * Alias all the custom finder method names to include an inflected version 
+	 * of the field name. This prevents method-name collisions when multiple 
+	 * date fields are being served in one table.
+	 * 
+	 * @param Table $table
+	 * @param array $config
+	 */
 	public function __construct($table, array $config = []) {
 		$methods = preg_grep('/find_/', get_class_methods($this));
-		$calls = preg_replace('/find_/', 'find'. Inflector::classify($config['field']), $methods);
-		$this->_defaultConfig['implementedFinders'] = array_combine($calls, $methods);
-		$config += $this->_defaultConfig;
+		$calls = preg_replace('/find_/', Inflector::classify($config['field']), $methods);
+		$this->config('implementedFinders', array_combine($calls, $methods));
 		parent::__construct($table, $config);
+	}
+	
+	/**
+	 * Give public read-only access to the properties
+	 * 
+	 * Because there can be more than one instantiation of DateQueryBehavior 
+	 * and method name collisions are prevented, we can't have any accessor 
+	 * methods unless we alias them (like the custom finders. Using magic-get 
+	 * seems adequate. Values can be changed with the objects ->config() method. 
+	 * 
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get($name) {
+		if (in_array($name, array_keys($this->_config))) {
+			return $this->_config[$name];
+		}
+		return NULL;
 	}
 	
 	/**
@@ -96,7 +124,6 @@ class DateQueryBehavior extends Behavior {
 		} catch (Exception $ex) {
 			throw new \BadMethodCallException('Could not create Time object for the date field query');
 		}
-		
 	}
 
 	protected function _columnIdententifier() {
@@ -104,17 +131,17 @@ class DateQueryBehavior extends Behavior {
 	}
 	
 	public function find_Is(Query $query, $options) {
-		$date = $this->_setDateParameter($options[$this->config('primary_input')]);
+		$date = $this->_setDateParameter($options[$this->primary_input]);
 		return $query->where([$this->_columnIdententifier() => $date]);
 	}
 
 	public function find_Before(Query $query, $options) {
-		$date = $this->_setDateParameter($options[$this->config('primary_input')]);
+		$date = $this->_setDateParameter($options[$this->primary_input]);
 		return $query->where(["{$this->_columnIdententifier()} <" => $date]);
 	}
 
 	public function find_After(Query $query, $options) {
-		$date = $this->_setDateParameter($options[$this->config('primary_input')]);
+		$date = $this->_setDateParameter($options[$this->primary_input]);
 		return $query->where(["{$this->_columnIdententifier()} >" => $date]);
 	}
 
@@ -128,8 +155,8 @@ class DateQueryBehavior extends Behavior {
 	 * @return type
 	 */
 	public function find_Between(Query $query, $options) {
-		$range_start = $this->_setDateParameter($options[$this->config('primary_input')]);
-		$range_end = $this->_setDateParameter($options[$this->config('secondary_input')]);
+		$range_start = $this->_setDateParameter($options[$this->primary_input]);
+		$range_end = $this->_setDateParameter($options[$this->secondary_input]);
 		$column = $this->_columnIdententifier();
 		return $this->_table->_setUserId($query)->where(function ($exp, Query $q) 
 				use ($range_start, $range_end, $column) {

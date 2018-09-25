@@ -15,8 +15,10 @@
 echo $this->Form->create();
 ?>
 	<?= $this->Form->select('method', $methods, ['multiple' => 'checkbox']); ?>
-	<?= $this->Form->input('start_date'); ?>
-	<?= $this->Form->input('end_date'); ?>
+	<?= $this->Form->input('first_start_date'); ?>
+	<?= $this->Form->input('second_start_date'); ?>
+	<?= $this->Form->input('first_end_date'); ?>
+	<?= $this->Form->input('second_end_date'); ?>
 	<?= $this->Form->button('submit'); ?>
 <?php	
 echo $this->Form->end();
