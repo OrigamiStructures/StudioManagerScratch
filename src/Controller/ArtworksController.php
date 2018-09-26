@@ -307,17 +307,8 @@ class ArtworksController extends ArtStackController
     }
 	
 	public function testMe() {
-		/**
-		 * @todo multi-selection queries could be passed to the a 
-		 *		generic finder in the Model for processing of all the choices. 
-		 *		This would eliminate controller action logic that had to 
-		 *		detect and controll the process.
-		 */
 		$queries = $this->request->data('method');
 		$result = [];
-//		$methods = ['collected', 'onLoan', 'futureLoans', 
-//			'pastLoans', 'open', 'overdue', 'dueDuring', 'search'];
-//		$methods = array_combine($methods, $methods);
 		$disp = TableRegistry::get('Dispositions');
 		$methods = $disp->customFinders();
 		$options = $this->request->data;
@@ -328,8 +319,13 @@ class ArtworksController extends ArtStackController
 			$result = $result->find($this->request->data['method'][$index++], $options);
 			}
 		}
+		if (is_object($result)) {
+			$result = $disp->containAncestry($result);
+			$pointers = clone $result;
+			$pieces = $pointers->toArray();
+		}
 		
-		$this->set(compact('result', 'methods'));
+		$this->set(compact('result', 'methods', 'pieces'));
 		//		die;
 	}
 	

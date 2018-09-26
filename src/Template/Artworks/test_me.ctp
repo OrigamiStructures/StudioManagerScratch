@@ -28,7 +28,6 @@ echo $this->Form->end();
 
 <?php
 echo $this->element('Disposition/testing/dispo_table');
-//osd($result->toArray());
 //osd($combined);
 //osd($stuff[0]());
 //osd($stuff[1]('input val'));
