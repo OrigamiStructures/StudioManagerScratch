@@ -320,14 +320,24 @@ class SystemState implements EventListenerInterface {
 	public function hasFocus($name, $value = NULL) {
 		if (is_object($name)) {
 			$value = $name->id;
-			$class = explode('\\',get_class($name));
-			$name = lcfirst(array_pop($class));
+			$name = $this::stripNamespace($name);
 		} 
 		$result = $this->request->query($name);
 		if (!is_null($result)) {
 			return $result == $value;
 		}
 		return FALSE;
+	}
+	
+	/**
+	 * Get the class name from a full namespaced name
+	 * 
+	 * @param Object $obj
+	 * @return string
+	 */
+	static function stripNamespace($obj) {
+		$class = explode('\\',get_class($obj));
+		return lcfirst(array_pop($class));
 	}
 	
 	/**
