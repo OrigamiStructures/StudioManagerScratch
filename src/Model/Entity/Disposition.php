@@ -111,4 +111,14 @@ class Disposition extends Entity
 	public function properties() {
 		return $this->_properties;
 	}
+	
+	public function pieceCount() {
+		if ($this->has('pieces')) {
+			return count($this->pieces) . ' ' . 
+				(count($this->pieces) === 1 ? 'piece' : 'pieces');
+		}
+		return 'piece count unknown';
+	}
+	
+	
 }
