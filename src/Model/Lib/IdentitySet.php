@@ -23,14 +23,14 @@ class IdentitySet {
 	 *
 	 * @var string
 	 */
-	protected $_class_name;
+	protected $_source_name;
 	
 	/**
 	 * ID of originating entity
 	 *
 	 * @var string
 	 */
-	protected $_id;
+	protected $_source_id;
 
 	/**
 	 * Count of IDs in the list
@@ -63,10 +63,12 @@ class IdentitySet {
 	 * @param string $property_name
 	 */
 	public function __construct(Entity $entity, $property_name) {
-		$this->_class_name = SystemState::stripNamespace($entity);
-		$this->_id = $entity->id;
+		$this->_source_name = SystemState::stripNamespace($entity);
+		$this->_source_id = $entity->id;
 		$this->_count = count($entity->$property_name);
 		$this->_pointer_name = $property_name;
+//		osd($this);
+//		osd($entity->$property_name);die;
 		$idList = new Collection($entity->$property_name);
 		$this->_id_list = $idList->map(function($value, $index) {
 			return $value->id;
@@ -98,11 +100,11 @@ class IdentitySet {
 	 * @param mixed $inflection The name of any Inflector method
 	 * @return string
 	 */
-	public function sourceName() {
+	public function sourceName($inflection = NULL) {
 		if (!is_null($inflection) && method_exists('Cake\Utility\Inflector', $inflection)){
-			return Inflector::$inflection($this->_class_name);
+			return Inflector::$inflection($this->_source_name);
 		}
-		return $this->_class_name;
+		return $this->_source_name;
 	}
 	
 	/**
@@ -111,7 +113,7 @@ class IdentitySet {
 	 * @return string
 	 */
 	public function sourceId() {
-		return $this->_id;
+		return $this->_source_id;
 	}
 	
 	/**
@@ -147,6 +149,14 @@ class IdentitySet {
 	 */
 	public function idSet() {
 		return $this->_id_list;
+	}
+	
+	public function describe() {
+		return "Contains {$this->countString()} linked to a {$this->sourceName()} (id: {$this->sourceId()}).";
+	}
+	
+	public function __debug() {
+		return [$this->describe()];
 	}
 }
 
