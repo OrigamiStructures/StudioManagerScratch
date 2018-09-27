@@ -9,9 +9,10 @@
 	<?php endif; ?>
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
-		<?php $pieceLists = [];
+		<?php //$pieceLists = [];
 		foreach ($result as $disposition): 
-			$pieceLists[$disposition->id] = new \App\Model\Lib\IdentitySet($disposition, 'pieces');
+//			$pieceLists[$disposition->id] = 
+//				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
 			$properties = array_intersect_key($disposition->properties(), array_flip($columns));
 			$properties['disposition_id'] = $disposition->pieceCount();
 		?>
@@ -20,4 +21,4 @@
 	</tbody>
 </table>
 <?php
-osd($pieceLists);
+//osd($pieceLists);
