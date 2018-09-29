@@ -28,18 +28,20 @@ echo $this->Form->end();
 
 <?php
 echo $this->element('Disposition/testing/dispo_table');
-$t = new OSDTImer();
-$t->start();
-$sets = new \App\Model\Lib\IdentitySets('Pieces', $result->toArray());
-osd($t->result());
-osd($sets->count());
-$idList = $sets->merge();
-sort($idList);
-osd($idList);
-osd($sets);
-//osd($combined);
-//osd($stuff[0]());
-//osd($stuff[1]('input val'));
-//osd($new, 'new');
-//osd($old, 'old');
+//osd($pieces->toArray());
+//$t = new OSDTImer();
+//$t->start();
+$edsets = new \App\Model\Lib\IdentitySets('Editions', $pieces->toArray());
+$editions = $edsets->query();
+//osd($editions);
+$artsets = new \App\Model\Lib\IdentitySets('Artworks', $editions);
+//$artsets = 
+//osd($t->result());
+//osd($sets->count());
+//$idList = array_count_values($sets->merge());
+//
+//osd($idList);
+osd($artsets->query());
+//osd($sets);
+
 ?>

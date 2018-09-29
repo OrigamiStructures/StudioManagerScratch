@@ -10,6 +10,7 @@ use App\Lib\Traits\ArtReviewTrait;
 use App\Controller\ArtStackController;
 use App\Controller\Component\LayersComponent;
 use Cake\Cache\Cache;
+use App\Model\Lib\IdentitySets;
 
 /**
  * Artworks Controller
@@ -323,7 +324,13 @@ class ArtworksController extends ArtStackController
 			$result = $disp->containAncestry($result);
 			$pointers = clone $result;
 			$pieces = $pointers->toArray();
+			$pieceIdentity = new IdentitySets('Pieces', $pieces);
+//			osd($pieceIdentity);die;
+			$piecetable = TableRegistry::get('Pieces');
+			$pieces = $piecetable->find('all', ['conditions' => 
+				['id IN ' => $pieceIdentity->merge() ]]);
 		}
+		
 		
 		$this->set(compact('result', 'methods', 'pieces'));
 		//		die;
