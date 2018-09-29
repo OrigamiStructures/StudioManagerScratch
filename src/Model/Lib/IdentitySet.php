@@ -5,6 +5,11 @@ use Cake\ORM\Entity;
 use App\Lib\SystemState;
 use Cake\Collection\Collection;
 use Cake\Utility\Inflector;
+use Cake\Core\ConventionsTrait;
+use App\Exception\MissingPropertyException;
+use App\Exception\BadClassConfigurationException;
+use Cake\ORM\TableRegistry;
+use Cake\ORM\Query;
 
 /**
  * IdentitySet manages sets of record IDs, thier context and other details
@@ -17,6 +22,8 @@ use Cake\Utility\Inflector;
  * 
  */
 class IdentitySet {
+	
+	use ConventionsTrait;
 	
 	/**
 	 * Type of originating entity
@@ -44,7 +51,11 @@ class IdentitySet {
 	 *
 	 * @var string
 	 */
-	protected $_pointer_name;
+	protected $_table_name;
+	
+	protected $_entity;
+
+	protected $_property_name;
 
 	/**
 	 * The array of IDs of the related records
@@ -59,20 +70,28 @@ class IdentitySet {
 	 * The provided entity must have a property ($property_name) that contains 
 	 * linked records. These linked entities only need the id field.
 	 * 
+	 * @todo The full range of Table name configurations (and transformations) 
+	 *		has not been tested
+	 * 
 	 * @param Entity $entity
 	 * @param string $property_name
 	 */
-	public function __construct(Entity $entity, $property_name) {
+	public function __construct(Entity $entity, $table_name) {
+		$this->_table_name = $table_name;
 		$this->_source_name = SystemState::stripNamespace($entity);
 		$this->_source_id = $entity->id;
-		$this->_count = count($entity->$property_name);
-		$this->_pointer_name = $property_name;
-//		osd($this);
-//		osd($entity->$property_name);die;
-		$idList = new Collection($entity->$property_name);
-		$this->_id_list = $idList->map(function($value, $index) {
-			return $value->id;
-		})->toArray();
+		$this->_property_name = $this->_propertyName($entity);
+		if (is_array($entity->{$this->_property_name})) {
+			$idList = new Collection($entity->{$this->_property_name});
+			$this->_id_list = $idList->map(function($value, $index) {
+				return $value->id !== NULL ? $value->id : NULL;
+			})->toArray();
+		} else {
+			$this->_id_list = $entity->{$this->_property_name} !== NULL ?
+				[$entity->{$this->_property_name}] :
+				[] ;
+		}
+		$this->_count = count($this->_id_list);
 	}
 	
 	/**
@@ -86,9 +105,51 @@ class IdentitySet {
 	 */
 	public function pointsTo($inflection = NULL) {
 		if (!is_null($inflection) && method_exists('Cake\Utility\Inflector', $inflection)){
-			return Inflector::$inflection($this->_pointer_name);
+			return Inflector::$inflection($this->_table_name);
 		}
-		return $this->_pointer_name;
+		return $this->_table_name;
+	}
+	
+	/**
+	 * Discover and return the property name of the linked ids
+	 * 
+	 * @todo This could be done with table and association classes 
+	 *			but I don't have them available here and don't know how anyway. 
+	 *			But without looking it up, we rely on conventions which the 
+	 *			developers may have overridden 
+	 * @return string
+	 */
+	protected function _propertyName($entity = NULL) {
+		if (!isset($this->_property_name)) {
+			$properties = $entity->visibleProperties();
+			
+			$many = Inflector::underscore($this->_table_name);
+			$one = $this->_modelKey($this->_table_name);
+			
+			if (in_array ($many, $properties)) {
+				$this->_property_name = $many;
+			} elseif (in_array ($one, $properties)){
+				$this->_property_name = $one;
+			} else {
+				throw new MissingPropertyException(get_class($entity) . 
+						" does not the property `$one` or `$many`");
+			}
+		}
+		return $this->_property_name;
+	}
+	
+	/**
+	 * Return the property name these linked ids are at in the source
+	 * 
+	 * @return string
+	 * @throws BadClassConfigurationException
+	 */
+	public function propertyName() {
+		if (!isset($this->_property_name)) {	
+			throw new BadClassConfigurationException(
+				'The IdentitySet class was not constructed with an entity.');
+		}
+		return $this->_propertyName();
 	}
 	
 	/**
@@ -155,8 +216,49 @@ class IdentitySet {
 		return "Contains {$this->countString()} linked to a {$this->sourceName()} (id: {$this->sourceId()}).";
 	}
 	
-	public function __debug() {
-		return [$this->describe()];
+	/**
+	 * Is the id stored in this list
+	 * 
+	 * @param string $id
+	 * @return boolean
+	 */
+	public function has($id) {
+		return in_array($id, $this->_id_list);
 	}
+	
+	/**
+	 * If the id exists, report the source record id
+	 * 
+	 * @param string $id 
+	 * @return boolean|string FALSE or the id of the source
+	 */
+	public function sourceFor($id) {
+		return $this->has($id) ? $this->_source_id : FALSE;
+	}
+	
+	/**
+	 * Start and return a query for the members of this single set
+	 * 
+	 * @return Query
+	 */
+	public function query() {
+		$table = TableRegistry::get($this->table());
+		return $table->find('all', ['conditions' => [
+			'id IN ' => $this->merge(),
+		]]);
+	}
+	
+	/**
+	 * Return an array of entities for the members of this single set
+	 * 
+	 * @return array
+	 */
+	public function arrayResult() {
+		$table = TableRegistry::get($this->table());
+		return $table->find('all', ['conditions' => [
+			'id IN ' => $this->merge(),
+		]])->toArray();
+	}
+	
 }
 
