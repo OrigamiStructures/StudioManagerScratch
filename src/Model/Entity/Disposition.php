@@ -105,7 +105,11 @@ class Disposition extends Entity
 	}
 
 	public function _getMemberName() {
-		return $this->first_name . ' ' . $this->last_name;
+		if ($this->first_name === $this->last_name) {
+			return $this->first_name;
+		} else {
+			return $this->first_name . ' ' . $this->last_name;
+		}
 	}
 	
 	public function properties() {
@@ -118,6 +122,19 @@ class Disposition extends Entity
 				(count($this->pieces) === 1 ? 'piece' : 'pieces');
 		}
 		return 'piece count unknown';
+	}
+	
+	public function dateRange() {
+		if ($this->start_date == $this->end_date) {
+			return "on {$this->start_date->format('M d, Y')}";
+		} else {
+			return "from {$this->start_date->format('M d, Y')} through {$this->end_date->format('M d, Y')}";
+		}
+		
+	}
+	
+	public function _getDisplayTitle() {
+		return ucfirst($this->type) . " to $this->memberName {$this->dateRange()}";
 	}
 	
 	

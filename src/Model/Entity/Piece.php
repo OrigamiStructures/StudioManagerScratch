@@ -85,6 +85,11 @@ class Piece extends Entity
 		return $this->_key([$this->edition_id, $this->format_id]);
 	}
 	
+	public function _getDisplayTitle() {
+		return (!is_null($this->number) ? "piece #$this->number" : "$this->quantity pieces");
+		
+	}
+	
 	/**
 	 * From an inverted artwork stack, identify the tip-of-the-iceberg
 	 * 

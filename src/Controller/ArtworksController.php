@@ -310,6 +310,7 @@ class ArtworksController extends ArtStackController
 	public function testMe() {
 		$queries = $this->request->data('method');
 		$result = [];
+		$anscestors = [];
 		$disp = TableRegistry::get('Dispositions');
 		$methods = $disp->customFinders();
 		$options = $this->request->data;
@@ -322,18 +323,29 @@ class ArtworksController extends ArtStackController
 		}
 		if (is_object($result)) {
 			$result = $disp->containAncestry($result);
-			$pointers = clone $result;
-			$pieces = $pointers->toArray();
-			$pieceIdentity = new IdentitySets('Pieces', $pieces);
-//			osd($pieceIdentity);die;
-			$piecetable = TableRegistry::get('Pieces');
-			$pieces = $piecetable->find('all', ['conditions' => 
-				['id IN ' => $pieceIdentity->merge() ]]);
+//			$pointers = clone $result;
+//			$pieces = $pointers->toArray();
+			$dispositions = $result->toArray();
+			$sorted = [];
+			foreach ($dispositions as $disposition) {
+				$sorted[$disposition->id] = $disposition;
+			}
+			$dispositions = $sorted;
+			$t = new \OSDTImer();
+			$t->start();
+			$pieces = new IdentitySets('Pieces', $dispositions);
+			$pieces->arrayResult();
+			$editions = new IdentitySets('Editions', $pieces->entity());
+			$editions->arrayResult();
+			$formats = new IdentitySets('Formats', $pieces->entity());
+			$formats->arrayResult();
+			$artworks = new IdentitySets('Artworks', $editions->entity());
+			$artworks->arrayResult();
 		}
 		
 		
-		$this->set(compact('result', 'methods', 'pieces'));
-		//		die;
+		$this->set(compact('result', 'methods', 'pieces', 
+				'editions', 'formats', 'artworks','dispositions'));
 	}
 	
 	public function composeStack($flat) {

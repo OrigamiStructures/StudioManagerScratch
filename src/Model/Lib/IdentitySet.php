@@ -204,7 +204,7 @@ class IdentitySet {
 	 * 
 	 * This can be used in the queries: 
 	 * `$query->where(['id' => $this->idSet()]` or 
-	 * `$query->where([$this->pointsTo('singularize') . '_id' => $this->idSet()]` 
+	 * `$query->where([$this->pointsTo('singularize') . '_id' => $this->idSet()]`
 	 * 
 	 * @return array
 	 */
@@ -255,9 +255,14 @@ class IdentitySet {
 	 */
 	public function arrayResult() {
 		$table = TableRegistry::get($this->table());
-		return $table->find('all', ['conditions' => [
-			'id IN ' => $this->merge(),
-		]])->toArray();
+		$entities = $table->find('all', ['conditions' => [
+				'id IN ' => $this->merge(),
+			]])->toArray();
+		$result = [];
+		foreach ($entities as $entity) {
+			$result[$entity->id] = $entity;
+		}
+		return $result;
 	}
 	
 }

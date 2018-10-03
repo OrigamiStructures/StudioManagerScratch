@@ -28,20 +28,37 @@ echo $this->Form->end();
 
 <?php
 echo $this->element('Disposition/testing/dispo_table');
-//osd($pieces->toArray());
-//$t = new OSDTImer();
-//$t->start();
-$edsets = new \App\Model\Lib\IdentitySets('Editions', $pieces->toArray());
-$editions = $edsets->query();
-//osd($editions);
-$artsets = new \App\Model\Lib\IdentitySets('Artworks', $editions);
-//$artsets = 
-//osd($t->result());
-//osd($sets->count());
-//$idList = array_count_values($sets->merge());
-//
-//osd($idList);
-osd($artsets->query());
-//osd($sets);
+if (isset($artworks)) {
+	foreach ($artworks->merge() as $artId) {
+		echo "<h1>{$artworks->entity($artId)->title}</h1>";
+		foreach ($artworks->sourceFor($artId) as $editionId) {
+			echo "<h2>{$editions->entity($editionId)->displayTitle}</h2>";
+			$count = 0;
+			foreach ($editions->sourceFor($editionId) as $pieceId) {
+				if ($count === 0) {
+					$formatId = $formats->getSet($pieceId)->idSet()[0];
+					echo "<h3>{$formats->entity($formatId)->displayTitle}</h3>";
+					$count++;
+				}
+				echo '<ul><li>' . $pieces->entity($pieceId)->displayTitle . '<ul>';
+				foreach ($pieces->sourceFor($pieceId) as $dispositionId) {
+					echo "<li>{$dispositions[$dispositionId]->displayTitle}</li>";
+				}
+				echo '</ul></li></ul>';
+			}
+		}
+	}
+}
+//osd($artworks);
+//$linkedPieces = $pieces->getSet(126)->idSet();
+//osd($linkedPieces);
+//$linkedEditions = [];
+//$linkedFormats = [];
+//foreach ($linkedPieces as $piece) {
+//	$linkedFormats[$piece] = $formats->getSet($piece)->idSet();
+//	$linkedEditions[$piece] = $editions->getSet($piece)->idSet();
+//}
+//osd($linkedEditions);
+//osd($linkedFormats);
 
-?>
+		?>

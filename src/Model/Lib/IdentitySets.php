@@ -30,6 +30,8 @@ class IdentitySets {
 	protected $_table_name;
 	
 	protected $source_table_name;
+	
+	protected $_entities;
 
 	/**
 	 * @todo needs to tollerate empty configs too. [], records found but not null 
@@ -104,6 +106,7 @@ class IdentitySets {
 	/**
 	 * Is the id a member of any set
 	 * 
+	 * @todo shouldn't this be $acc || $set and FALSE to start?
 	 * @param string $id
 	 * @return boolean 
 	 */
@@ -123,7 +126,8 @@ class IdentitySets {
 		$sets = new Collection($this->_sets);
 		$sources = $sets->reduce(function($acc, $set) use ($id){
 			$source = $set->sourceFor($id);
-			if ($source) { $acc[] = $source; }
+			if ($source) { $acc[] = $source;}
+			return $acc;
 		}, []);
 		return !empty($sources) ? $sources : FALSE;
 	}
@@ -178,10 +182,31 @@ class IdentitySets {
 	 * @return array
 	 */
 	public function arrayResult() {
+		if (empty($this->_sets)) {
+			return [];
+		}
 		$table = TableRegistry::get($this->table());
-		return $table->find('all', ['conditions' => [
-			'id IN ' => $this->merge(),
-		]])->toArray();
+		$entities = $table->find('all', ['conditions' => [
+				'id IN ' => $this->merge(),
+			]])->toArray();
+		$this->_entities = [];
+		foreach ($entities as $entity) {
+			$this->_entities[$entity->id] = $entity;
+		}
+		return $this->_entities;
+	}
+	
+	/**
+	 * 
+	 * @param type $id
+	 * @return type
+	 */
+	public function entity($id = NULL) {
+		if (is_null($id)) {
+			return $this->_entities;
+		} else {
+			return $this->_entities[$id];
+		}
 	}
 	
 }
