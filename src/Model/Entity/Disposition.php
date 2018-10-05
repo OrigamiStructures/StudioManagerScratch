@@ -128,13 +128,14 @@ class Disposition extends Entity
 		if ($this->start_date == $this->end_date) {
 			return "on {$this->start_date->format('M d, Y')}";
 		} else {
-			return "from {$this->start_date->format('M d, Y')} through {$this->end_date->format('M d, Y')}";
+			return "from {$this->start_date->format('M d, Y')} "
+			. "through {$this->end_date->format('M d, Y')}";
 		}
 		
 	}
 	
 	public function _getDisplayTitle() {
-		return ucfirst($this->type) . " to $this->memberName {$this->dateRange()}";
+		return $this->label . " to $this->memberName {$this->dateRange()}";
 	}
 	
 	
