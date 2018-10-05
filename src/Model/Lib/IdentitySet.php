@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Model\Lib\IdentitySetBase;
 use Cake\ORM\Entity;
 use App\Lib\SystemState;
 use Cake\Collection\Collection;
@@ -21,16 +22,7 @@ use Cake\ORM\Query;
  * details and, most importantly, can deliver an IN list for further queries.
  * 
  */
-class IdentitySet {
-	
-	use ConventionsTrait;
-	
-	/**
-	 * Type of originating entity
-	 *
-	 * @var string
-	 */
-	protected $_source_name;
+class IdentitySet extends IdentitySetBase {
 	
 	/**
 	 * ID of originating entity
@@ -45,15 +37,6 @@ class IdentitySet {
 	 * @var int
 	 */
 	protected $_count;
-	
-	/**
-	 * Name of the entities referenced by IDs in the list
-	 *
-	 * @var string
-	 */
-	protected $_table_name;
-	
-	protected $_entity;
 
 	protected $_property_name;
 
@@ -78,7 +61,7 @@ class IdentitySet {
 	 */
 	public function __construct(Entity $entity, $table_name) {
 		$this->_table_name = $table_name;
-		$this->_source_name = SystemState::stripNamespace($entity);
+		$this->source_entity_name = SystemState::stripNamespace($entity);
 		$this->_source_id = $entity->id;
 		$this->_property_name = $this->_propertyName($entity);
 		if (is_array($entity->{$this->_property_name})) {
@@ -104,7 +87,8 @@ class IdentitySet {
 	 * @return string
 	 */
 	public function pointsTo($inflection = NULL) {
-		if (!is_null($inflection) && method_exists('Cake\Utility\Inflector', $inflection)){
+		if (!is_null($inflection) && 
+				method_exists('Cake\Utility\Inflector', $inflection)){
 			return Inflector::$inflection($this->_table_name);
 		}
 		return $this->_table_name;
@@ -153,37 +137,12 @@ class IdentitySet {
 	}
 	
 	/**
-	 * Get the name of the enitity that contained the linked record(s)
-	 * 
-	 * By passing the name of an Inflector method, the output can be 
-	 * modified as needed.
-	 * 
-	 * @param mixed $inflection The name of any Inflector method
-	 * @return string
-	 */
-	public function sourceName($inflection = NULL) {
-		if (!is_null($inflection) && method_exists('Cake\Utility\Inflector', $inflection)){
-			return Inflector::$inflection($this->_source_name);
-		}
-		return $this->_source_name;
-	}
-	
-	/**
 	 * Get the ID of the source record
 	 * 
 	 * @return string
 	 */
 	public function sourceId() {
 		return $this->_source_id;
-	}
-	
-	/**
-	 * Get the count of IDs in the list of linked records
-	 * 
-	 * @return int
-	 */
-	public function count() {
-		return $this->_count;
 	}
 	
 	/**
@@ -199,23 +158,17 @@ class IdentitySet {
 				$this->pointsTo('singularize') : $this->pointsTo('pluralize'));
 	}
 	
+// <editor-fold defaultstate="collapsed" desc="Abstract implementations">
 	/**
-	 * An array containing the IDs of the linked records
+	 * Get the count of IDs in the list of linked records
 	 * 
-	 * This can be used in the queries: 
-	 * `$query->where(['id' => $this->idSet()]` or 
-	 * `$query->where([$this->pointsTo('singularize') . '_id' => $this->idSet()]`
-	 * 
-	 * @return array
+	 * @return int
 	 */
-	public function idSet() {
-		return $this->_id_list;
+	public function count() {
+		return $this->_count;
 	}
-	
-	public function describe() {
-		return "Contains {$this->countString()} linked to a {$this->sourceName()} (id: {$this->sourceId()}).";
-	}
-	
+
+
 	/**
 	 * Is the id stored in this list
 	 * 
@@ -223,9 +176,10 @@ class IdentitySet {
 	 * @return boolean
 	 */
 	public function has($id) {
-		return in_array($id, $this->_id_list);
+		return in_array($id, $this->idList());
 	}
-	
+
+
 	/**
 	 * If the id exists, report the source record id
 	 * 
@@ -237,33 +191,19 @@ class IdentitySet {
 	}
 	
 	/**
-	 * Start and return a query for the members of this single set
+	 * An array containing the IDs of the linked records
 	 * 
-	 * @return Query
-	 */
-	public function query() {
-		$table = TableRegistry::get($this->table());
-		return $table->find('all', ['conditions' => [
-			'id IN ' => $this->merge(),
-		]]);
-	}
-	
-	/**
-	 * Return an array of entities for the members of this single set
+	 * This can be used in the queries: 
+	 * `$query->where(['id' => $this->idSet()]` or 
+	 * `$query->where([$this->pointsTo('singularize') . '_id' => $this->idSet()]`
 	 * 
 	 * @return array
 	 */
-	public function arrayResult() {
-		$table = TableRegistry::get($this->table());
-		$entities = $table->find('all', ['conditions' => [
-				'id IN ' => $this->merge(),
-			]])->toArray();
-		$result = [];
-		foreach ($entities as $entity) {
-			$result[$entity->id] = $entity;
-		}
-		return $result;
+	public function idList() {
+		return $this->_id_list;
 	}
+
+// </editor-fold>
 	
 }
 
