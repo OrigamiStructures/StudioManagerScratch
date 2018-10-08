@@ -16,18 +16,30 @@ use Cake\ORM\Query;
  * 
  * Contains and reports on a many IdentitySet objects. All the contained 
  * objects are based on the same source Entity type and collect the 
- * same associated Entity IDs
+ * same associated entity IDs
  * 
  * @todo This class could, if appropriate, compose itself into the Table 
  *		object of the association. This would potentially solve transport 
  *		and availability problems. Otherwise, who keeps this object?
+ * 
+ * @todo If it becomes useful to know the Source and Association names, 
+ *		properties and methods to report on those exist in IdentitySet and 
+ *		could be moved to the base class to make them available here.
  */
 class IdentitySets extends IdentitySetBase {
 	
+	/**
+	 * IdentitySet objects indexed by source id
+	 * 
+	 * Each object names IDs of one type of record that are linked to 
+	 * the source record.
+	 *
+	 * @var array
+	 */
 	protected $_sets;
 
 	/**
-	 * @todo needs to tollerate empty configs too. [], records found but not null 
+	 * @todo needs to tollerate empty configs too. [], zero records found 
 	 * 
 	 * @param string $TableName The related IDs to compile from the $config
 	 * @param array|Entity $config A single or an array of Entities

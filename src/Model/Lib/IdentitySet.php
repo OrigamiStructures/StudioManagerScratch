@@ -19,7 +19,8 @@ use Cake\ORM\Query;
  * need to collect and transport sets of IDs to use in WHERE IN (list) queries. 
  * 
  * This object self assembles from an Entity, then reports on various contexual 
- * details and, most importantly, can deliver an IN list for further queries.
+ * details and, most importantly, can deliver an IN list (the IDs of one 
+ * specific association) for further queries.
  * 
  */
 class IdentitySet extends IdentitySetBase {
@@ -63,7 +64,7 @@ class IdentitySet extends IdentitySetBase {
 		$this->_table_name = $table_name;
 		$this->source_entity_name = SystemState::stripNamespace($entity);
 		$this->_source_id = $entity->id;
-		$this->_property_name = $this->_propertyName($entity);
+		$this->_property_name = $this->linkPropertyName($entity);
 		if (is_array($entity->{$this->_property_name})) {
 			$idList = new Collection($entity->{$this->_property_name});
 			$this->_id_list = $idList->map(function($value, $index) {
@@ -83,6 +84,11 @@ class IdentitySet extends IdentitySetBase {
 	 * By passing the name of an Inflector method, the output can be 
 	 * modified as needed.
 	 * 
+	 * @todo If this method becomes generally useful, it would be simpler 
+	 *		to pass in the which object name was required (like Table, 
+	 *		Entity, or Property), rather than the name of an inflection style. 
+	 *		This change would eliminate ->linkPropertyName() too.
+	 * 
 	 * @param mixed $inflection The name of any Inflector method
 	 * @return string
 	 */
@@ -101,9 +107,11 @@ class IdentitySet extends IdentitySetBase {
 	 *			but I don't have them available here and don't know how anyway. 
 	 *			But without looking it up, we rely on conventions which the 
 	 *			developers may have overridden 
+	 * @todo See todo on ->pointsTo()
+	 * 
 	 * @return string
 	 */
-	protected function _propertyName($entity = NULL) {
+	public function linkPropertyName($entity = NULL) {
 		if (!isset($this->_property_name)) {
 			$properties = $entity->visibleProperties();
 			
@@ -120,20 +128,6 @@ class IdentitySet extends IdentitySetBase {
 			}
 		}
 		return $this->_property_name;
-	}
-	
-	/**
-	 * Return the property name these linked ids are at in the source
-	 * 
-	 * @return string
-	 * @throws BadClassConfigurationException
-	 */
-	public function propertyName() {
-		if (!isset($this->_property_name)) {	
-			throw new BadClassConfigurationException(
-				'The IdentitySet class was not constructed with an entity.');
-		}
-		return $this->_propertyName();
 	}
 	
 	/**
