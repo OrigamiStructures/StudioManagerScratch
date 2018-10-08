@@ -24,19 +24,17 @@ echo $this->Form->create();
 echo $this->Form->end();
 ?>
 
-
-
 <?php
 echo $this->element('Disposition/testing/dispo_table');
 if (isset($artworks)) {
-	foreach ($artworks->merge() as $artId) {
+	foreach ($artworks->idList() as $artId) {
 		echo "<h1>{$artworks->entity($artId)->title}</h1>";
 		foreach ($artworks->sourceFor($artId) as $editionId) {
 			echo "<h2>{$editions->entity($editionId)->displayTitle}</h2>";
 			$count = 0;
 			foreach ($editions->sourceFor($editionId) as $pieceId) {
 				if ($count === 0) {
-					$formatId = $formats->getSet($pieceId)->idSet()[0];
+					$formatId = $formats->getSet($pieceId)->idList()[0];
 					echo "<h3>{$formats->entity($formatId)->displayTitle}</h3>";
 					$count++;
 				}
@@ -49,16 +47,20 @@ if (isset($artworks)) {
 		}
 	}
 }
-//osd($artworks);
-//$linkedPieces = $pieces->getSet(126)->idSet();
-//osd($linkedPieces);
-//$linkedEditions = [];
-//$linkedFormats = [];
-//foreach ($linkedPieces as $piece) {
-//	$linkedFormats[$piece] = $formats->getSet($piece)->idSet();
-//	$linkedEditions[$piece] = $editions->getSet($piece)->idSet();
-//}
-//osd($linkedEditions);
-//osd($linkedFormats);
-
-		?>
+echo '<h1>Reverse Formatting</h1>';
+if (isset($artworks)) {
+	foreach ($dispositions as $disposition) {
+		echo '<ul><li>' . $dispositions[$dispositionId]->displayTitle . '<ul>';
+		foreach ($pieces->getSet($disposition->id)->idList() as $pieceId) {
+			$piece = $pieces->entity($pieceId);
+			$artworkId = $editions->entity($piece->edition_id)->artwork_id;
+			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
+					$artworks->entity($artworkId)->title . ', ' . 
+					$editions->entity($piece->edition_id)->displayTitle . ', ' .
+					$formats->entity($piece->format_id)->displayTitle . 
+					'</li>';
+		}
+		echo '</ul></li></ul>';
+	}
+}
+?>

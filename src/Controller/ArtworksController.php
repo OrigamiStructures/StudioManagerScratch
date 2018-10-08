@@ -322,17 +322,15 @@ class ArtworksController extends ArtStackController
 			}
 		}
 		if (is_object($result)) {
+			$t = new \OSDTImer();
+			$t->start();
 			$result = $disp->containAncestry($result);
-//			$pointers = clone $result;
-//			$pieces = $pointers->toArray();
 			$dispositions = $result->toArray();
 			$sorted = [];
 			foreach ($dispositions as $disposition) {
 				$sorted[$disposition->id] = $disposition;
 			}
 			$dispositions = $sorted;
-			$t = new \OSDTImer();
-			$t->start();
 			$pieces = new IdentitySets('Pieces', $dispositions);
 			$pieces->arrayResult();
 			$editions = new IdentitySets('Editions', $pieces->entity());
@@ -341,6 +339,7 @@ class ArtworksController extends ArtStackController
 			$formats->arrayResult();
 			$artworks = new IdentitySets('Artworks', $editions->entity());
 			$artworks->arrayResult();
+			osd($t->result());
 		}
 		
 		
