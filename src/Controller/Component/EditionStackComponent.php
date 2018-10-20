@@ -9,6 +9,7 @@ use Cake\I18n\Time;
 use Cake\Cache\Cache;
 use App\Lib\Traits\EditionStackCache;
 use App\Model\Lib\Providers;
+use App\Lib\EditionTypeMap;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -157,7 +158,7 @@ class EditionStackComponent extends Component {
 			$patch = ['format_id' => NULL];
 		}
 		
-		if (\App\Lib\SystemState::isNumberedEdition($edition->type)) {
+		if (EditionTypeMap::isNumbered($edition->type)) {
 			$this->_prepareNumberedPieces($assignment, $patch);
 		} else {
 			$this->_prepareOpenPieces($assignment, $patch, $edition->id);

@@ -5,6 +5,7 @@ use Cake\View\Helper;
 use Cake\Cache\Cache;
 use App\View\Helper\Traits\ValidationErrors;
 use App\Lib\SystemState;
+use App\Lib\EditionTypeMap;
 
 /**
  * CakePHP DispositionToolsHelper
@@ -157,7 +158,7 @@ class DispositionToolsHelper extends Helper {
 		
 		$in_disposition = $this->_pieceInDisposition($piece);
 		if (!$in_disposition) {
-			if (SystemState::isOpenEdition($edition->type)) {
+			if (EditionTypeMap::isUnNumbered($edition->type)) {
 				return $this->_connectOpenPiece($piece);
 				
 			} else {

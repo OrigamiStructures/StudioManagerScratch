@@ -8,6 +8,7 @@ use App\Lib\SystemState;
 use Cake\View\Form\FormContext;
 use Cake\Collection\Collection;
 use App\Lib\Range;
+use App\Lib\EditionTypeMap;
 
 /**
  * @todo Has the PieceAssignmentComponent been abandoned as a concept?
@@ -83,8 +84,8 @@ class AssignmentForm extends Form
 				]
 			]);
 		
-		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
-			// open editions allow an integer value
+		if (EditionTypeMap::isUnNumbered($this->_providers['edition']->type)) {
+			// open/unNumbered editions allow an integer value
 			$validator
 				->add('to_move', [
 					'open_move' => [
@@ -174,7 +175,7 @@ class AssignmentForm extends Form
 	 */
 	public function piecesAvailabilityConfirmation ($context) {
 		$context = $this->_removeMatchingSource($context);
-		if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
+		if (EditionTypeMap::isUnNumbered($this->_providers['edition']->type)) {
 			return $this->checkOpenAvailability($context);
 		} else {
 			return $this->checkNumberedAvailability($context);
@@ -325,7 +326,7 @@ class AssignmentForm extends Form
 			// the final validaton passed so set up some final values for save
 			$this->destination = $data['destinations_for_pieces'];
 			
-			if (SystemState::isOpenEdition($this->_providers['edition']->type)) {
+			if (EditionTypeMap::isUnNumbered($this->_providers['edition']->type)) {
 				$this->_identifyOpenDestinationPiece($data);
 				$this->destination_piece = array_pop($this->destination_piece);
 			}

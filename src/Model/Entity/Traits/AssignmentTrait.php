@@ -5,6 +5,7 @@ use Cake\Utility\Inflector;
 use App\Lib\Range;
 use Cake\Collection\Collection;
 use App\Lib\SystemState;
+use App\Lib\EditionTypeMap;
 
 /**
  * AssignmentTrait provides a common Piece access interface for Editions and Formats
@@ -28,7 +29,7 @@ trait AssignmentTrait {
 	 * @param string $type The edition type
 	 */
 	public function range(Collection $pieces, $type) {
-		if (in_array($type, SystemState::limitedEditionTypes())) {
+		if (EditionTypeMap::isNumbered($type)) {
 			$numbers = $pieces->reduce(function($accumulate, $piece) {
 				$accumulate[] = $piece->number;
 				return $accumulate;

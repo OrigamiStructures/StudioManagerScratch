@@ -4,6 +4,7 @@ namespace App\Model\Lib;
 use \App\Exception\BadEditionStackContentException;
 use Cake\Utility\Text;
 use App\Lib\SystemState;
+use App\Lib\EditionTypeMap;
 
 /**
  * Providers
@@ -149,11 +150,12 @@ class Providers {
 	 *		and letting the artist control the limits. Then Open would 
 	 *		become UnNumbered. This just amounts to terminology changes 
 	 *		but if done, this code should get fixed too.
+	 * @todo This is a redundant method. Is there a reason for it to exist?
 	 * 
 	 * @return boolean
 	 */
 	public function isLimitedEdition() {
-		return in_array($this->_edition->type, SystemState::limitedEditionTypes());
+		return EditionTypeMap::isNumbered($this->_edition->type);
 	}
 	
 	/**
