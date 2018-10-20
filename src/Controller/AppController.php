@@ -19,7 +19,6 @@ use Cake\Event\Event;
 use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
-use App\Lib\SState;
 use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
 
@@ -51,7 +50,6 @@ class AppController extends Controller
 		
 		parent::__construct($request, $response, $name, $eventManager, $components);
         $this->eventManager()->on($this->SystemState);
-//		$this->eventManager()->on(new SState());
 //		$this->SystemState->afterLogin(new Event('thing'));
 	}
 	
