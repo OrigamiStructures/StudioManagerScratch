@@ -102,42 +102,6 @@ class SystemState implements EventListenerInterface {
         ];
     }
 	
-	static function limitedEditionTypes() {
-		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
-	}
-	
-	static function isNumberedEdition($edition_type) {
-		return in_array(
-			$edition_type, 
-			[EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED]);
-	}
-	
-	static function openEditionTypes() {
-		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
-	}
-
-	static function isOpenEdition($edition_type) {
-		return in_array(
-			$edition_type, 
-			[EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
-	}
-	
-	static function singleFormatEditionTypes() {
-		return [EDITION_UNIQUE, EDITION_RIGHTS];
-	}
-	
-	static function multiFormatEditionTypes() {
-		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
-				EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
-	}
-	
-	static function isValidEditionType($type) {
-		return in_array($type, [EDITION_UNIQUE, EDITION_RIGHTS, EDITION_LIMITED, 
-			PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
-			EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
-	}
-
-
 	static function collectedDispositionTypes() {
 		return [DISPOSITION_TRANSFER_SALE,  DISPOSITION_TRANSFER_SUBSCRIPTION, 
 			DISPOSITION_TRANSFER_DONATION,  DISPOSITION_TRANSFER_GIFT, 
