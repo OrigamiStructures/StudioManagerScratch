@@ -8,7 +8,7 @@ foreach($pieces as $piece) :
 ?>
 	<tr>
 		<?php 
-		if (in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) : ;
+		if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) : ;
 		?>
 		<td><?= $piece->number; ?></td>
 		<?php 

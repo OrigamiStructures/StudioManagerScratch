@@ -15,6 +15,7 @@ use Cake\ORM\Table;
 use App\Model\Table\AppTable;
 use Cake\Collection\Collection;
 use App\Lib\SystemState;
+use App\Lib\EditionTypeMap;
 
 /**
  * CakePHP MenusTable
@@ -237,7 +238,7 @@ class MenusTable extends AppTable{
 	}
 	
 	protected function allowNewFormat($edition) {
-		return in_array($edition->type, SystemState::multiFormatEditionTypes());
+		return EditionTypeMap::isMultiFormat($edition->type);
 	}
 
 }

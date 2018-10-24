@@ -4,6 +4,7 @@ namespace App\View\Helper;
 use Cake\View\Helper;
 use App\Lib\SystemState;
 use App\View\Helper\Traits\ValidationErrors;
+use App\Lib\EditionTypeMap;
 
 /**
  * AssignHelper supports the EditionController::assign() modelless form
@@ -25,7 +26,7 @@ class AssignHelper extends Helper {
 	}
 	
 	public function rangeText($provider, $edition) {
-		if (in_array($edition->type, SystemState::limitedEditionTypes())) {
+		if (EditionTypeMap::isNumbered($edition->type)) {
 			$identifier = 'Numbers: ';
 		} else {
 			$identifier = 'Available: ';

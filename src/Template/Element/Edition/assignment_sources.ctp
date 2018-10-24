@@ -33,7 +33,7 @@ $source_output = $source->reduce(function($accumulator, $provider) use($helper, 
 
 //osd($source_output);
 
-if (App\Lib\SystemState::isNumberedEdition($edition->type)) {
+if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) {
 	// checkboxes, all checked by default
 	$count = 0;
 	foreach($source_output as $source) {
