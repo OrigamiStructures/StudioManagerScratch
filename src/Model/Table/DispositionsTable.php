@@ -13,7 +13,7 @@ use Cake\Collection\Collection;
 use \SPLStorageObject;
 use Cake\I18n\Time;
 use App\Model\Behavior\DateQueryBehavior;
-//use App\Lib\Traits\EditionStackCache;
+use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
  * Dispositions Model
@@ -28,7 +28,7 @@ use App\Model\Behavior\DateQueryBehavior;
 class DispositionsTable extends AppTable
 {
 	
-//	use EditionStackCache;
+use ArtistIdConditionTrait;
 
 // <editor-fold defaultstate="collapsed" desc="Type and Label mapping properties">
 	/**
@@ -111,19 +111,6 @@ class DispositionsTable extends AppTable
 
 
 	/**
-	 * Track whether the artist_id has been added to the query where clause
-	 * 
-	 * This will let me avoid doing it again and again for complex queries. 
-	 * Of course, I'm assuming this will be an issue worth solving.
-	 * This will be an array that uses the object as a key and 
-	 * a boolean as a value to indicate done (TRUE), not done (->contains).
-	 * The TRUE value is not important. ->contains is the important test.
-	 * 
-	 * This property will made into an SPLStorageObject by intialize()
-	 */
-	protected $_where_artist_id;
-
-	/**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -189,10 +176,7 @@ class DispositionsTable extends AppTable
             'targetForeignKey' => 'piece_id',
             'joinTable' => 'dispositions_pieces'
         ]);
-		
-		$this->_where_artist_id = new \SplObjectStorage();
-		
-    }
+	}
 
 	public function map($label) {
 		if (isset($this->_map[$label])) {
@@ -375,24 +359,13 @@ class DispositionsTable extends AppTable
 	/**
 	 * beforeFind event
 	 * 
-	 * Insure that the artist_id is always included in queries. This will 
-	 * prevent bleed through of one user's data into another even if some  
-	 * crazy hack or error calls for record IDs that would otherwise cause 
-	 * the records to be exposed.
-	 * 
-	 * Since IDs are exposed in the URL, this is critical.
-	 * 
 	 * @param Event $event
 	 * @param Query $query
 	 * @param ArrayObject $options
 	 * @param boolean $primary
 	 */
-	public function beforeFind(Event $event, Query $query, ArrayObject $options,
-			$primary) {
-		if (!$this->_where_artist_id->contains($query)) {
-			$this->_where_artist_id->attach($query, TRUE);
-			$query->where(['Dispositions.user_id' => $this->SystemState->artistId()]);
-		}
+	public function beforeFind($event, $query, $options, $primary) { 
+		$this->includeArtistIdCondition($query); // trait handles this
 	}
 
 	/**
