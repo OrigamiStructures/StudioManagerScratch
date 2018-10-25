@@ -9,6 +9,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
 use App\Lib\Traits\EditionStackCache;
+use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
  * Pieces Model
@@ -21,6 +22,7 @@ use App\Lib\Traits\EditionStackCache;
 class PiecesTable extends AppTable {
 
     use EditionStackCache;
+	use ArtistIdConditionTrait;
 
     /**
      * Initialize method
@@ -69,6 +71,18 @@ class PiecesTable extends AppTable {
             'joinTable' => 'dispositions_pieces'
         ]);
     }
+
+	/**
+	 * beforeFind event
+	 * 
+	 * @param Event $event
+	 * @param Query $query
+	 * @param ArrayObject $options
+	 * @param boolean $primary
+	 */
+	public function beforeFind($event, $query, $options, $primary) { 
+		$this->includeArtistIdCondition($query); // trait handles this
+	}
 
 	/**
 	 * @todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 and issue 24 
@@ -296,7 +310,7 @@ class PiecesTable extends AppTable {
 					'Pieces.edition_id' => $edition_id, 
 					'Pieces.disposition_count' => 0]);
 	}
-
+	
 	/**
 	 * Pieces that are not yet assigned to Formats
 	 * 
