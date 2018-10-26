@@ -137,10 +137,11 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	public function connect($entity) {
-		$class = array_pop((explode('\\', get_class($entity))));
-		$method = "_connect$class";
-		
-		return $this->$method($entity);
+            $class = SystemState::stripNamespace($entity);
+//            $class = array_pop((explode('\\', get_class($entity))));
+            $method = "_connect$class";
+
+            return $this->$method($entity);
 	}
 	
 	/**
