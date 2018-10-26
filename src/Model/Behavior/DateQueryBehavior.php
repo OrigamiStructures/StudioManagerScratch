@@ -160,14 +160,13 @@ class DateQueryBehavior extends Behavior {
 	 * @return type
 	 */
 	public function find_Between(Query $query, $options) {
-		$range_start = $this->_setDateParameter($options[$this->primary_input]);
-		$range_end = $this->_setDateParameter($options[$this->secondary_input]);
-		$column = $this->_columnIdententifier();
-		return $this->_table->_setUserId($query)->where(function ($exp, Query $q) 
-				use ($range_start, $range_end, $column) {
-					return $exp->between($column, 
-						$range_start, $range_end);
-				});
+            $range_start = $this->_setDateParameter($options[$this->primary_input]);
+            $range_end = $this->_setDateParameter($options[$this->secondary_input]);
+            $column = $this->_columnIdententifier();
+            return $query->where(function ($exp, Query $q) 
+                use ($range_start, $range_end, $column) {
+                    return $exp->between($column, $range_start, $range_end);
+                });
 	}
 
 }
