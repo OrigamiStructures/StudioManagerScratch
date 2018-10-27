@@ -1,10 +1,11 @@
 <!-- Element/Edition/piece_assignment_decoration.ctp -->
 <?php
 $helper = $this->loadHelper('Assign');
-$edition = $providers['edition'];
+$edition = $providers->edition;
 $edition_index = $edition->index;
 $this->set(compact('edition', 'helper', 'artwork'));
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
+//osd($assign);//die;
 ?>
 
   <div class="row">

@@ -186,7 +186,7 @@ class ArtworkStackComponent extends Component {
 		}
 //		osd($providers);die;
 		return [
-			'providers' => new Providers($provider), 
+			'providers' => new Providers($providers), 
 			'pieces' => $pieces,
 			'artwork' => $artwork[0],
 			];

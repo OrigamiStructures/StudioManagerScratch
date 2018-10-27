@@ -47,6 +47,7 @@ class AssignmentForm extends Form
 
 	public function __construct($providers) {
 		$this->_providers = $providers;
+                parent::__construct();
 	}
 
     protected function _buildSchema(Schema $schema)
