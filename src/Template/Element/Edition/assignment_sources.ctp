@@ -65,6 +65,7 @@ if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) {
 		$input = str_replace(['<div class="input checkbox">', '</div>'], ['', ''], $input);
 		
 		echo '<div class="input checkbox">';
+                echo $this->Form->checkbox("source_for_pieces_$count", $attr);;
 		echo $this->Form->label(
 				"source_for_pieces_$count", 
 				$input . $source['text'] . ' ' . $source['range'], 
