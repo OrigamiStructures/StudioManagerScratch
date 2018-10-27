@@ -52,13 +52,13 @@ trait AssignmentTrait {
 	 * @throws \CakeDC\Users\Exception\BadConfigurationException
 	 */
 	public function assignablePieces($return_type = PIECE_COLLECTION_RETURN) {
-		if (stristr($this->_className, 'Edition')) {
+		if (stristr(get_class($this), 'Edition')) {
 			$property = 'unassigned';
-		} elseif (stristr($this->_className, 'Format')) {
+		} elseif (stristr(get_class($this), 'Format')) {
 			$property = 'fluid';
 		} else {
 			throw new \CakeDC\Users\Exception\BadConfigurationException(
-				"{$this->_className} does not have assignable pieces, so it "
+				get_class($this) . " does not have assignable pieces, so it "
 				. "is not compatible with the AssignmentTrait.");
 		}
 		return $this->_pieces($property, $return_type);
@@ -71,14 +71,14 @@ trait AssignmentTrait {
 	 * @throws \CakeDC\Users\Exception\BadConfigurationException
 	 */
 	public function hasAssignable() {
-		if (stristr($this->_className, 'Edition')) {
+		if (stristr(get_class($this), 'Edition')) {
 			return $this->hasUnassigned();
-		} elseif (stristr($this->_className, 'Format')) {
+		} elseif (stristr(get_class($this), 'Format')) {
 			return $this->hasFluid();
 		} else {
 			throw new \CakeDC\Users\Exception\BadConfigurationException(
 				"Only Edition and Format entities can have assignable pieces. "
-				. "{$this->_className} is not compatible with the AssignmentTrait.");
+				. get_class($this) . " is not compatible with the AssignmentTrait.");
 		}
 	}
 	

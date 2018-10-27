@@ -1,6 +1,6 @@
 <!-- Element/Pieces/overview_rows.ctp -->
 <?php
-$owners = new \Cake\Collection\Collection($providers);
+$owners = new \Cake\Collection\Collection($providers->providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
 	$accumulator[$owner->key()] = $owner->display_title;
 	return $accumulator;

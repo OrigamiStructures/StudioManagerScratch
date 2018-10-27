@@ -10,7 +10,7 @@ $assignment_source_data = [];
  * @todo much of this should go to the AssignHelper, the 'correct' place 
  *		for re-usable output logic.
  */
-$source = new \Cake\Collection\Collection($providers);
+$source = new \Cake\Collection\Collection($providers->providers);
 $source_output = $source->reduce(function($accumulator, $provider) use($helper, $edition) {
 	$key = $provider->key();
 	$acumulator[$key] = [];

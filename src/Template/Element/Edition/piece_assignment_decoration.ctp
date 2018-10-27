@@ -9,7 +9,7 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 ?>
 
   <div class="row">
-	<?= $this->Form->create($assign); ?>
+	<?= $this->Form->create(FALSE); //$this->Form->create($assign); ?>
     <div class="large-6 columns radio">
 		<?= $this->element('Edition/assignment_sources'); ?>
 		<div class="high">
