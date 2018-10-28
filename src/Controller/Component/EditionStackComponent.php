@@ -205,8 +205,7 @@ class EditionStackComponent extends Component {
 		$update_trigger_value = [
 			'created' => new \DateTime('now')
 		];
-		$formats = $assignment->_providers;
-		array_shift($formats);
+		$formats = $assignment->_providers->formats;
 		$trigger_pieces = (new Collection($formats))
 			->reduce(function($accumulator, $format) use ($Pieces, $update_trigger_value){
 				if (!empty($format->fluid)) {

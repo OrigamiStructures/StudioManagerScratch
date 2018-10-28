@@ -71,6 +71,7 @@ class AssignmentForm extends Form {
 
     protected function _buildValidator(Validator $validator) {
 
+//        osd($validator);
 //		osd('this string ' + 'that string');
         $validator
             ->notEmpty('to_move', 'You must indicate which pieces should be moved.')
@@ -82,8 +83,9 @@ class AssignmentForm extends Form {
                     . 'same as the destination. No action was taken.'
                 ]
         ]);
+//        osd($validator);die;
 
-        if (EditionTypeMap::isUnNumbered($this->_providers['edition']->type)) {
+        if (EditionTypeMap::isUnNumbered($this->_providers->edition->type)) {
             // open/unNumbered editions allow an integer value
             $validator
                 ->add('to_move', [
@@ -171,8 +173,9 @@ class AssignmentForm extends Form {
      * @return boolean
      */
     public function piecesAvailabilityConfirmation($context) {
+//        osd($this->_providers);die;
         $context = $this->_removeMatchingSource($context);
-        if (EditionTypeMap::isUnNumbered($this->_providers['edition']->type)) {
+        if (EditionTypeMap::isUnNumbered($this->_providers->edition->type)) {
             return $this->checkOpenAvailability($context);
         } else {
             return $this->checkNumberedAvailability($context);
@@ -289,7 +292,7 @@ class AssignmentForm extends Form {
             $provider_key = $index === 0 ? 'edition' : $index - 1;
             $this->source_pieces = array_merge(
                 $this->source_pieces,
-                $this->_providers[$provider_key]->assignablePieces(PIECE_ENTITY_RETURN)
+                $this->_providers->providers[$provider_key]->assignablePieces(PIECE_ENTITY_RETURN)
             );
         });
         return $this->source_pieces;
@@ -314,6 +317,7 @@ class AssignmentForm extends Form {
     }
 
     protected function _execute(array $data) {
+//        osd($data);die;
         // data is packaged to match Validator::context because we reuse many of its callbacks
         $result = $this->piecesAvailabilityConfirmation(['data' => $data]);
 
@@ -321,7 +325,7 @@ class AssignmentForm extends Form {
             // the final validaton passed so set up some final values for save
             $this->destination = $data['destinations_for_pieces'];
 
-            if (EditionTypeMap::isUnNumbered($this->_providers['edition']->type)) {
+            if (EditionTypeMap::isUnNumbered($this->_providers->edition->type)) {
                 $this->_identifyOpenDestinationPiece($data);
                 $this->destination_piece = array_pop($this->destination_piece);
             }

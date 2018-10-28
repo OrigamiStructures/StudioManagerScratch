@@ -241,7 +241,7 @@ class EditionsController extends ArtStackController {
 
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($assignment->execute($this->request->data)) {
-                if ($this->EditionStack->reassignPieces($assignment, $providers)) {
+                if ($this->EditionStack->reassignPieces($assignment, $providers->providers)) {
                     $this->Flash->error(__('The reassignments were completed.'));
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
 // and 
