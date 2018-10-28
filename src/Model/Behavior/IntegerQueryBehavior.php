@@ -37,8 +37,8 @@ class IntegerQueryBehavior extends Behavior{
      * @param array $params
      * @return Query
      */
-    protected function integer($query, $column, $params) {
-        if (in_array('between', $params)) {
+    public function integer($query, $column, $params) {
+        if (in_array('between', $params, TRUE)) {
             return $this->constructBetween($query, $column, $params);
         }
         if ($op = array_intersect(['<', '>', '=', '<=', '>='], $params)) {
@@ -74,7 +74,7 @@ class IntegerQueryBehavior extends Behavior{
             });
         } else {
             $msg = "'between' requires two integers, " . count($values) . ' given.';
-            throw new BadMethodCallException($msg);
+            throw new \BadMethodCallException($msg);
        }
             
     }

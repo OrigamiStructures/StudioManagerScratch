@@ -233,7 +233,7 @@ class PiecesTable extends AppTable {
      */
     public function fluidPieceCountInFormat($event, $entity, $table) {
         return $this
-                ->find('formatPieces', [$entity->format_id])
+                ->find('assignedTo', [$entity->format_id])
                 ->find('fluid')
                 ->count();
     }
@@ -304,7 +304,8 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findDispositionCount($query, $options) {
-        return $this->integer($query, 'disposistion_count', $options);
+//        osd($options);die;
+        return $this->integer($query, 'disposition_count', $options);
     }
 
     /**
