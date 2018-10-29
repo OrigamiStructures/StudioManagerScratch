@@ -153,8 +153,6 @@ class DateQueryBehavior extends Behavior {
 	/**
 	 * Find dates between two dates (inclusive)
 	 * 
-	 * @todo _table->_setUserId() must not be here. It will have to be 
-	 *		removed and performed by beforeFind event handler
 	 * @param Query $query
 	 * @param type $options
 	 * @return type

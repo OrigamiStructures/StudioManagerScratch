@@ -389,9 +389,8 @@ class DispositionsTable extends AppTable {
      * @return Query
      */
     public function findCurrentDisposition(Query $query, $options) {
-        $query = $query->orderAsc('Dispositions.created')
+        return $query->orderAsc('Dispositions.created')
                 ->$query->first();
-        return $this->_setUserId($query);
     }
 
     /**
