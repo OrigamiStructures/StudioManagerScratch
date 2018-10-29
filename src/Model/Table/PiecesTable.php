@@ -35,27 +35,14 @@ class PiecesTable extends AppTable {
      */
     public function initialize(array $config) {
         parent::initialize($config);
-
-        /**
-         * @todo These three steps seem unnecessary or suspect
-         */
-        $this->table('pieces');
-        $this->displayField('id');
-        $this->primaryKey('id');
-
-        $this->addBehavior('Timestamp');
-        $this->addBehavior('CounterCache', [
-            'Editions' => [
-                'assigned_piece_count' => [$this, 'assignedEditionPieces'],
-                'fluid_piece_count' => [$this, 'fluidEditionPieces'],
-            ],
-            'Formats' => [
-                'assigned_piece_count' => [$this, 'assignedFormatPieces'],
-                'fluid_piece_count' => [$this, 'fluidPieceCountInFormat'],
-                'collected_piece_count' => ['conditions' => ['collected' => 1]],
-            ],
-        ]);
-        $this->addBehavior('IntegerQuery');
+        $this->_initializeProperties();
+        $this->_initializeBehaviors();
+        $this->_initializeAssociations();
+    }
+    
+// <editor-fold defaultstate="collapsed" desc="Initialization details">
+    
+    protected function _initializeAssociations() {
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
@@ -75,6 +62,32 @@ class PiecesTable extends AppTable {
             'joinTable' => 'dispositions_pieces'
         ]);
     }
+    
+    protected function _initializeBehaviors() {
+        $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
+        $this->addBehavior('CounterCache', [
+            'Editions' => [
+                'assigned_piece_count' => [$this, 'editionsAssignedPieceCount'],
+                'fluid_piece_count' => [$this, 'editionsFluidPieceCount'],
+            ],
+            'Formats' => [
+                'assigned_piece_count' => [$this, 'formatsAssignedPieceCount'],
+                'fluid_piece_count' => [$this, 'formatsFluidPieceCount'],
+                'collected_piece_count' => ['conditions' => ['collected' => 1]],
+            ],
+        ]);
+    }
+    
+    protected function _initializeProperties() {
+        /**
+         * @todo This rem'd step seem unnecessary or suspect
+         */
+//        $this->table('pieces');
+        $this->displayField('displayTitle');
+    }
+
+// </editor-fold>
 
     /**
      * Default validation rules.
@@ -120,15 +133,16 @@ class PiecesTable extends AppTable {
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Event Handlers">
 
     /**
      * @todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 and issue 24 
      */
     public function implementedEvents() {
-//		return [
-//			'Pieces.fluidPieceCountInFormat' => 'fluidPieceCountInFormat',
-//		];
+//        return [
+//                'Pieces.formatsFluidPieceCount' => 'formatsFluidPieceCount',
+//        ];
     }
 
     /**
@@ -157,11 +171,11 @@ class PiecesTable extends AppTable {
      * @param boolean $primary
      */
     public function beforeFind($event, $query, $options, $primary) {
-
         $this->includeArtistIdCondition($query); // trait handles this
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Callables to support CounterCache Behaviors">
 
     /**
@@ -172,12 +186,10 @@ class PiecesTable extends AppTable {
      * @param Table $table
      * @return int
      */
-    public function assignedFormatPieces($event, $entity, $table) {
-        $pieces = $table->find('all')->where([
-            'edition_id' => $entity->edition_id,
-            'format_id' => $entity->format_id,
-        ]);
-        return $this->assignedPieces($pieces);
+    public function formatsAssignedPieceCount($event, $entity, $table) {
+        return $this->find('InEdition' [$entity->edition_id])
+            ->find('assignedTo', [$entity->format_id])
+            ->sumOf('quantity');
     }
 
     /**
@@ -188,39 +200,15 @@ class PiecesTable extends AppTable {
      * @param Table $table
      * @return int
      */
-    public function assignedEditionPieces($event, $entity, $table) {
-        $pieces = $table->find('all')->where([
-            'edition_id' => $entity->edition_id,
-            'format_id IS NOT NULL',
-        ]);
+    public function editionsAssignedPieceCount($event, $entity, $table) {
+        return $this->find('inEdition', [$entity->edition_id])
+            ->find('assigned')
+            ->sumOf('quantity');
         /**
          * @todo THIS NEEDS TO BUMP ASSIGNED FORMAT COUNTING
          * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
          * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
          */
-        return $this->assignedPieces($pieces);
-    }
-
-    /**
-     * Callable that calcs CounterCache Pieces that belongTo Formats
-     * 
-     * These counts are actually sums of 'quantity' on the pieces because of 
-     * the way pieces for Open Editions are tracked (avoiding making thousands 
-     * of individual records)
-     * 
-     * @param Event $event
-     * @param Entity $entity
-     * @param Table $table
-     * @return int
-     */
-    public function assignedPieces(Query $query) {
-        $query->select(['id', 'format_id', 'edition_id', 'quantity']);
-        $sum = (new Collection($query->toArray()))->sumOf(
-            function($value) {
-            return $value->quantity;
-        }
-        );
-        return $sum;
     }
 
     /**
@@ -231,55 +219,29 @@ class PiecesTable extends AppTable {
      * @param Table $table
      * @return int
      */
-    public function fluidPieceCountInFormat($event, $entity, $table) {
+    public function formatsFluidPieceCount($event, $entity, $table) {
         return $this
                 ->find('assignedTo', [$entity->format_id])
                 ->find('fluid')
-                ->count();
+                ->sumOf('quantity');
     }
 
     /**
      * Callable for Edition counter-cache behavior
      * 
+     * @todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+     *      Currently fixed by EditionStackComponent::_getFormatTriggerPieces(). Really? 
      * @param Event $event
      * @param Entity $entity
      * @param Table $table
      * @return int
      */
-    public function fluidEditionPieces($event, $entity, $table) {
-        $pieces = $table->find('all')->where([
-            'edition_id' => $entity->edition_id,
-            'format_id IS NOT NULL',
-            'disposition_count' => 0,
-        ]);
-        /**
-         * THIS NEEDS TO BUMP FLUID FORMAT PIECES
-         * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
-         * Currently fixed by EditionStackComponent::_getFormatTriggerPieces()
-         */
-        return $this->fluidPieces($pieces);
-    }
-
-    /**
-     * Callable for CounterCache Pieces that don't have Dispositions
-     * 
-     * If a piece doesn't have a disposition, it can still be moved between 
-     * any available formats.
-     * 
-     * @param Event $event
-     * @param Entity $entity
-     * @param Table $table
-     * @return integer
-     */
-    public function fluidPieces($query) {
-        $query->select(['id', 'format_id', 'edition_id', 'quantity']);
-        $sum = (new Collection($query->toArray()))->sumOf(
-            function($value) {
-            return $value->quantity;
-        }
-        );
-        return $sum; //die;
-//		}
+    public function editionsFluidPieceCount($event, $entity, $table) {
+        return $this
+            ->find('InEdition', [$entity->edition_id])
+            ->find('Assigned')
+            ->find('fluid')
+            ->sumOf('quantity');
     }
 
 // </editor-fold>
@@ -292,9 +254,9 @@ class PiecesTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findNumber(Query $query, $options) {
-        return $this->integer($query, 'number', $options);
-    }
+//    public function findNumber(Query $query, $options) {
+//        return $this->integer($query, 'number', $options);
+//    }
 
     /**
      * Find pieces by disposition count or range of counts
@@ -304,7 +266,6 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findDispositionCount($query, $options) {
-//        osd($options);die;
         return $this->integer($query, 'disposition_count', $options);
     }
 
@@ -326,18 +287,22 @@ class PiecesTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findAssignedTo($query, $options) {
-        return $this->integer($query, 'format_id', $options);
+    public function findAssignedTo(Query $query, $options) {
+        return $query->where(['format_id IN' => $options]);
+    }
+ //         return $this->integer($query, 'format_id', $options);
+    public function findNumbers(Query $query, $options) {
+        return $query->where(['number IN' => $options]);
     }
 
-    /**
+   /**
      * Find pieces in an edition regardless of format assignment
      * 
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findInEditon($query, $options) {
+    public function findInEdition($query, $options) {
         return $this->integer($query, 'edition_id', $options);
     }
 
@@ -348,8 +313,8 @@ class PiecesTable extends AppTable {
      * @param array $options None needed
      * @return Query
      */
-    public function findIsDisposed($query, $options) {
-        return $this->find('dispositionCount', ['>', 0]);
+    public function findIsDisposed($query, $options = []) {
+        return $query->find('dispositionCount', ['>', 0]);
     }
 
     /**
@@ -359,22 +324,26 @@ class PiecesTable extends AppTable {
      * @param array $options None needed
      * @return Query
      */
-    public function findNotDisposed($query, $options) {
-        return $this->find('dispositionCount', [0]);
+    public function findNotDisposed($query, $options = []) {
+        return $query->find('dispositionCount', [0]);
     }
 
     /**
      * Alias for notDisposed()
      */
-    public function findFluid($query, $options) {
+    public function findFluid($query, $options = []) {
         return $this->findNotDisposed($query, $options);
     }
 
     /**
-     * Alias for isDisposed()
+     * Find pieces with a format_id
+     * 
+     * @param Query $query
+     * @param array $options None needed
+     * @return Query
      */
-    public function findAssigned($query, $options) {
-        return $this->findIsDisposed($query, $options);
+    public function findAssigned($query, $options = []) {
+        return $query->where($this->aliasField('format_id') . ' IS NOT NULL');
     }
 
     /**
@@ -384,8 +353,8 @@ class PiecesTable extends AppTable {
      * @param array $options None needed
      * @return Query
      */
-    public function findIsCollected($query, $options) {
-        return $this->integer($query, 'collected', ['>', 0]);
+    public function findIsCollected($query, $options = []) {
+        return $this->integer($query, 'collected', [1]);
     }
 
     /**
@@ -395,7 +364,7 @@ class PiecesTable extends AppTable {
      * @param array $options None needed
      * @return Query
      */
-    public function findNotCollected($query, $options) {
+    public function findNotCollected($query, $options =[]) {
         return $this->integer($query, 'collected', [0]);
     }
 
