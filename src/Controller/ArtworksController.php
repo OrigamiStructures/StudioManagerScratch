@@ -308,6 +308,15 @@ class ArtworksController extends ArtStackController
     }
 	
 	public function testMe() {
+//            $p = TableRegistry::get('Pieces');
+//            
+//            $result = $p->find('assignedTo', ['values' => [3, 6, 13]])->find('numbers', ['values' => ['between', 2, 5]]);
+//            sql($result);die;
+//            
+//            $r = $p->find('number', ['3, 8-10, 20'])->find('inEdition', [35, 6])->toList();
+//            foreach($r as $e) {
+//                osd($e->displayTitle, $e->key());
+//            }
 		$queries = $this->request->data('method');
 		$result = [];
 		$anscestors = [];
