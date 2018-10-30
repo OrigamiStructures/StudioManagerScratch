@@ -52,7 +52,8 @@ class IntegerQueryBehavior extends Behavior{
         }
         if ($op = array_intersect(['<', '>', '=', '<=', '>='], $params)) {
             osd('comparison');
-            osd($query->getOptions());
+            osd($op);
+            osd($params);
 
             return $this->constructComparison($query, $column, $op, $params);
         }
@@ -78,11 +79,12 @@ class IntegerQueryBehavior extends Behavior{
     }
     
     private function constructComparison($query, $column, $op, $params) {
-        $value = array_diff($params, ['between']);
+        $value = array_diff($params, $op);
+        $op = array_shift($op);
         if (count($value) > 0){
             return $query->where(["$column $op" => array_shift($value)]);
         } else {
-            $msg = "'between' requires two integers, none given.";
+            $msg = "'$op' comparison requires an integer to compare to, none given.";
             throw new BadMethodCallException($msg);
        }
     }
