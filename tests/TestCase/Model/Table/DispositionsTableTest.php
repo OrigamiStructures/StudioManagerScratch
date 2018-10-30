@@ -34,14 +34,14 @@ class DispositionsTableTest extends TestCase
         'app.formats',
         'app.subscriptions',
         'app.pieces',
-        'app.dispositions_pieces',
+//        'app.dispositions_pieces',
         'app.locations',
         'app.addresses',
         'app.contacts',
         'app.groups',
         'app.groups_members',
-        'app.proxy_members',
-        'app.proxy_groups'
+//        'app.proxy_members',
+//        'app.proxy_groups'
     ];
 
     /**
