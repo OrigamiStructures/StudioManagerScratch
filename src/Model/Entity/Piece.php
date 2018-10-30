@@ -5,6 +5,7 @@ use Cake\ORM\Entity;
 use App\Model\Entity\Traits\ParentEntityTrait;
 use App\Model\Entity\Traits\DispositionTrait;
 use App\Model\Entity\Traits\EntityDebugTrait;
+use Cake\ORM\TableRegistry;
 
 /**
  * Piece Entity.
@@ -149,7 +150,7 @@ class Piece extends Entity
 	 */
 	public function _getDispositions() {
 		if (!isset($this->_properties['dispositions'])) {
-			$Pieces = \Cake\ORM\TableRegistry::get('Pieces');
+			$Pieces = TableRegistry::get('Pieces');
 			$existing_dispositions = $Pieces->get($this->id, ['contain' => ['Dispositions']]);
 			$this->_properties['dispositions'] = $existing_dispositions->dispositions;
 		}

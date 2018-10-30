@@ -303,7 +303,7 @@ class DispositionsTable extends AppTable {
      * @param Entity $entity
      */
     public function afterSave(Event $event, $entity) {
-        $table = \Cake\ORM\TableRegistry::get('Pieces');
+        $table = TableRegistry::get('Pieces');
         foreach ($entity->pieces as $piece) {
             $status_events = $this->DispositionsPieces
                     ->find()
