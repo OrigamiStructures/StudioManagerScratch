@@ -245,6 +245,7 @@ class PiecesTable extends AppTable {
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="CUSTOM FINDERS">
 
     /**
@@ -257,7 +258,7 @@ class PiecesTable extends AppTable {
 //    public function findNumber(Query $query, $options) {
 //        return $this->integer($query, 'number', $options);
 //    }
-
+    
     /**
      * Find pieces by disposition count or range of counts
      * 
@@ -266,7 +267,7 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findDispositionCount($query, $options) {
-        return $this->integer($query, 'disposition_count', $options);
+        return $this->integer($query, 'disposition_count', $options['values']);
     }
 
     /**
@@ -277,7 +278,7 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findQuantity($query, $options) {
-        return $this->integer($query, 'quantity', $options);
+        return $this->integer($query, 'quantity', $options['values']);
     }
 
     /**
@@ -287,12 +288,8 @@ class PiecesTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findAssignedTo(Query $query, $options) {
-        return $query->where(['format_id IN' => $options]);
-    }
- //         return $this->integer($query, 'format_id', $options);
-    public function findNumbers(Query $query, $options) {
-        return $query->where(['number IN' => $options]);
+    public function findAssignedTo($query, $options) {
+        return $this->integer($query, 'format_id', $options['values']);
     }
 
    /**
@@ -303,7 +300,7 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findInEdition($query, $options) {
-        return $this->integer($query, 'edition_id', $options);
+        return $this->integer($query, 'edition_id', $options['values']);
     }
 
     /**
@@ -332,7 +329,7 @@ class PiecesTable extends AppTable {
      * Alias for notDisposed()
      */
     public function findFluid($query, $options = []) {
-        return $this->findNotDisposed($query, $options);
+        return $this->findNotDisposed($query, $options['values']);
     }
 
     /**
@@ -366,6 +363,17 @@ class PiecesTable extends AppTable {
      */
     public function findNotCollected($query, $options =[]) {
         return $this->integer($query, 'collected', [0]);
+    }
+
+    /**
+     * Find pieces by number
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findNumbers($query, $options) {
+        return $this->integer($query, 'number', $options['values']);
     }
 
     /**

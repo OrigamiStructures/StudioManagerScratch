@@ -45,7 +45,7 @@ class IntegerQueryBehavior extends Behavior{
      * @return Query
      */
     public function integer($query, $column, $params) {
-        if (in_array('between', $params, TRUE)) {
+        if (in_array('between', $params)) {
             osd('between');
             osd($query->getOptions());
             return $this->constructBetween($query, $column, $params);
