@@ -67,21 +67,18 @@ class ImagesTable extends AppTable
 //                'thumbnailMethod' => 'imagick',   // Options are Imagick, Gd or Gmagick
             ]
         ]);
-//		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
-			$this->belongsTo('Users', [
-				'foreignKey' => 'user_id'
-			]);
-			$this->hasMany('Artworks', [
-				'foreignKey' => 'image_id'
-			]);
-			$this->hasMany('Formats', [
-				'foreignKey' => 'image_id'
-			]);
-			$this->hasMany('Members', [
-				'foreignKey' => 'image_id'
-			]);
-		}		
+        $this->belongsTo('Users', [
+                'foreignKey' => 'user_id'
+        ]);
+        $this->hasMany('Artworks', [
+                'foreignKey' => 'image_id'
+        ]);
+        $this->hasMany('Formats', [
+                'foreignKey' => 'image_id'
+        ]);
+        $this->hasMany('Members', [
+                'foreignKey' => 'image_id'
+        ]);
     }
 
     /**
