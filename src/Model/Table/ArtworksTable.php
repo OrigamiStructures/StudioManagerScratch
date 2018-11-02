@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 use Cake\Event\Event;
 use ArrayObject;
 use App\Model\Lib\ArtistIdConditionTrait;
+use App\Model\Behavior\StringQueryBehavior;
+use App\Model\Behavior\IntegerQueryBehavior;
 
 /**
  * Artworks Model
@@ -130,6 +132,50 @@ class ArtworksTable extends AppTable
     }
 
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
+    
+    /**
+     * Find artworks with a title matching or containing a string
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findTitle($query, $options = []) {
+        return $this->string($query, 'title', $options[$value]);
+    }
+    
+    /**
+     * Find artworks with a description matching or containing a string
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findDescription($query, $options = []) {
+        return $this->string($query, 'title', $options[$value]);
+    }
+    
+    /**
+     * Find artworks linked to an image (or set of images)
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findHasImage($query, $options) {
+        return $this->integer($query, 'image_id', $options['values']);
+    }
+    
+    /**
+     * Find formats with a number or range of Transferred pieces
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findEditionCount($query, $options) {
+        return $this->integer($query, 'edition_count', $options['values']);
+    }
 
     /**
      * @todo no known use
