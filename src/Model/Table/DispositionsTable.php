@@ -473,6 +473,7 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Find `types` active or made during date ranges">
     public function findLoanDueDuring(Query $query, $options) {
         return $query->find(DISPOSITION_LOAN)
@@ -508,6 +509,7 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="TypeFinders">
     public function findLoan(Query $query, $options) {
         return $query->where(['Dispositions.type' => DISPOSITION_LOAN,]);
@@ -533,6 +535,7 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="'Schema List' generating methods">
     /**
      * These methods return arrays that can be used by FormHelper select-type 
@@ -590,5 +593,5 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
-// 
+
 }
