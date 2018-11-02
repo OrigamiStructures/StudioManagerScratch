@@ -9,6 +9,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use App\Lib\Traits\EditionStackCache;
 use App\Model\Behavior\IntegerQueryBehavior;
+use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
  * Formats Model
@@ -22,6 +23,7 @@ use App\Model\Behavior\IntegerQueryBehavior;
 class FormatsTable extends AppTable {
 
     use EditionStackCache;
+    use ArtistIdConditionTrait;
 
 // <editor-fold defaultstate="collapsed" desc="Core processes">
 
@@ -143,6 +145,19 @@ class FormatsTable extends AppTable {
         osdLog($entity, 'afterSave on this format entity');
     }
 
+    /**
+     * beforeFind event
+     * 
+     * @param Event $event
+     * @param Query $query
+     * @param ArrayObject $options
+     * @param boolean $primary
+     */
+    public function beforeFind($event, $query, $options, $primary) {
+        $this->includeArtistIdCondition($query); // trait handles this
+    }
+
+
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Choice List engines">
@@ -170,29 +185,93 @@ class FormatsTable extends AppTable {
 
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
     
+    /**
+     * Find formats where all assigned pieces are Transferred
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
     public function findSoldOut($query, $options = []) {
         return $query->find('collectedPieceCount', ['value' => ['>', 0]])
             ->where(['collected_piece_count' => 'assigned_piece_count']);
     }
     
+    /**
+     * Find formats with a number or range of Transferred pieces
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
     public function findCollectedPieceCount($query, $options) {
         return $this->integer($query, 'collected_piece_count', $options['values']);
     }
     
+    /**
+     * Find formats with a number or range percentage of Transferred pieces
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
     public function findCollectedPiecePercentage($query, $options) {
         return $this->integer($query, 
             'collected_piece_count / assigned_piece_count', 
             $options['values']);
     }
     
+    /**
+     * Find formats in a subscription (or set of subscriptions)
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
     public function inSubscription($query, $options) {
         return $this->integer($query, 'subscription_id', $options['values']);
     }
     
+    /**
+     * Find formats in a edition (or set of editions)
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function inEdition($query, $options) {
+        return $this->integer($query, 'edition_id', $options['values']);
+    }
+    
+    /**
+     * Find formats linked to an image (or set of images)
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function hasImage($query, $options) {
+        return $this->integer($query, 'image_id', $options['values']);
+    }
+    
+    /**
+     * Find formats that have fluid pieces (un-disposed)
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
     public function findHasFluid($query, $options = []) {
         return $query->where(['fluid_piece_count >' => 0]);
     }
     
+    /**
+     * Find formats that have no assigned pieces
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
     public function findEmpty($query, $options = []) {
         return $query->where(['assigned_piece_count' => 0]);
     }
