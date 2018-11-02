@@ -116,7 +116,7 @@ class DateQueryBehavior extends Behavior {
 	 * 
 	 * Date data will often come directly form a user input form. Turning 
 	 * this input into a Time object lets us absorb a wide variety of date 
-	 * input and should nuetralize any malicious or damaging input.
+	 * input and should neutralize any malicious or damaging input.
 	 * 
 	 * @todo Make a better Exception result. But proper 
 	 *		form validation should prevent most bad input. 
