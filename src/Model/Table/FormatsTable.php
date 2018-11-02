@@ -251,7 +251,7 @@ class FormatsTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function hasImage($query, $options) {
+    public function findHasImage($query, $options) {
         return $this->integer($query, 'image_id', $options['values']);
     }
     
