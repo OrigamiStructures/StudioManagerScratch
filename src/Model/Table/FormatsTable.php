@@ -187,6 +187,17 @@ class FormatsTable extends AppTable {
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
     
     /**
+     * Find formats by id
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findFormat($query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
      * Find formats where all assigned pieces are Transferred
      * 
      * @param Query $query

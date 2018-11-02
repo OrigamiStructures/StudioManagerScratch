@@ -134,6 +134,19 @@ class ArtworksTable extends AppTable
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
     
     /**
+     * Find artworks by id
+     * 
+     * @todo is this where the stack cache storage/retrieval will be done?
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findArtwork($query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
      * Find artworks with a title matching or containing a string
      * 
      * @param Query $query

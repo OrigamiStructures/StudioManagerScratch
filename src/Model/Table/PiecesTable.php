@@ -249,6 +249,17 @@ class PiecesTable extends AppTable {
 // <editor-fold defaultstate="collapsed" desc="CUSTOM FINDERS">
 
     /**
+     * Find pieces by id
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findPiece($query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
      * Find pieces by number or range of numbers
      * 
      * @param Query $query
@@ -290,6 +301,17 @@ class PiecesTable extends AppTable {
      */
     public function findAssignedTo($query, $options) {
         return $this->integer($query, 'format_id', $options['values']);
+    }
+    
+    /**
+     * Alias for find('assignedTo')
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInFormat($query, $options) {
+        return $this->findAssignedTo($query, $options);
     }
 
    /**
