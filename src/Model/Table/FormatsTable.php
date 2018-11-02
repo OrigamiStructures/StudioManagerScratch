@@ -9,6 +9,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use App\Lib\Traits\EditionStackCache;
 use App\Model\Behavior\IntegerQueryBehavior;
+use App\Model\Behavior\StringQueryBehavior;
 use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
@@ -274,6 +275,28 @@ class FormatsTable extends AppTable {
      */
     public function findEmpty($query, $options = []) {
         return $query->where(['assigned_piece_count' => 0]);
+    }
+    
+    /**
+     * Find formats with a title matching or containing a string
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findTitle($query, $options = []) {
+        return $this->string($query, 'title', $options[$value]);
+    }
+    
+    /**
+     * Find formats with a description matching or containing a string
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findDescription($query, $options = []) {
+        return $this->string($query, 'title', $options[$value]);
     }
     
     /**
