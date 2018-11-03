@@ -255,7 +255,7 @@ class PiecesTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findPiece($query, $options) {
+    public function findPieces($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
     
