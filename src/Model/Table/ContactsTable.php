@@ -161,7 +161,7 @@ class ContactsTable extends AppTable
      * Find the 'kind' label for contacts
      * 
      * @param Query $query
-     * @param array $options see IntegerQueryBehavior
+     * @param array $options see StringQueryBehavior
      * @return Query
      */
     public function findKind(Query $query, $options) {
@@ -172,7 +172,7 @@ class ContactsTable extends AppTable
      * Find specific contact address (phone, email, url, etc)
      * 
      * @param Query $query
-     * @param array $options see IntegerQueryBehavior
+     * @param array $options see StringQueryBehavior
      * @return Query
      */
     public function findDetail(Query $query, $options) {
