@@ -14,6 +14,7 @@ use Cake\Collection\Collection;
 use \SPLStorageObject;
 use Cake\I18n\Time;
 use App\Model\Behavior\DateQueryBehavior;
+use App\Model\Behavior\IntegerQueryBehavior;
 use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
@@ -94,6 +95,8 @@ class DispositionsTable extends AppTable {
             DISPOSITION_NFS => DISPOSITION_UNAVAILABLE,],
     ]; // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Core">
+
     /**
      * Initialize method
      *
@@ -102,11 +105,20 @@ class DispositionsTable extends AppTable {
      */
     public function initialize(array $config) {
         parent::initialize($config);
+        $this->_initializeProperties();
+        $this->_initializeBehaviors();
+        $this->_initializeAssociations();
+    }
 
+// <editor-fold defaultstate="collapsed" desc="Initializers">
+
+    protected function _initializeProperties() {
         $this->table('dispositions');
         $this->displayField('id');
         $this->primaryKey('id');
+    }
 
+    protected function _initializeBehaviors() {
         $this->addBehavior('Timestamp');
         $this->addBehavior('StartDateQuery', [
             'className' => 'DateQuery',
@@ -133,12 +145,15 @@ class DispositionsTable extends AppTable {
             'Pieces' => [
                 'disposition_count',
                 'collected' => [$this, 'markCollected'],
-		/*'internal_dispo_count'*/],
+            /* 'internal_dispo_count' */            ],
             'Members' => [
                 'disposition_count',
                 'collector' => [$this, 'markCollected']
             ]
         ]);
+    }
+
+    protected function _initializeAssociations() {
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
@@ -161,32 +176,7 @@ class DispositionsTable extends AppTable {
         ]);
     }
 
-    public function map($label) {
-        if (isset($this->_map[$label])) {
-            return $this->_map[$label];
-        } else {
-            return FALSE;
-        }
-    }
-
-    public function containAncestry($query) {
-        return $query->contain(['Pieces' => ['fields' => ['id', 'DispositionsPieces.disposition_id']]]);
-    }
-
-// <editor-fold defaultstate="collapsed" desc="Destined for Entity">
-
-    /**
-     * Is the label a Rights type of disposition
-     * 
-     * @param string $label
-     * @return boolean
-     */
-    public function isRights($label) {
-        return in_array($label, [DISPOSITION_TRANSFER_RIGHTS, DISPOSITION_LOAN_RIGHTS]);
-    }
-
 // </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="Validation and Rules">
 
     /**
      * Default validation rules.
@@ -196,25 +186,83 @@ class DispositionsTable extends AppTable {
      */
     public function validationDefault(Validator $validator) {
         $validator
-                ->add('id', 'valid', ['rule' => 'numeric'])
-                ->allowEmpty('id', 'create')
-                ->requirePresence('start_date');
+            ->add('id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('id', 'create')
+            ->requirePresence('start_date');
         $validator
-                ->add('label', 'valid_label',
-                        [
-                            'rule' => [$this, 'validLabel'],
-                            'message' => 'The disposition must be chosen from the provided list',
-                ])
-                ->notEmpty('label');
+            ->add('label', 'valid_label',
+                [
+                    'rule' => [$this, 'validLabel'],
+                    'message' => 'The disposition must be chosen from the provided list',
+            ])
+            ->notEmpty('label');
         $validator
-                ->add('end_date', 'end_of_loan',
-                        [
-                            'rule' => [$this, 'endOfLoan'],
-                            'message' => 'Loans are for a limited time. Please provide an end date greater than the start date.'
-                ])
-                ->requirePresence('end_date');
+            ->add('end_date', 'end_of_loan',
+                [
+                    'rule' => [$this, 'endOfLoan'],
+                    'message' => 'Loans are for a limited time. Please provide an end date greater than the start date.'
+            ])
+            ->requirePresence('end_date');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules) {
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['member_id'], 'Members'));
+        $rules->add($rules->existsIn(['disposition_id'], 'Dispositions'));
+        $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
+        return $rules;
+    }
+
+// </editor-fold>
+    
+    public function map($label) {
+        if (isset($this->_map[$label])) {
+            return $this->_map[$label];
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Add piece (and edition) links to the query
+     * 
+     * This allows the dispositions to gain context. The edition_id will 
+     * provide a datum to make a cache key to find the stack data.
+     * 
+     * @todo This brings in two levels of linked entities, a lot of extra freight. 
+     *      setting up a map/reduce process to flatten the data might be better, 
+     *      but in that case, the disposition entity should gain new methods 
+     *      to cope with the new data. Issue #110 discusses this.
+     * 
+     * @param Query $query
+     * @return Query
+     */
+    public function containAncestry($query) {
+        return $query->contain(['Pieces' =>
+                ['fields' =>
+                    ['id', 'edition_id', 'DispositionsPieces.disposition_id']
+        ]]);
+    }
+
+// <editor-fold defaultstate="collapsed" desc="Callables and Events">
+
+    /**
+     * Is the label a Rights type of disposition
+     * 
+     * @param string $label
+     * @return boolean
+     */
+    public function isRights($label) {
+        return in_array($label, [DISPOSITION_TRANSFER_RIGHTS, DISPOSITION_LOAN_RIGHTS]);
     }
 
     /**
@@ -255,24 +303,6 @@ class DispositionsTable extends AppTable {
     }
 
     /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules) {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['member_id'], 'Members'));
-        $rules->add($rules->existsIn(['disposition_id'], 'Dispositions'));
-        $rules->add($rules->existsIn(['piece_id'], 'Pieces'));
-        return $rules;
-    }
-
-// </editor-fold>
-// <editor-fold defaultstate="collapsed" desc="CounterCache callables (see events too)">
-
-    /**
      * Callable to support MembersTable counter cache behavior
      * 
      * @param Event $event
@@ -290,6 +320,7 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="LifeCylce events">
 
     /**
@@ -306,9 +337,9 @@ class DispositionsTable extends AppTable {
         $table = TableRegistry::get('Pieces');
         foreach ($entity->pieces as $piece) {
             $status_events = $this->DispositionsPieces
-                    ->find()
-                    ->where(['piece_id' => $piece->id])
-                    ->contain('Dispositions');
+                ->find()
+                ->where(['piece_id' => $piece->id])
+                ->contain('Dispositions');
             $events = new Collection($status_events);
             $counts = $events->reduce(function($accum, $event) {
                 $accum['collected'] += $event->disposition->type === DISPOSITION_TRANSFER;
@@ -354,7 +385,7 @@ class DispositionsTable extends AppTable {
      * @param ArrayObject $options
      */
     public function beforeMarshal(Event $event, ArrayObject $data,
-            ArrayObject $options) {
+        ArrayObject $options) {
         if (isset($data['label']) && array_key_exists($data['label'], $this->_map)) {
             $data['type'] = $this->_map[$data['label']];
         }
@@ -376,6 +407,39 @@ class DispositionsTable extends AppTable {
     /**
      * CUSTOM FINDER METHODS
      */
+    
+    /**
+     * Find disposition by id
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findDispositions($query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
+     * Find members
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findMembers(Query $query, $options) {
+        return $query->integer($query, 'member_id', $options['values']);
+    }
+    
+    /**
+     * Find addresses
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findAddresses(Query $query, $options) {
+        return $query->integer($query, 'address_id', $options['values']);
+    }
 
     /**
      * Find the most rescent dispositions
@@ -390,7 +454,7 @@ class DispositionsTable extends AppTable {
      */
     public function findCurrentDisposition(Query $query, $options) {
         return $query->orderAsc('Dispositions.created')
-                ->$query->first();
+            ->$query->first();
     }
 
     /**
@@ -402,10 +466,6 @@ class DispositionsTable extends AppTable {
      * @param array $options
      */
     public function findSearch(Query $query, $options) {
-        
-    }
-
-    public function containParentId($param) {
         
     }
 
@@ -448,28 +508,28 @@ class DispositionsTable extends AppTable {
      */
     public function findCurrentLoans(Query $query, $options) {
         return $query->find('OpenLoan')
-            ->find('StartDateBefore', [
-                $this->behaviors()->get('StartDateQuery')->primary_input =>
-                date('Y-M-d', time() + DAY)
-            ]);
+                ->find('StartDateBefore', [
+                    $this->behaviors()->get('StartDateQuery')->primary_input =>
+                    date('Y-M-d', time() + DAY)
+        ]);
     }
 
     public function findLoanOverdue(Query $query, $options) {
         return $query->find('OpenLoan')
-            ->find('EndDateBefore', [
-                $this->behaviors()->get('EndDateQuery')->primary_input =>
-                date('Y-M-d', time() + DAY)
-            ]);
+                ->find('EndDateBefore', [
+                    $this->behaviors()->get('EndDateQuery')->primary_input =>
+                    date('Y-M-d', time() + DAY)
+        ]);
     }
 
     public function findOpenLoan(Query $query, $options) {
         return $query->find(DISPOSITION_LOAN)
-            ->where(['Dispositions.complete' => 0,]);
+                ->where(['Dispositions.complete' => 0,]);
     }
 
     public function findCompletedLoan(Query $query, $options) {
         return $query->find(DISPOSITION_LOAN)
-            ->where(['Dispositions.complete' => 1,]);
+                ->where(['Dispositions.complete' => 1,]);
     }
 
 // </editor-fold>
@@ -477,35 +537,35 @@ class DispositionsTable extends AppTable {
 // <editor-fold defaultstate="collapsed" desc="Find `types` active or made during date ranges">
     public function findLoanDueDuring(Query $query, $options) {
         return $query->find(DISPOSITION_LOAN)
-            ->where(['Dispositions.complete' => 0,])
-            ->find('EndDateBetween');
+                ->where(['Dispositions.complete' => 0,])
+                ->find('EndDateBetween');
     }
 
     public function findLoanStartedDuring(Query $query, $options) {
         return $query->find(DISPOSITION_LOAN)
-            ->where(['Dispositions.complete' => 0,])
-            ->find('StartDateBetween');
+                ->where(['Dispositions.complete' => 0,])
+                ->find('StartDateBetween');
     }
 
     public function findLoanActiveDuring(Query $query, $options) {
         return $query->find(DISPOSITION_LOAN)
-            ->where(['Dispositions.complete' => 0,])
-            ->find('EndDateBetween', $options);
+                ->where(['Dispositions.complete' => 0,])
+                ->find('EndDateBetween', $options);
     }
 
     public function findTransferDuring(Query $query, $options) {
         return $query->find(DISPOSITION_TRANSFER)
-            ->find('EndDateBetween', $options);
+                ->find('EndDateBetween', $options);
     }
 
     public function findStorageDuring(Query $query, $options) {
         return $query->find(DISPOSITION_STORE)
-        ->find('EndDateBetween', $options);
+                ->find('EndDateBetween', $options);
     }
 
     public function findUnavailableDuring(Query $query, $options) {
         return $query->find(DISPOSITION_UNAVAILABLE)
-            ->find('EndDateBetween', $options);
+                ->find('EndDateBetween', $options);
     }
 
 // </editor-fold>
@@ -593,5 +653,4 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
-
 }
