@@ -20,15 +20,15 @@ use App\Model\Lib\IdentitySets;
 class ArtworksController extends ArtStackController
 {
 	
-	use ArtReviewTrait;
+    use ArtReviewTrait;
 
-	public $components = ['ArtworkStack', 'Layers'];
-	
-	public function initialize() {
-		parent::initialize();
-		$this->loadComponent('ArtworkStack');
-//		$this->loadComponent('Layers');
-	}
+    public $components = ['ArtworkStack', 'Layers'];
+
+    public function initialize() {
+        parent::initialize();
+        $this->loadComponent('ArtworkStack');
+//      $this->loadComponent('Layers');
+    }
 	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
@@ -147,7 +147,7 @@ class ArtworksController extends ArtStackController
 
 // </editor-fold>
 
-	/**
+    /**
      * Delete method
      *
      * @param string|null $id Artwork id.
@@ -166,79 +166,79 @@ class ArtworksController extends ArtStackController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function sample() {
-		
-	}
-    
-	/**
-	 * Display one or a page of Artworks
-	 * 
-	 * Single record vs multiple record will be chosen based on whether the 
-	 * URL query value 'artwork' is set. If it is, we know the specific 
-	 * Artwork to display. If not, we'll get a page of them (the current page).
-	 * 
-	 * Also, if the Artwork is flat (has only one edition with only one 
-	 * format) then the URL query is beefed up with the proper id data 
-	 * and FormatController->review() is called instead. 
-	 * 
-	 * Later, some accomodation for Search sets must be made. That may be  
-	 * redirected through here for rendering once the records are found 
-	 * or it may all be handled by another method.
-	 */
-    public function review() {
-		if ($this->SystemState->urlArgIsKnown('artwork')) {
-			$this->_try_flatness_redirect(
-				$this->SystemState->queryArg('artwork'), 
-				$this->SystemState->queryArg('edition'));
-		}
+    public function sample() {
 
-		$result = $this->ArtworkStack->stackQuery();
-		
-		$this->set('artworks', $result);
-		$this->set('elements', $this->Layers->setElements());
-		$this->render('review');
+    }
+
+    /**
+     * Display one or a page of Artworks
+     * 
+     * Single record vs multiple record will be chosen based on whether the 
+     * URL query value 'artwork' is set. If it is, we know the specific 
+     * Artwork to display. If not, we'll get a page of them (the current page).
+     * 
+     * Also, if the Artwork is flat (has only one edition with only one 
+     * format) then the URL query is beefed up with the proper id data 
+     * and FormatController->review() is called instead. 
+     * 
+     * Later, some accomodation for Search sets must be made. That may be  
+     * redirected through here for rendering once the records are found 
+     * or it may all be handled by another method.
+     */
+    public function review() {
+        if ($this->SystemState->urlArgIsKnown('artwork')) {
+            $this->_try_flatness_redirect(
+            $this->SystemState->queryArg('artwork'), 
+            $this->SystemState->queryArg('edition'));
+        }
+
+        $result = $this->ArtworkStack->stackQuery();
+
+        $this->set('artworks', $result);
+        $this->set('elements', $this->Layers->setElements());
+        $this->render('review');
     }
 	
-	/**
-	 * Edit the Artwork layer and deeper layers if the work is 'flat'
-	 * 
-	 * A 'flat' artwork would have one Edition possibly with one Format
-	 */
-	public function refine() {
-		$artwork = $this->ArtworkStack->stackQuery();
+    /**
+     * Edit the Artwork layer and deeper layers if the work is 'flat'
+     * 
+     * A 'flat' artwork would have one Edition possibly with one Format
+     */
+    public function refine() {
+        $artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-//		osd($this->request->data);die;
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
-				'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
-			]);
-			
-			// if there is 1 edition, the quantity input could have been present
-			if ($artwork->edition_count === 1) {
-				$index = array_keys($this->request->data['editions'])[0];
-				$deletions = $this->ArtworkStack->refinePieces($artwork, 
-						$this->request->data['editions'][$index]['id']);
-			} else {
-				$deletions = [];
-			}
+    //      osd($this->request->data);die;
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+                'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
+        ]);
 
-			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
-//				$this->ArtworkStack->allocatePieces($artwork);
-                $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
-            } else {
-                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
-            }
+        // if there is 1 edition, the quantity input could have been present
+        if ($artwork->edition_count === 1) {
+            $index = array_keys($this->request->data['editions'])[0];
+            $deletions = $this->ArtworkStack->refinePieces($artwork, 
+            $this->request->data['editions'][$index]['id']);
+        } else {
+            $deletions = [];
         }
-		
-		$this->ArtworkStack->layerChoiceLists();
-		$this->set('artwork', $artwork);
-		$this->set('elements', $this->Layers->setElements());
-		$this->render('review');
-	}
-	
-	public function upload() {
-		$this->viewBuilder()->layout('ajax');
-//		osd($this->request->data);die;
-	}
+
+        if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
+//		$this->ArtworkStack->allocatePieces($artwork);
+            $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+        } else {
+            $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
+        }
+    }
+
+        $this->ArtworkStack->layerChoiceLists();
+        $this->set('artwork', $artwork);
+        $this->set('elements', $this->Layers->setElements());
+        $this->render('review');
+    }
+
+    public function upload() {
+        $this->viewBuilder()->layout('ajax');
+//      osd($this->request->data);die;
+    }
 	
     /**
      * Creates artwork records in element based state
@@ -248,155 +248,163 @@ class ArtworksController extends ArtStackController
     public function create() {
 		$artwork = $this->ArtworkStack->creationStack(); 
         if ($this->request->is('post') || $this->request->is('put')) {
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
-				'associated' => [
-					'Images', 'Editions', 
-						'Editions.Pieces', 'Editions.Formats', 
-							'Editions.Formats.Images', 'Editions.Formats.Pieces'
-					]
-			]);
-			$this->ArtworkStack->allocatePieces($artwork);
-			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
-					$this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
+                $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+                    'associated' => [
+                        'Images', 'Editions', 
+                        'Editions.Pieces', 'Editions.Formats', 
+                        'Editions.Formats.Images', 'Editions.Formats.Pieces'
+                    ]
+                ]);
+                $this->ArtworkStack->allocatePieces($artwork);
+                if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
+                    $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
                 
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
         }
-		$this->ArtworkStack->layerChoiceLists();
-        
-		$this->set('elements', $this->LayerElement->setElements());
-		$this->set('artwork', $artwork);
+        $this->ArtworkStack->layerChoiceLists();
+
+        $this->set('elements', $this->LayerElement->setElements());
+        $this->set('artwork', $artwork);
         $this->set('_serialize', ['artwork']);
-		$this->render('review');
+        $this->render('review');
     }
 	
-	/**
-	 * Simplify to UX for making unique artwork
-	 * 
-	 * arrive here with a postLink and TRD that makes 
-	 * the normal create method and form simpler. 
-	 */
-	public function createUnique() {
-		$this->request->data += ['user_id' => $this->SystemState->artistId()];
-		$artwork = $this->create();
-		$this->set('elements', $this->LayerElement->setElements());
-		$this->render('review');
-	}
+    /**
+     * Simplify to UX for making unique artwork
+     * 
+     * arrive here with a postLink and TRD that makes 
+     * the normal create method and form simpler. 
+     */
+    public function createUnique() {
+        $this->request->data += ['user_id' => $this->SystemState->artistId()];
+        $artwork = $this->create();
+        $this->set('elements', $this->LayerElement->setElements());
+        $this->render('review');
+    }
 
-	/**
-	 * Display one or a page of Artworks
-	 * 
-	 * Single record vs multiple record will be chosen based on whether the 
-	 * URL query value 'artwork' is set. If it is, we know the specific 
-	 * Artwork to display. If not, we'll get a page of them (the current page). 
-	 * 
-	 * Later, some accomodation for Search sets must be made. That may be  
-	 * redirected through here for rendering once the records are found 
-	 * or it may all be handled by another method.
-	 */
+    /**
+     * Display one or a page of Artworks
+     * 
+     * Single record vs multiple record will be chosen based on whether the 
+     * URL query value 'artwork' is set. If it is, we know the specific 
+     * Artwork to display. If not, we'll get a page of them (the current page). 
+     * 
+     * Later, some accomodation for Search sets must be made. That may be  
+     * redirected through here for rendering once the records are found 
+     * or it may all be handled by another method.
+     */
     public function validateQuantities($id) {
-		$this->request->query = ['artwork' => $id];
-//        $element_management = [
-//            'artwork' => 'full',
-//            'edition' => 'many',
-//            'format' => 'many'
-//        ];
+	$this->request->query = ['artwork' => $id];
+//      $element_management = [
+//          'artwork' => 'full',
+//          'edition' => 'many',
+//          'format' => 'many'
+//      ];
         $this->set('artwork', $this->ArtworkStack->stackQuery());
-//        $this->set('element_management', $element_management);
-//        $this->set('_serialize', [$artwork_variable]);
+//      $this->set('element_management', $element_management);
+//      $this->set('_serialize', [$artwork_variable]);
     }
-	
-	public function testMe() {
-            $p = TableRegistry::get('Formats');
-            
-            $result = $p->find('collectedPiecePercentage', 
-                ['values' => ['between', .25, .35]]);
-            
-            
-            sql($result);
-            
-            foreach($result as $e) {
-                osd($e->collected_piece_count / $e->assigned_piece_count, $e->key());
+
+    public function testMe() {
+        $strings = ['abc', '%abc', 'abc%', '%abc%'];
+        $t = new \OSDTImer();
+        $t->start();
+        foreach ($strings as $string) {
+            osd($string, (strlen($string) > strlen(trim($string, '%'))) ? 'TRUE' : 'FALSE');
+        }
+        $t->end();
+        $t->start(1);
+        foreach ($strings as $string) {
+            $new = str_split($string);
+            osd($new);
+            $f=[];
+            $f[0] = array_shift($new);
+            $f[1] = array_pop($new);
+            osd($f, in_array('%', $f) ? 'TRUE' : 'FALSE');
+        }
+        $t->end(1);
+        osd($t->result(), 'time for trim');
+        osd($t->result(1), 'time for split');
+    //    die;
+        $queries = $this->request->data('method');
+        $result = [];
+        $anscestors = [];
+        $disp = TableRegistry::get('Dispositions');
+        $methods = $disp->customFinders();
+        $options = $this->request->data;
+        if (count($queries) > 0) {
+            $index = 0;
+            $result = $disp->find($this->request->data['method'][$index++], $options);
+            while ($index < count($queries)) {
+            $result = $result->find($this->request->data['method'][$index++], $options);
             }
-            die;
-		$queries = $this->request->data('method');
-		$result = [];
-		$anscestors = [];
-		$disp = TableRegistry::get('Dispositions');
-		$methods = $disp->customFinders();
-		$options = $this->request->data;
-		if (count($queries) > 0) {
-			$index = 0;
-			$result = $disp->find($this->request->data['method'][$index++], $options);
-			while ($index < count($queries)) {
-			$result = $result->find($this->request->data['method'][$index++], $options);
-			}
-		}
-		if (is_object($result)) {
-			$t = new \OSDTImer();
-			$t->start();
-			$result = $disp->containAncestry($result);
-			$dispositions = $result->toArray();
-			$sorted = [];
-			foreach ($dispositions as $disposition) {
-				$sorted[$disposition->id] = $disposition;
-			}
-			$dispositions = $sorted;
-			$pieces = new IdentitySets('Pieces', $dispositions);
-			$pieces->arrayResult();
-			$editions = new IdentitySets('Editions', $pieces->entity());
-			$editions->arrayResult();
-			$formats = new IdentitySets('Formats', $pieces->entity());
-			$formats->arrayResult();
-			$artworks = new IdentitySets('Artworks', $editions->entity());
-			$artworks->arrayResult();
-			osd($t->result());
-		}
-		
-		
-		$this->set(compact('result', 'methods', 'pieces', 
-				'editions', 'formats', 'artworks','dispositions'));
-	}
-	
-	public function composeStack($flat) {
-//		foreach ($flat as $layer => $entities) {
-//			if (is_object($entities)) {
-//				$flat[$layer] = $entities->toArray();
-//			}
-//		}
-		extract($flat);
-		foreach ($pieces as $id => $piece) {
+        }
+        if (is_object($result)) {
+            $t = new \OSDTImer();
+            $t->start();
+            $result = $disp->containAncestry($result);
+            osd($result->toArray(), 'disp->containAncestory');
+            $dispositions = $result->toArray();
+            $sorted = [];
+            foreach ($dispositions as $disposition) {
+                    $sorted[$disposition->id] = $disposition;
+            }
+            $dispositions = $sorted;
+            $pieces = new IdentitySets('Pieces', $dispositions);
+            $pieces->arrayResult();
+            $editions = new IdentitySets('Editions', $pieces->entity());
+            $editions->arrayResult();
+            $formats = new IdentitySets('Formats', $pieces->entity());
+            $formats->arrayResult();
+            $artworks = new IdentitySets('Artworks', $editions->entity());
+            $artworks->arrayResult();
+            osd($t->result());
+        }
 
-			if (isset($piece->disposition_pieces)) {
-				$piece->disposition = [];
-				foreach ($piece->disposition_pieces as $key => $dp) {
-					$piece->disposition[$dp->disposition_id] = $dispositions[$dp->disposition_id];
-				}
-			}
-			if (is_null($piece->format_id)) {
-				if (!isset($editions[$piece->edition_id]->pieces)) {
-					$editions[$piece->edition_id]->pieces = [];
-				}
-				$editions[$piece->edition_id]->pieces[$id] = $piece;
-			} else {
-				if (!isset($formats[$piece->format_id]->pieces)) {
-					$formats[$piece->format_id]->pieces = [];
-				}
-				$formats[$piece->format_id]->pieces[$id] = $piece;
-			}
+        $this->set(compact('result', 'methods', 'pieces', 
+            'editions', 'formats', 'artworks','dispositions'));
+    }
 
-			foreach ($formats as $id => $format) {
-				if (!isset($editions[$format->edition_id]->formats)) {
-					$editions[$format->edition_id]->formats = [];
-				}
-				$editions[$format->edition_id]->formats[$format->id] = $format;
-			}
+    public function composeStack($flat) {
+    //  foreach ($flat as $layer => $entities) {
+    //      if (is_object($entities)) {
+    //          $flat[$layer] = $entities->toArray();
+    //      }
+    //  }
+        extract($flat);
+        foreach ($pieces as $id => $piece) {
 
-		};
-					
-			$artwork->editions = $editions;
-			return $artwork;
-	}
+            if (isset($piece->disposition_pieces)) {
+                $piece->disposition = [];
+                foreach ($piece->disposition_pieces as $key => $dp) {
+                    $piece->disposition[$dp->disposition_id] = $dispositions[$dp->disposition_id];
+                }
+            }
+            if (is_null($piece->format_id)) {
+                if (!isset($editions[$piece->edition_id]->pieces)) {
+                    $editions[$piece->edition_id]->pieces = [];
+                }
+                $editions[$piece->edition_id]->pieces[$id] = $piece;
+            } else {
+                if (!isset($formats[$piece->format_id]->pieces)) {
+                    $formats[$piece->format_id]->pieces = [];
+                }
+                $formats[$piece->format_id]->pieces[$id] = $piece;
+            }
+
+            foreach ($formats as $id => $format) {
+                if (!isset($editions[$format->edition_id]->formats)) {
+                    $editions[$format->edition_id]->formats = [];
+                }
+                $editions[$format->edition_id]->formats[$format->id] = $format;
+            }
+
+        };
+
+        $artwork->editions = $editions;
+        return $artwork;
+    }
 	
 }
