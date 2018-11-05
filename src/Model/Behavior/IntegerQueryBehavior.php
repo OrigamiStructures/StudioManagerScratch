@@ -35,7 +35,7 @@ class IntegerQueryBehavior extends Behavior{
      * <pre>
      * ['between', 5, 9];
      * ['<', 3]; 
-     * [4];
+     * 4;
      * ['2-3, 5']; 
      * [3, 5, '6', '24']
      * </pre>
@@ -44,24 +44,23 @@ class IntegerQueryBehavior extends Behavior{
      * @param array $params
      * @return Query
      */
-    public function integer($query, $column, $params) {
+    public function integer(Query $query, $column, $params) {
+        
         if (in_array('between', $params)) {
-            osd('between');
-            osd($query->getOptions());
             return $this->constructBetween($query, $column, $params);
         }
+        
         if ($op = array_intersect(['<', '>', '=', '<=', '>='], $params)) {
-            osd('comparison');
-            osd($op);
-            osd($params);
-
             return $this->constructComparison($query, $column, $op, $params);
         }
+        
         if (count($params) > 1) {
-            osd($params, 'in');
-            osd($query->getOptions());
             return $query->where(["$column IN" => $params]);
         }
+        
+        /*
+         * 
+         */
         $keys = array_keys($params);
         $key = array_shift($keys);
         $value = $params[$key];
@@ -75,10 +74,12 @@ class IntegerQueryBehavior extends Behavior{
             return $query->where(["$column IN" => $values]);      
         }
         return $query;
-        
     }
     
     private function constructComparison($query, $column, $op, $params) {
+//        echo '<pre>';
+//        print_r(func_get_args());
+//        echo '</pre>';
         $value = array_diff($params, $op);
         $op = array_shift($op);
         if (count($value) > 0){
