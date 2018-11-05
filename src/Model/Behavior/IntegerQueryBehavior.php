@@ -8,24 +8,7 @@ use App\Lib\Range;
 /**
  * IntegerQueryBehavior
  * 
- * Consolidate and simplify param requirements for searching INT fields
- * 
- * <code>
- * // parameter order not important
- * ['between', 5, 9];
- * ['<', 3]; // any comparison operator
- * [4];
- * ['2-3, 5']; // range strings, see App\Lib\Range
- * [3, 5, '6', '24']
- * // or any simple exposed value or range string
- * </code>
- * 
- * @todo Chained queries seem to overlay their parameter arrays. So if the first 
- *      in the chain has 3 elements and the second sets an array with 1 element, 
- *      the second with actually recieve 3 elements with the first overwritten.
- *      That's gonna be a problem with this 'deductive' class. 
- *      The query seems to do some cleanup, but it's based on associative keys 
- *      and possibly only named ones.
+ * Deduce the correct INT query based on the $params structure
  *
  * @author dondrake
  */
@@ -40,10 +23,11 @@ class IntegerQueryBehavior extends Behavior{
      * ['2-3, 5']; 
      * [3, 5, '6', '24']
      * </pre>
+     * 
      * @param Query $query
-     * @param string $column
-     * @param array $params
-     * @return Query unaltered if an invalid arg param is sent
+     * @param string $column Name of the column to search
+     * @param array $params Any of the variations described above
+     * @return Query unaltered if an unrecognized $params structure is sent
      */
     public function integer(Query $query, $column, $params) {
         
