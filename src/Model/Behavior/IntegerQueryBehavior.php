@@ -13,10 +13,11 @@ use App\Lib\Range;
  * <code>
  * // parameter order not important
  * ['between', 5, 9];
- * ['<', 3]; // any equality/inequality operator
+ * ['<', 3]; // any comparison operator
  * [4];
  * ['2-3, 5']; // range strings, see App\Lib\Range
  * [3, 5, '6', '24']
+ * // or any simple exposed value or range string
  * </code>
  * 
  * @todo Chained queries seem to overlay their parameter arrays. So if the first 
@@ -34,15 +35,15 @@ class IntegerQueryBehavior extends Behavior{
      * Search for a value or range in an INT field
      * <pre>
      * ['between', 5, 9];
-     * ['<', 3]; 
-     * 4;
+     * ['<', 3]; // any comparison operator
+     * [13];
      * ['2-3, 5']; 
      * [3, 5, '6', '24']
      * </pre>
      * @param Query $query
      * @param string $column
      * @param array $params
-     * @return Query
+     * @return Query unaltered if an invalid arg param is sent
      */
     public function integer(Query $query, $column, $params) {
         
@@ -50,7 +51,8 @@ class IntegerQueryBehavior extends Behavior{
             return $this->constructBetween($query, $column, $params);
         }
         
-        if ($op = array_intersect(['<', '>', '=', '<=', '>='], $params)) {
+        $op = array_intersect(['<', '>', '=', '<=', '>='], $params);
+        if ($op) {
             return $this->constructComparison($query, $column, $op, $params);
         }
         
@@ -58,28 +60,15 @@ class IntegerQueryBehavior extends Behavior{
             return $query->where(["$column IN" => $params]);
         }
         
-        /*
-         * 
-         */
-        $keys = array_keys($params);
-        $key = array_shift($keys);
-        $value = $params[$key];
-        if ($value === intval($value)) {
-//            osd($params, 'single value ' . $value);
-            return $query->where([$column => $value]);
+        $value = (string) array_shift($params);
+        if (!empty($value)) {
+            return $this->constructFromRange($query, $column, $value);
         }
-        if (Range::patternValidation($value)) {
-            $values = Range::stringToArray($value);
-//            osd($values, 'the array from ' . $value);
-            return $query->where(["$column IN" => $values]);      
-        }
+        
         return $query;
     }
     
     private function constructComparison($query, $column, $op, $params) {
-//        echo '<pre>';
-//        print_r(func_get_args());
-//        echo '</pre>';
         $value = array_diff($params, $op);
         $op = array_shift($op);
         if (count($value) > 0){
@@ -101,6 +90,17 @@ class IntegerQueryBehavior extends Behavior{
             $msg = "'between' requires two integers, " . count($values) . ' given.';
             throw new \BadMethodCallException($msg);
        }
-            
+    }
+    
+    private function constructFromRange($query, $column, $range) {
+        if(!Range::patternValidation($range)){
+            return $query;
+        }
+        $values = Range::stringToArray($range);
+        if (count($values) === 1) {
+            return $query->where([$column => $values[0]]);
+        } else {
+            return $query->where(["$column IN" => $values]);
+        }
     }
 }
