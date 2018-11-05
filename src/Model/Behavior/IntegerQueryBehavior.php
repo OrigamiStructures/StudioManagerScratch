@@ -68,6 +68,16 @@ class IntegerQueryBehavior extends Behavior{
         return $query;
     }
     
+    /**
+     * Construct a 'where' using a provided comparison operator
+     * 
+     * @param Query $query
+     * @param string $column
+     * @param string $op
+     * @param array $params
+     * @return Query
+     * @throws BadMethodCallException
+     */
     private function constructComparison($query, $column, $op, $params) {
         $value = array_diff($params, $op);
         $op = array_shift($op);
@@ -79,6 +89,15 @@ class IntegerQueryBehavior extends Behavior{
        }
     }
     
+    /**
+     * Construct a 'between' statement
+     * 
+     * @param Query $query
+     * @param string $column
+     * @param array $params
+     * @return Query
+     * @throws \BadMethodCallException
+     */
     private function constructBetween($query, $column, $params) {
         $values = array_diff($params, ['between']);
         if (count($values) > 1){
@@ -92,6 +111,14 @@ class IntegerQueryBehavior extends Behavior{
        }
     }
     
+    /**
+     * Construct a 'where =' or 'in ( )' statement
+     * 
+     * @param Query $query
+     * @param string $column
+     * @param string $range A valid App\Lib\Range string
+     * @return Query
+     */
     private function constructFromRange($query, $column, $range) {
         if(!Range::patternValidation($range)){
             return $query;
