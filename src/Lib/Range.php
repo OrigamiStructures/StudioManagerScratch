@@ -18,7 +18,7 @@ use ArrayIterator;
  *   user requested options that we then incorporate
  *   user created options
  * The second strategy seems best-ish. It would keep user freedom high and 
- * user tech-savy low. 
+ * user tech-savvy low. 
  * We would probably need a config file that was read by Range to get the 
  * proper sorting and validation-regex for the custom numbering. The edition 
  * creation routines would also want to read this config file to determine 
@@ -30,14 +30,14 @@ use ArrayIterator;
  * configurations to the system admin for review.
  * 
  * @todo Can we do a Series range? Or some other range-on-this-set?
- * One onorous task I've had to do is transfer same-number-piece from 
+ * One onerous task I've had to do is transfer same-number-piece from 
  * several Editions to a Disposition. It would be great to be able to name 
  * a set of Edition/Formats and a piece number (or numbers) then have all 
  * the pieces from those Editions chosen. The Series concept would represent 
  * a pre-defined Edition/Formats set. 
  * One implication of this idea is that there might end up being a separate 
- * class that gathers and returns the pieces and other necessary Enities. 
- * This class should problably focus on proper syntax (and reference validity?). 
+ * class that gathers and returns the pieces and other necessary Entities. 
+ * This class should probably focus on proper syntax (and reference validity?). 
  * 
  * @todo Expand this class to do validation against real data
  * The two issues discussed above suggest:
@@ -67,6 +67,7 @@ class Range {
      * @var array
      */
     static $range_array;
+    static $range_values;
 
     /**
      * An associative array
@@ -76,6 +77,7 @@ class Range {
      * @var array
      */
     static $range_assoc;
+    static $range_keys;
 
     public function __get($param) {
 
@@ -179,8 +181,10 @@ class Range {
 //		echo 
 //				die();
 
-        if (!in_array($type, ['assoc', 'array'])) {
-            throw new \BadMethodCallException('Range::stringToArray \'$type\' must be the string \'assoc\' or \'array\'');
+        if (!in_array($type, ['assoc', 'keys', 'array', 'values'])) {
+            $msg = 'Range::stringToArray \'$type\' must be the string'
+                . ' \'assoc\', \'keys\',  \'array\' or \'values\'';
+            throw new \BadMethodCallException($msg);
         }
 
         $sequence = array();
@@ -215,8 +219,8 @@ class Range {
         }
 
         // filter out the duplicates
-        self::$range_array = array_flip(array_flip($sequence));
-        self::$range_assoc = array_flip(self::$range_array);
+        self::$range_array = self::$range_values = array_flip(array_flip($sequence));
+        self::$range_assoc = self::$range_keys = array_flip(self::$range_array);
 
         $type = 'range_' . $type;
 
@@ -224,12 +228,11 @@ class Range {
     }
 
     /**
-     * Insure the range describing numbered pieces to move is valid
+     * Insure the range describing numbered pieces to move is valid 
      * 
      * @todo Stub from App\Form\AssignmentForm. That class uses this method 
      *          as a callable ('rule' => [$this, 'rangePatternValidation']). 
-     *          That code will have to be changed to call this version but 
-     *          I don't yet know if a static method can be a callable.
+     *          That code will have to be changed to call this static version  
      * 
      * @param mixed $value
      * @param array $context
