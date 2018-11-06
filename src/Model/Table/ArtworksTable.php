@@ -142,7 +142,7 @@ class ArtworksTable extends AppTable
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findArtwork($query, $options) {
+    public function findArtworks($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
     

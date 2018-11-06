@@ -198,7 +198,7 @@ class FormatsTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findFormat($query, $options) {
+    public function findFormats($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
     
