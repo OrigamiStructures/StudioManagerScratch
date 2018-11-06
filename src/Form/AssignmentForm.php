@@ -106,7 +106,10 @@ class AssignmentForm extends Form {
             // limited editions allow range values
             $validator
                 ->add('to_move', 'limit_move', [
-                    'rule' => [$this, 'rangePatternValidation'],
+                    // This rule attempts to change the callable location
+                    // untested as of 11/2018
+                    'rule' => [Range::patternValidation],
+//                  'rule' => [$this, 'rangePatternValidation'],
                     'message' => "Use numbers (eg. 27) or ranges (eg. 3-7) separated by commas (, )."
                     . "<br /> 5-7, 9, 12-13 would return 5, 6, 7, 9, 12, 13 ",
 //				])
