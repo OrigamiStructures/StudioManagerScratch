@@ -14,6 +14,11 @@ use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
  * Formats Model
+ * 
+ * @todo if I need to add Table. to column names
+ *      Regex
+ *      search: integer\(\$query, '(.*)',
+ *      replace:integer\(\$query, method\('$1'\),
  *
  * @property \Cake\ORM\Association\BelongsTo $Users
  * @property \Cake\ORM\Association\BelongsTo $Images
