@@ -36,9 +36,7 @@ class RangeTest  extends TestCase{
             [[6,2,1], '', '1-2, 6'],
             [[1,2,6,9,10], '', '1-2, 6, 9-10'],
             
-            // throws duplicate value in output string
-//            [[[2,3],[5,6],[5,7]], '{n}.{n}', '2-3, 5, 5-7'], //FIX THIS ONE
-            
+            [[[2,3],[5,6],[5,7]], '{n}.{n}', '2-3, 5-7'],
             [[['id'=>3], ['id'=>5]], '{n}.id', '3, 5'],
         ];
     }

@@ -102,10 +102,6 @@ class Range {
      * 
      * See Hash::extract for more detail
      * 
-     * @todo the case of providing an array of arrays creates duplicate 
-     *          values in the string [[2,3], [5,6], [5,7]], {n}.{n} 
-     *          yields '2-3, 5, 5-7'. Assemble an array of values, shake 
-     *          out duplicates, then process?
      * @todo make this work with arrays of objects? Extract properties 
      *          or get value by method call?
      * 
@@ -119,6 +115,7 @@ class Range {
             $data = array();
         }
         $numbers = Hash::extract($data, $path);
+        $numbers = array_keys(array_flip($numbers)); // kill duplicate values
         sort($numbers);
 
         foreach ($numbers as $index => $value) {
@@ -183,10 +180,6 @@ class Range {
      * @return array
      */
     static function stringToArray($range, $type = 'array') {
-//		var_dump(func_get_args());
-//		var_dump($type);
-//		echo 
-//				die();
 
         if (!in_array($type, ['assoc', 'keys', 'array', 'values'])) {
             $msg = 'Range::stringToArray \'$type\' must be the string'
@@ -196,19 +189,6 @@ class Range {
 
         $sequence = array();
 
-        /**
-         * this is being done by form validation so, i'm suppressing for now
-         */
-//		$pattern = '/(\d+-\d+|\d+)(, *(\d+-\d+|\d+))*/'; 
-//		preg_match($pattern, $range, $match); 
-//		if ($range !== $match[0]) {
-//			return $sequence;
-//		}
-        // this was the best validation prior to the regex above
-//		if ((!is_int($range)) && (!is_string($range)) || (trim($range, ' ') == '')) {
-//			return $sequence;
-//		}
-        // break on the range gaps first
         $groups = explode(',', $range);
 
         foreach ($groups as $series) {
@@ -236,11 +216,10 @@ class Range {
     }
 
     /**
-     * Insure the range describing numbered pieces to move is valid 
+     * Insure the string range describing numbered pieces to move is valid 
      * 
-     * @todo Stub from App\Form\AssignmentForm. That class uses this method 
-     *          as a callable ('rule' => [$this, 'rangePatternValidation']). 
-     *          That code will have to be changed to call this static version  
+     * @todo The signature may require $context = '' for compatibility 
+     *          when used as a callable from App\Form\AssignmentForm.
      * 
      * @param mixed $value
      * @param array $context
