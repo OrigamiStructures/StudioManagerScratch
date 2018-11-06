@@ -81,7 +81,7 @@ class Range {
 
     public function __get($param) {
 
-        if (in_array($param, ['string', 'array', 'assoc'])) {
+        if (in_array($param, ['string', 'array', 'assoc', 'keys', 'values'])) {
             $name = "range_$param";
             return $this->$name;
         } else {
@@ -101,6 +101,13 @@ class Range {
      * array(array('id'=>7), array('id'=>13) $path='{n}.id' range='7, 13'
      * 
      * See Hash::extract for more detail
+     * 
+     * @todo the case of providing an array of arrays creates duplicate 
+     *          values in the string [[2,3], [5,6], [5,7]], {n}.{n} 
+     *          yields '2-3, 5, 5-7'. Assemble an array of values, shake 
+     *          out duplicates, then process?
+     * @todo make this work with arrays of objects? Extract properties 
+     *          or get value by method call?
      * 
      * @param array $data
      * @param string $path
@@ -160,7 +167,7 @@ class Range {
             self::$range_string .= $previous;
         }
 
-        return self::$range_string;
+        return is_int(self::$range_string) ? (string) self::$range_string : self::$range_string;
     }
 
     /**
@@ -217,6 +224,7 @@ class Range {
                 $sequence[] = intval($series);
             }
         }
+        sort($sequence);
 
         // filter out the duplicates
         self::$range_array = self::$range_values = array_flip(array_flip($sequence));
@@ -241,8 +249,8 @@ class Range {
     static function patternValidation($value) {
         $pattern = '/(\d+-\d+|\d+)(, *(\d+-\d+|\d+))*/';
         preg_match($pattern, $value, $match);
-
-        return $value === $match[0];
+        
+        return isset($match[0]) && ($value === $match[0]);
     }
 
 }
