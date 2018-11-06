@@ -51,6 +51,7 @@ class ArtworksTable extends AppTable
         $this->addBehavior('Family');
         $this->addBehavior('ArtworkStack');
         $this->addBehavior('IntegerQuery');
+        $this->addBehavior('StringQuery');
     }
 
         protected function _initializeAssociations() {
