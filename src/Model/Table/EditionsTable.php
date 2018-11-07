@@ -24,15 +24,17 @@ use App\Lib\EditionTypeMap;
 class EditionsTable extends AppTable
 {
 	use EditionStackCache;
+
+    // <editor-fold defaultstate="collapsed" desc="Core">
 	/**
 	 * The allowable types of editions
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $types = [
 		'Edition' => [
 			EDITION_LIMITED => 'Limited (numbered)',
-			EDITION_OPEN => 'Open (un-numbered)',			
+			EDITION_OPEN => 'Open (un-numbered)',
 		],
 		'Portfolio' => [
 			PORTFOLIO_LIMITED => 'Limited (numbered)',
@@ -53,32 +55,37 @@ class EditionsTable extends AppTable
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
+        $this->_initializeProperties();
+        $this->_initializeBehaviors();
+        $this->_initializeAssociations();
+    }
 
-        $this->table('editions');
-        $this->displayField('name');
-        $this->primaryKey('id');
+    protected function _initializeProperties() {
+        $this->setTable('editions');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
+    }
 
+    protected function _initializeBehaviors() {
         $this->addBehavior('Timestamp');
-		$this->addBehavior('Family');
-		$this->addBehavior('ArtworkStack');
-		$this->addBehavior('CounterCache', [
+        $this->addBehavior('Family');
+        $this->addBehavior('ArtworkStack');
+        $this->addBehavior('CounterCache',[
             'Artworks' => ['edition_count']
         ]);
+    }
 
-//		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-//		if ($this->SystemState->is(ARTWORK_SAVE)) {
-		$this->belongsTo('Users',
-				[
-			'foreignKey' => 'user_id',
-		]);
-		$this->belongsTo('Artworks',
-				[
-			'foreignKey' => 'artwork_id',
-		]);
-//		}		
+    protected function _initializeAssociations() {
+        $this->belongsTo('Users',
+            [
+                'foreignKey' => 'user_id',
+            ]);
+        $this->belongsTo('Artworks',
+            [
+                'foreignKey' => 'artwork_id',
+            ]);
         $this->belongsTo('Series', [
             'foreignKey' => 'series_id',
         ]);
@@ -129,10 +136,10 @@ class EditionsTable extends AppTable
         $rules->add($rules->existsIn(['series_id'], 'Series'));
         return $rules;
     }
-	
+
 	/**
 	 * After save, clear any effected edition stackQuery cache
-	 * 
+	 *
 	 * @param type $event
 	 * @param type $entity
 	 * @param type $options
@@ -141,8 +148,11 @@ class EditionsTable extends AppTable
 		$this->clearCache($entity->id);
 		osdLog($entity, 'afterSave on this edition entity');
 	}
-	
-	/**
+    // </editor-fold>
+
+
+    //<editor-fold desc="LegacyCode">
+    /**
 	 * Get the current select list
 	 * 
 	 * @param Query $query
@@ -160,8 +170,21 @@ class EditionsTable extends AppTable
 //		osd($options, 'options');die;
 		return $this->find('memberList', $options)->toArray();
 	}
+    //</editor-fold>
 
-		/**
+
+    /**
+     * Find editions by id
+     *
+     * @param Query $query
+     * @param array $options Pass args on $options['values'] = [ ]
+     * @return Query
+     */
+    public function findEditions(Query $query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+
+    /**
 	 * 
 	 * @return array
 	 */
