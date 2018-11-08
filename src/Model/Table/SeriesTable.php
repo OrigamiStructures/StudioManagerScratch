@@ -36,11 +36,11 @@ class SeriesTable extends AppTable
 		$this->addBehavior('Family');
 
 //		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-		if ($this->SystemState->is(ARTWORK_SAVE)) {
+//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id'
 			]);
-		}		
+//		}		
         $this->hasMany('Editions', [
             'foreignKey' => 'series_id'
         ]);
