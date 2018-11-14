@@ -1,17 +1,20 @@
 ## COMMANDS TO BAKE FIXTURES
+====================================================================
 
 ### Big record sets
+--------------------------------------------------------------------
 bin/cake bake fixture --records --count 77 Addresses //puts real address data in test files
 bin/cake bake fixture --records --count 19 Artworks
 
 ### One complete artwork stack set
-
+--------------------------------------------------------------------
 bin/cake bake fixture --records --count 1 --conditions id=19 --table artworks ArtStackArt
 bin/cake bake fixture --records --conditions artwork_id=19 --count 3 --table editions ArtStackEdition
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 3 --table formats ArtStackFormat
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 100 --table pieces ArtStackPiece
 
 ## Help for bake fixture
+====================================================================
 
 bin/cake bake.bake fixture --help
 Generate fixtures for use with the test suite. You can use `bake fixture
@@ -54,3 +57,37 @@ Arguments:
 name  Name of the fixture to bake (without the `Fixture` suffix). You
       can use Plugin.name to bake plugin fixtures.
       (optional)
+
+## Help for bake test
+====================================================================
+
+bin/cake bake.bake test --help
+Bake test case skeletons for classes.
+
+Usage:
+cake bake.bake test [options] [<Entity|Table|Controller|Component|Behavior|Helper|Shell|Task|ShellHelper|Cell|Form|Mailer|Command|entity|table|controller|component|behavior|helper|shell|task|shell_helper|cell|form|mailer|command>] [<name>]
+
+Options:
+
+--all             Bake all classes of the given type
+--connection, -c  The datasource connection to get data from.
+                  (default: default)
+--fixtures        A comma separated list of fixture names you want to
+                  include.
+--force, -f       Force overwriting existing files without prompting.
+--help, -h        Display this help.
+--no-fixture      Select if you want to bake without fixture.
+--plugin, -p      Plugin to bake into.
+--prefix          Use when baking tests for prefixed controllers.
+--quiet, -q       Enable quiet output.
+--theme, -t       The theme to use when baking code. (choices:
+                  Bake|Migrations)
+--verbose, -v     Enable verbose output.
+
+Arguments:
+
+type  Type of class to bake, can be any of the following: controller,
+      model, helper, component or behavior.
+      (optional) (choices:
+      Entity|Table|Controller|Component|Behavior|Helper|Shell|Task|ShellHelper|Cell|Form|Mailer|Command|entity|table|controller|component|behavior|helper|shell|task|shell_helper|cell|form|mailer|command)
+name  An existing class to bake tests for. (optional)
