@@ -40,14 +40,17 @@ trait ArtistIdConditionTrait {
 	 * @param Query $query
 	 */
 	protected function includeArtistIdCondition($query) {
-		// First time through initialize the property
-		if (!$this->_where_artist_id) {
-			$this->_where_artist_id = new \SplObjectStorage();
-		}
-		if (!$this->_where_artist_id->contains($query)) {
-			$this->_where_artist_id->attach($query, TRUE);
-			$this->addArtistIdCondition($query, $this->SystemState->artistId());
-		}
+            
+            if (php_sapi_name() === 'cli') { return; } // ignore for command line fixture baking
+            
+            // First time through initialize the property
+            if (!$this->_where_artist_id) {
+                    $this->_where_artist_id = new \SplObjectStorage();
+            }
+            if (!$this->_where_artist_id->contains($query)) {
+                    $this->_where_artist_id->attach($query, TRUE);
+                    $this->addArtistIdCondition($query, $this->SystemState->artistId());
+            }
 	}
 	
 	/**
