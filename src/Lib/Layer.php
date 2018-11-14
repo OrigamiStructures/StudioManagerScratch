@@ -17,7 +17,7 @@ use Cake\Collection\Collection;
  *
  * @author Main
  */
-class StackLayer {
+class Layer {
     
     use ConventionsTrait;
     
@@ -208,7 +208,7 @@ class StackLayer {
      */
     public function linkedTo($layer, $id) {
         $property = $this->_modelKey($layer);
-        if (!$this->_verifyPropertyExists($property)) {
+        if (!$this->_verifyProperty($property)) {
             return NULL;
         }
         return $this->filter($property, $id);
@@ -281,12 +281,12 @@ class StackLayer {
                 $message = "All entities stored in a StackLayer must be of "
                     . "the same class. $this->_className was being used "
                     . "when $badClass was encountered.";
-                throw new BadClassConfigurationException($message);
+                throw new \BadClassConfigurationException($message);
             }
             if (!isset($entity->id)) {
                 $message = "StackLayer expects to find \$entity->id. This "
                     . "property was missing on array element $key.";
-                throw new BadClassConfigurationException($message);
+                throw new \BadClassConfigurationException($message);
             }
             $this->_entities[$entity->id] = $entity;
         }
@@ -301,7 +301,7 @@ class StackLayer {
      * @throws BadClassConfigurationException
      */
     private function _initClassProperties($entities, $type) {
-        if (!isEmpty($entities)) {
+        if (!empty($entities)) {
             $keys = array_keys($entities);
             $sampleData = $entities[$keys[0]];
             if (!is_object($sampleData) || !($sampleData instanceof \Cake\ORM\Entity)) {
@@ -310,20 +310,20 @@ class StackLayer {
                 $message = 'StackLayer class can only accept objects that '
                     . 'extend Entity. The first object in the array is a $badClass '
                     . 'and does not extend Cake\ORM\Entity.';
-                throw new BadClassConfigurationException($message);
+                throw new \BadClassConfigurationException($message);
             }
-            $name = namespaceSplit(get_class($sampleData));
+            $name = namespaceSplit(get_class($sampleData))[1];
         } else {
             if (isNull($type)) {
                 $message = 'If no entities are provided, the name of the expected '
                     . 'entity type must be provided to the StackLayer class as the '
                     . 'second argument to __construct().';
-                throw new BadClassConfigurationException($message);
+                throw new \BadClassConfigurationException($message);
             }
             $name = $type;
         }
         $this->_className = $this->_entityName($name);
-        $this->_layer = $this->_camelize($this->_className);
+        $this->_layer = strtolower($this->_camelize($this->_className));
         $this->_entityProperties = $sampleData->visibleProperties();
     }
 
