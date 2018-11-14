@@ -7,7 +7,7 @@ use Cake\TestSuite\Fixture\TestFixture;
  * ArtStackEditionFixture
  *
  */
-class ArtStackEditionFixture extends TestFixture
+class ArtStackEditionsFixture extends TestFixture
 {
 
     /**
