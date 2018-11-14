@@ -4,6 +4,7 @@ namespace App\Lib;
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
+use App\Exception\BadClassConfigurationException;
 
 /**
  * StackLayer
@@ -71,7 +72,7 @@ class Layer {
             $this->_initEntitySet($entities);
             
         } catch (Exception $ex) {
-            
+
             throw $ex;
             
         }
@@ -85,6 +86,14 @@ class Layer {
      */
     public function has($id) {
         return isset($this->_entities[$id]);
+    }
+    
+    public function name() {
+        return $this->_layer;
+    }
+    
+    public function entityClass() {
+        return $this->_className;
     }
     
     /**
@@ -130,10 +139,10 @@ class Layer {
         $types = ['all', 'first'];
 
         // arbitrary exposed value on $type, assumed to be an id
-        if (!in_array($type, $types + $this->_entityProperties)) {
-            $type = $id;
+        if (!in_array($type, $types + $this->_entityProperties) && empty($options)) {
+            $id = $type;
             if (!$this->has($id)) {
-                return NULL;
+                return null;
             }
             return $this->_entities[$id];
         }
@@ -145,27 +154,27 @@ class Layer {
         
         // if not a listed type, not a valid argument
         if (!in_array($type, $types)) {
-            return null;
+            return [];
         }
         
         // left with one of the three $types
         if ($type === 'all') {
-            return $this->_entities;
-        }
-        
+             return $this->_entities;
+         }
+            
         if ($type === 'first') {
             if (empty($options)) {
                 return $this->_entities[$this->IDs()[0]];
             }
             if (!is_array($options)) {
-                return null;
+                return [];
             }
-            $property = array_keys($options)[0];
-            $value = $options[$property];
+            $property = $options[0];
+            $value = $options[1];
             $result = $this->filter($property, $value);
             return array_shift($result);
         }
-        return null;
+        return [];
     }
     
     /**
@@ -227,12 +236,12 @@ class Layer {
      * @return type
      */
     public function filter($property, $value) {
-        if ($this->_verifyProperty($property)) {
-            return NULL;
+        if (!$this->_verifyProperty($property)) {
+            return [];
         }
         $set = new Collection($this->_entities);
-        $results = $set->filter(function ($entity, $key) use ($type, $value) {
-                return $entity->$type === $value;
+        $results = $set->filter(function ($entity, $key) use ($property, $value) {
+                return $entity->$property == $value;
             })->toArray();
         return $results;
     }
@@ -252,7 +261,13 @@ class Layer {
      */
     public function sort($property, $dir = \SORT_DESC, $type = \SORT_NUMERIC) {
         $set = new Collection($this->_entities);
-        return $set->sortBy($property, $dir, $type)->toArray();
+        $sorted = $set->sortBy($property, $dir, $type)->toArray();
+        $result = [];
+        //indexes are out of order
+        foreach ($sorted as $entity) {
+            $result[] = $entity;
+        }
+        return $result;
     }
     
 // <editor-fold defaultstate="collapsed" desc="Protected and Private">
@@ -281,12 +296,12 @@ class Layer {
                 $message = "All entities stored in a StackLayer must be of "
                     . "the same class. $this->_className was being used "
                     . "when $badClass was encountered.";
-                throw new \BadClassConfigurationException($message);
+                throw new BadClassConfigurationException($message);
             }
             if (!isset($entity->id)) {
                 $message = "StackLayer expects to find \$entity->id. This "
                     . "property was missing on array element $key.";
-                throw new \BadClassConfigurationException($message);
+                throw new BadClassConfigurationException($message);
             }
             $this->_entities[$entity->id] = $entity;
         }
@@ -310,20 +325,24 @@ class Layer {
                 $message = 'StackLayer class can only accept objects that '
                     . 'extend Entity. The first object in the array is a $badClass '
                     . 'and does not extend Cake\ORM\Entity.';
-                throw new \BadClassConfigurationException($message);
+                throw new BadClassConfigurationException($message);
             }
             $name = namespaceSplit(get_class($sampleData))[1];
         } else {
-            if (isNull($type)) {
+            if ($type === null) {
                 $message = 'If no entities are provided, the name of the expected '
                     . 'entity type must be provided to the StackLayer class as the '
                     . 'second argument to __construct().';
-                throw new \BadClassConfigurationException($message);
+                throw new BadClassConfigurationException($message);
             }
             $name = $type;
         }
         $this->_className = $this->_entityName($name);
         $this->_layer = strtolower($this->_camelize($this->_className));
+        if (empty($sampleData)) {
+            $class = "\App\Model\Entity\\$this->_className";
+            $sampleData = new $class;
+        }
         $this->_entityProperties = $sampleData->visibleProperties();
     }
 
