@@ -41,7 +41,8 @@ trait ArtistIdConditionTrait {
 	 */
 	protected function includeArtistIdCondition($query) {
             
-            if (php_sapi_name() === 'cli') { return; } // ignore for command line fixture baking
+            // ignore for command line fixture baking
+            if (php_sapi_name() === 'cli' && Configure::read('debug')) { return; } 
             
             // First time through initialize the property
             if (!$this->_where_artist_id) {
