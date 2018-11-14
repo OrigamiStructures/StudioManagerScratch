@@ -1,0 +1,45 @@
+bin/cake bake fixture --records --count 77 Addresses
+
+## Help for bake fixture
+
+bin/cake bake.bake fixture --help
+Generate fixtures for use with the test suite. You can use `bake fixture
+all` to bake all fixtures.
+
+Usage:
+cake bake.bake fixture [subcommand] [options] [<name>]
+
+Subcommands:
+
+all  Bake all fixture files for tables in the chosen connection.
+
+To see help on a subcommand use `cake bake.bake fixture [subcommand] --help`
+
+Options:
+
+--conditions      The SQL snippet to use when importing records.
+                  (default: 1=1)
+--connection, -c  The datasource connection to get data from.
+                  (default: default)
+--count, -n       When using generated data, the number of records to
+                  include in the fixture(s). (default:
+                  1)
+--force, -f       Force overwriting existing files without prompting.
+--help, -h        Display this help.
+--plugin, -p      Plugin to bake into.
+--quiet, -q       Enable quiet output.
+--records, -r     Generate a fixture with records from the non-test
+                  database. Used with --count and --conditions to limit
+                  which records are added to the fixture.
+--schema, -s      Create a fixture that imports schema, instead of
+                  dumping a schema snapshot into the fixture.
+--table           The table name if it does not follow conventions.
+--theme, -t       The theme to use when baking code. (choices:
+                  Bake|Migrations)
+--verbose, -v     Enable verbose output.
+
+Arguments:
+
+name  Name of the fixture to bake (without the `Fixture` suffix). You
+      can use Plugin.name to bake plugin fixtures.
+      (optional)
