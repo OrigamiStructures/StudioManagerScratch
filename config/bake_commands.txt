@@ -1,4 +1,15 @@
-bin/cake bake fixture --records --count 77 Addresses
+## COMMANDS TO BAKE FIXTURES
+
+### Big record sets
+bin/cake bake fixture --records --count 77 Addresses //puts real address data in test files
+bin/cake bake fixture --records --count 19 Artworks
+
+### One complete artwork stack set
+
+bin/cake bake fixture --records --count 1 --conditions id=19 --table artworks ArtStackArt
+bin/cake bake fixture --records --conditions artwork_id=19 --count 3 --table editions ArtStackEdition
+bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 3 --table formats ArtStackFormat
+bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 100 --table pieces ArtStackPiece
 
 ## Help for bake fixture
 
