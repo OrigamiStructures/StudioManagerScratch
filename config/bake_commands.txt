@@ -1,3 +1,13 @@
+## TESTING
+====================================================================
+
+### App\Lib
+--------------------------------------------------------------------
+vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
+vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
+vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
+
+
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
 
