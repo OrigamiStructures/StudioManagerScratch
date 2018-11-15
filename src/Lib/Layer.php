@@ -195,6 +195,18 @@ class Layer {
         return array_keys($this->_entities);
     }
     
+    public function distinct($property) {
+        if (!$this->_verifyProperty($property)) {
+            return [];
+        }
+//        osd($this->_entities[965]);;
+        $set = new Collection($this->_entities);
+        $asKeys = $set->reduce(function ($accumulated, $entity) use ($property){
+                return $accumulated += [$entity->$property => True];
+             }, []);
+        return array_keys($asKeys);
+    }
+    
     /**
      * Get the records with a matching foreign key value
      * 
