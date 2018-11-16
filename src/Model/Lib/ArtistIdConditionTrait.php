@@ -1,5 +1,7 @@
 <?php
 namespace App\Model\Lib;
+
+use Cake\Core\Configure;
 /**
  * ArtistIdConditionTrait
  * 
