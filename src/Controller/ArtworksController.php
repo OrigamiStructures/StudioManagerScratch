@@ -11,6 +11,7 @@ use App\Controller\ArtStackController;
 use App\Controller\Component\LayersComponent;
 use Cake\Cache\Cache;
 use App\Model\Lib\IdentitySets;
+use App\Lib\Layer;
 
 /**
  * Artworks Controller
@@ -308,32 +309,14 @@ class ArtworksController extends ArtStackController
     }
 
     public function testMe() {
-        $strings = ['abc', '%abc', 'abc%', '%abc%'];
-        $t = new \OSDTImer();
-        $t->start();
-        foreach ($strings as $string) {
-            osd($string, (strlen($string) > strlen(trim($string, '%'))) ? 'TRUE' : 'FALSE');
-        }
-        $t->end();
-        $t->start(1);
-        foreach ($strings as $string) {
-            $new = str_split($string);
-            osd($new);
-            $f=[];
-            $f[0] = array_shift($new);
-            $f[1] = array_pop($new);
-            osd($f, in_array('%', $f) ? 'TRUE' : 'FALSE');
-        }
-        $t->end(1);
-        osd($t->result(), 'time for trim');
-        osd($t->result(1), 'time for split');
-    //    die;
+
         $queries = $this->request->data('method');
         $result = [];
         $anscestors = [];
         $disp = TableRegistry::get('Dispositions');
         $methods = $disp->customFinders();
         $options = $this->request->data;
+        
         if (count($queries) > 0) {
             $index = 0;
             $result = $disp->find($this->request->data['method'][$index++], $options);
@@ -342,25 +325,29 @@ class ArtworksController extends ArtStackController
             }
         }
         if (is_object($result)) {
-            $t = new \OSDTImer();
-            $t->start();
-            $result = $disp->containAncestry($result);
-            osd($result->toArray(), 'disp->containAncestory');
+//            $result = $disp->containAncestry($result);
             $dispositions = $result->toArray();
-            $sorted = [];
-            foreach ($dispositions as $disposition) {
-                    $sorted[$disposition->id] = $disposition;
-            }
-            $dispositions = $sorted;
-            $pieces = new IdentitySets('Pieces', $dispositions);
-            $pieces->arrayResult();
-            $editions = new IdentitySets('Editions', $pieces->entity());
-            $editions->arrayResult();
-            $formats = new IdentitySets('Formats', $pieces->entity());
-            $formats->arrayResult();
-            $artworks = new IdentitySets('Artworks', $editions->entity());
-            $artworks->arrayResult();
-            osd($t->result());
+            $dispLayer = new Layer($dispositions);
+            
+            $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
+            $stacks = $ArtStacks->find('stackFrom', 
+                ['layer' => 'disposition', 'ids' => $dispLayer->IDs()]);
+            
+            osd($stacks);
+//            $sorted = [];
+//            foreach ($dispositions as $disposition) {
+//                    $sorted[$disposition->id] = $disposition;
+//            }
+//            $dispositions = $sorted;
+//            $pieces = new IdentitySets('Pieces', $dispositions);
+//            $pieces->arrayResult();
+//            $editions = new IdentitySets('Editions', $pieces->entity());
+//            $editions->arrayResult();
+//            $formats = new IdentitySets('Formats', $pieces->entity());
+//            $formats->arrayResult();
+//            $artworks = new IdentitySets('Artworks', $editions->entity());
+//            $artworks->arrayResult();
+//            osd($t->result());
         }
 
         $this->set(compact('result', 'methods', 'pieces', 
