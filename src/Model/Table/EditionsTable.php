@@ -11,6 +11,7 @@ use Cake\ORM\TableRegistry;
 use App\Lib\SystemState;
 use App\Lib\Traits\EditionStackCache;
 use App\Lib\EditionTypeMap;
+use App\Model\Behavior\IntegerQueryBehavior;
 
 /**
  * Editions Model
@@ -75,6 +76,7 @@ class EditionsTable extends AppTable
         $this->addBehavior('CounterCache',[
             'Artworks' => ['edition_count']
         ]);
+        $this->addBehavior('IntegerQuery');
     }
 
     protected function _initializeAssociations() {
@@ -182,6 +184,17 @@ class EditionsTable extends AppTable
      */
     public function findEditions(Query $query, $options) {
         return $this->integer($query, 'id', $options['values']);
+    }
+
+   /**
+     * Find editions in an artwork
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInArtworks($query, $options) {
+        return $this->integer($query, 'artwork_id', $options['values']);
     }
 
     /**
