@@ -321,5 +321,8 @@ class LayerTest extends TestCase
         $this->assertTrue($first < $middle && $middle < $last);
     }
     
+    public function testdistinct() {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
     
 }
