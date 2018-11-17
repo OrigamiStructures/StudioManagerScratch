@@ -68,9 +68,28 @@ class ArtStacksTable extends Table
             case 'dispositions':
                 return $this->loadFromDisposition($ids);
                 break;
-
             default:
-
+            case 'piece':
+            case 'pieces':
+                return $this->loadFromPiece($ids);
+                break;
+            default:
+            case 'format':
+            case 'formats':
+                return $this->loadFromFormat($ids);
+                break;
+            default:
+            case 'edition':
+            case 'editions':
+                return $this->loadFromEdition($ids);
+                break;
+            default:
+            case 'artwork':
+            case 'artworks':
+                return $this->loadFromArtwork($ids);
+                break;
+            default:
+				// what goes in here?
                 break;
         }
     }
@@ -79,20 +98,48 @@ class ArtStacksTable extends Table
      * 
      * @param type $pointers
      */
-    protected function _loadFromArtwork($pointers) {
-
+    protected function _loadFromArtwork($ids) {
+        return $this->stacksFromAtworks($ids);
     }
     
-    protected function _loadFromEdition($pointers) {
-
-    }
-    
-    public function loadFromFormat($pointers) {
+    protected function _loadFromEdition($ids) {
+        $editions = new Layer($this
+            ->_loadLayer('edition', $ids)
+            ->select(['id', 'artwork_id'])
+            ->toArray()
+            );
         
+        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
     }
     
-    public function loadFromPiece($pointers) {
+    public function loadFromFormat($ids) {
+        $formats = new Layer($this
+            ->_loadLayer('formats', $ids)
+            ->select(['id', 'edition_id'])
+            ->toArray()
+            );
+        $editions = new Layer($this
+            ->_loadLayer('edition', $formats->distinct('edition_id'))
+            ->select(['id', 'artwork_id'])
+            ->toArray()
+            );
         
+        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+    }
+    
+    public function loadFromPiece($ids) {
+        $pieces = new Layer($this
+            ->_loadLayer('pieces', $ids)
+            ->select(['id', 'edition_id'])
+            ->toArray()
+            );
+        $editions = new Layer($this
+            ->_loadLayer('edition', $pieces->distinct('edition_id'))
+            ->select(['id', 'artwork_id'])
+            ->toArray()
+            );
+        
+        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
     }
     
     public function loadFromDisposition($ids) {
@@ -116,8 +163,9 @@ class ArtStacksTable extends Table
     
     
     public function stacksFromAtworks($ids) {
-        //make empty stacks container
-        $this->stacks = []; //temporary solution
+		
+        $this->stacks = []; //temporary solution, should be an object?
+		
         foreach ($ids as $id) {
             $stack = FALSE;
 //            $stack = Cache::read(
@@ -161,72 +209,75 @@ class ArtStacksTable extends Table
         return $this->stacks;
     }
     
-    /**
-     * Load members of a table by id
-     * 
-     * The table name will be deduced from the $layer. Also, there is the 
-     * assumption that a custom finder exists in that Table which is in the form 
-     * Table::findTable() which can do an single or array id search.
-     * Custom finders based on IntegerQueryBehavior do the job in this system.
-     * 
-     * <code>
-     * $this-_loadLayer('member', $ids);
-     * 
-     * //will evaluate to
-     * $this->Members->find('members', ['values' => $ids]);
-     * 
-     * //and will expect, in the Members Table the custom finder:
-     * public function findMembers($query, $options) {
-     *      //must properly handle an array of id values
-     *      //finders us
-     * }
-     * </code>
-     * 
-     * @param name $layer The  
-     * @param array $ids
-     * @return Query A new query on some table
-     */
-    private function _loadLayer($layer, $ids) {
-        $tableName = $this->_modelNameFromKey($layer);
-        $finderName = lcfirst($tableName);
-        
-        return $this->$tableName
-            ->find($finderName, ['values' => $ids]);
-    }
-    
-    /**
-     * Set one of the layer properties for the Stack type entity
-     * 
-     * The value must be a homogenous array of entities
-     * 
-     * @param Entity $entity
-     * @param string $property The property to set
-     * @param array $value An array of Entities
-     */
-    public function _marshall($entity, $property, $value) {
-        $entity->set($property, new Layer($value));
-        $entity->setDirty($property, FALSE);
-        return $entity;
-    }
-    
-    /**
-     * Throw together a temporary Join Table class and search it
-     * 
-     * This will actually work for any table, but habtm tables typically 
-     * don't have a named class written for them.
-     * 
-     * 
-     * @param string $table The name of the table class by convention
-     * @param string $column Name of the integer column to search
-     * @param array $ids
-     */
-    protected function _loadFromJoinTable($table, $column, $ids) {
-        $joinTable = TableRegistry::getTableLocator()
-            ->get($table)
-            ->addBehavior('IntegerQuery');
+// <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
+	/**
+	 * Load members of a table by id
+	 * 
+	 * The table name will be deduced from the $layer. Also, there is the 
+	 * assumption that a custom finder exists in that Table which is in the form 
+	 * Table::findTable() which can do an single or array id search.
+	 * Custom finders based on IntegerQueryBehavior do the job in this system.
+	 * 
+	 * <code>
+	 * $this-_loadLayer('member', $ids);
+	 * 
+	 * //will evaluate to
+	 * $this->Members->find('members', ['values' => $ids]);
+	 * 
+	 * //and will expect, in the Members Table the custom finder:
+	 * public function findMembers($query, $options) {
+	 *      //must properly handle an array of id values
+	 *      //finders us
+	 * }
+	 * </code>
+	 * 
+	 * @param name $layer The  
+	 * @param array $ids
+	 * @return Query A new query on some table
+	     */
+	private function _loadLayer($layer, $ids) {
+		$tableName = $this->_modelNameFromKey($layer);
+		$finderName = lcfirst($tableName);
 
-        $q = $joinTable->find('all');
-        $q = $joinTable->integer($q, $column, $ids);
-        return $q;
-}
+		return $this->$tableName
+						->find($finderName, ['values' => $ids]);
+	}
+
+	/**
+	 * Set one of the layer properties for the Stack type entity
+	 * 
+	 * The value must be a homogenous array of entities
+	 * 
+	 * @param Entity $entity
+	 * @param string $property The property to set
+	 * @param array $value An array of Entities
+	     */
+	public function _marshall($entity, $property, $value) {
+		$entity->set($property, new Layer($value));
+		$entity->setDirty($property, FALSE);
+		return $entity;
+	}
+
+	/**
+	 * Throw together a temporary Join Table class and search it
+	 * 
+	 * This will actually work for any table, but habtm tables typically 
+	 * don't have a named class written for them.
+	 * 
+	 * 
+	 * @param string $table The name of the table class by convention
+	 * @param string $column Name of the integer column to search
+	 * @param array $ids
+	     */
+	protected function _loadFromJoinTable($table, $column, $ids) {
+		$joinTable = TableRegistry::getTableLocator()
+				->get($table)
+				->addBehavior('IntegerQuery');
+
+		$q = $joinTable->find('all');
+		$q = $joinTable->integer($q, $column, $ids);
+		return $q;
+	}
+// </editor-fold>
+
 }
