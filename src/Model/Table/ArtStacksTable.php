@@ -9,6 +9,7 @@ use App\Lib\Layer;
 use Cake\Core\ConventionsTrait;
 use Cake\Cache\Cache;
 use App\Model\Entity\ArtStack;
+use App\Model\Lib\StackSet;
 
 /**
  * ArtStacks Model
@@ -42,22 +43,19 @@ class ArtStacksTable extends Table
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->_initializeTables();
+        $this->_initializeAssociations();
     }
     
 //    protected function setSchema($schema) {
 //        
 //    }
     
-    protected function _initializeTables(){
-        $this->setTable('artworks');
-    }
-    
-    public function __get($property) {
-        if (in_array($property, ['Artworks', 'Editions', 'Formats', 'Pieces'])) {
-            return TableRegistry::getTableLocator()->get($property);
-        }
-        return parent::__get($property);
+    protected function _initializeAssociations(){
+		$this->hasMany('artworks');
+		$this->hasMany('editions');
+		$this->hasMany('formats');
+		$this->hasMany('pieces');
+		$this->hasMany('dispositions_pieces');
     }
     
     public function findStackFrom($query, $options) {
