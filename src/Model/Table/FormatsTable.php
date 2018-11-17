@@ -245,7 +245,7 @@ class FormatsTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function inSubscription($query, $options) {
+    public function FindInSubscriptions($query, $options) {
         return $this->integer($query, 'subscription_id', $options['values']);
     }
     
@@ -256,7 +256,7 @@ class FormatsTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function inEdition($query, $options) {
+    public function FindInEditions($query, $options) {
         return $this->integer($query, 'edition_id', $options['values']);
     }
     

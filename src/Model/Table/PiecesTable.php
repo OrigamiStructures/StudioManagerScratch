@@ -186,11 +186,11 @@ class PiecesTable extends AppTable {
      * @param Table $table
      * @return int
      */
-    public function formatsAssignedPieceCount($event, $entity, $table) {
-        return $this->find('InEdition' [$entity->edition_id])
-            ->find('assignedTo', [$entity->format_id])
-            ->sumOf('quantity');
-    }
+//    public function formatsAssignedPieceCount($event, $entity, $table) {
+//        return $this->find('InEdition' [$entity->edition_id])
+//            ->find('assignedTo', [$entity->format_id])
+//            ->sumOf('quantity');
+//    }
 
     /**
      * Callable for Edition counter-cache behavior
@@ -310,7 +310,7 @@ class PiecesTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findInFormat($query, $options) {
+    public function findInFormats($query, $options) {
         return $this->findAssignedTo($query, $options);
     }
 
@@ -321,7 +321,7 @@ class PiecesTable extends AppTable {
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findInEdition($query, $options) {
+    public function findInEditions($query, $options) {
         return $this->integer($query, 'edition_id', $options['values']);
     }
 
