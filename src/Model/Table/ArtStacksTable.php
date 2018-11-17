@@ -126,30 +126,29 @@ class ArtStacksTable extends Table
             
             if (!$stack && !key_exists($id, $this->stacks)) {
                 $stack = new ArtStack();
-                osd('made new stack');
                 
                 $artwork = $this->Artworks->find('artworks', ['values' => [$id]]);
                 $stack = $this->_marshall($stack, 'artwork', $artwork->toArray());
-                osd('marshalled artwork');
                 
                 $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
                 $stack = $this->_marshall($stack, 'editions', $editions->toArray());
-                osd('marshalled editions');
-                osd($stack->_properties);
-                die;
-                $editionIds = $stack->editions->IDs();
+
+				$editionIds = $stack->editions->IDs();
                 
-                $formats = $this->Formats->find('inEdition', ['values' => $editionIds]);
+                $formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
                 $stack = $this->_marshall($stack, 'formats', $formats->toArray());
                 
-                $pieces = $this->Pieces->find('inEdition', ['values' => $editionIds]);
+                $pieces = $this->Pieces->find('inEditions', ['values' => $editionIds]);
                 $stack = $this->_marshall($stack, 'pieces', $pieces->toArray());
                 
                 $pieceIds = $stack->pieces->IDs();
                 
                 $dispositionsPieces = $this->
                     _loadFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
-                $stack = $this->_marshall($stack, 'dispositionsPieces', $$dispositionsPieces->toArray());
+                $stack = $this->_marshall(
+						$stack, 
+						'dispositionsPieces', 
+						$dispositionsPieces->toArray());
 
 //                Cache::write(
 //                    $StackCache->key('art', $id), $stack, 
@@ -204,10 +203,8 @@ class ArtStacksTable extends Table
      * @param string $property The property to set
      * @param array $value An array of Entities
      */
-    private function _marshall($entity, $property, $value) {
-//        $entity = $this->patchEntity($entity, [$property => new Layer($value)]);
-//        $entity->set($property, new Layer($value));
-        $entity->setx($property, $value);
+    public function _marshall($entity, $property, $value) {
+        $entity->set($property, new Layer($value));
         $entity->setDirty($property, FALSE);
         return $entity;
     }
