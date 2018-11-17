@@ -68,7 +68,7 @@ class ArtStacksTable extends Table
         extract($options); //expects $layer string and $ids array
 		
 		if (in_array($layer, $allowedStartPoints)) {
-			$method = 'loadFrom' . $this->_entityClass($layer);
+			$method = 'loadFrom' . $this->_entityName($layer);
 			return $this->$method($ids);
 		}
 		$msg = "ArtStacks can't do lookups starting from $layer";
