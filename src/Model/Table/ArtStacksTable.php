@@ -76,87 +76,126 @@ class ArtStacksTable extends Table
         
     }
     
-    /**
-     * 
-     * @param type $pointers
-     */
-    protected function _loadFromArtwork($ids) {
-        return $this->stacksFromAtworks($ids);
-    }
-    
-    protected function _loadFromEdition($ids) {
-        $editions = new Layer($this
-            ->_loadLayer('edition', $ids)
-            ->select(['id', 'artwork_id'])
-            ->toArray()
-            );
-        
-        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
-    }
-    
-    public function loadFromFormat($ids) {
-        $formats = new Layer($this
-            ->_loadLayer('formats', $ids)
-            ->select(['id', 'edition_id'])
-            ->toArray()
-            );
-        $editions = new Layer($this
-            ->_loadLayer('edition', $formats->distinct('edition_id'))
-            ->select(['id', 'artwork_id'])
-            ->toArray()
-            );
-        
-        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
-    }
-    
-    public function loadFromPiece($ids) {
-        $pieces = new Layer($this
-            ->_loadLayer('pieces', $ids)
-            ->select(['id', 'edition_id'])
-            ->toArray()
-            );
-        $editions = new Layer($this
-            ->_loadLayer('edition', $pieces->distinct('edition_id'))
-            ->select(['id', 'artwork_id'])
-            ->toArray()
-            );
-        
-        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
-    }
-    
-    public function loadFromDisposition($ids) {
-        $joins = $this->
-            _loadFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
-        $dispositionPieces = $this->
-            dispositionsPieces = new Layer($joins->toArray());
-        $pieces = new Layer($this
-            ->_loadLayer('pieces', $dispositionPieces->distinct('piece_id'))
-            ->select(['id', 'edition_id'])
-            ->toArray()
-            );
-        $editions = new Layer($this
-            ->_loadLayer('edition', $pieces->distinct('edition_id'))
-            ->select(['id', 'artwork_id'])
-            ->toArray()
-            );
-        
-        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
-    }
+// <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">
 	
-	public function loadFromSeries($ids) {
-		$editions = new Layer($this
-			->Editions->find('inSeries', $ids)
-            ->select(['id', 'artwork_id', 'series_id'])
-            ->toArray()
-            );
-        
-        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	/**
+	 * Load the artwork stacks to support these artworks
+	 * 
+	 * @param array $ids Artwork ids
+	 * @return StackSet
+	     */
+	protected function _loadFromArtwork($ids) {
+		return $this->stacksFromAtworks($ids);
 	}
-    
-    
+
+	/**
+	 * Load the artwork stacks to support these editions
+	 * 
+	 * @param array $ids Edition ids
+	 * @return StackSet
+	 */
+	protected function _loadFromEdition($ids) {
+		$editions = new Layer($this
+						->_loadLayer('edition', $ids)
+						->select(['id', 'artwork_id'])
+						->toArray()
+		);
+		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	}
+
+	/**
+	 * Load the artwork stacks to support these formats
+	 * 
+	 * @param array $ids Format ids
+	 * @return StackSet
+	 */
+	protected function loadFromFormat($ids) {
+		$formats = new Layer($this
+						->_loadLayer('formats', $ids)
+						->select(['id', 'edition_id'])
+						->toArray()
+		);
+		$editions = new Layer($this
+						->_loadLayer('edition', $formats->distinct('edition_id'))
+						->select(['id', 'artwork_id'])
+						->toArray()
+		);
+		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	}
+
+	/**
+	 * Load the artwork stacks to support these pieces
+	 * 
+	 * @param array $ids Piece ids
+	 * @return StackSet
+	 */
+
+	protected function loadFromPiece($ids) {
+		$pieces = new Layer($this
+						->_loadLayer('pieces', $ids)
+						->select(['id', 'edition_id'])
+						->toArray()
+		);
+		$editions = new Layer($this
+						->_loadLayer('edition', $pieces->distinct('edition_id'))
+						->select(['id', 'artwork_id'])
+						->toArray()
+		);
+		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	}
+
+	/**
+	 * Load the artwork stacks to support these dispositions
+	 * 
+	 * @param array $ids Disposition ids
+	 * @return StackSet
+	 */
+
+	protected function loadFromDisposition($ids) {
+		$joins = $this->
+				_loadFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
+		$dispositionPieces = $this->
+				dispositionsPieces = new Layer($joins->toArray());
+		$pieces = new Layer($this
+						->_loadLayer('pieces', $dispositionPieces->distinct('piece_id'))
+						->select(['id', 'edition_id'])
+						->toArray()
+		);
+		$editions = new Layer($this
+						->_loadLayer('edition', $pieces->distinct('edition_id'))
+						->select(['id', 'artwork_id'])
+						->toArray()
+		);
+		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	}
+
+	/**
+	 * Load the artwork stacks to support these series
+	 * 
+	 * @param array $ids Series ids
+	 * @return StackSet
+	 */
+
+	protected function loadFromSeries($ids) {
+		$editions = new Layer($this
+						->Editions->find('inSeries', $ids)
+						->select(['id', 'artwork_id', 'series_id'])
+						->toArray()
+		);
+		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	}
+
+// </editor-fold>
+
+	/**
+	 * Read the stack from cache or assemble it and cache it
+	 * 
+	 * @param array $ids Artwork ids
+	 * @return StackSet
+	 */
     public function stacksFromAtworks($ids) {
 		
-        $this->stacks = []; //temporary solution, should be an object?
+        $this->stacks = new StackSet(); //temporary solution, should be an object?
 		
         foreach ($ids as $id) {
             $stack = FALSE;
@@ -195,13 +234,14 @@ class ArtStacksTable extends Table
 //                    $StackCache->config('art'));
             }
             
-            $this->stacks[$id] = $stack;
+            $this->stacks->insert($id, $stack);
         }
         
         return $this->stacks;
     }
     
 // <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
+	
 	/**
 	 * Load members of a table by id
 	 * 
@@ -245,6 +285,7 @@ class ArtStacksTable extends Table
 	 * @param array $value An array of Entities
 	     */
 	public function _marshall($entity, $property, $value) {
+//		$this->patchEntity($entity, $value);
 		$entity->set($property, new Layer($value));
 		$entity->setDirty($property, FALSE);
 		return $entity;
