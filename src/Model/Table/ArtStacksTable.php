@@ -61,37 +61,21 @@ class ArtStacksTable extends Table
     }
     
     public function findStackFrom($query, $options) {
+		$allowedStartPoints = [
+			'disposition', 'dispositions',
+			'piece', 'pieces', 'format', 'formats',
+			'edition', 'editions', 'artwork', 'artworks',
+			'series',
+		];
         extract($options); //expects $layer string and $ids array
+		
+		if (in_array($layer, $allowedStartPoints)) {
+			$method = 'loadFrom' . $this->_entityClass($layer);
+			return $this->$method($ids);
+		}
+		$msg = "ArtStacks can't do lookups starting from $layer";
+		throw new \BadMethodCallException($msg);
         
-        switch ($layer) {
-            case 'disposition':
-            case 'dispositions':
-                return $this->loadFromDisposition($ids);
-                break;
-            default:
-            case 'piece':
-            case 'pieces':
-                return $this->loadFromPiece($ids);
-                break;
-            default:
-            case 'format':
-            case 'formats':
-                return $this->loadFromFormat($ids);
-                break;
-            default:
-            case 'edition':
-            case 'editions':
-                return $this->loadFromEdition($ids);
-                break;
-            default:
-            case 'artwork':
-            case 'artworks':
-                return $this->loadFromArtwork($ids);
-                break;
-            default:
-				// what goes in here?
-                break;
-        }
     }
     
     /**
