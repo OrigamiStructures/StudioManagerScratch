@@ -333,7 +333,6 @@ class ArtworksController extends ArtStackController
             $stacks = $ArtStacks->find('stackFrom', 
                 ['layer' => 'disposition', 'ids' => $dispLayer->IDs()]);
             
-            osd($stacks);
 //            $sorted = [];
 //            foreach ($dispositions as $disposition) {
 //                    $sorted[$disposition->id] = $disposition;
@@ -350,8 +349,7 @@ class ArtworksController extends ArtStackController
 //            osd($t->result());
         }
 
-        $this->set(compact('result', 'methods', 'pieces', 
-            'editions', 'formats', 'artworks','dispositions'));
+        $this->set(compact('stacks', 'result', 'methods', 'dispositions'));
     }
 
     public function composeStack($flat) {
