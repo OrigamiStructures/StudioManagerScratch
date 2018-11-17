@@ -160,6 +160,16 @@ class ArtStacksTable extends Table
         
         return $this->stacksFromAtworks($editions->distinct('artwork_id'));
     }
+	
+	public function loadFromSeries($ids) {
+		$editions = new Layer($this
+			->Editions->find('inSeries', $ids)
+            ->select(['id', 'artwork_id', 'series_id'])
+            ->toArray()
+            );
+        
+        return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+	}
     
     
     public function stacksFromAtworks($ids) {
