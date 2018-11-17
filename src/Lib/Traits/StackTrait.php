@@ -25,10 +25,10 @@ trait StackTrait {
      * @param string $id
      * @return boolean 
      */
-    public function hassy($layer, $id) {
+    public function exists($layer, $id) {
         $property = $this->_getLayerProperty($layer);
         if ($property) {
-            return $property->has($id);
+            return $property->exists($id);
         }
         return FALSE;
     }
@@ -61,7 +61,7 @@ trait StackTrait {
      * @param mixed $options
      * @return array
      */
-    public function getty($layer, $options = []) {
+    public function load($layer, $options = []) {
         $property = $this->_getLayerProperty($layer);
         if (!$property) {
             return [];
