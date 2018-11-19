@@ -11,6 +11,7 @@ use Cake\Cache\Cache;
 use App\Model\Entity\ArtStack;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
+use Cake\Core\Configure;
 
 /**
  * ArtStacks Model
@@ -242,16 +243,20 @@ class ArtStacksTable extends Table
 	 * @return StackSet
 	 */
     public function stacksFromAtworks($ids) {
+		$t = (Configure::read('timers')) ? new \OSDTImer() : FALSE;
 		
-        $this->stacks = new StackSet(); //temporary solution, should be an object?
+        $this->stacks = new StackSet();
 		
         foreach ($ids as $id) {
             $stack = FALSE;
+			$t ? $t->start('read') : null;
 //            $stack = Cache::read(
 //                $StackCache->key('art', $id), 
 //                $StackCache->config('art'));
+			$t ? $t->end('read') : null;
             
             if (!$stack && !key_exists($id, $this->stacks)) {
+				$t ? $t->start('build') : null;
                 $stack = new ArtStack();
                 
                 $artwork = $this->Artworks->find('artworks', ['values' => [$id]]);
@@ -260,7 +265,6 @@ class ArtStacksTable extends Table
                 $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
                 $stack = $this->_marshall($stack, 'editions', $editions->toArray());
 
-//				osd($stack);die;
 				$editionIds = $stack->editions->IDs();
                 
                 $formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
@@ -277,17 +281,28 @@ class ArtStacksTable extends Table
 						$stack, 
 						'dispositionsPieces', 
 						$dispositionsPieces->toArray());
+				$t ? $t->end('build') : null;
 
+				$t ? $t->start('write') : null;
 //                Cache::write(
 //                    $StackCache->key('art', $id), $stack, 
 //                    $StackCache->config('art'));
+				$t ? $t->end('write') : null;
             }
+			$t ? $this->logTimers($t) : null;
             
             $this->stacks->insert($id, $stack);
         }
         
         return $this->stacks;
     }
+	
+	private function logTimers($t) {
+		osd($t);
+		if ($t->hasIndex('write')) {
+			
+		}
+	}
     
 // <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
 	
@@ -335,7 +350,7 @@ class ArtStacksTable extends Table
 	     */
 	public function _marshall($entity, $property, $value) {
 		$this->patchEntity($entity, [$property => $value]);
-		$entity->setDirty($property, FALSE);
+			$entity->setDirty($property, FALSE);
 		return $entity;
 	}
 
