@@ -41,46 +41,68 @@ class ArtStacksTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
-//        $this->_initializeAssociations();
-//        $this->_initializeSchema();
     }
     
-//    protected function setSchema($schema) {
-//        
-//    }
-    
-//    protected function _initializeAssociations(){
-//		$this->hasMany('artworks');
-////		$this->hasMany('editions');
-//		$this->hasMany('formats');
-//		$this->hasMany('pieces');
-//		$this->hasMany('dispositions_pieces');
-//    }
-    
+	/**
+	 * Lazy load the required tables
+	 * 
+	 * I couldn't get Associations to work in cooperation with the schema 
+	 * intialization that sets the custom 'layer' type properties. This is 
+	 * my solution to making the Tables available 
+	 * 
+	 * @param string $property
+	 * @return Table|mixed
+	 */
     public function __get($property) {
         if (in_array($property, ['Artworks', 'Editions', 'Formats', 'Pieces'])) {
             return TableRegistry::getTableLocator()->get($property);
-        }
+		}
         return parent::__get($property);
     }
-	
-	protected function _initializeSchema(TableSchema $schema)
-    {
+    
+	/**
+	 * Add the columns to hold the different layers and set their data type
+	 * 
+	 * This will make the entity properties automatically 
+	 * contain Layer objects. 
+	 * 
+	 * @param TableSchema $schema
+	 * @return TableSchema
+	 */
+	protected function _initializeSchema(TableSchema $schema) {
 		$schema->addColumn('artwork', ['type' => 'layer']);
 		$schema->addColumn('editions', ['type' => 'layer']);
 		$schema->addColumn('formats', ['type' => 'layer']);
 		$schema->addColumn('pieces', ['type' => 'layer']);
 		$schema->addColumn('dispositionsPieces', ['type' => 'layer']);
-//		$schema->setColumnType('editions', 'layer');
-//        $schema->setColumnType('formats', 'layer');
-//        $schema->setColumnType('pieces', 'layer');
-//        $schema->setColumnType('dispositions_pieces', 'layer');
         return $schema;
     }
 	
+	/**
+	 * The primary access point to get ArtStacks
+	 * 
+	 * The stacks are meant to provide full context for other detail 
+	 * data sets that have been retirieved for some process. This allows 
+	 * working data queries to be small and focused. Once completed, the 
+	 * Stack tables back-fill the context.
+	 * 
+	 * $options requires two indexes, 
+	 *		'layer' with a value matching any allowed starting point 
+	 *		'ids' containing an array of ids for the named layer
+	 * 
+	 * <code>
+	 * $ArtStacks->find('stackFrom',  ['layer' => 'disposition', 'ids' => $ids]);
+	 * $ArtStacks->find('stackFrom',  ['layer' => 'artworks', 'ids' => $ids]);
+	 * $ArtStacks->find('stackFrom',  ['layer' => 'format', 'ids' => $ids]);
+	 * </code>
+	 * 
+	 * @param Query $query
+	 * @param array $options
+	 * @return StackSet
+	 * @throws \BadMethodCallException
+	 */
 	public function findStackFrom($query, $options) {
 		$allowedStartPoints = [
 			'disposition', 'dispositions',
@@ -212,6 +234,9 @@ class ArtStacksTable extends Table
 
 	/**
 	 * Read the stack from cache or assemble it and cache it
+	 * 
+	 * This is an alternate finder for cases where you have a set 
+	 * of Artworks id. 
 	 * 
 	 * @param array $ids Artwork ids
 	 * @return StackSet
