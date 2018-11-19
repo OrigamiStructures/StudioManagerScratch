@@ -10,6 +10,7 @@ use Cake\Core\ConventionsTrait;
 use Cake\Cache\Cache;
 use App\Model\Entity\ArtStack;
 use App\Model\Lib\StackSet;
+use Cake\Database\Schema\TableSchema;
 
 /**
  * ArtStacks Model
@@ -43,22 +44,44 @@ class ArtStacksTable extends Table
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->_initializeAssociations();
+//        $this->_initializeAssociations();
+//        $this->_initializeSchema();
     }
     
 //    protected function setSchema($schema) {
 //        
 //    }
     
-    protected function _initializeAssociations(){
-		$this->hasMany('artworks');
-		$this->hasMany('editions');
-		$this->hasMany('formats');
-		$this->hasMany('pieces');
-		$this->hasMany('dispositions_pieces');
-    }
+//    protected function _initializeAssociations(){
+//		$this->hasMany('artworks');
+////		$this->hasMany('editions');
+//		$this->hasMany('formats');
+//		$this->hasMany('pieces');
+//		$this->hasMany('dispositions_pieces');
+//    }
     
-    public function findStackFrom($query, $options) {
+    public function __get($property) {
+        if (in_array($property, ['Artworks', 'Editions', 'Formats', 'Pieces'])) {
+            return TableRegistry::getTableLocator()->get($property);
+        }
+        return parent::__get($property);
+    }
+	
+	protected function _initializeSchema(TableSchema $schema)
+    {
+		$schema->addColumn('artwork', ['type' => 'layer']);
+		$schema->addColumn('editions', ['type' => 'layer']);
+		$schema->addColumn('formats', ['type' => 'layer']);
+		$schema->addColumn('pieces', ['type' => 'layer']);
+		$schema->addColumn('dispositionsPieces', ['type' => 'layer']);
+//		$schema->setColumnType('editions', 'layer');
+//        $schema->setColumnType('formats', 'layer');
+//        $schema->setColumnType('pieces', 'layer');
+//        $schema->setColumnType('dispositions_pieces', 'layer');
+        return $schema;
+    }
+	
+	public function findStackFrom($query, $options) {
 		$allowedStartPoints = [
 			'disposition', 'dispositions',
 			'piece', 'pieces', 'format', 'formats',
@@ -212,6 +235,7 @@ class ArtStacksTable extends Table
                 $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
                 $stack = $this->_marshall($stack, 'editions', $editions->toArray());
 
+//				osd($stack);die;
 				$editionIds = $stack->editions->IDs();
                 
                 $formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
@@ -285,8 +309,7 @@ class ArtStacksTable extends Table
 	 * @param array $value An array of Entities
 	     */
 	public function _marshall($entity, $property, $value) {
-//		$this->patchEntity($entity, $value);
-		$entity->set($property, new Layer($value));
+		$this->patchEntity($entity, [$property => $value]);
 		$entity->setDirty($property, FALSE);
 		return $entity;
 	}

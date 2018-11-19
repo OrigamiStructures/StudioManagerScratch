@@ -208,6 +208,7 @@ Type::build('datetime')->useLocaleParser();
 
 Configure::write('Users.config', ['users']);
 
+Type::map('layer', 'App\Database\Type\LayerType');
 
 /**
  * Constants
