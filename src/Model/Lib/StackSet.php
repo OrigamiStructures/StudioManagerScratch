@@ -15,7 +15,7 @@ class StackSet {
 	}
 	
 	public function all() {
-			return $this->_stacks;
-		}
+		return $this->_stacks;
+	}
 
 }
