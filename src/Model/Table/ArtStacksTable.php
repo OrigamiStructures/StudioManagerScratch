@@ -13,6 +13,7 @@ use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use Cake\Core\Configure;
 use App\SiteMetrics\CollectMetrics;
+use App\Cache\ArtStackCacheSettings;
 
 /**
  * ArtStacks Model
@@ -36,14 +37,17 @@ class ArtStacksTable extends Table
 {
     
     use ConventionsTrait;
+	
+	private $cache;
 
-    /**
+	/**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
      * @return void
      */
     public function initialize(array $config) {
+		$this->cache = new ArtStackCacheSettings();
         parent::initialize($config);
     }
     
@@ -252,9 +256,9 @@ class ArtStacksTable extends Table
 			$le = $t->startLogEntry("ArtStack.$id");
             $stack = FALSE;
 			$t->start("read", $le);
-            $stack = Cache::read($id, 'artstack'
-//                $StackCache->key('art', $id), 
-//                $StackCache->config('art')
+            $stack = Cache::read(
+                $this->cache->key($id), 
+                $this->cache->config()
                 );
 			$t->end('read', $le);
             
@@ -287,10 +291,11 @@ class ArtStacksTable extends Table
 				$t->end('build', $le);
 
 				$t->start("write", $le);
-                Cache::write($id, $stack, 'artstack'
-//                    $StackCache->key('art', $id), $stack, 
-//                    $StackCache->config('art')
-                    );
+                Cache::write(
+						$this->cache->key($id), 
+						$stack, 
+						$this->cache->config()
+					);
 				$t->end('write', $le);
             }
         
@@ -347,7 +352,7 @@ class ArtStacksTable extends Table
 	     */
 	public function _marshall($entity, $property, $value) {
 		$this->patchEntity($entity, [$property => $value]);
-			$entity->setDirty($property, FALSE);
+		$entity->setDirty($property, FALSE);
 		return $entity;
 	}
 
