@@ -17,5 +17,13 @@ class StackSet {
 	public function all() {
 		return $this->_stacks;
 	}
+	
+	public function members() {
+		return array_keys($this->_stacks);
+	}
+	
+	public function isMember($id) {
+		return array_key_exists($id, $this->_stacks);
+	}
 
 }
