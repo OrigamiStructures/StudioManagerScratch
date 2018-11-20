@@ -12,6 +12,7 @@ use App\Model\Entity\ArtStack;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use Cake\Core\Configure;
+use App\SiteMetrics\CollectMetrics;
 
 /**
  * ArtStacks Model
@@ -243,20 +244,22 @@ class ArtStacksTable extends Table
 	 * @return StackSet
 	 */
     public function stacksFromAtworks($ids) {
-		$t = (Configure::read('timers')) ? new \OSDTImer() : FALSE;
+		$t = CollectMetrics::instance();
 		
         $this->stacks = new StackSet();
 		
         foreach ($ids as $id) {
+			$le = $t->startLogEntry("ArtStack.$id");
             $stack = FALSE;
-			$t ? $t->start('read') : null;
-//            $stack = Cache::read(
+			$t->start("read", $le);
+            $stack = Cache::read($id, 'artstack'
 //                $StackCache->key('art', $id), 
-//                $StackCache->config('art'));
-			$t ? $t->end('read') : null;
+//                $StackCache->config('art')
+                );
+			$t->end('read', $le);
             
-            if (!$stack && !key_exists($id, $this->stacks)) {
-				$t ? $t->start('build') : null;
+            if (!$stack && !$this->stacks->isMember($id)) {
+				$t->start("build", $le);
                 $stack = new ArtStack();
                 
                 $artwork = $this->Artworks->find('artworks', ['values' => [$id]]);
@@ -281,29 +284,23 @@ class ArtStacksTable extends Table
 						$stack, 
 						'dispositionsPieces', 
 						$dispositionsPieces->toArray());
-				$t ? $t->end('build') : null;
+				$t->end('build', $le);
 
-				$t ? $t->start('write') : null;
-//                Cache::write(
+				$t->start("write", $le);
+                Cache::write($id, $stack, 'artstack'
 //                    $StackCache->key('art', $id), $stack, 
-//                    $StackCache->config('art'));
-				$t ? $t->end('write') : null;
+//                    $StackCache->config('art')
+                    );
+				$t->end('write', $le);
             }
-			$t ? $this->logTimers($t) : null;
-            
+        
+            $t->logTimers($t, $le);
             $this->stacks->insert($id, $stack);
         }
-        
+			
         return $this->stacks;
     }
-	
-	private function logTimers($t) {
-		osd($t);
-		if ($t->hasIndex('write')) {
-			
-		}
-	}
-    
+	    
 // <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
 	
 	/**
