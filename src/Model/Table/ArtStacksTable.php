@@ -13,7 +13,7 @@ use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use Cake\Core\Configure;
 use App\SiteMetrics\CollectMetrics;
-use App\Cache\ArtStackCacheSettings;
+use App\Cache\ArtStackCacheTools as cacheTools;
 
 /**
  * ArtStacks Model
@@ -38,8 +38,6 @@ class ArtStacksTable extends Table
     
     use ConventionsTrait;
 	
-	private $cache;
-
 	/**
      * Initialize method
      *
@@ -47,7 +45,6 @@ class ArtStacksTable extends Table
      * @return void
      */
     public function initialize(array $config) {
-		$this->cache = new ArtStackCacheSettings();
         parent::initialize($config);
     }
     
@@ -95,7 +92,7 @@ class ArtStacksTable extends Table
 	 */
 	public function forgetCache($ids) {
 		foreach ($ids as $id) {
-			Cache::delete($this->cache->key($id), $this->cache->config());
+			Cache::delete(cacheTools::key($id), cacheTools::config());
 		}
 	}
 	
@@ -270,8 +267,8 @@ class ArtStacksTable extends Table
             $stack = FALSE;
 			$t->start("read", $le);
             $stack = Cache::read(
-                $this->cache->key($id), 
-                $this->cache->config()
+                cacheTools::key($id), 
+                cacheTools::config()
                 );
 			$t->end('read', $le);
             
@@ -305,9 +302,9 @@ class ArtStacksTable extends Table
 
 				$t->start("write", $le);
                 Cache::write(
-						$this->cache->key($id), 
+						cacheTools::key($id), 
 						$stack, 
-						$this->cache->config()
+						cacheTools::config()
 					);
 				$t->end('write', $le);
             }
