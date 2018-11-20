@@ -309,7 +309,7 @@ class ArtStacksTable extends Table
 				$t->end('write', $le);
             }
         
-            $t->logTimers($t, $le);
+            $t->logTimers($le);
             $this->stacks->insert($id, $stack);
         }
 			
