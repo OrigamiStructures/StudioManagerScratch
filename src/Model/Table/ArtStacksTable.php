@@ -12,7 +12,7 @@ use App\Model\Entity\ArtStack;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use Cake\Core\Configure;
-use App\SiteMetrics\CollectMetrics;
+use App\SiteMetrics\CollectTimerMetrics;
 use App\Cache\ArtStackCacheTools as cacheTools;
 
 /**
@@ -21,15 +21,6 @@ use App\Cache\ArtStackCacheTools as cacheTools;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\ImagesTable|\Cake\ORM\Association\BelongsTo $Images
  * @property \App\Model\Table\EditionsTable|\Cake\ORM\Association\HasMany $Editions
- *
- * @method \App\Model\Entity\ArtStack get($primaryKey, $options = [])
- * @method \App\Model\Entity\ArtStack newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ArtStack[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ArtStack|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ArtStack|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ArtStack patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ArtStack[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ArtStack findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -258,7 +249,7 @@ class ArtStacksTable extends Table
 	 * @return StackSet
 	 */
     public function stacksFromAtworks($ids) {
-		$t = CollectMetrics::instance();
+		$t = CollectTimerMetrics::instance();
 		
         $this->stacks = new StackSet();
 		
