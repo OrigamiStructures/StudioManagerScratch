@@ -52,7 +52,7 @@ use Cake\Utility\Hash;
  *
  * @author dondrake
  */
-class CollectMetrics {
+class CollectTimerMetrics {
 	
 	/**
 	 * The timer object
@@ -95,11 +95,11 @@ class CollectMetrics {
 	/**
 	 * The public access point for a reference to this singleton
 	 * 
-	 * @return CollectMetrics
+	 * @return CollectTimerMetrics
 	 */
 	public static function instance() {
 		if (!isset(self::$_instance)) {
-			self::$_instance = new CollectMetrics(); 
+			self::$_instance = new CollectTimerMetrics(); 
 		}
 		return self::$_instance;
 	}
