@@ -24,10 +24,7 @@ class ArtStacksTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.art_stacks',
-        'app.users',
-        'app.images',
-        'app.editions'
+        'app.art_stacks'
     ];
 
     /**
@@ -65,21 +62,51 @@ class ArtStacksTableTest extends TestCase
     }
 
     /**
-     * Test validationDefault method
+     * Test __get method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testGet()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test buildRules method
+     * Test forgetCache method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testForgetCache()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findStackFrom method
+     *
+     * @return void
+     */
+    public function testFindStackFrom()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test stacksFromAtworks method
+     *
+     * @return void
+     */
+    public function testStacksFromAtworks()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test _marshall method
+     *
+     * @return void
+     */
+    public function testMarshall()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
