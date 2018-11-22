@@ -37,14 +37,14 @@ if (isset($stacks)) {
 		$editions = new Layer($stack->load('editions', ['id', $formats->distinct('edition_id')]));
 		
         echo "<h1>{$artwork->title}</h1>";
-        foreach ($editions->get('all') as $edition) {
+        foreach ($editions->load('all') as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-            foreach ($formats->get('all') as $format) {
+            foreach ($formats->load('all') as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
-				foreach ($pieces->get('format_id', $format->id) as $piece) {
+				foreach ($pieces->load('format_id', $format->id) as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
-					foreach ($joins->get('piece_id', $piece->id) as $link) {
-						echo "<li>{$dispLayer->get($link->disposition_id)->displayTitle}</li>";
+					foreach ($joins->load('piece_id', $piece->id) as $link) {
+						echo "<li>{$dispLayer->load($link->disposition_id)->displayTitle}</li>";
 					}
 					echo '</ul></li></ul>';
                }
@@ -55,13 +55,13 @@ if (isset($stacks)) {
 //die;
 echo '<h1>Reverse Formatting</h1>';
 if (isset($stacks)) {
-    foreach ($dispLayer->get('all') as $dispId => $disposition) {
+    foreach ($dispLayer->load('all') as $dispId => $disposition) {
 		
 		$joins = new Layer($stacks->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
 		$pieces = new Layer($stacks->load('pieces', ['id', $joins->distinct('piece_id')]));
 				
         echo '<ul><li>' . $disposition->displayTitle . '<ul>';
-        foreach ($pieces->get('all') as $piece) {
+        foreach ($pieces->load('all') as $piece) {
 			
 			$stack = $stacks->owner('pieces', $piece->id)[0];
 			$format = $stack->load('formats', ['id', $piece->format_id])[$piece->format_id];		

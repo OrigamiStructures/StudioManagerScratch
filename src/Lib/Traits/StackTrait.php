@@ -78,7 +78,7 @@ trait StackTrait {
             $type = $options;
         }
         
-        return $property->get($type, $opts);
+        return $property->load($type, $opts);
     }
 	
     /**
@@ -104,7 +104,7 @@ trait StackTrait {
 	}
 	
 	public function primaryEntity() {
-		$primary = $this->_getLayerProperty($this->_primary)->get('all');
+		$primary = $this->_getLayerProperty($this->_primary)->load('all');
 		return array_shift($primary);
 	}
     

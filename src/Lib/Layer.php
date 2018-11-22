@@ -88,10 +88,19 @@ class Layer {
         return isset($this->_entities[$id]);
     }
     
+	/**
+	 * The type/name of this layer data
+	 * 
+	 * @return string
+	 */
     public function name() {
         return $this->_layer;
     }
     
+	/**
+	 * The entity class name of the stored objects
+	 * @return string
+	 */
     public function entityClass() {
         return $this->_className;
     }
@@ -136,7 +145,7 @@ class Layer {
      * @param string $id
      * @return Entity
      */
-    public function get($type, $options = []) {
+    public function load($type, $options = []) {
         $types = ['all', 'first'];
 
         // arbitrary exposed value on $type, assumed to be an id

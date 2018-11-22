@@ -9,7 +9,7 @@
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
 		<?php //$pieceLists = [];
-		foreach ($dispLayer->get('all') as $disposition): 
+		foreach ($dispLayer->load('all') as $disposition): 
 //			$pieceLists[$disposition->id] = 
 //				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
 			$properties = array_intersect_key($disposition->properties(), array_flip($columns));

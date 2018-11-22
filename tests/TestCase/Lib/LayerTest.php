@@ -203,51 +203,55 @@ class LayerTest extends TestCase
         $this->assertFalse($layer->has('something wrong'));
     }
     
-    public function testGetUsingId() {
+    public function testLoadUsingId() {
         $layer = new Layer($this->fivePieces);
 
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->get(965));
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->get('962'));
-        $this->assertNull($layer->get(3));
-        $this->assertNull($layer->get('something wrong'));
+        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load(965));
+        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load('962'));
+        $this->assertNull($layer->load(3));
+        $this->assertNull($layer->load('something wrong'));
     }
     
-    public function testGetUsingPropertyValue() {
+    public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         
-        $results = $layer->get('number', 4); // good find
+        $results = $layer->load('number', 4); // good find
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
-        $results = $layer->get('number', '4'); // good val, casting mismatch
+        $results = $layer->load('number', '4'); // good val, casting mismatch
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
-        $results = $layer->get('number', 9000); // val doesn't exist
+        $results = $layer->load('number', 9000); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
-        $results = $layer->get('boogers', 3); // property doesn't exist
+        $results = $layer->load('boogers', 3); // property doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
     }
+	
+	public function testloadUsingPropertyArray() {
+        $this->markTestIncomplete('Not implemented yet.');
+	}
     
     public function testGetUsingAll() {
         $layer = new Layer($this->fivePieces);
         
-        $this->assertEquals(5, count($layer->get('all')));
-        $this->assertEquals(5, count($layer->get('all', ['id', 12])));        
+        $this->assertEquals(5, count($layer->load('all')));
+        $this->assertEquals(5, count($layer->load('all', ['id', 12])));        
     }
     
     public function testGetUsingFirst() {
         $layer = new Layer($this->fivePieces);
         
-        $this->assertEquals(1, count($layer->get('first')));
-        $this->assertEquals(1, count($layer->get('first', ['disposition_count', 0])));        
-        $this->assertEquals(0, count($layer->get('first', ['boogers', 0])));        
-        $this->assertEquals(0, count($layer->get('first', ['disposition_count', 50])));        
+        $this->assertEquals(1, count($layer->load('first')));
+        $this->assertEquals(1, count($layer->load('first', ['disposition_count', 0])));        
+        $this->assertEquals(0, count($layer->load('first', ['boogers', 0])));        
+        $this->assertEquals(0, count($layer->load('first', ['disposition_count', 50])));        
     }
     
     /**
