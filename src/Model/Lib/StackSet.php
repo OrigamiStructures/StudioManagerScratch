@@ -26,6 +26,24 @@ class StackSet {
 		return array_key_exists($id, $this->_stacks);
 	}
 	
+	public function load($layer, $options = []){
+		$results = [];
+		foreach($this->_stacks as $stack) {
+			$results = array_merge($results, $stack->load($layer, $options));
+		}
+		return $results;
+	}
+	
+	public function owner($layer, $id) {
+		$stacks = [];
+		foreach ($this->_stacks as $stack) {
+			if ($stack->exists($layer, $id)) {
+				$stacks[] = $stack;
+			}
+		}
+		return $stacks;
+	}
+	
 	public function IDs($layer) {
 		$ids = [];
 		foreach($this->_stacks as $stack) {

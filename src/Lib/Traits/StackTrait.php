@@ -28,7 +28,7 @@ trait StackTrait {
     public function exists($layer, $id) {
         $property = $this->_getLayerProperty($layer);
         if ($property) {
-            return $property->exists($id);
+            return $property->has($id);
         }
         return FALSE;
     }
@@ -80,7 +80,7 @@ trait StackTrait {
         
         return $property->get($type, $opts);
     }
-    
+	
     /**
      * Get the count of entities in a layer
      * 
