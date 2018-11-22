@@ -52,18 +52,26 @@ if (isset($stacks)) {
         }
     }
 }
-die;
+//die;
 echo '<h1>Reverse Formatting</h1>';
-if (isset($artworks)) {
-    foreach ($dispositions as $disposition) {
-        echo '<ul><li>' . $dispositions[$dispositionId]->displayTitle . '<ul>';
-        foreach ($pieces->getSet($disposition->id)->idList() as $pieceId) {
-            $piece = $pieces->entity($pieceId);
-            $artworkId = $editions->entity($piece->edition_id)->artwork_id;
+if (isset($stacks)) {
+    foreach ($dispLayer->get('all') as $dispId => $disposition) {
+		
+		$joins = new Layer($stacks->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
+		$pieces = new Layer($stacks->load('pieces', ['id', $joins->distinct('piece_id')]));
+				
+        echo '<ul><li>' . $disposition->displayTitle . '<ul>';
+        foreach ($pieces->get('all') as $piece) {
+			
+			$stack = $stacks->owner('pieces', $piece->id)[0];
+			$format = $stack->load('formats', ['id', $piece->format_id])[$piece->format_id];		
+			$edition = $stack->load('editions', ['id', $piece->edition_id])[$piece->edition_id];
+			$artwork = $stack->load('artwork', ['id', $edition->artwork_id])[$edition->artwork_id];
+			
             echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
-                $artworks->entity($artworkId)->title . ', ' . 
-                $editions->entity($piece->edition_id)->displayTitle . ', ' .
-                $formats->entity($piece->format_id)->displayTitle . 
+                $artwork->title . ', ' . 
+                $edition->displayTitle . ', ' .
+                $format->displayTitle . 
                 '</li>';
         }
         echo '</ul></li></ul>';
