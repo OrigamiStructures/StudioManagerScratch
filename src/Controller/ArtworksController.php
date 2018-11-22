@@ -332,6 +332,8 @@ class ArtworksController extends ArtStackController
             $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
             $stacks = $ArtStacks->find('stackFrom', 
                 ['layer' => 'disposition', 'ids' => $dispLayer->IDs()]);
+			
+			osd(count($stacks->all()));
             
 //            $sorted = [];
 //            foreach ($dispositions as $disposition) {
@@ -349,7 +351,8 @@ class ArtworksController extends ArtStackController
 //            osd($t->result());
         }
 
-        $this->set(compact('stacks', 'result', 'methods', 'dispositions'));
+//		osd($dispLayer);die;
+        $this->set(compact('stacks', 'result', 'methods', 'dispositions', 'dispLayer'));
     }
 
     public function composeStack($flat) {

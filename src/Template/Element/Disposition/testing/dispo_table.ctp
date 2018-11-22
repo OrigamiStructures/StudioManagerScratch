@@ -5,12 +5,11 @@
 ?>
 <table>
 	<?php if(is_object($result)) : ?>
-	<caption><?= 'Records found: ' . $result->count(); ?></caption>
-	<?php endif; ?>
+	<caption><?= 'Records found: ' . $dispLayer->count(); ?></caption>
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
 		<?php //$pieceLists = [];
-		foreach ($result as $disposition): 
+		foreach ($dispLayer->get('all') as $disposition): 
 //			$pieceLists[$disposition->id] = 
 //				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
 			$properties = array_intersect_key($disposition->properties(), array_flip($columns));
@@ -19,6 +18,7 @@
 		<?= $this->Html->tableCells($properties) ?>
 		<?php endforeach; ?>
 	</tbody>
+	<?php endif; ?>
 </table>
 <?php
 //osd($pieceLists);

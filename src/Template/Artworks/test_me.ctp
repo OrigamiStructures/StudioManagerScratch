@@ -24,28 +24,35 @@ echo $this->Form->end();
 ?>
 
 <?php
+use App\Lib\Layer;
+
 echo $this->element('Disposition/testing/dispo_table');
-if (isset($artworks)) {
-    foreach ($artworks->idList() as $artId) {
-        echo "<h1>{$artworks->entity($artId)->title}</h1>";
-        foreach ($artworks->sourceFor($artId) as $editionId) {
-            echo "<h2>{$editions->entity($editionId)->displayTitle}</h2>";
-            $count = 0;
-            foreach ($editions->sourceFor($editionId) as $pieceId) {
-                if ($count === 0) {
-                    $formatId = $formats->getSet($pieceId)->idList()[0];
-                    echo "<h3>{$formats->entity($formatId)->displayTitle}</h3>";
-                    $count++;
-                }
-                echo '<ul><li>' . $pieces->entity($pieceId)->displayTitle . '<ul>';
-                foreach ($pieces->sourceFor($pieceId) as $dispositionId) {
-                    echo "<li>{$dispositions[$dispositionId]->displayTitle}</li>";
-                }
-                echo '</ul></li></ul>';
+if (isset($stacks)) {
+	foreach ($stacks->all() as $stack) {
+		
+		$artwork = $stack->primaryEntity();
+		$joins = new Layer($stack->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
+		$pieces = new Layer($stack->load('pieces', ['id', $joins->distinct('piece_id')]));
+		$formats = new Layer($stack->load('formats', ['id', $pieces->distinct('format_id')]));		
+		$editions = new Layer($stack->load('editions', ['id', $formats->distinct('edition_id')]));
+		
+        echo "<h1>{$artwork->title}</h1>";
+        foreach ($editions->get('all') as $edition) {
+            echo "<h2>{$edition->displayTitle}</h2>";
+            foreach ($formats->get('all') as $format) {
+                echo "<h3>{$format->displayTitle}</h3>";
+				foreach ($pieces->get('format_id', $format->id) as $piece) {
+					echo '<ul><li>' . $piece->displayTitle . '<ul>';
+					foreach ($joins->get('piece_id', $piece->id) as $link) {
+						echo "<li>{$dispLayer->get($link->disposition_id)->displayTitle}</li>";
+					}
+					echo '</ul></li></ul>';
+               }
             }
         }
     }
 }
+die;
 echo '<h1>Reverse Formatting</h1>';
 if (isset($artworks)) {
     foreach ($dispositions as $disposition) {
