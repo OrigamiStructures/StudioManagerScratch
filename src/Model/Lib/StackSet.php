@@ -25,5 +25,13 @@ class StackSet {
 	public function isMember($id) {
 		return array_key_exists($id, $this->_stacks);
 	}
+	
+	public function IDs($layer) {
+		$ids = [];
+		foreach($this->_stacks as $stack) {
+			$ids = array_merge($ids, $stack->IDs($layer));
+		}
+		return $ids;
+	}
 
 }

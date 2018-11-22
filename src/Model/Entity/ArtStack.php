@@ -16,8 +16,10 @@ use App\Lib\Layer;
 class ArtStack extends Entity {
     
     use StackTrait;
-    
-    /**
+	
+	protected $_primary = 'artwork';
+
+	/**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * @var array

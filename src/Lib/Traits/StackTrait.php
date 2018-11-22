@@ -67,10 +67,11 @@ trait StackTrait {
             return [];
         }
 
+		//arrange params for call to layer->get()
         $opts = [];
         if (is_array($options)) {
             $type = array_shift($options);
-            if (count($options) > 1) {
+            if (!empty($options)) {
                 $opts = array_shift($options);
             }
         } else {
@@ -93,6 +94,19 @@ trait StackTrait {
         }
         return 0;
     }
+	
+	public function primaryLayer() {
+		return $this->_primary;
+	}
+	
+	public function primaryId() {
+		return $this->IDs($this->_primary)[0];
+	}
+	
+	public function primaryEntity() {
+		$primary = $this->_getLayerProperty($this->_primary)->get('all');
+		return array_shift($primary);
+	}
     
     /**
      * Get all the distinct values form the properties in a layer's entities
@@ -133,7 +147,7 @@ trait StackTrait {
     public function linkedTo(string $layer, array $options) {
         $property = $this->_getLayerProperty($layer);
         if ($property && count($options) === 2) {
-            return $property->linkedTo($$options[0], $options[1]);
+            return $property->linkedTo($options[0], $options[1]);
         }
         return [];
     }
@@ -146,8 +160,8 @@ trait StackTrait {
      */
     protected function _getLayerProperty($layer) {
         $property = $this->$layer;
-        if (isset($this->$property) && $this->$property instanceof Layer) {
-            return $this->$property;
+        if (isset($property) && $property instanceof Layer) {
+            return $property;
         }
         return FALSE;
     }

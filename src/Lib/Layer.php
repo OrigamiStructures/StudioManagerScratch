@@ -123,6 +123,7 @@ class Layer {
      * <code>
      * $editions->get(312);  //edition->id = 312
      * $artworks->get('title', 'Yosemite'); //atwork->title = 'Yosemite'
+	 * $artworks->get('title', ['Yosemite', 'Yellowstone']
      * $pieces->get('all');  //return all stored entities
      * $pieces->get('first); //return the first stored entity
      * $pieces->get('first', ['edition_id', 455]); //first where piece->edition_id = 455
@@ -147,8 +148,9 @@ class Layer {
             return $this->_entities[$id];
         }
         
-        // property name on type and some value on options will filter to prop = value
-        if (in_array($type, $this->_entityProperties) && !is_array($options)) {
+        // property name on type and some value on options will filter to prop = value 
+		// or in_array(prop, value-array) 
+        if (in_array($type, $this->_entityProperties)) {
             return $this->filter($type, $options);
         }
         
@@ -241,6 +243,7 @@ class Layer {
      * <code>
      *  $formats->filter('title', 'Boxed Set');
      *  $pieces->filter('number', 12);
+	 *  $pieces->filter('number', [6, 8, 10);
      * </code>
      * 
      * @param type $property
@@ -253,6 +256,9 @@ class Layer {
         }
         $set = new Collection($this->_entities);
         $results = $set->filter(function ($entity, $key) use ($property, $value) {
+				if (is_array($value)) {
+					return in_array($entity->$property, $value);
+				}
                 return $entity->$property == $value;
             })->toArray();
         return $results;

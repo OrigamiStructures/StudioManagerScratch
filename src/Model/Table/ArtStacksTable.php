@@ -75,19 +75,6 @@ class ArtStacksTable extends Table
     }
 	
 	/**
-	 * Clear cached stack data
-	 * 
-	 * When elements in the stack change, the cache will be destroyed
-	 * 
-	 * @param array $ids IDs of the ArtStacks to un-cache
-	 */
-	public function forgetCache($ids) {
-		foreach ($ids as $id) {
-			Cache::delete(cacheTools::key($id), cacheTools::config());
-		}
-	}
-	
-	/**
 	 * The primary access point to get ArtStacks
 	 * 
 	 * The stacks are meant to provide full context for other detail 
