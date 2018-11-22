@@ -1,3 +1,7 @@
+## BAKING TABLE TESTS
+====================================================================
+bin/cake bake.bake test table ArtStacks
+
 ## TESTING
 ====================================================================
 
@@ -6,7 +10,8 @@
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
-
+vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
