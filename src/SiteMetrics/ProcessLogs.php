@@ -15,8 +15,8 @@ use Cake\Utility\Hash;
  */
 class ProcessLogs {
 	
-	protected $entries = [];
 	protected $final = [];
+	protected $entries = [];
 
 	public function __construct() {
 		$config = Log::getConfig('performanceTimers');

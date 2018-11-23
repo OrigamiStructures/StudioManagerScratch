@@ -17,6 +17,11 @@ class ArtStack extends Entity {
     
     use StackTrait;
 	
+	/**
+	 * Name of the tip of this stack
+	 *
+	 * @var string
+	 */
 	protected $_primary = 'artwork';
 
 	/**

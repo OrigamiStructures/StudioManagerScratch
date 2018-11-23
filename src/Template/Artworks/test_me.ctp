@@ -11,6 +11,8 @@
     }
 </style>
 <?php
+//$log = new App\SiteMetrics\ProcessLogs();
+//osd($log);
 echo $this->Form->create();
 ?>
     <?= $this->Form->select('method', $methods, ['multiple' => 'checkbox']); ?>
@@ -53,24 +55,25 @@ if (isset($stacks)) {
     }
 }
 //die;
-echo '<h1>Reverse Formatting</h1>';
+echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
     foreach ($dispLayer->load('all') as $dispId => $disposition) {
 		
 		$joins = new Layer($stacks->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
 		$pieces = new Layer($stacks->load('pieces', ['id', $joins->distinct('piece_id')]));
 				
-        echo '<ul><li>' . $disposition->displayTitle . '<ul>';
-        foreach ($pieces->load('all') as $piece) {
+        echo '<h3>' . $disposition->displayTitle . '</h3><ul>';
+        foreach ($pieces->sort('format_id') as $piece) {
 			
 			$stack = $stacks->owner('pieces', $piece->id)[0];
-			$format = $stack->load('formats', ['id', $piece->format_id])[$piece->format_id];		
+			
+			$format = $stack->load('formats', ['id', $piece->format_id])[$piece->format_id];	
 			$edition = $stack->load('editions', ['id', $piece->edition_id])[$piece->edition_id];
 			$artwork = $stack->load('artwork', ['id', $edition->artwork_id])[$edition->artwork_id];
 			
             echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 
-                $edition->displayTitle . ', ' .
+                $edition->displayTitle . ', ' . 
                 $format->displayTitle . 
                 '</li>';
         }
