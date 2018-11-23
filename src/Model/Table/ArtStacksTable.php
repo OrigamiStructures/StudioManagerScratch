@@ -18,11 +18,13 @@ use App\Cache\ArtStackCacheTools as cacheTools;
 /**
  * ArtStacks Model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\ImagesTable|\Cake\ORM\Association\BelongsTo $Images
- * @property \App\Model\Table\EditionsTable|\Cake\ORM\Association\HasMany $Editions
+ * @property \App\Model\Table\ArtworkTable $Artworks
+ * @property \App\Model\Table\EditionsTable $Editions
+ * @property \App\Model\Table\FormatsTable $Images
+ * @property \App\Model\Table\PiecesTable $Images
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin \Cake\Core\ConventionsTrait
  */
 class ArtStacksTable extends Table
 {
