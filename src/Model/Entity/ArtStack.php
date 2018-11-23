@@ -12,11 +12,10 @@ use App\Lib\Layer;
  * @property \App\Model\Entity\Edition[] $editions
  * @property \App\Model\Entity\Format[] $formats
  * @property \App\Model\Entity\Piece[] $pieces
+ * 
  */
-class ArtStack extends Entity {
-    
-    use StackTrait;
-	
+class ArtStack extends StackEntity {
+    	
 	/**
 	 * Name of the tip of this stack
 	 *
@@ -32,5 +31,5 @@ class ArtStack extends Entity {
     protected $_accessible = [
         '*' => true,
     ];
-    
+	
 }

@@ -1,6 +1,7 @@
 <?php
-namespace App\Lib\Traits;
+namespace App\Model\Entity;
 
+use Cake\ORM\Entity;
 use App\Lib\Layer;
 
 /**
@@ -15,7 +16,7 @@ use App\Lib\Layer;
  * 
  * @author Main
  */
-trait StackTrait {
+class StackEntity extends Entity {
     
     /**
      * Is the id a member of the set
@@ -95,14 +96,29 @@ trait StackTrait {
         return 0;
     }
 	
+	/**
+	 * Get the name of the primary layer in the stack
+	 * 
+	 * @return string
+	 */
 	public function primaryLayer() {
 		return $this->_primary;
 	}
 	
+	/**
+	 * Get the id of the primary entity in the stack
+	 * 
+	 * @return string
+	 */
 	public function primaryId() {
 		return $this->IDs($this->_primary)[0];
 	}
 	
+	/**
+	 * Get the primary entity in the stack
+	 * 
+	 * @return Entity
+	 */
 	public function primaryEntity() {
 		$primary = $this->_getLayerProperty($this->_primary)->load('all');
 		return array_shift($primary);
