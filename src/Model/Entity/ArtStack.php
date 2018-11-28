@@ -32,4 +32,19 @@ class ArtStack extends StackEntity {
         '*' => true,
     ];
 	
+	public function emitEditionStack($id, $fromLayer = 'edition') {
+		if (!in_array($fromLayer, ['edition', 'format', 'piece'])) {
+			return [];
+		}
+		
+	}
+	
+	public function emitFormatStack($id, $fromLayer = 'format') {
+		 
+	}
+	
+	public function emitPieceStack($id) {
+		
+	}
+	
 }
