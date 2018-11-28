@@ -200,6 +200,8 @@ class SystemState implements EventListenerInterface {
 	 * 'yyyy' could be some random string or a name. id's always hidden at 'xxx'
 	 * 
 	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/66
+	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/111
+	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/120
 	 * @return string
 	 */
 	public function artistId($id = NULL) {
