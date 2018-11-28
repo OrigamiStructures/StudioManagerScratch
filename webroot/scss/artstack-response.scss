@@ -31,6 +31,10 @@
 .fi.wrench:before { content: "\f215"; }
 .fi.cog:before { content: "\f123"; }
 
+section.container {
+	padding: 1rem 2rem;
+}
+
 /* small up */ 
 @media only screen { 
 }
