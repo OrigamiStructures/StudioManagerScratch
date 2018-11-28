@@ -310,8 +310,9 @@ class ArtworksController extends ArtStackController
 
     public function testMe() {
 		
-		$this->Artworks->belongsTo('UserStacks');
-		$this->Artworks->UserStacks->find('stack');
+        $User = TableRegistry::getTableLocator()->get('UserStacks');
+		$stack = $User->find('stack');
+		osd($stack);
 		die;
 
         $queries = $this->request->data('method');
