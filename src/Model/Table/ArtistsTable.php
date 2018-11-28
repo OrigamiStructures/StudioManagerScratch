@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Behavior\IntegerQueryBehavior;
 
 /**
  * Artists Model
@@ -39,6 +40,8 @@ class ArtistsTable extends Table
         $this->setTable('artists');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+		
+		$this->_initializeBehaviors();
 
         $this->belongsTo('Members', [
             'foreignKey' => 'member_id',
@@ -57,7 +60,12 @@ class ArtistsTable extends Table
         ]);
     }
 
-    /**
+    protected function _initializeBehaviors() {
+        $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
+    }
+
+	/**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -86,5 +94,27 @@ class ArtistsTable extends Table
         $rules->add($rules->existsIn(['member_user_id'], 'MemberUsers'));
 
         return $rules;
+    }
+	
+    /**
+     * Find artists by id
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findArtists($query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
+     * Find members
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInMembers($query, $options) {
+        return $this->integer($query, 'member_id', $options['values']);
     }
 }

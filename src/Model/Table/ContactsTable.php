@@ -46,7 +46,12 @@ class ContactsTable extends AppTable
 
     protected function _initializeBehaviors() {
         $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
+        $this->addBehavior('StringQuery');
+    }
 
+
+    protected function _initializeAssociations() {
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
@@ -54,11 +59,6 @@ class ContactsTable extends AppTable
             'foreignKey' => 'member_id',
             'joinType' => 'INNER'
         ]);
-    }
-
-
-    protected function _initializeAssociations() {
-        
     }
 
     /**
@@ -153,8 +153,8 @@ class ContactsTable extends AppTable
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findMembers(Query $query, $options) {
-        return $query->integer($query, 'member_id', $options['values']);
+    public function findInMembers($query, $options) {
+        return $this->integer($query, 'member_id', $options['values']);
     }
     
     /**
@@ -165,7 +165,7 @@ class ContactsTable extends AppTable
      * @return Query
      */
     public function findKind(Query $query, $options) {
-        return $query->string($query, 'label', $options['value']);
+        return $this->string($query, 'label', $options['value']);
     }
     
     /**
@@ -176,7 +176,7 @@ class ContactsTable extends AppTable
      * @return Query
      */
     public function findDetail(Query $query, $options) {
-        return $query->string($query, 'data', $options['value']);
+        return $this->string($query, 'data', $options['value']);
     }
 
 // </editor-fold>

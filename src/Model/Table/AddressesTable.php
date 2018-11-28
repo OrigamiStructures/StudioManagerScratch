@@ -8,6 +8,8 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\Event;
 use ArrayObject;
+use App\Model\Behavior\IntegerQueryBehavior;
+use App\Model\Behavior\StringQueryBehavior;
 
 /**
  * Addresses Model
@@ -33,7 +35,7 @@ class AddressesTable extends AppTable
         $this->displayField('id');
         $this->primaryKey('id');
 
-        $this->addBehavior('Timestamp');
+        $this->_initializeBehaviors();
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -44,6 +46,12 @@ class AddressesTable extends AppTable
         ]);
     }
 
+    protected function _initializeBehaviors() {
+        $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
+        $this->addBehavior('StringQuery');
+    }
+	
     /**
      * Default validation rules.
      *
@@ -147,8 +155,8 @@ class AddressesTable extends AppTable
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findMembers(Query $query, $options) {
-        return $query->integer($query, 'member_id', $options['values']);
+    public function findInMembers(Query $query, $options) {
+        return $this->integer($query, 'member_id', $options['values']);
     }
     
     /**
@@ -159,7 +167,7 @@ class AddressesTable extends AppTable
      * @return Query
      */
     public function findKind(Query $query, $options) {
-        return $query->string($query, 'label', $options['value']);
+        return $this->string($query, 'label', $options['value']);
     }
     
     /**
@@ -170,7 +178,7 @@ class AddressesTable extends AppTable
      * @return Query
      */
     public function findZipCodes(Query $query, $options) {
-        return $query->string($query, 'zip', $options['value']);
+        return $this->string($query, 'zip', $options['value']);
     }
     
     /**
@@ -181,7 +189,7 @@ class AddressesTable extends AppTable
      * @return Query
      */
     public function findCities(Query $query, $options) {
-        return $query->string($query, 'city', $options['value']);
+        return $this->string($query, 'city', $options['value']);
     }
     
     /**
@@ -192,7 +200,7 @@ class AddressesTable extends AppTable
      * @return Query
      */
     public function findStates(Query $query, $options) {
-        return $query->string($query, 'state', $options['value']);
+        return $this->string($query, 'state', $options['value']);
     }
     
 // </editor-fold>

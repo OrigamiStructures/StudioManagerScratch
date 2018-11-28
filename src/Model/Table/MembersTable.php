@@ -52,8 +52,8 @@ class MembersTable extends AppTable
         $this->primaryKey('id');
     }
 
-        protected function _initializeBehaviors() {
-        
+    protected function _initializeBehaviors() {
+        $this->addBehavior('IntegerQuery');
     }
 
         protected function _initializeAssociations() {
