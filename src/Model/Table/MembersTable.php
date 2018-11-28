@@ -68,9 +68,9 @@ class MembersTable extends AppTable
         $this->hasMany('Dispositions', [
             'foreignKey' => 'member_id'
         ]);
-        $this->hasMany('Locations', [
-            'foreignKey' => 'member_id'
-        ]);
+//        $this->hasMany('Locations', [
+//            'foreignKey' => 'member_id'
+//        ]);
         $this->hasMany('Addresses', [
             'foreignKey' => 'member_id',
             'dependent' => TRUE
@@ -82,6 +82,10 @@ class MembersTable extends AppTable
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
         ]);
+		$this->hasOne('Artists', [
+			'foreignKey' => 'member_id',
+			'dependent' => TRUE,
+		]);
         $this->belongsToMany('Groups', [
             'className' => 'Groups',
             'foreignKey' => 'member_id',
