@@ -55,7 +55,9 @@ class SystemState implements EventListenerInterface {
 	 * @var Request
 	 */
 	public $request;
-	
+	public static $rq;
+
+
 	/**
 	 * The current system state
 	 * 
@@ -85,7 +87,7 @@ class SystemState implements EventListenerInterface {
 	protected $_admin_roles = [ADMIN_SYSTEM, ADMIN_ARTIST];
 
 	public function __construct(Request $request) {
-		$this->request = $request;
+		$this->request = self::$rq = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
         $stateChange = NULL;
@@ -226,7 +228,11 @@ class SystemState implements EventListenerInterface {
 		}
 	}
 	
-	/**
+	public static function userId() {
+		return self::$rq->session()->read('Auth.User.artist_id');
+	}
+
+		/**
 	 * 
 	 * @param type $event
 	 */
