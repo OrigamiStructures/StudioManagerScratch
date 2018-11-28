@@ -17,12 +17,14 @@ use App\Lib\SystemState;
 use App\Model\Entity\UserStack;
 
 /**
- * ArtStacks Model
+ * UserStacks Model
  *
- * @property \App\Model\Table\ArtworkTable $Artworks
- * @property \App\Model\Table\EditionsTable $Editions
- * @property \App\Model\Table\FormatsTable $Images
- * @property \App\Model\Table\PiecesTable $Images
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \App\Model\Table\MembersTable $Members
+ * @property \App\Model\Table\ContactsTable $Contacts
+ * @property \App\Model\Table\AddressesTable $Addresses
+ * @property \App\Model\Table\AritstsTable $Artists
+ * @property \App\Model\Table\GroupMembersTable $GroupMembers
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\Core\ConventionsTrait
@@ -79,31 +81,30 @@ class UserStacksTable extends Table
     }
 	
 	/**
-	 * The primary access point to get ArtStacks
+	 * The primary access point to get the UserStack
 	 * 
-	 * The stacks are meant to provide full context for other detail 
-	 * data sets that have been retirieved for some process. This allows 
-	 * working data queries to be small and focused. Once completed, the 
-	 * Stack tables back-fill the context.
+	 * The user stack contains all the daily operating data for a single 
+	 * register user. The user record in the stack contains a subset of 
+	 * user record data omitting sensitive system access data.
 	 * 
-	 * $options requires two indexes, 
-	 *		'layer' with a value matching any allowed starting point 
-	 *		'ids' containing an array of ids for the named layer
+	 * The stack contains all the user's personal contact and address 
+	 * data and group membership links they've established for their 
+	 * personal member record.
 	 * 
-	 * <code>
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'disposition', 'ids' => $ids]);
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'artworks', 'ids' => $ids]);
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'format', 'ids' => $ids]);
-	 * </code>
+	 * It also contains thier artist records. These are join record that
+	 * can lead to the member records that represent artist. These member 
+	 * records may be the user's own records or those of another registered 
+	 * system user that has give permission for artist management.
 	 * 
 	 * @param Query $query
-	 * @param array $options
-	 * @return StackSet
+	 * @param array $options None needed. Present for signature consistency
+	 * @return UserStack
 	 * @throws \BadMethodCallException
 	 */
 	public function findStack($query, $options) {
 		$id = SystemState::userId();
-		return $this->stackFromUserId($id);
+		$userStack = $this->stackFromUserId($id);
+		return $userStack;
     }
     
 	/**
@@ -115,7 +116,7 @@ class UserStacksTable extends Table
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	 */
-    public function stackFromUserId($id) {
+    private function stackFromUserId($id) {
 		$t = CollectTimerMetrics::instance();
 				
 		$le = $t->startLogEntry("UserStack.$id");
@@ -153,16 +154,14 @@ class UserStacksTable extends Table
 
 			$artists = $this->Artists->find('inMembers', ['values' => [$id]]);
 			$stack = $this->_marshall($stack, 'artists', $artists->toArray());
-			osd($stack);die;
 
-			$pieceIds = $stack->pieces->IDs();
-
-			$dispositionsPieces = $this->
-				_loadFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
+			$groupsMembers = $this->
+				_loadFromJoinTable('GroupsMembers', 'member_id', [$member_id]);
 			$stack = $this->_marshall(
 					$stack, 
-					'dispositionsPieces', 
-					$dispositionsPieces->toArray());
+					'groupsMembers', 
+					$groupsMembers->toArray());
+			
 			$t->end('build', $le);
 
 			$t->start("write", $le);
@@ -175,9 +174,8 @@ class UserStacksTable extends Table
 		}
 
 		$t->logTimers($le);
-		$this->stacks->insert($id, $stack);
-			
-        return $this->stacks;
+
+		return $stack;
     }
 	    
 // <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
