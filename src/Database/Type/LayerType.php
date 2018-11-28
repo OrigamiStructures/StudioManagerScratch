@@ -19,7 +19,7 @@ class LayerType extends BaseType implements ExpressionTypeInterface{
 		if (is_string($value)) {
 			$value = unserialize($value);
 		}
-		if (is_array($value)) {
+		if (is_array($value) && !empty($value)) {
 			$value = new Layer($value);
 		}
 		if (is_object($value)) {
