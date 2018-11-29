@@ -46,7 +46,7 @@ class Address extends Entity
 	 * 
 	 * @return string
 	 */
-	public function _getAddressLine() {
+	public function AddressAsLine() {
 		$values = [$this->address1, $this->cityStateZip()];
 		$address = implode(', ', $this->mergeStrings($values));
 		
@@ -63,7 +63,7 @@ class Address extends Entity
 	 * 
 	 * @return array 
 	 */
-	public function addressArray() {
+	public function addressAsArray() {
 		$props = ['address1', 'address2', 'address3'];
 		$result = $this->mergeProps($props);
 		
