@@ -79,7 +79,7 @@ class AddressesFixture extends TestFixture
                 'zip' => '94552',
                 'country' => 'USA',
                 'label' => 'main',
-                'primary_addr' => null
+                'primary_addr' => 1
             ],
             [
                 'id' => 3,
@@ -95,7 +95,7 @@ class AddressesFixture extends TestFixture
                 'zip' => '94552',
                 'country' => 'USA',
                 'label' => 'main',
-                'primary_addr' => null
+                'primary_addr' => 0
             ],
             [
                 'id' => 4,
@@ -649,7 +649,7 @@ class AddressesFixture extends TestFixture
                 'member_id' => 36,
                 'address1' => 'Address Line 1',
                 'address2' => '',
-                'address3' => 'Address Line 2',
+                'address3' => 'Address Line 3',
                 'city' => 'City',
                 'state' => '',
                 'zip' => 'Zip',

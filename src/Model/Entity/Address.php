@@ -37,6 +37,15 @@ class Address extends Entity
         '*' => true,
         'id' => false,
     ];
+    
+    /**
+     * Is this marked as the primary address
+     * 
+     * @return boolean
+     */
+    public function isPrimary() {
+        return $this->primary_addr > 0;
+    }
 	
 	/**
 	 * Make a basic one-line address
@@ -46,7 +55,7 @@ class Address extends Entity
 	 * 
 	 * @return string
 	 */
-	public function AddressAsLine() {
+	public function addressAsLine() {
 		$values = [$this->address1, $this->cityStateZip()];
 		$address = implode(', ', $this->mergeStrings($values));
 		
@@ -68,7 +77,7 @@ class Address extends Entity
 		$result = $this->mergeProps($props);
 		
 		$values = [$this->cityStateZip(), $this->country];
-		return $result + $this->mergeStrings($values);
+		return array_merge($result, $this->mergeStrings($values));
 	}
 	
 	/**
@@ -79,11 +88,15 @@ class Address extends Entity
 	 * @return string
 	 */
 	public function cityStateZip() {
-		$props = ['city', 'state'];
-		$address = implode(', ', $this->mergeLines($props));
-		
-		$values = [$sub, $this->zip];
-		return implode(' ', $this->mergeStrings($values));
+            $props = ['city', 'state', 'zip'];
+            return implode(' ', $this->mergeProps($props));
+
+            // version that does city, state zip
+//            $props = ['city', 'state'];
+//            $address = implode(', ', $this->mergeLines($props));
+//
+//            $values = [$sub, $this->zip];
+//            return implode(' ', $this->mergeStrings($values));
 	}
 	
 	/**
@@ -91,14 +104,14 @@ class Address extends Entity
 	 * 
 	 * @param array $nodes
 	 */
-	private function mergeProps($nodes) {
-		$result = [];
-		foreach ($props as $prop) {
-			if (isset($this->$prop)) {
-				$result[] = $this->$prop;
-			}
-		}
-		return $result;
+	private function mergeProps($props) {
+            $result = [];
+            foreach ($props as $prop) {
+                if (!empty($this->{$prop})) {
+                        $result[] = $this->$prop;
+                }
+            }
+            return $result;
 	}
 	
 	/**
