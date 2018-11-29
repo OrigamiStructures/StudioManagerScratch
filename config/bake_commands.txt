@@ -2,7 +2,9 @@
 ====================================================================
 cd/Library/WebServer/Documents/StudioManagerScratch
 
-/Applications/Apigen/apigen.phar generate --source /Library/WebServer/Documents/StudioManagerScratch/src --destination /Users/dondrake/Dropbox/projx_Origami_StudioManager/apigenDocs --title StudioManagerScratch --charset UTF-8 --todo
+/Applications/Apigen/apigen.phar generate --source /Library/WebServer/Documents/StudioManagerScratch/src --destination /Users/dondrake/Dropbox/projx_Origami_StudioManager/apigenDocs --title StudioManagerScratch --charset UTF-8 --todo  --template-theme=bootstrap
+
+/Applications/Apigen/apigen.phar generate --source /Library/WebServer/Documents/StudioManagerScratch/src --destination /Library/WebServer/Documents/OStructures/webroot/apigen --title StudioManagerScratch --charset UTF-8 --todo  --template-theme=bootstrap
 
 ## BAKING TABLE TESTS
 ====================================================================
