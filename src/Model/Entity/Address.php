@@ -38,8 +38,82 @@ class Address extends Entity
         'id' => false,
     ];
 	
+	/**
+	 * Make a basic one-line address
+	 * 
+	 * 'adress1, city, state zip'
+	 * avoid uneeded puncutation and spaces
+	 * 
+	 * @return string
+	 */
 	public function _getAddressLine() {
-		$address = trim("$this->address1, $this->city, $this->state $this->zip", ' ,');
+		$values = [$this->address1, $this->cityStateZip()];
+		$address = implode(', ', $this->mergeStrings($values));
+		
 		return empty($address) ? 'Address unknown' : $address;
 	}
+	
+	/**
+	 * Make an array in standard address structure
+	 * 
+	 * A helper can walk through this and format it 
+	 * as a label, or other typical multi-line format
+	 * This carefully avoids blank lines and 
+	 * unneccessary punctuations.
+	 * 
+	 * @return array 
+	 */
+	public function addressArray() {
+		$props = ['address1', 'address2', 'address3'];
+		$result = $this->mergeProps($props);
+		
+		$values = [$this->cityStateZip(), $this->country];
+		return $result + $this->mergeStrings($values);
+	}
+	
+	/**
+	 * Merge a 'city, state zip' line
+	 * 
+	 * Don't allow meaningless puctuation or spaces
+	 * 
+	 * @return string
+	 */
+	public function cityStateZip() {
+		$props = ['city', 'state'];
+		$address = implode(', ', $this->mergeLines($props));
+		
+		$values = [$sub, $this->zip];
+		return implode(' ', $this->mergeStrings($values));
+	}
+	
+	/**
+	 * Only add nodes if there is data to add
+	 * 
+	 * @param array $nodes
+	 */
+	private function mergeProps($nodes) {
+		$result = [];
+		foreach ($props as $prop) {
+			if (isset($this->$prop)) {
+				$result[] = $this->$prop;
+			}
+		}
+		return $result;
+	}
+	
+	/**
+	 * Only add nodes if there is data to add
+	 * 
+	 * @param array $nodes
+	 */
+	private function mergeStrings($strings) {
+		$result = [];
+		foreach ($strings as $string) {
+			if (!empty($string)) {
+				$result[] = $string;
+			}
+		}
+		return $result;
+	}
+	
 }
