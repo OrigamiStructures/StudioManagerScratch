@@ -20,6 +20,7 @@ vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
