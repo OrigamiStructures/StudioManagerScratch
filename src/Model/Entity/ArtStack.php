@@ -12,6 +12,7 @@ use App\Lib\Layer;
  * @property \App\Model\Entity\Edition[] $editions
  * @property \App\Model\Entity\Format[] $formats
  * @property \App\Model\Entity\Piece[] $pieces
+ * @property \CakeORM\Entity[] $dispositionsPieces
  * 
  */
 class ArtStack extends StackEntity {
