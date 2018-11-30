@@ -24,7 +24,7 @@ class ArtStacksTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.art_stacks',
+//        'app.art_stacks',
         'app.artworks',
         'app.editions',
         'app.formats',
@@ -70,17 +70,28 @@ class ArtStacksTableTest extends TestCase
                 'formats' => 'layer',
                 'pieces' => 'layer',
                 'dispositionsPieces' => 'layer'
-            ], $this->ArtStacks->getSchema());
+            ], $this->ArtStacks->getSchema()->typeMap());
     }
 
     /**
      * Test __get method
+     * 
+     * @dataProvider TableClassesProvider
      *
      * @return void
      */
-    public function testGet()
+    public function testGet($className, $propertyName)
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf($className, $this->ArtStacks->$propertyName);
+    }
+    
+    public function TableClassesProvider() {
+       return [
+           ['App\Model\Table\ArtworksTable', 'Artworks'],
+           ['App\Model\Table\EditionsTable', 'Editions'],
+           ['App\Model\Table\FormatsTable', 'Formats'],
+           ['App\Model\Table\PiecesTable', 'Pieces'],
+       ];
     }
 
     /**
@@ -91,6 +102,87 @@ class ArtStacksTableTest extends TestCase
     public function testFindStackFrom()
     {
         $this->markTestIncomplete('Not implemented yet.');
+        
+    }
+    
+    /**
+     * Test findStackFrom method
+     * 
+     * @dataProvider stackSeedLayerVariantProvider
+     *
+     * @return void
+     */
+    public function testFindStackFromLayerVariants($args, $art, $ed, $fo, $p_cnt, $d_cnt)
+    {
+        $stacks = $this->ArtStacks->find('stackFrom', $args);
+        $this->assertEquals(1, $stacks->count());
+        $entity = $stacks->owner('artwork', $art)[0];
+        
+        $this->assertTrue($entity->exists('editions', $ed), "===\nedition is $ed\n===");
+        $this->assertTrue($entity->exists('formats', $fo), "===\nformat is $fo\n===");
+        $this->assertEquals($p_cnt, $entity->count('pieces'));
+        $this->assertEquals($d_cnt, $entity->count('dispositionsPieces'));
+    }
+    
+    public function stackSeedLayerVariantProvider() {
+        return [
+        // george art13 ed21 fmt22 - 15 pieces 510-524 - 8 disp-id (12-15,48,51)
+            'disposition for George' => [
+                ['layer' => 'disposition', 'ids' => [12,14,48]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'dispositions for George' => [
+                ['layer' => 'dispositions', 'ids' => [12,14,48]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+        // george art13 ed21 fmt22 - 15 pieces 510-524 - 8 pc-id 8 disp-id (12-15,48,51)
+            'piece for George' => [
+                ['layer' => 'piece', 'ids' => [510,520]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'pieces for George' => [
+                ['layer' => 'pieces', 'ids' => [510]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'format for George' => [
+                ['layer' => 'format', 'ids' => [22]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'formats for George' => [
+                ['layer' => 'formats', 'ids' => [22]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'edition for George' => [
+                ['layer' => 'edition', 'ids' => [21]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'editions for George' => [
+                ['layer' => 'editions', 'ids' => [21]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'artwork for George' => [
+                ['layer' => 'artwork', 'ids' => [13]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+            'artworks for George' => [
+                ['layer' => 'artworks', 'ids' => [13]],
+                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+            ],
+        ];
+    }
+
+    /**
+     * Test findStackFrom method
+     * 
+     * @expectedException BadMethodCallException
+     *
+     * @return void
+     */
+    public function testFindStackFromUnknownLayer()
+    {
+        $this->expectExceptionMessage("ArtStacks can't do lookups");
+        $this->ArtStacks->find('stackFrom', 
+                ['layer' => 'unkown', 'ids' => [4,5,6]]);
     }
 
     /**
