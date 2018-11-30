@@ -9,6 +9,7 @@ cd/Library/WebServer/Documents/StudioManagerScratch
 ## BAKING TABLE TESTS
 ====================================================================
 bin/cake bake.bake test table ArtStacks
+bin/cake bake.bake test --fixtures app.art_stacks,app.artworks,app.editions,app.formats,app.pieces,app.dispositions_pieces table ArtStacks
 
 ## TESTING
 ====================================================================
@@ -17,7 +18,6 @@ bin/cake bake.bake test table ArtStacks
 --------------------------------------------------------------------
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
-vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
@@ -36,6 +36,8 @@ bin/cake bake fixture --records --count 1 --conditions id=19 --table artworks Ar
 bin/cake bake fixture --records --conditions artwork_id=19 --count 3 --table editions ArtStackEdition
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 3 --table formats ArtStackFormat
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 100 --table pieces ArtStackPiece
+bin/cake bake fixture --records --count 310 --table dispositions_pieces DispositionsPieces
+bin/cake bake fixture --count 1 --table art_stacks ArtStacks
 
 ## Help for bake fixture
 ====================================================================
