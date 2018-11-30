@@ -24,7 +24,12 @@ class ArtStacksTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.art_stacks'
+        'app.art_stacks',
+        'app.artworks',
+        'app.editions',
+        'app.formats',
+        'app.pieces',
+        'app.dispositions_pieces'
     ];
 
     /**
@@ -58,7 +63,14 @@ class ArtStacksTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertArraySubset([
+                'id' => 'integer',
+                'artwork' => 'layer',
+                'editions' => 'layer',
+                'formats' => 'layer',
+                'pieces' => 'layer',
+                'dispositionsPieces' => 'layer'
+            ], $this->ArtStacks->getSchema());
     }
 
     /**
@@ -67,16 +79,6 @@ class ArtStacksTableTest extends TestCase
      * @return void
      */
     public function testGet()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test forgetCache method
-     *
-     * @return void
-     */
-    public function testForgetCache()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
