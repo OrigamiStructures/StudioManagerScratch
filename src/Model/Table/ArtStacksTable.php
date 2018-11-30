@@ -20,8 +20,8 @@ use App\Cache\ArtStackCacheTools as cacheTools;
  *
  * @property \App\Model\Table\ArtworkTable $Artworks
  * @property \App\Model\Table\EditionsTable $Editions
- * @property \App\Model\Table\FormatsTable $Images
- * @property \App\Model\Table\PiecesTable $Images
+ * @property \App\Model\Table\FormatsTable $Formats
+ * @property \App\Model\Table\PiecesTable $Pieces
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\Core\ConventionsTrait
@@ -45,7 +45,7 @@ class ArtStacksTable extends Table
 	 * Lazy load the required tables
 	 * 
 	 * I couldn't get Associations to work in cooperation with the schema 
-	 * intialization that sets the custom 'layer' type properties. This is 
+	 * initialization that sets the custom 'layer' type properties. This is 
 	 * my solution to making the Tables available 
 	 * 
 	 * @param string $property
@@ -125,7 +125,7 @@ class ArtStacksTable extends Table
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
-	protected function _loadFromArtwork($ids) {
+	protected function loadFromArtwork($ids) {
 		return $this->stacksFromAtworks($ids);
 	}
 
@@ -135,7 +135,7 @@ class ArtStacksTable extends Table
 	 * @param array $ids Edition ids
 	 * @return StackSet
 	 */
-	protected function _loadFromEdition($ids) {
+	protected function loadFromEdition($ids) {
 		$editions = new Layer($this
 						->_loadLayer('edition', $ids)
 						->select(['id', 'artwork_id'])
@@ -326,7 +326,7 @@ class ArtStacksTable extends Table
 	private function _loadLayer($layer, $ids) {
 		$tableName = $this->_modelNameFromKey($layer);
 		$finderName = lcfirst($tableName);
-
+        
 		return $this->$tableName
 						->find($finderName, ['values' => $ids]);
 	}
