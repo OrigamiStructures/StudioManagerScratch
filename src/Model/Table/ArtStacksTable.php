@@ -106,14 +106,28 @@ class ArtStacksTable extends Table
 			'edition', 'editions', 'artwork', 'artworks',
 			'series',
 		];
+        
+        $msg = FALSE;
+        if (!array_key_exists('layer', $options) || !array_key_exists('ids', $options)) {
+            $msg = "Options array argument must include both 'layer' and 'ids' keys.";
+            throw new \BadMethodCallException($msg);
+        }
+        
         extract($options); //expects $layer string and $ids array
+        
+        if (!is_array($ids)) {
+            $msg = "The ids must be provided as an array.";
+        } elseif (!in_array($layer, $allowedStartPoints)) {
+            $msg = "ArtStacks can't do lookups starting from $layer";
+        }
+        
+        if ($msg) {
+            throw new \BadMethodCallException($msg);
+        }
+            
+        $method = 'loadFrom' . $this->_entityName($layer);
+        return $this->$method($ids);
 		
-		if (in_array($layer, $allowedStartPoints)) {
-			$method = 'loadFrom' . $this->_entityName($layer);
-			return $this->$method($ids);
-		}
-		$msg = "ArtStacks can't do lookups starting from $layer";
-		throw new \BadMethodCallException($msg);
         
     }
     
