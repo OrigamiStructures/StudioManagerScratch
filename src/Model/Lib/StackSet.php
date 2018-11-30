@@ -45,6 +45,15 @@ class StackSet {
 	public function members() {
 		return array_keys($this->_stacks);
 	}
+    
+    /**
+     * Get the count of stored Stack objects
+     * 
+     * @return integer
+     */
+    public function count() {
+        return count($this->_stacks);
+    }
 	
 	/**
 	 * Is this the id of one of the primary enities in a stored stack entity
