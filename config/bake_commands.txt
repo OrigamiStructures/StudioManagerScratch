@@ -32,12 +32,21 @@ bin/cake bake fixture --records --count 19 Artworks
 
 ### One complete artwork stack set
 --------------------------------------------------------------------
+//These set up the Test artwork with multiple editions and multiple formats in an eddition
 bin/cake bake fixture --records --count 1 --conditions id=19 --table artworks ArtStackArt
 bin/cake bake fixture --records --conditions artwork_id=19 --count 3 --table editions ArtStackEdition
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 3 --table formats ArtStackFormat
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 100 --table pieces ArtStackPiece
-bin/cake bake fixture --records --count 310 --table dispositions_pieces DispositionsPieces
+
+//This bakes a stub
 bin/cake bake fixture --count 1 --table art_stacks ArtStacks
+
+//These pull in full record sets to test
+bin/cake bake fixture --records --count 306 --table dispositions_pieces DispositionsPieces
+bin/cake bake fixture --records --count 985 --table pieces Pieces
+bin/cake bake fixture --records --count 985 --table formats Formats
+bin/cake bake fixture --records --count 985 --table editions Editions
+bin/cake bake fixture --records --count 985 --table artworks Artworks
 
 ## Help for bake fixture
 ====================================================================
