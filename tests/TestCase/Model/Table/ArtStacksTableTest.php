@@ -174,15 +174,41 @@ class ArtStacksTableTest extends TestCase
     /**
      * Test findStackFrom method
      * 
+     * @dataProvider badArgsProvider
+     * 
      * @expectedException BadMethodCallException
      *
      * @return void
      */
-    public function testFindStackFromUnknownLayer()
+    public function testFindStackFromBadArgs($args, $msg)
     {
-        $this->expectExceptionMessage("ArtStacks can't do lookups");
-        $this->ArtStacks->find('stackFrom', 
-                ['layer' => 'unkown', 'ids' => [4,5,6]]);
+        $this->expectExceptionMessage($msg);
+        $this->ArtStacks->find('stackFrom', $args);
+    }
+    
+    public function badArgsProvider() {
+        return [
+            'unknown layer' => [
+                ['layer' => 'unkown', 'ids' => [4,5,6]], 
+                "ArtStacks can't do lookups",
+            ],
+            'bad layer key' => [
+                ['wrong' => 'pieces', 'ids' => [4,5,6]], 
+                "both 'layer' and 'ids' keys",
+            ],
+            'bad id key' => [
+                ['layer' => 'pieces', 'wrong' => [4,5,6]], 
+                "both 'layer' and 'ids' keys",
+            ],
+            'missing key' => [
+                ['ids' => [4,5,6]], 
+                "both 'layer' and 'ids' keys",
+            ],
+            'ids not in array' => [
+                ['layer' => 'pieces', 'ids' => 12], 
+                "provided as an array",
+            ],
+        ];
     }
 
     /**
