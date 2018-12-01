@@ -95,6 +95,10 @@ class StackEntity extends Entity {
         }
         return 0;
     }
+    
+    public function hasNo($layer) {
+        return $this->count($layer) === 0;
+    }
 	
 	/**
 	 * Get the name of the primary layer in the stack
