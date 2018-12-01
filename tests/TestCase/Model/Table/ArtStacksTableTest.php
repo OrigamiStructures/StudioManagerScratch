@@ -99,10 +99,39 @@ class ArtStacksTableTest extends TestCase
      *
      * @return void
      */
-    public function testFindStackFrom()
+    public function testFindStackFromOnEmptyIds()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $stacks = $this->ArtStacks->find('stackFrom', ['layer' => 'artwork', 'ids' => []]);
+        $this->assertEquals(0, $stacks->count());
         
+    }
+    
+    /**
+     * Test findStackFrom method
+     * 
+     * @dataProvider noneFoundProvider
+     *
+     * @return void
+     */
+    public function testFindStackFromOnNoneFound($args, $count)
+    {
+        $stacks = $this->ArtStacks->find('stackFrom', $args);
+        $this->assertEquals($count, $stacks->count());  
+    }
+    
+    public function noneFoundProvider() {
+        return [
+            [['layer' => 'disposition', 'ids' => [6000]], 0],
+            [['layer' => 'disposition', 'ids' => []], 0],
+            [['layer' => 'pieces', 'ids' => [6000]], 0],
+            [['layer' => 'pieces', 'ids' => []], 0],
+            [['layer' => 'formats', 'ids' => [6000]], 0],
+            [['layer' => 'formats', 'ids' => []], 0],
+            [['layer' => 'editions', 'ids' => [6000]], 0],
+            [['layer' => 'editions', 'ids' => []], 0],
+            [['layer' => 'artwork', 'ids' => [6000]], 0],
+            [['layer' => 'artwork', 'ids' => []], 0],
+        ];
     }
     
     /**
@@ -172,7 +201,7 @@ class ArtStacksTableTest extends TestCase
     }
 
     /**
-     * Test findStackFrom method
+     * Test findStackFromBadArgs 
      * 
      * @dataProvider badArgsProvider
      * 
@@ -218,16 +247,27 @@ class ArtStacksTableTest extends TestCase
      */
     public function testStacksFromAtworks()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $stacks = $this->ArtStacks->stacksFromAtworks([3000]);
+        $this->assertEquals(0, $stacks->count());
+        
+        $stacks = $this->ArtStacks->stacksFromAtworks([4,6]);
+        $this->assertEquals(2, $stacks->count());
+        
+//        $stacks = $this->ArtStacks->stacksFromAtworks([4, 'wrong']);
+//        $this->assertEquals(1, $stacks->count());
+        
     }
-
     /**
-     * Test _marshall method
+     * Test stacksFromAtworksWithBadArg method
+     * 
+     * @expectedException BadMethodCallException
      *
      * @return void
      */
-    public function testMarshall()
+    public function testStacksFromAtworksWithBadArg()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->expectExceptionMessage('provided as an array');
+        $stacks = $this->ArtStacks->stacksFromAtworks(3);
+        print_r($stacks);
     }
 }
