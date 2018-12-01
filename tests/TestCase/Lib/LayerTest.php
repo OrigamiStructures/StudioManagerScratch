@@ -235,7 +235,12 @@ class LayerTest extends TestCase
     }
 	
 	public function testloadUsingPropertyArray() {
-        $this->markTestIncomplete('Not implemented yet.');
+        $layer = new Layer($this->pieceRecords);
+        
+        $four = $layer->load('number', 4);
+        $three = $layer->load('number', 3);
+        $results = $layer->load('number', [4,3]); // good find
+        $this->assertTrue((count($four) + count($three)) === count($results));
 	}
     
     public function testGetUsingAll() {
@@ -325,8 +330,18 @@ class LayerTest extends TestCase
         $this->assertTrue($first < $middle && $middle < $last);
     }
     
-    public function testdistinct() {
-        $this->markTestIncomplete('Not implemented yet.');
+    public function testDistinct() {
+        $layer = new Layer($this->fivePieces);
+        
+        $distinct = $layer->distinct('number');
+        sort($distinct);
+        $this->assertEquals([1,2,3,4,5], $distinct);
+        $this->assertEquals([36], $layer->distinct('format_id'));
+        
+//        foreach ($this->fivePieces as $entity) {
+//            $this->assertContains($entity->id, $layer->IDs());
+//        }
+//        $this->markTestIncomplete('Not implemented yet.');
     }
     
 }
