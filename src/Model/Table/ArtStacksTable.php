@@ -100,36 +100,48 @@ class ArtStacksTable extends Table
 	 * @throws \BadMethodCallException
 	 */
 	public function findStackFrom($query, $options) {
-		$allowedStartPoints = [
-			'disposition', 'dispositions',
-			'piece', 'pieces', 'format', 'formats',
-			'edition', 'editions', 'artwork', 'artworks',
-			'series',
-		];
         
+        $this->validateArguments($options);
+        extract($options); //$layer, $ids
+        if (empty($ids)) {
+            return new StackSet();
+        }
+        $method = 'loadFrom' . $this->_entityName($layer);
+        return $this->$method($ids);
+    }
+    
+// <editor-fold defaultstate="collapsed" desc="finder args validation">
+
+    /**
+     * Insure the findStack arguments were correct
+     * 
+     * @return void
+     * @throws \BadMethodCallException
+     */
+    private function validateArguments($options) {
+		$allowedStartPoints = [
+			'disposition', 'dispositions', 'piece', 
+			'pieces', 'format', 'formats', 'edition', 
+			'editions', 'artwork', 'artworks', 'series',
+		];
         $msg = FALSE;
         if (!array_key_exists('layer', $options) || !array_key_exists('ids', $options)) {
             $msg = "Options array argument must include both 'layer' and 'ids' keys.";
             throw new \BadMethodCallException($msg);
         }
-        
-        extract($options); //expects $layer string and $ids array
-        
-        if (!is_array($ids)) {
+
+        if (!is_array($options['ids'])) {
             $msg = "The ids must be provided as an array.";
-        } elseif (!in_array($layer, $allowedStartPoints)) {
-            $msg = "ArtStacks can't do lookups starting from $layer";
+        } elseif (!in_array($options['layer'], $allowedStartPoints)) {
+            $msg = "ArtStacks can't do lookups starting from {$options['layer']}";
         }
-        
         if ($msg) {
             throw new \BadMethodCallException($msg);
         }
-            
-        $method = 'loadFrom' . $this->_entityName($layer);
-        return $this->$method($ids);
-		
-        
+        return;
     }
+
+// </editor-fold>
     
 // <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">
 	
@@ -151,11 +163,16 @@ class ArtStacksTable extends Table
 	 */
 	protected function loadFromEdition($ids) {
 		$editions = new Layer($this
-						->_loadLayer('edition', $ids)
-						->select(['id', 'artwork_id'])
-						->toArray()
+            ->_loadLayer('edition', $ids)
+            ->select(['id', 'artwork_id'])
+            ->toArray(), 
+            'editions' // this is the second Layer arg
 		);
-		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        if ($editions->count()) {
+            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        } else {
+            return $this->stacksFromAtworks([]);
+        }
 	}
 
 	/**
@@ -166,16 +183,23 @@ class ArtStacksTable extends Table
 	 */
 	protected function loadFromFormat($ids) {
 		$formats = new Layer($this
-						->_loadLayer('formats', $ids)
-						->select(['id', 'edition_id'])
-						->toArray()
+            ->_loadLayer('formats', $ids)
+            ->select(['id', 'edition_id'])
+            ->toArray(), 
+            'formats' // this is the second Layer arg
 		);
-		$editions = new Layer($this
-						->_loadLayer('edition', $formats->distinct('edition_id'))
-						->select(['id', 'artwork_id'])
-						->toArray()
-		);
-		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        if ($formats->count()) {
+            $editions = new Layer($this
+                    ->_loadLayer('edition', $formats->distinct('edition_id'))
+                    ->select(['id', 'artwork_id'])
+                    ->toArray()
+            );
+        }        
+        if (isset($editions) && $editions->count()) {
+            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        } else {
+            return $this->stacksFromAtworks([]);
+        }
 	}
 
 	/**
@@ -187,16 +211,23 @@ class ArtStacksTable extends Table
 
 	protected function loadFromPiece($ids) {
 		$pieces = new Layer($this
-						->_loadLayer('pieces', $ids)
-						->select(['id', 'edition_id'])
-						->toArray()
+            ->_loadLayer('pieces', $ids)
+            ->select(['id', 'edition_id'])
+            ->toArray(), 
+            'pieces' // this is the second Layer arg
 		);
-		$editions = new Layer($this
-						->_loadLayer('edition', $pieces->distinct('edition_id'))
-						->select(['id', 'artwork_id'])
-						->toArray()
-		);
-		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        if ($pieces->count()) {
+            $editions = new Layer($this
+                ->_loadLayer('edition', $pieces->distinct('edition_id'))
+                ->select(['id', 'artwork_id'])
+                ->toArray()
+            );
+        }
+        if (isset($editions) && $editions->count()) {
+            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        } else {
+            return $this->stacksFromAtworks([]);
+        }
 	}
 
 	/**
@@ -209,19 +240,29 @@ class ArtStacksTable extends Table
 	protected function loadFromDisposition($ids) {
 		$joins = $this->
 				_loadFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
-		$dispositionPieces = $this->
-				dispositionsPieces = new Layer($joins->toArray());
-		$pieces = new Layer($this
-						->_loadLayer('pieces', $dispositionPieces->distinct('piece_id'))
-						->select(['id', 'edition_id'])
-						->toArray()
-		);
-		$editions = new Layer($this
-						->_loadLayer('edition', $pieces->distinct('edition_id'))
-						->select(['id', 'artwork_id'])
-						->toArray()
-		);
-		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        if ($joins->count()) {
+            $dispositionPieces = $this->
+                dispositionsPieces = new Layer($joins->toArray());
+        }
+        if (isset($dispositionPieces) && $dispositionPieces->count()) {
+            $pieces = new Layer($this
+                ->_loadLayer('pieces', $dispositionPieces->distinct('piece_id'))
+                ->select(['id', 'edition_id'])
+                ->toArray()
+            );
+        }  
+        if (isset($pieces) && $pieces->count()) {
+            $editions = new Layer($this
+                ->_loadLayer('edition', $pieces->distinct('edition_id'))
+                ->select(['id', 'artwork_id'])
+                ->toArray()
+            );
+        }     
+        if (isset($editions) && $editions->count()) {
+            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+        } else {
+            return $this->stacksFromAtworks([]);
+        }
 	}
 
 	/**
@@ -233,9 +274,9 @@ class ArtStacksTable extends Table
 
 	protected function loadFromSeries($ids) {
 		$editions = new Layer($this
-						->Editions->find('inSeries', $ids)
-						->select(['id', 'artwork_id', 'series_id'])
-						->toArray()
+            ->Editions->find('inSeries', $ids)
+            ->select(['id', 'artwork_id', 'series_id'])
+            ->toArray(), 'series'
 		);
 		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
 	}
@@ -252,6 +293,11 @@ class ArtStacksTable extends Table
 	 * @return StackSet
 	 */
     public function stacksFromAtworks($ids) {
+        if (!is_array($ids)) {
+            $msg = "The ids must be provided as an array.";
+            throw new \BadMethodCallException($msg);
+        }
+        
 		$t = CollectTimerMetrics::instance();
 		
         $this->stacks = new StackSet();
@@ -267,31 +313,42 @@ class ArtStacksTable extends Table
 			$t->end('read', $le);
             
             if (!$stack && !$this->stacks->isMember($id)) {
-				$t->start("build", $le);
+                $t->start("build", $le);
                 $stack = new ArtStack();
                 
                 $artwork = $this->Artworks->find('artworks', ['values' => [$id]]);
                 $stack = $this->_marshall($stack, 'artwork', $artwork->toArray());
                 
-                $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
-                $stack = $this->_marshall($stack, 'editions', $editions->toArray());
+                if ($stack->count('artwork')) {
+                    $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
+                    $stack = $this->_marshall($stack, 'editions', $editions->toArray());
 
-				$editionIds = $stack->editions->IDs();
+                    $editionIds = $stack->editions->IDs();
+                }  
                 
-                $formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
-                $stack = $this->_marshall($stack, 'formats', $formats->toArray());
+                if ($stack->count('editions')) {
+                    $formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
+                    $stack = $this->_marshall($stack, 'formats', $formats->toArray());
+
+
+                    $pieces = $this->Pieces->find('inEditions', ['values' => $editionIds]);
+                    $stack = $this->_marshall($stack, 'pieces', $pieces->toArray());
+
+
+                    $pieceIds = $stack->pieces->IDs();
+                } 
                 
-                $pieces = $this->Pieces->find('inEditions', ['values' => $editionIds]);
-                $stack = $this->_marshall($stack, 'pieces', $pieces->toArray());
+                if ($stack->count('pieces')) {
+                    $dispositionsPieces = $this->
+                        _loadFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
+                    $stack = $this->_marshall(
+                        $stack,
+
+                        'dispositionsPieces',
+
+                        $dispositionsPieces->toArray());
+                }      
                 
-                $pieceIds = $stack->pieces->IDs();
-                
-                $dispositionsPieces = $this->
-                    _loadFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
-                $stack = $this->_marshall(
-						$stack, 
-						'dispositionsPieces', 
-						$dispositionsPieces->toArray());
 				$t->end('build', $le);
 
 				$t->start("write", $le);
@@ -304,7 +361,10 @@ class ArtStacksTable extends Table
             }
         
             $t->logTimers($le);
-            $this->stacks->insert($id, $stack);
+            
+            if ($stack->count('artwork')) {
+                $this->stacks->insert($id, $stack);
+            }            
         }
 			
         return $this->stacks;
@@ -354,7 +414,7 @@ class ArtStacksTable extends Table
 	 * @param string $property The property to set
 	 * @param array $value An array of Entities
 	     */
-	public function _marshall($entity, $property, $value) {
+	protected function _marshall($entity, $property, $value) {
 		$this->patchEntity($entity, [$property => $value]);
 		$entity->setDirty($property, FALSE);
 		return $entity;
