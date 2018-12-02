@@ -1,6 +1,8 @@
 <?php
 namespace App\Test\TestCase\Model\Entity;
 
+use App\Model\Table\ArtStacksTable;
+use Cake\ORM\TableRegistry;
 use App\Model\Entity\StackEntity;
 use Cake\TestSuite\TestCase;
 
@@ -18,6 +20,26 @@ class StackEntityTest extends TestCase
     public $StackEntity;
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\ArtStacksTable
+     */
+    public $ArtStacks;
+
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+//        'app.art_stacks',
+        'app.artworks',
+        'app.editions',
+        'app.formats',
+        'app.pieces',
+        'app.dispositions_pieces'
+    ];
+    /**
      * setUp method
      *
      * @return void
@@ -25,7 +47,15 @@ class StackEntityTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->StackEntity = new StackEntity();
+        $config = TableRegistry::getTableLocator()->exists('ArtStacks') ? [] : ['className' => ArtStacksTable::class];
+        $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', $config);
+        $artID = 4; //jabberwocky
+        $stacks = $this->ArtStacks->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
+        $this->StackEntity = $stacks->owner('artwork', $artID, 'first');
+        
+        //art 4, ed 5 Unique qty 1, ed 8 Open Edition qty 150
+        //fmt 5 desc Watercolor 6 x 15", fmt 8 desc Digital output with cloth-covered card stock covers
+        //pc 20 nm null qty 1, pc 38,40,509,955 qty 140,7,1,2
     }
 
     /**
@@ -36,20 +66,26 @@ class StackEntityTest extends TestCase
     public function tearDown()
     {
         unset($this->StackEntity);
+        unset($this->ArtStacks);
 
         parent::tearDown();
     }
 
     /**
      * Test exists method
-     *
+     * 
      * @return void
      */
     public function testExists()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertFalse($this->StackEntity->exists('artwork', 50));
+        $this->assertFalse($this->StackEntity->exists('something', 6));
+        $this->assertTrue($this->StackEntity->exists('artwork', 4));
+        $this->assertTrue($this->StackEntity->exists('editions', 8));
+        $this->assertTrue($this->StackEntity->exists('formats', 5));
+        $this->assertTrue($this->StackEntity->exists('pieces', 955));
     }
-
+    
     /**
      * Test load method
      *
@@ -67,7 +103,9 @@ class StackEntityTest extends TestCase
      */
     public function testCount()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals(1, $this->StackEntity->count('artwork'));
+        $this->assertEquals(5, $this->StackEntity->count('pieces'));
+        $this->assertEquals(2, $this->StackEntity->count('formats'));
     }
 
     /**
@@ -77,7 +115,19 @@ class StackEntityTest extends TestCase
      */
     public function testHasNo()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertFalse($this->StackEntity->hasNo('editions'), 'has no editions');
+        $this->assertTrue($this->StackEntity->hasNo('members'), 'has no members');
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testHas()
+    {
+        $this->assertTrue($this->StackEntity->has('editions'), 'has editions');
+        $this->assertFalse($this->StackEntity->has('members'), 'has members');
     }
 
     /**
@@ -87,7 +137,7 @@ class StackEntityTest extends TestCase
      */
     public function testPrimaryLayer()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('artwork', $this->StackEntity->primaryLayer());
     }
 
     /**
@@ -97,7 +147,7 @@ class StackEntityTest extends TestCase
      */
     public function testPrimaryId()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals(4, $this->StackEntity->primaryId());
     }
 
     /**
@@ -107,7 +157,8 @@ class StackEntityTest extends TestCase
      */
     public function testPrimaryEntity()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $entity = $this->StackEntity->primaryEntity();
+        $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
 
     /**
@@ -117,7 +168,8 @@ class StackEntityTest extends TestCase
      */
     public function testDistinct()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals([5,8], $this->StackEntity->distinct('pieces', 'edition_id'));
+        $this->assertEquals([5,8], $this->StackEntity->distinct('formats', 'edition_id'));
     }
 
     /**
@@ -127,7 +179,8 @@ class StackEntityTest extends TestCase
      */
     public function testIDs()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals([20,38,40,509,955], $this->StackEntity->IDs('pieces'));
+        $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
     }
 
     /**
@@ -137,6 +190,13 @@ class StackEntityTest extends TestCase
      */
     public function testLinkedTo()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $unique = $this->StackEntity->linkedTo('pieces', ['edition_id', 5]);
+        $open = $this->StackEntity->linkedTo('pieces', ['edition_id', 8]);
+        $none = $this->StackEntity->linkedTo('something', ['link', 12]);
+        
+        $this->assertEquals(1, count($unique), 'unique edition');
+        $this->assertEquals(4, count($open), 'open edition');
+        $this->assertEquals(0, count($none), 'nothing');
+        
     }
 }
