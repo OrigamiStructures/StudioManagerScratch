@@ -94,13 +94,17 @@ class StackSet {
 	 * @param string $id
 	 * @return array
 	 */
-	public function owner($layer, $id) {
+	public function owner($layer, $id, $set = 'all') {
 		$stacks = [];
 		foreach ($this->_stacks as $stack) {
 			if ($stack->exists($layer, $id)) {
 				$stacks[] = $stack;
 			}
 		}
+        if ($set === 'first' && count($stacks) > 0) {
+            $stack = array_shift($stacks);
+            return $stack;
+        }
 		return $stacks;
 	}
 	
