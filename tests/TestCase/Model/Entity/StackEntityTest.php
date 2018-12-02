@@ -72,12 +72,45 @@ class StackEntityTest extends TestCase
     }
 
     /**
+     * Test load method
+     * 
+     * These all pass through to Layer and that class tests edge cases.
+     * So all I need here is verification of the proper passthrough 
+     * of all the variants
+     *
+     * @return void
+     */
+    public function testLoad() {
+        $format = $this->StackEntity->load('formats', 5);
+        $this->assertEquals('Watercolor 6 x 15"', $format->description);
+        
+        $format = $this->StackEntity->load('formats', [8]);
+        $this->assertStringStartsWith('Digital output', $format->description);
+        
+        $pieces = $this->StackEntity->load('pieces', ['quantity', 140]);
+        $piece = array_shift($pieces);
+        $this->assertEquals(140, $piece->quantity);
+
+        $this->assertEquals(5, count($this->StackEntity->load('pieces', 'all')));
+        
+        $this->assertEquals(2, count($this->StackEntity->load('formats', ['all'])));
+
+        $this->assertEquals(1, count($this->StackEntity->load('pieces', 'first')));
+        
+        $this->assertEquals(1, count($this->StackEntity->load('formats', ['first'])));
+        
+        // unknown layer combinded with a field search
+        $this->assertEquals(0, count($this->StackEntity->load('first', ['edition_id', 8])));
+    }
+
+// <editor-fold defaultstate="collapsed" desc="Simple class methods">
+
+    /**
      * Test exists method
      * 
      * @return void
      */
-    public function testExists()
-    {
+    public function testExists()     {
         $this->assertFalse($this->StackEntity->exists('artwork', 50));
         $this->assertFalse($this->StackEntity->exists('something', 6));
         $this->assertTrue($this->StackEntity->exists('artwork', 4));
@@ -85,24 +118,13 @@ class StackEntityTest extends TestCase
         $this->assertTrue($this->StackEntity->exists('formats', 5));
         $this->assertTrue($this->StackEntity->exists('pieces', 955));
     }
-    
-    /**
-     * Test load method
-     *
-     * @return void
-     */
-    public function testLoad()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
 
     /**
      * Test count method
      *
      * @return void
      */
-    public function testCount()
-    {
+    public function testCount()     {
         $this->assertEquals(1, $this->StackEntity->count('artwork'));
         $this->assertEquals(5, $this->StackEntity->count('pieces'));
         $this->assertEquals(2, $this->StackEntity->count('formats'));
@@ -113,21 +135,9 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testHasNo()
-    {
+    public function testHasNo()     {
         $this->assertFalse($this->StackEntity->hasNo('editions'), 'has no editions');
         $this->assertTrue($this->StackEntity->hasNo('members'), 'has no members');
-    }
-
-    /**
-     * Test has method
-     *
-     * @return void
-     */
-    public function testHas()
-    {
-        $this->assertTrue($this->StackEntity->has('editions'), 'has editions');
-        $this->assertFalse($this->StackEntity->has('members'), 'has members');
     }
 
     /**
@@ -135,8 +145,7 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryLayer()
-    {
+    public function testPrimaryLayer()     {
         $this->assertEquals('artwork', $this->StackEntity->primaryLayer());
     }
 
@@ -145,8 +154,7 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryId()
-    {
+    public function testPrimaryId()     {
         $this->assertEquals(4, $this->StackEntity->primaryId());
     }
 
@@ -155,8 +163,7 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryEntity()
-    {
+    public function testPrimaryEntity()     {
         $entity = $this->StackEntity->primaryEntity();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
@@ -166,10 +173,9 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testDistinct()
-    {
-        $this->assertEquals([5,8], $this->StackEntity->distinct('pieces', 'edition_id'));
-        $this->assertEquals([5,8], $this->StackEntity->distinct('formats', 'edition_id'));
+    public function testDistinct()     {
+        $this->assertEquals([5, 8], $this->StackEntity->distinct('pieces', 'edition_id'));
+        $this->assertEquals([5, 8], $this->StackEntity->distinct('formats', 'edition_id'));
     }
 
     /**
@@ -177,9 +183,8 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testIDs()
-    {
-        $this->assertEquals([20,38,40,509,955], $this->StackEntity->IDs('pieces'));
+    public function testIDs()     {
+        $this->assertEquals([20, 38, 40, 509, 955], $this->StackEntity->IDs('pieces'));
         $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
     }
 
@@ -188,15 +193,32 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testLinkedTo()
-    {
+    public function testLinkedTo()     {
         $unique = $this->StackEntity->linkedTo('pieces', ['edition_id', 5]);
         $open = $this->StackEntity->linkedTo('pieces', ['edition_id', 8]);
         $none = $this->StackEntity->linkedTo('something', ['link', 12]);
-        
+
+
         $this->assertEquals(1, count($unique), 'unique edition');
         $this->assertEquals(4, count($open), 'open edition');
         $this->assertEquals(0, count($none), 'nothing');
-        
+    
     }
+
+// </editor-fold>
+    
+// <editor-fold defaultstate="collapsed" desc="Inherited from entity">
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testHas() {
+        $this->assertTrue($this->StackEntity->has('editions'), 'has editions');
+        $this->assertFalse($this->StackEntity->has('members'), 'has members');
+    }
+
+// </editor-fold>
+
 }
