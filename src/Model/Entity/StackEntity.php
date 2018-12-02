@@ -136,9 +136,9 @@ class StackEntity extends Entity {
      * @return array
      */
     public function distinct($layer, $property) {
-        $property = $this->_getLayerProperty($layer);
-        if ($property) {
-            return $property->distinct($property);
+        $object = $this->_getLayerProperty($layer);
+        if ($object) {
+            return $object->distinct($property);
         }
         return [];
     }
