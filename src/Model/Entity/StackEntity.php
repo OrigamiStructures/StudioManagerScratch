@@ -53,7 +53,6 @@ class StackEntity extends Entity {
      * get('pieces', ['all']);  //return all stored entities
      * get('pieces', 'all');  //return all stored entities
      * get('pieces', 'first); //return the first stored entity
-     * get('pieces', ['first', ['edition_id', 455]]); //first where piece->edition_id = 455
      * </code>
      * 
      * @todo overlap with Entity method. Resolve our naming
@@ -167,7 +166,7 @@ class StackEntity extends Entity {
     public function linkedTo(string $layer, array $options) {
         $property = $this->_getLayerProperty($layer);
         if ($property && count($options) === 2) {
-            return $property->linkedTo($options[0], $options[1]);
+            return $property->load($options[0], $options[1]);
         }
         return [];
     }
