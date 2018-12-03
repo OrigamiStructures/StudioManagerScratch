@@ -94,10 +94,8 @@ class StackEntityTest extends TestCase
         $format = $this->StackEntity->load('formats', 5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description);
 
-
         $format = $this->StackEntity->load('formats', [8]);
         $this->assertStringStartsWith('Digital output', $format->description);
-
 
         $pieces = $this->StackEntity->load('pieces', ['quantity', 140]);
         $piece = array_shift($pieces);
@@ -105,14 +103,11 @@ class StackEntityTest extends TestCase
 
         $this->assertEquals(5, count($this->StackEntity->load('pieces', 'all')));
 
-
         $this->assertEquals(2, count($this->StackEntity->load('formats', ['all'])));
 
         $this->assertEquals(1, count($this->StackEntity->load('pieces', 'first')));
 
-
         $this->assertEquals(1, count($this->StackEntity->load('formats', ['first'])));
-
 
         // unknown layer combinded with a field search
         $this->assertEquals(0, count($this->StackEntity->load('first', ['edition_id', 8])));
@@ -243,6 +238,92 @@ class StackEntityTest extends TestCase
 // <editor-fold defaultstate="collapsed" desc="Inherited from entity">
 
     /**
+     * Test set method extension
+     *
+     * @return void
+     */
+    public function testSet(){
+        //extract an array, unset that value then 'set' the value
+        //the set is a (string, value) arg arrangement
+        $pieces = $this->StackEntity->load('pieces', 'all');
+        $this->assertTrue(is_array($pieces), 'the load value is an array');
+        
+        unset($this->StackEntity->pieces);
+        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
+        
+        $this->StackEntity->set('pieces', $pieces);
+        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+        
+        //do the same process to multiple values
+        //to test the [prop=>val, prop=>val] arguement syntax
+        $pieces = $this->StackEntity->load('pieces', 'all');
+        $dp = $this->StackEntity->load('dispositionsPieces', 'all');
+        unset($this->StackEntity->pieces);
+        unset($this->StackEntity->dispositionsPieces);
+        
+        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
+        $this->assertTrue($this->StackEntity->isEmpty('dispositionsPieces'), 'piece value is gone');
+        
+        $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
+        
+        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
+        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
+        
+        //do the same process to multiple values and use the guard feature
+        //to test the [prop=>val, prop=>val] arguement syntax
+//        $pieces = $this->StackEntity->load('pieces', 'all');
+//        $dp = $this->StackEntity->load('dispositionsPieces', 'all');
+//        unset($this->StackEntity->pieces);
+//        unset($this->StackEntity->dispositionsPieces);
+//        
+//        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
+//        $this->assertTrue($this->StackEntity->isEmpty('dispositionsPieces'), 'piece value is gone');
+//        
+//        $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
+//        
+//        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+//        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
+//        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
+    }
+    
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetx(){
+        
+    }
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGet(){
+        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'));
+        $this->assertEquals(null, $this->StackEntity->get('members'));
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetOriginal(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetOriginalValues(){
+        
+    }
+
+    /**
      * Test has method
      *
      * @return void
@@ -251,6 +332,368 @@ class StackEntityTest extends TestCase
         $this->assertTrue($this->StackEntity->has('editions'), 'has editions');
         $this->assertFalse($this->StackEntity->has('members'), 'has members');
     }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testHasValue(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testUnsetProperty(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testHiddenProperties(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetHidden(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetHidden(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testProperties(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetVirtual(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetVirtual(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testVisibleProperties(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testToArray(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testJsonSerialize(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testOffsetExists(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testOffsetGet(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testOffsetSet(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testOffsetUnset(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testExtract(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testExtractOriginal(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testExtractOriginalChanged(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testDirty(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetDirty(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testIsDirty(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetDirty(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testClean(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testIsNew(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetErrors(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetError(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetErrors(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetError(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testErrors(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetInvalid(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetInvalidField(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetInvalid(){
+        
+    }
+    
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetInvalidField(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testInvalid(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testAccessible(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetAccess(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testIsAccessible(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testGetSource(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSetSource(){
+        
+    }
+
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testSource(){
+        
+    }
+
+    
 
 // </editor-fold>
 
