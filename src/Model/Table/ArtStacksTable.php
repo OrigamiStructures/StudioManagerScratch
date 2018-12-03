@@ -408,7 +408,7 @@ class ArtStacksTable extends Table
 	/**
 	 * Set one of the layer properties for the Stack type entity
 	 * 
-	 * The value must be a homogenous array of entities
+	 * The value must be a homogeneous array of entities
 	 * 
 	 * @param Entity $entity
 	 * @param string $property The property to set
