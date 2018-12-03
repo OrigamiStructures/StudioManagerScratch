@@ -303,66 +303,51 @@ class ArtStacksTable extends Table
         $this->stacks = new StackSet();
 		
         foreach ($ids as $id) {
-			$le = $t->startLogEntry("ArtStack.$id");
+            $le = $t->startLogEntry("ArtStack.$id");
             $stack = FALSE;
-			$t->start("read", $le);
-            $stack = Cache::read(
-                cacheTools::key($id), 
-                cacheTools::config()
-                );
-			$t->end('read', $le);
+            $t->start("read", $le);
+            $stack = Cache::read(cacheTools::key($id), cacheTools::config());
+            $t->end('read', $le);
             
             if (!$stack && !$this->stacks->isMember($id)) {
                 $t->start("build", $le);
-                $stack = new ArtStack();
+                $stack = $this->newEntity([]);
                 
                 $artwork = $this->Artworks->find('artworks', ['values' => [$id]]);
-                $stack = $this->_marshall($stack, 'artwork', $artwork->toArray());
+                $stack->set('artwork', $artwork->toArray());
                 
                 if ($stack->count('artwork')) {
                     $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
-                    $stack = $this->_marshall($stack, 'editions', $editions->toArray());
-
+                    $stack->set('editions', $editions->toArray());
                     $editionIds = $stack->editions->IDs();
                 }  
                 
                 if ($stack->count('editions')) {
                     $formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
-                    $stack = $this->_marshall($stack, 'formats', $formats->toArray());
-
-
                     $pieces = $this->Pieces->find('inEditions', ['values' => $editionIds]);
-                    $stack = $this->_marshall($stack, 'pieces', $pieces->toArray());
-
-
+                    $stack->set([
+                        'formats' => $formats->toArray(),
+                        'pieces' => $pieces->toArray(),
+                        ]);
                     $pieceIds = $stack->pieces->IDs();
                 } 
                 
                 if ($stack->count('pieces')) {
                     $dispositionsPieces = $this->
                         _loadFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
-                    $stack = $this->_marshall(
-                        $stack,
-
-                        'dispositionsPieces',
-
-                        $dispositionsPieces->toArray());
+                    $stack->set('dispositionsPieces', $dispositionsPieces->toArray());
                 }      
                 
-				$t->end('build', $le);
-
-				$t->start("write", $le);
-                Cache::write(
-						cacheTools::key($id), 
-						$stack, 
-						cacheTools::config()
-					);
+                $t->end('build', $le);
+                $t->start("write", $le);
+                Cache::write(cacheTools::key($id), $stack, cacheTools::config());
 				$t->end('write', $le);
             }
         
             $t->logTimers($le);
             
             if ($stack->count('artwork')) {
+                $stack->clean();
                 $this->stacks->insert($id, $stack);
             }            
         }
@@ -403,21 +388,6 @@ class ArtStacksTable extends Table
         
 		return $this->$tableName
 						->find($finderName, ['values' => $ids]);
-	}
-
-	/**
-	 * Set one of the layer properties for the Stack type entity
-	 * 
-	 * The value must be a homogeneous array of entities
-	 * 
-	 * @param Entity $entity
-	 * @param string $property The property to set
-	 * @param array $value An array of Entities
-	     */
-	protected function _marshall($entity, $property, $value) {
-		$this->patchEntity($entity, [$property => $value]);
-		$entity->setDirty($property, FALSE);
-		return $entity;
 	}
 
 	/**
