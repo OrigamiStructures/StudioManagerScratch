@@ -3,6 +3,8 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use App\Lib\Layer;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 /**
  * Stacks
@@ -190,5 +192,44 @@ class StackEntity extends Entity {
         }
         return parent::isEmpty($property);
     }
-
+    
+    /**
+     * Pass through for 'set' to handle Layer type columns
+     * 
+     * If a layer value is set() directly with an array, this 
+     * overwrite will take care of it. New and patch entity do 
+     * the correct typing I think. 
+     * 
+     * {@inheritdoc}
+     * 
+     * @param Layer $property
+     * @param Layer $value
+     * @param array $options
+     * @return type
+     */
+    public function set($property, $value = null, array $options = []) {
+        $typeMap = TableRegistry::getTableLocator()
+            ->get($this->getSource())
+            ->getSchema()
+            ->typeMap();
+        
+        if (is_string($property) 
+            && Hash::extract($typeMap, $property) === ['layer']
+            && !($value instanceof Layer)) {
+                $value = new Layer($value);
+            
+        } elseif (is_array($property)) {
+            $typeMap = (Hash::filter($typeMap, function($value){
+                    return $value === 'layer';
+            }));
+            foreach ($typeMap as $p => $unused) {
+                if (Hash::check($property, $p)
+                    && !($property[$p] instanceof Layer)) {
+                        $property[$p] = new Layer($property[$p]);
+                }
+            }
+        }
+        return parent::set($property, $value, $options);
+    }
+    
 }
