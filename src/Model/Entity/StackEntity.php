@@ -27,7 +27,7 @@ class StackEntity extends Entity {
      * @return boolean 
      */
     public function exists($layer, $id) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property) {
             return $property->has($id);
         }
@@ -62,7 +62,7 @@ class StackEntity extends Entity {
      * @return array
      */
     public function load($layer, $options = []) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if (!$property) {
             return [];
         }
@@ -88,7 +88,7 @@ class StackEntity extends Entity {
      * @return int
      */
     public function count($layer) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property) {
             return $property->count();
         }
@@ -123,7 +123,7 @@ class StackEntity extends Entity {
 	 * @return Entity
 	 */
 	public function primaryEntity() {
-		$primary = $this->_getLayerProperty($this->_primary)->load('all');
+		$primary = $this->get($this->_primary)->load('all');
 		return array_shift($primary);
 	}
     
@@ -135,7 +135,7 @@ class StackEntity extends Entity {
      * @return array
      */
     public function distinct($layer, $property) {
-        $object = $this->_getLayerProperty($layer);
+        $object = $this->get($layer);
         if ($object) {
             return $object->distinct($property);
         }
@@ -149,7 +149,7 @@ class StackEntity extends Entity {
      * @return array
      */
     public function IDs($layer) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property) {
             return $property->IDs();
         }
@@ -164,7 +164,7 @@ class StackEntity extends Entity {
      * @return array
      */
     public function linkedTo(string $layer, array $options) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property && count($options) === 2) {
             return $property->load($options[0], $options[1]);
         }
@@ -172,17 +172,23 @@ class StackEntity extends Entity {
     }
  
     /**
-     * If the layer property is init'd with a Layer, return it
+     * Adds Layer property empty checks to other native checks
      * 
-     * @param string $layer Name of the layer
-     * @return boolean|Layer
+     * {@inheritdoc}
+     *
+     * @param string $property The property to check.
+     * @return bool
      */
-    protected function _getLayerProperty($layer) {
-        $property = $this->$layer;
-        if (isset($property) && $property instanceof Layer) {
-            return $property;
+    public function isEmpty($property)
+    {
+        $value = $this->get($property);
+        if (is_object($value) 
+            && $value instanceof \App\Lib\Layer 
+            && $value->count() === 0
+        ) {
+            return true;
         }
-        return FALSE;
+        return parent::isEmpty($property);
     }
 
 }
