@@ -5,6 +5,8 @@ use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\StackEntity;
 use Cake\TestSuite\TestCase;
+use App\Lib\Layer;
+use App\ORM\Entity\Address;
 
 /**
  * App\Model\Entity\StackEntity Test Case
@@ -53,6 +55,10 @@ class StackEntityTest extends TestCase
         $stacks = $this->ArtStacks->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
         $this->StackEntity = $stacks->owner('artwork', $artID, 'first');
         
+        $this->StackEntity->arrayProp = ['a','b','c'];
+        $this->StackEntity->stringProp = 'This is a string property';
+        $this->StackEntity->numProp = 498;
+                
         //art 4, ed 5 Unique qty 1, ed 8 Open Edition qty 150
         //fmt 5 desc Watercolor 6 x 15", fmt 8 desc Digital output with cloth-covered card stock covers
         //pc 20 nm null qty 1, pc 38,40,509,955 qty 140,7,1,2
@@ -70,6 +76,10 @@ class StackEntityTest extends TestCase
 
         parent::tearDown();
     }
+    
+    
+
+// <editor-fold defaultstate="collapsed" desc="Load method tests">
 
     /**
      * Test load method
@@ -83,25 +93,32 @@ class StackEntityTest extends TestCase
     public function testLoad() {
         $format = $this->StackEntity->load('formats', 5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description);
-        
+
+
         $format = $this->StackEntity->load('formats', [8]);
         $this->assertStringStartsWith('Digital output', $format->description);
-        
+
+
         $pieces = $this->StackEntity->load('pieces', ['quantity', 140]);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity);
 
         $this->assertEquals(5, count($this->StackEntity->load('pieces', 'all')));
-        
+
+
         $this->assertEquals(2, count($this->StackEntity->load('formats', ['all'])));
 
         $this->assertEquals(1, count($this->StackEntity->load('pieces', 'first')));
-        
+
+
         $this->assertEquals(1, count($this->StackEntity->load('formats', ['first'])));
-        
+
+
         // unknown layer combinded with a field search
         $this->assertEquals(0, count($this->StackEntity->load('first', ['edition_id', 8])));
     }
+
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Simple class methods">
 
@@ -205,6 +222,22 @@ class StackEntityTest extends TestCase
     
     }
 
+// </editor-fold>
+    
+// <editor-fold defaultstate="collapsed" desc="Modified parent methods">
+    
+    /**
+     * Test extension of isEmpty method
+     *
+     * @return void
+     */
+    public function testIsEmpty(){
+        $this->assertTrue($this->StackEntity->isEmpty('member'), 'An uset property');
+        $emptyLayer = new Layer([], 'addresses');
+        $this->StackEntity->addresses = $emptyLayer;
+        $this->assertTrue($this->StackEntity->isEmpty('addresses'), 'An empty layer property, count = 0');
+    }
+    
 // </editor-fold>
     
 // <editor-fold defaultstate="collapsed" desc="Inherited from entity">
