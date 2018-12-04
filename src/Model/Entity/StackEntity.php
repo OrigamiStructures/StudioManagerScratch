@@ -216,7 +216,7 @@ class StackEntity extends Entity {
         if (is_string($property) 
             && Hash::extract($typeMap, $property) === ['layer']
             && !($value instanceof Layer)) {
-                $value = new Layer($value);
+                $value = $this->makeLayerObject($property, $value);
             
         } elseif (is_array($property)) {
             $typeMap = (Hash::filter($typeMap, function($value){
@@ -225,11 +225,22 @@ class StackEntity extends Entity {
             foreach ($typeMap as $p => $unused) {
                 if (Hash::check($property, $p)
                     && !($property[$p] instanceof Layer)) {
-                        $property[$p] = new Layer($property[$p]);
+                        $property[$p] = $this->makeLayerObject($p, $property[$p]);
                 }
             }
         }
-        return parent::set($property, $value, $options);
+       return parent::set($property, $value, $options);
+    }
+    
+    private function makeLayerObject($layer, $seed) {
+        try {
+            $product = new Layer($seed);
+            return $product;
+        } catch (\Exception $ex) {
+            $this->setError($layer, $ex->getMessage());
+//            osd($this->getErrors());
+            return new Layer([], $layer);
+        }
     }
     
 }
