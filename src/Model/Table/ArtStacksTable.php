@@ -152,7 +152,7 @@ class ArtStacksTable extends Table
 	 * @return StackSet
 	     */
 	protected function loadFromArtwork($ids) {
-		return $this->stacksFromAtworks($ids);
+		return $this->stacksFromArtworks($ids);
 	}
 
 	/**
@@ -169,9 +169,9 @@ class ArtStacksTable extends Table
             'editions' // this is the second Layer arg
 		);
         if ($editions->count()) {
-            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+            return $this->stacksFromArtworks($editions->distinct('artwork_id'));
         } else {
-            return $this->stacksFromAtworks([]);
+            return $this->stacksFromArtworks([]);
         }
 	}
 
@@ -196,9 +196,9 @@ class ArtStacksTable extends Table
             );
         }        
         if (isset($editions) && $editions->count()) {
-            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+            return $this->stacksFromArtworks($editions->distinct('artwork_id'));
         } else {
-            return $this->stacksFromAtworks([]);
+            return $this->stacksFromArtworks([]);
         }
 	}
 
@@ -224,9 +224,9 @@ class ArtStacksTable extends Table
             );
         }
         if (isset($editions) && $editions->count()) {
-            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+            return $this->stacksFromArtworks($editions->distinct('artwork_id'));
         } else {
-            return $this->stacksFromAtworks([]);
+            return $this->stacksFromArtworks([]);
         }
 	}
 
@@ -259,9 +259,9 @@ class ArtStacksTable extends Table
             );
         }     
         if (isset($editions) && $editions->count()) {
-            return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+            return $this->stacksFromArtworks($editions->distinct('artwork_id'));
         } else {
-            return $this->stacksFromAtworks([]);
+            return $this->stacksFromArtworks([]);
         }
 	}
 
@@ -278,7 +278,7 @@ class ArtStacksTable extends Table
             ->select(['id', 'artwork_id', 'series_id'])
             ->toArray(), 'series'
 		);
-		return $this->stacksFromAtworks($editions->distinct('artwork_id'));
+		return $this->stacksFromArtworks($editions->distinct('artwork_id'));
 	}
 
 // </editor-fold>
@@ -292,7 +292,7 @@ class ArtStacksTable extends Table
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	 */
-    public function stacksFromAtworks($ids) {
+    public function stacksFromArtworks($ids) {
         if (!is_array($ids)) {
             $msg = "The ids must be provided as an array.";
             throw new \BadMethodCallException($msg);
@@ -314,7 +314,7 @@ class ArtStacksTable extends Table
                 $stack = $this->newEntity([]);
                 
                 $artwork = $this->Artworks->find('artworks', ['values' => [$id]]);
-                $stack->set('artwork', $artwork->toArray());
+                    $stack->set('artwork', $artwork->toArray());
                 
                 if ($stack->count('artwork')) {
                     $editions = $this->Editions->find('inArtworks', ['values' => [$id]]);

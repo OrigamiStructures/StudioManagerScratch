@@ -247,10 +247,10 @@ class ArtStacksTableTest extends TestCase
      */
     public function testStacksFromAtworks()
     {
-        $stacks = $this->ArtStacks->stacksFromAtworks([3000]);
+        $stacks = $this->ArtStacks->stacksFromArtworks([3000]);
         $this->assertEquals(0, $stacks->count());
         
-        $stacks = $this->ArtStacks->stacksFromAtworks([4,6]);
+        $stacks = $this->ArtStacks->stacksFromArtworks([4,6], 'four and six, missing downstream data');
         $this->assertEquals(2, $stacks->count());
         
 //        $stacks = $this->ArtStacks->stacksFromAtworks([4, 'wrong']);
@@ -267,7 +267,7 @@ class ArtStacksTableTest extends TestCase
     public function testStacksFromAtworksWithBadArg()
     {
         $this->expectExceptionMessage('provided as an array');
-        $stacks = $this->ArtStacks->stacksFromAtworks(3);
+        $stacks = $this->ArtStacks->stacksFromArtworks(3);
         print_r($stacks);
     }
 }
