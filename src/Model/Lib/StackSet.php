@@ -79,7 +79,14 @@ class StackSet {
 	 * @param mixed $options
 	 * @return array
 	 */
-	public function load($layer, $options = []){
+	public function load($layer = null, $options = []){
+        if (is_null($layer)) {
+            return $this->_stacks;
+        }
+        if ($layer === 'first') {
+            $keys = array_keys($this->_stacks);
+            return $this->_stacks[$keys[0]];
+        }
 		$results = [];
 		foreach($this->_stacks as $stack) {
 			$results = array_merge($results, $stack->load($layer, $options));
