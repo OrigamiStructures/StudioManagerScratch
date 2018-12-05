@@ -17,6 +17,8 @@ use App\Model\Entity\StackEntity;
 class StackSet {
 	
 	protected $_stacks = [];
+	
+	protected $_stackName;
 
 	/**
 	 * Add another entity to the collection
@@ -26,6 +28,9 @@ class StackSet {
 	 */
 	public function insert($id, $stack) {
 		$this->_stacks[$id] = $stack;
+		if (!isset($this->_stackName)) {
+			$this->_stackName = $stack->primaryLayer();
+		}
 	}
 	
 	/**
@@ -44,6 +49,20 @@ class StackSet {
 	 */
 	public function members() {
 		return array_keys($this->_stacks);
+	}
+	
+	public function element($number) {
+		if ($number <= $this->count()) {
+			return $this->_stacks[$this->members()[$number]];
+		}
+		return null;
+	}
+	
+	public function member($id) {
+		if (in_array($id, $this->members())) {
+			return $this->_stacks[$id];
+		}
+		return null;
 	}
     
     /**
@@ -94,7 +113,7 @@ class StackSet {
 	 * @param string $id
 	 * @return array
 	 */
-	public function owner($layer, $id) {
+	public function ownerOf($layer, $id) {
 		$stacks = [];
 		foreach ($this->_stacks as $stack) {
 			if ($stack->exists($layer, $id)) {
