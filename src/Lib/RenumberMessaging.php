@@ -1,6 +1,8 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\RenumberRequest;
+
 /**
  * RenumberMessaging
  * 
@@ -38,9 +40,9 @@ class RenumberMessaging {
 	/**
 	 * @todo Is renumber_message spelled right?
 	 * @param type $requests
-	 * @return \App\Lib\RenumberMessaging
+	 * @return RenumberMessaging
 	 */
-	public function __construct($requests) {
+	public function __construct($requests = []) {
 		$this->_requests = $requests;
 		foreach ($this->_requests as $request) {
 			$message = $request->message();
