@@ -20,10 +20,21 @@ bin/cake bake.bake test entity ArtStack
 
 ### App\Lib
 --------------------------------------------------------------------
+
+# behaviors
+vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
+# lib
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
+vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequests.php
+vendor/bin/phpunit test tests/TestCase/Lib/RenumberMessageTest.php
+vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
+
+# table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
+# entity
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
