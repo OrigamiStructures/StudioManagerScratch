@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\TestCase\Lib;
 
+use Cake\TestSuite\TestCase;
 use App\Lib\RenumberRequests;
 
 /**
@@ -8,7 +9,7 @@ use App\Lib\RenumberRequests;
  *
  * @author dondrake
  */
-class RenumberRequestsTest {
+class RenumberRequestsTest extends TestCase {
 	
 	public function setUp() {
         $this->markTestIncomplete('Not implemented yet.');
