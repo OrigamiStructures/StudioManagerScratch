@@ -3,6 +3,8 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use App\Lib\Layer;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 /**
  * Stacks
@@ -27,7 +29,7 @@ class StackEntity extends Entity {
      * @return boolean 
      */
     public function exists($layer, $id) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property) {
             return $property->has($id);
         }
@@ -53,7 +55,6 @@ class StackEntity extends Entity {
      * get('pieces', ['all']);  //return all stored entities
      * get('pieces', 'all');  //return all stored entities
      * get('pieces', 'first); //return the first stored entity
-     * get('pieces', ['first', ['edition_id', 455]]); //first where piece->edition_id = 455
      * </code>
      * 
      * @todo overlap with Entity method. Resolve our naming
@@ -63,7 +64,7 @@ class StackEntity extends Entity {
      * @return array
      */
     public function load($layer, $options = []) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if (!$property) {
             return [];
         }
@@ -89,7 +90,7 @@ class StackEntity extends Entity {
      * @return int
      */
     public function count($layer) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property) {
             return $property->count();
         }
@@ -124,7 +125,7 @@ class StackEntity extends Entity {
 	 * @return Entity
 	 */
 	public function primaryEntity() {
-		$primary = $this->_getLayerProperty($this->_primary)->load('all');
+		$primary = $this->get($this->_primary)->load('all');
 		return array_shift($primary);
 	}
     
@@ -136,9 +137,9 @@ class StackEntity extends Entity {
      * @return array
      */
     public function distinct($layer, $property) {
-        $property = $this->_getLayerProperty($layer);
-        if ($property) {
-            return $property->distinct($property);
+        $object = $this->get($layer);
+        if ($object) {
+            return $object->distinct($property);
         }
         return [];
     }
@@ -150,7 +151,7 @@ class StackEntity extends Entity {
      * @return array
      */
     public function IDs($layer) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property) {
             return $property->IDs();
         }
@@ -165,25 +166,81 @@ class StackEntity extends Entity {
      * @return array
      */
     public function linkedTo(string $layer, array $options) {
-        $property = $this->_getLayerProperty($layer);
+        $property = $this->get($layer);
         if ($property && count($options) === 2) {
-            return $property->linkedTo($options[0], $options[1]);
+            return $property->load($options[0], $options[1]);
         }
         return [];
     }
  
     /**
-     * If the layer property is init'd with a Layer, return it
+     * Adds Layer property empty checks to other native checks
      * 
-     * @param string $layer Name of the layer
-     * @return boolean|Layer
+     * {@inheritdoc}
+     *
+     * @param string $property The property to check.
+     * @return bool
      */
-    protected function _getLayerProperty($layer) {
-        $property = $this->$layer;
-        if (isset($property) && $property instanceof Layer) {
-            return $property;
+    public function isEmpty($property)
+    {
+        $value = $this->get($property);
+        if (is_object($value) 
+            && $value instanceof \App\Lib\Layer 
+            && $value->count() === 0
+        ) {
+            return true;
         }
-        return FALSE;
+        return parent::isEmpty($property);
     }
-
+    
+    /**
+     * Pass through for 'set' to handle Layer type columns
+     * 
+     * If a layer value is set() directly with an array, this 
+     * overwrite will take care of it. New and patch entity do 
+     * the correct typing I think. 
+     * 
+     * {@inheritdoc}
+     * 
+     * @param Layer $property
+     * @param Layer $value
+     * @param array $options
+     * @return type
+     */
+    public function set($property, $value = null, array $options = []) {
+        $typeMap = TableRegistry::getTableLocator()
+            ->get($this->getSource())
+            ->getSchema()
+            ->typeMap();
+        
+        if (is_string($property) 
+            && Hash::extract($typeMap, $property) === ['layer']
+            && !($value instanceof Layer)) {
+                $value = $this->makeLayerObject($property, $value);
+            
+        } elseif (is_array($property)) {
+            $typeMap = (Hash::filter($typeMap, function($value){
+                    return $value === 'layer';
+            }));
+            foreach ($typeMap as $p => $unused) {
+                if (Hash::check($property, $p)
+                    && !($property[$p] instanceof Layer)) {
+                        $property[$p] = $this->makeLayerObject($p, $property[$p]);
+                }
+            }
+        }
+       return parent::set($property, $value, $options);
+    }
+    
+    private function makeLayerObject($layer, $seed) {
+        try {
+            $product = new Layer($seed);
+            return $product;
+        } catch (\Exception $ex) {
+            $this->setError($layer, $ex->getMessage());
+//            osd($this->getErrors());
+            return new Layer([], $layer);
+        }
+    }
+    
 }
