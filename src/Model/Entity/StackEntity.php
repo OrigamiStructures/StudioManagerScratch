@@ -165,7 +165,7 @@ class StackEntity extends Entity {
      * @param array $options
      * @return array
      */
-    public function linkedTo(string $layer, array $options) {
+    public function linkedTo($layer, array $options) {
         $property = $this->get($layer);
         if ($property && count($options) === 2) {
             return $property->load($options[0], $options[1]);
