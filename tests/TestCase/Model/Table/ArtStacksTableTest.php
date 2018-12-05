@@ -145,7 +145,7 @@ class ArtStacksTableTest extends TestCase
     {
         $stacks = $this->ArtStacks->find('stackFrom', $args);
         $this->assertEquals(1, $stacks->count());
-        $entity = $stacks->owner('artwork', $art)[0];
+        $entity = $stacks->ownerOf('artwork', $art)[0];
         
         $this->assertTrue($entity->exists('editions', $ed), "===\nedition is $ed\n===");
         $this->assertTrue($entity->exists('formats', $fo), "===\nformat is $fo\n===");
