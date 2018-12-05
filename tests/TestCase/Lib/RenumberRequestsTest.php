@@ -1,37 +1,79 @@
 <?php
 namespace App\Test\TestCase\Lib;
 
-use Cake\TestSuite\TestCase;
 use App\Lib\RenumberRequests;
+use Cake\TestSuite\TestCase;
 
 /**
- * RenumberRequestsTest
- *
- * @author dondrake
+ * App\Lib\RenumberRequests Test Case
  */
-class RenumberRequestsTest extends TestCase {
-	
-	public function setUp() {
+class RenumberRequestsTest extends TestCase
+{
+
+    /**
+     * Test subject
+     *
+     * @var \App\Lib\RenumberRequests
+     */
+    public $RenumberRequests;
+
+    /**
+     * Test __get method
+     *
+     * @return void
+     */
+    public function testGet()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function tearDown() {
+    }
+
+    /**
+     * Test __construct method
+     *
+     * @return void
+     */
+    public function testConstruct()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testHeap() {
+    }
+
+    /**
+     * Test insert method
+     *
+     * @return void
+     */
+    public function testInsert()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testIndexed() {
+    }
+
+    /**
+     * Test heap method
+     *
+     * @return void
+     */
+    public function testHeap()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testMessagePackage() {
+    }
+
+    /**
+     * Test indexed method
+     *
+     * @return void
+     */
+    public function testIndexed()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testInsert() {
+    }
+
+    /**
+     * Test messagePackage method
+     *
+     * @return void
+     */
+    public function testMessagePackage()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
+    }
 }

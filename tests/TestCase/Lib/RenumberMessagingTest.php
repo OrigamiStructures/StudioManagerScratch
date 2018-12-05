@@ -1,16 +1,32 @@
 <?php
 namespace App\Test\TestCase\Lib;
 
-use Cake\TestSuite\TestCase;
 use App\Lib\RenumberMessaging;
+use Cake\TestSuite\TestCase;
 
 /**
- * RenumberMessagingTest
- *
- * @author dondrake
+ * App\Lib\RenumberMessaging Test Case
  */
-class RenumberMessagingTest extends TestCase {
-	
+class RenumberMessagingTest extends TestCase
+{
+
+    /**
+     * Test subject
+     *
+     * @var \App\Lib\RenumberMessaging
+     */
+    public $RenumberMessaging;
+
+    /**
+     * Test __construct method
+     *
+     * @return void
+     */
+    public function testConstruct()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
 	public function setUp() {
         $this->markTestIncomplete('Not implemented yet.');
 	}
@@ -18,20 +34,44 @@ class RenumberMessagingTest extends TestCase {
 	public function tearDown() {
         $this->markTestIncomplete('Not implemented yet.');
 	}
-	
-	public function testErrorCount() {
+
+	/**
+     * Test errors method
+     *
+     * @return void
+     */
+    public function testErrors()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testErrors() {
+    }
+
+    /**
+     * Test summaries method
+     *
+     * @return void
+     */
+    public function testSummaries()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testRequest() {
+    }
+
+    /**
+     * Test request method
+     *
+     * @return void
+     */
+    public function testRequest()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
-	
-	public function testSummaries() {
+    }
+
+    /**
+     * Test errorCount method
+     *
+     * @return void
+     */
+    public function testErrorCount()
+    {
         $this->markTestIncomplete('Not implemented yet.');
-	}
+    }
 }
