@@ -52,7 +52,7 @@ class RenumberRequestTest extends TestCase
         $mess = implode(' ' , $req->message());
         $match = stristr($mess, "but no new number was ");
 
-        $this->assertFalse(is_string($match),
+        $this->assertTrue(is_string($match),
             'Setting request with null new number should produced an error message');
         
         $match = stristr($mess, "Change piece #");
@@ -117,7 +117,7 @@ class RenumberRequestTest extends TestCase
     public function testBadNumber()
     {
         $req = new RenumberRequest(3,null);
-        $req->bad_number(TRUE);
+        $req->badNumber(TRUE);
         $mess = implode(' ' , $req->message());
         $match = stristr($mess, "but no new number");
 
@@ -132,7 +132,7 @@ class RenumberRequestTest extends TestCase
                 number shouldn\'t allow a \'change #x to #y\' message');
 
         $req = new RenumberRequest(3,5);
-        $req->bad_number(TRUE);
+        $req->badNumber(TRUE);
         $mess = implode(' ' , $req->message());
         $match = stristr($mess, "There is no #");
 
@@ -146,7 +146,7 @@ class RenumberRequestTest extends TestCase
             'Setting bad_number() to a TRUE shouldn\'t allow 
                 a \'change #x to #y\' message');
 
-        $req->bad_number(FALSE);
+        $req->badNumber(FALSE);
         $mess = implode(' ' , $req->message());
         $match = stristr($mess, "There is no #");
 
@@ -156,8 +156,8 @@ class RenumberRequestTest extends TestCase
 
         $match = stristr($mess, "Change piece #3 to");
 
-        $this->assertFalse(is_string($match),
-            'Setting bad_number() to a TRUE shouldn\'t allow 
+        $this->assertTrue(is_string($match),
+            'Setting bad_number() to a FALSE should allow 
                 a \'change #x to #y\' message');
     }
 
@@ -169,7 +169,7 @@ class RenumberRequestTest extends TestCase
     public function testVagueReceiver()
     {
         $req = new RenumberRequest(3,5);
-        $req->vague_receiver(TRUE);
+        $req->vagueReceiver(TRUE);
         $mess = implode(' ' , $req->message());
         $match = stristr($mess, "Can't determine which piece ");
 
@@ -183,7 +183,7 @@ class RenumberRequestTest extends TestCase
             'Setting vague_receiver() to a TRUE should allow 
                 a \'change #x to #y\' message');
 
-        $req->vague_receiver(FALSE);
+        $req->vagueReceiver(FALSE);
         $mess = implode(' ' , $req->message());
         $match = stristr($mess, "Can't determine which piece ");
 
@@ -215,7 +215,8 @@ class RenumberRequestTest extends TestCase
      */
     public function testMessage()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // Going to assume the individual flag test did 
+		// an adiquate job of testing the message method
     }
 
     /**

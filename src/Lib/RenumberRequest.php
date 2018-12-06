@@ -75,7 +75,7 @@ class RenumberRequest {
 		$this->_old = $old;
 		$this->_new = $new;
         if (is_null($new)) {
-            $this->bad_number(TRUE);
+            $this->badNumber(TRUE);
         }
 		return $this;
 	}
@@ -133,11 +133,11 @@ class RenumberRequest {
      * @param null|boolean $error_indication
 	 * @param boolean $error_indication
 	 */
-	public function bad_number($error_indication) {
+	public function badNumber($error_indication) {
 		$this->_bad_new_number = $error_indication;
 	}
 	
-	public function vague_receiver($error_indication) {
+	public function vagueReceiver($error_indication) {
 		$this->_vague_receiver = $error_indication;
 	}
 	

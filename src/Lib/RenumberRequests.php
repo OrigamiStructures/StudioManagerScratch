@@ -160,7 +160,7 @@ class RenumberRequests {
 	 */
 	public function insert(RenumberRequest $request) {
 		if (!$this->_loose && !array_key_exists($request->new, $this->_valid_symbols)) {
-			$request->bad_number(TRUE);
+			$request->badNumber(TRUE);
 			$this->_bad_symbols[$request->new] = $request->new;
 		}
 		$this->_heap->insert($request);
@@ -318,7 +318,7 @@ class RenumberRequests {
 		}
 		if (count($this->_provider_checklist) > 0) {
 			foreach ($this->_provider_checklist as $number){
-				$this->_indexed_list[$number]->vague_receiver(TRUE);
+				$this->_indexed_list[$number]->vagueReceiver(TRUE);
 			}
 		}
 		if (count($this->_reciever_checklist) > 0) {
