@@ -74,10 +74,21 @@ class RenumberRequest {
 	public function __construct($old, $new) {
 		$this->_old = $old;
 		$this->_new = $new;
+        if (is_null($new)) {
+            $this->bad_number(TRUE);
+        }
 		return $this;
 	}
 	
-	/**
+    public function newNum() {
+        return $this->_new;
+    }
+	
+    public function oldNum() {
+        return $this->_old;
+    }
+
+    /**
 	 * Give limited access to internal properties
 	 * 
 	 * If we are in a debugging environment, give 
@@ -107,9 +118,9 @@ class RenumberRequest {
 	 */
 	public function duplicate($count) {
 		if (!is_null($this->_new)) {
-			$this->duplicate_new_number = ($count === 1) ? FALSE : $count;
+			$this->duplicate_new_number = ($count == 1) ? FALSE : $count;
 		}
-		
+//        print_r("duplicate new num: $this->duplicate_new_number");
 	}
 	
 	/**
@@ -130,10 +141,10 @@ class RenumberRequest {
 		$this->_vague_receiver = $error_indication;
 	}
 	
-	public function vague_provider($error_indication) {
-		$this->_vague_receiver = $error_indication;
-		return $this;
-	}
+//	public function vague_provider($error_indication) {
+//		$this->_vague_receiver = $error_indication;
+//		return $this;
+//	}
 	
 	/**
 	 * Return an array of error messages for this request
@@ -145,7 +156,9 @@ class RenumberRequest {
 	 * @return array Empty array if no errors
 	 */
 	public function message() {
+        $this->_renumber_message = TRUE;
 		$this->_message = [];
+        
 		if ($this->_bad_new_number) {
 			if (is_null($this->_new)) {
 				$this->_message[] = "#$this->_old was reassigned but no new number was provided.";
@@ -159,7 +172,7 @@ class RenumberRequest {
 			$this->_renumber_message = FALSE;
 		}
 		if ($this->_implied_change) {
-			$this->_message[] = "Other changes implie the change of "
+			$this->_message[] = "Other changes implied the change of "
 					. "#$this->old to #$this->new.";
 			$this->_renumber_message = FALSE;
 		}
@@ -179,7 +192,7 @@ class RenumberRequest {
 	 * #6 should become #4 even if they don't say so. If we detect 
 	 * that case then the object creation would chain this 
 	 * method like:
-	 * $request = (new RenumberRequest($old, $new, $id))->implied();
+	 * $request = (new RenumberRequest($old, $new))->implied();
 	 * 
 	 * @return \App\Lib\RenumberRequest
 	 */
