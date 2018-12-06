@@ -324,7 +324,7 @@ class RenumberRequests {
 		if (count($this->_reciever_checklist) > 0) {
 			// number transfered but no replacement number provided
 			foreach ($this->_reciever_checklist as $number => $use) {
-				$request = (new RenumberRequest($number, NULL, NULL));
+				$request = (new RenumberRequest($number, NULL));
 				$this->insert($request);
 			}
 		}
