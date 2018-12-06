@@ -15,7 +15,7 @@ class RenumberMessaging {
 	
 	/**
 	 *
-	 * @var array Memebers are RenumberRequest objects
+	 * @var array Members are RenumberRequest objects
 	 */
 	private $_requests;
 	
