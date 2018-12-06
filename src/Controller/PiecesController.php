@@ -304,6 +304,9 @@ class PiecesController extends AppController
 	 * approval. We'll have to cache that form's data so the inputs 
 	 * can stay properly populated as the while we show the summaries 
 	 * and wait for approval or re-submission of changes
+     * 
+     * @todo Don't pass $post_data directly to db... is this validated 
+     *      or destined for a save use?
 	 * 
 	 * @param array $post_data the user's renumbering requests
 	 * @param array $pieces array of all piece entities ordered by number
