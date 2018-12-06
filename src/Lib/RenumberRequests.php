@@ -14,7 +14,7 @@ use App\Lib\RenumberMessaging;
  * RenumberRequests
  * 
  * This class sorts and validates piece number change requests. 
- * It keeps the requests in a heap and buids messages to explain 
+ * It keeps the requests in a heap and builds messages to explain 
  * when vague or impossible combinations of moves are requested. 
  * 
  * The heap actually contains RenumberRequest objects, one for each request.
@@ -59,19 +59,19 @@ class RenumberRequests {
 	 * $_explicit_receivers[number][count][target]
 	 * where 'number' is the symbol that is being assigned as a number
 	 * where 'count' contains an integer indicating how many pieces 
-	 *		will recieve the number used as an error indicator since 
+	 *		will receive the number used as an error indicator since 
 	 *		the only correct answer is '1' 
 	 * where 'target' contains an array of the old pieces numbers for the 
 	 *		pieces that will receive this new number (in the form [x => x, y => y]
 	 *		'target' is included for debugging and is not used in logic. 
-	 *		But it could be used to group messages during _completness_scan()
+	 *		But it could be used to group messages during _completeness_scan()
 	 *
 	 * @var array
 	 */
 	private $_providers_mentioned;
 
 	/**
-	 * To verify that all providers are also recieving
+	 * To verify that all providers are also receiving
 	 * 
 	 * [ x => x, y => y ]
 	 * Built from the number keys of $_providers_mentioned. The 
@@ -85,7 +85,7 @@ class RenumberRequests {
 	private $_reciever_checklist = FALSE;
 	
 	/**
-	 * List of pieces explicitly recieving new numbers
+	 * List of pieces explicitly receiving new numbers
 	 * 
 	 * Built from request->old
 	 * The implication is that these pieces will need to provide 
@@ -99,7 +99,7 @@ class RenumberRequests {
 	
 
 	/**
-	 * To verify that all recievers mentioned are also providing
+	 * To verify that all receivers mentioned are also providing
 	 *
 	 * [ x => x, y => y ]
 	 * This is a duplicate of $_explicit_receivers. We'll have 
@@ -144,7 +144,7 @@ class RenumberRequests {
 	 * If new entries go in the heap, any internal calculated values must update
 	 * 
 	 * This will tell us if the internal logic must 
-	 * run or if we can just use the analized properties as they stand
+	 * run or if we can just use the analyzed properties as they stand
 	 *
 	 * @param array $valid_numbers Values are the full set of valid numbers
 	 */

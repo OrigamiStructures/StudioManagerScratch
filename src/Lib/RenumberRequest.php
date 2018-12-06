@@ -9,6 +9,13 @@ use Cake\Core\Configure;
  * One move pair is handled by each object instance. 
  * This object contains all the information about the request, the old/new 
  * numbers and any error information about the requested change.
+ * 
+ * This class does not perform logic to implement rules, it only records the 
+ * state of the individual request. RequestNumbers does the rule logic and 
+ * prods this object to set the correct state.
+ * 
+ * This class has one logic method, message(), which synthesizes its internal 
+ * state into an array of messages that describes that state. 
  *
  * @author dondrake
  */
@@ -45,7 +52,7 @@ class RenumberRequest {
 	/**
 	 * The total number of pieces that are to receive this $new number
 	 * 
-	 * A truthy value here indicates this piece cannot recieve the indicated 
+	 * A truthy value here indicates this piece cannot receive the indicated 
 	 * new number because that number has been used for other pieces also. 
 	 *
 	 * @var int|boolean
@@ -108,9 +115,11 @@ class RenumberRequest {
 	/**
 	 * Is the new symbol/number valid or invalid
 	 * 
+     * NULL = no new number provided
 	 * TRUE = error, invalid new number
 	 * FALSE = valid symbol
 	 * 
+     * @param null|boolean $error_indication
 	 * @param boolean $error_indication
 	 */
 	public function bad_number($error_indication) {
