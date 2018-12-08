@@ -346,6 +346,14 @@ class RenumberRequests {
 			return (new RenumberRequest($discovered_old, $discovered_new))->implied(TRUE);
 	}
 	
+	public function __debugInfo() {
+		$properties = get_class_vars(get_class($this));
+		$output = [];
+		foreach ($properties as $name => $value) {
+			$output[$name] = $this->$name;
+		}
+		return $output;
+	}
 }
 
 class RenumberRequestHeap extends SplHeap {
