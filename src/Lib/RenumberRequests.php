@@ -96,22 +96,12 @@ class RenumberRequests {
 	 * <code>
 	 * $_explicit_providers[
 	 *	newNum => [
-	 *		[count => int],
-	 *		[target => 
-	 *			[oldNum => oldNum],
-	 *		],
+	 *		oldNum => oldNum,
+	 *		oldNum => oldNum. 
 	 *	], 
 	 *	newNum => [repeat],
 	 * ]
 	 * </code>
-	 * where `number` is the symbol that is being assigned as a number
-	 * where `count` contains an integer indicating how many pieces 
-	 *		will receive the number (used as an error indicator since 
-	 *		the only correct answer is '1') 
-	 * where `target` contains an array of the old pieces numbers for the 
-	 *		pieces that will receive this new number
-	 * `target` is included for debugging and is not used in logic. 
-	 *		But it could be used to group messages during _completeness_scan()
 	 *
 	 * @var array
 	 */
@@ -123,6 +113,7 @@ class RenumberRequests {
 	 * <code>
 	 *  $this_receiver_checklist = $this->providers_mentioned
 	 * </code>
+	 * 
 	 * Built from the number keys of $_explicit_providers. The 
 	 * _explicit_receivers are ok by definition. But the providers 
 	 * were only mentioned and we'll have to use this list to 
@@ -215,7 +206,7 @@ class RenumberRequests {
 		$this->badSymbolCheck($request);
 		$this->_heap->insert($request);
 		$this->storeRequest($request);
-		$this->recordProviderMention($request);
+		$this->updateProviders($request, 'addTarget');
 		$this->recordReceiverMention($request);
 	}
 	
@@ -226,12 +217,10 @@ class RenumberRequests {
 	 * @return void
 	 */
 	protected function badSymbolCheck($request) {
-		if (in_array($request->newNum(), $this->_valid_symbols)) {
-			return;
+		if (!in_array($request->newNum(), $this->_valid_symbols)) {
+			$request->badNumber(TRUE);
+			$this->_bad_symbols[$request->newNum()] = $request->newNum();
 		}
-		$request->badNumber(TRUE);
-		$this->_bad_symbols[$request->newNum()] = $request->newNum();
-		return;
 	}
 	
 	/**
@@ -284,29 +273,16 @@ class RenumberRequests {
 	}
 	
 	/**
-	 * Track errors related to multiple assignment of a new number
-	 * 
-	 * Find the cases where a new number is assigned multiple times and 
-	 * mark the pieces targeted for the new number. The number of uses 
-	 * will be recorded in the target for message purposes.
-	 * 
-	 * @todo This could be eliminated if done automatically on ->insert($request)
-	 */
-	private function _markDuplicateUse($request) {
-		$newNum = $request->newNum();
-		foreach ($this->providerTargets($newNum) as $target) {
-			$request->duplicate($this->providerUseCount($request));
-		}
-	}
-	
-	/**
 	 * Return the RenumberRequest object with $oldNum
 	 * 
 	 * @param int $oldNum
 	 * @return RenumberRequest
 	 */
 	public function request($oldNum) {
-		return $this->_indexed_list[$oldNum];
+		if (isset($this->_indexed_list[$oldNum])) {
+			return $this->_indexed_list[$oldNum];
+		}
+		return FALSE;
 	}
 	
 	/**
@@ -318,7 +294,7 @@ class RenumberRequests {
 	 * @return array
 	 */
 	protected function providerTargets($newNum) {
-		return $this->_explicit_providers[$newNum]['target'];
+		return $this->_explicit_providers[$newNum];
 	}
 	
 	/**
@@ -344,22 +320,6 @@ class RenumberRequests {
 	}
 
 	/**
-	 * Record the mention of a provider
-	 * 
-	 * Some piece's old number is being assigned to an different piece. 
-	 * The source piece is the provider. 
-	 * 
-	 * @param RenumberRequest $request
-	 */
-	protected function recordProviderMention($request) {
-//		$this->updateProvider($request, 'increment');
-		$this->updateProvider($request, 'addTarget');
-		if ($this->providerUseCount($request) > 1) {
-			$this->_markDuplicateUse($request);
-		}		
-	}
-
-	/**
 	 * Discover how many times this provider's number is used
 	 * 
 	 * Anything other than 1 is an error condition
@@ -369,7 +329,7 @@ class RenumberRequests {
 	 */
 	protected function providerUseCount($request) {
 		$newNum = $request->newNum();
-		return count($this->_explicit_providers[$newNum]['target']);
+		return count($this->_explicit_providers[$newNum]);
 //		return $this->_explicit_providers[$request->newNum()]['count'];
 	}
 	
@@ -379,26 +339,24 @@ class RenumberRequests {
 	 * @param RenumberRequest $request
 	 * @param string $mode What kind of property change to make
 	 */
-	protected function updateProvider($request, $mode = 'new') {
+	protected function updateProviders($request, $mode = 'addTarget') {
 		$newNum = $request->newNum();
 		$oldNum = $request->newNum();
 		if (!Hash::check($this->_explicit_providers, "$newNum")) {
-			$this->_explicit_providers[$newNum] = [/*'count' => 0, */'target' => []];
+			$this->_explicit_providers[$newNum] = [];
 		}
 		switch ($mode) {
-//			case 'increment':
-//				$this->_explicit_providers[$newNum]['count']++;
-//				break;
-//			case 'decrement':
-//				$this->_explicit_providers[$newNum]['count']--;
-//				break;
 			case 'addTarget':
-				$this->_explicit_providers[$newNum]['target'][$oldNum] = $oldNum;
+				$this->_explicit_providers[$newNum][$oldNum] = $oldNum;
+				$target = $this->request($oldNum);
+				if ($target) { // how would this not be true?
+					$target->duplicate($this->providerUseCount($request));
+				}
 				break;
 			case 'dropTarget':
-				unset($this->_explicit_providers[$newNum]['target'][$oldNum]);
+				// unused. assumed to be for ajax processes later
+				unset($this->_explicit_providers[$newNum][$oldNum]);
 				break;
-
 			default:
 				break;
 		}
