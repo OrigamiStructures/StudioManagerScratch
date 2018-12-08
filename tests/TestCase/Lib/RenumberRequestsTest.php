@@ -38,7 +38,7 @@ class RenumberRequestsTest extends TestCase
     public function testConstruct()
     {
         $reqs = new RenumberRequests($this->intNumberSet);
-		foreach ($reqs->validSymbols() as $key => $symbol) {
+		foreach ($reqs->_valid_symbols as $key => $symbol) {
 			$this->assertEquals($key, $symbol,
 					"A key and value in the array of valid symbols did not match "
 					. "when constructing from a set of numbers. key:$key, value:$symbol");
@@ -46,7 +46,7 @@ class RenumberRequestsTest extends TestCase
 		$this->assertInstanceOf('\SplHeap', $reqs->heap());
 		
         $reqs = new RenumberRequests($this->symNumberSet);
-		foreach ($reqs->validSymbols() as $key => $symbol) {
+		foreach ($reqs->_valid_symbols as $key => $symbol) {
 			$this->assertEquals($key, $symbol,
 					"A key and value in the array of valid symbols did not match "
 					. "when constructing from a set of letters. key:$key, value:$symbol");
@@ -63,8 +63,8 @@ class RenumberRequestsTest extends TestCase
     {
         $reqs = new RenumberRequests($this->intNumberSet);
         $reqs->insert(new RenumberRequest(2, 4));
-		$this->assertArrayHasKey(2, $reqs->indexed());
-//		$this->assertArrayHasKey(4, $reqs->indexed());
+		$this->assertArrayHasKey(2, $reqs->_indexed_list);
+//		$this->assertArrayHasKey(4, $reqs->_indexed_list);
     }
 
     /**
@@ -75,15 +75,15 @@ class RenumberRequestsTest extends TestCase
     public function testValidSymbols()
     {
         $reqs = new RenumberRequests($this->intNumberSet);
-		$this->assertEquals($this->intNumberSet, array_keys($reqs->validSymbols()),
+		$this->assertEquals($this->intNumberSet, array_keys($reqs->_valid_symbols),
 				'The keys of valid_symbol are wrong when construcing with an array of numbers');
-		$this->assertEquals($this->intNumberSet, array_values($reqs->validSymbols()),
+		$this->assertEquals($this->intNumberSet, array_values($reqs->_valid_symbols),
 				'The values of valid_symbol are wrong when construcing with an array of numbers');
 		
         $reqs = new RenumberRequests($this->symNumberSet);
-		$this->assertEquals($this->symNumberSet, array_keys($reqs->validSymbols()),
+		$this->assertEquals($this->symNumberSet, array_keys($reqs->_valid_symbols),
 				'The keys of valid_symbol are wrong when construcing with an array of letters');
-		$this->assertEquals($this->symNumberSet, array_values($reqs->validSymbols()),
+		$this->assertEquals($this->symNumberSet, array_values($reqs->_valid_symbols),
 				'The values of valid_symbol are wrong when construcing with an array of letters');
     }
 
@@ -116,4 +116,5 @@ class RenumberRequestsTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+	
 }
