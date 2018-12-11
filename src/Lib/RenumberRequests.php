@@ -57,7 +57,7 @@ class RenumberRequests {
 	 *
 	 * @var array
 	 */
-	private $_indexed_list;
+	private $_indexed_list = [];
 	
 	/**
 	 * The full set of possible symbols or number of pieces
@@ -267,7 +267,7 @@ class RenumberRequests {
 	public function messagePackage() {
 		$requests = [];
 		foreach ($this->heap() as $request) {
-			$requests[$request->old] = $request;
+			$requests[$request->oldNum()] = $request;
 		}
 		return new RenumberMessaging($requests);
 	}
@@ -315,7 +315,7 @@ class RenumberRequests {
 	}
 	
 	protected function recordReceiverMention(RenumberRequest $request) {
-		$this->_explicit_receivers[$request->old] = $request->old;
+		$this->_explicit_receivers[$request->oldNum()] = $request->oldNum();
 //		$this->_record_use(, '_explicit_receivers', 1);
 	}
 
@@ -341,7 +341,7 @@ class RenumberRequests {
 	 */
 	protected function updateProviders($request, $mode = 'addTarget') {
 		$newNum = $request->newNum();
-		$oldNum = $request->newNum();
+		$oldNum = $request->oldNum();
 		if (!Hash::check($this->_explicit_providers, "$newNum")) {
 			$this->_explicit_providers[$newNum] = [];
 		}
@@ -349,6 +349,10 @@ class RenumberRequests {
 			case 'addTarget':
 				$this->_explicit_providers[$newNum][$oldNum] = $oldNum;
 				$target = $this->request($oldNum);
+				// must loop on all provider taregts so the earlier 
+				// recipients of the dup number will know what happened
+				// so, if count(ex-pro[nn] > 1 then loop
+				// while $count > ?
 				if ($target) { // how would this not be true?
 					$target->duplicate($this->providerUseCount($request));
 				}
@@ -378,11 +382,11 @@ class RenumberRequests {
 		foreach($this->_indexed_list as $request) {
 			if ($request->_bad_new_number) {
 				// bad providers can be disregarded. Already have error message
-				unset($this->_reciever_checklist[$request->new]);
-				unset($this->_provider_checklist[$request->old]);
+				unset($this->_reciever_checklist[$request->newNum()]);
+				unset($this->_provider_checklist[$request->oldNum()]);
 			} else {
-				unset($this->_reciever_checklist[$request->old]);
-				unset($this->_provider_checklist[$request->new]);
+				unset($this->_reciever_checklist[$request->oldNum()]);
+				unset($this->_provider_checklist[$request->newNum()]);
 			}
 		}
 		$_providers = count($this->_provider_checklist);
@@ -391,8 +395,8 @@ class RenumberRequests {
 		if ($_providers === 1 && $_receivers === 1) {
 			$request = $this->_create_implied_request();
 			$this->insert($request);
-			unset($this->_reciever_checklist[$request->old]);
-			unset($this->_provider_checklist[$request->new]);
+			unset($this->_reciever_checklist[$request->oldNum()]);
+			unset($this->_provider_checklist[$request->newNum()]);
 		}
 		if (count($this->_provider_checklist) > 0) {
 			foreach ($this->_provider_checklist as $number){
