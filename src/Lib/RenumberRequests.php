@@ -186,15 +186,15 @@ class RenumberRequests {
 	}
 	
 	
-	public function validSymbols() {
-		return $this->_valid_symbols;
-	}
-	public function providers() {
-		return $this->_explicit_providers;
-	}
-	public function receivers() {
-		return $this->_receivers_mentioned;
-	}
+//	public function validSymbols() {
+//		return $this->_valid_symbols;
+//	}
+//	public function providers() {
+//		return $this->_explicit_providers;
+//	}
+//	public function receivers() {
+//		return $this->_receivers_mentioned;
+//	}
 	
 	/**
 	 * 
@@ -306,13 +306,13 @@ class RenumberRequests {
 	 * @param string $silo
 	 * @param int $delta
 	 */
-	private function _record_use($index, $silo, $delta) {
-		if (!isset($this->{$silo}[$index])) {
-			$this->{$silo}[$index] = $delta;
-		} else {
-			$this->{$silo}[$index] += $delta;
-		}
-	}
+//	private function _record_use($index, $silo, $delta) {
+//		if (!isset($this->{$silo}[$index])) {
+//			$this->{$silo}[$index] = $delta;
+//		} else {
+//			$this->{$silo}[$index] += $delta;
+//		}
+//	}
 	
 	protected function recordReceiverMention(RenumberRequest $request) {
 		$this->_explicit_receivers[$request->oldNum()] = $request->oldNum();
