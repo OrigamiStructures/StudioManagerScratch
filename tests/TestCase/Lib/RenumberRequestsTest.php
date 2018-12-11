@@ -51,6 +51,7 @@ class RenumberRequestsTest extends TestCase
 					"A key and value in the array of valid symbols did not match "
 					. "when constructing from a set of letters. key:$key, value:$symbol");
 		}
+		
 		$this->assertInstanceOf('\SplHeap', $reqs->heap());
     }
 
@@ -63,9 +64,54 @@ class RenumberRequestsTest extends TestCase
     {
         $reqs = new RenumberRequests($this->intNumberSet);
         $reqs->insert(new RenumberRequest(2, 4));
-		$this->assertArrayHasKey(2, $reqs->_indexed_list);
-//		$this->assertArrayHasKey(4, $reqs->_indexed_list);
-    }
+		$this->assertArrayHasKey(2, $reqs->_indexed_list,
+				'Inserting an RR object should make an _indexed_list entry '
+				. 'with the RR->oldNum as the key');
+		
+		foreach ($reqs->_indexed_list as $key => $request) {
+			$this->assertArrayHasKey($key, $reqs->_valid_symbols,
+					'Inserting RR objects should populate _indexed_list with '
+					. 'instances of RenumberRequest');
+			$this->assertInstanceOf('\App\Lib\RenumberRequest', $request,
+					'After inserting RR objects, keys of _indexed_list should '
+					. 'all be valid symbols');
+			$xp = $reqs->_explicit_providers;
+			$xr = $reqs->_explicit_receivers;
+			$nn = $request->newNum();
+			$on = $request->oldNum();
+			$this->assertArraySubset([$nn => [$on => $on]], $xp,
+					'Inserting an object should make a newNum indexed explicit provider '
+					. 'entry with an value indicating the oldNum receiver.');
+			$this->assertArraySubset([$on => $on], $xr,
+					'Inserting an object should make a oldNum indexed '
+					. 'explicit receiver entry.');
+		}
+
+		$reqs = new RenumberRequests($this->symNumberSet);
+        $reqs->insert(new RenumberRequest('C', 'B'));
+		$this->assertArrayHasKey('C', $reqs->_indexed_list,
+				'Inserting an RR object should make an _indexed_list entry '
+				. 'with the RR->oldNum as the key');
+		
+		foreach ($reqs->_indexed_list as $key => $request) {
+			$this->assertArrayHasKey($key, $reqs->_valid_symbols,
+					'Inserting RR objects should populate _indexed_list with '
+					. 'instances of RenumberRequest');
+			$this->assertInstanceOf('\App\Lib\RenumberRequest', $request,
+					'After inserting RR objects, keys of _indexed_list should '
+					. 'all be valid symbols');
+			$xp = $reqs->_explicit_providers;
+			$xr = $reqs->_explicit_receivers;
+			$nn = $request->newNum();
+			$on = $request->oldNum();
+			$this->assertArraySubset([$nn => [$on => $on]], $xp,
+					'Inserting an object should make a newNum indexed explicit provider '
+					. 'entry with an value indicating the oldNum receiver.');
+			$this->assertArraySubset([$on => $on], $xr,
+					'Inserting an object should make a oldNum indexed '
+					. 'explicit receiver entry.');
+		}
+	}
 
     /**
      * Test validSymbols method
