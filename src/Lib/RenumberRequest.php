@@ -98,10 +98,11 @@ class RenumberRequest {
 	 * @return mixed
 	 */
 	public function __get($name) {
-		if (in_array($name, ['new', 'old', 'renumber_message'])) {
-			return $this->{"_$name"};
+//		if (in_array($name, ['new', 'old', 'renumber_message'])) {
+//			return $this->{"_$name"};
 			
-		} elseif (Configure::read('debug')) {
+//		} elseif (Configure::read('debug')) {
+		if (Configure::read('debug')) {
 			return $this->$name;
 		}
 		
@@ -173,11 +174,11 @@ class RenumberRequest {
 		}
 		if ($this->_implied_change) {
 			$this->_message[] = "Other changes implied the change of "
-					. "#$this->old to #$this->new.";
+					. "#$this->_old to #$this->_new.";
 			$this->_renumber_message = FALSE;
 		}
 		if ($this->_vague_receiver) {
-			$this->_message[] = "Can't determine which piece should receive #$this->old.";
+			$this->_message[] = "Can't determine which piece should receive #$this->_old.";
 		}
 		if ($this->_renumber_message) {
 			array_unshift($this->_message, "Change piece #$this->_old to #$this->_new.");
