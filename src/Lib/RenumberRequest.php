@@ -57,7 +57,7 @@ class RenumberRequest {
 	 *
 	 * @var int|boolean
 	 */
-	public $duplicate_new_number = FALSE;
+	public $_duplicate_new_number = FALSE;
 	
 	public $_vague_receiver = FALSE;
 	
@@ -75,7 +75,8 @@ class RenumberRequest {
 		$this->_old = $old;
 		$this->_new = $new;
         if (is_null($new)) {
-            $this->badNumber(TRUE);
+//            $this->badNumber(TRUE);
+			$this->_vague_provider = TRUE;
         }
 		return $this;
 	}
@@ -87,8 +88,12 @@ class RenumberRequest {
     public function oldNum() {
         return $this->_old;
     }
+	
+	public function hasSummary() {
+		return $this->_renumber_message;
+	}
 
-    /**
+	/**
 	 * Give limited access to internal properties
 	 * 
 	 * If we are in a debugging environment, give 
@@ -119,7 +124,7 @@ class RenumberRequest {
 	 */
 	public function duplicate($count) {
 		if (!is_null($this->_new)) {
-			$this->duplicate_new_number = ($count == 1) ? FALSE : $count;
+			$this->_duplicate_new_number = ($count == 1) ? FALSE : $count;
 		}
 //        print_r("duplicate new num: $this->duplicate_new_number");
 	}
@@ -160,16 +165,20 @@ class RenumberRequest {
         $this->_renumber_message = TRUE;
 		$this->_message = [];
         
-		if ($this->_bad_new_number) {
-			if (is_null($this->_new)) {
-				$this->_message[] = "#$this->_old was reassigned but no new number was provided.";
-			} else {
-				$this->_message[] = "There is no #$this->_new in this edition.";
-			}
+		if ($this->_vague_provider) {
+			$this->_message[] = "#$this->_old was reassigned but no new number was provided.";
 			$this->_renumber_message = FALSE;
 		}
-		if ($this->duplicate_new_number) {
-			$this->_message[] = "Can't change multiple pieces ($this->duplicate_new_number) to #$this->_new";
+		if ($this->_bad_new_number) {
+//			if (is_null($this->_new)) {
+//				
+//			} else {
+				$this->_message[] = "There is no #$this->_new in this edition.";
+//			}
+			$this->_renumber_message = FALSE;
+		}
+		if ($this->_duplicate_new_number) {
+			$this->_message[] = "Can't change multiple pieces ($this->_duplicate_new_number) to #$this->_new.";
 			$this->_renumber_message = FALSE;
 		}
 		if ($this->_implied_change) {

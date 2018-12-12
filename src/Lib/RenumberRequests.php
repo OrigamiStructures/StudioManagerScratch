@@ -122,7 +122,7 @@ class RenumberRequests {
 	 *
 	 * @var array
 	 */
-	private $_reciever_checklist = FALSE;
+	private $_receiver_checklist = FALSE;
 	
 	/**
 	 * List of pieces explicitly receiving new numbers
@@ -204,7 +204,7 @@ class RenumberRequests {
 	 */
 	public function insert($request) {
 		$this->badSymbolCheck($request);
-		$this->_heap->insert($request);
+		$result = $this->_heap->insert($request);
 		$this->storeRequest($request);
 		$this->updateProviders($request, 'addTarget');
 		$this->recordReceiverMention($request);
@@ -217,7 +217,8 @@ class RenumberRequests {
 	 * @return void
 	 */
 	protected function badSymbolCheck($request) {
-		if (!in_array($request->newNum(), $this->_valid_symbols)) {
+		$newNum = $request->newNum();
+		if (!is_null($newNum) && !in_array($newNum, $this->_valid_symbols)) {
 			$request->badNumber(TRUE);
 			$this->_bad_symbols[$request->newNum()] = $request->newNum();
 		}
@@ -348,13 +349,11 @@ class RenumberRequests {
 		switch ($mode) {
 			case 'addTarget':
 				$this->_explicit_providers[$newNum][$oldNum] = $oldNum;
-				$target = $this->request($oldNum);
-				// must loop on all provider taregts so the earlier 
-				// recipients of the dup number will know what happened
-				// so, if count(ex-pro[nn] > 1 then loop
-				// while $count > ?
-				if ($target) { // how would this not be true?
-					$target->duplicate($this->providerUseCount($request));
+				foreach ($this->_explicit_providers[$newNum] as $oldNum) {
+					$target = $this->request($oldNum);
+					if ($target) {
+						$target->duplicate($this->providerUseCount($request));
+					}
 				}
 				break;
 			case 'dropTarget':
@@ -378,24 +377,24 @@ class RenumberRequests {
 	 */
 	protected function _completness_scan() {
 		$this->_provider_checklist = $this->_explicit_receivers;
-		$this->_reciever_checklist = $this->_explicit_providers;
+		$this->_receiver_checklist = $this->_explicit_providers;
 		foreach($this->_indexed_list as $request) {
 			if ($request->_bad_new_number) {
 				// bad providers can be disregarded. Already have error message
-				unset($this->_reciever_checklist[$request->newNum()]);
+				unset($this->_receiver_checklist[$request->newNum()]);
 				unset($this->_provider_checklist[$request->oldNum()]);
 			} else {
-				unset($this->_reciever_checklist[$request->oldNum()]);
+				unset($this->_receiver_checklist[$request->oldNum()]);
 				unset($this->_provider_checklist[$request->newNum()]);
 			}
 		}
 		$_providers = count($this->_provider_checklist);
-		$_receivers = count($this->_reciever_checklist);
+		$_receivers = count($this->_receiver_checklist);
 		
 		if ($_providers === 1 && $_receivers === 1) {
 			$request = $this->_create_implied_request();
 			$this->insert($request);
-			unset($this->_reciever_checklist[$request->oldNum()]);
+			unset($this->_receiver_checklist[$request->oldNum()]);
 			unset($this->_provider_checklist[$request->newNum()]);
 		}
 		if (count($this->_provider_checklist) > 0) {
@@ -403,9 +402,9 @@ class RenumberRequests {
 				$this->_indexed_list[$number]->vagueReceiver(TRUE);
 			}
 		}
-		if (count($this->_reciever_checklist) > 0) {
+		if (count($this->_receiver_checklist) > 0) {
 			// number transfered but no replacement number provided
-			foreach ($this->_reciever_checklist as $number => $use) {
+			foreach ($this->_receiver_checklist as $number => $use) {
 				$request = (new RenumberRequest($number, NULL));
 				$this->insert($request);
 			}
@@ -423,7 +422,7 @@ class RenumberRequests {
 	 * @return RenumberRequest
 	 */
 	private function _create_implied_request() {
-			$discovered_old = array_keys($this->_reciever_checklist)[0];
+			$discovered_old = array_keys($this->_receiver_checklist)[0];
 			$discovered_new = array_keys($this->_provider_checklist)[0];
 			return (new RenumberRequest($discovered_old, $discovered_new))->implied(TRUE);
 	}

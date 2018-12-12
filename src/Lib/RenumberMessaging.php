@@ -39,18 +39,18 @@ class RenumberMessaging {
 
 	/**
 	 * @todo Is renumber_message spelled right?
-	 * @param type $requests
+	 * @param RenumberRequest $requests
 	 * @return RenumberMessaging
 	 */
 	public function __construct($requests = []) {
 		$this->_requests = $requests;
 		foreach ($this->_requests as $request) {
 			$message = $request->message();
-			if ($request->renumber_message) { 
-				$this->_summaries[$request->old] = array_shift($message);
+			if ($request->hasSummary()) { 
+				$this->_summaries[$request->oldNum()] = array_shift($message);
 			}
 			if (!empty($message)) {
-				$this->_errors[$request->old] = $message;
+				$this->_errors[$request->oldNum()] = $message;
 				$this->_error_count += count($message);
 			}
 		}
