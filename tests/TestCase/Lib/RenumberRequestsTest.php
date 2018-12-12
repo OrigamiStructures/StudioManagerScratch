@@ -86,6 +86,8 @@ class RenumberRequestsTest extends TestCase
 			$this->assertArraySubset([$on => $on], $xr,
 					'Inserting an object should make a oldNum indexed '
 					. 'explicit receiver entry.');
+			$this->assertTrue($reqs->heap()->count() > 0, 'Inserting an RR object should '
+					. 'add an element to the heap ');
 		}
 		
 		$reqs->insert(new RenumberRequest(3,4));
@@ -98,7 +100,7 @@ class RenumberRequestsTest extends TestCase
 				'Inserting an object should make a newNum indexed explicit provider '
 				. 'entry with an value indicating the oldNum receiver.');
 		$this->assertEquals(2, count($xp[$nn]));
-		$this->assertTrue((boolean) $request->duplicate_new_number);
+		$this->assertTrue((boolean) $request->_duplicate_new_number);
 
 		/*
 		 * Test a leter symbol system
@@ -127,6 +129,8 @@ class RenumberRequestsTest extends TestCase
 			$this->assertArraySubset([$on => $on], $xr,
 					'Inserting an object should make a oldNum indexed '
 					. 'explicit receiver entry.');
+			$this->assertTrue($reqs->heap()->count() > 0, 'Inserting an RR object should '
+					. 'add an element to the heap ');
 		}
 		
 		$reqs->insert(new RenumberRequest('A', 'B'));
@@ -139,7 +143,7 @@ class RenumberRequestsTest extends TestCase
 				'Inserting an object should make a newNum indexed explicit provider '
 				. 'entry with an value indicating the oldNum receiver.');
 		$this->assertEquals(2, count($xp[$nn]));
-		$this->assertTrue((boolean) $request->duplicate_new_number);
+		$this->assertTrue((boolean) $request->_duplicate_new_number);
 	}
 
     /**
@@ -169,7 +173,19 @@ class RenumberRequestsTest extends TestCase
      */
     public function testHeap()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $reqs = new RenumberRequests($this->intNumberSet);
+        $reqs->insert(new RenumberRequest(2, 4));
+		$heap = $reqs->heap();
+		$this->assertInstanceOf('\SplHeap', $reqs->_heap, 
+				'The private property _heap should be an SplHeap object');
+		$this->assertInstanceOf('\SplHeap', $reqs->heap(), 
+				'The returned object should be an SplHeap object');
+		$this->assertTrue($reqs->_heap == $reqs->heap(),
+				'The heap property and returned heap should have the same content. The '
+				. 'return should be a clone');
+		$this->assertFalse($reqs->_heap === $reqs->heap(),
+				'The heap property and returned heap should not be the same object. The '
+				. 'return should be a clone');
     }
 
     /**
@@ -201,7 +217,109 @@ class RenumberRequestsTest extends TestCase
      */
     public function testMessagePackage()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $reqs = new RenumberRequests($this->intNumberSet);
+        $reqs->insert(new RenumberRequest(2, 4));
+		$messages = $reqs->messagePackage();
+		$this->assertInstanceOf('\App\Lib\RenumberMessaging', $messages, 
+				'The returned object should be an RenumberMessaging object');
     }
 	
+	public function testDuplicateDetection() {
+		$reqs = new RenumberRequests($this->symNumberSet);
+		$data = ['A'=>'B','B'=>'C','C'=>'B','D'=>'A','E'=>'B'];
+		foreach($data as $on => $nn) {
+			$reqs->insert(new RenumberRequest($on, $nn));
+		}
+		$messages = $reqs->messagePackage();
+		foreach (['A','C','E'] as $oldNum) {
+			$this->assertTrue((boolean) $reqs->request($oldNum)->_duplicate_new_number,
+					'Recieving a duplicate use of a new number should set the '
+					. 'duplicate new number flag in the request');
+			$this->assertArraySubset([$oldNum => ["Can't change multiple pieces (3) to #B."]], $messages->errors(),
+					'Recieving a duplicate use of a new number should place an error '
+					. 'message in the messagePackage');
+		}
+		foreach (['B','D'] as $oldNum) {
+			$this->assertFalse($reqs->request($oldNum)->_duplicate_new_number,
+					'A valid request should not set the '
+					. 'duplicate new number flag in the request');
+		}
+	}
+	
+	public function testImpliedRequestCreationDetection() {
+		$reqs = new RenumberRequests($this->symNumberSet);
+		$reqs->insert(new RenumberRequest('A', 'B'));
+		$reqs->insert(new RenumberRequest('C', 'D'));
+		$reqs->insert(new RenumberRequest('D', 'C'));
+		$messages = $reqs->messagePackage();
+		$this->assertTrue($reqs->request('B')->_implied_change,
+					'When one receiver and one provider are left after checklist-process '
+				. 'an implied change request should be constructed');
+		$this->assertArraySubset(['B' => ["Other changes implied the change of "
+					. "#B to #A."]], $messages->errors(),
+				'When one receiver and one provider are left after checklist-process '
+				. 'an implied change message should be written');
+		$this->assertFalse($reqs->request('D')->_implied_change,
+					'When a valid request is made '
+				. 'an implied change request should not be constructed');
+	}
+	
+	/**
+	 * Test vague provider rule detection
+	 * 
+	 * Vauge provider is a piece that gets a new number but 
+	 * it can't be determined where to pass the old number
+	 */
+	public function testVaugeProviderDetection() {
+		$reqs = new RenumberRequests($this->symNumberSet);
+		$data = ['A'=>'B','C'=>'D'];
+		foreach($data as $on => $nn) {
+			$reqs->insert(new RenumberRequest($on, $nn));
+		}
+		$messages = $reqs->messagePackage();
+		foreach (['B','D'] as $oldNum) {
+			$this->assertTrue($reqs->request($oldNum)->_vague_provider,
+					'When a piece provides a new number but doesn\'t act as a receiver '
+					. 'it should be flagged for its vauge provider');
+			$this->assertArraySubset([$oldNum => ["#$oldNum was reassigned but no new number was provided."]], $messages->errors(),
+					'When a piece provides a new number but doesn\'t act as a receiver '
+					. 'it should be generate a vauge provider message');
+		}
+		foreach (['A','C'] as $oldNum) {
+			$this->assertFalse($reqs->request($oldNum)->_vague_provider,
+					'A valid request should not set the '
+					. 'vague provider flag in the request');
+		}
+	}
+	
+	
+	/**
+	 * Test vague receiver rule detection
+	 * 
+	 * Vauge provider is a piece that gets a new number but 
+	 * it can't be determined where to pass the old number
+	 */
+	public function testMissingRecieverDetection() {
+		$reqs = new RenumberRequests($this->symNumberSet);
+		$data = ['A'=>'B','C'=>'D'];
+		foreach($data as $on => $nn) {
+			$reqs->insert(new RenumberRequest($on, $nn));
+		}
+		$messages = $reqs->messagePackage();
+		foreach (['A','C'] as $oldNum) {
+			$this->assertTrue($reqs->request($oldNum)->_vague_receiver,
+					'When a piece receives a new number but doesn\'t act as a receiver '
+					. 'it should be flagged as a vauge receiver');
+			$this->assertArraySubset([$oldNum => ["Can't determine which piece should receive #$oldNum."]], $messages->errors(),
+					'When a piece receives a new number but doesn\'t act as a receiver '
+					. 'it should be generate a vauge receiver message');
+		}
+		foreach (['B','D'] as $oldNum) {
+			$this->assertFalse($reqs->request($oldNum)->_vague_receiver,
+					'A valid request should not set the '
+					. 'vague receiver flag in the request');
+		}
+		
+	}
+
 }
