@@ -184,18 +184,7 @@ class RenumberRequests {
 		$this->_valid_symbols = array_combine($valid_numbers, $valid_numbers);
 		$this->_heap = new RenumberRequestHeap();
 	}
-	
-	
-//	public function validSymbols() {
-//		return $this->_valid_symbols;
-//	}
-//	public function providers() {
-//		return $this->_explicit_providers;
-//	}
-//	public function receivers() {
-//		return $this->_receivers_mentioned;
-//	}
-	
+		
 	/**
 	 * 
 	 * 
@@ -247,7 +236,7 @@ class RenumberRequests {
 	 * @return iterator
 	 */
 	public function heap(){
-		if ($this->_heap->count() > 0 && $this->_provider_checklist === FALSE) {
+		if ($this->_heap->count() > 0) {
 			$this->_completness_scan();
 		}
 		return clone($this->_heap);
@@ -297,23 +286,6 @@ class RenumberRequests {
 	protected function providerTargets($newNum) {
 		return $this->_explicit_providers[$newNum];
 	}
-	
-	/**
-	 * Increment or decrement and entry in the 'from' usage tables
-	 * 
-	 * the 'to' table became more complicated and was removed
-	 * 
-	 * @param int $index
-	 * @param string $silo
-	 * @param int $delta
-	 */
-//	private function _record_use($index, $silo, $delta) {
-//		if (!isset($this->{$silo}[$index])) {
-//			$this->{$silo}[$index] = $delta;
-//		} else {
-//			$this->{$silo}[$index] += $delta;
-//		}
-//	}
 	
 	protected function recordReceiverMention(RenumberRequest $request) {
 		$this->_explicit_receivers[$request->oldNum()] = $request->oldNum();
