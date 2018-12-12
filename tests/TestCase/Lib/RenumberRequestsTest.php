@@ -57,7 +57,7 @@ class RenumberRequestsTest extends TestCase
 
     /**
      * Test insert method
-     *
+	 * 
      * @return void
      */
     public function testInsert()
