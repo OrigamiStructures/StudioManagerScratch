@@ -1,18 +1,13 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use App\Model\Table\StacksTable;
-use App\Lib\Stacks;
 use App\Lib\Layer;
-use Cake\Core\ConventionsTrait;
 use Cake\Cache\Cache;
-use App\Model\Entity\ArtStack;
 use App\Model\Lib\StackSet;
-use Cake\Database\Schema\TableSchema;
-use Cake\Core\Configure;
-use App\SiteMetrics\CollectTimerMetrics;
+use App\Model\Entity\ArtStack;
 use App\Cache\ArtStackCacheTools as cacheTools;
+use App\SiteMetrics\CollectTimerMetrics;
 
 /**
  * ArtStacks Model

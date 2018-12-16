@@ -2,7 +2,6 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Lib\Traits\StackTrait;
 use App\Lib\Layer;
 
 /**
