@@ -24,10 +24,35 @@ use App\Model\Entity\UserStack;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\Core\ConventionsTrait
  */
-class UserStacksTable extends Table
+class UserStacksTable extends StacksTable
 {
+    	
+    /**
+     * {@inheritdoc}
+     */
+    protected $layerTables = [
+		'Users', 'Members', 'Contacts', 
+		'Addresses', 'Artists', 'GroupsMembers'
+	];
     
-    use ConventionsTrait;
+    /**
+     * {@inheritdoc}
+     */
+    protected $stackSchema = 	[	
+		['name' => 'user', 'specs' => ['type' => 'layer']],
+		['name' => 'member', 'specs' => ['type' => 'layer']],
+		['name' => 'contacts', 'specs' => ['type' => 'layer']],
+		['name' => 'addresses', 'specs' => ['type' => 'layer']],
+		['name' => 'artists', 'specs' => ['type' => 'layer']],
+		['name' => 'groups_members', 'specs' => ['type' => 'layer']],
+	];
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected $seedPoints = [
+		'user', 'users',
+	];
 	
 	/**
      * Initialize method
@@ -37,23 +62,6 @@ class UserStacksTable extends Table
      */
     public function initialize(array $config) {
         parent::initialize($config);
-    }
-    
-	/**
-	 * Lazy load the required tables
-	 * 
-	 * I couldn't get Associations to work in cooperation with the schema 
-	 * intialization that sets the custom 'layer' type properties. This is 
-	 * my solution to making the Tables available 
-	 * 
-	 * @param string $property
-	 * @return Table|mixed
-	 */
-    public function __get($property) {
-        if (in_array($property, ['Users', 'Members', 'Contacts', 'Addresses', 'Artists', 'GroupsMembers'])) {
-            return TableRegistry::getTableLocator()->get($property);
-		}
-        return parent::__get($property);
     }
     
 	/**
@@ -96,11 +104,10 @@ class UserStacksTable extends Table
 	 * @return UserStack
 	 * @throws \BadMethodCallException
 	 */
-	public function findStack($query, $options) {
-		$id = SystemState::userId();
-		$userStack = $this->stackFromUserId($id);
-		return $userStack;
-    }
+	protected function loadFromUser($ids) {
+		return $this->stackFromUser($ids);
+	}
+
     
 	/**
 	 * Read the stack from cache or assemble it and cache it
@@ -111,7 +118,7 @@ class UserStacksTable extends Table
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	 */
-    private function stackFromUserId($id) {
+    private function stackFromUser($id) {
 		$t = CollectTimerMetrics::instance();
 				
 		$le = $t->startLogEntry("UserStack.$id");
@@ -135,27 +142,14 @@ class UserStacksTable extends Table
 						'is_superuser', 'role', 
 						'member_id', 'id'])
 					;
-			$stack = $this->_marshall($stack, 'user', $user->toArray());
 			$member_id = $stack->primaryEntity()->member_id;
 
 			$member = $this->Members->find('Members', ['values' => [$member_id]]);
-			$stack = $this->_marshall($stack, 'member', $member->toArray());
-
 			$contacts = $this->Contacts->find('inMembers', ['values' => [$member_id]]);
-			$stack = $this->_marshall($stack, 'contacts', $contacts->toArray());
-
 			$addresses = $this->Addresses->find('inMembers', ['values' => [$member_id]]);
-			$stack = $this->_marshall($stack, 'addresses', $addresses->toArray());
-
 			$artists = $this->Artists->find('inMembers', ['values' => [$id]]);
-			$stack = $this->_marshall($stack, 'artists', $artists->toArray());
-
 			$groupsMembers = $this->
 				_loadFromJoinTable('GroupsMembers', 'member_id', [$member_id]);
-			$stack = $this->_marshall(
-					$stack, 
-					'groupsMembers', 
-					$groupsMembers->toArray());
 			
 			$t->end('build', $le);
 
@@ -172,77 +166,5 @@ class UserStacksTable extends Table
 
 		return $stack;
     }
-	    
-// <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
 	
-	/**
-	 * Load members of a table by id
-	 * 
-	 * The table name will be deduced from the $layer. Also, there is the 
-	 * assumption that a custom finder exists in that Table which is in the form 
-	 * Table::findTable() which can do an single or array id search.
-	 * Custom finders based on IntegerQueryBehavior do the job in this system.
-	 * 
-	 * <code>
-	 * $this-_loadLayer('member', $ids);
-	 * 
-	 * //will evaluate to
-	 * $this->Members->find('members', ['values' => $ids]);
-	 * 
-	 * //and will expect, in the Members Table the custom finder:
-	 * public function findMembers($query, $options) {
-	 *      //must properly handle an array of id values
-	 *      //finders us
-	 * }
-	 * </code>
-	 * 
-	 * @param name $layer The  
-	 * @param array $ids
-	 * @return Query A new query on some table
-	     */
-	private function _loadLayer($layer, $ids) {
-		$tableName = $this->_modelNameFromKey($layer);
-		$finderName = lcfirst($tableName);
-
-		return $this->$tableName
-						->find($finderName, ['values' => $ids]);
-	}
-
-	/**
-	 * Set one of the layer properties for the Stack type entity
-	 * 
-	 * The value must be a homogenous array of entities
-	 * 
-	 * @param Entity $entity
-	 * @param string $property The property to set
-	 * @param array $value An array of Entities
-	     */
-	public function _marshall($entity, $property, $value) {
-		$this->patchEntity($entity, [$property => $value]);
-		$entity->setDirty($property, FALSE);
-		return $entity;
-	}
-
-	/**
-	 * Throw together a temporary Join Table class and search it
-	 * 
-	 * This will actually work for any table, but habtm tables typically 
-	 * don't have a named class written for them.
-	 * 
-	 * 
-	 * @param string $table The name of the table class by convention
-	 * @param string $column Name of the integer column to search
-	 * @param array $ids
-	     */
-	protected function _loadFromJoinTable($table, $column, $ids) {
-		$joinTable = TableRegistry::getTableLocator()
-				->get($table)
-				->addBehavior('IntegerQuery');
-
-		$q = $joinTable->find('all');
-		$q = $joinTable->integer($q, $column, $ids);
-		return $q;
-	}
-// </editor-fold>
-
 }
