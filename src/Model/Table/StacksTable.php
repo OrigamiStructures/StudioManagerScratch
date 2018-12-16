@@ -144,8 +144,6 @@ class StacksTable extends Table
     }
 
 // </editor-fold>
-	    
-// <editor-fold defaultstate="collapsed" desc="Probably goes in a Stack parent class">
 	
 	/**
 	 * Load members of a table by id
@@ -200,6 +198,5 @@ class StacksTable extends Table
 		$q = $joinTable->integer($q, $column, $ids);
 		return $q;
 	}
-// </editor-fold>
 
 }
