@@ -65,7 +65,7 @@ if (isset($stacks)) {
         echo '<h3>' . $disposition->displayTitle . '</h3><ul>';
         foreach ($pieces->sort('format_id') as $piece) {
 			
-			$stack = $stacks->owner('pieces', $piece->id)[0];
+			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			
 			$format = $stack->load('formats', ['id', $piece->format_id])[$piece->format_id];	
 			$edition = $stack->load('editions', ['id', $piece->edition_id])[$piece->edition_id];
