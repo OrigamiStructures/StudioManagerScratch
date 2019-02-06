@@ -1,7 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
-use App\Lib\SystemState;
+use App\Lib\DispositionTypeMap;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,14 +17,14 @@ use App\Lib\SystemState;
 Trait DispositionFilterTrait {
 	
 	public function filterUnavailable($disposition, $key){
-			if (in_array($disposition->type, SystemState::scrappedDispositionTypes())) {
+			if (in_array($disposition->type, DispositionTypeMap::scrappedDispositionTypes())) {
 				return TRUE;
 			}
 			
 	}
 	
 	public function filterAvailable($disposition, $key){
-			return !in_array($disposition->type, SystemState::scrappedDispositionTypes());
+			return !in_array($disposition->type, DispositionTypeMap::scrappedDispositionTypes());
 	}
 	
 	public function filterNotFutureEvent($disposition, $key) {

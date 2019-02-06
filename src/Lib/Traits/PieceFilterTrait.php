@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib\Traits;
 
+use App\Lib\DispositionTypeMap;
 use App\Lib\Traits\DispositionFilterTrait;
 use Cake\View\Helper;
 use Cake\Collection\Collection;
@@ -230,7 +231,7 @@ trait PieceFilterTrait {
 		$dispositions = $piece->dispositions;
 		$collection = new Collection($dispositions);
 		$unavailable = $collection->filter(function($disposition, $key){
-			return in_array($disposition->type, SystemState::scrappedDispositionTypes());
+			return in_array($disposition->type, DispositionTypeMap::scrappedDispositionTypes());
 		});
 		
 		if ((boolean) iterator_count($unavailable)) {
