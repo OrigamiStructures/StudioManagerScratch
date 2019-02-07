@@ -175,6 +175,7 @@ class DropDownHelper extends HtmlHelper {
 				$class = array_flip(explode(' ', $options['class']));
 			}
 			$required = array_flip($defaults['class']);
+			// can array_unique() be used here?
 			$result = array_flip($class + $required);
 			$options['class'] = implode(' ', $result);
 		}

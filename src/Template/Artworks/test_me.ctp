@@ -34,7 +34,21 @@ if (isset($stacks)) {
 		
 		$artwork = $stack->primaryEntity();
 		$joins = new Layer($stack->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
-		$pieces = new Layer($stack->load('pieces', ['id', $joins->distinct('piece_id')]));
+		
+		// Layer object's __contruct() accept an array of entities 
+		// and that's what $stack->load( ) returns. 
+		// Layer turns an array of entities into a quasi-db tool.
+		// See \App\Lib\Layer
+		$pieces = new Layer(
+				// load() is the primary 'search' method in an entity 
+				// that extends the StackEntity class.
+				// See \App\Model\Entity\StackEntity for the base class 
+				// of these entities and details of load()
+				$stack->load('pieces', ['id', 
+					// distinct() is a Layer class method that returns no duplicates.
+					// $joins was defined on line 36 as a Layer object.
+					$joins->distinct('piece_id')])
+			);
 		$formats = new Layer($stack->load('formats', ['id', $pieces->distinct('format_id')]));		
 		$editions = new Layer($stack->load('editions', ['id', $formats->distinct('edition_id')]));
 		

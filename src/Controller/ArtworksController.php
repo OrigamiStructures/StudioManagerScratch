@@ -328,7 +328,7 @@ class ArtworksController extends ArtStackController
 		osd($reqs->messagePackage());
 		osd($reqs->_receiver_checklist, 'receiver checklist');
 		osd($reqs->_provider_checklist, 'providers checklist');
-		die;
+//		die;
 
         $queries = $this->request->data('method');
         $result = [];

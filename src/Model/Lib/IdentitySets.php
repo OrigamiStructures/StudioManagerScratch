@@ -154,6 +154,7 @@ class IdentitySets extends IdentitySetBase {
 		$merged = $sets->reduce(function($acc, $set) {
 			return array_merge($acc, $set->idList());
 		}, []);
+		// use array_unique()
 		return array_flip(array_flip($merged));
 	}
 

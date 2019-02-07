@@ -115,6 +115,7 @@ class Range {
             $data = array();
         }
         $numbers = Hash::extract($data, $path);
+		// use array_unique()
         $numbers = array_keys(array_flip($numbers)); // kill duplicate values
         sort($numbers);
 
@@ -207,6 +208,7 @@ class Range {
         sort($sequence);
 
         // filter out the duplicates
+		// use array_unique
         self::$range_array = self::$range_values = array_flip(array_flip($sequence));
         self::$range_assoc = self::$range_keys = array_flip(self::$range_array);
 
