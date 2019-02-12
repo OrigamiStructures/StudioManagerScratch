@@ -310,6 +310,11 @@ class ArtworksController extends ArtStackController
 
     public function testMe() {
 		
+		$v = [];
+		$s = implode(' ', $v);
+		osd($s);
+		die;
+		
 		$intNumberSet = [1,2,3,4,5];
 		$symNumberSet = ['A','B','C','D','E'];
         $reqs = new \App\Lib\RenumberRequests($symNumberSet);
