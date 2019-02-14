@@ -23,13 +23,11 @@ class RolodexCardsTable extends StacksTable {
      * {@inheritdoc}
      */
     protected $stackSchema = 	[	
-			['name' => 'member', 'specs' => ['type' => 'object']],
+			['name' => 'member', 'specs' => ['type' => 'layer']],
             ['name' => 'contacts', 'specs' => ['type' => 'layer']],
             ['name' => 'addresses', 'specs' => ['type' => 'layer']],
-			['name' => 'primary_contact', 'specs' => ['type' => 'integer']],
-			['name' => 'primary_address', 'specs' => ['type' => 'integer']],
             ['name' => 'member_of', 'specs' => ['type' => 'layer']],
-			['name' => 'group', 'specs' => ['type' => 'object']],
+			['name' => 'group', 'specs' => ['type' => 'layer']],
             ['name' => 'has_members', 'specs' => ['type' => 'layer']],
         ];
     
@@ -97,7 +95,7 @@ class RolodexCardsTable extends StacksTable {
                 $stack = $this->newEntity([]);
                 
                 $member = $this->Members->find('members', ['values' => [$id]]);
-                    $stack->set('member', $member->toArray()[0]);
+                    $stack->set(['member' => $member->toArray()]);
                 
                 if ($stack->count('member')) {
                     $contacts = $this->Contacts->find('inMembers', ['values' => [$id]]);
