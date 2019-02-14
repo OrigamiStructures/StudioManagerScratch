@@ -310,29 +310,24 @@ class ArtworksController extends ArtStackController
 
     public function testMe() {
 		
-		$v = [];
-		$s = implode(' ', $v);
-		osd($s);
-		die;
-		
-		$intNumberSet = [1,2,3,4,5];
-		$symNumberSet = ['A','B','C','D','E'];
-        $reqs = new \App\Lib\RenumberRequests($symNumberSet);
-//		$requests = [[1,2],[2,3],[3,1]];
-//		$requests = [[1,2],[3,4]];
-//		$data = ['A'=>'B','B'=>'C','C'=>'B','D'=>'A','E'=>'B'];
-		$data = ['A'=>'B','C'=>'D'];
-		foreach($data as $on => $nn) {
-			$reqs->insert(new \App\Lib\RenumberRequest($on, $nn));
-		}
-//		foreach ($requests as $request) {
-//			$reqs->insert(new \App\Lib\RenumberRequest($request[0],$request[1]));
+//		$intNumberSet = [1,2,3,4,5];
+//		$symNumberSet = ['A','B','C','D','E'];
+//        $reqs = new \App\Lib\RenumberRequests($symNumberSet);
+////		$requests = [[1,2],[2,3],[3,1]];
+////		$requests = [[1,2],[3,4]];
+////		$data = ['A'=>'B','B'=>'C','C'=>'B','D'=>'A','E'=>'B'];
+//		$data = ['A'=>'B','C'=>'D'];
+//		foreach($data as $on => $nn) {
+//			$reqs->insert(new \App\Lib\RenumberRequest($on, $nn));
 //		}
-		osd($reqs->_explicit_providers, 'explicit providers');
-		osd($reqs->_explicit_receivers, 'explicit receiver');
-		osd($reqs->messagePackage());
-		osd($reqs->_receiver_checklist, 'receiver checklist');
-		osd($reqs->_provider_checklist, 'providers checklist');
+////		foreach ($requests as $request) {
+////			$reqs->insert(new \App\Lib\RenumberRequest($request[0],$request[1]));
+////		}
+//		osd($reqs->_explicit_providers, 'explicit providers');
+//		osd($reqs->_explicit_receivers, 'explicit receiver');
+//		osd($reqs->messagePackage());
+//		osd($reqs->_receiver_checklist, 'receiver checklist');
+//		osd($reqs->_provider_checklist, 'providers checklist');
 //		die;
 
         $queries = $this->request->data('method');
