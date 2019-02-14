@@ -50,6 +50,8 @@ class ArtworkStackBehavior extends Behavior {
     public function __construct(\Cake\ORM\Table $table, array $config = array()) {
         parent::__construct($table, $config);
     }
+
+
 	
 	public function addToSeries($series_id = NULL, $artwork_id = NULL) {
 		// get the series configuration
