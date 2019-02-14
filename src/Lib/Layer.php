@@ -257,7 +257,7 @@ class Layer {
      * 
      * @param type $property
      * @param type $value
-     * @return type
+     * @return array
      */
     public function filter($property, $value) {
         if (!$this->_verifyProperty($property)) {
@@ -281,10 +281,11 @@ class Layer {
      *  $pieces->sort('number', SORT_ASC, SORT_NUMERIC);
      * </code>
      * 
-     * @param type $property
-     * @param type $dir
-     * @param type $type
-     * @return type
+     * @param string $property Name of the property to sort by
+     * @param string $dir SORT_ASC or SORT_DESC
+     * @param string $type sort type constants
+	 * @see https://book.cakephp.org/3.0/en/core-libraries/collections.html#Cake\Collection\Collection::sortBy
+     * @return array Array of entities
      */
     public function sort($property, $dir = \SORT_DESC, $type = \SORT_NUMERIC) {
         $set = new Collection($this->_entities);
