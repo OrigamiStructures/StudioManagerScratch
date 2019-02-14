@@ -15,14 +15,23 @@ namespace App\Controller;
 class RolodexCardsController extends AppController {
 	public function testMe() {
 		
-		$ids = range(1, 73);
+		$ids = [1,2];
 		$cards = $this->RolodexCards->find('stackFrom', ['layer' => 'member', 'ids' => $ids]);
-
-		foreach($cards->all() as $card) {
+		$this->set('cards', $cards);
+//		$this->labeled(
+//				$cards->load('member',['member_type', 'Institution'])
+//				);
+//
+//		$this->labeled(
+//				$cards->load('member',['member_type', 'Person'])
+//				);
+//
+//		die;
+	}
+	
+	public function labeled($cards) {
+		foreach($cards as $card) {
 			echo "<p>{$card->getName(LABELED)}</p>";
 		}
-		
-		die;
-		
 	}
 }
