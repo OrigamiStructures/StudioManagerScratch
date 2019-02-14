@@ -4,6 +4,12 @@ namespace App\Model\Entity;
 use App\Model\Entity\StackEntity;
 use App\Lib\Layer;
 
+define('ADDRESS', 'addresses');
+define('CONTACT', 'contacts');
+define('PRIMARY', 'primary');
+define('BARE', 'bare');
+define('WRAPPED', 'wrapped');
+
 /**
  * Base class for detailed Person/Institution/Grouping objects
  * 
@@ -15,19 +21,37 @@ use App\Lib\Layer;
  * Contact records (phone, url, email, whatever) and any number of Address 
  * records. 
  * 
- * Each Member can have one Contact and one Address designated as "primary".
+ * One linked Contact and one linked Address can be designated as "primary" 
+ * by setting the PRIMARY flag field in the Contact or Address.
  * 
  * Some Member records are attached to a Group record. The presence of this 
  * relationship indicates the Member acts as a category record that collects 
- * other Members into its group. ('The Drake Family', 'ABC Corp', or 
- * 'Woodworkers' are example Group Members).
+ * other Members into its group. 'The Drake Family', 'ABC Corp', or 
+ * 'Woodworkers' are example groups.
  * 
- * This possibility means some Member records can also be included as 
- * members of such a group.
+ * When there is a Group record in the stack, there can also be content 
+ * in the `has_members` layer. These will be basic data about the member 
+ * records that are in the group.
+ * 
+ * And, of course some Member records will also be included as 
+ * members of such a group. The `member_of` layer will hold basic data 
+ * about the groups this unit is a member of.
  * 
  * The RolodexCard class works to gather all these associated elements together 
  * in a single manageable entity. It provides the basic structure and 
- * functionality for all of its concrete instantiations
+ * functionality for all of its concrete instantiations (PersonCard, 
+ * InstitutionCard, GroupdCard, etc.)
+ * 
+ * <code>
+ *	$Schema = [
+ *		['name' => 'member', 'specs' => ['type' => 'layer']],
+ *		['name' => 'contacts', 'specs' => ['type' => 'layer']],
+ *		['name' => 'addresses', 'specs' => ['type' => 'layer']],
+ *		['name' => 'member_of', 'specs' => ['type' => 'layer']],
+ *		['name' => 'group', 'specs' => ['type' => 'layer']],
+ *		['name' => 'has_members', 'specs' => ['type' => 'layer']],
+ *	];
+ * </code>
  *
  * @todo If a member has no contact or address, should it inherit from a 
  *		group? What if it is in more than one group? Would it need an 
@@ -38,7 +62,7 @@ use App\Lib\Layer;
  * @author dondrake
  */
 class RolodexCard extends StackEntity {
-	
+		
     /**
      * Get the count of entities in a layer
      * 
@@ -46,7 +70,7 @@ class RolodexCard extends StackEntity {
      * @return int
      */
     public function count($layer) {
-		if (in_array($layer, ['member', 'primary_contact', 'primary_member', 'group']) && 
+		if (in_array($layer, ['primary_contact', 'primary_member', 'group']) && 
 				!empty($this->$layer)){
 			return 1;
 		}
@@ -67,8 +91,9 @@ class RolodexCard extends StackEntity {
 	}
     
 	public function getName($format = FIRST_LAST) {
-		return $this->member->getName($format);
+		return $this->member->element(0)->getName($format);
 	}
+	
 	/**
 	 * Get the id this member's group if there is one
 	 * 
@@ -80,5 +105,77 @@ class RolodexCard extends StackEntity {
 		}
 		return '';
 	}
+	
+// <editor-fold defaultstate="collapsed" desc="Accessing layers with PRIMARY">
+
+	/**
+	 * @see http://dev.os.com/article/stacks-layers-single-members-and-primary
+	 */
+	
+	/**
+	 * Is a record in the named layer flagged as PRIMARY?
+	 * 
+	 * @param string $type
+	 * @return boolean
+	 */
+	public function hasPrimary($type) {
+		if ($this->_flagsPrimary($type) && !empty($this->$type->load('primary', 1))) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	/**
+	 * Get the entity flagged as PRIMARY if one exists
+	 * 
+	 * Return style allows the return to be wrapped in an array for 
+	 * consistency (Helpers may expect arrays of entities) but also 
+	 * allows a bare entity to return for convenience.
+	 * 
+	 * @param string $type Name of a layer that uses a PRIMARY flag column
+	 * @param string $returnStyle WRAPPED or BARE
+	 * @return mixed array, entity object, or null
+	 */
+	public function getPrimary($type, $returnStyle = WRAPPED) {
+		if ($this->_flagsPrimary($type)) {
+			$result = $this->$type->load(PRIMARY, 1);
+		} else {
+			$result [];
+		}
+		if ($returnStyle === WRAPPED) {
+			return $result;
+		}
+		return array_pop($result);
+	}
+
+	/**
+	 * Get any entities not flagged as PRIMARY
+	 * 
+	 * @param string $type Name of a layer that uses a PRIMARY flag column
+	 * @return array
+	 */
+	public function getSecondary($type) {
+		if ($this->_flagsPrimary($type)) {
+			return $this->$type->load(PRIMARY, [null, 0]);
+		}
+		return [];
+	}
+
+
+	/**
+	 * Does the named layer have a PRIMARY flag column
+	 * 
+	 * This method both defines the list of layers known to use a 
+	 * PRIMARY flag, and confirst that the argument is one of those layers
+	 * 
+	 * @param string $type The name of a layer
+	 * @return array
+	 */
+	protected function _flagsPrimary($type) {
+		$primary = [ADDRESS, CONTACT];
+		return in_array($type, $primary);
+	}
+
+// </editor-fold>
 	
 }
