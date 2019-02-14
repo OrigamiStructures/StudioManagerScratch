@@ -141,6 +141,8 @@ class Layer {
      * ### Be careful, this will return references to the entities. Any changes 
      *      to them will ripple back into this package. And this class was designed 
      *      for access by rendering processes, not edit-clycle processes.
+	 * 
+	 * @todo How about making a 'not' type search? ('not', ['edition_id', 455])
      * 
      * @param string $id
      * @return Entity
@@ -197,6 +199,13 @@ class Layer {
         return count($this->_entities);
     }
     
+	public function element($number) {
+		if ($number <= $this->count()) {
+			return $this->_entities[$this->IDs()[$number]];
+		}
+		return null;
+	}
+	
     /**
      * Get an array of the IDs of the stored entities
      * 
