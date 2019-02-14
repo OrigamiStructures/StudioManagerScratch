@@ -42,13 +42,15 @@ foreach($cards->all() as $card) {
 		],
 		'Primary Contact' => [
 			$card->hasPrimary(CONTACT) ? 
-			$card->getPrimary(CONTACT, BARE)->asString() : 'No primary contact'
+			$card->getPrimary(CONTACT, BARE)->asString() : 
+			'No primary contact'
 		],
 		'Secondary Addresses' => $secondaryA,
 		'Secondary Contacts' => $secondaryC,
 	];
 	
 	echo $this->Html->nestedList($result);
+	
 //	osd($card->getPrimary(ADDRESS), 'PRIMARY ADDRESS ' . $card->getName());
 //	osd($card->getSecondary(ADDRESS), 'SECONDARY ADDRESS ' . $card->getName());
 //	
