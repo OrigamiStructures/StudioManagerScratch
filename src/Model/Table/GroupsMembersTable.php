@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Behavior\IntegerQueryBehavior;
 
 /**
  * GroupsMembers Model
@@ -32,6 +33,7 @@ class GroupsMembersTable extends AppTable
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -75,4 +77,27 @@ class GroupsMembersTable extends AppTable
         $rules->add($rules->existsIn(['member_id'], 'Members'));
         return $rules;
     }
+    
+    /**
+     * Find members
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInMembers($query, $options) {
+        return $this->integer($query, 'member_id', $options['values']);
+    }
+    
+    /**
+     * Find groups
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInGroups($query, $options) {
+        return $this->integer($query, 'group_id', $options['values']);
+    }
+	
 }

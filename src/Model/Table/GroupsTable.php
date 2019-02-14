@@ -6,6 +6,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Behavior\IntegerQueryBehavior;
+use App\Model\Behavior\StringQueryBehavior;
 
 /**
  * Groups Model
@@ -26,13 +28,24 @@ class GroupsTable extends AppTable
     public function initialize(array $config)
     {
         parent::initialize($config);
+        $this->_initializeProperties();
+        $this->_initializeBehaviors();
+        $this->_initializeAssociations();
+    }
 
+    protected function _initializeProperties() {
         $this->table('groups');
         $this->displayField('name');
         $this->primaryKey('id');
+    }
 
+    protected function _initializeBehaviors() {
         $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
+        $this->addBehavior('StringQuery');
+    }
 
+    protected function _initializeAssociations() {
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
@@ -127,5 +140,17 @@ class GroupsTable extends AppTable
         
         return array_fill($start, $count, $columns);
 	}
+
+    
+    /**
+     * Find members
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInMembers($query, $options) {
+        return $this->integer($query, 'member_id', $options['values']);
+    }
 	
 }
