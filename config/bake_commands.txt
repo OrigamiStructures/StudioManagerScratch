@@ -22,6 +22,10 @@ bin/cake bake.bake test --fixtures app.art_stacks,app.artworks,app.editions,app.
 ====================================================================
 bin/cake bake.bake test entity ArtStack
 
+## BAKING CUSTOM FOLDER TESTS
+====================================================================
+bin/cake bake.bake test ModLib StackSet
+
 ## TESTING
 ====================================================================
 
