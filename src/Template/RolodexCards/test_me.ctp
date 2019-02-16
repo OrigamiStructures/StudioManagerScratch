@@ -1,8 +1,15 @@
+<?php
+use Cake\Collection\Collection;
+?>
+
 <style>
 	.tests {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		grid-template-areas: "Institution Person";
+	}
+	label {
+		display: block;
 	}
 </style>
 <div class="tests">
@@ -23,7 +30,9 @@ endforeach;
 <?php
 
 $result = [];
+	osd($cards->IDs('member'));
 foreach($cards->all() as $card) {
+	
 	
 	$secondaryA = [];
 	foreach($card->getSecondary(ADDRESS) as $address) {
@@ -49,7 +58,20 @@ foreach($cards->all() as $card) {
 		'Secondary Contacts' => $secondaryC,
 	];
 	
+}
 	echo $this->Html->nestedList($result);
+	
+	$options = [];
+	foreach($cards->load('addresses', ['all']) as $address) {
+		$options[$address->id] = " {$address->asString()}";
+	}
+	
+	echo $this->Form->radio('address', $options);
+	echo $this->Form->select('address', $options);
+	
+	osd($cards->load('member_of', 'all'));
+		osd($cards->load('has_members', 'all'));
+
 	
 //	osd($card->getPrimary(ADDRESS), 'PRIMARY ADDRESS ' . $card->getName());
 //	osd($card->getSecondary(ADDRESS), 'SECONDARY ADDRESS ' . $card->getName());
@@ -58,5 +80,4 @@ foreach($cards->all() as $card) {
 //	osd($card->getSecondary(CONTACT), 'SECONDARY CONTACT ' . $card->getName());
 //	osd($card->getPrimary('badVal'));
 
-}
 
