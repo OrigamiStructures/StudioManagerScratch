@@ -86,7 +86,7 @@ class GroupsMembersTable extends AppTable
      * @return Query
      */
     public function findInMembers($query, $options) {
-        return $this->integer($query, 'member_id', $options['values']);
+        return $this->integer($query, 'GroupsMembers.member_id', $options['values']);
     }
     
     /**
@@ -97,7 +97,7 @@ class GroupsMembersTable extends AppTable
      * @return Query
      */
     public function findInGroups($query, $options) {
-        return $this->integer($query, 'group_id', $options['values']);
+        return $this->integer($query, 'GroupsMembers.group_id', $options['values']);
     }
 	
 }
