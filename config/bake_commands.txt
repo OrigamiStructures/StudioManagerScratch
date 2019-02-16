@@ -119,6 +119,17 @@ name  Name of the fixture to bake (without the `Fixture` suffix). You
 
 ## Help for bake test
 ====================================================================
+I MODIFIED A CORE FILE TO BAKE TESTS FROM NON-STANDARD DIRECTORIES
+in vendor/cakephp Bake\Shell\Task TestTask.php
+I modified the public $classTypes and public $classSuffixes properties. Records are lost, but it looks like these were added:
+    public $classTypes = [
+-->		'Lib' => 'Lib',
+-->		'ModLib' => 'Model\Lib',
+        'Entity' => 'Model\Entity',
+    public $classSuffixes = [
+-->		'Lib' => '',
+-->		'ModLib' => '',
+        'Entity' => '',
 
 bin/cake bake.bake test --help
 Bake test case skeletons for classes.
