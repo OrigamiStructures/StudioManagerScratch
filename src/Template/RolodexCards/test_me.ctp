@@ -58,6 +58,8 @@ foreach($cards->all() as $card) {
 		'Secondary Contacts' => $secondaryC,
 	];
 	
+	osd($card->addresses->filter('state', 'CA'));
+	
 }
 	echo $this->Html->nestedList($result);
 	
