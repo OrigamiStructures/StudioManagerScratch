@@ -27,6 +27,7 @@ bin/cake bake.bake test entity ArtStack
 
 ### App\Lib
 --------------------------------------------------------------------
+cd Library/WebServer/Documents/StudioManagerScratch
 
 # lib
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
