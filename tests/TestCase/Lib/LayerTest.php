@@ -93,9 +93,9 @@ class LayerTest extends TestCase
      * @expectedException App\Exception\BadClassConfigurationException
      */
     public function testNoArgInitialization() {
-        $piece = $this->pieceRecords[0];
-        $art = $this->artRecord[0];
-        $notEntityObj = new \stdClass();
+//        $piece = $this->pieceRecords[0];
+//        $art = $this->artRecord[0];
+//        $notEntityObj = new \stdClass();
         
         $this->expectExceptionMessageRegExp('/the name of the expected entity/');
         $layer = new Layer([], null);
@@ -142,7 +142,7 @@ class LayerTest extends TestCase
     /**
      * test name property
      */
-    public function testName() {
+    public function testLayerName() {
         $record = $this->pieceRecords[0];
         
         $layer = new Layer([], 'edition');
@@ -268,14 +268,18 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
         
         $results = $layer->filter('number', 4); // good find
-        $this->assertTrue(is_array($results));
+        $this->assertTrue(is_array($results), 
+				'A valid search for \'number\' = 4 failed');
         $match = array_pop($results);
-        $this->assertEquals(4, $match->number);
+        $this->assertEquals(4, $match->number, 
+				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
         
-        $results = $layer->filter('number', '4'); // good val, casting mismatch
+        $results = $layer->filter('number', '4', 
+				'A valid search for \'number\' = \'4\' failed'); // good val, casting mismatch
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
-        $this->assertEquals(4, $match->number);
+        $this->assertEquals(4, $match->number, 
+				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
         
         $results = $layer->filter('number', 9000); // val doesn't exist
         $this->assertTrue(is_array($results));
