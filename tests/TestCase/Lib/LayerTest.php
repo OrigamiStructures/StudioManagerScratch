@@ -146,13 +146,13 @@ class LayerTest extends TestCase
         $record = $this->pieceRecords[0];
         
         $layer = new Layer([], 'edition');
-        $this->assertEquals('edition', $layer->name());
+        $this->assertEquals('edition', $layer->layerName());
         
         $layer = new Layer([$record], 'edition');
-        $this->assertEquals('piece', $layer->name());
+        $this->assertEquals('piece', $layer->layerName());
         
         $layer = new Layer([$record]);
-        $this->assertEquals('piece', $layer->name());
+        $this->assertEquals('piece', $layer->layerName());
     }
     
     /**
@@ -197,10 +197,10 @@ class LayerTest extends TestCase
     public function testHas() {
         $layer = new Layer($this->fivePieces);
 
-        $this->assertTrue($layer->has(965));
-        $this->assertTrue($layer->has('962'));
-        $this->assertFalse($layer->has(3));
-        $this->assertFalse($layer->has('something wrong'));
+        $this->assertTrue($layer->hasId(965));
+        $this->assertTrue($layer->hasId('962'));
+        $this->assertFalse($layer->hasId(3));
+        $this->assertFalse($layer->hasId('something wrong'));
     }
     
     public function testLoadUsingId() {

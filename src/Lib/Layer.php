@@ -84,7 +84,7 @@ class Layer {
      * @param string $id
      * @return boolean
      */
-    public function has($id) {
+    public function hasId($id) {
         return isset($this->_entities[$id]);
     }
     
@@ -93,7 +93,7 @@ class Layer {
 	 * 
 	 * @return string
 	 */
-    public function name() {
+    public function layerName() {
         return $this->_layer;
     }
     
@@ -153,7 +153,7 @@ class Layer {
         // arbitrary exposed value on $type, assumed to be an id
         if (!in_array($type, $types + $this->_entityProperties) && empty($options)) {
             $id = $type;
-            if (!$this->has($id)) {
+            if (!$this->hasId($id)) {
                 return null;
             }
             return $this->_entities[$id];

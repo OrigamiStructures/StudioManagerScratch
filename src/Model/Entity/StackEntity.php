@@ -31,7 +31,7 @@ class StackEntity extends Entity {
     public function exists($layer, $id) {
         $property = $this->get($layer);
         if ($property) {
-            return $property->has($id);
+            return $property->hasId($id);
         }
         return FALSE;
     }
