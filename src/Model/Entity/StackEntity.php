@@ -198,8 +198,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
         } else {
             $type = $options;
         }
-        $argObj = null;
-        return $property->load($type, $opts, $argObj);
+
+		return $property->load($type, $opts, $argObj);
     }
 	
 	public function keyedList($key, $value, $type, $options) {

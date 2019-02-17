@@ -177,19 +177,22 @@ class Layer implements LayerAccessInterface {
      * @return array The entities that passed the test
      */
     public function load($type, $options = [], $argObj = null) {
+//		var_dump(func_get_args());
 		if(!is_object($argObj)) {
 			$argObj = $this->accessArgs();
 		}
-        $types = ['all', 'first', ''];
-		if ($types === 'all') {
+
+		if ($type === 'all') {
 			$argObj->limit(-1);
 		}
-		if ($types === 'first') {
+		if ($type === 'first') {
 			$argObj->limit(1);
 		}
+		
+//		$this->_entityProperties[];
 
         // arbitrary exposed value on $type, assumed to be an id
-        if (!in_array($type, $types + $this->_entityProperties) && empty($options)) {
+        if ($type !== '' && !in_array($type, $this->_entityProperties) && empty($options)) {
             $id = $type;
             if (!$this->hasId($id)) {
                 return null;
@@ -199,14 +202,14 @@ class Layer implements LayerAccessInterface {
         
         // property name on type and some value on options will filter to prop = value 
 		// or in_array(prop, value-array) 
-        if (in_array($type, $this->_entityProperties)) {
+        if (in_array($type, $this->_entityProperties) && $type !== '') {
             return $this->filter($type, $options);
         }
         
-        // if not a listed type, not a valid argument
-        if (!in_array($type, $types)) {
-            return [];
-        }
+//        // if not a listed type, not a valid argument
+//        if ($type !== '') {
+//            return [];
+//        }
         
         // left with one of the three $types
         if ($type === 'all' || $argObj->valueOf('limit') === -1) {

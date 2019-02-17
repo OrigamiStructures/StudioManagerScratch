@@ -190,7 +190,8 @@ class StackSetTest extends TestCase {
      * @return void
      */
     public function testLoad() {
-        $formats = $this->StackEntities->load('formats', 5);
+		$argObj = $this->StackEntities->accessArgs();
+        $formats = $this->StackEntities->load('formats', 5, $argObj);
 //		var_dump($formats);
 		$format = array_shift($formats);
 //		var_dump($format);
@@ -198,32 +199,39 @@ class StackSetTest extends TestCase {
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
 				. 'did not return an entity with an expected property value.');
 
-        $formats = $this->StackEntities->load('formats', [8]);
+		$argObj = $this->StackEntities->accessArgs();
+        $formats = $this->StackEntities->load('formats', [8], $argObj);
 		$format = array_shift($formats);
         $this->assertStringStartsWith('Digital output', $format->description,
 				'loading a valid format by array value ...->load(\'formats\', [8])... '
 				. 'did not return an entity with an expected property value.');
 
-        $pieces = $this->StackEntities->load('pieces', ['quantity', 140]);
+		$argObj = $this->StackEntities->accessArgs();
+        $pieces = $this->StackEntities->load('pieces', ['quantity', 140], $argObj);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
 				. 'did not return an entity with an expected property value.');
 
-        $this->assertEquals(21, count($this->StackEntities->load('pieces', 'all')),
+		$argObj = $this->StackEntities->accessArgs()->limit('all');
+        $this->assertEquals(21, count($this->StackEntities->load('pieces', '', $argObj)),
 				'loading using \'all\' did not return the expected number of entities');
 
-        $this->assertEquals(4, count($this->StackEntities->load('formats', ['all'])),
+		$argObj = $this->StackEntities->accessArgs()->limit('all');
+        $this->assertEquals(4, count($this->StackEntities->load('formats', [''], $argObj)),
 				'loading using [\'all\'] did not return the expected number of entities');
 
-        $this->assertEquals(2, count($this->StackEntities->load('pieces', 'first')),
+		$argObj = $this->StackEntities->accessArgs()->limit('first');
+        $this->assertEquals(2, count($this->StackEntities->load('pieces', '', $argObj)),
 				'loading using \'first\' did not return one entity');
 
-        $this->assertEquals(2, count($this->StackEntities->load('formats', ['first'])),
+		$argObj = $this->StackEntities->accessArgs()->limit(1);
+        $this->assertEquals(2, count($this->StackEntities->load('formats', ['first', $argObj])),
 				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search
-        $this->assertEquals(0, count($this->StackEntities->load('gizmo', ['edition_id', 8])),
+		$argObj = $this->StackEntities->accessArgs();
+        $this->assertEquals(0, count($this->StackEntities->load('gizmo', ['edition_id', 8], $argObj)),
 				'loading using an unknow layer name and a property/value search returned something '
 				. 'other than the 0 expected entities.');
     }

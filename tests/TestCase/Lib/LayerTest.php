@@ -268,10 +268,13 @@ class LayerTest extends TestCase
         
  		$simpleFirstArg = $layer->accessArgs()->limit('first');
         $this->assertEquals(1, count($layer->load('', [], $simpleFirstArg)));
+		
  		$first_with_0_dispos_arg = $layer->accessArgs()->limit('first');
-        $this->assertEquals(1, count($layer->load('', ['disposition_count', 0], $first_with_0_dispos_arg)));        
+        $this->assertEquals(1, count($layer->load('', ['disposition_count', 0], $first_with_0_dispos_arg)));  
+		
  		$first_badSearch_args = $layer->accessArgs()->limit('first');
         $this->assertEquals(0, count($layer->load('', ['boogers', 0], $first_badSearch_args)));        
+		
  		$first_with_50_dispos_arg = $layer->accessArgs()->limit(1);
         $this->assertEquals(0, count($layer->load('', ['disposition_count', 50], $first_with_50_dispos_arg)));        
     }

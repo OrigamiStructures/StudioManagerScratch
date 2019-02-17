@@ -150,13 +150,13 @@ class StackSet implements LayerAccessInterface {
 		if (is_null($layer)) {
 			return $this->_stacks;
 		}
-		if ($layer === 'first') {
+		if (is_object($argObj) && $argObj->valueOf('limit') === 1) {
 			$keys = array_keys($this->_stacks);
 			return $this->_stacks[$keys[0]];
 		}
 		$results = [];
 		foreach ($this->_stacks as $stack) {
-			$result = $stack->load($layer, $options);
+			$result = $stack->load($layer, $options, $argObj);
 			$results = array_merge($results, (is_array($result) ? $result : [$result]));
 		}
 		
