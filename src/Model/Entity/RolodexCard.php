@@ -119,7 +119,8 @@ class RolodexCard extends StackEntity {
 	 * @return boolean
 	 */
 	public function hasPrimary($type) {
-		if ($this->_flagsPrimary($type) && !empty($this->$type->load('primary', 1))) {
+		$argObj = 0;
+		if ($this->_flagsPrimary($type) && !empty($this->$type->load('primary', 1, $argObj))) {
 			return TRUE;
 		}
 		return FALSE;
@@ -138,7 +139,8 @@ class RolodexCard extends StackEntity {
 	 */
 	public function getPrimary($type, $returnStyle = WRAPPED) {
 		if ($this->_flagsPrimary($type)) {
-			$result = $this->$type->load(PRIMARY, 1);
+			$argObj = null;
+			$result = $this->$type->load(PRIMARY, 1, $argObj);
 		} else {
 			$result = [];
 		}
@@ -156,7 +158,8 @@ class RolodexCard extends StackEntity {
 	 */
 	public function getSecondary($type) {
 		if ($this->_flagsPrimary($type)) {
-			return $this->$type->load(PRIMARY, [null, 0]);
+			$argObj = null;
+			return $this->$type->load(PRIMARY, [null, 0], $argObj);
 		}
 		return [];
 	}

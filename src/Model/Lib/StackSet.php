@@ -16,7 +16,7 @@ use App\Model\Traits\LayerAccessTrait;
  *
  * @author dondrake
  */
-class StackSet /*implements LayerAccessInterface*/ {
+class StackSet implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
 	
@@ -146,7 +146,7 @@ class StackSet /*implements LayerAccessInterface*/ {
 	 * @param mixed $options
 	 * @return array
 	 */
-	public function load($layer = null, $options = []) {
+	public function load($layer = null, $options = [], $argObj = null) {
 		if (is_null($layer)) {
 			return $this->_stacks;
 		}

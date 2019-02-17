@@ -20,7 +20,7 @@ use App\Model\Traits\LayerAccessTrait;
  * 
  * @author Main
  */
-class StackEntity extends Entity /*implements LayerAccessInterface*/ {
+class StackEntity extends Entity implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
     
@@ -82,7 +82,8 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
 	 * @return Entity
 	 */
 	public function primaryEntity() {
-		$primary = $this->get($this->_primary)->load('all');
+		$allArg = $this->accessArgs()->limit('all');
+		$primary = $this->get($this->_primary)->load('', [], $allArg);
 		return array_shift($primary);
 	}
     
@@ -132,7 +133,8 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
 	public function linkedTo($layer, array $options) {
 		$property = $this->get($layer);
 		if ($property && count($options) === 2) {
-			return $property->load($options[0], $options[1]);
+			$argObj = null;
+			return $property->load($options[0], $options[1], $argObj);
 		}
 		return [];
 	}
@@ -180,7 +182,7 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
      * @param mixed $options
      * @return array
      */
-    public function load($layer, $options = []) {
+    public function load($layer, $options = [], $argObj = null) {
         $property = $this->get($layer);
         if (!$property) {
             return [];
@@ -196,8 +198,8 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
         } else {
             $type = $options;
         }
-        
-        return $property->load($type, $opts);
+        $argObj = null;
+        return $property->load($type, $opts, $argObj);
     }
 	
 	public function keyedList($key, $value, $type, $options) {

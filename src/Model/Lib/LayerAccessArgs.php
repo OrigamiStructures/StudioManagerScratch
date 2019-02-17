@@ -15,19 +15,17 @@ class LayerAccessArgs {
 
 	private $_layer = '';
 	private $_page = 1;
-	private $_limit = -1;
+	private $_limit = 0;
 	private $_property = '';
 	private $_method = '';
 	private $_conditions = []; // or we make 'dirty' a condition?
 	private $_match = TRUE;
 	// this one is a different concept? or wouldn't need condtions perhaps
 	private $_source = 'entity'; //entity or original
-	private $_params;
 	
 	private $_unlocked = TRUE;
 
 	public function __construct() {
-		$this->_params = array_keys(get_class_vars($this));
 		return $this;
 	}
 	public function layer($param) {
@@ -39,6 +37,7 @@ class LayerAccessArgs {
 		return $this;
 	}
 	public function limit($param) {
+		$param = $param === 'all' ? -1 : $param;
 		if ($this->_unlocked) $this->_limit = $param;
 		return $this;
 	}
@@ -60,9 +59,9 @@ class LayerAccessArgs {
 	}
 	
 	public function valueOf($param) {
-		$this->_unlocked = FALSE;
+//		$this->_unlocked = FALSE;
 		$property = '_' . trim($param, '_');
-		if(!in_array($property, $this->_params)) {
+		if(!isset($this->$property)) {
 			throw new BadMethodCallException("Request to get LayerFilterParams::$param. The property does not exist.");
 		}
 		return $this->$property;

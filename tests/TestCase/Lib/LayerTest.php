@@ -206,30 +206,38 @@ class LayerTest extends TestCase
     public function testLoadUsingId() {
         $layer = new Layer($this->fivePieces);
 
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load(965));
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load('962'));
-        $this->assertNull($layer->load(3));
-        $this->assertNull($layer->load('something wrong'));
+		$argObj = null;
+        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load(965, [], $argObj));
+ 		$argObj = null;
+		$this->assertInstanceOf('App\Model\Entity\Piece', $layer->load('962', [], $argObj));
+ 		$argObj = null;
+        $this->assertNull($layer->load(3, [], $argObj));
+ 		$argObj = null;
+        $this->assertNull($layer->load('something wrong', [], $argObj));
     }
     
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         
-        $results = $layer->load('number', 4); // good find
+ 		$argObj = null;
+        $results = $layer->load('number', 4, $argObj); // good find
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
-        $results = $layer->load('number', '4'); // good val, casting mismatch
+ 		$argObj = null;
+        $results = $layer->load('number', '4', $argObj); // good val, casting mismatch
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
-        $results = $layer->load('number', 9000); // val doesn't exist
+ 		$argObj = null;
+        $results = $layer->load('number', 9000, $argObj); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
-        $results = $layer->load('boogers', 3); // property doesn't exist
+ 		$argObj = null;
+        $results = $layer->load('boogers', 3, $argObj); // property doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
     }
@@ -237,26 +245,35 @@ class LayerTest extends TestCase
 	public function testloadUsingPropertyArray() {
         $layer = new Layer($this->pieceRecords);
         
-        $four = $layer->load('number', 4);
-        $three = $layer->load('number', 3);
-        $results = $layer->load('number', [4,3]); // good find
+ 		$argObj = null;
+        $four = $layer->load('number', 4, $argObj);
+ 		$argObj = null;
+        $three = $layer->load('number', 3, $argObj);
+ 		$argObj = null;
+        $results = $layer->load('number', [4,3], $argObj); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
 	}
     
     public function testGetUsingAll() {
         $layer = new Layer($this->fivePieces);
         
-        $this->assertEquals(5, count($layer->load('all')));
-        $this->assertEquals(5, count($layer->load('all', ['id', 12])));        
+ 		$argObj = null;
+        $this->assertEquals(5, count($layer->load('all', [], $argObj)));
+ 		$argObj = null;
+        $this->assertEquals(5, count($layer->load('all', ['id', 12], $argObj)));        
     }
     
     public function testGetUsingFirst() {
         $layer = new Layer($this->fivePieces);
         
-        $this->assertEquals(1, count($layer->load('first')));
-        $this->assertEquals(1, count($layer->load('first', ['disposition_count', 0])));        
-        $this->assertEquals(0, count($layer->load('first', ['boogers', 0])));        
-        $this->assertEquals(0, count($layer->load('first', ['disposition_count', 50])));        
+ 		$argObj = null;
+        $this->assertEquals(1, count($layer->load('first', [], $argObj)));
+ 		$argObj = null;
+        $this->assertEquals(1, count($layer->load('first', ['disposition_count', 0], $argObj)));        
+ 		$argObj = null;
+        $this->assertEquals(0, count($layer->load('first', ['boogers', 0], $argObj)));        
+ 		$argObj = null;
+        $this->assertEquals(0, count($layer->load('first', ['disposition_count', 50], $argObj)));        
     }
     
     /**

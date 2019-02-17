@@ -173,10 +173,20 @@ class Layer implements LayerAccessInterface {
      * 
      * @param string $type 'all', 'first', an ID, a property name
 	 * @param array $options Search arguments
+	 * @param LayerAccessArgs a parameters object
      * @return array The entities that passed the test
      */
-    public function load($type, $options = []) {
-        $types = ['all', 'first'];
+    public function load($type, $options = [], $argObj = null) {
+		if(!is_object($argObj)) {
+			$argObj = $this->accessArgs();
+		}
+        $types = ['all', 'first', ''];
+		if ($types === 'all') {
+			$argObj->limit(-1);
+		}
+		if ($types === 'first') {
+			$argObj->limit(1);
+		}
 
         // arbitrary exposed value on $type, assumed to be an id
         if (!in_array($type, $types + $this->_entityProperties) && empty($options)) {
@@ -199,11 +209,11 @@ class Layer implements LayerAccessInterface {
         }
         
         // left with one of the three $types
-        if ($type === 'all') {
+        if ($type === 'all' || $argObj->valueOf('limit') === -1) {
              return $this->_entities;
          }
             
-        if ($type === 'first') {
+        if ($type === 'first' || $argObj->valueOf('limit') === 1) {
             if (empty($options)) {
                 return $this->_entities[$this->IDs()[0]];
             }
@@ -260,7 +270,8 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		$result = [];
-		$data = $this->load($type, $options);
+		$argObj = null;
+		$data = $this->load($type, $options, $argObj);
 		foreach ($data as $datum) {
 			$result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
 		}

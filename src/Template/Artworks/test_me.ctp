@@ -33,12 +33,14 @@ if (isset($stacks)) {
 	foreach ($stacks->all() as $stack) {
 		
 		$artwork = $stack->primaryEntity();
-		$joins = new Layer($stack->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
+		$argObj = null;
+		$joins = new Layer($stack->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()], $argObj));
 		
 		// Layer object's __contruct() accept an array of entities 
 		// and that's what $stack->load( ) returns. 
 		// Layer turns an array of entities into a quasi-db tool.
 		// See \App\Lib\Layer
+		$argObj = null;
 		$pieces = new Layer(
 				// load() is the primary 'search' method in an entity 
 				// that extends the StackEntity class.
@@ -47,20 +49,27 @@ if (isset($stacks)) {
 				$stack->load('pieces', ['id', 
 					// distinct() is a Layer class method that returns no duplicates.
 					// $joins was defined on line 36 as a Layer object.
-					$joins->distinct('piece_id')])
+					$joins->distinct('piece_id')], $argObj)
 			);
-		$formats = new Layer($stack->load('formats', ['id', $pieces->distinct('format_id')]));		
-		$editions = new Layer($stack->load('editions', ['id', $formats->distinct('edition_id')]));
+		$argObj = null;
+		$formats = new Layer($stack->load('formats', ['id', $pieces->distinct('format_id')], $argObj));	
+		$argObj = null;
+		$editions = new Layer($stack->load('editions', ['id', $formats->distinct('edition_id')], $argObj));
 		
         echo "<h1>{$artwork->title}</h1>";
-        foreach ($editions->load('all') as $edition) {
+		$allEditionsArg = $editions->accessArgs()->limit('all');
+        foreach ($editions->load('', [], $allEditionsArg) as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-            foreach ($formats->load('all') as $format) {
+			$argObj = null;
+            foreach ($formats->load('all', [], $argObj) as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
-				foreach ($pieces->load('format_id', $format->id) as $piece) {
+				$argObj = null;
+				foreach ($pieces->load('format_id', $format->id, $argObj) as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
-					foreach ($joins->load('piece_id', $piece->id) as $link) {
-						echo "<li>{$dispLayer->load($link->disposition_id)->displayTitle}</li>";
+					$argObj = null;
+					foreach ($joins->load('piece_id', $piece->id, $argObj) as $link) {
+						$argObj = null;
+						echo "<li>{$dispLayer->load($link->disposition_id, [], $argObj)->displayTitle}</li>";
 					}
 					echo '</ul></li></ul>';
                }
@@ -71,19 +80,25 @@ if (isset($stacks)) {
 //die;
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
-    foreach ($dispLayer->load('all') as $dispId => $disposition) {
+	$argObj = null;
+    foreach ($dispLayer->load('all', [], $argObj) as $dispId => $disposition) {
 		
-		$joins = new Layer($stacks->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()]));
-		$pieces = new Layer($stacks->load('pieces', ['id', $joins->distinct('piece_id')]));
+		$argObj = null;
+		$joins = new Layer($stacks->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()], $argObj));
+		$argObj = null;
+		$pieces = new Layer($stacks->load('pieces', ['id', $joins->distinct('piece_id')], $argObj));
 				
         echo '<h3>' . $disposition->displayTitle . '</h3><ul>';
         foreach ($pieces->sort('format_id') as $piece) {
 			
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			
-			$format = $stack->load('formats', ['id', $piece->format_id])[$piece->format_id];	
-			$edition = $stack->load('editions', ['id', $piece->edition_id])[$piece->edition_id];
-			$artwork = $stack->load('artwork', ['id', $edition->artwork_id])[$edition->artwork_id];
+			$argObj = null;
+			$format = $stack->load('formats', ['id', $piece->format_id], $argObj)[$piece->format_id];	
+			$argObj = null;
+			$edition = $stack->load('editions', ['id', $piece->edition_id], $argObj)[$piece->edition_id];
+			$argObj = null;
+			$artwork = $stack->load('artwork', ['id', $edition->artwork_id], $argObj)[$edition->artwork_id];
 			
             echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 

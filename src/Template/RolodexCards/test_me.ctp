@@ -16,7 +16,8 @@ use Cake\Collection\Collection;
 <?php
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
-	$setMembers = $cards->load('member',['member_type', $type]);
+	$argObj = null;
+	$setMembers = $cards->load('member',['member_type', $type], $argObj);
 	foreach($setMembers as $member) :
 
 		echo "<p>{$member->getName(LAST_FIRST)}</p>"; 
@@ -61,7 +62,8 @@ foreach($cards->all() as $card) {
 	echo $this->Html->nestedList($result);
 	
 	$options = [];
-	foreach($cards->load('addresses', ['all']) as $address) {
+	$argObj = null;
+	foreach($cards->load('addresses', ['all'], $argObj) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}
 	
