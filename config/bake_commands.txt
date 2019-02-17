@@ -33,7 +33,7 @@ bin/cake bake.bake test ModLib StackSet
 --------------------------------------------------------------------
 cd Library/WebServer/Documents/StudioManagerScratch
 
-# lib
+# App\Lib
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestsTest.php
@@ -43,12 +43,20 @@ vendor/bin/phpunit test tests/TestCase/Lib/SystemStateTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
+# Model\Lib
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 # behaviors
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
 # entity
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
+
+Stack/Layer suite
+--------------------------------------------------------------------
+vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
