@@ -9,8 +9,8 @@
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
 		<?php //$pieceLists = [];
-		$argObj = null;
-		foreach ($dispLayer->load('all', [], $argObj) as $disposition): //Layer::load
+		$allInLayer = $dispLayer->accessArgs()->limit('all');
+		foreach ($dispLayer->load('', [], $allInLayer) as $disposition): //Layer::load
 //			$pieceLists[$disposition->id] = 
 //				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
 			$properties = array_intersect_key($disposition->properties(), array_flip($columns));

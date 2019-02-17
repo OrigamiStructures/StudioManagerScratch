@@ -57,11 +57,10 @@ if (isset($stacks)) {
 		$editions = new Layer($stack->load('editions', ['id', $formats->distinct('edition_id')], $argObj));
 		
         echo "<h1>{$artwork->title}</h1>";
-		$allEditionsArg = $editions->accessArgs()->limit('all');
-        foreach ($editions->load('', [], $allEditionsArg) as $edition) {
+		$allInLayer = $editions->accessArgs()->limit('all');
+        foreach ($editions->load('', [], $allInLayer) as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-			$argObj = null;
-            foreach ($formats->load('all', [], $argObj) as $format) {
+            foreach ($formats->load('', [], $allInLayer) as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
 				$argObj = null;
 				foreach ($pieces->load('format_id', $format->id, $argObj) as $piece) {
@@ -80,8 +79,8 @@ if (isset($stacks)) {
 //die;
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
-	$argObj = null;
-    foreach ($dispLayer->load('all', [], $argObj) as $dispId => $disposition) {
+
+	foreach ($dispLayer->load('', [], $allInLayer) as $dispId => $disposition) {
 		
 		$argObj = null;
 		$joins = new Layer($stacks->load('dispositionsPieces', ['disposition_id', $dispLayer->IDs()], $argObj));

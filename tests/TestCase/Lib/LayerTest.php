@@ -257,10 +257,10 @@ class LayerTest extends TestCase
     public function testGetUsingAll() {
         $layer = new Layer($this->fivePieces);
         
- 		$argObj = null;
-        $this->assertEquals(5, count($layer->load('all', [], $argObj)));
- 		$argObj = null;
-        $this->assertEquals(5, count($layer->load('all', ['id', 12], $argObj)));        
+ 		$simpleAllArg = $layer->accessArgs()->limit('all');
+        $this->assertEquals(5, count($layer->load('', [], $simpleAllArg)));
+ 		$all_ID_equal_12 = $layer->accessArgs()->limit('all');
+        $this->assertEquals(5, count($layer->load('', ['id', 12], $all_ID_equal_12)));        
     }
     
     public function testGetUsingFirst() {
