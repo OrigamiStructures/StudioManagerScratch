@@ -221,12 +221,12 @@ class StackSetTest extends TestCase {
         $this->assertEquals(4, count($this->StackEntities->load('formats', [''], $argObj)),
 				'loading using [\'all\'] did not return the expected number of entities');
 
-		$argObj = $this->StackEntities->accessArgs()->limit('first');
+		$argObj = $this->StackEntities->accessArgs()->limit('first')->property('pieces');
         $this->assertEquals(2, count($this->StackEntities->load('pieces', '', $argObj)),
 				'loading using \'first\' did not return one entity');
 
-		$argObj = $this->StackEntities->accessArgs()->limit(1);
-        $this->assertEquals(2, count($this->StackEntities->load('formats', ['first', $argObj])),
+		$argObj = $this->StackEntities->accessArgs()->limit(1)->property('formats');
+        $this->assertEquals(2, count($this->StackEntities->load('formats', [''], $argObj)),
 				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search

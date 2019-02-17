@@ -150,7 +150,7 @@ class StackSet implements LayerAccessInterface {
 		if (is_null($layer)) {
 			return $this->_stacks;
 		}
-		if (is_object($argObj) && $argObj->valueOf('limit') === 1) {
+		if (is_object($argObj) && $argObj->valueOf('limit') === 1 && $argObj->valueOf('property') === '') {
 			$keys = array_keys($this->_stacks);
 			return $this->_stacks[$keys[0]];
 		}

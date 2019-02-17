@@ -62,8 +62,8 @@ foreach($cards->all() as $card) {
 	echo $this->Html->nestedList($result);
 	
 	$options = [];
-	$allAddressesArg = $cards->accessArgs();
-	foreach($cards->load('addresses', [''], $argObj) as $address) {
+	$allAddressesArg = $cards->accessArgs()->limit('all');
+	foreach($cards->load('addresses', [''], $allAddressesArg) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}
 	
