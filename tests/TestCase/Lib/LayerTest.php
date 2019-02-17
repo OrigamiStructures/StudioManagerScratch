@@ -266,14 +266,14 @@ class LayerTest extends TestCase
     public function testGetUsingFirst() {
         $layer = new Layer($this->fivePieces);
         
- 		$argObj = null;
-        $this->assertEquals(1, count($layer->load('first', [], $argObj)));
- 		$argObj = null;
-        $this->assertEquals(1, count($layer->load('first', ['disposition_count', 0], $argObj)));        
- 		$argObj = null;
-        $this->assertEquals(0, count($layer->load('first', ['boogers', 0], $argObj)));        
- 		$argObj = null;
-        $this->assertEquals(0, count($layer->load('first', ['disposition_count', 50], $argObj)));        
+ 		$simpleFirstArg = $layer->accessArgs()->limit('first');
+        $this->assertEquals(1, count($layer->load('', [], $simpleFirstArg)));
+ 		$first_with_0_dispos_arg = $layer->accessArgs()->limit('first');
+        $this->assertEquals(1, count($layer->load('', ['disposition_count', 0], $first_with_0_dispos_arg)));        
+ 		$first_badSearch_args = $layer->accessArgs()->limit('first');
+        $this->assertEquals(0, count($layer->load('', ['boogers', 0], $first_badSearch_args)));        
+ 		$first_with_50_dispos_arg = $layer->accessArgs()->limit(1);
+        $this->assertEquals(0, count($layer->load('', ['disposition_count', 50], $first_with_50_dispos_arg)));        
     }
     
     /**

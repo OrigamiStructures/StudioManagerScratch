@@ -38,6 +38,7 @@ class LayerAccessArgs {
 	}
 	public function limit($param) {
 		$param = $param === 'all' ? -1 : $param;
+		$param = $param === 'first' ? 1 : $param;
 		if ($this->_unlocked) $this->_limit = $param;
 		return $this;
 	}
