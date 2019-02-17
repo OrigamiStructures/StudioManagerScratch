@@ -15,14 +15,14 @@ class StackEntityTest extends TestCase
 {
 
     /**
-     * Test subject
+     * The StackEntity for testing
      *
      * @var \App\Model\Entity\StackEntity
      */
     public $StackEntity;
 
     /**
-     * Test subject
+     * The table object
      *
      * @var \App\Model\Table\ArtStacksTable
      */
@@ -41,6 +41,7 @@ class StackEntityTest extends TestCase
         'app.pieces',
         'app.dispositions_pieces'
     ];
+	
     /**
      * setUp method
      *
@@ -94,7 +95,7 @@ class StackEntityTest extends TestCase
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
 				. 'did not return an entity with an expected property value.');
-
+		
         $format = $this->StackEntity->load('formats', [8]);
         $this->assertStringStartsWith('Digital output', $format->description,
 				'loading a valid format by array value ...->load(\'formats\', [8])... '
