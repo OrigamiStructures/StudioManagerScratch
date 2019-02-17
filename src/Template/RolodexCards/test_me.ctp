@@ -30,7 +30,6 @@ endforeach;
 <?php
 
 $result = [];
-	osd($cards->IDs('member'));
 foreach($cards->all() as $card) {
 	
 	
@@ -57,9 +56,7 @@ foreach($cards->all() as $card) {
 		'Secondary Addresses' => $secondaryA,
 		'Secondary Contacts' => $secondaryC,
 	];
-	
-	osd($card->addresses->filter('state', 'CA'));
-	
+		
 }
 	echo $this->Html->nestedList($result);
 	
@@ -71,9 +68,6 @@ foreach($cards->all() as $card) {
 	echo $this->Form->radio('address', $options);
 	echo $this->Form->select('address', $options);
 	
-	osd($cards->load('member_of', 'all'));
-		osd($cards->load('has_members', 'all'));
-
 	
 //	osd($card->getPrimary(ADDRESS), 'PRIMARY ADDRESS ' . $card->getName());
 //	osd($card->getSecondary(ADDRESS), 'SECONDARY ADDRESS ' . $card->getName());
