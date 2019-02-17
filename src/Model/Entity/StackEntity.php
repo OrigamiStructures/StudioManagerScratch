@@ -5,6 +5,8 @@ use Cake\ORM\Entity;
 use App\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use App\Interfaces\LayerAccessInterface;
+use App\Model\Traits\LayerAccessTrait;
 
 /**
  * Stacks
@@ -18,7 +20,9 @@ use Cake\Utility\Hash;
  * 
  * @author Main
  */
-class StackEntity extends Entity {
+class StackEntity extends Entity /*implements LayerAccessInterface*/ {
+	
+	use LayerAccessTrait;
     
     /**
      * Is the id a member of the set
@@ -36,53 +40,6 @@ class StackEntity extends Entity {
         return FALSE;
     }
     
-    /**
-     * Get entities from one of the layers
-     * 
-     * This call supports all the `get` methods as Layer, but it requires a 
-     * new first argument naming the layer to operate on. The second argument 
-     * represents the signature for the Layer::get(). If your chosen Layer 
-     * search has one arg, you may pass it exposed as the second arg or in 
-     * an array.
-     * 
-     * If your Layer call has more than one argument, pass it as an array with 
-     * two elements that match the arguments of your Layer::get()
-     * 
-     * <code>
-     * get('editions', [312]);  //edition->id = 312
-     * get('editions', 312);  //edition->id = 312
-     * get('artworks', ['title', 'Yosemite']); //atwork->title = 'Yosemite'
-     * get('pieces', ['all']);  //return all stored entities
-     * get('pieces', 'all');  //return all stored entities
-     * get('pieces', 'first); //return the first stored entity
-     * </code>
-     * 
-     * @todo overlap with Entity method. Resolve our naming
-     * 
-     * @param string $layer
-     * @param mixed $options
-     * @return array
-     */
-    public function load($layer, $options = []) {
-        $property = $this->get($layer);
-        if (!$property) {
-            return [];
-        }
-
-		//arrange params for call to layer->get()
-        $opts = [];
-        if (is_array($options)) {
-            $type = array_shift($options);
-            if (!empty($options)) {
-                $opts = array_shift($options);
-            }
-        } else {
-            $type = $options;
-        }
-        
-        return $property->load($type, $opts);
-    }
-	
     /**
      * Get the count of entities in a layer
      * 
@@ -130,21 +87,6 @@ class StackEntity extends Entity {
 	}
     
     /**
-     * Get all the distinct values form the properties in a layer's entities
-     * 
-     * @param string $layer
-     * @param string $property
-     * @return array
-     */
-    public function distinct($layer, $property) {
-        $object = $this->get($layer);
-        if ($object) {
-            return $object->distinct($property);
-        }
-        return [];
-    }
-    
-    /**
      * Get the ids of all the entities in a layer
      * 
      * @param string $layer
@@ -158,21 +100,6 @@ class StackEntity extends Entity {
         return [];
     }
     
-    /**
-     * In a layer, get the entities linked to a specified record
-     * 
-     * @param string $layer
-     * @param array $options
-     * @return array
-     */
-    public function linkedTo($layer, array $options) {
-        $property = $this->get($layer);
-        if ($property && count($options) === 2) {
-            return $property->load($options[0], $options[1]);
-        }
-        return [];
-    }
- 
     /**
      * Adds Layer property empty checks to other native checks
      * 
@@ -192,7 +119,99 @@ class StackEntity extends Entity {
         }
         return parent::isEmpty($property);
     }
-    
+	
+// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
+	
+	/**
+	 * In a layer, get the entities linked to a specified record
+	 * 
+	 * @param string $layer
+	 * @param array $options
+	 * @return array
+	     */
+	public function linkedTo($layer, array $options) {
+		$property = $this->get($layer);
+		if ($property && count($options) === 2) {
+			return $property->load($options[0], $options[1]);
+		}
+		return [];
+	}
+
+
+	/**
+	 * Get all the distinct values form the properties in a layer's entities
+	 * 
+	 * @param string $layer
+	 * @param string $property
+	 * @return array
+	     */
+	public function distinct($layer, $property) {
+		$object = $this->get($layer);
+		if ($object) {
+			return $object->distinct($property);
+		}
+		return [];
+	}
+
+    /**
+     * Get entities from one of the layers
+     * 
+     * This call supports all the `get` methods as Layer, but it requires a 
+     * new first argument naming the layer to operate on. The second argument 
+     * represents the signature for the Layer::get(). If your chosen Layer 
+     * search has one arg, you may pass it exposed as the second arg or in 
+     * an array.
+     * 
+     * If your Layer call has more than one argument, pass it as an array with 
+     * two elements that match the arguments of your Layer::get()
+     * 
+     * <code>
+     * get('editions', [312]);  //edition->id = 312
+     * get('editions', 312);  //edition->id = 312
+     * get('artworks', ['title', 'Yosemite']); //atwork->title = 'Yosemite'
+     * get('pieces', ['all']);  //return all stored entities
+     * get('pieces', 'all');  //return all stored entities
+     * get('pieces', 'first); //return the first stored entity
+     * </code>
+     * 
+     * @todo overlap with Entity method. Resolve our naming
+     * 
+     * @param string $layer
+     * @param mixed $options
+     * @return array
+     */
+    public function load($layer, $options = []) {
+        $property = $this->get($layer);
+        if (!$property) {
+            return [];
+        }
+
+		//arrange params for call to layer->get()
+        $opts = [];
+        if (is_array($options)) {
+            $type = array_shift($options);
+            if (!empty($options)) {
+                $opts = array_shift($options);
+            }
+        } else {
+            $type = $options;
+        }
+        
+        return $property->load($type, $opts);
+    }
+	
+	public function keyedList($key, $value, $type, $options) {
+		;
+	}
+	
+	public function filter($property, $value) {
+		;
+	}
+	
+// </editor-fold>
+
+
+	    
     /**
      * Pass through for 'set' to handle Layer type columns
      * 

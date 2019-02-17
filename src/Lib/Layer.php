@@ -5,6 +5,8 @@ use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
+use App\Interfaces\LayerAccessInterface;
+use App\Model\Traits\LayerAccessTrait;
 
 /**
  * StackLayer
@@ -18,9 +20,10 @@ use App\Exception\BadClassConfigurationException;
  *
  * @author Main
  */
-class Layer {
+class Layer implements LayerAccessInterface {
     
     use ConventionsTrait;
+	use LayerAccessTrait;
     
     /**
      * The lower case, singular name of this layer (matches the entity type)
@@ -123,7 +126,31 @@ class Layer {
              }, TRUE);
         return $result;
     }
-    
+	
+//	public function functionName($param) {
+//		
+//		
+//		$args = (new LayerFilterParms())
+//				->layer('addresses')
+//				->property('state')
+//				->conditions(['CA']);
+//		
+//		// to get the values out
+//		$value = $args->valueOf('conditions');
+//		
+//		$result = $stacks->load($args);
+//				
+//		$args = [
+//			'layer' => '',
+//			'page' => 1,
+//			'limit' => -1,
+//			'property' => '',
+//			'method' => '',
+//			'conditions' => [],
+//			'match' => TRUE,
+//		];
+//	}
+	
     /**
      * The StackLayer's version of a find() 
      * 
@@ -144,8 +171,9 @@ class Layer {
 	 * 
 	 * @todo How about making a 'not' type search? ('not', ['edition_id', 455])
      * 
-     * @param string $id
-     * @return Entity
+     * @param string $type 'all', 'first', an ID, a property name
+	 * @param array $options Search arguments
+     * @return array The entities that passed the test
      */
     public function load($type, $options = []) {
         $types = ['all', 'first'];
@@ -206,6 +234,40 @@ class Layer {
 		return null;
 	}
 	
+	/**
+	 * Get a key => value map from some or all of the stored entities
+	 * 
+	 * Filtering is performed by Layer::load() (see the docs) 
+	 * $key must be a visible property of the entities
+	 * $value must be either a visible property or a method that needs no args
+	 * 
+	 * @param string $key The property to use for the result array keys
+	 * @param string $value The property or method to provide the result values
+	 * @param string $type First arg passed to $this->load() ('all' or 'first')
+	 * @param array $options Search conditions passed to $this->load()
+	 * @return array 
+	 */
+	public function keyedList($key, $value, $type = 'all', $options =[]) {
+		
+		$validKey = $this->_verifyProperty($key);
+		$valueIsProperty = $validValue = $this->_verifyProperty($value);
+		if (!$valueIsProperty) {
+			$valueIsMethod = $validValue = method_exists($this->className(), $value);
+		}
+		
+		if(!$validKey || !$validValue) {
+			return [];
+		}
+		
+		$result = [];
+		$data = $this->load($type, $options);
+		foreach ($data as $datum) {
+			$result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
+		}
+		
+		return $result;
+	}
+	
     /**
      * Get an array of the IDs of the stored entities
      * 
@@ -226,7 +288,7 @@ class Layer {
              }, []);
         return array_keys($asKeys);
     }
-    
+	
     /**
      * Get the records with a matching foreign key value
      * 
@@ -261,12 +323,12 @@ class Layer {
      * <code>
      *  $formats->filter('title', 'Boxed Set');
      *  $pieces->filter('number', 12);
-	 *  $pieces->filter('number', [6, 8, 10);
+	 *  $pieces->filter('number', [6, 8, 10]);
      * </code>
      * 
-     * @param type $property
-     * @param type $value
-     * @return array
+     * @param string $property The property to examine
+     * @param mixed $value The value or array of values to search for
+     * @return array An array of entities that passed the test
      */
     public function filter($property, $value) {
         if (!$this->_verifyProperty($property)) {
@@ -278,7 +340,7 @@ class Layer {
 					return in_array($entity->$property, $value);
 				}
                 return $entity->$property == $value;
-            })->toArray();
+            })->toArray(); 
         return $results;
     }
     
@@ -311,6 +373,8 @@ class Layer {
 
     /**
      * Does the $property exist in this entity?
+	 * 
+	 * This checks against visible properties
      * 
      * @param string $property
      * @return boolean
@@ -386,3 +450,4 @@ class Layer {
 // </editor-fold>
     
 }
+
