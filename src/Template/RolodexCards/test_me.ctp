@@ -16,8 +16,8 @@ use Cake\Collection\Collection;
 <?php
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
-	$argObj = null;
-	$setMembers = $cards->load('member',['member_type', $type], $argObj);
+	$member_type_to_type_match = $cards->accessArgs()->property('member_type');
+	$setMembers = $cards->load('member',['', $type], $member_type_to_type_match);
 	foreach($setMembers as $member) :
 
 		echo "<p>{$member->getName(LAST_FIRST)}</p>"; 

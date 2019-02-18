@@ -190,19 +190,28 @@ class Layer implements LayerAccessInterface {
         // property name on type and some value on options will filter to prop = value 
 		// or in_array(prop, value-array) 
         if (
-//				empty($options) &&
-				(in_array($type, $this->_entityProperties) ||
-				in_array($argObj->valueOf('property'), $this->_entityProperties)) &&
-				$type !== '') {
+				// conditions after removing all/first
+				(in_array($type, $this->_entityProperties) && $type !== '') || 
+				
+				// condition while transitioning 'property' into argObj
+				(
+					is_object($argObj) && 
+					$argObj->valueOf('property') && $type === '' && //empty($options) &&
+					in_array($argObj->valueOf('property'), $this->_entityProperties)
+				)
+				) {
+			if(is_object($argObj)) {
+				$type = $argObj->valueOf('property') ? $argObj->valueOf('property') : $type;
+			}
             return $this->filter($type, $options);
         }
         
         // left with one of the three $types
-        if ($type === 'all' || $argObj->valueOf('limit') === -1) {
+        if ($type === 'all' || (is_object($argObj) && $argObj->valueOf('limit') === -1)) {
              return $this->_entities;
          }
             
-        if ($type === 'first' || $argObj->valueOf('limit') === 1) {
+        if ($type === 'first' || (is_object($argObj) && $argObj->valueOf('limit') === 1)) {
             if (empty($options)) {
                 return $this->_entities[$this->IDs()[0]];
             }

@@ -212,32 +212,32 @@ class LayerTest extends TestCase
 		$this->assertInstanceOf('App\Model\Entity\Piece', $layer->load('962', [], $argObj));
  		$argObj = null;
         $this->assertNull($layer->load(3, [], $argObj));
- 		$argObj = null;
+ 		$bad_property_or_id_arg = $layer->accessArgs();
         $this->assertNull($layer->load('something wrong', [], $argObj));
     }
     
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         
- 		$argObj = $layer->accessArgs();
-        $results = $layer->load('number', 4, $argObj); // good find
+ 		$number_is_4_arg = $layer->accessArgs()->property('number');
+        $results = $layer->load('', 4, $number_is_4_arg); // good find
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
- 		$argObj = $layer->accessArgs();
-        $results = $layer->load('number', '4', $argObj); // good val, casting mismatch
+ 		$number_is_4_arg = $layer->accessArgs()->property('number');
+        $results = $layer->load('', '4', $number_is_4_arg); // good val, casting mismatch
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
- 		$argObj = $layer->accessArgs();
-        $results = $layer->load('number', 9000, $argObj); // val doesn't exist
+ 		$number_is_badval_arg = $layer->accessArgs()->property('number');
+        $results = $layer->load('', 9000, $number_is_badval_arg); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
- 		$argObj = $layer->accessArgs();
-        $results = $layer->load('boogers', 3, $argObj); // property doesn't exist
+ 		$badproperty_is_3_arg = $layer->accessArgs()->property('boogers');
+        $results = $layer->load('', 3, $badproperty_is_3_arg); // property doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
     }
@@ -245,12 +245,12 @@ class LayerTest extends TestCase
 	public function testloadUsingPropertyArray() {
         $layer = new Layer($this->pieceRecords);
         
- 		$argObj = $layer->accessArgs();
-        $four = $layer->load('number', 4, $argObj);
- 		$argObj = $layer->accessArgs();
-        $three = $layer->load('number', 3, $argObj);
- 		$argObj = $layer->accessArgs();
-        $results = $layer->load('number', [4,3], $argObj); // good find
+ 		$number_is_4_arg = $layer->accessArgs()->property('number');
+        $four = $layer->load('', 4, $number_is_4_arg);
+ 		$number_is_3_arg = $layer->accessArgs()->property('number');
+        $three = $layer->load('', 3, $number_is_3_arg);
+ 		$number_is_3and4_arg = $layer->accessArgs()->property('number');
+        $results = $layer->load('', [4,3], $number_is_3and4_arg); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
 	}
     

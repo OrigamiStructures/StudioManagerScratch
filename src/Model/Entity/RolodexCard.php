@@ -119,8 +119,8 @@ class RolodexCard extends StackEntity {
 	 * @return boolean
 	 */
 	public function hasPrimary($type) {
-		$argObj = 0;
-		if ($this->_flagsPrimary($type) && !empty($this->$type->load('primary', 1, $argObj))) {
+		$is_primary_arg = $this->$type->accessArgs()->property('primary');
+		if ($this->_flagsPrimary($type) && !empty($this->$type->load('', 1, $is_primary_arg))) {
 			return TRUE;
 		}
 		return FALSE;
