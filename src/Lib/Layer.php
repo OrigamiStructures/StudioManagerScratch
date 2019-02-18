@@ -179,8 +179,13 @@ class Layer implements LayerAccessInterface {
     public function load($type, $options = [], $argObj = null) {
 
         // arbitrary exposed value on $type, assumed to be an id
-        if ($type !== '' && !in_array($type, $this->_entityProperties) && empty($options)) {
-            $id = $type;
+        if (
+				($type !== '' && !in_array($type, $this->_entityProperties) && empty($options)) ||
+				(is_object($argObj) && $argObj->valueOf('lookup_index'))
+			) {
+            
+			$id = (is_object($argObj) && $argObj->valueOf('lookup_index')) ? $argObj->valueOf('lookup_index') : $type;
+			
             if (!$this->hasId($id)) {
                 return null;
             }

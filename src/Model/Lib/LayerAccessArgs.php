@@ -44,6 +44,7 @@ class LayerAccessArgs {
 	 *
 	 * @var string
 	 */
+	private $_lookup_index = FALSE;
 	private $_property = FALSE;
 	/**
 	 * The name of a method of the layer entities
@@ -79,44 +80,46 @@ class LayerAccessArgs {
 	// does this have something to do with the context when the call is made? 
 	private $_source = 'entity'; //entity or original
 	
-	private $_unlocked = TRUE;
 
 	public function __construct() {
 		return $this;
 	}
 	public function layer($param) {
-		if ($this->_unlocked) $this->_layer = $param; 
+		$this->_layer = $param; 
 		return $this;
 	}
 	public function page($param) {
-		if ($this->_unlocked) $this->_page = $param;
+		$this->_page = $param;
 		return $this;
 	}
 	public function limit($param) {
 		$param = $param === 'all' ? -1 : $param;
 		$param = $param === 'first' ? 1 : $param;
-		if ($this->_unlocked) $this->_limit = $param;
+		$this->_limit = $param;
+		return $this;
+	}
+	public function lookupIndex($param) {
+		$this->_lookup_index = $param;
 		return $this;
 	}
 	public function property($param) {
-		if ($this->_unlocked) $this->_property = $param;
+		$this->_property = $param;
 		return $this;
 	}
 	public function method($param) {
-		if ($this->_unlocked) $this->_method = $param;
+		$this->_method = $param;
 		return $this;
 	}
 	public function conditions($param) {
-		if ($this->_unlocked) $this->_conditions = $param;
+		$this->_conditions = $param;
 		return $this;
 	}
 	public function match($param) {
-		if ($this->_unlocked) $this->_match = $param;
+		$this->_match = $param;
 		return $this;
 	}
 	
 	public function valueOf($param) {
-//		$this->_unlocked = FALSE;
 		$property = '_' . trim($param, '_');
 		if(!isset($this->$property)) {
 			throw new BadMethodCallException("Request to get LayerAccessParams::$param. The property does not exist.");
