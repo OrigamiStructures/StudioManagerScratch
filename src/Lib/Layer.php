@@ -189,7 +189,11 @@ class Layer implements LayerAccessInterface {
         
         // property name on type and some value on options will filter to prop = value 
 		// or in_array(prop, value-array) 
-        if (in_array($type, $this->_entityProperties) && $type !== '') {
+        if (
+//				empty($options) &&
+				(in_array($type, $this->_entityProperties) ||
+				in_array($argObj->valueOf('property'), $this->_entityProperties)) &&
+				$type !== '') {
             return $this->filter($type, $options);
         }
         
