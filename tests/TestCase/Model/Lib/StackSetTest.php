@@ -100,81 +100,81 @@ class StackSetTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testInsert() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test all method
-	 *
-	 * @return void
-	 */
-	public function testAll() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test members method
-	 *
-	 * @return void
-	 */
-	public function testMembers() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test element method
-	 *
-	 * @return void
-	 */
-	public function testElement() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test member method
-	 *
-	 * @return void
-	 */
-	public function testMember() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test count method
-	 *
-	 * @return void
-	 */
-	public function testCount() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test isMember method
-	 *
-	 * @return void
-	 */
-	public function testIsMember() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test ownerOf method
-	 *
-	 * @return void
-	 */
-	public function testOwnerOf() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test IDs method
-	 *
-	 * @return void
-	 */
-	public function testIDs() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
+//	public function testInsert() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test all method
+//	 *
+//	 * @return void
+//	 */
+//	public function testAll() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test members method
+//	 *
+//	 * @return void
+//	 */
+//	public function testMembers() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test element method
+//	 *
+//	 * @return void
+//	 */
+//	public function testElement() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test member method
+//	 *
+//	 * @return void
+//	 */
+//	public function testMember() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test count method
+//	 *
+//	 * @return void
+//	 */
+//	public function testCount() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test isMember method
+//	 *
+//	 * @return void
+//	 */
+//	public function testIsMember() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test ownerOf method
+//	 *
+//	 * @return void
+//	 */
+//	public function testOwnerOf() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test IDs method
+//	 *
+//	 * @return void
+//	 */
+//	public function testIDs() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATON">
 
@@ -243,27 +243,27 @@ class StackSetTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testDistinct() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test filter method
-	 *
-	 * @return void
-	 */
-	public function testFilter() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test keyedList method
-	 *
-	 * @return void
-	 */
-	public function testKeyedList() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
+//	public function testDistinct() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test filter method
+//	 *
+//	 * @return void
+//	 */
+//	public function testFilter() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test keyedList method
+//	 *
+//	 * @return void
+//	 */
+//	public function testKeyedList() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
 
 	/**
 	 * Test linkedTo method
