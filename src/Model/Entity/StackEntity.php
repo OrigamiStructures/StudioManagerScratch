@@ -156,43 +156,6 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		return [];
 	}
 
-    /**
-     * Get entities from one of the layers
-     * 
-     * This call supports all the `get` methods as Layer, but it requires a 
-     * new first argument naming the layer to operate on. The second argument 
-     * represents the signature for the Layer::get(). If your chosen Layer 
-     * search has one arg, you may pass it exposed as the second arg or in 
-     * an array.
-     * 
-     * If your Layer call has more than one argument, pass it as an array with 
-     * two elements that match the arguments of your Layer::get()
-     * 
-     * <code>
-     * get('editions', [312]);  //edition->id = 312
-     * get('editions', 312);  //edition->id = 312
-     * get('artworks', ['title', 'Yosemite']); //atwork->title = 'Yosemite'
-     * get('pieces', ['all']);  //return all stored entities
-     * get('pieces', 'all');  //return all stored entities
-     * get('pieces', 'first); //return the first stored entity
-     * </code>
-     * 
-     * @todo overlap with Entity method. Resolve our naming
-     * 
-     * @param string $layer
-     * @param mixed $options
-     * @return array
-     */
-    public function load(LayerAccessArgs $argObj) {
-		
-        $property = $argObj->valueOf('layer') ? $this->get($argObj->valueOf('layer')) : FALSE;
-        if (!$property) {
-            return [];
-        }
-
-		return $property->load($argObj);
-    }
-	
 	public function keyedList($key, $value, $type, $options) {
 		;
 	}
