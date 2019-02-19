@@ -16,8 +16,11 @@ use Cake\Collection\Collection;
 <?php
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
-	$member_type_to_type_match = $cards->accessArgs()->property('member_type');
-	$setMembers = $cards->load('member',['', $type], $member_type_to_type_match);
+	$member_type_to_type_match = $cards->accessArgs()
+			->layer('member')
+			->property('member_type')
+			->comparisonValue($type);
+	$setMembers = $cards->load($member_type_to_type_match);
 	foreach($setMembers as $member) :
 
 		echo "<p>{$member->getName(LAST_FIRST)}</p>"; 
@@ -62,8 +65,10 @@ foreach($cards->all() as $card) {
 	echo $this->Html->nestedList($result);
 	
 	$options = [];
-	$allAddressesArg = $cards->accessArgs()->limit('all');
-	foreach($cards->load('addresses', [''], $allAddressesArg) as $address) {
+	$allAddressesArg = $cards->accessArgs()
+			->limit('all')
+			->layer('addresses');
+	foreach($cards->load($allAddressesArg) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}
 //	
