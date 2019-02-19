@@ -185,7 +185,7 @@ class Layer implements LayerAccessInterface {
 		if ($argObj->valueOf('lookup_index')) {
 			$id = $argObj->valueOf('lookup_index');
             if (!$this->hasId($id)) {
-                return null;
+                return [];
             }
             return $this->_entities[$id];
 		}

@@ -32,8 +32,8 @@ endforeach;
 
 $result = [];
 foreach($cards->all() as $card) {
-	
-	
+//	
+//	
 	$secondaryA = [];
 	foreach($card->getSecondary(ADDRESS) as $address) {
 		$secondaryA[] = $address->asString();
@@ -66,10 +66,10 @@ foreach($cards->all() as $card) {
 	foreach($cards->load('addresses', [''], $allAddressesArg) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}
-	
-	echo $this->Form->radio('address', $options);
-	echo $this->Form->select('address', $options);
-	
+//	
+//	echo $this->Form->radio('address', $options);
+//	echo $this->Form->select('address', $options);
+//	
 
 //	osd($card->getPrimary(ADDRESS), 'PRIMARY ADDRESS ' . $card->getName());
 //	osd($card->getSecondary(ADDRESS), 'SECONDARY ADDRESS ' . $card->getName());
