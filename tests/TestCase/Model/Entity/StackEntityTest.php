@@ -94,7 +94,7 @@ class StackEntityTest extends TestCase
 		$format_index_5 = $this->StackEntity->accessArgs()
 				->layer('formats')
 				->lookupIndex(5);
-        $format = $this->StackEntity->load('', '', $format_index_5);
+        $format = $this->StackEntity->load($format_index_5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
 				. 'did not return an entity with an expected property value.');
@@ -103,7 +103,7 @@ class StackEntityTest extends TestCase
 				->layer('pieces')
 				->property('quantity')
 				->comparisonValue(140);
-        $pieces = $this->StackEntity->load('', ['', ''], $pieces_qty_equals_140);
+        $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
@@ -113,25 +113,25 @@ class StackEntityTest extends TestCase
 		$all_pieces_args = $this->StackEntity->accessArgs()
 				->layer('pieces')
 				->limit('all');
-        $this->assertEquals(5, count($this->StackEntity->load('', '', $all_pieces_args)),
+        $this->assertEquals(5, count($this->StackEntity->load($all_pieces_args)),
 				'loading using \'all\' did not return the expected number of entities');
 
 		$all_formats_args = $this->StackEntity->accessArgs()
 				->layer('formats')
 				->limit('all');
-        $this->assertEquals(2, count($this->StackEntity->load('', '', $all_formats_args)),
+        $this->assertEquals(2, count($this->StackEntity->load($all_formats_args)),
 				'loading using [\'all\'] did not return the expected number of entities');
 
 		$first_piece_args = $this->StackEntity->accessArgs()
 				->layer('pieces')
 				->limit('first');
-        $this->assertEquals(1, count($this->StackEntity->load('', '', $first_piece_args)),
+        $this->assertEquals(1, count($this->StackEntity->load($first_piece_args)),
 				'loading using \'first\' did not return one entity');
 
 		$first_format_args = $this->StackEntity->accessArgs()
 				->layer('formats')
 				->limit('first');
-        $this->assertEquals(1, count($this->StackEntity->load('', '', $first_format_args)),
+        $this->assertEquals(1, count($this->StackEntity->load($first_format_args)),
 				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search
@@ -139,7 +139,7 @@ class StackEntityTest extends TestCase
 				->limit('first')
 				->property('edition_id')
 				->comparisonValue(8);
-        $this->assertEquals(0, count($this->StackEntity->load('', ['', ''], $first_editionId_is_8_arg)),
+        $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
 				'loading using an unknow layer name and a property/value search returned something '
 				. 'other than the 0 expected entities.');
     }
@@ -273,7 +273,7 @@ class StackEntityTest extends TestCase
         //extract an array, unset that value then 'set' the value
         //the set is a (string, value) arg arrangement
 		$all_pieces_arg = $this->StackEntity->accessArgs()->layer('pieces')->limit('all');
-        $pieces = $this->StackEntity->load('', '', $all_pieces_arg);
+        $pieces = $this->StackEntity->load($all_pieces_arg);
         $this->assertTrue(is_array($pieces), 'the load value is an array');
         
         unset($this->StackEntity->pieces);
@@ -287,11 +287,11 @@ class StackEntityTest extends TestCase
 		$all_pieces_arg = $this->StackEntity->accessArgs()
 				->layer('pieces')
 				->limit('all');
-        $pieces = $this->StackEntity->load('', '', $all_pieces_arg);
+        $pieces = $this->StackEntity->load($all_pieces_arg);
 		$all_dispo_pieces_arg = $this->StackEntity->accessArgs()->
 				layer('dispositionsPieces')
 				->limit('all');
-        $dp = $this->StackEntity->load('', '', $all_dispo_pieces_arg);
+        $dp = $this->StackEntity->load($all_dispo_pieces_arg);
         unset($this->StackEntity->pieces);
         unset($this->StackEntity->dispositionsPieces);
         

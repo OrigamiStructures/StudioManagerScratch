@@ -190,17 +190,6 @@ class StackEntity extends Entity implements LayerAccessInterface {
             return [];
         }
 
-		//arrange params for call to layer->get()
-        $opts = [];
-        if (is_array($options)) {
-            $type = array_shift($options);
-            if (!empty($options)) {
-                $opts = array_shift($options);
-            }
-        } else {
-            $type = $options;
-        }
-
 		return $property->load($argObj);
     }
 	
