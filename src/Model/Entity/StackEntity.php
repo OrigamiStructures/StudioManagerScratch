@@ -7,6 +7,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
+use App\Model\Lib\LayerAccessArgs;
 
 /**
  * Stacks
@@ -20,7 +21,7 @@ use App\Model\Traits\LayerAccessTrait;
  * 
  * @author Main
  */
-class StackEntity extends Entity /*implements LayerAccessInterface*/ {
+class StackEntity extends Entity implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
     
@@ -82,7 +83,8 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
 	 * @return Entity
 	 */
 	public function primaryEntity() {
-		$primary = $this->get($this->_primary)->load('all');
+		$allArg = $this->accessArgs()->limit('all');
+		$primary = $this->get($this->_primary)->load($allArg);
 		return array_shift($primary);
 	}
     
@@ -132,7 +134,8 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
 	public function linkedTo($layer, array $options) {
 		$property = $this->get($layer);
 		if ($property && count($options) === 2) {
-			return $property->load($options[0], $options[1]);
+			$argObj = $property->accessArgs()->property($options[0])->comparisonValue($options[1]);
+			return $property->load($argObj);
 		}
 		return [];
 	}
@@ -180,24 +183,14 @@ class StackEntity extends Entity /*implements LayerAccessInterface*/ {
      * @param mixed $options
      * @return array
      */
-    public function load($layer, $options = []) {
-        $property = $this->get($layer);
+    public function load(LayerAccessArgs $argObj) {
+		
+        $property = $argObj->valueOf('layer') ? $this->get($argObj->valueOf('layer')) : FALSE;
         if (!$property) {
             return [];
         }
 
-		//arrange params for call to layer->get()
-        $opts = [];
-        if (is_array($options)) {
-            $type = array_shift($options);
-            if (!empty($options)) {
-                $opts = array_shift($options);
-            }
-        } else {
-            $type = $options;
-        }
-        
-        return $property->load($type, $opts);
+		return $property->load($argObj);
     }
 	
 	public function keyedList($key, $value, $type, $options) {

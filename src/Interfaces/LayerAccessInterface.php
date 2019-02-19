@@ -12,19 +12,19 @@ interface LayerAccessInterface {
 	
 //	public function all($property); //FUTURE FEATURE
 	
-	public function distinct($propery);
+//	public function distinct($propery);
 	
 	/**
 	 * This one seems silly
 	 */
 //	public function duplicate($property); // FUTURE FEATURE
 	
-	public function filter($property, $value);
+//	public function filter($property, $value);
 	
-	public function load($type, $options);
+	public function load(LayerAccessArgs $argObj);
 	
-	public function keyedList($key, $value, $type, $options);
-	
-	public function linkedTo($layer, $id);
+//	public function keyedList($key, $value, $type, $options);
+//	
+//	public function linkedTo($layer, $id);
 	
 }

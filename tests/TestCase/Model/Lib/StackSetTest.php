@@ -100,81 +100,81 @@ class StackSetTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testInsert() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test all method
-	 *
-	 * @return void
-	 */
-	public function testAll() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test members method
-	 *
-	 * @return void
-	 */
-	public function testMembers() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test element method
-	 *
-	 * @return void
-	 */
-	public function testElement() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test member method
-	 *
-	 * @return void
-	 */
-	public function testMember() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test count method
-	 *
-	 * @return void
-	 */
-	public function testCount() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test isMember method
-	 *
-	 * @return void
-	 */
-	public function testIsMember() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test ownerOf method
-	 *
-	 * @return void
-	 */
-	public function testOwnerOf() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test IDs method
-	 *
-	 * @return void
-	 */
-	public function testIDs() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
+//	public function testInsert() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test all method
+//	 *
+//	 * @return void
+//	 */
+//	public function testAll() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test members method
+//	 *
+//	 * @return void
+//	 */
+//	public function testMembers() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test element method
+//	 *
+//	 * @return void
+//	 */
+//	public function testElement() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test member method
+//	 *
+//	 * @return void
+//	 */
+//	public function testMember() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test count method
+//	 *
+//	 * @return void
+//	 */
+//	public function testCount() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test isMember method
+//	 *
+//	 * @return void
+//	 */
+//	public function testIsMember() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test ownerOf method
+//	 *
+//	 * @return void
+//	 */
+//	public function testOwnerOf() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test IDs method
+//	 *
+//	 * @return void
+//	 */
+//	public function testIDs() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATON">
 
@@ -190,7 +190,10 @@ class StackSetTest extends TestCase {
      * @return void
      */
     public function testLoad() {
-        $formats = $this->StackEntities->load('formats', 5);
+		$format_index_5_arg = $this->StackEntities->accessArgs()
+				->layer('formats')
+				->lookupIndex(5);
+        $formats = $this->StackEntities->load($format_index_5_arg);
 //		var_dump($formats);
 		$format = array_shift($formats);
 //		var_dump($format);
@@ -198,32 +201,53 @@ class StackSetTest extends TestCase {
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
 				. 'did not return an entity with an expected property value.');
 
-        $formats = $this->StackEntities->load('formats', [8]);
+		$argObj = $this->StackEntities->accessArgs()
+				->layer('formats')
+				->lookupIndex(8);
+        $formats = $this->StackEntities->load($argObj);
 		$format = array_shift($formats);
         $this->assertStringStartsWith('Digital output', $format->description,
-				'loading a valid format by array value ...->load(\'formats\', [8])... '
+				'loading a valid format by array value ...->load(\'formats\', 8)... '
 				. 'did not return an entity with an expected property value.');
 
-        $pieces = $this->StackEntities->load('pieces', ['quantity', 140]);
+		$argObj = $this->StackEntities->accessArgs()
+				->layer('pieces')
+				->property('quantity')
+				->comparisonValue(140);
+        $pieces = $this->StackEntities->load($argObj);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
 				. 'did not return an entity with an expected property value.');
 
-        $this->assertEquals(21, count($this->StackEntities->load('pieces', 'all')),
+		$argObj = $this->StackEntities->accessArgs()->limit('all')
+				->layer('pieces');
+        $this->assertEquals(21, count($this->StackEntities->load($argObj)),
 				'loading using \'all\' did not return the expected number of entities');
 
-        $this->assertEquals(4, count($this->StackEntities->load('formats', ['all'])),
+		$argObj = $this->StackEntities->accessArgs()->limit('all')
+				->layer('formats');
+        $this->assertEquals(4, count($this->StackEntities->load($argObj)),
 				'loading using [\'all\'] did not return the expected number of entities');
 
-        $this->assertEquals(2, count($this->StackEntities->load('pieces', 'first')),
+		$argObj = $this->StackEntities->accessArgs()
+				->limit('first')
+				->layer('pieces');
+        $this->assertEquals(2, count($this->StackEntities->load($argObj)),
 				'loading using \'first\' did not return one entity');
 
-        $this->assertEquals(2, count($this->StackEntities->load('formats', ['first'])),
+		$argObj = $this->StackEntities->accessArgs()
+				->limit(1)
+				->layer('formats');
+        $this->assertEquals(2, count($this->StackEntities->load($argObj)),
 				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search
-        $this->assertEquals(0, count($this->StackEntities->load('gizmo', ['edition_id', 8])),
+		$argObj = $this->StackEntities->accessArgs()
+				->layer('gizmo')
+				->property('edition_id')
+				->comparisonValue(8);
+        $this->assertEquals(0, count($this->StackEntities->load($argObj)),
 				'loading using an unknow layer name and a property/value search returned something '
 				. 'other than the 0 expected entities.');
     }
@@ -235,27 +259,27 @@ class StackSetTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testDistinct() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test filter method
-	 *
-	 * @return void
-	 */
-	public function testFilter() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	/**
-	 * Test keyedList method
-	 *
-	 * @return void
-	 */
-	public function testKeyedList() {
-		$this->markTestIncomplete('Not implemented yet.');
-	}
+//	public function testDistinct() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test filter method
+//	 *
+//	 * @return void
+//	 */
+//	public function testFilter() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
+//
+//	/**
+//	 * Test keyedList method
+//	 *
+//	 * @return void
+//	 */
+//	public function testKeyedList() {
+//		$this->markTestIncomplete('Not implemented yet.');
+//	}
 
 	/**
 	 * Test linkedTo method

@@ -16,7 +16,11 @@ use Cake\Collection\Collection;
 <?php
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
-	$setMembers = $cards->load('member',['member_type', $type]);
+	$member_type_to_type_match = $cards->accessArgs()
+			->layer('member')
+			->property('member_type')
+			->comparisonValue($type);
+	$setMembers = $cards->load($member_type_to_type_match);
 	foreach($setMembers as $member) :
 
 		echo "<p>{$member->getName(LAST_FIRST)}</p>"; 
@@ -31,8 +35,8 @@ endforeach;
 
 $result = [];
 foreach($cards->all() as $card) {
-	
-	
+//	
+//	
 	$secondaryA = [];
 	foreach($card->getSecondary(ADDRESS) as $address) {
 		$secondaryA[] = $address->asString();
@@ -61,14 +65,17 @@ foreach($cards->all() as $card) {
 	echo $this->Html->nestedList($result);
 	
 	$options = [];
-	foreach($cards->load('addresses', ['all']) as $address) {
+	$allAddressesArg = $cards->accessArgs()
+			->limit('all')
+			->layer('addresses');
+	foreach($cards->load($allAddressesArg) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}
-	
-	echo $this->Form->radio('address', $options);
-	echo $this->Form->select('address', $options);
-	
-	
+//	
+//	echo $this->Form->radio('address', $options);
+//	echo $this->Form->select('address', $options);
+//	
+
 //	osd($card->getPrimary(ADDRESS), 'PRIMARY ADDRESS ' . $card->getName());
 //	osd($card->getSecondary(ADDRESS), 'SECONDARY ADDRESS ' . $card->getName());
 //	

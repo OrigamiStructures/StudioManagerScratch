@@ -7,6 +7,7 @@ use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
+use App\Model\Lib\LayerAccessArgs;
 
 /**
  * StackLayer
@@ -173,49 +174,30 @@ class Layer implements LayerAccessInterface {
      * 
      * @param string $type 'all', 'first', an ID, a property name
 	 * @param array $options Search arguments
+	 * @param LayerAccessArgs a parameters object
      * @return array The entities that passed the test
      */
-    public function load($type, $options = []) {
-        $types = ['all', 'first'];
-
-        // arbitrary exposed value on $type, assumed to be an id
-        if (!in_array($type, $types + $this->_entityProperties) && empty($options)) {
-            $id = $type;
+    public function load(LayerAccessArgs $argObj) {
+		
+		if ($argObj->valueOf('lookup_index')) {
+			$id = $argObj->valueOf('lookup_index');
             if (!$this->hasId($id)) {
-                return null;
-            }
-            return $this->_entities[$id];
-        }
-        
-        // property name on type and some value on options will filter to prop = value 
-		// or in_array(prop, value-array) 
-        if (in_array($type, $this->_entityProperties)) {
-            return $this->filter($type, $options);
-        }
-        
-        // if not a listed type, not a valid argument
-        if (!in_array($type, $types)) {
-            return [];
-        }
-        
-        // left with one of the three $types
-        if ($type === 'all') {
-             return $this->_entities;
-         }
-            
-        if ($type === 'first') {
-            if (empty($options)) {
-                return $this->_entities[$this->IDs()[0]];
-            }
-            if (!is_array($options)) {
                 return [];
             }
-            $property = $options[0];
-            $value = $options[1];
-            $result = $this->filter($property, $value);
-            return array_shift($result);
-        }
-        return [];
+            return $this->_entities[$id];
+		}
+		
+		if ($argObj->isFilter()) {
+			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('comparison_value'));
+		} else {
+			$result = $this->_entities;
+		}
+		
+		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
+			return $result;
+		} else {
+			return array_shift($result);
+		}
     }
     
     /**
@@ -260,7 +242,8 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		$result = [];
-		$data = $this->load($type, $options);
+		$argObj = $this->accessArgs(); // THIS IS UNIMPLEMENTED;
+		$data = $this->load($argObj); // THIS IS UNIMPLEMENTED
 		foreach ($data as $datum) {
 			$result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
 		}
