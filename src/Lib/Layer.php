@@ -7,6 +7,7 @@ use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
+use App\Model\Lib\LayerAccessArgs;
 
 /**
  * StackLayer
@@ -176,11 +177,7 @@ class Layer implements LayerAccessInterface {
 	 * @param LayerAccessArgs a parameters object
      * @return array The entities that passed the test
      */
-    public function load($type, $options = [], $argObj = null) {
-		
-		if($argObj->valueOf('conditions')){
-			
-		}
+    public function load(LayerAccessArgs $argObj) {
 		
 		if ($argObj->valueOf('lookup_index')) {
 			$id = $argObj->valueOf('lookup_index');
@@ -192,16 +189,8 @@ class Layer implements LayerAccessInterface {
 		
 		if ($argObj->isFilter()) {
 			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('comparison_value'));
-			if($argObj->valueOf('conditions')) {
-				var_dump(count($result) . ' filter');
-//				var_export($result);
-			}
 		} else {
 			$result = $this->_entities;
-			if($argObj->valueOf('conditions')) {
-				var_dump(count($result) . ' dont filter');
-//				var_export($result);
-			}
 		}
 		
 		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
@@ -253,8 +242,8 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		$result = [];
-		$argObj = null;
-		$data = $this->load($type, $options, $argObj);
+		$argObj = $this->accessArgs(); // THIS IS UNIMPLEMENTED;
+		$data = $this->load($argObj); // THIS IS UNIMPLEMENTED
 		foreach ($data as $datum) {
 			$result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
 		}

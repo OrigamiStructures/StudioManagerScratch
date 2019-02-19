@@ -21,7 +21,7 @@ interface LayerAccessInterface {
 	
 //	public function filter($property, $value);
 	
-	public function load($type, $options = [], $argObj = null);
+	public function load(LayerAccessArgs $argObj);
 	
 //	public function keyedList($key, $value, $type, $options);
 //	

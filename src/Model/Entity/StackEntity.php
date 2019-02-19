@@ -7,6 +7,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
+use App\Model\Lib\LayerAccessArgs;
 
 /**
  * Stacks
@@ -83,7 +84,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 */
 	public function primaryEntity() {
 		$allArg = $this->accessArgs()->limit('all');
-		$primary = $this->get($this->_primary)->load('', [], $allArg);
+		$primary = $this->get($this->_primary)->load($allArg);
 		return array_shift($primary);
 	}
     
@@ -134,7 +135,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		$property = $this->get($layer);
 		if ($property && count($options) === 2) {
 			$argObj = $property->accessArgs()->property($options[0])->comparisonValue($options[1]);
-			return $property->load('', '', $argObj);
+			return $property->load($argObj);
 		}
 		return [];
 	}
@@ -182,8 +183,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
      * @param mixed $options
      * @return array
      */
-    public function load($layer, $options = [], $argObj = null) {
-//        $property = $this->get($layer);
+    public function load(LayerAccessArgs $argObj) {
+		
         $property = $argObj->valueOf('layer') ? $this->get($argObj->valueOf('layer')) : FALSE;
         if (!$property) {
             return [];
@@ -200,7 +201,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
             $type = $options;
         }
 
-		return $property->load($type, $opts, $argObj);
+		return $property->load($argObj);
     }
 	
 	public function keyedList($key, $value, $type, $options) {

@@ -4,6 +4,7 @@ namespace App\Model\Lib;
 use App\Model\Entity\StackEntity;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
+use App\Model\Lib\LayerAccessArgs;
 
 /**
  * StackSet
@@ -146,17 +147,17 @@ class StackSet implements LayerAccessInterface {
 	 * @param mixed $options
 	 * @return array
 	 */
-	public function load($layer = null, $options = [], $argObj = null) {
+	public function load(LayerAccessArgs $argObj) {
 		if (is_null($layer)) {
 			return $this->_stacks;
 		}
-		if (is_object($argObj) && $argObj->valueOf('limit') === 1 && $argObj->valueOf('property') === '') {
+		if ($argObj->valueOf('limit') === 1 && $argObj->valueOf('property') === '') {
 			$keys = array_keys($this->_stacks);
 			return $this->_stacks[$keys[0]];
 		}
 		$results = [];
 		foreach ($this->_stacks as $stack) {
-			$result = $stack->load($layer, $options, $argObj);
+			$result = $stack->load($argObj);
 			$results = array_merge($results, (is_array($result) ? $result : [$result]));
 		}
 		
