@@ -37,7 +37,7 @@ if (isset($stacks)) {
 				->layer('dispositionsPieces')
 				->property('disposition_id')
 				->comparisonValue($dispLayer->IDs());
-		$joins = new Layer($stack->load('', ['', ''], $dispoID_list_match));
+		$joins = new Layer($stack->load($dispoID_list_match));
 		
 		// Layer object's __contruct() accept an array of entities 
 		// and that's what $stack->load( ) returns. 
@@ -47,37 +47,37 @@ if (isset($stacks)) {
 				->layer('pieces')
 				->property('id')
 				->comparisonValue($joins->distinct('piece_id'));
-		$distinct_pieces = $stack->load('', ['', ''], $distinct_pieces_args);
+		$distinct_pieces = $stack->load($distinct_pieces_args);
 		$pieces = new Layer($distinct_pieces);
 		$distinct_formats_args = $stack->accessArgs()
 				->layer('formats')
 				->property('id')
 				->comparisonValue($pieces->distinct('format_id'));
-		$formats = new Layer($stack->load('', ['', ''], $distinct_formats_args));	
+		$formats = new Layer($stack->load($distinct_formats_args));	
 		$distinct_editions_args = $stack->accessArgs()
 				->layer('editions')
 				->property('id')
 				->comparisonValue($formats->distinct('edition_id'));
-		$editions = new Layer($stack->load('', ['', ''], $distinct_editions_args));
+		$editions = new Layer($stack->load($distinct_editions_args));
 		$indexed_dispo = $stack->accessArgs();
 		
         echo "<h1>{$artwork->title}</h1>";
 		$allInLayer = $editions->accessArgs()->limit('all');
-        foreach ($editions->load('', '', $allInLayer) as $edition) {
+        foreach ($editions->load($allInLayer) as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-            foreach ($formats->load('', '', $allInLayer) as $format) {
+            foreach ($formats->load($allInLayer) as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
 				$pieces_for_format_arg = $pieces->accessArgs()
 						->property('format_id')
 						->comparisonValue($format->id);
-				foreach ($pieces->load('', '', $pieces_for_format_arg) as $piece) {
+				foreach ($pieces->load($pieces_for_format_arg) as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
 					$dispo_joins_for_piece_arg = $joins->accessArgs()
 							->property('piece_id')
 							->comparisonValue($piece->id);
-					foreach ($joins->load('', '', $dispo_joins_for_piece_arg) as $link) {
+					foreach ($joins->load($dispo_joins_for_piece_arg) as $link) {
 						$indexed_dispo->lookupIndex($link->disposition_id); // this is an id search
-						echo "<li>{$dispLayer->load('', '', $indexed_dispo)->displayTitle}</li>";
+						echo "<li>{$dispLayer->load($indexed_dispo)->displayTitle}</li>";
 					}
 					echo '</ul></li></ul>';
                }
@@ -105,12 +105,12 @@ if (isset($stacks)) {
 			->layer('pieces')
 			->property('id');
 	
-	foreach ($dispLayer->load('', [], $allInLayer) as $dispId => $disposition) {
+	foreach ($dispLayer->load($allInLayer) as $dispId => $disposition) {
 //		
 		$dispo_joins_args->comparisonValue($dispLayer->IDs());
-		$joins = new Layer($stacks->load('', ['', ''], $dispo_joins_args));
+		$joins = new Layer($stacks->load($dispo_joins_args));
 		$linked_pieces_args->comparisonValue($joins->distinct('piece_id'));
-		$pieces = new Layer($stacks->load('', ['', ''], $linked_pieces_args));
+		$pieces = new Layer($stacks->load($linked_pieces_args));
 				
 		echo '<h3>' . $disposition->displayTitle . "($disposition->id)" . '</h3><ul>';
         foreach ($pieces->sort('format_id') as $piece) {
@@ -118,11 +118,11 @@ if (isset($stacks)) {
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			
 			$format_for_piece_arg->comparisonValue($piece->format_id);
-			$format = $stack->load('', ['', ''], $format_for_piece_arg)[$piece->format_id];	
+			$format = $stack->load($format_for_piece_arg)[$piece->format_id];	
 			$edition_for_format->comparisonValue($piece->edition_id);
-			$edition = $stack->load('', ['', ''], $edition_for_format)[$piece->edition_id];
+			$edition = $stack->load($edition_for_format)[$piece->edition_id];
 			$artwork_for_edition->comparisonValue($edition->artwork_id);
-			$artwork = $stack->load('', ['', ''], $artwork_for_edition)[$edition->artwork_id];
+			$artwork = $stack->load($artwork_for_edition)[$edition->artwork_id];
 			
             echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 
