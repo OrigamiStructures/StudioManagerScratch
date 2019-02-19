@@ -148,7 +148,7 @@ class StackSet implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function load(LayerAccessArgs $argObj) {
-		if (is_null($layer)) {
+		if (!$argObj->valueOf('layer')) {
 			return $this->_stacks;
 		}
 		if ($argObj->valueOf('limit') === 1 && $argObj->valueOf('property') === '') {
