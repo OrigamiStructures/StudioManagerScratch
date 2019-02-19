@@ -133,8 +133,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	public function linkedTo($layer, array $options) {
 		$property = $this->get($layer);
 		if ($property && count($options) === 2) {
-			$argObj = null;
-			return $property->load($options[0], $options[1], $argObj);
+			$argObj = $property->accessArgs()->property($options[0])->comparisonValue($options[1]);
+			return $property->load('', '', $argObj);
 		}
 		return [];
 	}
@@ -183,7 +183,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
      * @return array
      */
     public function load($layer, $options = [], $argObj = null) {
-        $property = $this->get($layer);
+//        $property = $this->get($layer);
+        $property = $argObj->valueOf('layer') ? $this->get($argObj->valueOf('layer')) : FALSE;
         if (!$property) {
             return [];
         }
