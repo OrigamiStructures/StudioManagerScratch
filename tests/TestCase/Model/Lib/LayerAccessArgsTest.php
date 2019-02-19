@@ -9,6 +9,15 @@ use Cake\TestSuite\TestCase;
  */
 class LayerAccessArgsTest extends TestCase
 {
+	public $args;
+
+	public function setUp() {
+		$this->args = new LayerAccessArgs();
+	}
+	
+	public function tearDown() {
+		unset($this->args);
+	}
 
     /**
      * Test subject
@@ -25,6 +34,20 @@ class LayerAccessArgsTest extends TestCase
     public function testConstruct()
     {
         $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test layer method
+     *
+     * @return void
+     */
+    public function testMultiSet()
+    {
+        $this->args->property('property')->limit('first');
+		$this->assertTrue($this->args->valueOf('property') === 'property', 
+				'The first setting of a chain did not persist');
+		$this->assertTrue($this->args->valueOf('limit') === 1, 
+				'The second setting of a chain did not persist');
     }
 
     /**

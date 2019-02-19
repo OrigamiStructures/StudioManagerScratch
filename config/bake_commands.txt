@@ -31,7 +31,7 @@ bin/cake bake.bake test ModLib StackSet
 
 ### App\Lib
 --------------------------------------------------------------------
-cd Library/WebServer/Documents/StudioManagerScratch
+cd /Library/WebServer/Documents/StudioManagerScratch
 
 # App\Lib
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
@@ -57,6 +57,7 @@ Stack/Layer suite
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================

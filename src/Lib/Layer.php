@@ -177,58 +177,38 @@ class Layer implements LayerAccessInterface {
      * @return array The entities that passed the test
      */
     public function load($type, $options = [], $argObj = null) {
-
-        // arbitrary exposed value on $type, assumed to be an id
-        if (
-				($type !== '' && !in_array($type, $this->_entityProperties) && empty($options)) ||
-				(is_object($argObj) && $argObj->valueOf('lookup_index'))
-			) {
-            
-			$id = (is_object($argObj) && $argObj->valueOf('lookup_index')) ? $argObj->valueOf('lookup_index') : $type;
+		
+		if($argObj->valueOf('conditions')){
 			
+		}
+		
+		if ($argObj->valueOf('lookup_index')) {
+			$id = $argObj->valueOf('lookup_index');
             if (!$this->hasId($id)) {
                 return null;
             }
             return $this->_entities[$id];
-        }
-        
-        // property name on type and some value on options will filter to prop = value 
-		// or in_array(prop, value-array) 
-        if (
-				// conditions after removing all/first
-				(in_array($type, $this->_entityProperties) && $type !== '') || 
-				
-				// condition while transitioning 'property' into argObj
-				(
-					is_object($argObj) && 
-					$argObj->valueOf('property') && $type === '' && //empty($options) &&
-					in_array($argObj->valueOf('property'), $this->_entityProperties)
-				)
-				) {
-			if(is_object($argObj)) {
-				$type = $argObj->valueOf('property') ? $argObj->valueOf('property') : $type;
+		}
+		
+		if ($argObj->isFilter()) {
+			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('comparison_value'));
+			if($argObj->valueOf('conditions')) {
+				var_dump(count($result) . ' filter');
+//				var_export($result);
 			}
-            return $this->filter($type, $options);
-        }
-        
-        // left with one of the three $types
-        if ($type === 'all' || (is_object($argObj) && $argObj->valueOf('limit') === -1)) {
-             return $this->_entities;
-         }
-            
-        if ($type === 'first' || (is_object($argObj) && $argObj->valueOf('limit') === 1)) {
-            if (empty($options)) {
-                return $this->_entities[$this->IDs()[0]];
-            }
-            if (!is_array($options)) {
-                return [];
-            }
-            $property = $options[0];
-            $value = $options[1];
-            $result = $this->filter($property, $value);
-            return array_shift($result);
-        }
-        return [];
+		} else {
+			$result = $this->_entities;
+			if($argObj->valueOf('conditions')) {
+				var_dump(count($result) . ' dont filter');
+//				var_export($result);
+			}
+		}
+		
+		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
+			return $result;
+		} else {
+			return array_shift($result);
+		}
     }
     
     /**

@@ -1,11 +1,7 @@
 <?php
 namespace App\Model\Lib;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
+use BadMethodCallException;
 /**
  * Description of LayerAccessArgs
  *
@@ -64,7 +60,7 @@ class LayerAccessArgs {
 	 *
 	 * @var array
 	 */
-	private $_conditions = []; // or we make 'dirty' a condition?
+	private $_conditions = FALSE; // or we make 'dirty' a condition?
 	/**
 	 * This could describe the comparison between property and condition
 	 * 
@@ -74,7 +70,9 @@ class LayerAccessArgs {
 	 *
 	 * @var mixed
 	 */
-	private $_match = FALSE;
+	private $_comparison_value = FALSE;
+	private $_comparison_value_isset = FALSE;
+	private $_comparison_operator = FALSE;
 	
 	// this one is a different concept? or wouldn't need condtions perhaps
 	// does this have something to do with the context when the call is made? 
@@ -114,11 +112,18 @@ class LayerAccessArgs {
 		$this->_conditions = $param;
 		return $this;
 	}
-	public function match($param) {
-		$this->_match = $param;
+	public function comparisonValue($param) {
+		$this->_comparison_value_isset = TRUE;
+		$this->_comparison_value = $param;
 		return $this;
 	}
-	
+	public function comparisonOperator($param) {
+		$this->_comparison_operator = $param;
+		return $this;
+	}
+	public function isFilter() {
+		return ($this->valueOf('property') || $this->valueOf('method')) && $this->valueOf('comparison_value_isset');
+	}
 	public function valueOf($param) {
 		$property = '_' . trim($param, '_');
 		if(!isset($this->$property)) {

@@ -49,7 +49,6 @@ class LayerTest extends TestCase
         
         $chunks = array_chunk($this->pieceRecords, 5);
         $this->fivePieces = $chunks[1];
-
     }
 
     /**
@@ -206,38 +205,50 @@ class LayerTest extends TestCase
     public function testLoadUsingId() {
         $layer = new Layer($this->fivePieces);
 
-		$id_int_965_arg = $layer->accessArgs()->lookupIndex(965);
+		$id_int_965_arg = $layer->accessArgs()
+				->lookupIndex(965);
         $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load('', [], $id_int_965_arg));
-		$id_string_965_arg = $layer->accessArgs()->lookupIndex('965');
+		$id_string_965_arg = $layer->accessArgs()
+				->lookupIndex('965');
 		$this->assertInstanceOf('App\Model\Entity\Piece', $layer->load('', [], $id_string_965_arg));
-		$id_3_bad_arg = $layer->accessArgs()->lookupIndex(3);
+		$id_3_bad_arg = $layer->accessArgs()
+				->lookupIndex(3);
         $this->assertNull($layer->load('', [], $id_3_bad_arg));
- 		$bad_index_arg = $layer->accessArgs()->lookupIndex('something wrong');
+ 		$bad_index_arg = $layer->accessArgs()
+				->lookupIndex('something wrong');
         $this->assertNull($layer->load('', [], $bad_index_arg));
     }
     
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         
- 		$number_is_4_arg = $layer->accessArgs()->property('number');
-        $results = $layer->load('', 4, $number_is_4_arg); // good find
+ 		$number_is_4_arg = $layer->accessArgs()
+				->property('number')
+				->comparisonValue(4);
+        $results = $layer->load('', '', $number_is_4_arg); // good find
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
- 		$number_is_4_arg = $layer->accessArgs()->property('number');
-        $results = $layer->load('', '4', $number_is_4_arg); // good val, casting mismatch
+ 		$number_is_4_arg = $layer->accessArgs()
+				->property('number')
+				->comparisonValue('4');
+        $results = $layer->load('', '', $number_is_4_arg); // good val, casting mismatch
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
         
- 		$number_is_badval_arg = $layer->accessArgs()->property('number');
-        $results = $layer->load('', 9000, $number_is_badval_arg); // val doesn't exist
+ 		$number_is_badval_arg = $layer->accessArgs()
+				->property('number')
+				->comparisonValue(9000);
+        $results = $layer->load('', '', $number_is_badval_arg); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
- 		$badproperty_is_3_arg = $layer->accessArgs()->property('boogers');
-        $results = $layer->load('', 3, $badproperty_is_3_arg); // property doesn't exist
+ 		$badproperty_is_3_arg = $layer->accessArgs()
+				->property('boogers')
+				->comparisonValue(3);
+        $results = $layer->load('', '', $badproperty_is_3_arg); // property doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
     }
@@ -245,38 +256,59 @@ class LayerTest extends TestCase
 	public function testloadUsingPropertyArray() {
         $layer = new Layer($this->pieceRecords);
         
- 		$number_is_4_arg = $layer->accessArgs()->property('number');
-        $four = $layer->load('', 4, $number_is_4_arg);
- 		$number_is_3_arg = $layer->accessArgs()->property('number');
-        $three = $layer->load('', 3, $number_is_3_arg);
- 		$number_is_3and4_arg = $layer->accessArgs()->property('number');
-        $results = $layer->load('', [4,3], $number_is_3and4_arg); // good find
+ 		$number_is_4_arg = $layer->accessArgs()
+				->property('number')
+				->comparisonValue(4);
+        $four = $layer->load('', '', $number_is_4_arg);
+ 		$number_is_3_arg = $layer->accessArgs()
+				->property('number')
+				->comparisonValue(3);
+        $three = $layer->load('', '', $number_is_3_arg);
+ 		$number_is_3and4_arg = $layer->accessArgs()
+				->property('number')
+				->comparisonValue([4,3]);
+        $results = $layer->load('', '', $number_is_3and4_arg); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
 	}
     
     public function testGetUsingAll() {
         $layer = new Layer($this->fivePieces);
         
- 		$simpleAllArg = $layer->accessArgs()->limit('all');
+ 		$simpleAllArg = $layer->accessArgs()
+				->limit('all');
         $this->assertEquals(5, count($layer->load('', [], $simpleAllArg)));
- 		$all_ID_equal_12 = $layer->accessArgs()->limit('all');
-        $this->assertEquals(5, count($layer->load('', ['id', 12], $all_ID_equal_12)));        
+ 		$all_id_equals_12 = $layer->accessArgs()
+				->limit('all')
+				->property('id')
+				->comparisonValue('12');
+        $this->assertEquals(0, count($layer->load('', ['', ''], $all_id_equals_12)));        
     }
     
     public function testGetUsingFirst() {
         $layer = new Layer($this->fivePieces);
         
- 		$simpleFirstArg = $layer->accessArgs()->limit('first');
+ 		$simpleFirstArg = $layer->
+				accessArgs()
+				->limit('first');
         $this->assertEquals(1, count($layer->load('', [], $simpleFirstArg)));
 		
- 		$first_with_0_dispos_arg = $layer->accessArgs()->limit('first');
-        $this->assertEquals(1, count($layer->load('', ['disposition_count', 0], $first_with_0_dispos_arg)));  
+ 		$first_with_0_dispos_arg = $layer->accessArgs()
+				->limit('first')
+				->property('disposition_count')
+				->comparisonValue(0);
+        $this->assertEquals(1, count($layer->load('', ['', ''], $first_with_0_dispos_arg)));  
 		
- 		$first_badSearch_args = $layer->accessArgs()->limit('first');
-        $this->assertEquals(0, count($layer->load('', ['boogers', 0], $first_badSearch_args)));        
+ 		$first_badSearch_args = $layer->accessArgs()
+				->limit('first')
+				->property('boogers')
+				->comparisonValue(0);
+        $this->assertEquals(0, count($layer->load('', ['', ''], $first_badSearch_args)));        
 		
- 		$first_with_50_dispos_arg = $layer->accessArgs()->limit(1);
-        $this->assertEquals(0, count($layer->load('', ['disposition_count', 50], $first_with_50_dispos_arg)));        
+ 		$first_with_50_dispos_arg = $layer->accessArgs()
+				->limit(1)
+				->property('disposition_count')
+				->comparisonValue(50);
+        $this->assertEquals(0, count($layer->load('', ['', ''], $first_with_50_dispos_arg)));        
     }
     
     /**
