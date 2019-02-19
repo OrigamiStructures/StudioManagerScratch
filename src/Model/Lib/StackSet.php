@@ -2,6 +2,8 @@
 namespace App\Model\Lib;
 
 use App\Model\Entity\StackEntity;
+use App\Interfaces\LayerAccessInterface;
+use App\Model\Traits\LayerAccessTrait;
 
 /**
  * StackSet
@@ -14,12 +16,15 @@ use App\Model\Entity\StackEntity;
  *
  * @author dondrake
  */
-class StackSet {
+class StackSet /*implements LayerAccessInterface*/ {
+	
+	use LayerAccessTrait;
 	
 	protected $_stacks = [];
 	
 	protected $_stackName;
 
+	
 	/**
 	 * Add another entity to the collection
 	 * 
@@ -85,35 +90,6 @@ class StackSet {
 	}
 	
 	/**
-	 * Get all layer entities that match
-	 * 
-	 * This is a collection-level method that matches the StackEntity's and Layer's 
-	 * load() methods. These form a pass-through chain, so the allowed 
-	 * arguments here are the same as for StackEntity::load(). 
-	 * 
-	 * Calling load from this level will merge all found results from all 
-	 * the stored StackEntities.
-	 * 
-	 * @param string $layer
-	 * @param mixed $options
-	 * @return array
-	 */
-	public function load($layer = null, $options = []){
-        if (is_null($layer)) {
-            return $this->_stacks;
-        }
-        if ($layer === 'first') {
-            $keys = array_keys($this->_stacks);
-            return $this->_stacks[$keys[0]];
-        }
-		$results = [];
-		foreach($this->_stacks as $stack) {
-			$results = array_merge($results, $stack->load($layer, $options));
-		}
-		return $results;
-	}
-	
-	/**
 	 * Return all StackEntities that contain a layer entity with id = $id
 	 * 
 	 * @param string $layer
@@ -154,4 +130,59 @@ class StackSet {
 		return $ids;
 	}
 
+// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
+	
+	/**
+	 * Get all layer entities that match
+	 * 
+	 * This is a collection-level method that matches the StackEntity's and Layer's 
+	 * load() methods. These form a pass-through chain, so the allowed 
+	 * arguments here are the same as for StackEntity::load(). 
+	 * 
+	 * Calling load from this level will merge all found results from all 
+	 * the stored StackEntities.
+	 * 
+	 * @param string $layer
+	 * @param mixed $options
+	 * @return array
+	 */
+	public function load($layer = null, $options = []) {
+		if (is_null($layer)) {
+			return $this->_stacks;
+		}
+		if ($layer === 'first') {
+			$keys = array_keys($this->_stacks);
+			return $this->_stacks[$keys[0]];
+		}
+		$results = [];
+		foreach ($this->_stacks as $stack) {
+			$result = $stack->load($layer, $options);
+			$results = array_merge($results, (is_array($result) ? $result : [$result]));
+		}
+		
+		return $results;
+	}
+
+	public function keyList($key, $value, $layer, $options) {
+		
+	}
+
+	public function distinct($propery) {
+		
+	}
+
+	public function filter($property, $value) {
+		
+	}
+
+	public function keyedList($key, $value, $type, $options) {
+		
+	}
+
+	public function linkedTo($layer, $id) {
+		
+	}
+
+// </editor-fold>
+	
 }

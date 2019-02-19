@@ -15,14 +15,14 @@ class StackEntityTest extends TestCase
 {
 
     /**
-     * Test subject
+     * The StackEntity for testing
      *
      * @var \App\Model\Entity\StackEntity
      */
     public $StackEntity;
 
     /**
-     * Test subject
+     * The table object
      *
      * @var \App\Model\Table\ArtStacksTable
      */
@@ -41,6 +41,7 @@ class StackEntityTest extends TestCase
         'app.pieces',
         'app.dispositions_pieces'
     ];
+	
     /**
      * setUp method
      *
@@ -49,8 +50,7 @@ class StackEntityTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('ArtStacks') ? [] : ['className' => ArtStacksTable::class];
-        $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', $config);
+        $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', []);
         $artID = 4; //jabberwocky
         $stacks = $this->ArtStacks->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
         $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
@@ -92,25 +92,37 @@ class StackEntityTest extends TestCase
      */
     public function testLoad() {
         $format = $this->StackEntity->load('formats', 5);
-        $this->assertEquals('Watercolor 6 x 15"', $format->description);
-
+        $this->assertEquals('Watercolor 6 x 15"', $format->description,
+				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
+				. 'did not return an entity with an expected property value.');
+		
         $format = $this->StackEntity->load('formats', [8]);
-        $this->assertStringStartsWith('Digital output', $format->description);
+        $this->assertStringStartsWith('Digital output', $format->description,
+				'loading a valid format by array value ...->load(\'formats\', [8])... '
+				. 'did not return an entity with an expected property value.');
 
         $pieces = $this->StackEntity->load('pieces', ['quantity', 140]);
         $piece = array_shift($pieces);
-        $this->assertEquals(140, $piece->quantity);
+        $this->assertEquals(140, $piece->quantity,
+				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
+				. 'did not return an entity with an expected property value.');
 
-        $this->assertEquals(5, count($this->StackEntity->load('pieces', 'all')));
+        $this->assertEquals(5, count($this->StackEntity->load('pieces', 'all')),
+				'loading using \'all\' did not return the expected number of entities');
 
-        $this->assertEquals(2, count($this->StackEntity->load('formats', ['all'])));
+        $this->assertEquals(2, count($this->StackEntity->load('formats', ['all'])),
+				'loading using [\'all\'] did not return the expected number of entities');
 
-        $this->assertEquals(1, count($this->StackEntity->load('pieces', 'first')));
+        $this->assertEquals(1, count($this->StackEntity->load('pieces', 'first')),
+				'loading using \'first\' did not return one entity');
 
-        $this->assertEquals(1, count($this->StackEntity->load('formats', ['first'])));
+        $this->assertEquals(1, count($this->StackEntity->load('formats', ['first'])),
+				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search
-        $this->assertEquals(0, count($this->StackEntity->load('first', ['edition_id', 8])));
+        $this->assertEquals(0, count($this->StackEntity->load('first', ['edition_id', 8])),
+				'loading using an unknow layer name and a property/value search returned something '
+				. 'other than the 0 expected entities.');
     }
 
 // </editor-fold>

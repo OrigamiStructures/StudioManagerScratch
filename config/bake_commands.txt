@@ -22,13 +22,18 @@ bin/cake bake.bake test --fixtures app.art_stacks,app.artworks,app.editions,app.
 ====================================================================
 bin/cake bake.bake test entity ArtStack
 
+## BAKING CUSTOM FOLDER TESTS
+====================================================================
+bin/cake bake.bake test ModLib StackSet
+
 ## TESTING
 ====================================================================
 
 ### App\Lib
 --------------------------------------------------------------------
+cd Library/WebServer/Documents/StudioManagerScratch
 
-# lib
+# App\Lib
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestsTest.php
@@ -38,12 +43,20 @@ vendor/bin/phpunit test tests/TestCase/Lib/SystemStateTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
+# Model\Lib
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 # behaviors
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
 # entity
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
+
+Stack/Layer suite
+--------------------------------------------------------------------
+vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
@@ -118,6 +131,17 @@ name  Name of the fixture to bake (without the `Fixture` suffix). You
 
 ## Help for bake test
 ====================================================================
+I MODIFIED A CORE FILE TO BAKE TESTS FROM NON-STANDARD DIRECTORIES
+in vendor/cakephp Bake\Shell\Task TestTask.php
+I modified the public $classTypes and public $classSuffixes properties. Records are lost, but it looks like these were added:
+    public $classTypes = [
+-->		'Lib' => 'Lib',
+-->		'ModLib' => 'Model\Lib',
+        'Entity' => 'Model\Entity',
+    public $classSuffixes = [
+-->		'Lib' => '',
+-->		'ModLib' => '',
+        'Entity' => '',
 
 bin/cake bake.bake test --help
 Bake test case skeletons for classes.

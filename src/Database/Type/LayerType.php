@@ -32,5 +32,4 @@ class LayerType extends BaseType implements ExpressionTypeInterface{
 		
 	}
 
-//put your code here
 }

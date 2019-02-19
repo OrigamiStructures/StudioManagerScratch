@@ -140,7 +140,7 @@ class RolodexCard extends StackEntity {
 		if ($this->_flagsPrimary($type)) {
 			$result = $this->$type->load(PRIMARY, 1);
 		} else {
-			$result [];
+			$result = [];
 		}
 		if ($returnStyle === WRAPPED) {
 			return $result;

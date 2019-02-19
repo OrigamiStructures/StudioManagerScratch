@@ -57,7 +57,7 @@ class Address extends Entity
 	 * 
 	 * @return string
 	 */
-	public function asLine() {
+	public function asString() {
 		$values = [$this->address1, $this->cityStateZip()];
 		$address = implode(', ', $this->mergeStrings($values));
 		

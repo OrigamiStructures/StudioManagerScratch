@@ -7,6 +7,8 @@ use App\SiteMetrics\CollectTimerMetrics;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
 use App\Cache\ArtStackCacheTools as cacheTools;
+use App\Model\Entity\HasMember;
+use App\Model\MemberOf;
 
 /**
  * CakePHP RolodexCardsTable
@@ -98,42 +100,92 @@ class RolodexCardsTable extends StacksTable {
                     $stack->set(['member' => $member->toArray()]);
                 
                 if ($stack->count('member')) {
+					// First do the simple finds
                     $contacts = $this->Contacts->find('inMembers', ['values' => [$id]]);
                     $addresses = $this->Addresses->find('inMembers', ['values' => [$id]]);
                     $group = $this->Groups->find('inMembers', ['values' => [$id]]);
-                    $memberships = $this->GroupsMembers->find('inMembers', ['values' => [$id]]);
-                    $group_members = $this->GroupsMembers->find('inGroups', ['values' => [$id]]);
-					
                     $stack->set([
 						'contacts' => $contacts->toArray(),
 						'addresses' => $addresses->toArray(),
-						'member_of' => $memberships->toArray(),
 						'group' => $group->toArray(),
-						'has_members' => $group_members->toArray(),
 						]);
-                }
-				
-				if ($stack->isGroup()) {
-                    $group_members = $this->GroupsMembers->
-							find('inGroups', ['values' => [$stack->getGroupId]]);
-					$stack->set(['has_members' => $group_members->toArray()]);
-				}
+					
+					// TODO
+					//$artist_managers the artist records that assign management 
+					//$managed_artists the artist records allowing the management role
+					//These would be summary layers. Full Detail stack object could 
+					// be built from these summary records. 
+					
+					//Burrow through and set up the Members for the Groups that contain this
+					$memberships = $this->lookupMemberships($id);
+                    $stack->set(['member_of' => $memberships]);
+					
+					//Burrow through and set up the members of this group
+					$group_members = $this->lookupGroupMembers($id, $stack);
+					$stack->set(['has_members' => ((is_array($group_members)) ? $group_members : $group_members->toArray())]);
                 
-                $t->end('build', $le);
-                $t->start("write", $le);
-//                Cache::write(cacheTools::key($id), $stack, cacheTools::config());
-                $t->end('write', $le);
-            }
-        
-            $t->logTimers($le);
-            
-            if ($stack->count('member')) {
-                $stack->clean();
-                $this->stacks->insert($id, $stack);
-            }            
-        }
+					$t->end('build', $le);
+					$t->start("write", $le);
+	//                Cache::write(cacheTools::key($id), $stack, cacheTools::config());
+					$t->end('write', $le);
+				}
+
+				$t->logTimers($le);
+
+				if ($stack->count('member')) {
+					$stack->clean();
+					$this->stacks->insert($id, $stack);
+				}            
+			}
+		}
 			
         return $this->stacks;
     }
 	
+	/**
+	 * Get the Groups that have this Card as a Member
+	 * 
+	 * What exactly do we need to store? ProxyMember + Group.id ?
+	 * 
+	 * @param string $member_id
+	 * @return array
+	 */
+	private function lookupMemberships($member_id) {
+		$memberships = $this->GroupsMembers->find('inMembers', [
+			'values' => [$member_id],
+			'contain' => ['Groups' => ['ProxyMembers']]]);
+			
+		$collection = new \Cake\Collection\Collection($memberships);
+		$memberships = $collection->reduce(function($accum, $entity){
+			$member = $entity->group->proxy_member;
+			$member->group_id = $entity->group->id;
+			$accum[] = $member;
+			return $accum;
+		}, []);
+			
+		return $memberships;
+	}
+	
+	/**
+	 * Get the Members if this is a group
+	 * 
+	 * @param string $member_id
+	 * @return array
+	 */
+	private function lookupGroupMembers($member_id, $stack) {
+		if($stack->isGroup()) {
+			$group_members = $this->GroupsMembers->
+				find('inGroups', ['values' => [$stack->getGroupId]])->
+					contain('Members');
+			
+			$collection = new \Cake\Collection\Collection($group_members);
+			$members = $collection->reduce(function($accum, $entity){
+				$accum[] = $entity->member;
+				return $accum;
+			}, []);
+
+			return $members;
+		}
+		return [];
+	}
 }

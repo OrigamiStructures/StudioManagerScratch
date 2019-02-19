@@ -15,7 +15,7 @@ namespace App\Controller;
 class RolodexCardsController extends AppController {
 	public function testMe() {
 		
-		$ids = [1,2];
+		$ids = [1,2,21,20,19,22];
 		$cards = $this->RolodexCards->find('stackFrom', ['layer' => 'member', 'ids' => $ids]);
 		$this->set('cards', $cards);
 //		$this->labeled(
