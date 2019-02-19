@@ -152,53 +152,6 @@ class Layer implements LayerAccessInterface {
 //		];
 //	}
 	
-    /**
-     * The StackLayer's version of a find() 
-     * 
-     * Supports some simple filtering and sorting
-     * 
-     * <code>
-     * $editions->get(312);  //edition->id = 312
-     * $artworks->get('title', 'Yosemite'); //atwork->title = 'Yosemite'
-	 * $artworks->get('title', ['Yosemite', 'Yellowstone']
-     * $pieces->get('all');  //return all stored entities
-     * $pieces->get('first); //return the first stored entity
-     * $pieces->get('first', ['edition_id', 455]); //first where piece->edition_id = 455
-     * </code>
-     * 
-     * ### Be careful, this will return references to the entities. Any changes 
-     *      to them will ripple back into this package. And this class was designed 
-     *      for access by rendering processes, not edit-clycle processes.
-	 * 
-	 * @todo How about making a 'not' type search? ('not', ['edition_id', 455])
-     * 
-     * @param string $type 'all', 'first', an ID, a property name
-	 * @param array $options Search arguments
-	 * @param LayerAccessArgs a parameters object
-     * @return array The entities that passed the test
-     */
-    public function load(LayerAccessArgs $argObj) {
-		
-		if ($argObj->valueOf('lookup_index')) {
-			$id = $argObj->valueOf('lookup_index');
-            if (!$this->hasId($id)) {
-                return [];
-            }
-            return $this->_entities[$id];
-		}
-		
-		if ($argObj->isFilter()) {
-			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('comparison_value'));
-		} else {
-			$result = $this->_entities;
-		}
-		
-		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
-			return $result;
-		} else {
-			return array_shift($result);
-		}
-    }
     
     /**
      * The count of stored entities in this layer
