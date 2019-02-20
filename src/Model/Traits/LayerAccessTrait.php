@@ -149,7 +149,7 @@ trait LayerAccessTrait {
 		}
 		
 		if ($argObj->isFilter()) {
-			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('comparison_value'));
+			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
 		} else {
 			$result = $this->_entities;
 		}
