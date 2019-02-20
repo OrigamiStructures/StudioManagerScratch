@@ -45,7 +45,7 @@ class Layer implements LayerAccessInterface {
      *
      * @var array
      */
-    protected $_entities = [];
+    protected $_data = [];
     
     /**
      * The properties that can be found on the entities
@@ -89,7 +89,7 @@ class Layer implements LayerAccessInterface {
      * @return boolean
      */
     public function hasId($id) {
-        return isset($this->_entities[$id]);
+        return isset($this->_data[$id]);
     }
     
 	/**
@@ -121,7 +121,7 @@ class Layer implements LayerAccessInterface {
      * @return boolean
      */
     public function isClean() {
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $result = $set->reduce(function ($accumulated, $entity) {
                 return $accumulated && !($entity->isDirty());
              }, TRUE);
@@ -159,12 +159,12 @@ class Layer implements LayerAccessInterface {
      * @return int
      */
     public function count() {
-        return count($this->_entities);
+        return count($this->_data);
     }
     
 	public function element($number) {
 		if ($number <= $this->count()) {
-			return $this->_entities[$this->IDs()[$number]];
+			return $this->_data[$this->IDs()[$number]];
 		}
 		return null;
 	}
@@ -210,7 +210,7 @@ class Layer implements LayerAccessInterface {
      * @return array
      */
     public function IDs() {
-        return array_keys($this->_entities);
+        return array_keys($this->_data);
     }
     
     public function distinct($property) {
@@ -218,7 +218,7 @@ class Layer implements LayerAccessInterface {
             return [];
         }
 //        osd($this->_entities[965]);;
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $asKeys = $set->reduce(function ($accumulated, $entity) use ($property){
                 return $accumulated += [$entity->$property => True];
              }, []);
@@ -270,7 +270,7 @@ class Layer implements LayerAccessInterface {
         if (!$this->_verifyProperty($property)) {
             return [];
         }
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $results = $set->filter(function ($entity, $key) use ($property, $value) {
 				if (is_array($value)) {
 					return in_array($entity->$property, $value);
@@ -295,7 +295,7 @@ class Layer implements LayerAccessInterface {
      * @return array Array of entities
      */
     public function sort($property, $dir = \SORT_DESC, $type = \SORT_NUMERIC) {
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $sorted = $set->sortBy($property, $dir, $type)->toArray();
         $result = [];
         //indexes are out of order
@@ -340,7 +340,7 @@ class Layer implements LayerAccessInterface {
                     . "property was missing on array element $key.";
                 throw new BadClassConfigurationException($message);
             }
-            $this->_entities[$entity->id] = $entity;
+            $this->_data[$entity->id] = $entity;
         }
     }
 

@@ -21,7 +21,7 @@ class StackSet implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
 	
-	protected $_stacks = [];
+	protected $_data = [];
 	
 	protected $_stackName;
 
@@ -33,7 +33,7 @@ class StackSet implements LayerAccessInterface {
 	 * @param StackEntity $stack
 	 */
 	public function insert($id, $stack) {
-		$this->_stacks[$id] = $stack;
+		$this->_data[$id] = $stack;
 		if (!isset($this->_stackName)) {
 			$this->_stackName = $stack->primaryLayer();
 		}
@@ -45,7 +45,7 @@ class StackSet implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function all() {
-		return $this->_stacks;
+		return $this->_data;
 	}
 	
 	/**
@@ -54,19 +54,19 @@ class StackSet implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function members() {
-		return array_keys($this->_stacks);
+		return array_keys($this->_data);
 	}
 	
 	public function element($number) {
 		if ($number <= $this->count()) {
-			return $this->_stacks[$this->members()[$number]];
+			return $this->_data[$this->members()[$number]];
 		}
 		return null;
 	}
 	
 	public function member($id) {
 		if (in_array($id, $this->members())) {
-			return $this->_stacks[$id];
+			return $this->_data[$id];
 		}
 		return null;
 	}
@@ -77,7 +77,7 @@ class StackSet implements LayerAccessInterface {
      * @return integer
      */
     public function count() {
-        return count($this->_stacks);
+        return count($this->_data);
     }
 	
 	/**
@@ -87,7 +87,7 @@ class StackSet implements LayerAccessInterface {
 	 * @return boolean
 	 */
 	public function isMember($id) {
-		return array_key_exists($id, $this->_stacks);
+		return array_key_exists($id, $this->_data);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ class StackSet implements LayerAccessInterface {
 	 */
 	public function ownerOf($layer, $id, $set = 'all') {
 		$stacks = [];
-		foreach ($this->_stacks as $stack) {
+		foreach ($this->_data as $stack) {
 			if ($stack->exists($layer, $id)) {
 				$stacks[] = $stack;
 			}
@@ -125,7 +125,7 @@ class StackSet implements LayerAccessInterface {
 	 */
 	public function IDs($layer) {
 		$ids = [];
-		foreach($this->_stacks as $stack) {
+		foreach($this->_data as $stack) {
 			$ids = array_merge($ids, $stack->IDs($layer));
 		}
 		return $ids;
