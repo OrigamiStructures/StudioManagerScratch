@@ -234,7 +234,8 @@ class StackSetTest extends TestCase {
 				->limit('first')
 				->layer('pieces');
         $this->assertEquals(2, count($this->StackEntities->load($argObj)),
-				'loading using \'first\' did not return one entity');
+				'loading using \'first\' did not return the first '
+				. 'from each Entity in the stack');
 
 		$argObj = $this->StackEntities->accessArgs()
 				->limit(1)

@@ -63,7 +63,7 @@ trait LayerAccessTrait {
 		if (!$argObj->valueOf('layer')) {
 			return $this->_stacks;
 		}
-		if ($argObj->valueOf('limit') === 1 && $argObj->valueOf('property') === '') {
+		if ($argObj->valueOf('limit') === 1 && !$argObj->valueOf('layer')) {
 			$keys = array_keys($this->_stacks);
 			return $this->_stacks[$keys[0]];
 		}
