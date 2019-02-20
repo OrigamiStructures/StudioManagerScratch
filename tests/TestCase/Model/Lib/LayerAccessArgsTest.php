@@ -77,7 +77,12 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testLimit()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->args->limit('first');
+		$this->assertTrue($this->args->valueOf('limit') === 1,
+				'Setting \limit\' to \'first\' did not result in the value 1');
+		$this->args->limit('all');
+		$this->assertTrue($this->args->valueOf('limit') === -1,
+				'Setting \limit\' to \'all\' did not result in the value -1');
     }
 
     /**
@@ -121,12 +126,84 @@ class LayerAccessArgsTest extends TestCase
     }
 
     /**
+     * Test filterValue method
+     *
+     * @return void
+     */
+    public function testFilterValue()
+    {
+        $this->args->filterValue(FALSE);
+		$this->assertTrue($this->args->valueOf('filter_value_isset'),
+				"Setting the filter value to FALSE did not register "
+				. "trigger filter_value_isset to become true.");
+    }
+
+    /**
+     * Test filterOperator method
+     *
+     * @return void
+     */
+    public function testFilterOperator()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isFilter method
+     *
+     * @return void
+     */
+    public function testIsFilter()
+    {
+        $this->assertFalse($this->args->isFilter(),
+				'unmodified argObject says it is a valid Filter');
+		
+		$this->args->property('property');
+        $this->assertFalse($this->args->isFilter(),
+				'argObject with only a property says it is a valid Filter');
+		
+		$this->args->filterValue('filter_value');
+        $this->assertTrue($this->args->isFilter(),
+				'argObject with a property and filter value says it is not a valid Filter');
+		
+		$this->args->method('method');
+        $this->assertFalse($this->args->isFilter(),
+				'argObject with a property and method and filter value says it is a valid Filter');
+		
+		$this->args->property(FALSE);
+        $this->assertTrue($this->args->isFilter(),
+				'argObject with a method and filter value says it is not a valid Filter');
+		
+		$args = (new LayerAccessArgs())->property('prop')->method('meth');
+        $this->assertFalse($args->isFilter(),
+				'argObject with method and property value says it is a valid Filter');
+		
+    }
+
+    /**
      * Test valueOf method
      *
      * @return void
      */
     public function testValueOf()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->args
+				->filterOperator('==')
+				->layer('layer');
+		$this->assertTrue($this->args->valueOf('filter_operator') == '==', 
+				"valueOf('filter_operator') did not return expected propery value");
+		$this->assertTrue($this->args->valueOf('_filter_operator') == '==', 
+				"valueOf('_filter_operator') did not return expected propery value");
+		$this->assertTrue($this->args->valueOf('filterOperator') == '==', 
+				"valueOf('filterOperator') did not return expected propery value");
+		$this->assertTrue($this->args->valueOf('FilterOperator') == '==', 
+				"valueOf('FilterOperator') did not return expected propery value");
+		
+		$this->assertTrue($this->args->valueOf('layer') == 'layer', 
+				"valueOf('layer') did not return expected propery value");
+		$this->assertTrue($this->args->valueOf('_layer') == 'layer', 
+				"valueOf('layer') did not return expected propery value");
+		$this->assertTrue($this->args->valueOf('Layer') == 'layer', 
+				"valueOf('Layer') did not return expected propery value");
     }
 }

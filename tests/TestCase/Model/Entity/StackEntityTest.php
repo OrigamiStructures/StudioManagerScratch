@@ -102,7 +102,7 @@ class StackEntityTest extends TestCase
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
 				->layer('pieces')
 				->property('quantity')
-				->comparisonValue(140);
+				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
@@ -138,7 +138,7 @@ class StackEntityTest extends TestCase
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->limit('first')
 				->property('edition_id')
-				->comparisonValue(8);
+				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
 				'loading using an unknow layer name and a property/value search returned something '
 				. 'other than the 0 expected entities.');

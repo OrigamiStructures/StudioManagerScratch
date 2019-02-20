@@ -2,13 +2,15 @@
 namespace App\Model\Lib;
 
 use BadMethodCallException;
+use Cake\Utility\Inflector;
+
 /**
  * Description of LayerAccessArgs
  *
  * @author dondrake
  */
 class LayerAccessArgs {
-
+	
 	/**
 	 * Name of this layer property
 	 *
@@ -70,9 +72,9 @@ class LayerAccessArgs {
 	 *
 	 * @var mixed
 	 */
-	private $_comparison_value = FALSE;
-	private $_comparison_value_isset = FALSE;
-	private $_comparison_operator = FALSE;
+	private $_filter_value = FALSE;
+	private $_filter_value_isset = FALSE;
+	private $_filter_operator = FALSE;
 	
 	// this one is a different concept? or wouldn't need condtions perhaps
 	// does this have something to do with the context when the call is made? 
@@ -112,25 +114,67 @@ class LayerAccessArgs {
 		$this->_conditions = $param;
 		return $this;
 	}
-	public function comparisonValue($param) {
-		$this->_comparison_value_isset = TRUE;
-		$this->_comparison_value = $param;
+	/**
+	 * Set a filter value and flag that this has been done
+	 * 
+	 * Filtering may be done on any value, including FALSE. 
+	 * So there is no safe direct test to see if a value has been stored. 
+	 * Instead, filter-value-isset is marked as our indicator.
+	 * 
+	 * filter_operator will be assumed as == if it hasn't been set 
+	 * 
+	 * @param mixed $param
+	 * @return \App\Model\Lib\LayerAccessArgs
+	 */
+	public function filterValue($param) {
+		$this->_filter_value_isset = TRUE;
+		$this->_filter_value = $param;
 		return $this;
 	}
-	public function comparisonOperator($param) {
-		$this->_comparison_operator = $param;
+	public function filterOperator($param) {
+		$this->_filter_operator = $param;
 		return $this;
 	}
+	/**
+	 * Are the minimum required arguments set to allow filter operations?
+	 * 
+	 * Requires that 'property' or 'method' is set (xor) and 
+	 * that a 'filterValue' has been set.
+	 * 
+	 * @return boolean
+	 */
 	public function isFilter() {
-		return ($this->valueOf('property') || $this->valueOf('method')) && $this->valueOf('comparison_value_isset');
+		return ($this->valueOf('property') xor $this->valueOf('method')) 
+				&& $this->valueOf('filter_value_isset');
 	}
+	/**
+	 * One call returns them all
+	 * 
+	 * Properties can be identified 
+	 *		under_scored
+	 *		_under_scored
+	 *		underScored
+	 *		UnderScored
+	 * 
+	 * @param string $param Name of the property to return
+	 * 
+	 * @return mixed
+	 * @throws BadMethodCallException
+	 */
 	public function valueOf($param) {
+		// when some_name style is submitted
 		$property = '_' . trim($param, '_');
+		if (isset($this->$property)){
+			return $this->$property;
+		}
+		// when someName style is submitted
+		$property = '_' . Inflector::underscore($param);
+		if (isset($this->$property)){
+			return $this->$property;
+		}
 		if(!isset($this->$property)) {
-			throw new BadMethodCallException("Request to get LayerAccessParams::$param. The property does not exist.");
+			throw new BadMethodCallException("Request to get LayerAccessParams::$param. The property does not exist."	);
 		}
 		return $this->$property;
 	}
-
-	
 }
