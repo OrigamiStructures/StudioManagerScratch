@@ -102,7 +102,18 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testMethod()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->args->method('asArray()');
+		$this->assertTrue($this->args->valueOf('method') === 'asArray',
+				'The method setter did not trim \'()\' from the input string');
+		
+        $this->args->method('asString( )');
+		$this->assertTrue($this->args->valueOf('method') === 'asString',
+				'The method setter did not trim \'( )\' from the input string');
+		
+        $this->args->method('hasPrimary');
+		$this->assertTrue($this->args->valueOf('method') === 'hasPrimary',
+				'The method setter did not store the provided value');
+
     }
 
     /**
@@ -123,6 +134,31 @@ class LayerAccessArgsTest extends TestCase
     public function testMatch()
     {
         $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test filter method
+     *
+     * @return void
+     */
+    public function testFilter()
+    {
+        $this->args->filter('piece_id', [12,13,14,15]);
+		$this->assertTrue($this->args->isFilter());
+		$this->assertTrue($this->args->valueOf('property') === 'piece_id');
+		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
+		$this->assertTrue($this->args->valueOf('filterOperator') === '==');
+		
+		$this->setUp();
+		$this->args->filter('cityStateZip()', '');
+		$this->assertTrue($this->args->isFilter());
+		$this->assertTrue($this->args->valueOf('method') === 'cityStateZip');
+		$this->assertTrue($this->args->valueOf('filterValue') === '');
+		
+		$this->setUp();
+		$this->args->filter('cityStateZip()', '', '!=');
+		$this->assertTrue($this->args->valueOf('filterOperator') === '!=');
+		
     }
 
     /**
