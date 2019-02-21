@@ -111,6 +111,8 @@ class StackSet implements LayerAccessInterface {
 		return $stacks;
 	}
 	
+// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
+	
 	/**
 	 * Get all the ids accross all the stored StackEntities for the Layer entities
 	 * 
@@ -123,7 +125,7 @@ class StackSet implements LayerAccessInterface {
 	 * @param string $layer
 	 * @return array
 	 */
-	public function IDs($layer) {
+	public function IDs($layer = null) {
 		$ids = [];
 		foreach($this->_data as $stack) {
 			$ids = array_merge($ids, $stack->IDs($layer));
@@ -131,21 +133,15 @@ class StackSet implements LayerAccessInterface {
 		return $ids;
 	}
 
-// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
-	
-	public function keyList($key, $value, $layer, $options) {
+	public function keyedList(LayerAccessArgs $argObj) {
 		
 	}
 
-	public function distinct($propery) {
+	public function distinct($property) {
 		
 	}
 
 	public function filter($property, $value) {
-		
-	}
-
-	public function keyedList($key, $value, $type, $options) {
 		
 	}
 

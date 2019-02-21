@@ -5,7 +5,7 @@ use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
-use App\Interfaces\LayerAccessInterface;
+use \App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 
@@ -182,7 +182,8 @@ class Layer implements LayerAccessInterface {
 	 * @param array $options Search conditions passed to $this->load()
 	 * @return array 
 	 */
-	public function keyedList($key, $value, $type = 'all', $options =[]) {
+//	public function keyedList($key, $value, $type = 'all', $options =[]) {
+	public function keyedList(LayerAccessArgs $args) {
 		
 		$validKey = $this->_verifyProperty($key);
 		$valueIsProperty = $validValue = $this->_verifyProperty($value);
@@ -209,7 +210,7 @@ class Layer implements LayerAccessInterface {
      * 
      * @return array
      */
-    public function IDs() {
+    public function IDs($args = null) {
         return array_keys($this->_data);
     }
     
@@ -253,32 +254,32 @@ class Layer implements LayerAccessInterface {
         return $this->filter($property, $id);
     }
     
-    /**
-     * Provide single column search
-     * 
-     * <code>
-     *  $formats->filter('title', 'Boxed Set');
-     *  $pieces->filter('number', 12);
-	 *  $pieces->filter('number', [6, 8, 10]);
-     * </code>
-     * 
-     * @param string $property The property to examine
-     * @param mixed $value The value or array of values to search for
-     * @return array An array of entities that passed the test
-     */
-    public function filter($property, $value) {
-        if (!$this->_verifyProperty($property)) {
-            return [];
-        }
-        $set = new Collection($this->_data);
-        $results = $set->filter(function ($entity, $key) use ($property, $value) {
-				if (is_array($value)) {
-					return in_array($entity->$property, $value);
-				}
-                return $entity->$property == $value;
-            })->toArray(); 
-        return $results;
-    }
+//    /**
+//     * Provide single column search
+//     * 
+//     * <code>
+//     *  $formats->filter('title', 'Boxed Set');
+//     *  $pieces->filter('number', 12);
+//	 *  $pieces->filter('number', [6, 8, 10]);
+//     * </code>
+//     * 
+//     * @param string $property The property to examine
+//     * @param mixed $value The value or array of values to search for
+//     * @return array An array of entities that passed the test
+//     */
+//    public function filter($property, $value) {
+//        if (!$this->_verifyProperty($property)) {
+//            return [];
+//        }
+//        $set = new Collection($this->_data);
+//        $results = $set->filter(function ($entity, $key) use ($property, $value) {
+//				if (is_array($value)) {
+//					return in_array($entity->$property, $value);
+//				}
+//                return $entity->$property == $value;
+//            })->toArray(); 
+//        return $results;
+//    }
     
     /**
      * Provide single column sorting

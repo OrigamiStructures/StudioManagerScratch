@@ -94,7 +94,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
      * @param string $layer
      * @return array
      */
-    public function IDs($layer) {
+    public function IDs($layer = null) {
         $property = $this->get($layer);
         if ($property) {
             return $property->IDs();
@@ -123,6 +123,10 @@ class StackEntity extends Entity implements LayerAccessInterface {
     }
 	
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
+
+	public function element($number) {
+		
+	}
 	
 	/**
 	 * In a layer, get the entities linked to a specified record
@@ -131,15 +135,14 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param array $options
 	 * @return array
 	     */
-	public function linkedTo($layer, array $options) {
-		$property = $this->get($layer);
-		if ($property && count($options) === 2) {
-			$argObj = $property->accessArgs()->property($options[0])->filterValue($options[1]);
-			return $property->load($argObj);
-		}
-		return [];
-	}
-
+//	public function linkedTo($layer, array $options) {
+//		$property = $this->get($layer);
+//		if ($property && count($options) === 2) {
+//			$argObj = $property->accessArgs()->property($options[0])->filterValue($options[1]);
+//			return $property->load($argObj);
+//		}
+//		return [];
+//	}
 
 	/**
 	 * Get all the distinct values form the properties in a layer's entities
@@ -148,15 +151,15 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param string $property
 	 * @return array
 	     */
-	public function distinct($layer, $property) {
-		$object = $this->get($layer);
-		if ($object) {
-			return $object->distinct($property);
-		}
-		return [];
-	}
+//	public function distinct($layer, $property) {
+//		$object = $this->get($layer);
+//		if ($object) {
+//			return $object->distinct($property);
+//		}
+//		return [];
+//	}
 
-	public function keyedList($key, $value, $type, $options) {
+	public function keyedList(LayerAccessArgs $argObj) {
 		;
 	}
 	
@@ -217,5 +220,5 @@ class StackEntity extends Entity implements LayerAccessInterface {
             return new Layer([], $layer);
         }
     }
-    
+
 }

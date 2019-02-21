@@ -16,11 +16,9 @@ trait LayerAccessTrait {
 		
 //	public function all($property);
 //	
-//	public function distinct($propery);
-//	
-//	public function duplicate($property);
-//	
-//	public function filter($property, $value);
+	public function distinct($property){
+		
+	}
 	
 	public function load(LayerAccessArgs $argObj) {
 		
@@ -41,10 +39,45 @@ trait LayerAccessTrait {
 				. "StackEntity, Layer, or a subclass of one of these.");
 	}
 	
-//	public function keyedList($key, $value, $type, $options);
+	public function keyedList(LayerAccessArgs $args){
+		
+	}
 //	
-//	public function linkedTo($layer, $id);
+	public function linkedTo($layer, $id){
+		
+	}
 	
+	public function IDs($args = null) {
+		
+	}
+	
+    /**
+     * Provide single column search
+     * 
+     * <code>
+     *  $formats->filter('title', 'Boxed Set');
+     *  $pieces->filter('number', 12);
+	 *  $pieces->filter('number', [6, 8, 10]);
+     * </code>
+     * 
+     * @param string $property The property to examine
+     * @param mixed $value The value or array of values to search for
+     * @return array An array of entities that passed the test
+     */
+    public function filter($property, $value) {
+        if (!is_a($this, '\App\Lib\Layer') || !$this->_verifyProperty($property)) {
+            return [];
+        }
+        $set = collection($this->_data);
+        $results = $set->filter(function ($entity, $key) use ($property, $value) {
+				if (is_array($value)) {
+					return in_array($entity->$property, $value);
+				}
+                return $entity->$property == $value;
+            })->toArray(); 
+        return $results;
+    }
+    
 	/**
 	 * Get all layer entities that match
 	 * 
@@ -60,15 +93,49 @@ trait LayerAccessTrait {
 	 * @return array
 	 */
 	private function loadStackSet($argObj) {
+		
+//		if (is_a($this, '\App\Model\Lib\StackSet')) {
+//			
+//			if(!$argObj->valueOf(layer)) {
+//				return $this->paginate($this->stacks);
+//			} else {
+//				$result = [];
+//				foreach ($this->stacks as $stack) {
+//					$result[] = $stack->load($argObj);
+//				}
+//				return $result;
+//			}
+//			
+//		} elseif(is_a($this, '\App\Model\Entity\StackEntity')) {
+//			
+//			if (!$argObj->valueOf('layer')) { return []; }
+//			return $property->load($argObj);
+//			
+//		} elseif (is_a($this, '\App\Lib\Layer')) {
+//			
+//			$index = $argObj->valueOf('lookup_index');
+//			if ($this->hasId($index)) {
+//				return $this->_data[$id];
+//			}
+//
+//			if ($argObj->isFilter()) {
+//				$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
+//			} else {
+//				$result = $this->_data;
+//			}
+//			return $this->paginate($result);
+//
+//		}
+//		
 		if (!$argObj->valueOf('layer')) {
-			return $this->_stacks;
+			return $this->_data;
 		}
 		if ($argObj->valueOf('limit') === 1 && !$argObj->valueOf('layer')) {
-			$keys = array_keys($this->_stacks);
-			return $this->_stacks[$keys[0]];
+			$keys = array_keys($this->_data);
+			return $this->_data[$keys[0]];
 		}
 		$results = [];
-		foreach ($this->_stacks as $stack) {
+		foreach ($this->_data as $stack) {
 			$result = $stack->load($argObj);
 			$results = array_merge($results, (is_array($result) ? $result : [$result]));
 		}
@@ -145,13 +212,13 @@ trait LayerAccessTrait {
             if (!$this->hasId($id)) {
                 return [];
             }
-            return $this->_entities[$id];
+            return $this->_data[$id];
 		}
 		
 		if ($argObj->isFilter()) {
 			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
 		} else {
-			$result = $this->_entities;
+			$result = $this->_data;
 		}
 		
 		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
@@ -159,5 +226,9 @@ trait LayerAccessTrait {
 		} else {
 			return array_shift($result);
 		}
+	}
+	
+	private function validIndex($index) {
+		return $this->hasId($index);
 	}
 }
