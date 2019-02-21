@@ -46,9 +46,6 @@ class LayerAccessArgs {
 	private $_property = FALSE;
 	/**
 	 * The name of a method of the layer entities
-	 * 
-	 * used for query in combination with (match? conditions?)
-	 * or for distinct(), keyedList() or other single value return?
 	 *
 	 * @var string
 	 */
@@ -92,26 +89,74 @@ class LayerAccessArgs {
 		$this->_page = $param;
 		return $this;
 	}
+	/**
+	 * Set the number of elements per page
+	 * 
+	 * -1 will return all
+	 * 1 is actually 'first in page' rather than 'first in collection'
+	 * 
+	 * @param type $param
+	 * @return \App\Model\Lib\LayerAccessArgs
+	 */
 	public function limit($param) {
 		$param = $param === 'all' ? -1 : $param;
 		$param = $param === 'first' ? 1 : $param;
 		$this->_limit = $param;
 		return $this;
 	}
+	/**
+	 * Set the index to lookup a stored node in a layer or stack set
+	 * 
+	 * These nodes are stored in an array indexed by the id or the 
+	 * stored entity or, in the case of a stack, the id of the 
+	 * primary entity. 
+	 * 
+	 * @param string $param
+	 * @return \App\Model\Lib\LayerAccessArgs
+	 */
 	public function lookupIndex($param) {
 		$this->_lookup_index = $param;
 		return $this;
 	}
+	/**
+	 * Set the property to be used as the value source in a filter
+	 * 
+	 * @param string $param
+	 * @return \App\Model\Lib\LayerAccessArgs
+	 */
 	public function property($param) {
 		$this->_property = $param;
 		return $this;
 	}
+	/**
+	 * Set a method to be used a the value source in a filter
+	 * 
+	 * @param string $param methodName or methodName() 
+	 * @return \App\Model\Lib\LayerAccessArgs
+	 */
 	public function method($param) {
-		$this->_method = $param;
+		$this->_method = trim($param,'() ');
 		return $this;
 	}
-	public function conditions($param) {
-		$this->_conditions = $param;
+	/**
+	 * Set up the filter params all at once
+	 * 
+	 * Passing a string followed by '()' will be interpreted as the name of 
+	 * a method that will return the source value for comparison. Exclude 
+	 * the '()' and $source_value will be assumed to be a property
+	 * 
+	 * @param string $source_value A property_name or method_name()
+	 * @param mixed $filter_value The value to compare to the $source_value
+	 * @param string $filter_operator The kind of comparison to make
+	 */
+	public function filter($source_value, $filter_value, $filter_operator = '==') {
+		if(preg_match('/\(\)|\( \)/', $source_value)) {
+			$this->method($source_value);
+		} else {
+			$this->property($source_value);
+		}
+		$this->filterValue($filter_value);
+		$this->filterOperator($filter_operator);
 		return $this;
 	}
 	/**
