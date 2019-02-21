@@ -101,6 +101,13 @@ class StackEntity extends Entity implements LayerAccessInterface {
         }
         return [];
     }
+
+	public function distinct($property, $layer = '') {
+		if($this->has($layer)) {
+			return $this->$layer->distinct($property);
+		}
+		return [];
+	}
     
     /**
      * Adds Layer property empty checks to other native checks
@@ -142,22 +149,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 //			return $property->load($argObj);
 //		}
 //		return [];
-//	}
-
-	/**
-	 * Get all the distinct values form the properties in a layer's entities
-	 * 
-	 * @param string $layer
-	 * @param string $property
-	 * @return array
-	     */
-//	public function distinct($layer, $property) {
-//		$object = $this->get($layer);
-//		if ($object) {
-//			return $object->distinct($property);
-//		}
-//		return [];
-//	}
+	}
 
 	public function keyedList(LayerAccessArgs $argObj) {
 		;

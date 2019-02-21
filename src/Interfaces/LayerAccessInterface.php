@@ -22,7 +22,7 @@ interface LayerAccessInterface {
 	
 	public function accessArgs();
 	
-	public function distinct($propery);
+	public function distinct($propery, $layer = '');
 	
 	public function element($number);
 	

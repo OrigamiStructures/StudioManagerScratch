@@ -137,8 +137,15 @@ class StackSet implements LayerAccessInterface {
 		
 	}
 
-	public function distinct($property) {
-		
+	public function distinct($property, $layer = '') {
+		$accumulation = [];
+//		if($layer !== '') {
+			foreach($this->_data as $stackEntity) {
+				$result = $stackEntity->distinct($property, $layer);
+				$accumulation = array_merge($accumulation, $result);
+			}
+//		}
+		return array_unique($accumulation);
 	}
 
 	public function filter($property, $value) {

@@ -217,6 +217,7 @@ class LayerAccessArgs {
 		if (isset($this->$property)){
 			return $this->$property;
 		}
+		return '';
 		if(!isset($this->$property)) {
 			throw new BadMethodCallException("Request to get LayerAccessParams::$param. The property does not exist."	);
 		}

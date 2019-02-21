@@ -109,7 +109,8 @@ if (isset($stacks)) {
 //		
 		$dispo_joins_args->filterValue($dispLayer->IDs());
 		$joins = new Layer($stacks->load($dispo_joins_args));
-		$linked_pieces_args->filterValue($joins->distinct('piece_id'));
+		$pieceID_arg = $stack->accessArgs('piece_id');
+		$linked_pieces_args->filterValue($joins->distinct($pieceID_arg));
 		$pieces = new Layer($stacks->load($linked_pieces_args));
 				
 		echo '<h3>' . $disposition->displayTitle . "($disposition->id)" . '</h3><ul>';

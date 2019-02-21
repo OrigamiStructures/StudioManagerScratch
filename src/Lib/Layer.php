@@ -185,8 +185,8 @@ class Layer implements LayerAccessInterface {
 //	public function keyedList($key, $value, $type = 'all', $options =[]) {
 	public function keyedList(LayerAccessArgs $args) {
 		
-		$validKey = $this->_verifyProperty($key);
-		$valueIsProperty = $validValue = $this->_verifyProperty($value);
+		$validKey = $this->verifyProperty($key);
+		$valueIsProperty = $validValue = $this->verifyProperty($value);
 		if (!$valueIsProperty) {
 			$valueIsMethod = $validValue = method_exists($this->className(), $value);
 		}
@@ -214,8 +214,8 @@ class Layer implements LayerAccessInterface {
         return array_keys($this->_data);
     }
     
-    public function distinct($property) {
-        if (!$this->_verifyProperty($property)) {
+	public function distinct($property, $layer = '') {
+        if (!$this->verifyProperty($property)) {
             return [];
         }
 //        osd($this->_entities[965]);;
@@ -316,7 +316,7 @@ class Layer implements LayerAccessInterface {
      * @param string $property
      * @return boolean
      */
-    protected function _verifyProperty($property) {
+    public function verifyProperty($property) {
         return in_array($property, $this->_entityProperties);
     }
 
