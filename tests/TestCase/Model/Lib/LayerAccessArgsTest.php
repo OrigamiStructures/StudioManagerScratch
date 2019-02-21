@@ -241,5 +241,9 @@ class LayerAccessArgsTest extends TestCase
 				"valueOf('layer') did not return expected propery value");
 		$this->assertTrue($this->args->valueOf('Layer') == 'layer', 
 				"valueOf('Layer') did not return expected propery value");
+		$this->assertTrue($this->args->valueOf('bad_property') == '', 
+				"valueOf('bad_property') did not return expected empty string");
+		$this->assertTrue($this->args->valueOf(null) == '', 
+				"valueOf(null) did not return expected empty string");
     }
 }
