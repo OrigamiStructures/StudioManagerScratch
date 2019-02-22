@@ -43,7 +43,7 @@ trait LayerAccessTrait {
 		
 	}
 //	
-	public function linkedTo($layer, $id){
+	public function linkedTo($foreign, $foreign_id, $linked = null){
 		
 	}
 	

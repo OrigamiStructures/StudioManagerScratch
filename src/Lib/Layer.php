@@ -246,12 +246,12 @@ class Layer implements LayerAccessInterface {
      * @param string $id The foreign key value to match
      * @return null|array
      */
-    public function linkedTo($layer, $id) {
-        $property = $this->_modelKey($layer);
-        if (!$this->_verifyProperty($property)) {
+    public function linkedTo($foreign, $foreign_id, $linked = null) {
+        $foreign_key = $this->_modelKey($foreign);
+        if (!$this->verifyProperty($foreign_key)) {
             return NULL;
         }
-        return $this->filter($property, $id);
+        return $this->filter($foreign_key, $foreign_id);
     }
     
 //    /**
@@ -268,7 +268,7 @@ class Layer implements LayerAccessInterface {
 //     * @return array An array of entities that passed the test
 //     */
 //    public function filter($property, $value) {
-//        if (!$this->_verifyProperty($property)) {
+//        if (!$this->verifyProperty($property)) {
 //            return [];
 //        }
 //        $set = new Collection($this->_data);

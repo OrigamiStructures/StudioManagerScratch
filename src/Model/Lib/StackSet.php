@@ -152,8 +152,13 @@ class StackSet implements LayerAccessInterface {
 		
 	}
 
-	public function linkedTo($layer, $id) {
-		
+	public function linkedTo($foreign, $foreign_id, $linked = null) {
+		$accum = [];
+		foreach ($this->_data as $stack) {
+			$result = $stack->linkedTo($foreign, $foreign_id, $linked);
+			$accum = array_merge($accum, $result);
+		}
+		return $accum;
 	}
 
 // </editor-fold>

@@ -241,9 +241,9 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testLinkedTo()     {
-        $unique = $this->StackEntity->linkedTo('pieces', ['edition_id', 5]);
-        $open = $this->StackEntity->linkedTo('pieces', ['edition_id', 8]);
-        $none = $this->StackEntity->linkedTo('something', ['link', 12]);
+        $unique = $this->StackEntity->linkedTo('edition', 5, 'pieces');
+        $open = $this->StackEntity->linkedTo('edition', 8, 'pieces');
+        $none = $this->StackEntity->linkedTo('link', 12, 'something');
 
 
         $this->assertEquals(1, count($unique), 'unique edition');
