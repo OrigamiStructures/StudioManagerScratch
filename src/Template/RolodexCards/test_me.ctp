@@ -19,7 +19,7 @@ foreach (["Institution","Person"] as $type) :
 	$member_type_to_type_match = $cards->accessArgs()
 			->layer('member')
 			->property('member_type')
-			->comparisonValue($type);
+			->filterValue($type);
 	$setMembers = $cards->load($member_type_to_type_match);
 	foreach($setMembers as $member) :
 

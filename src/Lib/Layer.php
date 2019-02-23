@@ -5,7 +5,7 @@ use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
-use App\Interfaces\LayerAccessInterface;
+use \App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 
@@ -45,7 +45,7 @@ class Layer implements LayerAccessInterface {
      *
      * @var array
      */
-    protected $_entities = [];
+    protected $_data = [];
     
     /**
      * The properties that can be found on the entities
@@ -81,7 +81,7 @@ class Layer implements LayerAccessInterface {
             
         }
     }
-    
+	
     /**
      * Does the set contain an entity with ID = $id
      * 
@@ -89,7 +89,7 @@ class Layer implements LayerAccessInterface {
      * @return boolean
      */
     public function hasId($id) {
-        return isset($this->_entities[$id]);
+        return isset($this->_data[$id]);
     }
     
 	/**
@@ -121,7 +121,7 @@ class Layer implements LayerAccessInterface {
      * @return boolean
      */
     public function isClean() {
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $result = $set->reduce(function ($accumulated, $entity) {
                 return $accumulated && !($entity->isDirty());
              }, TRUE);
@@ -159,16 +159,44 @@ class Layer implements LayerAccessInterface {
      * @return int
      */
     public function count() {
-        return count($this->_entities);
+        return count($this->_data);
     }
     
-	public function element($number) {
-		if ($number <= $this->count()) {
-			return $this->_entities[$this->IDs()[$number]];
+	/**
+	 * Perform data load from Layer context
+	 * 
+	 * No args gets the id-indexed array of all stored entities
+	 * Arg [lookup-index] gets the entity stored under that id/index value
+	 *		if the index is invalid, an empty array is returned
+	 * If a filter is set, the data is filtered, then paginated and returned
+	 * Otherwise, the full set is paginated and returned
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
+	public function load(LayerAccessArgs $argObj = null) {
+		
+		if(is_null($argObj)) {
+			return $this->_data;
 		}
-		return null;
+		
+		if ($argObj->valueOf('lookup_index')) {
+			$id = $argObj->valueOf('lookup_index');
+            if (!$this->hasId($id)) {
+                return [];
+            }
+            return $this->_data[$id];
+		}
+		
+		if ($argObj->isFilter()) {
+			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
+		} else {
+			$result = $this->_data;
+		}
+		
+		return $this->paginate($result, $argObj);
+		
 	}
-	
 	/**
 	 * Get a key => value map from some or all of the stored entities
 	 * 
@@ -182,10 +210,11 @@ class Layer implements LayerAccessInterface {
 	 * @param array $options Search conditions passed to $this->load()
 	 * @return array 
 	 */
-	public function keyedList($key, $value, $type = 'all', $options =[]) {
+//	public function keyedList($key, $value, $type = 'all', $options =[]) {
+	public function keyedList(LayerAccessArgs $args) {
 		
-		$validKey = $this->_verifyProperty($key);
-		$valueIsProperty = $validValue = $this->_verifyProperty($value);
+		$validKey = $this->verifyProperty($key);
+		$valueIsProperty = $validValue = $this->verifyProperty($value);
 		if (!$valueIsProperty) {
 			$valueIsMethod = $validValue = method_exists($this->className(), $value);
 		}
@@ -209,16 +238,16 @@ class Layer implements LayerAccessInterface {
      * 
      * @return array
      */
-    public function IDs() {
-        return array_keys($this->_entities);
+    public function IDs($layer = null) {
+        return array_keys($this->load());
     }
     
-    public function distinct($property) {
-        if (!$this->_verifyProperty($property)) {
+	public function distinct($property, $layer = '') {
+        if (!$this->verifyProperty($property)) {
             return [];
         }
 //        osd($this->_entities[965]);;
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $asKeys = $set->reduce(function ($accumulated, $entity) use ($property){
                 return $accumulated += [$entity->$property => True];
              }, []);
@@ -245,40 +274,40 @@ class Layer implements LayerAccessInterface {
      * @param string $id The foreign key value to match
      * @return null|array
      */
-    public function linkedTo($layer, $id) {
-        $property = $this->_modelKey($layer);
-        if (!$this->_verifyProperty($property)) {
+    public function linkedTo($foreign, $foreign_id, $linked = null) {
+        $foreign_key = $this->_modelKey($foreign);
+        if (!$this->verifyProperty($foreign_key)) {
             return NULL;
         }
-        return $this->filter($property, $id);
+        return $this->filter($foreign_key, $foreign_id);
     }
     
-    /**
-     * Provide single column search
-     * 
-     * <code>
-     *  $formats->filter('title', 'Boxed Set');
-     *  $pieces->filter('number', 12);
-	 *  $pieces->filter('number', [6, 8, 10]);
-     * </code>
-     * 
-     * @param string $property The property to examine
-     * @param mixed $value The value or array of values to search for
-     * @return array An array of entities that passed the test
-     */
-    public function filter($property, $value) {
-        if (!$this->_verifyProperty($property)) {
-            return [];
-        }
-        $set = new Collection($this->_entities);
-        $results = $set->filter(function ($entity, $key) use ($property, $value) {
-				if (is_array($value)) {
-					return in_array($entity->$property, $value);
-				}
-                return $entity->$property == $value;
-            })->toArray(); 
-        return $results;
-    }
+//    /**
+//     * Provide single column search
+//     * 
+//     * <code>
+//     *  $formats->filter('title', 'Boxed Set');
+//     *  $pieces->filter('number', 12);
+//	 *  $pieces->filter('number', [6, 8, 10]);
+//     * </code>
+//     * 
+//     * @param string $property The property to examine
+//     * @param mixed $value The value or array of values to search for
+//     * @return array An array of entities that passed the test
+//     */
+//    public function filter($property, $value) {
+//        if (!$this->verifyProperty($property)) {
+//            return [];
+//        }
+//        $set = new Collection($this->_data);
+//        $results = $set->filter(function ($entity, $key) use ($property, $value) {
+//				if (is_array($value)) {
+//					return in_array($entity->$property, $value);
+//				}
+//                return $entity->$property == $value;
+//            })->toArray(); 
+//        return $results;
+//    }
     
     /**
      * Provide single column sorting
@@ -295,7 +324,7 @@ class Layer implements LayerAccessInterface {
      * @return array Array of entities
      */
     public function sort($property, $dir = \SORT_DESC, $type = \SORT_NUMERIC) {
-        $set = new Collection($this->_entities);
+        $set = new Collection($this->_data);
         $sorted = $set->sortBy($property, $dir, $type)->toArray();
         $result = [];
         //indexes are out of order
@@ -315,7 +344,7 @@ class Layer implements LayerAccessInterface {
      * @param string $property
      * @return boolean
      */
-    protected function _verifyProperty($property) {
+    public function verifyProperty($property) {
         return in_array($property, $this->_entityProperties);
     }
 
@@ -340,7 +369,7 @@ class Layer implements LayerAccessInterface {
                     . "property was missing on array element $key.";
                 throw new BadClassConfigurationException($message);
             }
-            $this->_entities[$entity->id] = $entity;
+            $this->_data[$entity->id] = $entity;
         }
     }
 

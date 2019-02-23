@@ -21,7 +21,7 @@ class StackSet implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
 	
-	protected $_stacks = [];
+	protected $_data = [];
 	
 	protected $_stackName;
 
@@ -33,7 +33,7 @@ class StackSet implements LayerAccessInterface {
 	 * @param StackEntity $stack
 	 */
 	public function insert($id, $stack) {
-		$this->_stacks[$id] = $stack;
+		$this->_data[$id] = $stack;
 		if (!isset($this->_stackName)) {
 			$this->_stackName = $stack->primaryLayer();
 		}
@@ -45,7 +45,39 @@ class StackSet implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function all() {
-		return $this->_stacks;
+		return $this->_data;
+	}
+	
+	/**
+	 * Perform data load from StackSet context
+	 * 
+	 * No args will get the id-indexed array of stack entities
+	 * No layer specified will get the paginated chunck of the stack entity array
+	 * Once a layer is specified, load will deligate to each stack entity 
+	 * in turn. Filtering and pagination will be done, and the accumulated 
+	 * result will be returned
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
+	public function load(LayerAccessArgs $argObj = null) {
+		
+		if (is_null($argObj)) {
+			return $this->_data;
+		}
+		
+		if (!$argObj->hasLayer()) {
+			return $this->paginate($this->_data, $argObj);
+		} else {
+			$result = [];
+			foreach ($this->_data as $stack) {
+				$found = $stack->load($argObj);
+				$result = array_merge($result, (is_array($found) ? $found : [$found]));
+			}
+		}
+		
+		return $result;
+		
 	}
 	
 	/**
@@ -54,19 +86,12 @@ class StackSet implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function members() {
-		return array_keys($this->_stacks);
-	}
-	
-	public function element($number) {
-		if ($number <= $this->count()) {
-			return $this->_stacks[$this->members()[$number]];
-		}
-		return null;
+		return array_keys($this->_data);
 	}
 	
 	public function member($id) {
 		if (in_array($id, $this->members())) {
-			return $this->_stacks[$id];
+			return $this->_data[$id];
 		}
 		return null;
 	}
@@ -77,7 +102,7 @@ class StackSet implements LayerAccessInterface {
      * @return integer
      */
     public function count() {
-        return count($this->_stacks);
+        return count($this->_data);
     }
 	
 	/**
@@ -87,7 +112,7 @@ class StackSet implements LayerAccessInterface {
 	 * @return boolean
 	 */
 	public function isMember($id) {
-		return array_key_exists($id, $this->_stacks);
+		return array_key_exists($id, $this->_data);
 	}
 	
 	/**
@@ -99,7 +124,7 @@ class StackSet implements LayerAccessInterface {
 	 */
 	public function ownerOf($layer, $id, $set = 'all') {
 		$stacks = [];
-		foreach ($this->_stacks as $stack) {
+		foreach ($this->_data as $stack) {
 			if ($stack->exists($layer, $id)) {
 				$stacks[] = $stack;
 			}
@@ -111,46 +136,60 @@ class StackSet implements LayerAccessInterface {
 		return $stacks;
 	}
 	
+// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
+	
 	/**
-	 * Get all the ids accross all the stored StackEntities for the Layer entities
+	 * Get all the ids accross all the stored StackEntities or the Layer entities
 	 * 
 	 * This is a collection-level method that matches the StackEntity's and Layer's 
 	 * IDs() methods. These form a pass-through chain. 
 	 * 
-	 * Calling IDs() from this level will merge all found results from all 
-	 * the stored StackEntities.
+	 * Calling IDs() from this level will insure unique results if 
+	 * Layer IDs are pulled. 
+	 * 
+	 * StackEntity IDs will be from the primary entity propery and will
+	 * be unique becuase the set structure insures it.
 	 * 
 	 * @param string $layer
 	 * @return array
 	 */
-	public function IDs($layer) {
+	public function IDs($layer = null) {
+		if(is_null($layer)){
+			return array_keys($this->load());
+		}
 		$ids = [];
-		foreach($this->_stacks as $stack) {
+		foreach($this->_data as $stack) {
 			$ids = array_merge($ids, $stack->IDs($layer));
 		}
-		return $ids;
+		return array_unique($ids);
 	}
 
-// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
-	
-	public function keyList($key, $value, $layer, $options) {
+	public function keyedList(LayerAccessArgs $argObj) {
 		
 	}
 
-	public function distinct($propery) {
-		
+	public function distinct($property, $layer = '') {
+		$accumulation = [];
+//		if($layer !== '') {
+			foreach($this->_data as $stackEntity) {
+				$result = $stackEntity->distinct($property, $layer);
+				$accumulation = array_merge($accumulation, $result);
+			}
+//		}
+		return array_unique($accumulation);
 	}
 
 	public function filter($property, $value) {
 		
 	}
 
-	public function keyedList($key, $value, $type, $options) {
-		
-	}
-
-	public function linkedTo($layer, $id) {
-		
+	public function linkedTo($foreign, $foreign_id, $linked = null) {
+		$accum = [];
+		foreach ($this->_data as $stack) {
+			$result = $stack->linkedTo($foreign, $foreign_id, $linked);
+			$accum = array_merge($accum, $result);
+		}
+		return $accum;
 	}
 
 // </editor-fold>

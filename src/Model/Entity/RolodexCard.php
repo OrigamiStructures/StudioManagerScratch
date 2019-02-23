@@ -121,7 +121,7 @@ class RolodexCard extends StackEntity {
 	public function hasPrimary($type) {
 		$is_primary_arg = $this->$type->accessArgs()
 				->property('primary')
-				->comparisonValue(1);
+				->filterValue(1);
 		if ($this->_flagsPrimary($type) && !empty($this->$type->load($is_primary_arg))) {
 			return TRUE;
 		}
@@ -143,7 +143,7 @@ class RolodexCard extends StackEntity {
 		if ($this->_flagsPrimary($type)) {
 			$primary_contact_or_address = $this->$type->accessArgs()
 					->property(PRIMARY)
-					->comparisonValue(1);
+					->filterValue(1);
 			$result = $this->$type->load($primary_contact_or_address);
 		} else {
 			$result = [];
@@ -164,7 +164,7 @@ class RolodexCard extends StackEntity {
 		if ($this->_flagsPrimary($type)) {
 			$secondary_contacts_or_addresses = $this->$type->accessArgs()
 					->property(PRIMARY)
-					->comparisonValue([null, 0]);
+					->filterValue([null, 0]);
 			return $this->$type->load($secondary_contacts_or_addresses);
 		}
 		return [];

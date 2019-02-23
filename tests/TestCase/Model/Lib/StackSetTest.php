@@ -213,7 +213,7 @@ class StackSetTest extends TestCase {
 		$argObj = $this->StackEntities->accessArgs()
 				->layer('pieces')
 				->property('quantity')
-				->comparisonValue(140);
+				->filterValue(140);
         $pieces = $this->StackEntities->load($argObj);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
@@ -234,7 +234,8 @@ class StackSetTest extends TestCase {
 				->limit('first')
 				->layer('pieces');
         $this->assertEquals(2, count($this->StackEntities->load($argObj)),
-				'loading using \'first\' did not return one entity');
+				'loading using \'first\' did not return the first '
+				. 'from each Entity in the stack');
 
 		$argObj = $this->StackEntities->accessArgs()
 				->limit(1)
@@ -246,7 +247,7 @@ class StackSetTest extends TestCase {
 		$argObj = $this->StackEntities->accessArgs()
 				->layer('gizmo')
 				->property('edition_id')
-				->comparisonValue(8);
+				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntities->load($argObj)),
 				'loading using an unknow layer name and a property/value search returned something '
 				. 'other than the 0 expected entities.');
@@ -254,15 +255,42 @@ class StackSetTest extends TestCase {
 
 // </editor-fold>
 
+	
+	/**
+	 * Test element (a trait method) in StackSet context
+	 */
+	public function testElement() {
+		$this->assertTrue($this->StackEntities->element(1)->primaryId() === 5);
+		$this->assertTrue($this->StackEntities->element(2) === null);
+	}
+	
+	public function testIDs() {
+		$this->assertTrue($this->StackEntities->IDs() === [4, 5], 'IDs() did '
+				. 'not return the IDs of the primary entities of the set');
+		$this->assertEmpty($this->StackEntities->IDs('badLayer'), 'IDs(badLayer) '
+				. 'did not return the expected empty array');
+		$this->assertTrue($this->StackEntities->IDs('editions') === [5,8,6,20], 
+				'IDs(editions) did not return the expected 4 IDs');
+	}
+	
 	/**
 	 * Test distinct method
 	 *
 	 * @return void
 	 */
-//	public function testDistinct() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
+	public function testDistinct() {
+		$this->assertEquals(["Unique","Open Edition","Limited Edition"], 
+				$this->StackEntities->distinct('type', 'editions'),
+				'Distinct did not return the expected set of edition types '
+				. 'from a set of stack entities');
+		
+		$this->assertEmpty($this->StackEntities->distinct('type', 'badLayer'),
+				'Distinct did not return an empty array when passed a bad layer');
+		
+		$this->assertEmpty($this->StackEntities->distinct('garbage', 'editions'),
+				'Distinct did not return an empty array when passed a bad property');
+	}
+
 //	/**
 //	 * Test filter method
 //	 *
@@ -287,7 +315,15 @@ class StackSetTest extends TestCase {
 	 * @return void
 	 */
 	public function testLinkedTo() {
-		$this->markTestIncomplete('Not implemented yet.');
+
+        $unique = $this->StackEntities->linkedTo('edition', 5, 'pieces');
+        $open = $this->StackEntities->linkedTo('edition', 8, 'pieces');
+        $none = $this->StackEntities->linkedTo('link', 12, 'something');
+
+
+        $this->assertEquals(1, count($unique), 'unique edition 5 should have 1 piece');
+        $this->assertEquals(4, count($open), 'open edition 8 should have 4 pieces');
+        $this->assertEquals(0, count($none), 'nothing, bad layer and foreign, has no pieces');
 	}
 
 // </editor-fold>

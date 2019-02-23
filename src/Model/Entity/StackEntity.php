@@ -88,20 +88,59 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		return array_shift($primary);
 	}
     
+	/**
+	 * Load data from the StackEntity context
+	 * 
+	 * If no args are given, return $this in an array indexed by the primary id
+	 * If a layer is named, it should be a property of this stack. If its 
+	 *	not a valid Layer type property, an empty array is returned. 
+	 * Given a valid property/layer the  query is delegated to that named layer. 
+	 *	The layer will do all required filtering and pagination. StackEntity 
+	 *	will return that result
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
+	public function load(LayerAccessArgs $argObj = null) {
+		
+		if (is_null($argObj)) {
+			return [$this->primaryId() => $this];
+		}
+		
+        $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
+        if (!$property || !is_a($property, '\App\Lib\Layer')) {
+            return [];
+        }
+
+		return $property->load($argObj);
+		
+	}
     /**
-     * Get the ids of all the entities in a layer
+     * Get this primary id or the IDs of all the entities in a layer
      * 
      * @param string $layer
      * @return array
      */
-    public function IDs($layer) {
-        $property = $this->get($layer);
-        if ($property) {
-            return $property->IDs();
+    public function IDs($layer = null) {
+		if (is_null($layer)) {
+			return array_keys($this->load());
+		}
+		
+        $property = is_null($layer) ? null : $this->get($layer);
+        if (is_null($property) || !is_a($property, '\App\Lib\Layer')) {
+            return [];
         }
-        return [];
-    }
-    
+
+        return $property->IDs();
+	}
+
+	public function distinct($property, $layer = '') {
+		if($this->has($layer)) {
+			return $this->$layer->distinct($property);
+		}
+		return [];
+	}
+	
     /**
      * Adds Layer property empty checks to other native checks
      * 
@@ -123,7 +162,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
     }
 	
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
-	
+
 	/**
 	 * In a layer, get the entities linked to a specified record
 	 * 
@@ -131,32 +170,14 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param array $options
 	 * @return array
 	     */
-	public function linkedTo($layer, array $options) {
-		$property = $this->get($layer);
-		if ($property && count($options) === 2) {
-			$argObj = $property->accessArgs()->property($options[0])->comparisonValue($options[1]);
-			return $property->load($argObj);
+	public function linkedTo($foreign, $foreign_id, $linked = null) {
+		if($this->has($linked)) {
+			return $this->$linked->linkedTo($foreign, $foreign_id);
 		}
 		return [];
 	}
 
-
-	/**
-	 * Get all the distinct values form the properties in a layer's entities
-	 * 
-	 * @param string $layer
-	 * @param string $property
-	 * @return array
-	     */
-	public function distinct($layer, $property) {
-		$object = $this->get($layer);
-		if ($object) {
-			return $object->distinct($property);
-		}
-		return [];
-	}
-
-	public function keyedList($key, $value, $type, $options) {
+	public function keyedList(LayerAccessArgs $argObj) {
 		;
 	}
 	
@@ -217,5 +238,5 @@ class StackEntity extends Entity implements LayerAccessInterface {
             return new Layer([], $layer);
         }
     }
-    
+
 }

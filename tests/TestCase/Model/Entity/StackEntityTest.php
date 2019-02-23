@@ -91,6 +91,13 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testLoad() {
+		
+		$this->assertCount(1, $this->StackEntity->load());
+		$this->assertArrayHasKey(4, $this->StackEntity->load());
+		
+		$formats_arg = $this->StackEntity->accessArgs()->layer('formats');
+		
+		$this->assertCount(2, $this->StackEntity->load($formats_arg));
 		$format_index_5 = $this->StackEntity->accessArgs()
 				->layer('formats')
 				->lookupIndex(5);
@@ -102,7 +109,7 @@ class StackEntityTest extends TestCase
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
 				->layer('pieces')
 				->property('quantity')
-				->comparisonValue(140);
+				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
@@ -138,13 +145,21 @@ class StackEntityTest extends TestCase
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->limit('first')
 				->property('edition_id')
-				->comparisonValue(8);
+				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
 				'loading using an unknow layer name and a property/value search returned something '
 				. 'other than the 0 expected entities.');
     }
 
 // </editor-fold>
+	
+	/**
+	 * Test element (a trait method) in StackEntity context
+	 */
+	public function testElement() {
+		$this->assertTrue(is_a($this->StackEntity->element(0), '\App\Model\Entity\StackEntity'));
+		$this->assertTrue($this->StackEntity->element(1) === null);
+	}
 
 // <editor-fold defaultstate="collapsed" desc="Simple class methods">
 
@@ -217,8 +232,12 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testDistinct()     {
-        $this->assertEquals([5, 8], $this->StackEntity->distinct('pieces', 'edition_id'));
-        $this->assertEquals([5, 8], $this->StackEntity->distinct('formats', 'edition_id'));
+        $this->assertEquals([5, 8], $this->StackEntity->distinct('edition_id', 'pieces'),
+				'A valid layer and property did not return the expected values');
+        $this->assertEmpty($this->StackEntity->distinct('edition_id', 'badLayer'),
+				'A bad layer did not return an empty array');
+        $this->assertEmpty($this->StackEntity->distinct('garbage', 'pieces'),
+				'A bad property did not return an empty array');
     }
 
     /**
@@ -227,8 +246,13 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testIDs()     {
-        $this->assertEquals([20, 38, 40, 509, 955], $this->StackEntity->IDs('pieces'));
+		$this->assertTrue($this->StackEntity->IDs() === [4], 
+				'IDs() did not return the expected primary id for this stack');
+        $this->assertEquals([20, 38, 40, 509, 955], $this->StackEntity->IDs('pieces'),
+				'IDs() on a valid layer did not return the expected array of values');
         $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
+		$this->assertEmpty($this->StackEntity->IDs('bad_layer'), 'IDs(badLayer) '
+				. 'did not return an empty array');
     }
 
     /**
@@ -237,9 +261,9 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testLinkedTo()     {
-        $unique = $this->StackEntity->linkedTo('pieces', ['edition_id', 5]);
-        $open = $this->StackEntity->linkedTo('pieces', ['edition_id', 8]);
-        $none = $this->StackEntity->linkedTo('something', ['link', 12]);
+        $unique = $this->StackEntity->linkedTo('edition', 5, 'pieces');
+        $open = $this->StackEntity->linkedTo('edition', 8, 'pieces');
+        $none = $this->StackEntity->linkedTo('link', 12, 'something');
 
 
         $this->assertEquals(1, count($unique), 'unique edition');
