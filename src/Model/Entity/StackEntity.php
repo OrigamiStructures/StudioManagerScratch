@@ -116,18 +116,23 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		
 	}
     /**
-     * Get the ids of all the entities in a layer
+     * Get this primary id or the IDs of all the entities in a layer
      * 
      * @param string $layer
      * @return array
      */
     public function IDs($layer = null) {
-        $property = $this->get($layer);
-        if ($property) {
-            return $property->IDs();
+		if (is_null($layer)) {
+			return array_keys($this->load());
+		}
+		
+        $property = is_null($layer) ? null : $this->get($layer);
+        if (is_null($property) || !is_a($property, '\App\Lib\Layer')) {
+            return [];
         }
-        return [];
-    }
+
+        return $property->IDs();
+	}
 
 	public function distinct($property, $layer = '') {
 		if($this->has($layer)) {
@@ -135,7 +140,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		}
 		return [];
 	}
-    
+	
     /**
      * Adds Layer property empty checks to other native checks
      * 

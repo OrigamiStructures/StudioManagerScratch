@@ -139,23 +139,28 @@ class StackSet implements LayerAccessInterface {
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
 	
 	/**
-	 * Get all the ids accross all the stored StackEntities for the Layer entities
+	 * Get all the ids accross all the stored StackEntities or the Layer entities
 	 * 
 	 * This is a collection-level method that matches the StackEntity's and Layer's 
 	 * IDs() methods. These form a pass-through chain. 
 	 * 
-	 * Calling IDs() from this level will merge all found results from all 
-	 * the stored StackEntities.
+	 * Calling IDs() from this level will insure unique results if 
+	 * Layer IDs are pulled. 
+	 * 
+	 * StackEntity IDs will be from the primary entity propery and will
+	 * be unique becuase the set structure insures it.
 	 * 
 	 * @param string $layer
 	 * @return array
 	 */
 	public function IDs($layer = null) {
-		$ids = [];
+		if(is_null($layer)){
+			return array_keys($this->load());
+		}
 		foreach($this->_data as $stack) {
 			$ids = array_merge($ids, $stack->IDs($layer));
 		}
-		return $ids;
+		return array_unique($ids);
 	}
 
 	public function keyedList(LayerAccessArgs $argObj) {
