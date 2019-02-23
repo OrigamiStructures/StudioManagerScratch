@@ -152,6 +152,14 @@ class StackEntityTest extends TestCase
     }
 
 // </editor-fold>
+	
+	/**
+	 * Test element (a trait method) in StackEntity context
+	 */
+	public function testElement() {
+		$this->assertTrue(is_a($this->StackEntity->element(0), '\App\Model\Entity\StackEntity'));
+		$this->assertTrue($this->StackEntity->element(1) === null);
+	}
 
 // <editor-fold defaultstate="collapsed" desc="Simple class methods">
 

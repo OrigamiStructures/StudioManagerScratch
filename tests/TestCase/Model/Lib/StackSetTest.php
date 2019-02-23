@@ -255,6 +255,15 @@ class StackSetTest extends TestCase {
 
 // </editor-fold>
 
+	
+	/**
+	 * Test element (a trait method) in StackSet context
+	 */
+	public function testElement() {
+		$this->assertTrue($this->StackEntities->element(1)->primaryId() === 5);
+		$this->assertTrue($this->StackEntities->element(2) === null);
+	}
+	
 	/**
 	 * Test distinct method
 	 *

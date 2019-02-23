@@ -317,6 +317,15 @@ class LayerTest extends TestCase
         $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));        
     }
     
+	/**
+	 * Test element (a trait method) in Layer context
+	 */
+	public function testElement() {
+		$layer = new Layer($this->fivePieces);
+		$this->assertTrue($layer->element(0)->id === 961);
+		$this->assertTrue($layer->element(6) === null);
+	}
+	
     /**
      * Test filter
      * 
