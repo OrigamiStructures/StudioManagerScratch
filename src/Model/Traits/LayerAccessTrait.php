@@ -2,6 +2,7 @@
 namespace App\Model\Traits;
 
 use App\Model\Lib\LayerAccessArgs;
+use App\Lib\Layer;
 
 /**
  * Description of LayerAccessTrait
@@ -14,6 +15,10 @@ trait LayerAccessTrait {
 		return new LayerAccessArgs();
 	}
 		
+	public function layer(array $entities) {
+		return new Layer($entities);
+	}
+    
 //	public function all($property);
 //	
 	public function distinct($property, $layer = ''){

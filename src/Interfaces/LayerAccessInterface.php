@@ -20,18 +20,25 @@ use App\Model\Lib\LayerAccessArgs;
  */
 interface LayerAccessInterface {
 	
+	/* Done */
 	public function accessArgs();
 	
+	/* Done */
+	public function layer(array $entities);
+	
+	/* Done */
 	public function distinct($propery, $layer = '');
 	
 	public function element($number);
 	
 	public function IDs($argObj = null);
 	
+	/* Done */
 	public function keyedList(LayerAccessArgs $argObj);
 	
 	public function linkedTo($layer, $id);
 	
+	/* Done */
 	public function load(LayerAccessArgs $argObj);
 	
 	function filter($property, $value);

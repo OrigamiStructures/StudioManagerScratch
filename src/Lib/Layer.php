@@ -81,7 +81,7 @@ class Layer implements LayerAccessInterface {
             
         }
     }
-    
+	
     /**
      * Does the set contain an entity with ID = $id
      * 

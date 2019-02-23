@@ -147,12 +147,6 @@ class StackEntity extends Entity implements LayerAccessInterface {
 			return $this->$linked->linkedTo($foreign, $foreign_id);
 		}
 		return [];
-//		$property = $this->get($layer);
-//		if ($property && count($options) === 2) {
-//			$argObj = $property->accessArgs()->property($options[0])->filterValue($options[1]);
-//			return $property->load($argObj);
-//		}
-//		return [];
 	}
 
 	public function keyedList(LayerAccessArgs $argObj) {
