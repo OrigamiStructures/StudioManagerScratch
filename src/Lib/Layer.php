@@ -238,8 +238,8 @@ class Layer implements LayerAccessInterface {
      * 
      * @return array
      */
-    public function IDs($args = null) {
         return array_keys($this->_data);
+    public function IDs($layer = null) {
     }
     
 	public function distinct($property, $layer = '') {

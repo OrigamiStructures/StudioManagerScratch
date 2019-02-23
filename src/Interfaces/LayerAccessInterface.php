@@ -31,7 +31,7 @@ interface LayerAccessInterface {
 	
 	public function element($number);
 	
-	public function IDs($argObj = null);
+	public function IDs($layer = null);
 	
 	/* Done */
 	public function keyedList(LayerAccessArgs $argObj);

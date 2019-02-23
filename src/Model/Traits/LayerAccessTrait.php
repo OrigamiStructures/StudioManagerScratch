@@ -52,8 +52,8 @@ trait LayerAccessTrait {
 		
 	}
 	
-	public function IDs($args = null) {
-		return array_keys($this->load());
+	public function IDs($layer = null){
+		
 	}
 	
 	public function paginate($data, LayerAccessArgs $argObj) {
