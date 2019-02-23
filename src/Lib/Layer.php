@@ -189,11 +189,7 @@ class Layer implements LayerAccessInterface {
 			$result = $this->_data;
 		}
 		
-		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
-			return $result;
-		} else {
-			return array_shift($result);
-		}
+		return $this->paginate($result, $argObj);
 		
 	}
 	/**

@@ -94,7 +94,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 			return [$this->primaryId() => $this];
 		}
 		
-        $property = $argObj->valueOf('layer') ? $this->get($argObj->valueOf('layer')) : FALSE;
+        $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
         if (!$property) {
             return [];
         }
