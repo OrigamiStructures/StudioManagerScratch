@@ -277,7 +277,7 @@ class LayerTest extends TestCase
         $this->assertTrue((count($four) + count($three)) === count($results));
 	}
     
-    public function testGetUsingAll() {
+    public function testLoadUsingAll() {
         $layer = new Layer($this->fivePieces);
         
  		$simpleAllArg = $layer->accessArgs()
@@ -290,7 +290,7 @@ class LayerTest extends TestCase
         $this->assertEquals(0, count($layer->load($all_id_equals_12)));        
     }
     
-    public function testGetUsingFirst() {
+    public function testloadUsingFirst() {
         $layer = new Layer($this->fivePieces);
         
  		$simpleFirstArg = $layer->
@@ -320,7 +320,6 @@ class LayerTest extends TestCase
     /**
      * Test filter
      * 
-     * Same testing pattern as testGetUsingPropertyValue()
      */
     public function testFilter() {
         $layer = new Layer($this->fivePieces);
