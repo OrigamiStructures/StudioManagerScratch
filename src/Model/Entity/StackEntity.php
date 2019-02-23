@@ -88,6 +88,19 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		return array_shift($primary);
 	}
     
+	/**
+	 * Load data from the StackEntity context
+	 * 
+	 * If no args are given, return $this in an array indexed by the primary id
+	 * If a layer is named, it should be a property of this stack. If its 
+	 *	not a valid Layer type property, an empty array is returned. 
+	 * Given a valid property/layer the  query is delegated to that named layer. 
+	 *	The layer will do all required filtering and pagination. StackEntity 
+	 *	will return that result
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
 	public function load(LayerAccessArgs $argObj = null) {
 		
 		if (is_null($argObj)) {
@@ -95,7 +108,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		}
 		
         $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
-        if (!$property) {
+        if (!$property || !is_a($property, '\App\Lib\Layer')) {
             return [];
         }
 

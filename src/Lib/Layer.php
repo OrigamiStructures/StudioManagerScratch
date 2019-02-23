@@ -169,6 +169,18 @@ class Layer implements LayerAccessInterface {
 		return null;
 	}
 	
+	/**
+	 * Perform data load from Layer context
+	 * 
+	 * No args gets the id-indexed array of all stored entities
+	 * Arg [lookup-index] gets the entity stored under that id/index value
+	 *		if the index is invalid, an empty array is returned
+	 * If a filter is set, the data is filtered, then paginated and returned
+	 * Otherwise, the full set is paginated and returned
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
 	public function load(LayerAccessArgs $argObj = null) {
 		
 		if(is_null($argObj)) {
