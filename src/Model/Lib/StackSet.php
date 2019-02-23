@@ -89,13 +89,6 @@ class StackSet implements LayerAccessInterface {
 		return array_keys($this->_data);
 	}
 	
-	public function element($number) {
-		if ($number <= $this->count()) {
-			return $this->_data[$this->members()[$number]];
-		}
-		return null;
-	}
-	
 	public function member($id) {
 		if (in_array($id, $this->members())) {
 			return $this->_data[$id];

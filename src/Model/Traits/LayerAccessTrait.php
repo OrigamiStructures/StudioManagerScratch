@@ -18,6 +18,25 @@ trait LayerAccessTrait {
 	public function layer(array $entities) {
 		return new Layer($entities);
 	}
+	
+	/**
+	 * Return the n-th stored element (starting from 0)
+	 * 
+	 * Data is stored in id-indexed arrays, but this method will let you 
+	 * pluck the n-th item without bothering with the id-indexes
+	 * 
+	 * @param int $number Array index 0 through n
+	 * @return Entity
+	 */
+	public function element($number){
+		$data = array_values($this->load());
+		if(count($data) > $number) {
+			$result =  $data[$number];
+		} else {
+			$result = null;
+		}
+		return $result;
+	}
     
 //	public function all($property);
 //	

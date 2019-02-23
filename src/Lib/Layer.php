@@ -162,13 +162,6 @@ class Layer implements LayerAccessInterface {
         return count($this->_data);
     }
     
-	public function element($number) {
-		if ($number <= $this->count()) {
-			return $this->_data[$this->IDs()[$number]];
-		}
-		return null;
-	}
-	
 	/**
 	 * Perform data load from Layer context
 	 * 

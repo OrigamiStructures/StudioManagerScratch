@@ -158,10 +158,6 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
 
-	public function element($number) {
-		
-	}
-	
 	/**
 	 * In a layer, get the entities linked to a specified record
 	 * 
