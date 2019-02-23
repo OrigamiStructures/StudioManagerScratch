@@ -85,6 +85,9 @@ class LayerAccessArgs {
 		$this->_layer = $param; 
 		return $this;
 	}
+	public function hasLayer() {
+		return $this->_layer !== FALSE;
+	}
 	public function page($param) {
 		$this->_page = $param;
 		return $this;
