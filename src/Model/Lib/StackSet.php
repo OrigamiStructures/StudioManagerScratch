@@ -62,7 +62,7 @@ class StackSet implements LayerAccessInterface {
 	 */
 	public function load(LayerAccessArgs $argObj = null) {
 		
-		if (!$argObj->hasLayer()) {
+		if (is_null($argObj)) {
 			return $this->_data;
 		}
 		
