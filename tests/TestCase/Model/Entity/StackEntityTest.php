@@ -91,6 +91,13 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testLoad() {
+		
+		$this->assertCount(1, $this->StackEntity->load());
+		$this->assertArrayHasKey(4, $this->StackEntity->load());
+		
+		$formats_arg = $this->StackEntity->accessArgs()->layer('formats');
+		
+		$this->assertCount(2, $this->StackEntity->load($formats_arg));
 		$format_index_5 = $this->StackEntity->accessArgs()
 				->layer('formats')
 				->lookupIndex(5);

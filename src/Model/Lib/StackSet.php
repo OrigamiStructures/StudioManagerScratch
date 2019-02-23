@@ -48,22 +48,35 @@ class StackSet implements LayerAccessInterface {
 		return $this->_data;
 	}
 	
+	/**
+	 * Perform data load from StackSet context
+	 * 
+	 * No args will get the id-indexed array of stack entities
+	 * No layer specified will get the paginated chunck of the stack entity array
+	 * Once a layer is specified, load will deligate to each stack entity 
+	 * in turn. Filtering and pagination will be done, and the accumulated 
+	 * result will be returned
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
 	public function load(LayerAccessArgs $argObj = null) {
 		
 		if (!$argObj->valueOf('layer')) {
 			return $this->_data;
 		}
-		if ($argObj->valueOf('limit') === 1 && !$argObj->valueOf('layer')) {
-			$keys = array_keys($this->_data);
-			return $this->_data[$keys[0]];
-		}
-		$results = [];
-		foreach ($this->_data as $stack) {
-			$result = $stack->load($argObj);
-			$results = array_merge($results, (is_array($result) ? $result : [$result]));
+		
+		if (!$argObj->hasLayer()) {
+			return $this->paginate($this->_data, $argObj);
+		} else {
+			$result = [];
+			foreach ($this->_data as $stack) {
+				$found = $stack->load($argObj);
+				$result = array_merge($result, (is_array($found) ? $found : [$found]));
+			}
 		}
 		
-		return $results;
+		return $result;
 		
 	}
 	

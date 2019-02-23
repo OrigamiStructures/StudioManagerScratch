@@ -90,6 +90,10 @@ class StackEntity extends Entity implements LayerAccessInterface {
     
 	public function load(LayerAccessArgs $argObj = null) {
 		
+		if (is_null($argObj)) {
+			return [$this->primaryId() => $this];
+		}
+		
         $property = $argObj->valueOf('layer') ? $this->get($argObj->valueOf('layer')) : FALSE;
         if (!$property) {
             return [];

@@ -201,6 +201,12 @@ class LayerTest extends TestCase
         $this->assertFalse($layer->hasId(3));
         $this->assertFalse($layer->hasId('something wrong'));
     }
+	
+	public function testLoadBare() {
+		$layer = new Layer($this->fivePieces);
+		$this->assertCount(5, $layer->load());
+		$this->assertArrayHasKey(961, $layer->load());
+	}
     
     public function testLoadUsingId() {
         $layer = new Layer($this->fivePieces);
