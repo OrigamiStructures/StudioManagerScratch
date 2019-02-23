@@ -246,8 +246,13 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testIDs()     {
-        $this->assertEquals([20, 38, 40, 509, 955], $this->StackEntity->IDs('pieces'));
+		$this->assertTrue($this->StackEntity->IDs() === [4], 
+				'IDs() did not return the expected primary id for this stack');
+        $this->assertEquals([20, 38, 40, 509, 955], $this->StackEntity->IDs('pieces'),
+				'IDs() on a valid layer did not return the expected array of values');
         $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
+		$this->assertEmpty($this->StackEntity->IDs('bad_layer'), 'IDs(badLayer) '
+				. 'did not return an empty array');
     }
 
     /**

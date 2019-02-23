@@ -157,6 +157,7 @@ class StackSet implements LayerAccessInterface {
 		if(is_null($layer)){
 			return array_keys($this->load());
 		}
+		$ids = [];
 		foreach($this->_data as $stack) {
 			$ids = array_merge($ids, $stack->IDs($layer));
 		}

@@ -188,8 +188,14 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
         
         foreach ($this->fivePieces as $entity) {
-            $this->assertContains($entity->id, $layer->IDs());
+            $this->assertContains($entity->id, $layer->IDs(),
+					'IDs() on a layer of five elements did not return 5 IDs. '
+					. 'At one expected id was missing');
         }
+		
+		$layer = new Layer([], 'contact');
+		$this->assertEmpty($layer->IDs(), 'IDs() on an empty layer'
+				. 'did not return an empty array.');
         
     }
     
