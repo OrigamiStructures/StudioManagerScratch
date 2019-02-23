@@ -34,7 +34,14 @@ trait LayerAccessTrait {
 	}
 	
 	public function IDs($args = null) {
-		
+		return array_keys($this->load());
+	}
+	
+	public function paginate($data, LayerAccessArgs $argObj) {
+		if ($argObj->valueOf('limit') === 1 && !empty($data)) {
+			return array_shift($data);
+		}
+		return $data;
 	}
 	
     /**
