@@ -48,6 +48,25 @@ class StackSet implements LayerAccessInterface {
 		return $this->_data;
 	}
 	
+	public function load(LayerAccessArgs $argObj = null) {
+		
+		if (!$argObj->valueOf('layer')) {
+			return $this->_data;
+		}
+		if ($argObj->valueOf('limit') === 1 && !$argObj->valueOf('layer')) {
+			$keys = array_keys($this->_data);
+			return $this->_data[$keys[0]];
+		}
+		$results = [];
+		foreach ($this->_data as $stack) {
+			$result = $stack->load($argObj);
+			$results = array_merge($results, (is_array($result) ? $result : [$result]));
+		}
+		
+		return $results;
+		
+	}
+	
 	/**
 	 * Get the IDs of all the primary entities in the stored stack entities
 	 * 

@@ -169,6 +169,29 @@ class Layer implements LayerAccessInterface {
 		return null;
 	}
 	
+	public function load(LayerAccessArgs $argObj = null) {
+		
+		if ($argObj->valueOf('lookup_index')) {
+			$id = $argObj->valueOf('lookup_index');
+            if (!$this->hasId($id)) {
+                return [];
+            }
+            return $this->_data[$id];
+		}
+		
+		if ($argObj->isFilter()) {
+			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
+		} else {
+			$result = $this->_data;
+		}
+		
+		if (!$argObj->valueOf('limit') || $argObj->valueOf('limit') == -1) {
+			return $result;
+		} else {
+			return array_shift($result);
+		}
+		
+	}
 	/**
 	 * Get a key => value map from some or all of the stored entities
 	 * 
