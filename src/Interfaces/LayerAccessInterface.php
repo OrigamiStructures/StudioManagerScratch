@@ -29,13 +29,15 @@ interface LayerAccessInterface {
 	/* Done */
 	public function distinct($propery, $layer = '');
 	
+	/* Done */
 	public function element($number);
 	
+	/* Done */
 	public function IDs($layer = null);
 	
-	/* Done */
 	public function keyedList(LayerAccessArgs $argObj);
 	
+	/* Done */
 	public function linkedTo($layer, $id);
 	
 	/* Done */

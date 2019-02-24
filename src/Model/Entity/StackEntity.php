@@ -107,13 +107,32 @@ class StackEntity extends Entity implements LayerAccessInterface {
 			return [$this->primaryId() => $this];
 		}
 		
-        $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
-        if (!$property || !is_a($property, '\App\Lib\Layer')) {
+        $property = $this->getValidPropery($argObj);
+        if (!$property) {
             return [];
         }
 
 		return $property->load($argObj);
 		
+	}
+	
+	/**
+	 * Get a property of this stack that is a Layer
+	 * 
+	 * The target is named in 'layer' of the arg object, but it is seen as a 
+	 * property of the stack. ('property' in the argObj is of the layer entities) 
+	 * 
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return boolean|Layer Layer object if valid, FALSE otherwise
+	 */
+	private function getValidPropery($argObj) {
+		$property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
+		if($property && is_a($property, '\App\Lib\Layer')) {
+			return $property;
+		} else {
+			return FALSE;
+		}
 	}
     /**
      * Get this primary id or the IDs of all the entities in a layer
