@@ -77,7 +77,7 @@ trait LayerAccessTrait {
      * @return array An array of entities that passed the test
      */
     public function filter($property, $value) {
-        if (!is_a($this, '\App\Lib\Layer') || !$this->verifyProperty($property)) {
+        if (!is_a($this, '\App\Lib\Layer') || !$this->has($property)) {
             return [];
         }
         $set = collection($this->_data);

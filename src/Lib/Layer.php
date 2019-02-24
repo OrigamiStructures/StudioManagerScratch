@@ -213,8 +213,8 @@ class Layer implements LayerAccessInterface {
 //	public function keyedList($key, $value, $type = 'all', $options =[]) {
 	public function keyedList(LayerAccessArgs $args) {
 		
-		$validKey = $this->verifyProperty($key);
-		$valueIsProperty = $validValue = $this->verifyProperty($value);
+		$validKey = $this->has($key);
+		$valueIsProperty = $validValue = $this->has($value);
 		if (!$valueIsProperty) {
 			$valueIsMethod = $validValue = method_exists($this->className(), $value);
 		}
@@ -243,7 +243,7 @@ class Layer implements LayerAccessInterface {
     }
     
 	public function distinct($property, $layer = '') {
-        if (!$this->verifyProperty($property)) {
+        if (!$this->has($property)) {
             return [];
         }
 //        osd($this->_entities[965]);;
@@ -276,7 +276,7 @@ class Layer implements LayerAccessInterface {
      */
     public function linkedTo($foreign, $foreign_id, $linked = null) {
         $foreign_key = $this->_modelKey($foreign);
-        if (!$this->verifyProperty($foreign_key)) {
+        if (!$this->has($foreign_key)) {
             return NULL;
         }
         return $this->filter($foreign_key, $foreign_id);
@@ -337,14 +337,14 @@ class Layer implements LayerAccessInterface {
 // <editor-fold defaultstate="collapsed" desc="Protected and Private">
 
     /**
-     * Does the $property exist in this entity?
+     * Does the $property exist in this layer?
 	 * 
-	 * This checks against visible properties
+	 * This checks against visible properties, echos Entity::has()
      * 
      * @param string $property
      * @return boolean
      */
-    public function verifyProperty($property) {
+    public function has($property) {
         return in_array($property, $this->_entityProperties);
     }
 
