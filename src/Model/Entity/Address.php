@@ -44,7 +44,7 @@ class Address extends Entity
      * @return boolean
      */
     public function isPrimary() {
-        return $this->primary_addr > 0;
+        return $this->get('primary');
     }
 	
 	/**
