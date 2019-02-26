@@ -38,6 +38,15 @@ class FGCurlTest extends TestCase
     }
 	
 	public function testDevJsonOrder() {
+		$order = [
+			'Credential' => $this->goodCreds(),
+			'Orders' => [
+				$this->goodOrder(),
+				$this->badOrder(),
+			],
+		];
+		
+		
 		$response = $this->FGCurl->devJsonOrder($this->jsonOrder());
 		pr(json_decode($response));
 	}
@@ -178,12 +187,24 @@ class FGCurlTest extends TestCase
 '];
 	}
 	
+	/**
+	 * Array nodes for credentials that will succeed
+	 */
 	protected function goodCreds() {
-		
+		return [
+			"company" => "IfOnly Testing",
+			"token" => "76be72caa9a4a550ac4593d872f38e0d20618a4a"
+		];
 	}
 	
+	/**
+	 * Array nodes for credentials that will fail
+	 */
 	protected function badCreds() {
-		
+		return [
+			"company" => "Unknown Company",
+			"token" => "76be72caa9_bogus_token_872f38e0d20618a4a"
+		];
 	}
 	
 	protected function newOrderRef() {
@@ -198,8 +219,13 @@ class FGCurlTest extends TestCase
 		
 	}
 	
-	public function goodOrders() {
-		
+	protected function badOrder() {
 		
 	}
+	
+	public function goodOrders() {
+		
+	}
+	
+	
 }
