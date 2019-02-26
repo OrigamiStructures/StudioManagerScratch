@@ -103,10 +103,17 @@ class Layer implements LayerAccessInterface {
     
 	/**
 	 * The entity class name of the stored objects
+	 * 
+	 * @param string $style 'bare' or 'namespaced'
 	 * @return string
 	 */
-    public function entityClass() {
-        return $this->_className;
+    public function entityClass($style = 'bare') {
+		if ($style === 'bare') {
+			return $this->_className;
+		} else {
+			return 'App\\Model\\Entity\\'.$this->_className;
+		}
+        
     }
     
     /**
@@ -219,15 +226,16 @@ class Layer implements LayerAccessInterface {
 	 */
     public function filter($value_source, $test_value, $operator = null) {
 			
+		if	(	!$this->has($value_source) && 
+				!method_exists($this->entityClass('namespaced'), $value_source)) 
+		{
+            return [];
+        }
+		
 		if(is_null($operator)) {
 			$operator = is_array($test_value) ? 'in_array' : '==';
 		}
 
-		if (!$this->has($value_source) && 
-				!method_exists('App\\Model\\Entity\\'.$this->entityClass(), $value_source)) {
-            return [];
-        }
-		
 		$comparison = $this->selectComparison($operator);
 		
         $set = collection($this->_data);
