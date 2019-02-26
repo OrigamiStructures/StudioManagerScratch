@@ -223,7 +223,8 @@ class Layer implements LayerAccessInterface {
 			$operator = is_array($test_value) ? 'in_array' : '==';
 		}
 
-		if (!$this->has($value_source) && !method_exists($this->entityClass(), $value_source)) {
+		if (!$this->has($value_source) && 
+				!method_exists('App\\Model\\Entity\\'.$this->entityClass(), $value_source)) {
             return [];
         }
 		
@@ -256,7 +257,8 @@ class Layer implements LayerAccessInterface {
 			'!=' => function($actual, $test_value) { return $actual != $test_value; },
 			'<' => function($actual, $test_value) { return $actual < $test_value; },
 			'>' => function($actual, $test_value) { return $actual > $test_value; },
-			'in_array' => function($actual, $array) {return in_array($actual, $array);},
+			'in_array' => function($actual, $test_value) {return in_array($actual, $test_value);},
+			'truthy' => function($actual, $test_value) {return (boolean) $actual; }
 		];
 			
 		if (!array_key_exists($operator, $ops)) {

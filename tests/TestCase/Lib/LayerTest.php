@@ -333,10 +333,10 @@ class LayerTest extends TestCase
 	}
 	
     /**
-     * Test filter
+     * Test filter with property comparisons
      * 
      */
-    public function testFilter() {
+    public function testFilterWithProperties() {
         $layer = new Layer($this->fivePieces);
         
         $results = $layer->filter('number', 4); // good find
@@ -362,6 +362,29 @@ class LayerTest extends TestCase
         $this->assertTrue(empty($results));
     }
 
+	/**
+	 * Test filter with method comparisons
+	 * 
+	 */
+	public function testFilterWithMethods() {
+		$layer = new Layer($this->fivePieces);
+		
+		$result = $layer->filter('isCollected', '', 'truthy');
+		$this->assertCount(2, $result, 'unexpected result while testing truthy '
+				. 'on the boolean output of an entity method');
+				
+		$result = $layer->filter('isCollected', TRUE, '!=');
+		$this->assertCount(3, $result, 'unexpected result while searching != '
+				. 'on the boolean output of an entity method');
+		
+		$result = $layer->filter('key', '35_36', '==');
+		$this->assertCount(5, $result, 'unexpected result while searching == '
+				. 'on the string output of an entity method');
+		
+		$result = $layer->filter('key', '35_36', '!=');
+		$this->assertCount(0, $result, 'unexpected result while searching != '
+				. 'on the string output of an entity method');
+	}
     /**
      * Check that no entities have changed
      */
