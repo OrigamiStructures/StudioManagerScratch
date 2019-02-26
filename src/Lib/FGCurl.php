@@ -11,8 +11,12 @@ class FGCurl {
 	protected $_url = [
 		'DevJsonOrder' => "http://dev.ampfg.com/robotOrders/input/json",
 		'DevXmlOrder' => "http://dev.ampfg.com/robotOrders/input/xml",
-		'DevJsonStatus' => "http://dev.ampfg.com/robotStatus/input/json",
-		'DevXmlStatus' => "http://dev.ampfg.com/robotStatus/input/xml",
+		'DevJsonStatus' => "http://dev.ampfg.com/robotStatuses/input/json",
+		'DevXmlStatus' => "http://dev.ampfg.com/robotStatuses/input/xml",
+		'JsonOrder' => "https://fg.ampprinting.com/robotOrders/input/json",
+		'XmlOrder' => "https://fg.ampprinting.com/robotOrders/input/xml",
+		'JsonStatus' => "https://fg.ampprinting.com/robotStatuses/input/json",
+		'XmlStatus' => "https://fg.ampprinting.com/robotStatuses/input/xml",
 	];
 
 	public function devJsonOrder($data) {
@@ -29,6 +33,21 @@ class FGCurl {
 
 	public function devXmlStatus($data) {
 		return $this->postRequest($data, $this->to('DevXmlStatus'));
+	}
+	public function JsonOrder($data) {
+		return $this->postRequest($data, $this->to('JsonOrder'));
+	}
+
+	public function XmlOrder($data) {
+		return $this->postRequest($data, $this->to('XmlOrder'));
+	}
+
+	public function JsonStatus($data) {
+		return $this->postRequest($data, $this->to('JsonStatus'));
+	}
+
+	public function XmlStatus($data) {
+		return $this->postRequest($data, $this->to('XmlStatus'));
 	}
 
 	protected function to($destination) {
