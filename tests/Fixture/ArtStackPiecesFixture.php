@@ -77,7 +77,7 @@ class ArtStackPiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => 1
             ],
             [
                 'id' => 958,
@@ -90,7 +90,7 @@ class ArtStackPiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => 1
             ],
             [
                 'id' => 959,
@@ -130,7 +130,7 @@ class ArtStackPiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => 36,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => 1
             ],
             [
                 'id' => 962,
@@ -143,7 +143,7 @@ class ArtStackPiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => 36,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => 1
             ],
             [
                 'id' => 963,
