@@ -43,7 +43,7 @@ interface LayerAccessInterface {
 	/* Done */
 	public function load(LayerAccessArgs $argObj = null);
 	
-	function filter($property, $value);
+//	function filter($property, $value);
 	
 //	public function all($property); //FUTURE FEATURE
 	

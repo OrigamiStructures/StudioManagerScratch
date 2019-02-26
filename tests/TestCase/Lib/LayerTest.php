@@ -346,9 +346,9 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number, 
 				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
         
-        $results = $layer->filter('number', '4', 
-				'A valid search for \'number\' = \'4\' failed'); // good val, casting mismatch
-        $this->assertTrue(is_array($results));
+        $results = $layer->filter('number', '4'); // good val, casting mismatch
+        $this->assertTrue(is_array($results), 
+				'A valid search for \'number\' = \'4\' failed');
         $match = array_pop($results);
         $this->assertEquals(4, $match->number, 
 				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');

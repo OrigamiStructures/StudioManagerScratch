@@ -197,6 +197,75 @@ class Layer implements LayerAccessInterface {
 		return $this->paginate($result, $argObj);
 		
 	}
+	
+	/**
+	 * Run a filter process on entities in an array
+	 * 
+	 * Support the Layer::load by doing original/desired filter testing
+	 * This is the final stop of all three levels of load(). If some simple 
+	 * case wasn't requested, the matching data will be sought here.
+	 * 
+	 * $value_source can be the name of a property or a method on the 
+	 *		entity. Methods must require no arguemnts.
+	 * $test_value is will be compared to $value_source's result
+	 * $operator is the kind of comparison to be done. The actual function 
+	 *		that does comparison will be looked up (selectComparison($op)) 
+	 *		using $operator as a lookup key
+	 * 
+	 * @param string $value_source name of a property or method
+	 * @param mixed $test_value 
+	 * @param string $operator A comparison operator
+	 * @return array
+	 */
+    public function filter($value_source, $test_value, $operator = null) {
+			
+		if(is_null($operator)) {
+			$operator = is_array($test_value) ? 'in_array' : '==';
+		}
+
+		if (!$this->has($value_source) && !method_exists($this->entityClass(), $value_source)) {
+            return [];
+        }
+		
+		$comparison = $this->selectComparison($operator);
+		
+        $set = collection($this->_data);
+        $results = $set->filter(function ($entity, $key) use ($value_source, $test_value, $comparison) {
+				if(in_array($value_source, $entity->visibleProperties())) {
+					$actual = $entity->$value_source;
+				} else {
+					$actual = $entity->$value_source();
+				}
+				return $comparison($actual, $test_value);
+            })->toArray(); 
+        return $results;
+    }
+	
+	/**
+	 * Choose a comparison function based on a provided operator
+	 * 
+	 * An unknown operator will yield a function that never finds matches
+	 * 
+	 * @param string $operator
+	 * @return function
+	 */
+	public function selectComparison($operator) {
+		$ops = [
+			'bad_op' => function($actual, $test_value) { return FALSE; },
+			'==' => function($actual, $test_value) { return $actual == $test_value; },
+			'!=' => function($actual, $test_value) { return $actual != $test_value; },
+			'<' => function($actual, $test_value) { return $actual < $test_value; },
+			'>' => function($actual, $test_value) { return $actual > $test_value; },
+			'in_array' => function($actual, $array) {return in_array($actual, $array);},
+		];
+			
+		if (!array_key_exists($operator, $ops)) {
+			return $ops['bad_op'];
+		} else {
+			return $ops[$operator];
+		}
+		
+	}
 	/**
 	 * Get a key => value map from some or all of the stored entities
 	 * 
