@@ -177,4 +177,29 @@ class FGCurlTest extends TestCase
 }
 '];
 	}
+	
+	protected function goodCreds() {
+		
+	}
+	
+	protected function badCreds() {
+		
+	}
+	
+	protected function newOrderRef() {
+		return uniqid();
+	}
+	
+	protected function oldOrderRef() {
+		
+	}
+	
+	protected function goodOrder() {
+		
+	}
+	
+	public function goodOrders() {
+		
+		
+	}
 }
