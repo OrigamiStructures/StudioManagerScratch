@@ -470,9 +470,9 @@ class Layer implements LayerAccessInterface {
                     . 'second argument to __construct().';
                 throw new BadClassConfigurationException($message);
             }
-            $name = $type;
+            $name = ucfirst($type);
         }
-        $this->_className = $this->_entityName($name);
+        $this->_className = $name; //$this->_entityName($name);
         $this->_layer = strtolower($this->_camelize($this->_className));
         if (empty($sampleData)) {
             $class = "\App\Model\Entity\\$this->_className";
