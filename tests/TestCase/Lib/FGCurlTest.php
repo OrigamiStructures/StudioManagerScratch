@@ -37,15 +37,45 @@ class FGCurlTest extends TestCase {
 	}
 
 	public function testDevJsonOrder() {
-		$response = $this->FGCurl->devJsonOrder($this->jsonOrder());
-		pr(json_decode($response));
-//		pr($response);
 		
-		$response = $this->FGCurl->JsonOrder($this->jsonOrder());
-		pr(json_decode($response));
+		$empty_order = [json_encode([
+			'Credentials' => $this->goodCreds(),
+			'Order' => [],
+		])];
+		$response = $this->FGCurl->devJsonOrder($empty_order);
+//		pr(json_decode($response));
+//		pr($response);
+//		$this->assertTrue(must have at least one order)
+		
+		$response = $this->FGCurl->devJsonOrder($empty_order);
+//		pr(json_decode($response));
+//		pr($response);
+//		$this->assertTrue(must have at least one order)
+		
+		$no_items = [json_encode([
+			'Credentials' => $this->goodCreds(),
+			$this->customer_order('', ''),
+			'OrderItems' => [],
+		])];
+		$response = $this->FGCurl->devJsonOrder($no_items);
+//		pr(json_decode($response));
+//		pr($response);
+//		$this->assertTrue(must have at least one order item)
+		
+		$response = $this->FGCurl->devJsonOrder($empty_order);
+//		pr(json_decode($response));
+//		pr($response);
+//		$this->assertTrue(must have at least one order item)
+
+//		$response = $this->FGCurl->devJsonOrder($this->jsonOrder());
+//		pr(json_decode($response));
+////		pr($response);
+//		
+//		$response = $this->FGCurl->JsonOrder($this->jsonOrder());
+//		pr(json_decode($response));
 //		pr($response);
 	}
-
+	
 	public function testDevXmlOrder() {
         $this->markTestIncomplete('Not implemented yet.');
 	}
@@ -306,7 +336,7 @@ class FGCurlTest extends TestCase {
 	protected function customer_order($billing_company, $order_reference) {
 		return [
 			// <editor-fold defaultstate="collapsed" desc="basic order data">
-			'billing_company' => $billing_company,
+			'billing_company' => 'If Only',
 			'first_name' => 'Celia',
 			'last_name' => 'Peachey',
 			'phone' => '518-256-3396',
@@ -319,7 +349,7 @@ class FGCurlTest extends TestCase {
 			'note' => 'This is a note for this shipment. It really could be quite a long note.
 	 It might even have carriage returns.', 
 			// </editor-fold>
-			'order_reference' => $order_reference,
+			'order_reference' => 'order1233452',
 			];
 	}
 	
