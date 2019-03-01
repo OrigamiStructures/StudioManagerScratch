@@ -41,6 +41,7 @@ vendor/bin/phpunit test tests/TestCase/Lib/RenumberMessagingTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/SystemStateTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
+vendor/bin/phpunit test tests/TestCase/Lib/FGCurlTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
 # Model\Lib

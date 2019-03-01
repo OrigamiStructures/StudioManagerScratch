@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Lib;
 
 use App\Lib\FGCurl;
 use Cake\TestSuite\TestCase;
+use App\Test\Fixture\RobotFixture;
 
 /**
  * App\Lib\FGCurl Test Case
@@ -16,15 +17,18 @@ class FGCurlTest extends TestCase {
 	 * @var \App\Lib\FGCurl
 	 */
 	public $FGCurl;
+	public $RobotFixture;
 
 	public function setUp() {
 		parent::setUp();
 		$this->FGCurl = new FGCurl();
+		$this->RobotFixture= new RobotFixture();
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->FGCurl);
+		unset($this->RobotFixture);
 	}
 
 	/**
@@ -37,43 +41,37 @@ class FGCurlTest extends TestCase {
 	}
 
 	public function testDevJsonOrder() {
-		
-		$empty_order = [json_encode([
-			'Credentials' => $this->goodCreds(),
-			'Order' => [],
-		])];
-		$response = $this->FGCurl->devJsonOrder($empty_order);
-//		pr(json_decode($response));
-//		pr($response);
-//		$this->assertTrue(must have at least one order)
-		
-		$response = $this->FGCurl->devJsonOrder($empty_order);
-//		pr(json_decode($response));
-//		pr($response);
-//		$this->assertTrue(must have at least one order)
-		
-		$no_items = [json_encode([
-			'Credentials' => $this->goodCreds(),
-			$this->customer_order('', ''),
-			'OrderItems' => [],
-		])];
-		$response = $this->FGCurl->devJsonOrder($no_items);
-//		pr(json_decode($response));
-//		pr($response);
-//		$this->assertTrue(must have at least one order item)
-		
-		$response = $this->FGCurl->devJsonOrder($empty_order);
-//		pr(json_decode($response));
-//		pr($response);
-//		$this->assertTrue(must have at least one order item)
 
-//		$response = $this->FGCurl->devJsonOrder($this->jsonOrder());
-//		pr(json_decode($response));
+//        $empty_order = [json_encode([
+//            'Credentials' => $this->goodCreds(),
+//            'Order' => [],
+//        ])];
+//        $response = $this->FGCurl->devJsonOrder($empty_order);
+////		pr(json_decode($response));
 ////		pr($response);
-//		
-//		$response = $this->FGCurl->JsonOrder($this->jsonOrder());
-//		pr(json_decode($response));
+////		$this->assertTrue(must have at least one order)
+
+        $good_order = [json_encode([
+            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+            'Orders' =>
+                [
+                    $this->RobotFixture->getOrderNode(TRUE, 0),
+                    'OrderItem' =>
+                    [
+                        $this->RobotFixture->orderItemNode['good'][0],
+                        $this->RobotFixture->orderItemNode['good'][1]
+                    ],
+                    'Shipment' =>
+                    [
+                        $this->RobotFixture->shipmentNode['good']
+                    ]
+                ]
+        ])];
+        $response = $this->FGCurl->devJsonOrder($good_order);
+		pr(json_decode($response));
 //		pr($response);
+//		$this->assertTrue(must have at least one order)
+
 	}
 	
 	public function testDevXmlOrder() {
@@ -249,6 +247,7 @@ class FGCurlTest extends TestCase {
 				return uniqid();
 				break;
 			case 'existing':
+			    $existing_order_ref = $this->exitingOrderRef();
 				return 'order1233452';
 				break;
 			default:
