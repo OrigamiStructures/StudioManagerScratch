@@ -22,7 +22,7 @@ class FGCurlTest extends TestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->FGCurl = new FGCurl();
-		$this->RobotFixture= new RobotFixture();
+		$this->RobotFixture = new RobotFixture();
 	}
 
 	public function tearDown() {
@@ -51,33 +51,33 @@ class FGCurlTest extends TestCase {
 ////		pr($response);
 ////		$this->assertTrue(must have at least one order)
 
-		$order = [
-            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
-            'Orders' =>
-                [
-                    $this->RobotFixture->getOrderNode(TRUE, 0),
-                    'OrderItem' =>
-                    [
-                        $this->RobotFixture->orderItemNode['good'][0],
-                        $this->RobotFixture->orderItemNode['good'][1]
-                    ],
-                    'Shipment' =>
-                    [
-                        $this->RobotFixture->shipmentNode['good']
-                    ]
-                ]
-        ];
-		pr($order);
-       $good_order = [json_encode($order)];
-        $response = $this->FGCurl->devJsonOrder($good_order);
+		$items = [
+			$this->RobotFixture->orderItemNode['good'][0],
+			$this->RobotFixture->orderItemNode['good'][1]
+		];
+		$shipment = $this->RobotFixture->shipmentNode['good'];
+		$order = $this->RobotFixture->getOrderNode(TRUE, 0);
+		$order['OrderItem'] = $items;
+		$order['Shipment'] = $shipment;
+		
+		$orders = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				$order
+			]
+		];
+			
+//		'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+//		pr($orders);
+		$good_order = [json_encode($orders)];
+		$response = $this->FGCurl->devJsonOrder($good_order);
 //		pr(json_decode($response));
-//		pr($response);
+		pr($response);
 //		$this->assertTrue(must have at least one order)
-
 	}
-	
+
 	public function testDevXmlOrder() {
-        $this->markTestIncomplete('Not implemented yet.');
+		$this->markTestIncomplete('Not implemented yet.');
 	}
 
 	public function testDevJsonStatus() {
@@ -249,7 +249,7 @@ class FGCurlTest extends TestCase {
 				return uniqid();
 				break;
 			case 'existing':
-			    $existing_order_ref = $this->exitingOrderRef();
+				$existing_order_ref = $this->exitingOrderRef();
 				return 'order1233452';
 				break;
 			default:
@@ -276,7 +276,7 @@ class FGCurlTest extends TestCase {
 			'billing_zip' => '94111',
 			'billing_country' => 'US',
 			'note' => 'This is a note for this shipment. It really could be quite a long note.
-	 It might even have carriage returns.', 
+	 It might even have carriage returns.',
 			// </editor-fold>
 			'order_reference' => 'order1233452',
 			'OrderItem' => [
@@ -286,7 +286,7 @@ class FGCurlTest extends TestCase {
 					'customer_item_code' => '1602',
 					'name' => 'Test Item #1',
 					'quantity' => '1',
-				], 
+				],
 				// </editor-fold>
 				// <editor-fold defaultstate="collapsed" desc="first item">
 				1 => [
@@ -294,8 +294,8 @@ class FGCurlTest extends TestCase {
 					'customer_item_code' => 'TestItem2',
 					'name' => 'Test Item #2',
 					'quantity' => '5',
-				], 
-				// </editor-fold>
+				],
+			// </editor-fold>
 			],
 			// <editor-fold defaultstate="collapsed" desc="Shipment">
 			'Shipment' => [
@@ -320,11 +320,11 @@ class FGCurlTest extends TestCase {
 				'tpb_state' => '',
 				'tpb_zip' => '',
 				'tpb_phone' => '',
-			], 
-			// </editor-fold>
+			],
+				// </editor-fold>
 		];
 	}
-	
+
 	protected function keyParams() {
 		$billing_company = 'If Only';
 		$order_reference = 'order1233452';
@@ -333,7 +333,7 @@ class FGCurlTest extends TestCase {
 			'TestItem2',
 		];
 	}
-	
+
 	protected function customer_order($billing_company, $order_reference) {
 		return [
 			// <editor-fold defaultstate="collapsed" desc="basic order data">
@@ -348,12 +348,12 @@ class FGCurlTest extends TestCase {
 			'billing_zip' => '94111',
 			'billing_country' => 'US',
 			'note' => 'This is a note for this shipment. It really could be quite a long note.
-	 It might even have carriage returns.', 
+	 It might even have carriage returns.',
 			// </editor-fold>
 			'order_reference' => 'order1233452',
-			];
+		];
 	}
-	
+
 	protected function orderItem($item_code) {
 		return [
 			'catalog_id' => '',
@@ -362,7 +362,7 @@ class FGCurlTest extends TestCase {
 			'quantity' => '1',
 		];
 	}
-	
+
 	protected function shipment() {
 		return [
 			'billing' => 'Sender',
@@ -403,7 +403,7 @@ class FGCurlTest extends TestCase {
 			'billing_zip' => '94111',
 			'billing_country' => 'US',
 			'note' => 'This is a note for this shipment. It really could be quite a long note.
-	 It might even have carriage returns.', 
+	 It might even have carriage returns.',
 			// </editor-fold>
 			'order_reference' => 'order1233452',
 			'OrderItem' => [
@@ -413,7 +413,7 @@ class FGCurlTest extends TestCase {
 					'customer_item_code' => '1602',
 					'name' => 'Test Item #1',
 					'quantity' => '1',
-				], 
+				],
 				// </editor-fold>
 				// <editor-fold defaultstate="collapsed" desc="first item">
 				1 => [
@@ -421,8 +421,8 @@ class FGCurlTest extends TestCase {
 					'customer_item_code' => 'TestItem2',
 					'name' => 'Test Item #2',
 					'quantity' => '5',
-				], 
-				// </editor-fold>
+				],
+			// </editor-fold>
 			],
 			// <editor-fold defaultstate="collapsed" desc="Shipment">
 			'Shipment' => [
@@ -447,15 +447,15 @@ class FGCurlTest extends TestCase {
 				'tpb_state' => '',
 				'tpb_zip' => '',
 				'tpb_phone' => '',
-			], 
-			// </editor-fold>
+			],
+				// </editor-fold>
 		];
 	}
 
 	public function goodOrders() {
 		
 	}
-	
+
 	protected function jsonStatusRequest() {
 		return ['
 {
@@ -485,7 +485,6 @@ class FGCurlTest extends TestCase {
 	]
 }
 '];
-
 	}
 
 }
