@@ -480,7 +480,7 @@ class Layer implements LayerAccessInterface {
                     . 'second argument to __construct().';
                 throw new BadClassConfigurationException($message);
             }
-            $name = ucfirst($type);
+            $name = ucfirst($this->_singularName($type));
         }
         $this->_className = $name; //$this->_entityName($name);
         $this->_layer = strtolower($this->_camelize($this->_className));
