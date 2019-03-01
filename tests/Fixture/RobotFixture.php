@@ -11,11 +11,11 @@ namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
-class RobotFixture extends TestFixture
+class RobotFixture
 {
     public $goodCreds =
         [
-            "company" => "CurlyMedia",
+            "company" => "Curly Media",
             "token" => ''
         ];
 
@@ -224,7 +224,7 @@ class RobotFixture extends TestFixture
     public function getToken($mode = 'Dev')
     {
         if($mode = 'Dev') {
-            return '146567403f8aadb4bbd468b9aa7879742704c2ca';
+            return 'ac62001e66caaa8614610284b07d50c1a7f487b1';
         } else {
             return 'ac62001e66caaa8614610284b07d50c1a7f487b1';
         }

@@ -51,7 +51,7 @@ class FGCurlTest extends TestCase {
 ////		pr($response);
 ////		$this->assertTrue(must have at least one order)
 
-        $good_order = [json_encode([
+		$order = [
             'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
             'Orders' =>
                 [
@@ -66,9 +66,11 @@ class FGCurlTest extends TestCase {
                         $this->RobotFixture->shipmentNode['good']
                     ]
                 ]
-        ])];
+        ];
+		pr($order);
+       $good_order = [json_encode($order)];
         $response = $this->FGCurl->devJsonOrder($good_order);
-		pr(json_decode($response));
+//		pr(json_decode($response));
 //		pr($response);
 //		$this->assertTrue(must have at least one order)
 
@@ -79,12 +81,12 @@ class FGCurlTest extends TestCase {
 	}
 
 	public function testDevJsonStatus() {
-		$response = $this->FGCurl->devJsonStatus($this->jsonStatusRequest());
-		pr(json_decode($response));
-//		pr($response);
-		
-		$response = $this->FGCurl->JsonStatus($this->jsonStatusRequest());
-		pr(json_decode($response));
+//		$response = $this->FGCurl->devJsonStatus($this->jsonStatusRequest());
+//		pr(json_decode($response));
+////		pr($response);
+//		
+//		$response = $this->FGCurl->JsonStatus($this->jsonStatusRequest());
+//		pr(json_decode($response));
 //		pr($response);
 	}
 
