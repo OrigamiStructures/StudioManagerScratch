@@ -176,15 +176,17 @@ class RobotFixture
                 ]
         ];
 
-    public $statusOrderNubmers =
+    public $statusOrderNumbers =
         [
             'good' =>
                 [
-                    [],[]
+                    '1903-AEZY',
+                    '1903-AEZW'
                 ],
             'bad' =>
                 [
-                    [],[]
+                    'bad_order_no',
+                    'bad_order_no_2'
                 ]
         ];
 
@@ -192,11 +194,13 @@ class RobotFixture
         [
             'good' =>
                 [
-                    [],[]
+                    '5c7ad48d56750',
+                    '5c7ad48e8ee56'
                 ],
             'bad' =>
                 [
-                    [],[]
+                    'bad_order_ref',
+                    'bad_order_ref_2'
                 ]
         ];
 
