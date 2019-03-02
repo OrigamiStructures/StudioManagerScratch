@@ -8,19 +8,8 @@ namespace App\Lib;
  */
 class FGCurl {
 
-//    protected $_url = [
-//        'DevJsonOrder' => "http://dev.ampfg.com/robotOrders/input/json",
-//        'DevXmlOrder' => "http://dev.ampfg.com/robotOrders/input/xml",
-//        'DevJsonStatus' => "http://dev.ampfg.com/robotStatuses/input/json",
-//        'DevXmlStatus' => "http://dev.ampfg.com/robotStatuses/input/xml",
-//        'JsonOrder' => "https://fg.ampprinting.com/robotOrders/input/json",
-//        'XmlOrder' => "https://fg.ampprinting.com/robotOrders/input/xml",
-//        'JsonStatus' => "https://fg.ampprinting.com/robotStatuses/input/json",
-//        'XmlStatus' => "https://fg.ampprinting.com/robotStatuses/input/xml",
-//    ];
-
     protected $_url = [
-        'DevJsonOrder' => "http://localhost/ampfg/robotOrders/input/json",
+        'DevJsonOrder' => "http://dev.ampfg.com/robotOrders/input/json",
         'DevXmlOrder' => "http://dev.ampfg.com/robotOrders/input/xml",
         'DevJsonStatus' => "http://dev.ampfg.com/robotStatuses/input/json",
         'DevXmlStatus' => "http://dev.ampfg.com/robotStatuses/input/xml",
@@ -73,9 +62,13 @@ class FGCurl {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		$response = curl_exec($ch);
-		curl_close($ch);
+        if($erno = curl_errno($ch)){
+            $error_message = curl_strerror($erno);
+            pr("cURL error ({$erno}):\n{$error_message}");
+        }
+        curl_close($ch);
 
 		return $response;
 

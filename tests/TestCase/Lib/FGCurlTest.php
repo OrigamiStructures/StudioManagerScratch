@@ -71,12 +71,12 @@ class FGCurlTest extends TestCase {
             $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
         }
 
-//        $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
-//        pr($this->FGCurl->JsonOrder($json_order));
-//
-//        foreach ($response as $index => $this_one){
-//            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
-//        }
+        $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+        pr($this->FGCurl->JsonOrder($json_order));
+
+        foreach ($response as $index => $this_one){
+            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+        }
 
     }
 
