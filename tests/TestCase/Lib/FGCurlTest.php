@@ -18,6 +18,7 @@ class FGCurlTest extends TestCase {
 	 */
 	public $FGCurl;
 	public $RobotFixture;
+	public $production = false;
 
 	public function setUp() {
 		parent::setUp();
@@ -40,7 +41,7 @@ class FGCurlTest extends TestCase {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
 
-    public function testDevJsonOrderSingleGood() {
+    public function testJsonOrderSingleGood() {
 
         //setup items
 	    $items = [
@@ -65,22 +66,34 @@ class FGCurlTest extends TestCase {
         ];
 
         $json_order = [json_encode($orders)];
+
+        //dev platform
         $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
 
-        foreach ($response as $index => $this_one){
-            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+        $this->assertNotNull($response, "Test returned NULL response when some response was expected from good order on dev server");
+
+        if (!is_null($response)) {
+            foreach ($response as $index => $this_one) {
+                $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1 on dev server");
+            }
         }
 
-        $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
-        pr($this->FGCurl->JsonOrder($json_order));
+        //served platform
 
-        foreach ($response as $index => $this_one){
-            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+        if ($this->production) {
+            $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+            pr($this->FGCurl->JsonOrder($json_order));
+            $this->assertNotNull($response, "Test returned NULL response when some response was expected from good order on production server");
+            if (!is_null($response)) {
+                foreach ($response as $index => $this_one) {
+                    $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1 production server");
+                }
+            }
         }
 
     }
 
-    public function testDevJsonOrderMultipleGood() {
+    public function testJsonOrderMultipleGood() {
 
         //setup common items
 	    $items = [
@@ -112,14 +125,33 @@ class FGCurlTest extends TestCase {
 
 
         $json_order = [json_encode($orders)];
+
+        //dev platform
         $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
 
-        foreach ($response as $index => $this_one){
-            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+        $this->assertNotNull($response, "Test returned NULL response when some response was expected from good order on dev server");
+
+        if (!is_null($response)) {
+            foreach ($response as $index => $this_one) {
+                $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1 on dev server");
+            }
+        }
+
+        //served platform
+
+        if ($this->production) {
+            $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+            pr($this->FGCurl->JsonOrder($json_order));
+            $this->assertNotNull($response, "Test returned NULL response when some response was expected from good order on production server");
+            if (!is_null($response)) {
+                foreach ($response as $index => $this_one) {
+                    $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1 production server");
+                }
+            }
         }
     }
 
-    public function testDevJsonOrderSingleBadOrderNode() {
+    public function testJsonOrderSingleBadOrderNode() {
 
         //setup common items
         $items = [
@@ -143,14 +175,34 @@ class FGCurlTest extends TestCase {
         ];
 
         $json_order = [json_encode($orders)];
+
+        //dev platform
         $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
 
-        foreach ($response as $index => $this_one){
-            $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 order");
+        $this->assertNotNull($response, "Test returned NULL response when some response was expected from providing missing order reference on dev server");
+
+        if (!is_null($response)) {
+            foreach ($response as $index => $this_one) {
+                $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 error on dev server");
+            }
         }
+
+        //served platform
+
+        if ($this->production) {
+            $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+            pr($this->FGCurl->JsonOrder($json_order));
+            $this->assertNotNull($response, "Test returned NULL response when some response was expected from providing missing order reference on production server");
+            if (!is_null($response)) {
+                foreach ($response as $index => $this_one) {
+                    $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 error on production server");
+                }
+            }
+        }
+
     }
 
-    public function testDevJsonOrderMultipleBadOrderNode() {
+    public function testJsonOrderMultipleBadOrderNode() {
 
         //setup common items
         $items = [
@@ -182,11 +234,96 @@ class FGCurlTest extends TestCase {
 
 
         $json_order = [json_encode($orders)];
+
+        //dev platform
         $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
 
-        foreach ($response as $index => $this_one){
-            $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 order");
+        $this->assertNotNull($response, "Test returned NULL response when some response was expected from providing missing order reference on dev server");
+
+        if (!is_null($response)) {
+            foreach ($response as $index => $this_one) {
+                $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 error on dev server");
+            }
         }
+
+        //served platform
+
+        if ($this->production) {
+            $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+            pr($this->FGCurl->JsonOrder($json_order));
+            $this->assertNotNull($response, "Test returned NULL response when some response was expected from providing missing order reference on production server");
+            if (!is_null($response)) {
+                foreach ($response as $index => $this_one) {
+                    $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 error on production server");
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $error_index the index from the data provider
+     * @param $error_code the error code that should return
+     * @param $error_message the message to show
+     * @dataProvider badItemProvider
+     */
+    public function testJsonOrderBadOrderItem($error_index, $error_code, $error_message) {
+
+        //setup common items
+        $items = [
+            $this->RobotFixture->orderItemNode['bad'][$error_index]
+        ];
+
+        //setup common shipment
+        $shipment = $this->RobotFixture->shipmentNode['good'];
+
+        //setup first order
+        $order = $this->RobotFixture->getOrderNode(true, 0);
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        $orders = [
+            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+            'Orders' => [
+                $order
+            ]
+        ];
+
+        $json_order = [json_encode($orders)];
+
+        //dev platform
+        $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
+        pr($this->FGCurl->devJsonOrder($json_order));
+
+        $this->assertNotNull($response, "Test returned NULL response when some response was expected from $error_message on dev server");
+
+        if (!is_null($response)) {
+            foreach ($response as $index => $this_one) {
+                $this->assertTrue($this_one['code'] == $error_code, "$error_message did not throw $error_code error on dev server");
+            }
+        }
+
+        //served platform
+
+        if ($this->production) {
+            $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+            pr($this->FGCurl->JsonOrder($json_order));
+            $this->assertNotNull($response, "Test returned NULL response when some response was expected from $error_message on production server");
+            if (!is_null($response)) {
+                foreach ($response as $index => $this_one) {
+                    $this->assertTrue($this_one['code'] == $error_code, "$error_message did not throw $error_code error on production server");
+                }
+            }
+        }
+
+    }
+
+    public function badItemProvider()
+    {
+        return [
+            ['bad_customer_item_code', 2002, 'providing bad customer item code'],
+            ['bad_catalog_id', 2002, 'providing bad catalog id']
+//            ['bad_quantity', 2005, 'providing bad quantity']
+        ];
     }
 
 
