@@ -59,22 +59,20 @@ class RobotFixture
                     ]
                 ],
             'bad' =>
-                [
-                    ['no_order_reference' =>
-                        [
-                            "billing_company" => "Sad New Vistas in Testing",
-                            "first_name" => "Jason",
-                            "last_name" => "Tempestini",
-                            "phone" => "925-895-4468",
-                            "billing_address" => "1107 Fountain Street",
-                            "billing_address2" => "",
-                            "billing_city" => "Alameda",
-                            "billing_state" => "CA",
-                            "billing_zip" => "94501",
-                            "billing_country" => "US",
-                            "order_reference" => "",
-                            "note" => "This is a note for this shipment. It really could be quite a long note.\n It might even have carriage returns."
-                        ]
+                ['no_order_reference' =>
+                    [
+                        "billing_company" => "Sad New Vistas in Testing",
+                        "first_name" => "Jason",
+                        "last_name" => "Tempestini",
+                        "phone" => "925-895-4468",
+                        "billing_address" => "1107 Fountain Street",
+                        "billing_address2" => "",
+                        "billing_city" => "Alameda",
+                        "billing_state" => "CA",
+                        "billing_zip" => "94501",
+                        "billing_country" => "US",
+                        "order_reference" => null,
+                        "note" => "This is a note for this shipment. It really could be quite a long note.\n It might even have carriage returns."
                     ]
                 ]
         ];

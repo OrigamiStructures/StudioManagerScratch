@@ -40,43 +40,157 @@ class FGCurlTest extends TestCase {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
 
-	public function testDevJsonOrder() {
+    public function testDevJsonOrderSingleGood() {
 
-//        $empty_order = [json_encode([
-//            'Credentials' => $this->goodCreds(),
-//            'Order' => [],
-//        ])];
-//        $response = $this->FGCurl->devJsonOrder($empty_order);
-////		pr(json_decode($response));
-////		pr($response);
-////		$this->assertTrue(must have at least one order)
+        //setup items
+	    $items = [
+            $this->RobotFixture->orderItemNode['good'][0],
+            $this->RobotFixture->orderItemNode['good'][1]
+        ];
 
-		$items = [
-			$this->RobotFixture->orderItemNode['good'][0],
-			$this->RobotFixture->orderItemNode['good'][1]
-		];
-		$shipment = $this->RobotFixture->shipmentNode['good'];
-		$order = $this->RobotFixture->getOrderNode(TRUE, 0);
-		$order['OrderItem'] = $items;
-		$order['Shipment'] = $shipment;
-		
-		$orders = [
-			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
-			'Orders' => [
-				$order
-			]
-		];
-			
-//		'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
-//		pr($orders);
-		$good_order = [json_encode($orders)];
-		$response = $this->FGCurl->devJsonOrder($good_order);
-//		pr(json_decode($response));
-		pr($response);
-//		$this->assertTrue(must have at least one order)
-	}
+	    //setup shipment
+        $shipment = $this->RobotFixture->shipmentNode['good'];
 
-	public function testDevXmlOrder() {
+        //setup order
+        $order = $this->RobotFixture->getOrderNode(TRUE, 0);
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        //nest into proper array structure
+        $orders = [
+            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+            'Orders' => [
+                $order
+            ]
+        ];
+
+        $json_order = [json_encode($orders)];
+        $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
+
+        foreach ($response as $index => $this_one){
+            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+        }
+
+//        $response = json_decode($this->FGCurl->JsonOrder($json_order), true);
+//        pr($this->FGCurl->JsonOrder($json_order));
+//
+//        foreach ($response as $index => $this_one){
+//            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+//        }
+
+    }
+
+    public function testDevJsonOrderMultipleGood() {
+
+        //setup common items
+	    $items = [
+            $this->RobotFixture->orderItemNode['good'][0],
+            $this->RobotFixture->orderItemNode['good'][1]
+        ];
+
+	    //setup common shipment
+        $shipment = $this->RobotFixture->shipmentNode['good'];
+
+        //setup first order
+        $order = $this->RobotFixture->getOrderNode(TRUE, 0);
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        $orders = [
+            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+            'Orders' => [
+                $order
+            ]
+        ];
+
+        //setup second order
+        $order = $this->RobotFixture->getOrderNode(TRUE, 1);
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        $orders['Orders'][] = $order;
+
+
+        $json_order = [json_encode($orders)];
+        $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
+
+        foreach ($response as $index => $this_one){
+            $this->assertTrue($this_one['code'] == 1, "Providing good order did not return expected order code 1");
+        }
+    }
+
+    public function testDevJsonOrderSingleBadOrderNode() {
+
+        //setup common items
+        $items = [
+            $this->RobotFixture->orderItemNode['good'][0],
+            $this->RobotFixture->orderItemNode['good'][1]
+        ];
+
+        //setup common shipment
+        $shipment = $this->RobotFixture->shipmentNode['good'];
+
+        //setup first order
+        $order = $this->RobotFixture->getOrderNode(FALSE, 0, 'no_order_reference');
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        $orders = [
+            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+            'Orders' => [
+                $order
+            ]
+        ];
+
+        $json_order = [json_encode($orders)];
+        $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
+
+        foreach ($response as $index => $this_one){
+            $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 order");
+        }
+    }
+
+    public function testDevJsonOrderMultipleBadOrderNode() {
+
+        //setup common items
+        $items = [
+            $this->RobotFixture->orderItemNode['good'][0],
+            $this->RobotFixture->orderItemNode['good'][1]
+        ];
+
+        //setup common shipment
+        $shipment = $this->RobotFixture->shipmentNode['good'];
+
+        //setup first order
+        $order = $this->RobotFixture->getOrderNode(FALSE, 0, 'no_order_reference');
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        $orders = [
+            'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+            'Orders' => [
+                $order
+            ]
+        ];
+
+        //setup second order
+        $order = $this->RobotFixture->getOrderNode(FALSE, 0, 'no_order_reference');
+        $order['OrderItem'] = $items;
+        $order['Shipment'] = $shipment;
+
+        $orders['Orders'][] = $order;
+
+
+        $json_order = [json_encode($orders)];
+        $response = json_decode($this->FGCurl->devJsonOrder($json_order), true);
+
+        foreach ($response as $index => $this_one){
+            $this->assertTrue($this_one['code'] == 2004, "Providing missing order reference did not throw 2004 order");
+        }
+    }
+
+
+    public function testDevXmlOrder() {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
 

@@ -7,17 +7,28 @@ namespace App\Lib;
  * @author dondrake
  */
 class FGCurl {
-	
-	protected $_url = [
-		'DevJsonOrder' => "http://dev.ampfg.com/robotOrders/input/json",
-		'DevXmlOrder' => "http://dev.ampfg.com/robotOrders/input/xml",
-		'DevJsonStatus' => "http://dev.ampfg.com/robotStatuses/input/json",
-		'DevXmlStatus' => "http://dev.ampfg.com/robotStatuses/input/xml",
-		'JsonOrder' => "https://fg.ampprinting.com/robotOrders/input/json",
-		'XmlOrder' => "https://fg.ampprinting.com/robotOrders/input/xml",
-		'JsonStatus' => "https://fg.ampprinting.com/robotStatuses/input/json",
-		'XmlStatus' => "https://fg.ampprinting.com/robotStatuses/input/xml",
-	];
+
+//    protected $_url = [
+//        'DevJsonOrder' => "http://dev.ampfg.com/robotOrders/input/json",
+//        'DevXmlOrder' => "http://dev.ampfg.com/robotOrders/input/xml",
+//        'DevJsonStatus' => "http://dev.ampfg.com/robotStatuses/input/json",
+//        'DevXmlStatus' => "http://dev.ampfg.com/robotStatuses/input/xml",
+//        'JsonOrder' => "https://fg.ampprinting.com/robotOrders/input/json",
+//        'XmlOrder' => "https://fg.ampprinting.com/robotOrders/input/xml",
+//        'JsonStatus' => "https://fg.ampprinting.com/robotStatuses/input/json",
+//        'XmlStatus' => "https://fg.ampprinting.com/robotStatuses/input/xml",
+//    ];
+
+    protected $_url = [
+        'DevJsonOrder' => "http://localhost/ampfg/robotOrders/input/json",
+        'DevXmlOrder' => "http://dev.ampfg.com/robotOrders/input/xml",
+        'DevJsonStatus' => "http://dev.ampfg.com/robotStatuses/input/json",
+        'DevXmlStatus' => "http://dev.ampfg.com/robotStatuses/input/xml",
+        'JsonOrder' => "https://fg.ampprinting.com/robotOrders/input/json",
+        'XmlOrder' => "https://fg.ampprinting.com/robotOrders/input/xml",
+        'JsonStatus' => "https://fg.ampprinting.com/robotStatuses/input/json",
+        'XmlStatus' => "https://fg.ampprinting.com/robotStatuses/input/xml",
+    ];
 
 	public function devJsonOrder($data) {
 		return $this->postRequest($data, $this->to('DevJsonOrder'));
