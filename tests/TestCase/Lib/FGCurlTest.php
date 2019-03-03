@@ -418,380 +418,69 @@ class FGCurlTest extends TestCase {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
 
-	public function testDevJsonStatus() {
-//		$response = $this->FGCurl->devJsonStatus($this->jsonStatusRequest());
-//		pr(json_decode($response));
-////		pr($response);
-//		
-//		$response = $this->FGCurl->JsonStatus($this->jsonStatusRequest());
-//		pr(json_decode($response));
-//		pr($response);
+	public function testDevJsonStatusSingleOrderNumber() {
+		//setup items
+		$orders = [
+			$this->RobotFixture->statusOrderNumbers['good'][0],
+		];
+
+		//nest into proper array structure
+		$request = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				[
+					'order_numbers' => $orders
+				]
+			]
+		];
+
+		$json_order = [json_encode($request)];
+
+		//dev platform
+		$response = json_decode($this->FGCurl->devJsonStatus($json_order), true);
+
+		$this->assertNotNull($response, 'Json Status request with one valid job number '
+				. 'received a NULL response. Dev.');
+		$this->assertTrue(is_array($response), 'Json Status request with one valid job number '
+				. 'din\'t decode into an array. Dev.');
+		
+		if($this->allowResponse($response)) {
+			foreach ($response as $index => $statusResponse) {
+				$this->assertTrue($statusResponse['code'] == 1,
+						"Json Status request with one valid job number did not "
+						. "return an error code of 1. Dev. Received {$statusResponse['code']} "
+						. "for job $index");
+			}					
+		} else {
+			$this->nullTrapMessage();
+		}
+		
+		if ($this->production) {
+			//dev platform
+			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
+
+			$this->assertNotNull($response, 'Json Status request with one valid job number '
+					. 'received a NULL response. Served');
+			$this->assertTrue(is_array($response), 'Json Status request with one valid job number '
+					. 'din\'t decode into an array. Served.');
+
+			if($this->allowResponse($response)) {
+				foreach ($response as $index => $statusResponse) {
+					$this->assertTrue($statusResponse['code'] == 1,
+							"Json Status request with one valid job number did not "
+							. "return an error code of 1.Served. Received {$statusResponse['code']} "
+							. "for job $index");
+				}					
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
 	}
 
 	public function testDevXmlStatus() {
 		$this->markTestIncomplete('Not implemented yet.');
-	}
-
-	protected function jsonOrder() {
-		return ['
-{
-	"Credentials":
-		{
-			"company":"IfOnly Testing",
-			"token":"76be72caa9a4a550ac4593d872f38e0d20618a4a"
-		}
-	,
-	"Orders":
-	[
-		{
-			"billing_company":"If Only",
-			"first_name":"Celia",
-			"last_name":"Peachey",
-			"phone":"518-256-3396",
-			"billing_address":"244 Jackson Street, 4th Floor",
-			"billing_address2":"",
-			"billing_city":"San Francisco",
-			"billing_state":"CA",
-			"billing_zip":"94111",
-			"billing_country":"US",
-			"order_reference":"order1233452",
-			"note":"This is a note for this shipment. It really could be quite a long note.\n It might even have carriage returns.",
-			"OrderItem":
-			[
-				{
-					"catalog_id":"",
-					"customer_item_code":"1602",
-					"name":"Test Item #1",
-					"quantity":"1"
-				},
-				{
-					"catalog_id":"",
-					"customer_item_code":"TestItem2",
-					"name":"Test Item #2",
-					"quantity":"5"
-				}
-			],
-			"Shipment":
-				{
-					"billing":"Sender",
-					"carrier":"UPS",
-					"method":"1DA",
-					"billing_account":"",
-					"first_name":"Jason",
-					"last_name":"Tempestini",
-					"email":"jason@tempestinis.com",
-					"phone":"925-895-4468",
-					"company":"Curly Media",
-					"address":"1107 Fountain Street",
-					"address2":"",
-					"city":"Alameda",
-					"state":"CA",
-					"zip":"94501",
-					"country":"US",
-					"tpb_company":"",
-					"tpb_address":"",
-					"tpb_city":"",
-					"tpb_state":"",
-					"tpb_zip":"",
-					"tpb_phone":""
-				}
-		},
-
-		{
-			"billing_company":"If Only",
-			"first_name":"Celia",
-			"last_name":"Peachey",
-			"phone":"518-256-3396",
-			"billing_address":"244 Jackson Street, 4th Floor",
-			"billing_address2":"",
-			"billing_city":"San Francisco",
-			"billing_state":"CA",
-			"billing_zip":"94111",
-			"billing_country":"US",
-			"order_reference":"order1233462",
-			"note":"This is a note for this shipment. It really could be quite a long note.\n It might even have carriage returns.",
-			"OrderItem":
-			[
-				{
-					"catalog_id":"1602",
-					"customer_item_code":"",
-					"name":"Test Item #1",
-					"quantity":"10"
-				},
-				{
-					"catalog_id":"",
-					"customer_item_code":"TestItem2",
-					"name":"Test Item #2",
-					"quantity":"50"
-				}
-			],
-			"Shipment":
-				{
-					"billing":"Sender",
-					"carrier":"UPS",
-					"method":"1DA",
-					"billing_account":"",
-					"first_name":"Jason",
-					"last_name":"Tempestini",
-					"email":"jason@tempestinis.com",
-					"phone":"925-895-4468",
-					"company":"Curly Media",
-					"address":"1107 Fountain Street",
-					"address2":"",
-					"city":"Alameda",
-					"state":"CA",
-					"zip":"94501",
-					"country":"US",
-					"tpb_company":"",
-					"tpb_address":"",
-					"tpb_city":"",
-					"tpb_state":"",
-					"tpb_zip":"",
-					"tpb_phone":""
-				}
-		}
-
-	]
-}
-'];
-	}
-
-	/**
-	 * Array nodes for credentials that will succeed
-	 */
-	protected function goodCreds() {
-		return [
-			"company" => "IfOnly Testing",
-			"token" => "76be72caa9a4a550ac4593d872f38e0d20618a4a"
-		];
-	}
-
-	/**
-	 * Array nodes for credentials that will fail
-	 */
-	protected function badCreds() {
-		return [
-			"company" => "Unknown Company",
-			"token" => "76be72caa9_bogus_token_872f38e0d20618a4a"
-		];
-	}
-
-	/**
-	 * 
-	 * @param string $version 'new', 'existing', 'unknown'
-	 * @return string
-	 */
-	protected function OrderRef($version) {
-		switch ($version) {
-			case 'new':
-				return uniqid();
-				break;
-			case 'existing':
-				$existing_order_ref = $this->exitingOrderRef();
-				return 'order1233452';
-				break;
-			default:
-				return 'bad_order_reference';
-				break;
-		}
-	}
-
-	protected function oldOrderRef() {
-		
-	}
-
-	protected function goodOrder() {
-		return [
-			// <editor-fold defaultstate="collapsed" desc="basic order data">
-			'billing_company' => 'If Only',
-			'first_name' => 'Celia',
-			'last_name' => 'Peachey',
-			'phone' => '518-256-3396',
-			'billing_address' => '244 Jackson Street, 4th Floor',
-			'billing_address2' => '',
-			'billing_city' => 'San Francisco',
-			'billing_state' => 'CA',
-			'billing_zip' => '94111',
-			'billing_country' => 'US',
-			'note' => 'This is a note for this shipment. It really could be quite a long note.
-	 It might even have carriage returns.',
-			// </editor-fold>
-			'order_reference' => 'order1233452',
-			'OrderItem' => [
-				// <editor-fold defaultstate="collapsed" desc="zeroth item">
-				0 => [
-					'catalog_id' => '',
-					'customer_item_code' => '1602',
-					'name' => 'Test Item #1',
-					'quantity' => '1',
-				],
-				// </editor-fold>
-				// <editor-fold defaultstate="collapsed" desc="first item">
-				1 => [
-					'catalog_id' => '',
-					'customer_item_code' => 'TestItem2',
-					'name' => 'Test Item #2',
-					'quantity' => '5',
-				],
-			// </editor-fold>
-			],
-			// <editor-fold defaultstate="collapsed" desc="Shipment">
-			'Shipment' => [
-				'billing' => 'Sender',
-				'carrier' => 'UPS',
-				'method' => '1DA',
-				'billing_account' => '',
-				'first_name' => 'Jason',
-				'last_name' => 'Tempestini',
-				'email' => 'jason@tempestinis.com',
-				'phone' => '925-895-4468',
-				'company' => 'Curly Media',
-				'address' => '1107 Fountain Street',
-				'address2' => '',
-				'city' => 'Alameda',
-				'state' => 'CA',
-				'zip' => '94501',
-				'country' => 'US',
-				'tpb_company' => '',
-				'tpb_address' => '',
-				'tpb_city' => '',
-				'tpb_state' => '',
-				'tpb_zip' => '',
-				'tpb_phone' => '',
-			],
-				// </editor-fold>
-		];
-	}
-
-	protected function keyParams() {
-		$billing_company = 'If Only';
-		$order_reference = 'order1233452';
-		$customer_item_codes = [
-			'1602',
-			'TestItem2',
-		];
-	}
-
-	protected function customer_order($billing_company, $order_reference) {
-		return [
-			// <editor-fold defaultstate="collapsed" desc="basic order data">
-			'billing_company' => 'If Only',
-			'first_name' => 'Celia',
-			'last_name' => 'Peachey',
-			'phone' => '518-256-3396',
-			'billing_address' => '244 Jackson Street, 4th Floor',
-			'billing_address2' => '',
-			'billing_city' => 'San Francisco',
-			'billing_state' => 'CA',
-			'billing_zip' => '94111',
-			'billing_country' => 'US',
-			'note' => 'This is a note for this shipment. It really could be quite a long note.
-	 It might even have carriage returns.',
-			// </editor-fold>
-			'order_reference' => 'order1233452',
-		];
-	}
-
-	protected function orderItem($item_code) {
-		return [
-			'catalog_id' => '',
-			'customer_item_code' => $item_code,
-			'name' => 'Test Item #1',
-			'quantity' => '1',
-		];
-	}
-
-	protected function shipment() {
-		return [
-			'billing' => 'Sender',
-			'carrier' => 'UPS',
-			'method' => '1DA',
-			'billing_account' => '',
-			'first_name' => 'Jason',
-			'last_name' => 'Tempestini',
-			'email' => 'jason@tempestinis.com',
-			'phone' => '925-895-4468',
-			'company' => 'Curly Media',
-			'address' => '1107 Fountain Street',
-			'address2' => '',
-			'city' => 'Alameda',
-			'state' => 'CA',
-			'zip' => '94501',
-			'country' => 'US',
-			'tpb_company' => '',
-			'tpb_address' => '',
-			'tpb_city' => '',
-			'tpb_state' => '',
-			'tpb_zip' => '',
-			'tpb_phone' => '',
-		];
-	}
-
-	protected function badOrder() {
-		return [
-			// <editor-fold defaultstate="collapsed" desc="basic order data">
-			'billing_company' => 'If Only',
-			'first_name' => 'Celia',
-			'last_name' => 'Peachey',
-			'phone' => '518-256-3396',
-			'billing_address' => '244 Jackson Street, 4th Floor',
-			'billing_address2' => '',
-			'billing_city' => 'San Francisco',
-			'billing_state' => 'CA',
-			'billing_zip' => '94111',
-			'billing_country' => 'US',
-			'note' => 'This is a note for this shipment. It really could be quite a long note.
-	 It might even have carriage returns.',
-			// </editor-fold>
-			'order_reference' => 'order1233452',
-			'OrderItem' => [
-				// <editor-fold defaultstate="collapsed" desc="zeroth item">
-				0 => [
-					'catalog_id' => '',
-					'customer_item_code' => '1602',
-					'name' => 'Test Item #1',
-					'quantity' => '1',
-				],
-				// </editor-fold>
-				// <editor-fold defaultstate="collapsed" desc="first item">
-				1 => [
-					'catalog_id' => '',
-					'customer_item_code' => 'TestItem2',
-					'name' => 'Test Item #2',
-					'quantity' => '5',
-				],
-			// </editor-fold>
-			],
-			// <editor-fold defaultstate="collapsed" desc="Shipment">
-			'Shipment' => [
-				'billing' => 'Sender',
-				'carrier' => 'UPS',
-				'method' => '1DA',
-				'billing_account' => '',
-				'first_name' => 'Jason',
-				'last_name' => 'Tempestini',
-				'email' => 'jason@tempestinis.com',
-				'phone' => '925-895-4468',
-				'company' => 'Curly Media',
-				'address' => '1107 Fountain Street',
-				'address2' => '',
-				'city' => 'Alameda',
-				'state' => 'CA',
-				'zip' => '94501',
-				'country' => 'US',
-				'tpb_company' => '',
-				'tpb_address' => '',
-				'tpb_city' => '',
-				'tpb_state' => '',
-				'tpb_zip' => '',
-				'tpb_phone' => '',
-			],
-				// </editor-fold>
-		];
-	}
-
-	public function goodOrders() {
-		
 	}
 
 	protected function jsonStatusRequest() {
