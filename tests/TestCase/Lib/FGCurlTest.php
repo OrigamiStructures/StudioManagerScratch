@@ -5,6 +5,7 @@ namespace App\Test\TestCase\Lib;
 use App\Lib\FGCurl;
 use Cake\TestSuite\TestCase;
 use App\Test\Fixture\RobotFixture;
+use Cake\Utility\Xml;
 
 /**
  * App\Lib\FGCurl Test Case
@@ -64,10 +65,93 @@ class FGCurlTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testInitialization() {
-		$this->markTestIncomplete('Not implemented yet.');
+
+
+	public function makeXml($data) {
+		$body = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				$data,
+			]
+		];
+		$XMLrequest = ['Body' => [$body]];
+//        foreach ($data as $index => $response) {
+//            $XMLresponse['body'][$index] = $response;
+//        }
+        $request = XML::fromArray($XMLrequest);
+        return [$request->asXML()];
+
+
+	}
+	public function testXmlOrderSingleGood() {
+
+		//setup items
+		$items = [
+			$this->RobotFixture->orderItemNode['good'][0],
+			$this->RobotFixture->orderItemNode['good'][1]
+		];
+
+		//setup shipment
+		$shipment = $this->RobotFixture->shipmentNode['good'];
+
+		//setup order
+		$order = ['Order' => $this->RobotFixture->getOrderNode(TRUE, 0)];
+		$order['Order']['OrderItems'] = ['OrderItem' => $items];
+		$order['Order']['Shipments'] = $shipment;
+		
+		//nest into proper array structure
+//		$orders = [
+//			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+//			'Orders' => [
+//				$order
+//			]
+//		];
+
+		$Xml_order = $this->makeXml($order);
+		pr($Xml_order);die;
+		pr($this->FGCurl->devXmlOrder($Xml_order));die;
+
+		//dev platform
+		$response = Xml::toArray($this->FGCurl->devXmlOrder($Xml_order));
+//		$response = Xml::toArray($this->FGCurl->devXmlOrder($Xml_order));
+
+		$this->assertNotNull($response,
+				"Test returned NULL response when some "
+				. "response was expected from good order on dev server");
+
+		if ($this->allowResponse($response)) {
+			foreach ($response as $index => $orderResponse) {
+				$this->assertTrue($orderResponse['code'] == 1,
+						"Providing good order "
+						. "did not return expected order code 1 on dev server");
+			}
+		} else {
+			$this->nullTrapMessage();
+		}
+
+		//served platform
+
+		if ($this->production) {
+			$response = Xml_decode($this->FGCurl->XmlOrder($Xml_order), true);
+//            pr($this->FGCurl->XmlOrder($Xml_order));
+			$this->assertNotNull($response,
+					"Test returned NULL response when "
+					. "some response was expected from good order on production server");
+			if ($this->allowResponse($response)) {
+				foreach ($response as $index => $orderResponse) {
+					$this->assertTrue($orderResponse['code'] == 1,
+							"Providing good order "
+							. "did not return expected order code 1 production server");
+				}
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
 	}
 
+	
 	public function testJsonOrderSingleGood() {
 
 		//setup items
@@ -412,10 +496,6 @@ class FGCurlTest extends TestCase {
 			['bad_catalog_id', 2002, 'providing bad catalog id']
 //            ['bad_quantity', 2005, 'providing bad quantity']
 		];
-	}
-
-	public function testDevXmlOrder() {
-		$this->markTestIncomplete('Not implemented yet.');
 	}
 
 	public function testDevJsonStatusSingleOrderNumber() {
@@ -1009,36 +1089,122 @@ class FGCurlTest extends TestCase {
 	public function testDevXmlStatus() {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
-
-	protected function jsonStatusRequest() {
-		return ['
-{
-	"Credentials":
-{
-"company":"Curly Media",
-"token":"ac62001e66caaa8614610284b07d50c1a7f487b1"
-}
-,
-	"Orders":
-	[
-		{
-			"order_numbers":
-			    [
-			    "1902-AEKE",
-			    "1902-AEKF",
-			    "1902-blah",
-			    "1902-foo"
-			    ],
-			"order_references":
-			    [
-			    "order15",
-			    "order16",
-			    "order171"
-			    ]
-		}
-	]
-}
-'];
+	
+	public function d() {
+		return array (
+    '0' => '<?xml version="1.0" encoding="UTF-8"?>
+<Body>
+    <Credentials>
+        <company>IFOnly American Express City Blitz</company>
+        <token>270afe2adbee28b5ffcd87287c5707d66f292d46</token>
+    </Credentials>
+    <Orders>
+        <Order>
+            <billing_company>If Only</billing_company>
+            <first_name>Celia</first_name>
+            <last_name>Peachey</last_name>
+            <phone>(518) 256-3396</phone>
+            <billing_address>244 Jackson Street, 4th Floor</billing_address>
+            <billing_address2/>
+            <billing_city>San Francisco</billing_city>
+            <billing_state>CA</billing_state>
+            <billing_zip>94111</billing_zip>
+            <billing_country>US</billing_country>
+            <order_reference>order123345</order_reference>
+            <note>This is a note for this shipment. It really could be quite a long note.
+                It might even have carriage returns.</note>
+            <OrderItems>
+                <OrderItem>
+                    <catalog_id>1602</catalog_id>
+                    <customer_item_code/>
+                    <name>Test Item #1</name>
+                    <quantity>1</quantity>
+                </OrderItem>
+                <OrderItem>
+                    <catalog_id/>
+                    <customer_item_code>TestItem2</customer_item_code>
+                    <name>Test Item #2</name>
+                    <quantity>5</quantity>
+                </OrderItem>
+            </OrderItems>
+            <Shipments>
+                <billing>Sender</billing>
+                <carrier>UPS</carrier>
+                <method>1DA</method>
+                <billing_account/>
+                <first_name>Jason</first_name>
+                <last_name>Tempestini</last_name>
+                <email>jason@tempestinis.com</email>
+                <phone>925-895-4468</phone>
+                <company>Curly Media</company>
+                <address>1107 Fountain Street</address>
+                <address2/>
+                <city>Alameda</city>
+                <state>CA</state>
+                <zip>94501</zip>
+                <country>US</country>
+                <tpb_company/>
+                <tpb_address/>
+                <tpb_city/>
+                <tpb_state/>
+                <tpb_zip/>
+                <tpb_phone/>
+            </Shipments>
+        </Order>
+        <Order>
+            <billing_company>If Only</billing_company>
+            <first_name>Celia</first_name>
+            <last_name>Peachey</last_name>
+            <phone>(518) 256-3396</phone>
+            <billing_address>244 Jackson Street, 4th Floor</billing_address>
+            <billing_address2/>
+            <billing_city>San Francisco</billing_city>
+            <billing_state>CA</billing_state>
+            <billing_zip>94111</billing_zip>
+            <billing_country>US</billing_country>
+            <order_reference>order123346</order_reference>
+            <note>This is a note for this shipment. It really could be quite a long note.
+                It might even have carriage returns.</note>
+            <OrderItems>
+                <OrderItem>
+                    <catalog_id>1602</catalog_id>
+                    <customer_item_code/>
+                    <name>Test Item #1</name>
+                    <quantity>10</quantity>
+                </OrderItem>
+                <OrderItem>
+                    <catalog_id/>
+                    <customer_item_code>TestItem2</customer_item_code>
+                    <name>Test Item #2</name>
+                    <quantity>50</quantity>
+                </OrderItem>
+            </OrderItems>
+            <Shipments>
+                <billing>Sender</billing>
+                <carrier>UPS</carrier>
+                <method>1DA</method>
+                <billing_account/>
+                <first_name>Jason</first_name>
+                <last_name>Tempestini</last_name>
+                <email>jason@tempestinis.com</email>
+                <phone>925-895-4468</phone>
+                <company>Curly Media</company>
+                <address>1107 Fountain Street</address>
+                <address2/>
+                <city>Alameda</city>
+                <state>CA</state>
+                <zip>94501</zip>
+                <country>US</country>
+                <tpb_company/>
+                <tpb_address/>
+                <tpb_city/>
+                <tpb_state/>
+                <tpb_zip/>
+                <tpb_phone/>
+            </Shipments>
+        </Order>
+    </Orders>
+</Body>
+');
 	}
-
 }
