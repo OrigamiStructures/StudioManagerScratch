@@ -479,6 +479,67 @@ class FGCurlTest extends TestCase {
 		}
 	}
 
+	public function testDevJsonStatusSingleReferenceNumber() {
+		//setup items
+		$orders = [
+			$this->RobotFixture->statusOrderReferences['good'][0],
+		];
+
+		//nest into proper array structure
+		$request = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				[
+					'reference_numbers' => $orders
+				]
+			]
+		];
+
+		$json_order = [json_encode($request)];
+
+		//dev platform
+		$response = json_decode($this->FGCurl->devJsonStatus($json_order), true);
+
+		$this->assertNotNull($response, 'Json Status request with one valid reference number '
+				. 'received a NULL response. Dev.');
+		$this->assertTrue(is_array($response), 'Json Status request with one valid reference number '
+				. 'din\'t decode into an array. Dev.');
+		
+		if($this->allowResponse($response)) {
+			foreach ($response as $index => $statusResponse) {
+				$this->assertTrue($statusResponse['code'] == 1,
+						"Json Status request with one valid reference number did not "
+						. "return an error code of 1. Dev. Received {$statusResponse['code']} "
+						. "for reference $index");
+			}					
+		} else {
+			$this->nullTrapMessage();
+		}
+		
+		if ($this->production) {
+			//dev platform
+			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
+
+			$this->assertNotNull($response, 'Json Status request with one valid reference number '
+					. 'received a NULL response. Served');
+			$this->assertTrue(is_array($response), 'Json Status request with one valid reference number '
+					. 'din\'t decode into an array. Served.');
+
+			if($this->allowResponse($response)) {
+				foreach ($response as $index => $statusResponse) {
+					$this->assertTrue($statusResponse['code'] == 1,
+							"Json Status request with one valid reference number did not "
+							. "return an error code of 1.Served. Received {$statusResponse['code']} "
+							. "for reference $index");
+				}					
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
+	}
+
 	public function testDevXmlStatus() {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
