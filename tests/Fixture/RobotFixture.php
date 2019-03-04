@@ -195,6 +195,8 @@ class RobotFixture
         [
             'good' =>
                 [
+					'5c7cb8dacf636',
+					'5c7cb8dacf4dc',
                     '5c7ad48d56750',
                     '5c7ad48e8ee56'
                 ],

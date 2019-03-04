@@ -490,7 +490,7 @@ class FGCurlTest extends TestCase {
 			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
 			'Orders' => [
 				[
-					'reference_numbers' => $orders
+					'order_references' => $orders
 				]
 			]
 		];
@@ -503,7 +503,9 @@ class FGCurlTest extends TestCase {
 		$this->assertNotNull($response, 'Json Status request with one valid reference number '
 				. 'received a NULL response. Dev.');
 		$this->assertTrue(is_array($response), 'Json Status request with one valid reference number '
-				. 'din\'t decode into an array. Dev.');
+				. 'didn\'t decode into an array. Dev.');
+			$this->assertCount(1, $response, 'Good reference number for dev Status '
+				. 'check did not return a response.');
 		
 		if($this->allowResponse($response)) {
 			foreach ($response as $index => $statusResponse) {
@@ -517,13 +519,15 @@ class FGCurlTest extends TestCase {
 		}
 		
 		if ($this->production) {
-			//dev platform
+			//hosted platform
 			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
 
 			$this->assertNotNull($response, 'Json Status request with one valid reference number '
 					. 'received a NULL response. Served');
 			$this->assertTrue(is_array($response), 'Json Status request with one valid reference number '
 					. 'din\'t decode into an array. Served.');
+			$this->assertCount(1, $response, 'Good reference number for hosted Status '
+				. 'check did not return a response.');
 
 			if($this->allowResponse($response)) {
 				foreach ($response as $index => $statusResponse) {
@@ -618,7 +622,7 @@ class FGCurlTest extends TestCase {
 			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
 			'Orders' => [
 				[
-					'reference_numbers' => $orders
+					'order_references' => $orders
 				]
 			]
 		];
@@ -647,7 +651,7 @@ class FGCurlTest extends TestCase {
 		}
 		
 		if ($this->production) {
-			//dev platform
+			//hosted platform
 			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
 
 			$this->assertNotNull($response, 'Json Status request with multiple '
@@ -664,6 +668,158 @@ class FGCurlTest extends TestCase {
 							. "return an error code of 1.Served. Received {$statusResponse['code']} "
 							. "for reference $index");
 				}					
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
+	}
+
+	public function testDevJsonStatusBadGoodOrderNumbers() {
+		//setup items
+		$orders = [
+			$this->RobotFixture->statusOrderNumbers['bad'][0],
+			$this->RobotFixture->statusOrderNumbers['good'][1],
+		];
+
+		//nest into proper array structure
+		$request = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				[
+					'order_numbers' => $orders
+				]
+			]
+		];
+
+		$json_order = [json_encode($request)];
+
+		//dev platform
+		$response = json_decode($this->FGCurl->devJsonStatus($json_order), true);
+
+		$this->assertNotNull($response, 'Json Status request with good & bad job numbers '
+				. 'received a NULL response. Dev.');
+		$this->assertTrue(is_array($response), 'Json Status request with good & bad job numbers '
+				. 'din\'t decode into an array. Dev.');
+		$this->assertCount(2, $response, 'good & bad order numbers for Dev Status check did not return '
+				. 'two responses.');
+		
+		if($this->allowResponse($response)) {
+			$keys = array_keys($response);
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 3001,
+					"Json Status request with good & bad job numbers did not "
+					. "return an error code of 3001. Dev. Received {$statusResponse['code']} "
+					. "for job $keys[0]");
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 1,
+					"Json Status request with good & bad job numbers did not "
+					. "return an error code of 1. Dev. Received {$statusResponse['code']} "
+					. "for job $keys[1]");
+		} else {
+			$this->nullTrapMessage();
+		}
+		
+		if ($this->production) {
+			//hosted platform
+			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
+
+			$this->assertNotNull($response, 'Json Status request with good & bad job numbers '
+					. 'received a NULL response. Served');
+			$this->assertTrue(is_array($response), 'Json Status request with good & bad job numbers '
+					. 'din\'t decode into an array. Served.');
+		$this->assertCount(2, $response, 'good & bad order numbers for Hosted Status check did not return '
+				. 'two responses.');
+
+			if($this->allowResponse($response)) {
+			$keys = array_keys($response);
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 3001,
+					"Json Status request with good & bad job numbers did not "
+					. "return an error code of 3001.Served. Received {$statusResponse['code']} "
+					. "for job $keys[0]");
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 1,
+					"Json Status request with good & bad job numbers did not "
+					. "return an error code of 1.Served. Received {$statusResponse['code']} "
+					. "for job $keys[1]");
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
+	}
+
+	public function testDevJsonStatusBadGoodReferenceNumbers() {
+		//setup items
+		$orders = [
+			$this->RobotFixture->statusOrderReferences['bad'][0],
+			$this->RobotFixture->statusOrderReferences['good'][1],
+		];
+
+		//nest into proper array structure
+		$request = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				[
+					'order_references' => $orders
+				]
+			]
+		];
+
+		$json_order = [json_encode($request)];
+
+		//dev platform
+		$response = json_decode($this->FGCurl->devJsonStatus($json_order), true);
+
+		$this->assertNotNull($response, 'Json Status request with good & bad reference numbers '
+				. 'received a NULL response. Dev.');
+		$this->assertTrue(is_array($response), 'Json Status request with good & bad reference numbers '
+				. 'din\'t decode into an array. Dev.');
+		$this->assertCount(2, $response, 'Two good reference numbers for Dev Status check did not return '
+				. 'two responses.');
+		
+		if($this->allowResponse($response)) {
+			$keys = array_keys($response);
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 3001,
+					"Json Status request with good & bad reference numbers did not "
+					. "return an error code of 3001. Dev. Received {$statusResponse['code']} "
+					. "for reference $keys[0]");
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 1,
+					"Json Status request with good & bad reference numbers did not "
+					. "return an error code of 1. Dev. Received {$statusResponse['code']} "
+					. "for reference $keys[1]");
+		} else {
+			$this->nullTrapMessage();
+		}
+		
+		if ($this->production) {
+			//hosted platform
+			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
+
+			$this->assertNotNull($response, 'Json Status request with good & bad '
+					. 'reference numbers received a NULL response. Served');
+			$this->assertTrue(is_array($response), 'Json Status request with good & bad '
+					. 'reference numbers didn\'t decode into an array. Served.');
+		$this->assertCount(2, $response, 'good & bad reference numbers for Hosted Status '
+				. 'check did not return two responses.');
+
+			if($this->allowResponse($response)) {
+			$keys = array_keys($response);
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 3001,
+					"Json Status request with good & bad reference numbers did not "
+					. "return an error code of 3001.Served. Received {$statusResponse['code']} "
+					. "for reference $keys[0]");
+			$statusResponse = array_shift($response);
+			$this->assertTrue($statusResponse['code'] == 1,
+					"Json Status request with good & bad reference numbers did not "
+					. "return an error code of 1.Served. Received {$statusResponse['code']} "
+					. "for reference $keys[1]");
 			} else {
 				$this->nullTrapMessage();
 			}
