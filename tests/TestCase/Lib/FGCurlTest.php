@@ -540,6 +540,138 @@ class FGCurlTest extends TestCase {
 		}
 	}
 
+	public function testDevJsonStatusMultipleGoodOrderNumbers() {
+		//setup items
+		$orders = [
+			$this->RobotFixture->statusOrderNumbers['good'][0],
+			$this->RobotFixture->statusOrderNumbers['good'][1],
+		];
+
+		//nest into proper array structure
+		$request = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				[
+					'order_numbers' => $orders
+				]
+			]
+		];
+
+		$json_order = [json_encode($request)];
+
+		//dev platform
+		$response = json_decode($this->FGCurl->devJsonStatus($json_order), true);
+
+		$this->assertNotNull($response, 'Json Status request with multiple valid job numbers '
+				. 'received a NULL response. Dev.');
+		$this->assertTrue(is_array($response), 'Json Status request with multiple valid job numbers '
+				. 'din\'t decode into an array. Dev.');
+		$this->assertCount(2, $response, 'Two good order numbers for Dev Status check did not return '
+				. 'two responses.');
+		
+		if($this->allowResponse($response)) {
+			foreach ($response as $index => $statusResponse) {
+				$this->assertTrue($statusResponse['code'] == 1,
+						"Json Status request with multiple valid job numbers did not "
+						. "return an error code of 1. Dev. Received {$statusResponse['code']} "
+						. "for job $index");
+			}					
+		} else {
+			$this->nullTrapMessage();
+		}
+		
+		if ($this->production) {
+			//dev platform
+			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
+
+			$this->assertNotNull($response, 'Json Status request with multiple valid job numbers '
+					. 'received a NULL response. Served');
+			$this->assertTrue(is_array($response), 'Json Status request with multiple valid job numbers '
+					. 'din\'t decode into an array. Served.');
+		$this->assertCount(2, $response, 'Two good order numbers for Hosted Status check did not return '
+				. 'two responses.');
+
+			if($this->allowResponse($response)) {
+				foreach ($response as $index => $statusResponse) {
+					$this->assertTrue($statusResponse['code'] == 1,
+							"Json Status request with multiple valid job numbers did not "
+							. "return an error code of 1.Served. Received {$statusResponse['code']} "
+							. "for job $index");
+				}					
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
+	}
+
+	public function testDevJsonStatusMultipleGoodReferenceNumbers() {
+		//setup items
+		$orders = [
+			$this->RobotFixture->statusOrderReferences['good'][0],
+			$this->RobotFixture->statusOrderReferences['good'][1],
+		];
+
+		//nest into proper array structure
+		$request = [
+			'Credentials' => $this->RobotFixture->getCreds('dev', TRUE),
+			'Orders' => [
+				[
+					'reference_numbers' => $orders
+				]
+			]
+		];
+
+		$json_order = [json_encode($request)];
+
+		//dev platform
+		$response = json_decode($this->FGCurl->devJsonStatus($json_order), true);
+
+		$this->assertNotNull($response, 'Json Status request with multiple valid reference numbers '
+				. 'received a NULL response. Dev.');
+		$this->assertTrue(is_array($response), 'Json Status request with multiple valid reference numbers '
+				. 'din\'t decode into an array. Dev.');
+		$this->assertCount(2, $response, 'Two good reference numbers for Dev Status check did not return '
+				. 'two responses.');
+		
+		if($this->allowResponse($response)) {
+			foreach ($response as $index => $statusResponse) {
+				$this->assertTrue($statusResponse['code'] == 1,
+						"Json Status request with multiple valid reference numbers did not "
+						. "return an error code of 1. Dev. Received {$statusResponse['code']} "
+						. "for reference $index");
+			}					
+		} else {
+			$this->nullTrapMessage();
+		}
+		
+		if ($this->production) {
+			//dev platform
+			$response = json_decode($this->FGCurl->JsonStatus($json_order), true);
+
+			$this->assertNotNull($response, 'Json Status request with multiple '
+					. 'valid reference numbers received a NULL response. Served');
+			$this->assertTrue(is_array($response), 'Json Status request with multiple '
+					. 'valid reference numbers din\'t decode into an array. Served.');
+		$this->assertCount(2, $response, 'Two good reference numbers for Hosted Status '
+				. 'check did not return two responses.');
+
+			if($this->allowResponse($response)) {
+				foreach ($response as $index => $statusResponse) {
+					$this->assertTrue($statusResponse['code'] == 1,
+							"Json Status request with multiple valid reference numbers did not "
+							. "return an error code of 1.Served. Received {$statusResponse['code']} "
+							. "for reference $index");
+				}					
+			} else {
+				$this->nullTrapMessage();
+			}
+		} else {
+			$this->servedTestMessage();
+		}
+	}
+
 	public function testDevXmlStatus() {
 		$this->markTestIncomplete('Not implemented yet.');
 	}
