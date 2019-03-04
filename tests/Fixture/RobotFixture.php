@@ -10,6 +10,7 @@ namespace App\Test\Fixture;
 
 
 use Cake\TestSuite\Fixture\TestFixture;
+use \Cake\Filesystem\File;
 
 class RobotFixture
 {
@@ -235,11 +236,20 @@ class RobotFixture
     public function getOrderNode($valid = TRUE, $index = 0, $variant = '')
     {
         if($valid){
-            $this->orderNode['good'][$index]['order_reference'] = uniqid();
+            $this->orderNode['good'][$index]['order_reference'] = $this->getUniqueOrderReference();
             return $this->orderNode['good'][$index];
         } else {
             return $this->orderNode['bad'][$variant];
         }
     }
+	
+	public function getUniqueOrderReference() {
+		$reference = uniqid();
+		$storage = new File(WWW_ROOT . 'files/fgtesting.txt');
+		$storage->open('a');
+		$storage->append("$reference\n");
+		$storage->close();
+		return $reference;
+	}
 
 }
