@@ -196,7 +196,7 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		if ($argObj->isFilter()) {
-			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
+			$result = $this->filter($argObj->valueOf('value_source'), $argObj->valueOf('filter_value'));
 		} else {
 			$result = $this->_data;
 		}

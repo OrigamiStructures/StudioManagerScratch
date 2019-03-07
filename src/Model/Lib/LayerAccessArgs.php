@@ -214,6 +214,7 @@ class LayerAccessArgs {
 	
 	public function valueSource($param) {
 		$this->_value_source = $param;
+		return $this;
 	}
 	/**
 	 * Set a filter value and flag that this has been done

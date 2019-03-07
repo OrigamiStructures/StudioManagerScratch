@@ -212,9 +212,11 @@ class StackSetTest extends TestCase {
 
 		$argObj = $this->StackEntities->accessArgs()
 				->setLayer('pieces')
-				->property('quantity')
+				->valueSource('quantity')
 				->filterValue(140);
         $pieces = $this->StackEntities->load($argObj);
+//		pr($this->StackEntities);
+//		pr($pieces);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
