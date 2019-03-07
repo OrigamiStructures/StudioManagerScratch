@@ -113,7 +113,9 @@ class ValueSource {
 	private function _getSample($entity) {
 		if (is_string($entity)) {
 			$entity = namespaceSplit($entity);
-			$className = '\\App\\Model\\Entity\\'.ucfirst($this->_singularName($type));
+			$entity = array_pop($entity);
+			$entityName = ucfirst($this->_singularName($entity));
+			$className = "\\App\\Model\\Entity\\".$entityName;
 			$entity = new $className();
 		}
 		if (is_a($entity, '\Cake\ORM\Entity')) {

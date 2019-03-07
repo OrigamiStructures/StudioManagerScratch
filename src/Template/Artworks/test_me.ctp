@@ -35,7 +35,7 @@ if (isset($stacks)) {
 		$artwork = $stack->primaryEntity();
 		$dispoID_list_match = $stack->accessArgs()
 				->setLayer('dispositionsPieces')
-				->property('disposition_id')
+				->valueSource('disposition_id')
 				->filterValue($dispLayer->IDs());
 		$joins = new Layer($stack->load($dispoID_list_match));
 		
@@ -45,18 +45,18 @@ if (isset($stacks)) {
 		// See \App\Lib\Layer
 		$distinct_pieces_args = $stack->accessArgs()
 				->setLayer('pieces')
-				->property('id')
+				->valueSource('id')
 				->filterValue($joins->distinct('piece_id'));
 		$distinct_pieces = $stack->load($distinct_pieces_args);
 		$pieces = new Layer($distinct_pieces);
 		$distinct_formats_args = $stack->accessArgs()
 				->setLayer('formats')
-				->property('id')
+				->valueSource('id')
 				->filterValue($pieces->distinct('format_id'));
 		$formats = new Layer($stack->load($distinct_formats_args));	
 		$distinct_editions_args = $stack->accessArgs()
 				->setLayer('editions')
-				->property('id')
+				->valueSource('id')
 				->filterValue($formats->distinct('edition_id'));
 		$editions = new Layer($stack->load($distinct_editions_args));
 		$indexed_dispo = $stack->accessArgs();
@@ -68,12 +68,12 @@ if (isset($stacks)) {
             foreach ($formats->load($allInLayer) as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
 				$pieces_for_format_arg = $pieces->accessArgs()
-						->property('format_id')
+						->valueSource('format_id')
 						->filterValue($format->id);
 				foreach ($pieces->load($pieces_for_format_arg) as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
 					$dispo_joins_for_piece_arg = $joins->accessArgs()
-							->property('piece_id')
+							->valueSource('piece_id')
 							->filterValue($piece->id);
 					foreach ($joins->load($dispo_joins_for_piece_arg) as $link) {
 						$indexed_dispo->lookupIndex($link->disposition_id); // this is an id search
@@ -91,19 +91,19 @@ if (isset($stacks)) {
 	
 	$format_for_piece_arg = $dispLayer->accessArgs()
 			->setLayer('formats')
-			->property('id');
+			->valueSource('id');
 	$edition_for_format = $dispLayer->accessArgs()
 			->setLayer('editions')
-			->property('id');
+			->valueSource('id');
 	$artwork_for_edition = $dispLayer->accessArgs()
 			->setLayer('artwork')
-			->property('id');
+			->valueSource('id');
 	$dispo_joins_args = $dispLayer->accessArgs()
 			->setLayer('dispositionsPieces')
-			->property('disposition_id');
+			->valueSource('disposition_id');
 	$linked_pieces_args = $dispLayer->accessArgs()
 			->setLayer('pieces')
-			->property('id');
+			->valueSource('id');
 	
 	foreach ($dispLayer->load($allInLayer) as $dispId => $disposition) {
 //		
