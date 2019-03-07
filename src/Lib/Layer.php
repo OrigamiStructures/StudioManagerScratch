@@ -224,7 +224,10 @@ class Layer implements LayerAccessInterface {
 	 * @param string $operator A comparison operator
 	 * @return array
 	 */
-    public function filter($value_source, $test_value, $operator = null) {
+    public function filter($value_source, $test_value = null, $operator = null) {
+//		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs') && $value_source->isFilter()) {
+//			$operator = $value_source->getValue('operator');
+//		}
 			
 		if	(	!$this->has($value_source) && 
 				!method_exists($this->entityClass('namespaced'), $value_source)) 
@@ -239,7 +242,8 @@ class Layer implements LayerAccessInterface {
 		$comparison = $this->selectComparison($operator);
 		
         $set = collection($this->_data);
-        $results = $set->filter(function ($entity, $key) use ($value_source, $test_value, $comparison) {
+        $results = $set->filter(function ($entity, $key) 
+				use ($value_source, $test_value, $comparison) {
 				if(in_array($value_source, $entity->visibleProperties())) {
 					$actual = $entity->$value_source;
 				} else {
