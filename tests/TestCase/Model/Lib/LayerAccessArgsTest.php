@@ -143,20 +143,20 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testFilter()
     {
-        $this->args->filter('piece_id', [12,13,14,15]);
+        $this->args->specifyFilter('piece_id', [12,13,14,15]);
 		$this->assertTrue($this->args->isFilter());
 		$this->assertTrue($this->args->valueOf('property') === 'piece_id');
 		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
 		$this->assertTrue($this->args->valueOf('filterOperator') === '==');
 		
 		$this->setUp();
-		$this->args->filter('cityStateZip()', '');
+		$this->args->specifyFilter('cityStateZip()', '');
 		$this->assertTrue($this->args->isFilter());
 		$this->assertTrue($this->args->valueOf('method') === 'cityStateZip');
 		$this->assertTrue($this->args->valueOf('filterValue') === '');
 		
 		$this->setUp();
-		$this->args->filter('cityStateZip()', '', '!=');
+		$this->args->specifyFilter('cityStateZip()', '', '!=');
 		$this->assertTrue($this->args->valueOf('filterOperator') === '!=');
 		
     }

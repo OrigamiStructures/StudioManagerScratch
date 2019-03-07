@@ -152,7 +152,7 @@ class LayerAccessArgs {
 	 * @param mixed $filter_value The value to compare to the $source_value
 	 * @param string $filter_operator The kind of comparison to make
 	 */
-	public function filter($source_value, $filter_value, $filter_operator = '==') {
+	public function specifyFilter($source_value, $filter_value, $filter_operator = '==') {
 		if(preg_match('/\(\)|\( \)/', $source_value)) {
 			$this->method($source_value);
 		} else {
