@@ -179,26 +179,6 @@ class LayerAccessArgs {
 		return $this->getEntityValue($pointer, $entity);
 	}
 	/**
-	 * Set the property to be used as the value source in a filter
-	 * 
-	 * @param string $param
-	 * @return \App\Model\Lib\LayerAccessArgs
-	 */
-//	public function property($param) {
-//		$this->_property = $param;
-//		return $this;
-//	}
-	/**
-	 * Set a method to be used a the value source in a filter
-	 * 
-	 * @param string $param methodName or methodName() 
-	 * @return \App\Model\Lib\LayerAccessArgs
-	 */
-	public function method($param) {
-		$this->_method = trim($param,'() ');
-		return $this;
-	}
-	/**
 	 * Set up the filter params all at once
 	 * 
 	 * @param string $value_source A property_name or method_name()

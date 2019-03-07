@@ -86,37 +86,6 @@ class LayerAccessArgsTest extends TestCase
     }
 
     /**
-     * Test property method
-     *
-     * @return void
-     */
-    public function testProperty()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test method method
-     *
-     * @return void
-     */
-    public function testMethod()
-    {
-        $this->args->method('asArray()');
-		$this->assertTrue($this->args->valueOf('method') === 'asArray',
-				'The method setter did not trim \'()\' from the input string');
-		
-        $this->args->method('asString( )');
-		$this->assertTrue($this->args->valueOf('method') === 'asString',
-				'The method setter did not trim \'( )\' from the input string');
-		
-        $this->args->method('hasPrimary');
-		$this->assertTrue($this->args->valueOf('method') === 'hasPrimary',
-				'The method setter did not store the provided value');
-
-    }
-
-    /**
      * Test conditions method
      *
      * @return void
