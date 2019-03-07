@@ -12,12 +12,6 @@ use Cake\Utility\Inflector;
 class LayerAccessArgs {
 	
 	/**
-	 * Name of this layer property
-	 *
-	 * @var string
-	 */
-	private $_layer = FALSE;
-	/**
 	 * Page to return for paginated results
 	 *
 	 * @var int
@@ -43,23 +37,18 @@ class LayerAccessArgs {
 	 * @var string
 	 */
 	private $_lookup_index = FALSE;
-	private $_property = FALSE;
 	/**
-	 * The name of a method of the layer entities
+	 * Name of this layer property
 	 *
 	 * @var string
 	 */
-	private $_method = FALSE;
-	private $_value = FALSE;
-	/**
-	 * Unsure of use
-	 * 
-	 * This looks something like the query system. Instead I 
-	 * think I go with property vs value and method vs value
-	 *
-	 * @var array
-	 */
-	private $_conditions = FALSE; // or we make 'dirty' a condition?
+	private $_layer = FALSE;
+	
+	private $_property = FALSE;
+	
+	private $_key_source = FALSE;
+
+
 	/**
 	 * This could describe the comparison between property and condition
 	 * 
@@ -69,28 +58,37 @@ class LayerAccessArgs {
 	 *
 	 * @var mixed
 	 */
+	private $_value_source = FALSE;
 	private $_filter_value = FALSE;
 	private $_filter_value_isset = FALSE;
-	private $_filter_operator = FALSE;
-	
-	// this one is a different concept? or wouldn't need condtions perhaps
-	// does this have something to do with the context when the call is made? 
-	private $_source = 'entity'; //entity or original
-	
+	private $_filter_operator = FALSE;	
 
 	public function __construct() {
 		return $this;
 	}
-	public function layer($param) {
+	public function setLayer($param) {
 		$this->_layer = $param; 
 		return $this;
 	}
 	public function hasLayer() {
 		return $this->_layer !== FALSE;
 	}
-	public function page($param) {
+	
+	public function hasKeySource() {
+		return $this->_key_source !== FALSE;
+	}
+	
+	public function hasValueSource() {
+		return $this->_value_source !== FALSE;
+	}
+	
+	public function setPage($param) {
 		$this->_page = $param;
 		return $this;
+	}
+	public function paginate($page, $limit) {
+		$this->setPage($page);
+		$this->setLimit($limit);
 	}
 	/**
 	 * Set the number of elements per page
@@ -101,7 +99,7 @@ class LayerAccessArgs {
 	 * @param type $param
 	 * @return \App\Model\Lib\LayerAccessArgs
 	 */
-	public function limit($param) {
+	public function setLimit($param) {
 		$param = $param === 'all' ? -1 : $param;
 		$param = $param === 'first' ? 1 : $param;
 		$this->_limit = $param;
@@ -120,6 +118,27 @@ class LayerAccessArgs {
 	public function lookupIndex($param) {
 		$this->_lookup_index = $param;
 		return $this;
+	}
+	
+	
+	private function getEntityValue($pointer, $entity) {
+		if (in_array($pointer, $entity->visibleProperties())) {
+			return $entity->$pointer;
+		} elseif (method_exists($entity, $pointer)) {
+			return $entity->$pointer();
+		} else {
+			return null;
+		}
+	}
+	
+	public function getKeyValue($entity) {
+		$pointer = $this->_key_source;
+		return $this->getValue($pointer, $entity);
+	}
+	
+	public function getValue($entity) {
+		$pointer = $this->_value_source;
+		return $this->getEntityValue($pointer, $entity);
 	}
 	/**
 	 * Set the property to be used as the value source in a filter
@@ -144,23 +163,19 @@ class LayerAccessArgs {
 	/**
 	 * Set up the filter params all at once
 	 * 
-	 * Passing a string followed by '()' will be interpreted as the name of 
-	 * a method that will return the source value for comparison. Exclude 
-	 * the '()' and $source_value will be assumed to be a property
-	 * 
-	 * @param string $source_value A property_name or method_name()
+	 * @param string $value_source A property_name or method_name()
 	 * @param mixed $filter_value The value to compare to the $source_value
 	 * @param string $filter_operator The kind of comparison to make
 	 */
-	public function specifyFilter($source_value, $filter_value, $filter_operator = '==') {
-		if(preg_match('/\(\)|\( \)/', $source_value)) {
-			$this->method($source_value);
-		} else {
-			$this->property($source_value);
-		}
+	public function specifyFilter($value_source, $filter_value, $filter_operator = '==') {
+		$this->valueSource($value_source);
 		$this->filterValue($filter_value);
 		$this->filterOperator($filter_operator);
 		return $this;
+	}
+	
+	public function valueSource($param) {
+		$this->_value_source = $param;
 	}
 	/**
 	 * Set a filter value and flag that this has been done
@@ -192,8 +207,7 @@ class LayerAccessArgs {
 	 * @return boolean
 	 */
 	public function isFilter() {
-		return ($this->valueOf('property') xor $this->valueOf('method')) 
-				&& $this->valueOf('filter_value_isset');
+		return $this->valueOf('value_source') && $this->valueOf('filter_value_isset');
 	}
 	/**
 	 * One call returns them all

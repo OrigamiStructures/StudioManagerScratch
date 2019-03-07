@@ -95,11 +95,11 @@ class StackEntityTest extends TestCase
 		$this->assertCount(1, $this->StackEntity->load());
 		$this->assertArrayHasKey(4, $this->StackEntity->load());
 		
-		$formats_arg = $this->StackEntity->accessArgs()->layer('formats');
+		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
 		
 		$this->assertCount(2, $this->StackEntity->load($formats_arg));
 		$format_index_5 = $this->StackEntity->accessArgs()
-				->layer('formats')
+				->setLayer('formats')
 				->lookupIndex(5);
         $format = $this->StackEntity->load($format_index_5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
@@ -107,7 +107,7 @@ class StackEntityTest extends TestCase
 				. 'did not return an entity with an expected property value.');
 		
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
-				->layer('pieces')
+				->setLayer('pieces')
 				->property('quantity')
 				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
@@ -118,32 +118,32 @@ class StackEntityTest extends TestCase
 
 		
 		$all_pieces_args = $this->StackEntity->accessArgs()
-				->layer('pieces')
-				->limit('all');
+				->setLayer('pieces')
+				->setLimit('all');
         $this->assertEquals(5, count($this->StackEntity->load($all_pieces_args)),
 				'loading using \'all\' did not return the expected number of entities');
 
 		$all_formats_args = $this->StackEntity->accessArgs()
-				->layer('formats')
-				->limit('all');
+				->setLayer('formats')
+				->setLimit('all');
         $this->assertEquals(2, count($this->StackEntity->load($all_formats_args)),
 				'loading using [\'all\'] did not return the expected number of entities');
 
 		$first_piece_args = $this->StackEntity->accessArgs()
-				->layer('pieces')
-				->limit('first');
+				->setLayer('pieces')
+				->setLimit('first');
         $this->assertEquals(1, count($this->StackEntity->load($first_piece_args)),
 				'loading using \'first\' did not return one entity');
 
 		$first_format_args = $this->StackEntity->accessArgs()
-				->layer('formats')
-				->limit('first');
+				->setLayer('formats')
+				->setLimit('first');
         $this->assertEquals(1, count($this->StackEntity->load($first_format_args)),
 				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
-				->limit('first')
+				->setLimit('first')
 				->property('edition_id')
 				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
@@ -296,7 +296,7 @@ class StackEntityTest extends TestCase
     public function testSet(){
         //extract an array, unset that value then 'set' the value
         //the set is a (string, value) arg arrangement
-		$all_pieces_arg = $this->StackEntity->accessArgs()->layer('pieces')->limit('all');
+		$all_pieces_arg = $this->StackEntity->accessArgs()->setLayer('pieces')->setLimit('all');
         $pieces = $this->StackEntity->load($all_pieces_arg);
         $this->assertTrue(is_array($pieces), 'the load value is an array');
         
@@ -309,12 +309,12 @@ class StackEntityTest extends TestCase
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
 		$all_pieces_arg = $this->StackEntity->accessArgs()
-				->layer('pieces')
-				->limit('all');
+				->setLayer('pieces')
+				->setLimit('all');
         $pieces = $this->StackEntity->load($all_pieces_arg);
 		$all_dispo_pieces_arg = $this->StackEntity->accessArgs()->
-				layer('dispositionsPieces')
-				->limit('all');
+				setLayer('dispositionsPieces')
+				->setLimit('all');
         $dp = $this->StackEntity->load($all_dispo_pieces_arg);
         unset($this->StackEntity->pieces);
         unset($this->StackEntity->dispositionsPieces);

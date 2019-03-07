@@ -34,7 +34,7 @@ if (isset($stacks)) {
 		
 		$artwork = $stack->primaryEntity();
 		$dispoID_list_match = $stack->accessArgs()
-				->layer('dispositionsPieces')
+				->setLayer('dispositionsPieces')
 				->property('disposition_id')
 				->filterValue($dispLayer->IDs());
 		$joins = new Layer($stack->load($dispoID_list_match));
@@ -44,25 +44,25 @@ if (isset($stacks)) {
 		// Layer turns an array of entities into a quasi-db tool.
 		// See \App\Lib\Layer
 		$distinct_pieces_args = $stack->accessArgs()
-				->layer('pieces')
+				->setLayer('pieces')
 				->property('id')
 				->filterValue($joins->distinct('piece_id'));
 		$distinct_pieces = $stack->load($distinct_pieces_args);
 		$pieces = new Layer($distinct_pieces);
 		$distinct_formats_args = $stack->accessArgs()
-				->layer('formats')
+				->setLayer('formats')
 				->property('id')
 				->filterValue($pieces->distinct('format_id'));
 		$formats = new Layer($stack->load($distinct_formats_args));	
 		$distinct_editions_args = $stack->accessArgs()
-				->layer('editions')
+				->setLayer('editions')
 				->property('id')
 				->filterValue($formats->distinct('edition_id'));
 		$editions = new Layer($stack->load($distinct_editions_args));
 		$indexed_dispo = $stack->accessArgs();
 		
         echo "<h1>{$artwork->title}</h1>";
-		$allInLayer = $editions->accessArgs()->limit('all');
+		$allInLayer = $editions->accessArgs()->setLimit('all');
         foreach ($editions->load($allInLayer) as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
             foreach ($formats->load($allInLayer) as $format) {
@@ -90,19 +90,19 @@ echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
 	
 	$format_for_piece_arg = $dispLayer->accessArgs()
-			->layer('formats')
+			->setLayer('formats')
 			->property('id');
 	$edition_for_format = $dispLayer->accessArgs()
-			->layer('editions')
+			->setLayer('editions')
 			->property('id');
 	$artwork_for_edition = $dispLayer->accessArgs()
-			->layer('artwork')
+			->setLayer('artwork')
 			->property('id');
 	$dispo_joins_args = $dispLayer->accessArgs()
-			->layer('dispositionsPieces')
+			->setLayer('dispositionsPieces')
 			->property('disposition_id');
 	$linked_pieces_args = $dispLayer->accessArgs()
-			->layer('pieces')
+			->setLayer('pieces')
 			->property('id');
 	
 	foreach ($dispLayer->load($allInLayer) as $dispId => $disposition) {

@@ -83,7 +83,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return Entity
 	 */
 	public function primaryEntity() {
-		$allArg = $this->accessArgs()->limit('all');
+		$allArg = $this->accessArgs()->setLimit('all');
 		$primary = $this->get($this->_primary)->load($allArg);
 		return array_shift($primary);
 	}

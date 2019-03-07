@@ -17,7 +17,7 @@ use Cake\Collection\Collection;
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
 	$member_type_to_type_match = $cards->accessArgs()
-			->layer('member')
+			->setLayer('member')
 			->property('member_type')
 			->filterValue($type);
 	$setMembers = $cards->load($member_type_to_type_match);
@@ -66,8 +66,8 @@ foreach($cards->all() as $card) {
 	
 	$options = [];
 	$allAddressesArg = $cards->accessArgs()
-			->limit('all')
-			->layer('addresses');
+			->setLimit('all')
+			->setLayer('addresses');
 	foreach($cards->load($allAddressesArg) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}

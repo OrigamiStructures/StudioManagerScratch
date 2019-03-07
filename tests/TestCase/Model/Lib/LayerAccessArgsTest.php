@@ -43,7 +43,7 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testMultiSet()
     {
-        $this->args->property('property')->limit('first');
+        $this->args->property('property')->setLimit('first');
 		$this->assertTrue($this->args->valueOf('property') === 'property', 
 				'The first setting of a chain did not persist');
 		$this->assertTrue($this->args->valueOf('limit') === 1, 
@@ -77,10 +77,10 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testLimit()
     {
-        $this->args->limit('first');
+        $this->args->setLimit('first');
 		$this->assertTrue($this->args->valueOf('limit') === 1,
 				'Setting \limit\' to \'first\' did not result in the value 1');
-		$this->args->limit('all');
+		$this->args->setLimit('all');
 		$this->assertTrue($this->args->valueOf('limit') === -1,
 				'Setting \limit\' to \'all\' did not result in the value -1');
     }
@@ -145,18 +145,12 @@ class LayerAccessArgsTest extends TestCase
     {
         $this->args->specifyFilter('piece_id', [12,13,14,15]);
 		$this->assertTrue($this->args->isFilter());
-		$this->assertTrue($this->args->valueOf('property') === 'piece_id');
+		$this->assertTrue($this->args->valueOf('valueSource') === 'piece_id');
 		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
 		$this->assertTrue($this->args->valueOf('filterOperator') === '==');
 		
 		$this->setUp();
-		$this->args->specifyFilter('cityStateZip()', '');
-		$this->assertTrue($this->args->isFilter());
-		$this->assertTrue($this->args->valueOf('method') === 'cityStateZip');
-		$this->assertTrue($this->args->valueOf('filterValue') === '');
-		
-		$this->setUp();
-		$this->args->specifyFilter('cityStateZip()', '', '!=');
+		$this->args->specifyFilter('cityStateZip', '', '!=');
 		$this->assertTrue($this->args->valueOf('filterOperator') === '!=');
 		
     }
@@ -194,26 +188,14 @@ class LayerAccessArgsTest extends TestCase
         $this->assertFalse($this->args->isFilter(),
 				'unmodified argObject says it is a valid Filter');
 		
-		$this->args->property('property');
+		$this->args->valueSource('_value_source');
         $this->assertFalse($this->args->isFilter(),
-				'argObject with only a property says it is a valid Filter');
+				'argObject with only a _value_source says it is a valid Filter');
 		
 		$this->args->filterValue('filter_value');
         $this->assertTrue($this->args->isFilter(),
-				'argObject with a property and filter value says it is not a valid Filter');
-		
-		$this->args->method('method');
-        $this->assertFalse($this->args->isFilter(),
-				'argObject with a property and method and filter value says it is a valid Filter');
-		
-		$this->args->property(FALSE);
-        $this->assertTrue($this->args->isFilter(),
-				'argObject with a method and filter value says it is not a valid Filter');
-		
-		$args = (new LayerAccessArgs())->property('prop')->method('meth');
-        $this->assertFalse($args->isFilter(),
-				'argObject with method and property value says it is a valid Filter');
-		
+				'argObject with a _value_source and filter value says it is not a valid Filter');
+						
     }
 
     /**
@@ -225,7 +207,7 @@ class LayerAccessArgsTest extends TestCase
     {
         $this->args
 				->filterOperator('==')
-				->layer('layer');
+				->setLayer('layer');
 		$this->assertTrue($this->args->valueOf('filter_operator') == '==', 
 				"valueOf('filter_operator') did not return expected propery value");
 		$this->assertTrue($this->args->valueOf('_filter_operator') == '==', 

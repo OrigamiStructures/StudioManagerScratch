@@ -287,10 +287,10 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
         
  		$simpleAllArg = $layer->accessArgs()
-				->limit('all');
+				->setLimit('all');
         $this->assertEquals(5, count($layer->load($simpleAllArg)));
  		$all_id_equals_12 = $layer->accessArgs()
-				->limit('all')
+				->setLimit('all')
 				->property('id')
 				->filterValue('12');
         $this->assertEquals(0, count($layer->load($all_id_equals_12)));        
@@ -301,23 +301,23 @@ class LayerTest extends TestCase
         
  		$simpleFirstArg = $layer->
 				accessArgs()
-				->limit('first');
+				->setLimit('first');
         $this->assertEquals(1, count($layer->load($simpleFirstArg)));
 		
  		$first_with_0_dispos_arg = $layer->accessArgs()
-				->limit('first')
+				->setLimit('first')
 				->property('disposition_count')
 				->filterValue(0);
         $this->assertEquals(1, count($layer->load($first_with_0_dispos_arg)));  
 		
  		$first_badSearch_args = $layer->accessArgs()
-				->limit('first')
+				->setLimit('first')
 				->property('boogers')
 				->filterValue(0);
         $this->assertEquals(0, count($layer->load($first_badSearch_args)));        
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
-				->limit(1)
+				->setLimit(1)
 				->property('disposition_count')
 				->filterValue(50);
         $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));        
