@@ -192,7 +192,7 @@ class StackSetTest extends TestCase {
     public function testLoad() {
 		$format_index_5_arg = $this->StackEntities->accessArgs()
 				->setLayer('formats')
-				->lookupIndex(5);
+				->setIdIndex(5);
         $formats = $this->StackEntities->load($format_index_5_arg);
 //		var_dump($formats);
 		$format = array_shift($formats);
@@ -203,7 +203,7 @@ class StackSetTest extends TestCase {
 
 		$argObj = $this->StackEntities->accessArgs()
 				->setLayer('formats')
-				->lookupIndex(8);
+				->setIdIndex(8);
         $formats = $this->StackEntities->load($argObj);
 		$format = array_shift($formats);
         $this->assertStringStartsWith('Digital output', $format->description,

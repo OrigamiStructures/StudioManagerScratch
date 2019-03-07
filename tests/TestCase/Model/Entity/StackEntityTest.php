@@ -100,7 +100,7 @@ class StackEntityTest extends TestCase
 		$this->assertCount(2, $this->StackEntity->load($formats_arg));
 		$format_index_5 = $this->StackEntity->accessArgs()
 				->setLayer('formats')
-				->lookupIndex(5);
+				->setIdIndex(5);
         $format = $this->StackEntity->load($format_index_5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '

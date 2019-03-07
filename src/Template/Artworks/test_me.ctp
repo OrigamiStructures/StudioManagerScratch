@@ -76,7 +76,7 @@ if (isset($stacks)) {
 							->valueSource('piece_id')
 							->filterValue($piece->id);
 					foreach ($joins->load($dispo_joins_for_piece_arg) as $link) {
-						$indexed_dispo->lookupIndex($link->disposition_id); // this is an id search
+						$indexed_dispo->setIdIndex($link->disposition_id); // this is an id search
 						echo "<li>{$dispLayer->load($indexed_dispo)->displayTitle}</li>";
 					}
 					echo '</ul></li></ul>';

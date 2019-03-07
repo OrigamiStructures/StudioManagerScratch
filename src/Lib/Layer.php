@@ -187,8 +187,8 @@ class Layer implements LayerAccessInterface {
 			return $this->_data;
 		}
 		
-		if ($argObj->valueOf('lookup_index')) {
-			$id = $argObj->valueOf('lookup_index');
+		if ($argObj->valueOf('idIndex')) {
+			$id = $argObj->valueOf('idIndex');
             if (!$this->hasId($id)) {
                 return [];
             }

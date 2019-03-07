@@ -15,13 +15,8 @@ use App\Model\Lib\ValueSource;
  * ------------------------------------------
  * layer : The classes upstream from Layers will often need to name the 
  *		layer that will be operated on. 
- * lookup_index : To support record linking, `layer` content and `StackSet` 
+ * id_index : To support record linking, `layer` content and `StackSet` 
  *		content are indexed by their ID (or primary entity ID) 
- * 
- * property : At the end of a structure-traversal, a property can be 
- *		identified as the datum of interest
- * method : At the end of a structure-traversal, a method can be 
- *		identified as the datum of interest
  * 
  * Pagination
  * All results will be paginated using these values if set
@@ -32,8 +27,9 @@ use App\Model\Lib\ValueSource;
  * Data filtering 
  * ------------------------------------------
  * TRUE allows the entity into the set, FALSE excludes it 
- * Easiest to build these using the filter() method
- * property || method : The source of the datum to test
+ * Easiest to build these using the specifyFilter() method
+ * value_source : The source of the datum to test (property or method)
+ *		methods must not require arguments
  * filter_value : The value to compare
  * filter_operator : The kind of comparison to make
  * 
@@ -42,10 +38,7 @@ use App\Model\Lib\ValueSource;
  * Most processes return an array containing entities. The values() and 
  * keyedList() methods will reduce the result to an array of values or 
  * an indexed array respectively
- * Easiest to build 
- * value :
- * key : 
- *
+ * 
  * @author dondrake
  */
 class LayerAccessArgs {
@@ -75,28 +68,16 @@ class LayerAccessArgs {
 	 *
 	 * @var string
 	 */
-	private $_lookup_index = FALSE;
+	private $_id_index = FALSE;
 	/**
 	 * Name of this layer property
 	 *
 	 * @var string
 	 */
 	private $_layer = FALSE;
-	
-	private $_property = FALSE;
-	
+		
 	private $_key_source = FALSE;
 
-
-	/**
-	 * This could describe the comparison between property and condition
-	 * 
-	 * ==, !=, >, <, between, dirty, clean... there are so many options here. 
-	 * How about starting with == and NOT then do more later?
-	 * Or even just go property == and use this property for later expansion?
-	 *
-	 * @var mixed
-	 */
 	private $_value_source = FALSE;
 	private $_filter_value = FALSE;
 	private $_filter_value_isset = FALSE;
@@ -109,25 +90,52 @@ class LayerAccessArgs {
 		$this->_layer = $param; 
 		return $this;
 	}
+	
+// <editor-fold defaultstate="collapsed" desc="VALIDATION CALLS -- hasXX(), isXX()">
+	
 	public function hasLayer() {
 		return $this->_layer !== FALSE;
 	}
-	
+
+
 	public function hasKeySource() {
 		return $this->_key_source !== FALSE;
 	}
-	
+
+
 	public function hasValueSource() {
 		return $this->_value_source !== FALSE;
 	}
+
+	/**
+	 * Are the minimum required arguments set to allow filter operations?
+	 * 
+	 * Requires 'valueSource and that a 'filterValue' has been set.
+	 * 
+	 * @return boolean
+	 */
+	public function isFilter() {
+		return $this->valueOf('value_source') && $this->valueOf('filter_value_isset');
+	}
+
+// </editor-fold>
 	
+// <editor-fold defaultstate="collapsed" desc="PAGINATION ARGUMENTS">
+
+	/**
+	 * Set a page to get and how many units are on the page
+	 * 
+	 * @param int $page
+	 * @param int $limit
+	 */
+	public function setPagination($page, $limit) {
+		$this->setPage($page);
+		$this->setLimit($limit);
+	}
+
 	public function setPage($param) {
 		$this->_page = $param;
 		return $this;
-	}
-	public function paginate($page, $limit) {
-		$this->setPage($page);
-		$this->setLimit($limit);
 	}
 	/**
 	 * Set the number of elements per page
@@ -144,6 +152,11 @@ class LayerAccessArgs {
 		$this->_limit = $param;
 		return $this;
 	}
+
+// </editor-fold>
+	
+// <editor-fold defaultstate="collapsed" desc="ID-INDEX ARGUMENT">
+	
 	/**
 	 * Set the index to lookup a stored node in a layer or stack set
 	 * 
@@ -154,11 +167,15 @@ class LayerAccessArgs {
 	 * @param string $param
 	 * @return \App\Model\Lib\LayerAccessArgs
 	 */
-	public function lookupIndex($param) {
-		$this->_lookup_index = $param;
+	public function setIdIndex($param) {
+		$this->_id_index = $param;
 		return $this;
 	}
-		
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="VALUE RETRIEVAL -- PROPOSED --">
+
 	private function getEntityValue($pointer, $entity) {
 		if (in_array($pointer, $entity->visibleProperties())) {
 			return $entity->$pointer;
@@ -168,16 +185,23 @@ class LayerAccessArgs {
 			return null;
 		}
 	}
-	
+
+
 	public function getKeyValue($entity) {
 		$pointer = $this->_key_source;
 		return $this->getValue($pointer, $entity);
 	}
-	
+
+
 	public function getValue($entity) {
 		$pointer = $this->_value_source;
 		return $this->getEntityValue($pointer, $entity);
 	}
+
+// </editor-fold>
+	
+// <editor-fold defaultstate="collapsed" desc="FILTER ARGUMENTS">
+	
 	/**
 	 * Set up the filter params all at once
 	 * 
@@ -185,17 +209,20 @@ class LayerAccessArgs {
 	 * @param mixed $filter_value The value to compare to the $source_value
 	 * @param string $filter_operator The kind of comparison to make
 	 */
-	public function specifyFilter($value_source, $filter_value, $filter_operator = '==') {
+	public function specifyFilter($value_source, $filter_value,
+			$filter_operator = '==') {
 		$this->valueSource($value_source);
 		$this->filterValue($filter_value);
 		$this->setFilterOperator($filter_operator);
 		return $this;
 	}
-	
+
+
 	public function valueSource($param) {
 		$this->_value_source = $param;
 		return $this;
 	}
+
 	/**
 	 * Set a filterValue and flag that this has been done
 	 * 
@@ -215,6 +242,7 @@ class LayerAccessArgs {
 		$this->_filter_value = $param;
 		return $this;
 	}
+
 	/**
 	 * Set a comparison operation for filtering sourceValues
 	 * 
@@ -232,25 +260,19 @@ class LayerAccessArgs {
 		$this->_filter_operator = $param;
 		return $this;
 	}
-	/**
-	 * Are the minimum required arguments set to allow filter operations?
-	 * 
-	 * Requires that 'property' or 'method' is set (xor) and 
-	 * that a 'filterValue' has been set.
-	 * 
-	 * @return boolean
-	 */
-	public function isFilter() {
-		return $this->valueOf('value_source') && $this->valueOf('filter_value_isset');
-	}
+
+// </editor-fold>
+	
+// <editor-fold defaultstate="collapsed" desc="UNIVERSAL GETTER">
+	
 	/**
 	 * One call returns them all
 	 * 
 	 * Properties can be identified 
-	 *		under_scored
-	 *		_under_scored
-	 *		underScored
-	 *		UnderScored
+	 * 		under_scored
+	 * 		_under_scored
+	 * 		underScored
+	 * 		UnderScored
 	 * 
 	 * @param string $param Name of the property to return
 	 * 
@@ -260,18 +282,21 @@ class LayerAccessArgs {
 	public function valueOf($param) {
 		// when some_name style is submitted
 		$property = '_' . trim($param, '_');
-		if (isset($this->$property)){
+		if (isset($this->$property)) {
 			return $this->$property;
 		}
 		// when someName style is submitted
 		$property = '_' . Inflector::underscore($param);
-		if (isset($this->$property)){
+		if (isset($this->$property)) {
 			return $this->$property;
 		}
 		return '';
-		if(!isset($this->$property)) {
-			throw new BadMethodCallException("Request to get LayerAccessParams::$param. The property does not exist."	);
+		if (!isset($this->$property)) {
+			throw new BadMethodCallException("Request to get LayerAccessParams::$param. The property does not exist.");
 		}
 		return $this->$property;
 	}
+
+// </editor-fold>
+	
 }
