@@ -45,8 +45,31 @@ trait LayerAccessTrait {
 	}
 	
 	public function keyedList(LayerAccessArgs $args){
-		
+		$result = $this->load($args);
+		$collection = collection($this->load($args));
+		$collection->reduce(function($accum, $entity) use ($args){
+			if($args->valueOf('method')) {
+				$method = $args->valueOf('method');
+				$value = $entity->$mehtod();
+			} else {
+				
+			}
+		}, []);
 	}
+	
+	public function validateSource($entity, $source) {
+		return $entity->has($source) && method_exists($this->entityClass('namespaced'), $value_source) ;
+	}
+	
+	public function value($entity, $source) {
+		if(in_array($source, $entity->visibleProperties())) {
+			$result = $entity->$source;
+		} else {
+			$result = $entity->$source();
+		}
+		return $result;
+	}
+
 //	
 	public function linkedTo($foreign, $foreign_id, $linked = null){
 		
@@ -62,5 +85,4 @@ trait LayerAccessTrait {
 		}
 		return $data;
 	}
-    	
 }

@@ -3,9 +3,48 @@ namespace App\Model\Lib;
 
 use BadMethodCallException;
 use Cake\Utility\Inflector;
+use App\Model\Lib\ValueSource;
 
 /**
- * Description of LayerAccessArgs
+ * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
+ * 
+ * load(), and the several methods that support and extend it make use of 
+ * many parameter. This class encapsulates and manages them.
+ * 
+ * Targeting downstream nodes
+ * ------------------------------------------
+ * layer : The classes upstream from Layers will often need to name the 
+ *		layer that will be operated on. 
+ * lookup_index : To support record linking, `layer` content and `StackSet` 
+ *		content are indexed by their ID (or primary entity ID) 
+ * 
+ * property : At the end of a structure-traversal, a property can be 
+ *		identified as the datum of interest
+ * method : At the end of a structure-traversal, a method can be 
+ *		identified as the datum of interest
+ * 
+ * Pagination
+ * All results will be paginated using these values if set
+ * ------------------------------------------
+ * page : which page of found data to return
+ * limit : how many elements per page
+ * 
+ * Data filtering 
+ * ------------------------------------------
+ * TRUE allows the entity into the set, FALSE excludes it 
+ * Easiest to build these using the filter() method
+ * property || method : The source of the datum to test
+ * filter_value : The value to compare
+ * filter_operator : The kind of comparison to make
+ * 
+ * Return data structure
+ * ------------------------------------------
+ * Most processes return an array containing entities. The values() and 
+ * keyedList() methods will reduce the result to an array of values or 
+ * an indexed array respectively
+ * Easiest to build 
+ * value :
+ * key : 
  *
  * @author dondrake
  */
@@ -119,8 +158,7 @@ class LayerAccessArgs {
 		$this->_lookup_index = $param;
 		return $this;
 	}
-	
-	
+		
 	private function getEntityValue($pointer, $entity) {
 		if (in_array($pointer, $entity->visibleProperties())) {
 			return $entity->$pointer;

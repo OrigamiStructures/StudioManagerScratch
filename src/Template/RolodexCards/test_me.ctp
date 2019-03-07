@@ -14,6 +14,9 @@ use Cake\Collection\Collection;
 </style>
 <div class="tests">
 <?php
+$val = new \App\Model\Lib\ValueSource('contact', 'label');
+osd($val);
+
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
 	$member_type_to_type_match = $cards->accessArgs()
