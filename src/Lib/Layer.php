@@ -267,8 +267,14 @@ class Layer implements LayerAccessInterface {
 			'bad_op' => function($actual, $test_value) { return FALSE; },
 			'==' => function($actual, $test_value) { return $actual == $test_value; },
 			'!=' => function($actual, $test_value) { return $actual != $test_value; },
+			'===' => function($actual, $test_value) { return $actual === $test_value; },
+			'!==' => function($actual, $test_value) { return $actual !== $test_value; },
 			'<' => function($actual, $test_value) { return $actual < $test_value; },
 			'>' => function($actual, $test_value) { return $actual > $test_value; },
+			'<=' => function($actual, $test_value) { return $actual <= $test_value; },
+			'>=' => function($actual, $test_value) { return $actual >= $test_value; },
+			'true' => function($actual, $test_value) { return $actual === TRUE; },
+			'false' => function($actual, $test_value) { return $actual === FALSE; },
 			'in_array' => function($actual, $test_value) {return in_array($actual, $test_value);},
 			'truthy' => function($actual, $test_value) {return (boolean) $actual; }
 		];

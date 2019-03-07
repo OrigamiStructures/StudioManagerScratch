@@ -206,7 +206,7 @@ class LayerAccessArgsTest extends TestCase
     public function testValueOf()
     {
         $this->args
-				->filterOperator('==')
+				->setFilterOperator('==')
 				->setLayer('layer');
 		$this->assertTrue($this->args->valueOf('filter_operator') == '==', 
 				"valueOf('filter_operator') did not return expected propery value");

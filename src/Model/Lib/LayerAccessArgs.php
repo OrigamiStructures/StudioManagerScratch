@@ -208,7 +208,7 @@ class LayerAccessArgs {
 	public function specifyFilter($value_source, $filter_value, $filter_operator = '==') {
 		$this->valueSource($value_source);
 		$this->filterValue($filter_value);
-		$this->filterOperator($filter_operator);
+		$this->setFilterOperator($filter_operator);
 		return $this;
 	}
 	
@@ -217,7 +217,9 @@ class LayerAccessArgs {
 		return $this;
 	}
 	/**
-	 * Set a filter value and flag that this has been done
+	 * Set a filterValue and flag that this has been done
+	 * 
+	 * `filterValue` compares to the value of `valueSource` using `filterOperator`
 	 * 
 	 * Filtering may be done on any value, including FALSE. 
 	 * So there is no safe direct test to see if a value has been stored. 
@@ -233,7 +235,20 @@ class LayerAccessArgs {
 		$this->_filter_value = $param;
 		return $this;
 	}
-	public function filterOperator($param) {
+	/**
+	 * Set a comparison operation for filtering sourceValues
+	 * 
+	 * [==, in_array] - defaults based on filterValue type
+	 * 
+	 * Other options
+	 * !=, ===, !==, <, >, <=, >=, 
+	 * Options that won't use filterValue
+	 * true (=== T), false (=== F), truthy (boolean of value) 
+	 * 
+	 * @param string $param
+	 * @return \App\Model\Lib\LayerAccessArgs
+	 */
+	public function setFilterOperator($param) {
 		$this->_filter_operator = $param;
 		return $this;
 	}
