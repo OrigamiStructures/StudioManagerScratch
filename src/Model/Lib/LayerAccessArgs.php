@@ -43,12 +43,15 @@ use App\Model\Lib\ValueSource;
  */
 class LayerAccessArgs {
 	
+// <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
+	
 	/**
 	 * Page to return for paginated results
 	 *
 	 * @var int
 	 */
 	private $_page = FALSE;
+
 	/**
 	 * Number of entities per page
 	 * 
@@ -59,7 +62,12 @@ class LayerAccessArgs {
 	 *
 	 * @var int
 	 */
-	private $_limit = FALSE;
+	private $_limit = FALSE; 
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="ID-INDEX PROPERTY">
+
 	/**
 	 * The name of a specific property in the layer entities
 	 * 
@@ -68,28 +76,48 @@ class LayerAccessArgs {
 	 *
 	 * @var string
 	 */
-	private $_id_index = FALSE;
+	private $_id_index = FALSE; 
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="LAYER PROPERTY">
+
 	/**
 	 * Name of this layer property
 	 *
 	 * @var string
 	 */
 	private $_layer = FALSE;
-		
-	private $_key_source = FALSE;
+	
+	// </editor-fold>
+	
+// <editor-fold defaultstate="collapsed" desc="VALUE-SOURCE PROPERTIES">
 
+	private $_key_source = FALSE;
 	private $_value_source = FALSE;
+	
+	// </editor-fold>
+	
+// <editor-fold defaultstate="collapsed" desc="FILTER PROPERTIES">
+	
 	private $_filter_value = FALSE;
 	private $_filter_value_isset = FALSE;
-	private $_filter_operator = FALSE;	
+	private $_filter_operator = FALSE; 
+
+// </editor-fold>
 
 	public function __construct() {
 		return $this;
 	}
+	
+// <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
+
 	public function setLayer($param) {
-		$this->_layer = $param; 
+		$this->_layer = $param;
 		return $this;
 	}
+
+// </editor-fold>
 	
 // <editor-fold defaultstate="collapsed" desc="VALIDATION CALLS -- hasXX(), isXX()">
 	
