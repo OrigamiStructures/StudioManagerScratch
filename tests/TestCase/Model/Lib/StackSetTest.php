@@ -248,7 +248,7 @@ class StackSetTest extends TestCase {
         // unknown layer combinded with a field search
 		$argObj = $this->StackEntities->accessArgs()
 				->setLayer('gizmo')
-				->property('edition_id')
+				->valueSource('edition_id')
 				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntities->load($argObj)),
 				'loading using an unknow layer name and a property/value search returned something '

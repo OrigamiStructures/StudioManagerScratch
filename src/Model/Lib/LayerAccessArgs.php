@@ -184,10 +184,10 @@ class LayerAccessArgs {
 	 * @param string $param
 	 * @return \App\Model\Lib\LayerAccessArgs
 	 */
-	public function property($param) {
-		$this->_property = $param;
-		return $this;
-	}
+//	public function property($param) {
+//		$this->_property = $param;
+//		return $this;
+//	}
 	/**
 	 * Set a method to be used a the value source in a filter
 	 * 

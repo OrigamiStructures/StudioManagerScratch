@@ -144,7 +144,7 @@ class StackEntityTest extends TestCase
         // unknown layer combinded with a field search
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->setLimit('first')
-				->property('edition_id')
+				->valueSource('edition_id')
 				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
 				'loading using an unknow layer name and a property/value search returned something '

@@ -43,8 +43,8 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testMultiSet()
     {
-        $this->args->property('property')->setLimit('first');
-		$this->assertTrue($this->args->valueOf('property') === 'property', 
+        $this->args->valueSource('property')->setLimit('first');
+		$this->assertTrue($this->args->valueOf('valueSource') === 'property', 
 				'The first setting of a chain did not persist');
 		$this->assertTrue($this->args->valueOf('limit') === 1, 
 				'The second setting of a chain did not persist');
