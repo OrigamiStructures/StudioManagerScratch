@@ -64,6 +64,10 @@ class ValueSource {
 	 */
 	public function isValid() {
 		$ambiguous = $this->_isMethod && $this->_isProperty;
+//		pr('ambiguous ' . ($ambiguous ? 'true' : 'false'));
+//		pr('$this->_isEntity ' . ($this->_isEntity ? 'true' : 'false'));
+//		pr('$this->_isMethod ' . ($this->_isMethod ? 'true' : 'false'));
+//		pr('$this->_isProperty ' . ($this->_isProperty ? 'true' : 'false'));
 		return $this->_isEntity && !$ambiguous && ($this->_isMethod || $this->_isProperty);
 	}
 	
@@ -104,7 +108,7 @@ class ValueSource {
 	 * The name or an object might be sent. In either case, get an object 
 	 * and if it is an Entity, set class properties and return it.
 	 * 
-	 * 'entity', 'Entity', 'entities', 'Entities', or 
+	 * 'entity', 'Entity', 'dispositionsPieces', or 
 	 * '\Name\Space\Entity' are valid strings
 	 * 
 	 * @param string|Entity $entity
@@ -114,8 +118,7 @@ class ValueSource {
 		if (is_string($entity)) {
 			$entity = namespaceSplit($entity);
 			$entity = array_pop($entity);
-			$entityName = ucfirst($this->_singularName($entity));
-			$className = "\\App\\Model\\Entity\\".$entityName;
+			$className = "\\App\\Model\\Entity\\" .  ucfirst($entity);
 			$entity = new $className();
 		}
 		if (is_a($entity, '\Cake\ORM\Entity')) {
@@ -138,9 +141,10 @@ class ValueSource {
 			$this->_isProperty = TRUE;
 		} elseif(stristr($source, '()')) {
 			$this->_isMethod = TRUE;
-		} else {
-			$this->_isProperty = $entity->isAccessible($source);
-			$this->_isMethod = method_exists($this->_name, $source);
+		} elseif (method_exists($this->_name, $source)) {
+			$this->_isMethod = TRUE;
+		} elseif (!empty($source)) {
+			$this->_isProperty = TRUE;
 		}
 		return;
 	}

@@ -185,7 +185,6 @@ class Layer implements LayerAccessInterface {
 		if(is_null($argObj)) {
 			return $this->_data;
 		}
-				pr($argObj->getSourceObject());
 
 		if ($argObj->valueOf('idIndex')) {
 			$id = $argObj->valueOf('idIndex');
