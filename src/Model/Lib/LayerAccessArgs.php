@@ -4,6 +4,7 @@ namespace App\Model\Lib;
 use BadMethodCallException;
 use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
+use Cake\Error\Debugger;
 
 /**
  * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
@@ -43,6 +44,9 @@ use App\Model\Lib\ValueSource;
  */
 class LayerAccessArgs {
 	
+	protected $_errors = [];
+
+
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 	
 	/**
@@ -95,7 +99,9 @@ class LayerAccessArgs {
 
 	private $_key_source = FALSE;
 	private $_value_source = FALSE;
-	
+	public $KeySource;
+	public $ValueSource;
+
 	// </editor-fold>
 	
 // <editor-fold defaultstate="collapsed" desc="FILTER PROPERTIES">
@@ -109,12 +115,100 @@ class LayerAccessArgs {
 	public function __construct() {
 		return $this;
 	}
+
+// <editor-fold defaultstate="collapsed" desc="ERROR MANAGEMENT">
+
+	private function registerError($message) {
+		$trace = collection(Debugger::trace(['start' => 2, 'format' => 'points']));
+		$stack = $trace->reduce(function($accum, $node){
+			$namespace = explode('/', $node['file']);
+			$file = array_pop($namespace);
+			$folder = array_pop($namespace);
+			$namespace = implode('/', $namespace);
+			$accum[] = "Line {$node['line'] } in $folder/$file:\t$namespace";
+			return $accum;
+		}, []);
+		$error = [$message, $stack];
+		$this->_errors[] = $error;
+		pr($error);
+	}
+
+
+	public function getErrors() {
+		return $this->_errors;
+	}
+
+// </editor-fold>
 	
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
 	public function setLayer($param) {
-		$this->_layer = $param;
+		if ($this->hasLayer() && $this->valueOf('layer') != $param) {
+			$this->registerError('Can\'t change `layer` after it\'s been set.');
+		} else {
+			$this->_layer = $param;
+			$this->setupValueObjects('layer');
+		}
 		return $this;
+	}
+	
+	public function getSourceObject() {
+		return $this->ValueSource;
+	}
+
+	public function setValueSource($param) {
+		if ($this->hasValueSource() && $this->valueOf('valueSource') != $param) {
+			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
+		} else {
+			$this->_value_source = $param;
+			$this->setupValueObjects('value');
+		}
+		return $this;
+	}
+
+	public function setKeySource($param) {
+		if ($this->hasKeySourceSource() && $this->valueOf('keySource') != $param) {
+			$this->registerError('Can\'t change `keySource` after it\'s been set.');
+		} else {
+			$this->_value_source = $param;
+			$this->setupValueObjects('key');
+		}
+		return $this;
+	}
+	
+	private function setupValueObjects($origin) {
+		switch ($origin) {
+			case 'layer':
+				if (!$this->hasValueObject() && $this->hasValueSource()) {
+					$this->buildValueObject();
+				}
+				if (!$this->hasKeyObject() && $this->hasKeySource()) {
+					$this->buildKeyObject();
+				}
+				break;
+			case 'value':
+				if (!$this->hasValueObject() && $this->hasLayer()) {
+					$this->buildValueObject();
+				}
+				break;
+			case 'key':
+				if (!$this->hasKeyObject() && $this->hasLayer()) {
+					$this->buildKeyObject();
+				}
+				break;
+			default:
+				$message = 'setupValueObjects called with unknown origin';
+				$this->registerError($message);
+				break;
+		}
+	}
+	
+	private function buildKeyObject() {
+		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->valueOf('keySource'));
+	}
+	
+	private function buildValueObject() {
+		$this->ValueSource = new ValueSource($this->valueOf('layer'), $this->valueOf('valueSource'));
 	}
 
 // </editor-fold>
@@ -133,6 +227,14 @@ class LayerAccessArgs {
 
 	public function hasValueSource() {
 		return $this->_value_source !== FALSE;
+	}
+	
+	public function hasValueObject() {
+		return isset($this->ValueSource);
+	}
+	
+	public function hasKeyObject() {
+		return isset($this->KeySource);
 	}
 
 	/**

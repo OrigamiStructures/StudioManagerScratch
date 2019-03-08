@@ -182,11 +182,11 @@ class Layer implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function load(LayerAccessArgs $argObj = null) {
-		
 		if(is_null($argObj)) {
 			return $this->_data;
 		}
-		
+				pr($argObj->getSourceObject());
+
 		if ($argObj->valueOf('idIndex')) {
 			$id = $argObj->valueOf('idIndex');
             if (!$this->hasId($id)) {

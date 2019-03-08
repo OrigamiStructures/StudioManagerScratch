@@ -74,6 +74,11 @@ foreach($cards->all() as $card) {
 	foreach($cards->load($allAddressesArg) as $address) {
 		$options[$address->id] = " {$address->asString()}";
 	}
+	osd($member_type_to_type_match, 'members type to type match');
+	$member_type_to_type_match->setValueSource('something');
+	osd($member_type_to_type_match, 'members type to type match');
+	osd($allAddressesArg, 'all addresss arg');
+	
 //	
 //	echo $this->Form->radio('address', $options);
 //	echo $this->Form->select('address', $options);
