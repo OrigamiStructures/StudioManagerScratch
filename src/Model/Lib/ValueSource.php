@@ -3,6 +3,7 @@ namespace App\Model\Lib;
 
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Entity;
+use Cake\Utility\Inflector;
 
 /**
  * ValueSource
@@ -115,7 +116,8 @@ class ValueSource {
 		if (is_string($entity)) {
 			$entity = namespaceSplit($entity);
 			$entity = array_pop($entity);
-			$className = "\\App\\Model\\Entity\\" .  ucfirst($entity);
+			$className = "\\App\\Model\\Entity\\" . 
+					$this->_singularName(Inflector::pluralize(ucfirst($entity)));
 			$entity = new $className();
 		}
 		if (is_a($entity, '\Cake\ORM\Entity')) {

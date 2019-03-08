@@ -244,15 +244,6 @@ class StackSetTest extends TestCase {
 				->setLayer('formats');
         $this->assertEquals(2, count($this->StackEntities->load($argObj)),
 				'loading using [\'first\'] did not return one entity');
-
-        // unknown layer combinded with a field search
-		$argObj = $this->StackEntities->accessArgs()
-				->setLayer('gizmo')
-				->setValueSource('edition_id')
-				->filterValue(8);
-        $this->assertEquals(0, count($this->StackEntities->load($argObj)),
-				'loading using an unknow layer name and a property/value search returned something '
-				. 'other than the 0 expected entities.');
     }
 
 // </editor-fold>
