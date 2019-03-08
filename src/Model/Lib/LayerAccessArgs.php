@@ -339,8 +339,7 @@ class LayerAccessArgs {
 	 * @param mixed $filter_value The value to compare to the $source_value
 	 * @param string $filter_operator The kind of comparison to make
 	 */
-	public function specifyFilter($value_source, $filter_value,
-			$filter_operator = '==') {
+	public function specifyFilter($value_source, $filter_value, $filter_operator = FALSE) {
 		$this->setValueSource($value_source);
 		$this->filterValue($filter_value);
 		$this->setFilterOperator($filter_operator);

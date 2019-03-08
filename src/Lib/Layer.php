@@ -195,11 +195,12 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		if ($argObj->isFilter()) {
-			$result = $this->filter($argObj->valueOf('value_source'), $argObj->valueOf('filter_value'));
+//			$result = $this->filter($this->vsSwap($argObj), $argObj->valueOf('filter_value'));
+			$result = $this->filter($argObj);
 		} else {
 			$result = $this->_data;
 		}
-		
+
 		return $this->paginate($result, $argObj);
 		
 	}
@@ -224,16 +225,52 @@ class Layer implements LayerAccessInterface {
 	 * @return array
 	 */
     public function filter($value_source, $test_value = null, $operator = null) {
-//		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs') && $value_source->isFilter()) {
-//			$operator = $value_source->getValue('operator');
-//		}
+		
+		// SHUNT TO NEW FILTER
+		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
+			return $this->newFilter($value_source);
+		}
 			
 		if	(	!$this->has($value_source) && 
 				!method_exists($this->entityClass('namespaced'), $value_source)) 
 		{
             return [];
         }
+		if(is_null($operator)) {
+			$operator = is_array($test_value) ? 'in_array' : '==';
+		}
+
+		$comparison = $this->selectComparison($operator);
 		
+        $set = collection($this->_data);
+        $results = $set->filter(function ($entity, $key) 
+				use ($value_source, $test_value, $comparison) {
+				if(in_array($value_source, $entity->visibleProperties())) {
+					$actual = $entity->$value_source;
+				} else {
+					$actual = $entity->$value_source();
+				}
+				return $comparison($actual, $test_value);
+            })->toArray(); 
+        return $results;
+    }
+	
+    public function newFilter($value_source, $test_value = null, $operator = null) {
+		
+		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
+			$argObj = $value_source;
+			$operator = $argObj->valueOf('filterOperator') ? $argObj->valueOf('filterOperator') : null ;
+			$test_value = $argObj->valueOf('filterValue');
+			$value_source = $argObj->valueOf('valueSource');
+		} else {
+//			$value_source;
+		}
+			
+		if	(	!$this->has($value_source) && 
+				!method_exists($this->entityClass('namespaced'), $value_source)) 
+		{
+            return [];
+        }
 		if(is_null($operator)) {
 			$operator = is_array($test_value) ? 'in_array' : '==';
 		}
