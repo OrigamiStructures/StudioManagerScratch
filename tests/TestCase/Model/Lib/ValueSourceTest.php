@@ -106,24 +106,80 @@ class ValueSourceTest extends TestCase
 				. "and a empty field produces notValid state."],
 		];
 	}
-
-    /**
-     * Test isValid method
-     *
-     * @return void
-     */
-    public function testIsValid()
-    {
-        $this->assertTrue(true);
-    }
-
+	
     /**
      * Test value method
-     *
+     * @dataProvider propertyChecks
      * @return void
      */
-    public function testValue()
+    public function testValuePropertyReturns($entity, $source, $values, $message)
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->ValueSource = new ValueSource($entity, $source);
+		foreach ($values as $index => $value) {
+			$this->assertEquals($value, $this->ValueSource->value($this->addressRecords[$index]), $message);
+		}
+		unset($this->ValueSource);
     }
+	
+	public function propertyChecks() {
+		return [
+			['address', 'address1', 
+				[
+					'5664 Sunridge Court',
+					'Address Line 1',
+					'',
+				],
+				'Property check did not return expected `address1` value'
+			],
+			[
+				'address', 'city..',
+				[
+					'Castro Valley',
+					'',
+					'',
+				],
+				'Method check did not return expected `city..` value'
+			]
+			
+		];
+		
+	}
+	
+    /**
+     * Test value method
+     * @dataProvider propertyChecks
+     * @return void
+     */
+    public function testValueMethodReturns($entity, $source, $values, $message)
+    {
+        $this->ValueSource = new ValueSource($entity, $source);
+		foreach ($values as $index => $value) {
+			$this->assertEquals($value, $this->ValueSource->value($this->addressRecords[$index]), $message);
+		}
+		unset($this->ValueSource);
+    }
+	
+	public function methodChecks() {
+		return [
+			['address', 'toString', 
+				[
+					'5664 Sunridge Court, Castro Valley CA 94552',
+					'Address Line 1',
+					'Address unknown'
+				],
+				'Method check did not return expected `toString` value'
+			],
+			[
+				'address', 'cityStateZip()',
+				[
+					'Castro Valley',
+					'',
+					'',
+				],
+				'Property check did not return expected `cityStateZip()` value'
+			]
+		];
+		
+	}
+
 }

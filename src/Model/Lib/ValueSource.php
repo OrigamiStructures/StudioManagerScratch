@@ -2,6 +2,7 @@
 namespace App\Model\Lib;
 
 use Cake\Core\ConventionsTrait;
+use Cake\ORM\Entity;
 
 /**
  * ValueSource
@@ -53,7 +54,7 @@ class ValueSource {
 		if ($this->_isEntity) {
 			$this->_identify($entity, $source);
 		}
-		$this->_source = $source;
+		$this->_source = trim($source, '().');
 		return $this->isValid();
 	}
 	
@@ -64,10 +65,6 @@ class ValueSource {
 	 */
 	public function isValid() {
 		$ambiguous = $this->_isMethod && $this->_isProperty;
-//		pr('ambiguous ' . ($ambiguous ? 'true' : 'false'));
-//		pr('$this->_isEntity ' . ($this->_isEntity ? 'true' : 'false'));
-//		pr('$this->_isMethod ' . ($this->_isMethod ? 'true' : 'false'));
-//		pr('$this->_isProperty ' . ($this->_isProperty ? 'true' : 'false'));
 		return $this->_isEntity && !$ambiguous && ($this->_isMethod || $this->_isProperty);
 	}
 	
@@ -82,9 +79,9 @@ class ValueSource {
 			return null;
 		}
 		if ($this->_isMethod) {
-			return $entity->{$this->_source};
-		} else {
 			return $entity->{$this->_source}();
+		} else {
+			return $entity->{$this->_source};
 		}
 	}
 	
@@ -126,12 +123,13 @@ class ValueSource {
 			$this->_name = get_class($entity);
 		}
 		return $entity;
-	}
+		}
 	
 	/**
 	 * Determine what the source points to on the Entity
 	 * 
 	 * property, method, neither, both
+	 * can't detect bad property names
 	 * 
 	 * @param Entity $entity
 	 * @param string $source
