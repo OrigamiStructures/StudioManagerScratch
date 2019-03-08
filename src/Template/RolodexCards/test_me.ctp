@@ -21,7 +21,7 @@ foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
 	$member_type_to_type_match = $cards->accessArgs()
 			->setLayer('member')
-			->valueSource('member_type')
+			->setValueSource('member_type')
 			->filterValue($type);
 	$setMembers = $cards->load($member_type_to_type_match);
 	foreach($setMembers as $member) :

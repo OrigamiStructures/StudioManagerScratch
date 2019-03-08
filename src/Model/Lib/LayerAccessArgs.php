@@ -239,15 +239,9 @@ class LayerAccessArgs {
 	 */
 	public function specifyFilter($value_source, $filter_value,
 			$filter_operator = '==') {
-		$this->valueSource($value_source);
+		$this->setValueSource($value_source);
 		$this->filterValue($filter_value);
 		$this->setFilterOperator($filter_operator);
-		return $this;
-	}
-
-
-	public function valueSource($param) {
-		$this->_value_source = $param;
 		return $this;
 	}
 

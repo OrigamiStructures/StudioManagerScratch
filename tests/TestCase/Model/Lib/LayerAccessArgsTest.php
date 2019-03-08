@@ -43,7 +43,7 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testMultiSet()
     {
-        $this->args->valueSource('property')->setLimit('first');
+        $this->args->setValueSource('property')->setLimit('first');
 		$this->assertTrue($this->args->valueOf('valueSource') === 'property', 
 				'The first setting of a chain did not persist');
 		$this->assertTrue($this->args->valueOf('limit') === 1, 
@@ -157,7 +157,7 @@ class LayerAccessArgsTest extends TestCase
         $this->assertFalse($this->args->isFilter(),
 				'unmodified argObject says it is a valid Filter');
 		
-		$this->args->valueSource('_value_source');
+		$this->args->setValueSource('_value_source');
         $this->assertFalse($this->args->isFilter(),
 				'argObject with only a _value_source says it is a valid Filter');
 		

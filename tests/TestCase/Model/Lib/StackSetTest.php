@@ -212,7 +212,7 @@ class StackSetTest extends TestCase {
 
 		$argObj = $this->StackEntities->accessArgs()
 				->setLayer('pieces')
-				->valueSource('quantity')
+				->setValueSource('quantity')
 				->filterValue(140);
         $pieces = $this->StackEntities->load($argObj);
 //		pr($this->StackEntities);
@@ -248,7 +248,7 @@ class StackSetTest extends TestCase {
         // unknown layer combinded with a field search
 		$argObj = $this->StackEntities->accessArgs()
 				->setLayer('gizmo')
-				->valueSource('edition_id')
+				->setValueSource('edition_id')
 				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntities->load($argObj)),
 				'loading using an unknow layer name and a property/value search returned something '

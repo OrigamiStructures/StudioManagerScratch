@@ -108,7 +108,7 @@ class StackEntityTest extends TestCase
 		
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
-				->valueSource('quantity')
+				->setValueSource('quantity')
 				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
@@ -144,7 +144,7 @@ class StackEntityTest extends TestCase
         // unknown layer combinded with a field search
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->setLimit('first')
-				->valueSource('edition_id')
+				->setValueSource('edition_id')
 				->filterValue(8);
         $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
 				'loading using an unknow layer name and a property/value search returned something '

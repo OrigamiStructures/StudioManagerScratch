@@ -235,7 +235,7 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->valueSource('number')
+				->setValueSource('number')
 				->filterValue(4);
         $results = $layer->load($number_is_4_arg); // good find
         $this->assertTrue(is_array($results));
@@ -243,7 +243,7 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->valueSource('number')
+				->setValueSource('number')
 				->filterValue('4');
         $results = $layer->load($number_is_4_arg); // good val, casting mismatch
         $this->assertTrue(is_array($results));
@@ -251,14 +251,14 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_badval_arg = $layer->accessArgs()
-				->valueSource('number')
+				->setValueSource('number')
 				->filterValue(9000);
         $results = $layer->load($number_is_badval_arg); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
  		$badproperty_is_3_arg = $layer->accessArgs()
-				->valueSource('boogers')
+				->setValueSource('boogers')
 				->filterValue(3);
         $results = $layer->load($badproperty_is_3_arg); // property doesn't exist
         $this->assertTrue(is_array($results));
@@ -269,15 +269,15 @@ class LayerTest extends TestCase
         $layer = new Layer($this->pieceRecords);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->valueSource('number')
+				->setValueSource('number')
 				->filterValue(4);
         $four = $layer->load($number_is_4_arg);
  		$number_is_3_arg = $layer->accessArgs()
-				->valueSource('number')
+				->setValueSource('number')
 				->filterValue(3);
         $three = $layer->load($number_is_3_arg);
  		$number_is_3and4_arg = $layer->accessArgs()
-				->valueSource('number')
+				->setValueSource('number')
 				->filterValue([4,3]);
         $results = $layer->load($number_is_3and4_arg); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
@@ -291,7 +291,7 @@ class LayerTest extends TestCase
         $this->assertEquals(5, count($layer->load($simpleAllArg)));
  		$all_id_equals_12 = $layer->accessArgs()
 				->setLimit('all')
-				->valueSource('id')
+				->setValueSource('id')
 				->filterValue('12');
         $this->assertEquals(0, count($layer->load($all_id_equals_12)));        
     }
@@ -306,19 +306,19 @@ class LayerTest extends TestCase
 		
  		$first_with_0_dispos_arg = $layer->accessArgs()
 				->setLimit('first')
-				->valueSource('disposition_count')
+				->setValueSource('disposition_count')
 				->filterValue(0);
         $this->assertEquals(1, count($layer->load($first_with_0_dispos_arg)));  
 		
  		$first_badSearch_args = $layer->accessArgs()
 				->setLimit('first')
-				->valueSource('boogers')
+				->setValueSource('boogers')
 				->filterValue(0);
         $this->assertEquals(0, count($layer->load($first_badSearch_args)));        
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
 				->setLimit(1)
-				->valueSource('disposition_count')
+				->setValueSource('disposition_count')
 				->filterValue(50);
         $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));        
     }
