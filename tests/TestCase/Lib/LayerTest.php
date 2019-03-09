@@ -314,6 +314,12 @@ class LayerTest extends TestCase
 				->setLimit('first')
 				->setValueSource('boogers')
 				->filterValue(0);
+		/**
+		 * This fails because of the property validation check's loosness 
+		 * combinded with the == default comparison. The property validation 
+		 * process needs to be tightened up. visibleProperties() need 
+		 * Entity::accessible to be set to something other than '*' ?
+		 */
         $this->assertEquals(0, count($layer->load($first_badSearch_args)));        
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
