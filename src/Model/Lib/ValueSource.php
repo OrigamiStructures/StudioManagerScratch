@@ -4,6 +4,7 @@ namespace App\Model\Lib;
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Entity;
 use Cake\Utility\Inflector;
+use App\Lib\Traits\ErrorRegistryTrait;
 
 /**
  * ValueSource
@@ -16,6 +17,7 @@ use Cake\Utility\Inflector;
 class ValueSource {
 	
 	use ConventionsTrait;
+	use ErrorRegistryTrait;
 	
 	/**
 	 * Name of the property or method that provides the value
@@ -77,7 +79,9 @@ class ValueSource {
 	 */
 	public function value(Entity $entity) {
 		if (!$this->registeredEntity($entity) || !$this->isValid()) {
-			return null;
+			$this->registerError('If ' . get_class($entity) . ' is a generic entity, you\'ll have '
+					. 'to bake the model and entity to use it, even if they are left empty.');
+			return FALSE;
 		}
 		if ($this->_isMethod) {
 			return $entity->{$this->_source}();

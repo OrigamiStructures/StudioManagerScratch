@@ -4,7 +4,7 @@ namespace App\Model\Lib;
 use BadMethodCallException;
 use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
-use Cake\Error\Debugger;
+use App\Lib\Traits\ErrorRegistryTrait;
 
 /**
  * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
@@ -44,8 +44,7 @@ use Cake\Error\Debugger;
  */
 class LayerAccessArgs {
 	
-	protected $_errors = [];
-
+use ErrorRegistryTrait;
 
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 	
@@ -115,30 +114,6 @@ class LayerAccessArgs {
 	public function __construct() {
 		return $this;
 	}
-
-// <editor-fold defaultstate="collapsed" desc="ERROR MANAGEMENT">
-
-	private function registerError($message) {
-		$trace = collection(Debugger::trace(['start' => 2, 'format' => 'points']));
-		$stack = $trace->reduce(function($accum, $node){
-			$namespace = explode('/', $node['file']);
-			$file = array_pop($namespace);
-			$folder = array_pop($namespace);
-			$namespace = implode('/', $namespace);
-			$accum[] = "Line {$node['line'] } in $folder/$file:\t$namespace";
-			return $accum;
-		}, []);
-		$error = [$message, $stack];
-		$this->_errors[] = $error;
-		pr($error);
-	}
-
-
-	public function getErrors() {
-		return $this->_errors;
-	}
-
-// </editor-fold>
 	
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
