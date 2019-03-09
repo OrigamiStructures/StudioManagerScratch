@@ -3,6 +3,7 @@ namespace App\Model\Traits;
 
 use App\Model\Lib\LayerAccessArgs;
 use App\Lib\Layer;
+use App\Model\Lib\ValueSource;
 
 /**
  * Description of LayerAccessTrait
@@ -44,17 +45,41 @@ trait LayerAccessTrait {
 		
 	}
 	
-	public function keyedList(LayerAccessArgs $args){
-		$result = $this->load($args);
-		$collection = collection($this->load($args));
-		$collection->reduce(function($accum, $entity) use ($args){
-			if($args->valueOf('method')) {
-				$method = $args->valueOf('method');
-				$value = $entity->$mehtod();
-			} else {
-				
-			}
+	public function loadKeyValueList(LayerAccessArgs $args){
+		$data = $this->load($args);
+		$KeySource = $this->args->getKeyObject();
+		$ValueSource = $this->args->getSourceObject();
+		return $this->keyValueList($data, $KeySource, $ValueSource);
+	}
+	
+	public function loadValueList(LayerAccessArgs $args){
+		$data = $this->load($args);
+		$ValueSource = $this->args->getSourceObject();
+		return $this->valueList($data, $ValueSource);
+	}
+	
+	public function keyValueList($data, ValueSource $KeySource,	ValueSource$ValueSource) {
+		$collection = collection($data);
+		$collection->reduce(function($accum, $entity) use ($KeySource, $ValueSource){
+			$accum[$KeySource->value($entity)] = $ValueSource->value($entity);
+			return $accum;
 		}, []);
+	}
+	
+	public function valueList($data, ValueSource $valueSource) {
+		$collection = collection($data);
+		$collection->reduce(function($accum, $entity) use ($ValueSource){
+			$accum[] = $ValueSource->value($entity);
+			return $accum;
+		}, []);
+	}
+	
+	protected function _keyValueReducer($param) {
+		// make this callable if the args can be worked out
+	}
+	
+	protected function _valueReducer($param) {
+		// make this callable if the args can be worked out
 	}
 	
 	public function validateSource($entity, $source) {
@@ -85,4 +110,5 @@ trait LayerAccessTrait {
 		}
 		return $data;
 	}
+	
 }
