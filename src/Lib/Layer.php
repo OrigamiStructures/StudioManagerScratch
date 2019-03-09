@@ -195,6 +195,7 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		if ($argObj->isFilter()) {
+//			$result = $this->filter($argObj->valueOf('value_source'), $argObj->valueOf('filter_value'));
 //			$result = $this->filter($this->vsSwap($argObj), $argObj->valueOf('filter_value'));
 			$result = $this->filter($argObj);
 		} else {
@@ -224,7 +225,7 @@ class Layer implements LayerAccessInterface {
 	 * @param string $operator A comparison operator
 	 * @return array
 	 */
-    public function filter($value_source, $test_value = null, $operator = null) {
+    public function xfilter($value_source, $test_value = null, $operator = null) {
 		
 		// SHUNT TO NEW FILTER
 		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
@@ -255,37 +256,56 @@ class Layer implements LayerAccessInterface {
         return $results;
     }
 	
-    public function newFilter($value_source, $test_value = null, $operator = null) {
+	protected function normalizeArgs($params) {
 		
-		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
-			$argObj = $value_source;
-			$operator = $argObj->valueOf('filterOperator') ? $argObj->valueOf('filterOperator') : null ;
-			$test_value = $argObj->valueOf('filterValue');
-			$value_source = $argObj->valueOf('valueSource');
-		} else {
-//			$value_source;
+		if (is_a($params[0], '\App\Model\Lib\LayerAccessArgs')) {
+			return $params[0];
 		}
-			
-		if	(	!$this->has($value_source) && 
-				!method_exists($this->entityClass('namespaced'), $value_source)) 
-		{
-            return [];
-        }
-		if(is_null($operator)) {
-			$operator = is_array($test_value) ? 'in_array' : '==';
+		$argObj = $this->accessArgs();
+		$args = func_get_args()[0];
+		switch ( count($args) ) {
+			case 2:
+				$argObj->specifyFilter(
+						$args[0],
+						$args[1]);
+				break;
+			case 3:
+				$argObj->specifyFilter(
+						$args[0], //value source
+						$args[1], //filter value
+						$args[2]); //filter operator
+			default:
+//				pr(func_get_args());//die;
+//				throw new \BadMethodCallException('Bad arguments for Layer::filter() provided.');
+				break;
 		}
-
-		$comparison = $this->selectComparison($operator);
-		
+		return $argObj;
+	}
+	
+	/**
+	 * Filter this layers set of entities
+	 * 
+	 * Supply an LayerAccessArg object with a `specifyFilter()` done or provide 
+	 * `value-source` string (property or method name)
+	 * `test-value` mixed (value to compare to)
+	 * `filter-operaration` string (the comparison operation to perform)
+	 *		filter-op is options, defaults to == for values, in_array for arrays
+	 * 
+	 * @param mixed $argObj
+	 * @return array
+	 */
+    public function filter($argObj) {
+		$argObj = $this->NormalizeArgs(func_get_args());
+		if (!$argObj->hasValueObject()) {
+//			pr($this->layerName());
+			$argObj->setLayer($this->layerName());
+		}
+		$comparison = $this->selectComparison($argObj->valueOf('filterOperator'));
         $set = collection($this->_data);
-        $results = $set->filter(function ($entity, $key) 
-				use ($value_source, $test_value, $comparison) {
-				if(in_array($value_source, $entity->visibleProperties())) {
-					$actual = $entity->$value_source;
-				} else {
-					$actual = $entity->$value_source();
-				}
-				return $comparison($actual, $test_value);
+		
+        $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
+				$actual = $argObj->ValueSource->value($entity);
+				return $comparison($actual, $argObj->valueOf('filterValue'));
             })->toArray(); 
         return $results;
     }
