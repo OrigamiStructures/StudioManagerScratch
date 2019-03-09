@@ -340,9 +340,9 @@ class LayerAccessArgs {
 	 * @param string $filter_operator The kind of comparison to make
 	 */
 	public function specifyFilter($value_source, $filter_value, $filter_operator = FALSE) {
+		$this->setFilterOperator($filter_operator);
 		$this->setValueSource($value_source);
 		$this->filterValue($filter_value);
-		$this->setFilterOperator($filter_operator);
 		return $this;
 	}
 
@@ -363,6 +363,14 @@ class LayerAccessArgs {
 	public function filterValue($param) {
 		$this->_filter_value_isset = TRUE;
 		$this->_filter_value = $param;
+		if (!$this->valueOf('filterOperator')) {
+			if (is_array($param)) {
+				$default_operator = 'in_array';
+			} else {
+				$default_operator = '==';
+			}
+			$this->setFilterOperator($default_operator);
+		}
 		return $this;
 	}
 
