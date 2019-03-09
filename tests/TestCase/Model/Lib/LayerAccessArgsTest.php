@@ -116,7 +116,7 @@ class LayerAccessArgsTest extends TestCase
 		$this->assertTrue($this->args->isFilter());
 		$this->assertTrue($this->args->valueOf('valueSource') === 'piece_id');
 		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
-		$this->assertTrue($this->args->valueOf('filterOperator') === FALSE);
+		$this->assertTrue($this->args->valueOf('filterOperator') === 'in_array');
 		
 		$this->setUp();
 		$this->args->specifyFilter('cityStateZip', '', '!=');
