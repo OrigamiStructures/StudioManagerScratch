@@ -8,6 +8,7 @@ use App\Exception\BadClassConfigurationException;
 use \App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
+use App\Lib\Traits\ErrorRegistryTrait;
 
 /**
  * StackLayer
@@ -25,6 +26,7 @@ class Layer implements LayerAccessInterface {
     
     use ConventionsTrait;
 	use LayerAccessTrait;
+	use ErrorRegistryTrait;
     
     /**
      * The lower case, singular name of this layer (matches the entity type)
