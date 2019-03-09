@@ -127,25 +127,39 @@ use ErrorRegistryTrait;
 		return $this;
 	}
 	
+	/**
+	 * 
+	 * @return ValueSource
+	 */
 	public function getSourceObject() {
+		// make this default the value if its not set
 		return $this->ValueSource;
 	}
 
-	public function setValueSource($param) {
-		if ($this->hasValueSource() && $this->valueOf('valueSource') != $param) {
+	/**
+	 * 
+	 * @return ValueSource
+	 */
+	public function getKeyObject() {
+		// make this default the value if its not set
+		return $this->KeySource;
+	}
+
+	public function setValueSource($source) {
+		if ($this->hasValueSource() && $this->valueOf('valueSource') != $source) {
 			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
 		} else {
-			$this->_value_source = $param;
+			$this->_value_source = $source;
 			$this->setupValueObjects('value');
 		}
 		return $this;
 	}
 
-	public function setKeySource($param) {
-		if ($this->hasKeySourceSource() && $this->valueOf('keySource') != $param) {
+	public function setKeySource($source) {
+		if ($this->hasKeySourceSource() && $this->valueOf('keySource') != $source) {
 			$this->registerError('Can\'t change `keySource` after it\'s been set.');
 		} else {
-			$this->_value_source = $param;
+			$this->_value_source = $source;
 			$this->setupValueObjects('key');
 		}
 		return $this;
