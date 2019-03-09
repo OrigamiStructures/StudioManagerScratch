@@ -96,6 +96,7 @@ class AddressTest extends TestCase
      */
     public function testIsPrimary() {
         $data = $this->primaryProviders();
+		pr($this->primaryProviders());
         foreach($data as $datum) {
            $this->assertEquals($datum[0], $datum[1]->isPrimary()); 
         }
@@ -133,8 +134,8 @@ class AddressTest extends TestCase
      *
      * @return void
      */
-    public function testAsLineNoData() {
-        $this->assertEquals('Address unknown', $this->noAddressInfoRecord->addressAsLine());
+    public function testAsStringNoData() {
+        $this->assertEquals('Address unknown', $this->noAddressInfoRecord->asString());
     }
 
      /**
@@ -142,8 +143,8 @@ class AddressTest extends TestCase
      *
      * @return void
      */
-    public function testAsArrayNoData() {
-        $this->assertEquals([], $this->noAddressInfoRecord->addressAsArray());
+    public function testAsArraya() {
+        $this->assertEquals([], $this->noAddressInfoRecord->asArray());
     }
 
      /**
@@ -165,11 +166,11 @@ class AddressTest extends TestCase
      *
      * @return void
      */
-    public function testAddressAsLine()
+    public function testAsString()
     {
         $data = $this->elevenLineProviders();
         foreach($data as $datum) {
-           $this->assertEquals($datum[0], $datum[1]->addressAsLine()); 
+           $this->assertEquals($datum[0], $datum[1]->asString()); 
         }
     }
 
@@ -178,11 +179,11 @@ class AddressTest extends TestCase
      *
      * @return void
      */
-    public function testAddressAsArray()
+    public function testAsArray()
     {
         $data = $this->elevenArrayProviders();
         foreach($data as $datum) {
-           $this->assertEquals($datum[0], $datum[1]->addressAsArray()); 
+           $this->assertEquals($datum[0], $datum[1]->asArray()); 
         }
     }
 
