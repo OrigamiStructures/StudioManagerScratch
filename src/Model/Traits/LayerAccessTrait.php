@@ -74,14 +74,6 @@ trait LayerAccessTrait {
 		}, []);
 	}
 	
-	protected function _keyValueReducer($param) {
-		// make this callable if the args can be worked out
-	}
-	
-	protected function _valueReducer($param) {
-		// make this callable if the args can be worked out
-	}
-	
 	public function validateSource($entity, $source) {
 		return $entity->has($source) && method_exists($this->entityClass('namespaced'), $value_source) ;
 	}
@@ -94,6 +86,10 @@ trait LayerAccessTrait {
 		}
 		return $result;
 	}
+	
+	public function filter($argObj) {
+		
+	}
 
 //	
 	public function linkedTo($foreign, $foreign_id, $linked = null){
@@ -104,9 +100,23 @@ trait LayerAccessTrait {
 		
 	}
 	
+	/**
+	 * Make this into a real pagination class?
+	 * 
+	 * @param array $data
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
 	public function paginate($data, LayerAccessArgs $argObj) {
 		if ($argObj->valueOf('limit') === 1 && !empty($data)) {
 			return array_shift($data);
+		}
+		if ($argObj->valueOf('limit') < 1) {
+			return $data;
+		}
+		$paginated = array_chunk($data, $argObj->valueOf('limit'));
+		if (count($paginated) < $argObj->valueOf('page')) {
+			return $paginated[$argObj->valueOf('page') - 1];
 		}
 		return $data;
 	}
