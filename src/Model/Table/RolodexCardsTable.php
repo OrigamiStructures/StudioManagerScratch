@@ -50,6 +50,7 @@ class RolodexCardsTable extends StacksTable {
      */
     public function initialize(array $config) {
         parent::initialize($config);
+		$this->setTable('members');
     }
 	
 // <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">
