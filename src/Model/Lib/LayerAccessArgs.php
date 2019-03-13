@@ -127,11 +127,15 @@ use ErrorRegistryTrait;
 		return $this;
 	}
 	
+	public function setEntity($param) {
+		$this->setLayer($param);
+	}
+	
 	/**
 	 * 
 	 * @return ValueSource
 	 */
-	public function getSourceObject() {
+	public function sourceObject() {
 		// make this default the value if its not set
 		return $this->ValueSource;
 	}
@@ -140,7 +144,7 @@ use ErrorRegistryTrait;
 	 * 
 	 * @return ValueSource
 	 */
-	public function getKeyObject() {
+	public function keyObject() {
 		// make this default the value if its not set
 		return $this->KeySource;
 	}
@@ -303,18 +307,6 @@ use ErrorRegistryTrait;
 		} else {
 			return null;
 		}
-	}
-
-
-	public function getKeyValue($entity) {
-		$pointer = $this->_key_source;
-		return $this->getValue($pointer, $entity);
-	}
-
-
-	public function getValue($entity) {
-		$pointer = $this->_value_source;
-		return $this->getEntityValue($pointer, $entity);
 	}
 
 // </editor-fold>
