@@ -45,6 +45,12 @@ trait LayerAccessTrait {
 		
 	}
 	
+	/**
+	 * Full feature load(), results reduced to key=>value arrry
+	 * 
+	 * @param LayerAccessArgs $args
+	 * @return array
+	 */
 	public function loadKeyValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
 		$KeySource = $this->args->getKeyObject();
@@ -52,12 +58,25 @@ trait LayerAccessTrait {
 		return $this->keyValueList($data, $KeySource, $ValueSource);
 	}
 	
+	/**
+	 * Full feature load(), results reduced to value array
+	 * 
+	 * @param LayerAccessArgs $args
+	 * @return array
+	 */
 	public function loadValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
 		$ValueSource = $this->args->getSourceObject();
 		return $this->valueList($data, $ValueSource);
 	}
 	
+	/**
+	 * Reduce an array of entities to a key=>value array
+	 * 
+	 * @param array $data Contains entities of type registered in the Source objects
+	 * @param ValueSource $KeySource
+	 * @param ValueSource $ValueSource
+	 */
 	public function keyValueList($data, ValueSource $KeySource,	ValueSource$ValueSource) {
 		$collection = collection($data);
 		$collection->reduce(function($accum, $entity) use ($KeySource, $ValueSource){
@@ -66,6 +85,12 @@ trait LayerAccessTrait {
 		}, []);
 	}
 	
+	/**
+	 * Reduce an array of entities to a value array
+	 * 
+	 * @param array $data Contains entities of type registered in the Source object
+	 * @param ValueSource $valueSource
+	 */
 	public function valueList($data, ValueSource $valueSource) {
 		$collection = collection($data);
 		$collection->reduce(function($accum, $entity) use ($ValueSource){
@@ -74,18 +99,18 @@ trait LayerAccessTrait {
 		}, []);
 	}
 	
-	public function validateSource($entity, $source) {
-		return $entity->has($source) && method_exists($this->entityClass('namespaced'), $value_source) ;
-	}
-	
-	public function value($entity, $source) {
-		if(in_array($source, $entity->visibleProperties())) {
-			$result = $entity->$source;
-		} else {
-			$result = $entity->$source();
-		}
-		return $result;
-	}
+//	public function validateSource($entity, $source) {
+//		return $entity->has($source) && method_exists($this->entityClass('namespaced'), $value_source) ;
+//	}
+//	
+//	public function value($entity, $source) {
+//		if(in_array($source, $entity->visibleProperties())) {
+//			$result = $entity->$source;
+//		} else {
+//			$result = $entity->$source();
+//		}
+//		return $result;
+//	}
 	
 	public function filter($argObj) {
 		
@@ -101,7 +126,17 @@ trait LayerAccessTrait {
 	}
 	
 	/**
-	 * Make this into a real pagination class?
+	 * Full feature load() with pagination at the end
+	 * 
+	 * @param LayerAccessArgs $argObj
+	 * @return array
+	 */
+	public function loadPage(LayerAccessArgs $argObj) {
+		$data = $this->load($argObj);
+		return $this->paginate($data, $argObj);
+	}
+	/**
+	 * Paginate provided array
 	 * 
 	 * @param array $data
 	 * @param LayerAccessArgs $argObj
