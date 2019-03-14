@@ -24,21 +24,25 @@ class RolodexCardsTable extends StacksTable {
     /**
      * {@inheritdoc}
      */
-    protected $stackSchema = 	[	
-			['name' => 'member', 'specs' => ['type' => 'layer']],
-            ['name' => 'contacts', 'specs' => ['type' => 'layer']],
-            ['name' => 'addresses', 'specs' => ['type' => 'layer']],
-            ['name' => 'member_of', 'specs' => ['type' => 'layer']],
-			['name' => 'group', 'specs' => ['type' => 'layer']],
-            ['name' => 'has_members', 'specs' => ['type' => 'layer']],
+    protected $stackSchema = 	[
+			['name' => 'member',		'specs' => ['type' => 'layer']],
+            ['name' => 'contacts',		'specs' => ['type' => 'layer']],
+            ['name' => 'addresses',		'specs' => ['type' => 'layer']],
+            ['name' => 'member_of',		'specs' => ['type' => 'layer']],
+			['name' => 'group',			'specs' => ['type' => 'layer']],
+            ['name' => 'has_members',	'specs' => ['type' => 'layer']],
         ];
     
     /**
      * {@inheritdoc}
      */
     protected $seedPoints = [
-			'member', 'members', 'contact', 'contacts', 'address', 
-			'addresses', 'member_of', 'members_of', 'group', 'groups', 'has_members', 'has_member', 
+			'member', 
+			'contact', 'contacts', 
+			'address', 'addresses', 
+			'member_of', 'members_of', 
+			'group', 'groups', 
+			'has_members', 'has_member', 
 		];
 
 	
