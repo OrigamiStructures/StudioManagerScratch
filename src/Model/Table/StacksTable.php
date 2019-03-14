@@ -61,10 +61,11 @@ class StacksTable extends Table
 	 * @return Table|mixed
 	 */
     public function __get($property) {
+		
         if (in_array($property, $this->layerTables)) {
-            return TableRegistry::getTableLocator()->get($property);
+            $this->$property = TableRegistry::getTableLocator()->get($property);
+			return $this->$property;
 		}
-        return parent::__get($property);
     }
     
 	/**
