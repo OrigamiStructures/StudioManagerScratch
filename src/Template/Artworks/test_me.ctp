@@ -35,8 +35,7 @@ if (isset($stacks)) {
 		$artwork = $stack->primaryEntity();
 		$dispoID_list_match = $stack->accessArgs()
 				->setLayer('dispositionsPieces')
-				->setValueSource('disposition_id')
-				->filterValue($dispLayer->IDs());
+				->specifyFilter('disposition_id', $dispLayer->IDs());
 		$joins = new Layer($stack->load($dispoID_list_match));
 		
 		// Layer object's __contruct() accept an array of entities 
@@ -45,20 +44,20 @@ if (isset($stacks)) {
 		// See \App\Lib\Layer
 		$distinct_pieces_args = $stack->accessArgs()
 				->setLayer('pieces')
-				->setValueSource('id')
-				->filterValue($joins->distinct('piece_id'));
+				->filterValue($joins->distinct('id', 'piece_id'));
 		$distinct_pieces = $stack->load($distinct_pieces_args);
 		$pieces = new Layer($distinct_pieces);
+		
 		$distinct_formats_args = $stack->accessArgs()
 				->setLayer('formats')
-				->setValueSource('id')
-				->filterValue($pieces->distinct('format_id'));
+				->specifyFilter('id', $pieces->distinct('format_id'));
 		$formats = new Layer($stack->load($distinct_formats_args));	
+		
 		$distinct_editions_args = $stack->accessArgs()
 				->setLayer('editions')
-				->setValueSource('id')
-				->filterValue($formats->distinct('edition_id'));
+				->specifyFilter('id', $formats->distinct('edition_id'));
 		$editions = new Layer($stack->load($distinct_editions_args));
+		
 		$indexed_dispo = $stack->accessArgs();
 		
         echo "<h1>{$artwork->title}</h1>";
@@ -68,13 +67,11 @@ if (isset($stacks)) {
             foreach ($formats->load($allInLayer) as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
 				$pieces_for_format_arg = $pieces->accessArgs()
-						->setValueSource('format_id')
-						->filterValue($format->id);
+						->specifyFilter('format_id', $format->id);
 				foreach ($pieces->load($pieces_for_format_arg) as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
 					$dispo_joins_for_piece_arg = $joins->accessArgs()
-							->setValueSource('piece_id')
-							->filterValue($piece->id);
+							->specifyFilter('piece_id', $piece->id);
 					foreach ($joins->load($dispo_joins_for_piece_arg) as $link) {
 						$indexed_dispo->setIdIndex($link->disposition_id); // this is an id search
 						echo "<li>{$dispLayer->load($indexed_dispo)->displayTitle}</li>";

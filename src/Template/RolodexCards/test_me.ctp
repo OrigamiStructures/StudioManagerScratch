@@ -38,9 +38,7 @@ osd($val);
 foreach (["Institution","Person"] as $type) :
 	echo "<section class='$type'>\r";
 	$member_type_to_type_match = $cards->accessArgs()
-			->setLayer('member')
-			->setValueSource('member_type')
-			->filterValue($type);
+			->setLayer('member')->specifyFilter('member_type', $type);
 	$setMembers = $cards->load($member_type_to_type_match);
 	foreach($setMembers as $member) :
 
