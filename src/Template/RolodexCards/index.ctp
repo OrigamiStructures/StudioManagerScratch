@@ -1,0 +1,3 @@
+<?php
+
+osd($rolodexCards->toArray());
