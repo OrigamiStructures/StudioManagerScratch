@@ -26,22 +26,25 @@ class RolodexCardsTable extends StacksTable {
 	}
 
 	protected function _initializeAssociations() {
-		$this->belongsTo(
-			'DataOwner')
+		$this->belongsTo('DataOwner')
 			->setProperty('dataOwner')
 			->setForeignKey('user_id')
 			->setFinder('hook')
 			;
 		
-		$this->belongsToMany('Memberships', [
-			'className' => 'Groups',
-			'foreignKey' => 'member_id',
-			'dependent' => TRUE,
-		]);
-		$this->belongsTo('Images', [
-			'className' => 'Images',
-			'property' => 'avatar'
-		]);
+        $this->belongsToMany('Groups', [
+            'className' => 'Groups',
+            'foreignKey' => 'member_id',
+            'targetForeignKey' => 'group_id',
+            'joinTable' => 'groups_members'
+        ]);
+		
+		$this->hasMany('Memberships')
+				->setProperty('memberships')
+				->setForeignKey('member_id')
+				->setFinder('hook');
+//			'dependent' => TRUE,
+//		]);
 	}
 
     protected function _initializeBehaviors() {

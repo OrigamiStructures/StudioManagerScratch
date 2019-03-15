@@ -15,6 +15,6 @@ namespace App\Controller;
 class RolodexCardsController extends AppController {
 	
 	public function index() {
-		$this->set('rolodexCards', $this->RolodexCards->find('all')->contain(['DataOwner', 'Images']));
+		$this->set('rolodexCards', $this->RolodexCards->find('all')->contain(['DataOwner', 'Memberships', 'Groups']));
 	}
 }
