@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use App\Model\Table\RolodexCardsTable;
+use App\Model\Table\RolodexCardsDevTable;
 
 use Cake\ORM\Table;
 
@@ -9,7 +9,7 @@ use Cake\ORM\Table;
  * CakePHP PersonCardsTable
  * @author dondrake
  */
-class PersonCardsTable extends RolodexCardsTable {
+class PersonCardsTable extends RolodexCardsDevTable {
 	
 	public function initialize(array $config) {
 		parent::initialize($config);

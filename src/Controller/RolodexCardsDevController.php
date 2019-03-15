@@ -3,22 +3,22 @@
 
 namespace App\Controller;
 
-use App\Model\Table\MembersTable as RolodexCards;
+use App\Model\Table\MembersTable as RolodexCardsDev;
 
 /**
- * CakePHP RolodexCardsController
+ * CakePHP RolodexCardsDevController
  * @author dondrake
  */
-class RolodexCardsController extends AppController {
+class RolodexCardsDevController extends AppController {
 	
 	public function initialize() {
 		parent::initialize();
-//		$this->loadModel('RolodexCards');
+//		$this->loadModel('RolodexCardsDev');
 	}
 	public function testMe() {
 		
 		$ids = [1,2,21,20,19,22];
-		$cards = $this->RolodexCards->find('stackFrom', ['layer' => 'member', 'ids' => $ids]);
+		$cards = $this->RolodexCardsDev->find('stackFrom', ['layer' => 'member', 'ids' => $ids]);
 		$this->set('cards', $cards);
 //		$this->labeled(
 //				$cards->load('member',['member_type', 'Institution'])

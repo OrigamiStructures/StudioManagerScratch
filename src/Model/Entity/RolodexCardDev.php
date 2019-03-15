@@ -37,7 +37,7 @@ define('WRAPPED', 'wrapped');
  * members of such a group. The `member_of` layer will hold basic data 
  * about the groups this unit is a member of.
  * 
- * The RolodexCard class works to gather all these associated elements together 
+ * The RolodexCardDev class works to gather all these associated elements together 
  * in a single manageable entity. It provides the basic structure and 
  * functionality for all of its concrete instantiations (PersonCard, 
  * InstitutionCard, GroupdCard, etc.)
@@ -61,7 +61,7 @@ define('WRAPPED', 'wrapped');
  * 
  * @author dondrake
  */
-class RolodexCard extends StackEntity {
+class RolodexCardDev extends StackEntity {
 		
     /**
      * Get the count of entities in a layer

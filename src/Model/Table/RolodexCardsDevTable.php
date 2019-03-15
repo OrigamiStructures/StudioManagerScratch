@@ -8,10 +8,10 @@ use Cake\Cache\Cache;
 use App\Cache\ArtStackCacheTools as cacheTools;
 
 /**
- * CakePHP RolodexCardsTable
+ * CakePHP RolodexCardsDevTable
  * @author dondrake
  */
-class RolodexCardsTable extends StacksTable {
+class RolodexCardsDevTable extends StacksTable {
 	
     /**
      * {@inheritdoc}
