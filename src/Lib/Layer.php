@@ -8,6 +8,7 @@ use App\Exception\BadClassConfigurationException;
 use \App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
+use App\Lib\Traits\ErrorRegistryTrait;
 
 /**
  * StackLayer
@@ -25,6 +26,7 @@ class Layer implements LayerAccessInterface {
     
     use ConventionsTrait;
 	use LayerAccessTrait;
+	use ErrorRegistryTrait;
     
     /**
      * The lower case, singular name of this layer (matches the entity type)
@@ -103,10 +105,17 @@ class Layer implements LayerAccessInterface {
     
 	/**
 	 * The entity class name of the stored objects
+	 * 
+	 * @param string $style 'bare' or 'namespaced'
 	 * @return string
 	 */
-    public function entityClass() {
-        return $this->_className;
+    public function entityClass($style = 'bare') {
+		if ($style === 'bare') {
+			return $this->_className;
+		} else {
+			return 'App\\Model\\Entity\\'.$this->_className;
+		}
+        
     }
     
     /**
@@ -175,13 +184,12 @@ class Layer implements LayerAccessInterface {
 	 * @return array
 	 */
 	public function load(LayerAccessArgs $argObj = null) {
-		
 		if(is_null($argObj)) {
 			return $this->_data;
 		}
-		
-		if ($argObj->valueOf('lookup_index')) {
-			$id = $argObj->valueOf('lookup_index');
+
+		if ($argObj->valueOf('idIndex')) {
+			$id = $argObj->valueOf('idIndex');
             if (!$this->hasId($id)) {
                 return [];
             }
@@ -189,12 +197,151 @@ class Layer implements LayerAccessInterface {
 		}
 		
 		if ($argObj->isFilter()) {
-			$result = $this->filter($argObj->valueOf('property'), $argObj->valueOf('filter_value'));
+//			$result = $this->filter($argObj->valueOf('value_source'), $argObj->valueOf('filter_value'));
+//			$result = $this->filter($this->vsSwap($argObj), $argObj->valueOf('filter_value'));
+			$result = $this->filter($argObj);
 		} else {
 			$result = $this->_data;
 		}
-		
+
 		return $this->paginate($result, $argObj);
+		
+	}
+	
+	/**
+	 * Run a filter process on entities in an array
+	 * 
+	 * Support the Layer::load by doing original/desired filter testing
+	 * This is the final stop of all three levels of load(). If some simple 
+	 * case wasn't requested, the matching data will be sought here.
+	 * 
+	 * $value_source can be the name of a property or a method on the 
+	 *		entity. Methods must require no arguemnts.
+	 * $test_value is will be compared to $value_source's result
+	 * $operator is the kind of comparison to be done. The actual function 
+	 *		that does comparison will be looked up (selectComparison($op)) 
+	 *		using $operator as a lookup key
+	 * 
+	 * @param string $value_source name of a property or method
+	 * @param mixed $test_value 
+	 * @param string $operator A comparison operator
+	 * @return array
+	 */
+    public function xfilter($value_source, $test_value = null, $operator = null) {
+		
+		// SHUNT TO NEW FILTER
+		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
+			return $this->newFilter($value_source);
+		}
+			
+		if	(	!$this->has($value_source) && 
+				!method_exists($this->entityClass('namespaced'), $value_source)) 
+		{
+            return [];
+        }
+		if(is_null($operator)) {
+			$operator = is_array($test_value) ? 'in_array' : '==';
+		}
+
+		$comparison = $this->selectComparison($operator);
+		
+        $set = collection($this->_data);
+        $results = $set->filter(function ($entity, $key) 
+				use ($value_source, $test_value, $comparison) {
+				if(in_array($value_source, $entity->visibleProperties())) {
+					$actual = $entity->$value_source;
+				} else {
+					$actual = $entity->$value_source();
+				}
+				return $comparison($actual, $test_value);
+            })->toArray(); 
+        return $results;
+    }
+	
+	protected function normalizeArgs($params) {
+		
+		if (is_a($params[0], '\App\Model\Lib\LayerAccessArgs')) {
+			return $params[0];
+		}
+		$argObj = $this->accessArgs();
+		$args = func_get_args()[0];
+		switch ( count($args) ) {
+			case 2:
+				$argObj->specifyFilter(
+						$args[0],
+						$args[1]);
+				break;
+			case 3:
+				$argObj->specifyFilter(
+						$args[0], //value source
+						$args[1], //filter value
+						$args[2]); //filter operator
+			default:
+//				pr(func_get_args());//die;
+//				throw new \BadMethodCallException('Bad arguments for Layer::filter() provided.');
+				break;
+		}
+		return $argObj;
+	}
+	
+	/**
+	 * Filter this layers set of entities
+	 * 
+	 * Supply an LayerAccessArg object with a `specifyFilter()` done or provide 
+	 * `value-source` string (property or method name)
+	 * `test-value` mixed (value to compare to)
+	 * `filter-operaration` string (the comparison operation to perform)
+	 *		filter-op is options, defaults to == for values, in_array for arrays
+	 * 
+	 * @param mixed $argObj
+	 * @return array
+	 */
+    public function filter($argObj) {
+		$argObj = $this->NormalizeArgs(func_get_args());
+		if (!$argObj->hasValueObject()) {
+//			pr($this->layerName());
+			$argObj->setLayer($this->layerName());
+		}
+		$comparison = $this->selectComparison($argObj->valueOf('filterOperator'));
+        $set = collection($this->_data);
+		
+        $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
+				$actual = $argObj->ValueSource->value($entity);
+				return $comparison($actual, $argObj->valueOf('filterValue'));
+            })->toArray(); 
+        return $results;
+    }
+	
+	/**
+	 * Choose a comparison function based on a provided operator
+	 * 
+	 * An unknown operator will yield a function that never finds matches
+	 * 
+	 * @param string $operator
+	 * @return function
+	 */
+	public function selectComparison($operator) {
+		$ops = [
+			'bad_op' => function($actual, $test_value) { return FALSE; },
+			'==' => function($actual, $test_value) { return $actual == $test_value; },
+			'!=' => function($actual, $test_value) { return $actual != $test_value; },
+			'===' => function($actual, $test_value) { return $actual === $test_value; },
+			'!==' => function($actual, $test_value) { return $actual !== $test_value; },
+			'<' => function($actual, $test_value) { return $actual < $test_value; },
+			'>' => function($actual, $test_value) { return $actual > $test_value; },
+			'<=' => function($actual, $test_value) { return $actual <= $test_value; },
+			'>=' => function($actual, $test_value) { return $actual >= $test_value; },
+			'true' => function($actual, $test_value) { return $actual === TRUE; },
+			'false' => function($actual, $test_value) { return $actual === FALSE; },
+			'in_array' => function($actual, $test_value) {return in_array($actual, $test_value);},
+			'truthy' => function($actual, $test_value) {return (boolean) $actual; }
+		];
+			
+		if (!array_key_exists($operator, $ops)) {
+			return $ops['bad_op'];
+		} else {
+			return $ops[$operator];
+		}
 		
 	}
 	/**
@@ -213,8 +360,8 @@ class Layer implements LayerAccessInterface {
 //	public function keyedList($key, $value, $type = 'all', $options =[]) {
 	public function keyedList(LayerAccessArgs $args) {
 		
-		$validKey = $this->verifyProperty($key);
-		$valueIsProperty = $validValue = $this->verifyProperty($value);
+		$validKey = $this->has($key);
+		$valueIsProperty = $validValue = $this->has($value);
 		if (!$valueIsProperty) {
 			$valueIsMethod = $validValue = method_exists($this->className(), $value);
 		}
@@ -243,7 +390,7 @@ class Layer implements LayerAccessInterface {
     }
     
 	public function distinct($property, $layer = '') {
-        if (!$this->verifyProperty($property)) {
+        if (!$this->has($property)) {
             return [];
         }
 //        osd($this->_entities[965]);;
@@ -276,7 +423,7 @@ class Layer implements LayerAccessInterface {
      */
     public function linkedTo($foreign, $foreign_id, $linked = null) {
         $foreign_key = $this->_modelKey($foreign);
-        if (!$this->verifyProperty($foreign_key)) {
+        if (!$this->has($foreign_key)) {
             return NULL;
         }
         return $this->filter($foreign_key, $foreign_id);
@@ -337,14 +484,14 @@ class Layer implements LayerAccessInterface {
 // <editor-fold defaultstate="collapsed" desc="Protected and Private">
 
     /**
-     * Does the $property exist in this entity?
+     * Does the $property exist in this layer?
 	 * 
-	 * This checks against visible properties
+	 * This checks against visible properties, echos Entity::has()
      * 
      * @param string $property
      * @return boolean
      */
-    public function verifyProperty($property) {
+    public function has($property) {
         return in_array($property, $this->_entityProperties);
     }
 
@@ -401,9 +548,9 @@ class Layer implements LayerAccessInterface {
                     . 'second argument to __construct().';
                 throw new BadClassConfigurationException($message);
             }
-            $name = $type;
+            $name = ucfirst($this->_singularName($type));
         }
-        $this->_className = $this->_entityName($name);
+        $this->_className = $name; //$this->_entityName($name);
         $this->_layer = strtolower($this->_camelize($this->_className));
         if (empty($sampleData)) {
             $class = "\App\Model\Entity\\$this->_className";

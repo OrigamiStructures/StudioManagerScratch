@@ -2,13 +2,10 @@
 namespace App\Model\Table;
 
 use App\Model\Table\StacksTable;
-use App\Lib\Layer;
 use App\SiteMetrics\CollectTimerMetrics;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
 use App\Cache\ArtStackCacheTools as cacheTools;
-use App\Model\Entity\HasMember;
-use App\Model\MemberOf;
 
 /**
  * CakePHP RolodexCardsTable
@@ -24,21 +21,25 @@ class RolodexCardsTable extends StacksTable {
     /**
      * {@inheritdoc}
      */
-    protected $stackSchema = 	[	
-			['name' => 'member', 'specs' => ['type' => 'layer']],
-            ['name' => 'contacts', 'specs' => ['type' => 'layer']],
-            ['name' => 'addresses', 'specs' => ['type' => 'layer']],
-            ['name' => 'member_of', 'specs' => ['type' => 'layer']],
-			['name' => 'group', 'specs' => ['type' => 'layer']],
-            ['name' => 'has_members', 'specs' => ['type' => 'layer']],
+    protected $stackSchema = 	[
+			['name' => 'member',		'specs' => ['type' => 'layer']],
+            ['name' => 'contacts',		'specs' => ['type' => 'layer']],
+            ['name' => 'addresses',		'specs' => ['type' => 'layer']],
+            ['name' => 'member_of',		'specs' => ['type' => 'layer']],
+			['name' => 'group',			'specs' => ['type' => 'layer']],
+            ['name' => 'has_members',	'specs' => ['type' => 'layer']],
         ];
     
     /**
      * {@inheritdoc}
      */
     protected $seedPoints = [
-			'member', 'members', 'contact', 'contacts', 'address', 
-			'addresses', 'member_of', 'members_of', 'group', 'groups', 'has_members', 'has_member', 
+			'member', 
+			'contact', 'contacts', 
+			'address', 'addresses', 
+			'member_of', 'members_of', 
+			'group', 'groups', 
+			'has_members', 'has_member', 
 		];
 
 	
@@ -50,6 +51,7 @@ class RolodexCardsTable extends StacksTable {
      */
     public function initialize(array $config) {
         parent::initialize($config);
+		$this->setTable('members');
     }
 	
 // <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">
@@ -122,7 +124,8 @@ class RolodexCardsTable extends StacksTable {
 					
 					//Burrow through and set up the members of this group
 					$group_members = $this->lookupGroupMembers($id, $stack);
-					$stack->set(['has_members' => ((is_array($group_members)) ? $group_members : $group_members->toArray())]);
+					$stack->set(['has_members' => ((is_array($group_members)) ? 
+						$group_members : $group_members->toArray())]);
                 
 					$t->end('build', $le);
 					$t->start("write", $le);

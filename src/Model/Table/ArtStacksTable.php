@@ -22,8 +22,8 @@ use App\SiteMetrics\CollectTimerMetrics;
  */
 class ArtStacksTable extends StacksTable
 {
-    
-    /**
+
+	/**
      * {@inheritdoc}
      */
     protected $layerTables = ['Artworks', 'Editions', 'Formats', 'Pieces'];
@@ -32,20 +32,23 @@ class ArtStacksTable extends StacksTable
      * {@inheritdoc}
      */
     protected $stackSchema = 	[	
-            ['name' => 'artwork', 'specs' => ['type' => 'layer']],
-            ['name' => 'editions', 'specs' => ['type' => 'layer']],
-            ['name' => 'formats', 'specs' => ['type' => 'layer']],
-            ['name' => 'pieces', 'specs' => ['type' => 'layer']],
-            ['name' => 'dispositionsPieces', 'specs' => ['type' => 'layer']],
+            ['name' => 'artwork',				'specs' => ['type' => 'layer']],
+            ['name' => 'editions',				'specs' => ['type' => 'layer']],
+            ['name' => 'formats',				'specs' => ['type' => 'layer']],
+            ['name' => 'pieces',				'specs' => ['type' => 'layer']],
+            ['name' => 'dispositionsPieces',	'specs' => ['type' => 'layer']],
         ];
     
     /**
      * {@inheritdoc}
      */
     protected $seedPoints = [
-			'disposition', 'dispositions', 'piece', 
-			'pieces', 'format', 'formats', 'edition', 
-			'editions', 'artwork', 'artworks', 'series',
+			'disposition', 'dispositions', 
+			'piece', 'pieces', 
+			'format', 'formats', 
+			'edition', 'editions', 
+			'artwork', 'artworks', 
+			'series',
 		];
 
 	
@@ -57,6 +60,7 @@ class ArtStacksTable extends StacksTable
      */
     public function initialize(array $config) {
         parent::initialize($config);
+		$this->setTable('artworks');
     }
     
 // <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">

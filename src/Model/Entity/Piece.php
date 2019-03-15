@@ -172,7 +172,7 @@ class Piece extends Entity
 	 * @return boolean
 	 */
 	public function isCollected() {
-		return (boolean) $this->_properties['collected'];
+		return $this->get('collected');
 	}
 	
 	/**

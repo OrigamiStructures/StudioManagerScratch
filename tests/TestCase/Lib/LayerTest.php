@@ -218,16 +218,16 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
 
 		$id_int_965_arg = $layer->accessArgs()
-				->lookupIndex(965);
+				->setIdIndex(965);
         $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_int_965_arg));
 		$id_string_965_arg = $layer->accessArgs()
-				->lookupIndex('965');
+				->setIdIndex('965');
 		$this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_string_965_arg));
 		$id_3_bad_arg = $layer->accessArgs()
-				->lookupIndex(3);
+				->setIdIndex(3);
         $this->assertTrue(is_array($layer->load($id_3_bad_arg)));
  		$bad_index_arg = $layer->accessArgs()
-				->lookupIndex('something wrong');
+				->setIdIndex('something wrong');
         $this->assertTrue(is_array($layer->load($bad_index_arg)));
     }
     
@@ -235,7 +235,7 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->property('number')
+				->setValueSource('number')
 				->filterValue(4);
         $results = $layer->load($number_is_4_arg); // good find
         $this->assertTrue(is_array($results));
@@ -243,7 +243,7 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->property('number')
+				->setValueSource('number')
 				->filterValue('4');
         $results = $layer->load($number_is_4_arg); // good val, casting mismatch
         $this->assertTrue(is_array($results));
@@ -251,14 +251,14 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_badval_arg = $layer->accessArgs()
-				->property('number')
+				->setValueSource('number')
 				->filterValue(9000);
         $results = $layer->load($number_is_badval_arg); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
  		$badproperty_is_3_arg = $layer->accessArgs()
-				->property('boogers')
+				->setValueSource('boogers')
 				->filterValue(3);
         $results = $layer->load($badproperty_is_3_arg); // property doesn't exist
         $this->assertTrue(is_array($results));
@@ -269,15 +269,15 @@ class LayerTest extends TestCase
         $layer = new Layer($this->pieceRecords);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->property('number')
+				->setValueSource('number')
 				->filterValue(4);
         $four = $layer->load($number_is_4_arg);
  		$number_is_3_arg = $layer->accessArgs()
-				->property('number')
+				->setValueSource('number')
 				->filterValue(3);
         $three = $layer->load($number_is_3_arg);
  		$number_is_3and4_arg = $layer->accessArgs()
-				->property('number')
+				->setValueSource('number')
 				->filterValue([4,3]);
         $results = $layer->load($number_is_3and4_arg); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
@@ -287,11 +287,11 @@ class LayerTest extends TestCase
         $layer = new Layer($this->fivePieces);
         
  		$simpleAllArg = $layer->accessArgs()
-				->limit('all');
+				->setLimit('all');
         $this->assertEquals(5, count($layer->load($simpleAllArg)));
  		$all_id_equals_12 = $layer->accessArgs()
-				->limit('all')
-				->property('id')
+				->setLimit('all')
+				->setValueSource('id')
 				->filterValue('12');
         $this->assertEquals(0, count($layer->load($all_id_equals_12)));        
     }
@@ -301,24 +301,30 @@ class LayerTest extends TestCase
         
  		$simpleFirstArg = $layer->
 				accessArgs()
-				->limit('first');
+				->setLimit('first');
         $this->assertEquals(1, count($layer->load($simpleFirstArg)));
 		
  		$first_with_0_dispos_arg = $layer->accessArgs()
-				->limit('first')
-				->property('disposition_count')
+				->setLimit('first')
+				->setValueSource('disposition_count')
 				->filterValue(0);
         $this->assertEquals(1, count($layer->load($first_with_0_dispos_arg)));  
 		
  		$first_badSearch_args = $layer->accessArgs()
-				->limit('first')
-				->property('boogers')
+				->setLimit('first')
+				->setValueSource('boogers')
 				->filterValue(0);
+		/**
+		 * This fails because of the property validation check's loosness 
+		 * combinded with the == default comparison. The property validation 
+		 * process needs to be tightened up. visibleProperties() need 
+		 * Entity::accessible to be set to something other than '*' ?
+		 */
         $this->assertEquals(0, count($layer->load($first_badSearch_args)));        
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
-				->limit(1)
-				->property('disposition_count')
+				->setLimit(1)
+				->setValueSource('disposition_count')
 				->filterValue(50);
         $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));        
     }
@@ -333,10 +339,10 @@ class LayerTest extends TestCase
 	}
 	
     /**
-     * Test filter
+     * Test filter with property comparisons
      * 
      */
-    public function testFilter() {
+    public function testFilterWithProperties() {
         $layer = new Layer($this->fivePieces);
         
         $results = $layer->filter('number', 4); // good find
@@ -346,9 +352,9 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number, 
 				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
         
-        $results = $layer->filter('number', '4', 
-				'A valid search for \'number\' = \'4\' failed'); // good val, casting mismatch
-        $this->assertTrue(is_array($results));
+        $results = $layer->filter('number', '4'); // good val, casting mismatch
+        $this->assertTrue(is_array($results), 
+				'A valid search for \'number\' = \'4\' failed');
         $match = array_pop($results);
         $this->assertEquals(4, $match->number, 
 				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
@@ -362,6 +368,29 @@ class LayerTest extends TestCase
         $this->assertTrue(empty($results));
     }
 
+	/**
+	 * Test filter with method comparisons
+	 * 
+	 */
+	public function testFilterWithMethods() {
+		$layer = new Layer($this->fivePieces);
+		
+		$result = $layer->filter('isCollected', '', 'truthy');
+		$this->assertCount(2, $result, 'unexpected result while testing truthy '
+				. 'on the boolean output of an entity method');
+				
+		$result = $layer->filter('isCollected', TRUE, '!=');
+		$this->assertCount(3, $result, 'unexpected result while searching != '
+				. 'on the boolean output of an entity method');
+		
+		$result = $layer->filter('key', '35_36', '==');
+		$this->assertCount(5, $result, 'unexpected result while searching == '
+				. 'on the string output of an entity method');
+		
+		$result = $layer->filter('key', '35_36', '!=');
+		$this->assertCount(0, $result, 'unexpected result while searching != '
+				. 'on the string output of an entity method');
+	}
     /**
      * Check that no entities have changed
      */

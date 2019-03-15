@@ -4,8 +4,6 @@ namespace App\Model\Table;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
-use App\Lib\Stacks;
-use App\Lib\Layer;
 use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
@@ -61,10 +59,11 @@ class StacksTable extends Table
 	 * @return Table|mixed
 	 */
     public function __get($property) {
+		
         if (in_array($property, $this->layerTables)) {
-            return TableRegistry::getTableLocator()->get($property);
+            $this->$property = TableRegistry::getTableLocator()->get($property);
+			return $this->$property;
 		}
-        return parent::__get($property);
     }
     
 	/**
