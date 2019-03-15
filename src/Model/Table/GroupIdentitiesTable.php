@@ -9,10 +9,10 @@ namespace App\Model\Table;
 use Cake\ORM\Table;
 
 /**
- * CakePHP ProxyMembersTable
+ * CakePHP GroupIdentitiesTable
  * @author jasont
  */
-class ProxyMembersTable extends Table {
+class GroupIdentitiesTable extends Table {
     /**
      * Initialize method
      *

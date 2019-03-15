@@ -10,9 +10,9 @@ use Cake\ORM\Entity;
 use App\Model\Entity\Member;
 
 /**
- * CakePHP ProxyMember
+ * CakePHP GroupIdentity
  * @author jasont
  */
-class ProxyMember extends Member {
+class GroupIdentity extends Member {
     
 }

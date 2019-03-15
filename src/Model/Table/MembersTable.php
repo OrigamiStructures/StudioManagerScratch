@@ -23,9 +23,9 @@ use App\Model\Behavior\StringQueryBehavior;
  */
 class MembersTable extends AppTable
 {
-    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
+    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities']];
     
-    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
+    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities'], 'ProxyGroups' => ['Members']];
 	
 // <editor-fold defaultstate="collapsed" desc="Core">
 

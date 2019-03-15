@@ -18,21 +18,21 @@ class MembershipsTable extends Table {
 	}
 	
 	public function initializeAssociations() {
-		$this->belongsTo('ProxyMembers')
+		$this->belongsTo('GroupIdentities')
 			->setForeignKey('member_id');
 	}
 	
 	public function findHook(Query $query, array $options) {
 		return $query
-				->contain(['ProxyMembers'])
+				->contain(['GroupIdentities'])
 				->select([
 					'Memberships.id', 
 					'Memberships.member_id', 
 					'GroupsMembers.member_id', 
 					'GroupsMembers.group_id',
-					'ProxyMembers.id',
-					'ProxyMembers.first_name',
-					'ProxyMembers.last_name'])
+					'GroupIdentities.id',
+					'GroupIdentities.first_name',
+					'GroupIdentities.last_name'])
 				;
 	}
 	

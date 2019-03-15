@@ -149,7 +149,7 @@ class RolodexCardsDevTable extends StacksTable {
 	/**
 	 * Get the Groups that have this Card as a Member
 	 * 
-	 * What exactly do we need to store? ProxyMember + Group.id ?
+	 * What exactly do we need to store? GroupIdentity + Group.id ?
 	 * 
 	 * @param string $member_id
 	 * @return array
@@ -157,7 +157,7 @@ class RolodexCardsDevTable extends StacksTable {
 	private function lookupMemberships($member_id) {
 		$memberships = $this->GroupsMembers->find('inMembers', [
 			'values' => [$member_id],
-			'contain' => ['Groups' => ['ProxyMembers']]]);
+			'contain' => ['Groups' => ['GroupIdentities']]]);
 			
 		$collection = new \Cake\Collection\Collection($memberships);
 		$memberships = $collection->reduce(function($accum, $entity){
