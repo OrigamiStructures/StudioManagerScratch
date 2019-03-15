@@ -8,12 +8,12 @@
 
 namespace App\Model\Entity;
 
-use Cake\ORM\Entity;
+use App\Model\Entity\StackEntity;
 
 /**
  * CakePHP RolodexCard
  * @author dondrake
  */
-class RolodexCard extends Entity {
+class RolodexCard extends StackEntity {
 	
 }
