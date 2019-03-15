@@ -18,4 +18,8 @@ class Membership extends Entity {
 		return $this->member_id;
 	}
 	
+	public function name() {
+		
+	}
+	
 }

@@ -20,9 +20,9 @@ class RolodexCardsTable extends StacksTable {
 	 * @return void
 	 */
 	public function initialize(array $config) {
-		parent::initialize($config);
 		$this->setTable('members');
 		$this->_initializeAssociations();
+		parent::initialize($config);
 	}
 
 	protected function _initializeAssociations() {
