@@ -31,20 +31,13 @@ class RolodexCardsTable extends StacksTable {
 			->setForeignKey('user_id')
 			->setFinder('hook')
 			;
-		
-        $this->belongsToMany('Memberships', [
-            'className' => 'Groups',
-            'foreignKey' => 'member_id',
-            'targetForeignKey' => 'group_id',
-            'joinTable' => 'groups_members'
-        ]);
-		
-//		$this->hasMany('Memberships')
-//				->setProperty('memberships')
-//				->setForeignKey('member_id')
-//				->setFinder('hook');
-//			'dependent' => TRUE,
-//		]);
+        $this->belongsToMany(
+			'Memberships', 
+			['joinTable' => 'groups_members'])
+			->setTargetForeignKey('group_id')
+			->setForeignKey('member_id')
+			->setFinder('hook')
+			;
 	}
 
     protected function _initializeBehaviors() {
