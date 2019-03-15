@@ -19,7 +19,7 @@ class Membership extends Entity {
 	}
 	
 	public function name() {
-		
+		return $this->proxy_member->name;
 	}
 	
 }
