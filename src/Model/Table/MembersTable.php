@@ -54,10 +54,10 @@ class MembersTable extends AppTable
 
     protected function _initializeBehaviors() {
         $this->addBehavior('IntegerQuery');
+        $this->addBehavior('Timestamp');
     }
 
         protected function _initializeAssociations() {
-        $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
