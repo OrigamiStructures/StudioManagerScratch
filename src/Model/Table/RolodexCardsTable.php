@@ -2,13 +2,10 @@
 namespace App\Model\Table;
 
 use App\Model\Table\StacksTable;
-use App\Lib\Layer;
 use App\SiteMetrics\CollectTimerMetrics;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
 use App\Cache\ArtStackCacheTools as cacheTools;
-use App\Model\Entity\HasMember;
-use App\Model\MemberOf;
 
 /**
  * CakePHP RolodexCardsTable
@@ -127,7 +124,8 @@ class RolodexCardsTable extends StacksTable {
 					
 					//Burrow through and set up the members of this group
 					$group_members = $this->lookupGroupMembers($id, $stack);
-					$stack->set(['has_members' => ((is_array($group_members)) ? $group_members : $group_members->toArray())]);
+					$stack->set(['has_members' => ((is_array($group_members)) ? 
+						$group_members : $group_members->toArray())]);
                 
 					$t->end('build', $le);
 					$t->start("write", $le);
