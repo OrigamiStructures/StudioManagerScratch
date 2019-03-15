@@ -49,8 +49,4 @@ class RolodexCardsTable extends StacksTable {
         return $this->integer($query, 'id', $options['values']);
 	}
 	
-	public function findOwner(Query $query, $options) {
-		$query->select(['id', 'username']);
-	}
-
 }
