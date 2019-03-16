@@ -53,6 +53,7 @@ class RolodexCardsTable extends StacksTable {
 			['joinTable' => 'groups_members'])
 			->setTargetForeignKey('group_id')
 			->setForeignKey('member_id')
+			->setProperty('memberships')
 			->setFinder('hook')
 			;
 	}
@@ -108,8 +109,9 @@ class RolodexCardsTable extends StacksTable {
 		
 	protected function marshalStack($id) {
 
-		$layers = Hash::extract($this->stackSchema, '{n}.path');
+		$layers = Hash::extract($this->stackSchema, '{n}.name');
 		$stack = $this->newEntity([]);
+		osd($layers);
 		foreach($layers as $layer) {
 			$method = 'marshal'.ucfirst($layer);
 			$stack = $this->$method($id, $stack);
@@ -118,22 +120,28 @@ class RolodexCardsTable extends StacksTable {
 	}
 	
 	protected function marshalIdentity($id, $stack) {
-			$identity = $this->Identity->find('identity', ['values' => [$id]]);
+			$identity = $this->Identities->find('all')->where(['id' => $id]);
 			$stack->set(['identity' => $identity->toArray()]);
+			osd($stack, 'identity');
+			return $stack;
 	}
 	
-	protected function marshalDataOwner($id, $stack) {
+	protected function marshalData_owner($id, $stack) {
 		if ($stack->count('member')) {
 			$dataOwner = $this->DataOwners->find('hook')->where(['id' => $stack->dataOwner()]);
 			$stack->set(['$dataOwner' => $dataOwner->toArray()]);
 		}
+		osd($stack, 'owner');
+		return $stack;
 	}
 	
-	protected function marshalMemberships($id, $stacks) {
+	protected function marshalMemberships($id, $stack) {
 		if ($stack->count('member')) {
 			$memberships = $this->Memberships->find('hook')->where(['member_id' => $id]);
 			$stack->set(['memberships' => $memberships->toArray()]);
 		}
+		osd($memberships, 'memberships');
+		return $stack;
 	}
 	
 	
