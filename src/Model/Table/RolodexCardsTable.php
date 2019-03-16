@@ -43,6 +43,7 @@ class RolodexCardsTable extends StacksTable {
 	}
 
 	protected function _initializeAssociations() {
+		// also see $this::layerTables
 		$this->belongsTo('DataOwner')
 			->setProperty('dataOwner')
 			->setForeignKey('user_id')
@@ -99,7 +100,7 @@ class RolodexCardsTable extends StacksTable {
 			if (!$stack && !$this->stacks->isMember($id)) {
 				$stack = $this->marshalStack($id);
 			}
-			if ($stack->count('member')) {
+			if ($stack->count('identity')) {
 				$stack->clean();
 				$this->stacks->insert($id, $stack);
 			}       
@@ -111,7 +112,6 @@ class RolodexCardsTable extends StacksTable {
 
 		$layers = Hash::extract($this->stackSchema, '{n}.name');
 		$stack = $this->newEntity([]);
-		osd($layers);
 		foreach($layers as $layer) {
 			$method = 'marshal'.ucfirst($layer);
 			$stack = $this->$method($id, $stack);
@@ -122,58 +122,29 @@ class RolodexCardsTable extends StacksTable {
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities->find('all')->where(['id' => $id]);
 			$stack->set(['identity' => $identity->toArray()]);
-			osd($stack, 'identity');
 			return $stack;
 	}
 	
 	protected function marshalData_owner($id, $stack) {
-		if ($stack->count('member')) {
-			$dataOwner = $this->DataOwners->find('hook')->where(['id' => $stack->dataOwner()]);
+		if ($stack->count('identity')) {
+			$dataOwner = $this->_associations->get('DataOwner')
+					->find('hook')
+					->where(['id' => $stack->identity->element(0)->user_id]);
 			$stack->set(['$dataOwner' => $dataOwner->toArray()]);
 		}
-		osd($stack, 'owner');
 		return $stack;
 	}
 	
 	protected function marshalMemberships($id, $stack) {
-		if ($stack->count('member')) {
-			$memberships = $this->Memberships->find('hook')->where(['member_id' => $id]);
+//		osd($this->_associations->get('Memberships'));die;
+//		osd($this->associations());die;
+		if ($stack->count('identity')) {
+			$memberships = $this->_associations->get('Memberships')
+					->find('hook')
+					->where(['member_id' => $id]);
 			$stack->set(['memberships' => $memberships->toArray()]);
 		}
-		osd($memberships, 'memberships');
 		return $stack;
 	}
-	
-	
-	function hold(){
-		if (!$stack && !$this->stacks->isMember($id)) {
-
-//			$member = $this->Members->find('members', ['values' => [$id]]);
-//				$stack->set(['member' => $member->toArray()]);
-
-			if ($stack->count('member')) {
-				// First do the simple finds
-				$contacts = $this->Contacts->find('inMembers', ['values' => [$id]]);
-				$addresses = $this->Addresses->find('inMembers', ['values' => [$id]]);
-				$group = $this->Groups->find('inMembers', ['values' => [$id]]);
-				$stack->set([
-					'contacts' => $contacts->toArray(),
-					'addresses' => $addresses->toArray(),
-					'group' => $group->toArray(),
-					]);
-
-				//Burrow through and set up the Members for the Groups that contain this
-				$memberships = $this->lookupMemberships($id);
-				$stack->set(['member_of' => $memberships]);
-
-				//Burrow through and set up the members of this group
-				$group_members = $this->lookupGroupMembers($id, $stack);
-				$stack->set(['has_members' => ((is_array($group_members)) ? 
-					$group_members : $group_members->toArray())]);
-
-			}
-		}
-			
-    }
 
 }

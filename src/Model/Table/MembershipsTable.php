@@ -25,14 +25,14 @@ class MembershipsTable extends Table {
 	public function findHook(Query $query, array $options) {
 		return $query
 				->contain(['GroupIdentities'])
-				->select([
-					'Memberships.id', 
-					'Memberships.member_id', 
-					'GroupsMembers.member_id', 
-					'GroupsMembers.group_id',
-					'GroupIdentities.id',
-					'GroupIdentities.first_name',
-					'GroupIdentities.last_name'])
+//				->select([
+//					'Memberships.id', 
+//					'Memberships.member_id', 
+//					'GroupsMembers.member_id', 
+//					'GroupsMembers.group_id',
+//					'GroupIdentities.id',
+//					'GroupIdentities.first_name',
+//					'GroupIdentities.last_name'])
 				;
 	}
 	

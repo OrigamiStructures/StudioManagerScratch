@@ -69,6 +69,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	}
 	
 	public function dataOwner() {
+		osd($this->primaryEntity());die;
 		return $this->primaryEntity()->user_id;
 	}
 	
