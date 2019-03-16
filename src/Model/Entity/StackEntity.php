@@ -68,6 +68,10 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		return $this->_primary;
 	}
 	
+	public function dataOwner() {
+		return $this->primaryEntity()->user_id;
+	}
+	
 	/**
 	 * Get the id of the primary entity in the stack
 	 * 
