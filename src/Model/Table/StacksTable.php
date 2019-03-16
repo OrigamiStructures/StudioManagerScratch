@@ -76,9 +76,10 @@ class StacksTable extends Table
 	 * @return TableSchema
 	 */
 	protected function _initializeSchema(TableSchema $schema) {
-        foreach ($this->stackSchema as $column) {
-            $schema->addColumn($column['name'], $column['specs']);
-        }
+		collection($this->stackSchema)
+			->map(function($column) use ($schema) {
+				$schema->addColumn($column['name'], $column['specs']);
+			});
         return $schema;
     }
 	
