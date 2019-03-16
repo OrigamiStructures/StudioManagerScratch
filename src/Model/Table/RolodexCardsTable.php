@@ -16,7 +16,9 @@ use Cake\Cache\Cache;
  */
 class RolodexCardsTable extends StacksTable {
 
-    protected $stackSchema = 	[
+    protected $layerTables = ['Identities'];
+
+	protected $stackSchema = 	[
 			['name' => 'identity',		'specs' => ['type' => 'layer']],
             ['name' => 'data_owner',		'specs' => ['type' => 'layer']],
             ['name' => 'memberships',		'specs' => ['type' => 'layer']],
@@ -27,7 +29,7 @@ class RolodexCardsTable extends StacksTable {
 			'data_owner', 
 			'memberships', 
 		];
-
+	
 	/**
 	 * Initialize method
 	 *
@@ -41,11 +43,6 @@ class RolodexCardsTable extends StacksTable {
 	}
 
 	protected function _initializeAssociations() {
-		$this->belongsTo('Identity')
-			->setProperty('identity')
-			->setForeignKey('id')
-//			->setFinder('hook')
-			;
 		$this->belongsTo('DataOwner')
 			->setProperty('dataOwner')
 			->setForeignKey('user_id')
