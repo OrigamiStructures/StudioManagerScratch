@@ -1,6 +1,6 @@
 <?php
 
-//osd($rolodexCards->toArray());
+osd($rolodexCards->toArray());
 
 foreach($rolodexCards as $card) {
 	if(!empty($card->memberships)){
