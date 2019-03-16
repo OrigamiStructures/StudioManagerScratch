@@ -88,7 +88,7 @@ class RolodexCardsTable extends StacksTable {
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    public function stacksFromIdentities($ids) {
+    protected function stacksFromIdentities($ids) {
         if (!is_array($ids)) {
             $msg = "The ids must be provided as an array.";
             throw new \BadMethodCallException($msg);
