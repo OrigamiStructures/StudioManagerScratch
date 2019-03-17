@@ -8,6 +8,6 @@ use Cake\ORM\Entity;
  * CakePHP Identity
  * @author dondrake
  */
-class Identity extends Entity {
+class Identity extends Member {
 	
 }

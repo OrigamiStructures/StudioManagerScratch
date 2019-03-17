@@ -16,4 +16,10 @@ use App\Model\Entity\StackEntity;
  */
 class RolodexCard extends StackEntity {
 	
+	protected $_primary = 'identity';
+
+
+	public function name() {
+		return $this->primaryEntity()->name();
+	}
 }
