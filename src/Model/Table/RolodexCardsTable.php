@@ -20,8 +20,8 @@ class RolodexCardsTable extends StacksTable {
 
 	protected $stackSchema = 	[
 			['name' => 'identity',		'specs' => ['type' => 'layer']],
-            ['name' => 'data_owner',		'specs' => ['type' => 'layer']],
-            ['name' => 'memberships',		'specs' => ['type' => 'layer']],
+            ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
+            ['name' => 'memberships',	'specs' => ['type' => 'layer']],
         ];
 	
     protected $seedPoints = [
@@ -64,6 +64,13 @@ class RolodexCardsTable extends StacksTable {
         $this->addBehavior('Timestamp');
     }
 	
+	/**
+	 * By id or array of IDs
+	 * 
+	 * @param \App\Model\Table\Query $query
+	 * @param array $options
+	 * @return array
+	 */
 	public function findRolodexCards(Query $query, $options) {
         return $this->integer($query, 'id', $options['values']);
 			}
@@ -82,8 +89,14 @@ class RolodexCardsTable extends StacksTable {
 	/**
 	 * Read the stack from cache or assemble it and cache it
 	 * 
-	 * This is an alternate finder for cases where you have a set 
-	 * of Members id. 
+	 * This is the destination for all the loadFrom variants. 
+	 * They work to derive the member_id values required to 
+	 * run this stack building process
+	 * 
+	 * There will be other marshalling methods added by the 
+	 * various sub classes. Each sub class holds its own. 
+	 * They are all named by the column names listed in the 
+	 * schema defined in the table. 
 	 * 
 	 * @param array $ids Member ids
 	 * @return StackSet
