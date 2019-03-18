@@ -108,7 +108,6 @@ class Member extends Entity
 	 * @return string
 	 */
 	public function name($format = FIRST_LAST) {
-		osd('here');
 		switch ($format) {
 			case FIRST_LAST:
 				return $this->_name();
