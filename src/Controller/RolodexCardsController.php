@@ -17,7 +17,9 @@ class RolodexCardsController extends AppController {
 	public function index() {
 //		$this->set('rolodexCards', $this->RolodexCards->Memberships->find('all')->contain(['Members']));
 //		$this->set('rolodexCards', $this->RolodexCards->find('all')->contain(['DataOwner', 'Memberships']));
-		$rolodexCards = $this->RolodexCards->find('stackFrom',  ['layer' => 'identity', 'ids' => [1,2,3,4,5]]);
+		$ids = $this->RolodexCards->Identities->find('list')->toArray();
+//		osd($ids);
+		$rolodexCards = $this->RolodexCards->find('stackFrom',  ['layer' => 'identity', 'ids' => $ids]);
 		$this->set('rolodexCards', $rolodexCards);
 //		$this->set('rolodexCards', $this->RolodexCards->Identities->find('all'));
 	}
