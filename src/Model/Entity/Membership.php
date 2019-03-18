@@ -8,18 +8,14 @@ use Cake\ORM\Entity;
  * CakePHP Membership
  * @author dondrake
  */
-class Membership extends Entity {
+class Membership extends GroupIdentity {
 	
-	public function id() {
-		return $this->id;
+	public function groupId() {
+		return $this->group_id;
 	}
 	
-	public function memberId() {
-		return $this->member_id;
+	public function groupIsActive() {
+		return $this->group_active;
 	}
-	
-	public function name() {
-		return $this->group_identity->name;
-	}
-	
+		
 }

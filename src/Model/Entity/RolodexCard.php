@@ -22,4 +22,15 @@ class RolodexCard extends StackEntity {
 	public function name() {
 		return $this->primaryEntity()->name();
 	}
+	
+	public function isMember() {
+		return is_a($this->memberships, '\App\Lib\Layer');
+	}
+	
+	public function memberships() {
+		if ($this->isMember()) {
+			return $this->memberships;
+		}
+		return [];
+	}
 }
