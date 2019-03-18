@@ -154,8 +154,13 @@ class RolodexCardsTable extends StacksTable {
 		if ($stack->count('identity')) {
 			$memberships = $this->_associations->get('Memberships')
 					->find('hook')
-					->where(['member_id' => $id]);
-			$stack->set(['memberships' => $memberships->toArray()]);
+					->where(['member_id' => $id])
+					->toArray();
+			if(!empty($memberships)) {
+				//remove residue from the mapper-reducer
+				$memberships = $memberships['groupIdentities'];
+			}
+			$stack->set(['memberships' => $memberships]);
 		}
 		return $stack;
 	}
