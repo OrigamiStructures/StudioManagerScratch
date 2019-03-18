@@ -43,7 +43,7 @@ class Member extends Entity
 	 * 
 	 * @return string
 	 */
-    public function _getName(){
+    public function _name(){
         switch ($this->getType()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(' ', [
@@ -61,7 +61,7 @@ class Member extends Entity
 	/**
 	 * The assembled `reverse name`; last/first format
 	 */
-    public function _getReverseName(){
+    public function _reverseName(){
         switch ($this->getType()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(', ', [
@@ -110,16 +110,16 @@ class Member extends Entity
 	public function name($format = FIRST_LAST) {
 		switch ($format) {
 			case FIRST_LAST:
-				return $this->name;
+				return $this->_name;
 				break;
 			case LAST_FIRST:
-				return $this->reverseName;
+				return $this->_reverseName;
 				break;
 			case LABELED:
-				return "{$this->getType()}: $this->name";
+				return "{$this->getType()}: $this->_name";
 				break;
 			default:
-				return $this->name;
+				return $this->_name;
 				break;
 		}
 	}
@@ -136,7 +136,7 @@ class Member extends Entity
 		return FALSE;
 	}
 	
-	protected function getCollector() {
+	protected function collector() {
 		return $this->collector;
 	}
     
@@ -155,7 +155,7 @@ class Member extends Entity
 		return FALSE;
 	}
 	
-	public function getDispositionCount() {
+	public function dispositionCount() {
 		$count = $this->disposition_count;
 		if (!is_null($count) && $count > 0 ) {
 			return $count;
@@ -170,15 +170,15 @@ class Member extends Entity
 		return FALSE;
 	}
 	
-	public function getFirstName() {
+	public function firstName() {
 		return $this->first_name;
 	}
 	
-	public function getLastName() {
+	public function lastName() {
 		return $this->last_name;
 	}
 	
-	public function getType() {
+	public function type() {
 		return $this->member_type;
 	}
 }
