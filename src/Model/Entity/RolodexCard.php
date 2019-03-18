@@ -91,7 +91,7 @@ class RolodexCard extends StackEntity {
 	}
     
 	public function getName($format = FIRST_LAST) {
-		return $this->member->element(0)->getName($format);
+		return $this->member->element(0)->name($format);
 	}
 	
 	/**

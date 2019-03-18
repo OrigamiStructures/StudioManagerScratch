@@ -33,7 +33,7 @@ class RolodexCardsController extends AppController {
 	
 	public function labeled($cards) {
 		foreach($cards as $card) {
-			echo "<p>{$card->getName(LABELED)}</p>";
+			echo "<p>{$card->name(LABELED)}</p>";
 		}
 	}
 }

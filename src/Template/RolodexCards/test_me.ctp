@@ -42,7 +42,7 @@ foreach (["Institution","Person"] as $type) :
 	$setMembers = $cards->load($member_type_to_type_match);
 	foreach($setMembers as $member) :
 
-		echo "<p>{$member->getName(LAST_FIRST)}</p>"; 
+		echo "<p>{$member->name(LAST_FIRST)}</p>"; 
 	
 	endforeach;
 	echo "</section>\r";
@@ -65,7 +65,7 @@ foreach($cards->all() as $card) {
 		$secondaryC[] = $contact->asString();
 	}
 	
-	$result[$card->getName()] = [
+	$result[$card->name()] = [
 		'Primary Address' => [
 			$card->hasPrimary(ADDRESS) ? 
 			$card->getPrimary(ADDRESS, BARE)->asString() : 
