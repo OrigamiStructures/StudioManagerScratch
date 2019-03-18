@@ -30,7 +30,7 @@
                 <td><?= h($contact->created) ?></td>
                 <td><?= h($contact->modified) ?></td>
                 <td><?= $contact->has('user') ? $this->Html->link($contact->user->id, ['controller' => 'Users', 'action' => 'view', $contact->user->id]) : '' ?></td>
-                <td><?= $contact->has('member') ? $this->Html->link($contact->member->name, ['controller' => 'Members', 'action' => 'view', $contact->member->id]) : '' ?></td>
+                <td><?= $contact->has('member') ? $this->Html->link($contact->member->name(), ['controller' => 'Members', 'action' => 'view', $contact->member->id]) : '' ?></td>
                 <td><?= h($contact->label) ?></td>
                 <td><?= h($contact->data) ?></td>
                 <td class="actions">

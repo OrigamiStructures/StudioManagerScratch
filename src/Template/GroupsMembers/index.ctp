@@ -32,7 +32,7 @@
                 <td><?= h($groupsMember->modified) ?></td>
                 <td><?= $groupsMember->has('user') ? $this->Html->link($groupsMember->user->id, ['controller' => 'Users', 'action' => 'view', $groupsMember->user->id]) : '' ?></td>
                 <td><?= $groupsMember->has('group') ? $this->Html->link($groupsMember->group->name, ['controller' => 'Groups', 'action' => 'view', $groupsMember->group->id]) : '' ?></td>
-                <td><?= $groupsMember->has('member') ? $this->Html->link($groupsMember->member->name, ['controller' => 'Members', 'action' => 'view', $groupsMember->member->id]) : '' ?></td>
+                <td><?= $groupsMember->has('member') ? $this->Html->link($groupsMember->member->name(), ['controller' => 'Members', 'action' => 'view', $groupsMember->member->id]) : '' ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $groupsMember->id]) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $groupsMember->id]) ?>

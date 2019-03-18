@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <th><?= __('Member') ?></th>
-            <td><?= $groupsMember->has('member') ? $this->Html->link($groupsMember->member->name, ['controller' => 'Members', 'action' => 'view', $groupsMember->member->id]) : '' ?></td>
+            <td><?= $groupsMember->has('member') ? $this->Html->link($groupsMember->member->name(), ['controller' => 'Members', 'action' => 'view', $groupsMember->member->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>
