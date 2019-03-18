@@ -44,11 +44,11 @@ class Member extends Entity
 	 * @return string
 	 */
     public function _name(){
-        switch ($this->getType()) {
+        switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(' ', [
-					$this->getFirstName(), 
-					$this->getLastName()
+					$this->firstName(), 
+					$this->lastName()
 				]);
                 break;
             default:
@@ -62,11 +62,11 @@ class Member extends Entity
 	 * The assembled `reverse name`; last/first format
 	 */
     public function _reverseName(){
-        switch ($this->getType()) {
+        switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(', ', [
-					$this->getLastName(), 
-					$this->getFirstName(),
+					$this->lastName(), 
+					$this->firstName(),
 				]);
                 break;
             default:
@@ -108,18 +108,19 @@ class Member extends Entity
 	 * @return string
 	 */
 	public function name($format = FIRST_LAST) {
+		osd('here');
 		switch ($format) {
 			case FIRST_LAST:
-				return $this->_name;
+				return $this->_name();
 				break;
 			case LAST_FIRST:
-				return $this->_reverseName;
+				return $this->_reverseName();
 				break;
 			case LABELED:
-				return "{$this->getType()}: $this->_name";
+				return "{$this->type()}: {$this->_name()})";
 				break;
 			default:
-				return $this->_name;
+				return $this->_name();
 				break;
 		}
 	}
@@ -130,7 +131,7 @@ class Member extends Entity
 	 * @return boolean
 	 */
 	public function isCollector() {
-		if (!is_null($this->getCollector()) && $this->getCollector() > 0 ) {
+		if (!is_null($this->collector()) && $this->collector() > 0 ) {
 			return TRUE;
 		}
 		return FALSE;
@@ -140,8 +141,8 @@ class Member extends Entity
 		return $this->collector;
 	}
     
-	public function getCollectedCount() {
-		$count = $this->getCollector();
+	public function collectedCount() {
+		$count = $this->collector();
 		if (!is_null($count) && $count > 0 ) {
 			return $count;
 		}
@@ -149,7 +150,7 @@ class Member extends Entity
 	}
 	
 	public function isDispositionParticipant() {
-		if (!is_null($this->getDispositionCount()) && $this->getDispositionCount() > 0 ) {
+		if (!is_null($this->dispositionCount()) && $this->dispositionCount() > 0 ) {
 			return TRUE;
 		}
 		return FALSE;
