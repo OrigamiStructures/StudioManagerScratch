@@ -30,7 +30,7 @@
             <?php foreach ($artists as $artist): ?>
             <tr>
                 <td><?= $this->Number->format($artist->id) ?></td>
-                <td><?= $artist->has('member') ? $this->Html->link($artist->member->name, ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
+                <td><?= $artist->has('member') ? $this->Html->link($artist->member->name(), ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
                 <td><?= h($artist->user_id) ?></td>
                 <td><?= $this->Number->format($artist->member_user_id) ?></td>
                 <td class="actions">

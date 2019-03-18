@@ -27,10 +27,10 @@ endif;
  */
 $this->Html->addCrumb('All Members', ['action' => 'review']);
 if($SystemState->urlArgIsKnown('member')){
-    $this->Html->addCrumb($member->name, ['action' => 'review', '?' => ['member' => $member->id]]);
+    $this->Html->addCrumb($member->name(), ['action' => 'review', '?' => ['member' => $member->id]]);
 }
 if($SystemState->now() == MEMBER_REFINE){
-    $this->Html->addCrumb('Edit ' . $member->name, ['action' => 'refine', '?' => ['member' => $member->id]]);
+    $this->Html->addCrumb('Edit ' . $member->name(), ['action' => 'refine', '?' => ['member' => $member->id]]);
 }
 if($SystemState->now() == MEMBER_CREATE){
     $this->Html->addCrumb('Create Member', ['action' => 'create']);

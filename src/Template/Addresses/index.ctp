@@ -30,7 +30,7 @@
                 <td><?= h($address->created) ?></td>
                 <td><?= h($address->modified) ?></td>
                 <td><?= $address->has('user') ? $this->Html->link($address->user->id, ['controller' => 'Users', 'action' => 'view', $address->user->id]) : '' ?></td>
-                <td><?= $address->has('member') ? $this->Html->link($address->member->name, ['controller' => 'Members', 'action' => 'view', $address->member->id]) : '' ?></td>
+                <td><?= $address->has('member') ? $this->Html->link($address->member->name(), ['controller' => 'Members', 'action' => 'view', $address->member->id]) : '' ?></td>
                 <td><?= h($address->address1) ?></td>
                 <td><?= h($address->address2) ?></td>
                 <td class="actions">

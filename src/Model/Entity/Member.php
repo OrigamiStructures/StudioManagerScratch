@@ -59,7 +59,7 @@ class Member extends Entity
     }
     
 	/**
-	 * The assembled `revers name`; last/first format
+	 * The assembled `reverse name`; last/first format
 	 */
     public function _getReverseName(){
         switch ($this->getType()) {
@@ -107,7 +107,7 @@ class Member extends Entity
 	 * @param string $format
 	 * @return string
 	 */
-	public function getName($format = FIRST_LAST) {
+	public function name($format = FIRST_LAST) {
 		switch ($format) {
 			case FIRST_LAST:
 				return $this->name;

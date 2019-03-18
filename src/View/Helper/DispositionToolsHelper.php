@@ -111,7 +111,7 @@ class DispositionToolsHelper extends Helper {
 
 	public function dispositionLabel($disposition) {
 		if (!is_null($disposition->member)) {
-			return $this->_toLabel($disposition->member->name);
+			return $this->_toLabel($disposition->member->name());
 		} else {
 			return $disposition->label;
 		}
@@ -253,7 +253,7 @@ class DispositionToolsHelper extends Helper {
             return $this->_disconnectMember($member);
         }
 		
-        $label = $this->_toLabel($member->name);
+        $label = $this->_toLabel($member->name());
 		
         if($disposition){
             $action = 'refine';

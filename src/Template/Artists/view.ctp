@@ -22,7 +22,7 @@
     <table class="vertical-table">
         <tr>
             <th scope="row"><?= __('Member') ?></th>
-            <td><?= $artist->has('member') ? $this->Html->link($artist->member->name, ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
+            <td><?= $artist->has('member') ? $this->Html->link($artist->member->name(), ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('User Id') ?></th>

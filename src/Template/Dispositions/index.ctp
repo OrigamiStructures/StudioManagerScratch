@@ -31,7 +31,7 @@
                 <td><?= h($disposition->created) ?></td>
                 <td><?= h($disposition->modified) ?></td>
                 <td><?= $disposition->has('user') ? $this->Html->link($disposition->user->id, ['controller' => 'Users', 'action' => 'view', $disposition->user->id]) : '' ?></td>
-                <td><?= $disposition->has('member') ? $this->Html->link($disposition->member->name, ['controller' => 'Members', 'action' => 'view', $disposition->member->id]) : '' ?></td>
+                <td><?= $disposition->has('member') ? $this->Html->link($disposition->member->name(), ['controller' => 'Members', 'action' => 'view', $disposition->member->id]) : '' ?></td>
                 <td><?= h($disposition->start_date) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $disposition->id]) ?>
