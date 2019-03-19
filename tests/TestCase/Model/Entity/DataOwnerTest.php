@@ -39,7 +39,7 @@ class DataOwnerTest extends TestCase
         parent::setUp();
         $this->DataOwners = $this->getTableLocator()->get('DataOwners');
         $this->DataOwner = $this->DataOwners->find('hook')->toArray();
-		pr($this->DataOwner);
+//		pr($this->DataOwner);
     }
 
     /**
@@ -61,10 +61,10 @@ class DataOwnerTest extends TestCase
      */
     public function testId()
     {
-//        $this->assertTrue($this->DataOwner[0]->id() === '008ab31c-124d-4e15-a4e1-45fccd7becac',
-//				'Failed to detect a matching id');
-//        $this->assertFalse($this->DataOwner[0]->id() === 'bad-124d-4e15-a4e1-45fccd7becac',
-//				'Incorrectly matched a non-matching id');
+        $this->assertTrue($this->DataOwner[0]->id() === '008ab31c-124d-4e15-a4e1-45fccd7becac',
+				'Failed to detect a matching id');
+        $this->assertFalse($this->DataOwner[0]->id() === 'bad-124d-4e15-a4e1-45fccd7becac',
+				'Incorrectly matched a non-matching id');
     }
 
     /**
