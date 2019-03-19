@@ -82,18 +82,18 @@ class Member extends Entity
 	 * Handles messy usage of the first/last name fields for these 
 	 * names that only need one field
 	 * 
-	 * @todo The Member UX needs to route Institution/Group names to first_name
+	 * @todo The Member UX needs to route Institution/Group names to last_name
 	 * 
 	 * @return string
 	 */
 	protected function _institutionName() {
-		if ($this->_properties['first_name'] === $this->_properties['last_name'] ||
-				isset($this->_properties['first_name'])) {
-			$name = $this->_properties['first_name'];
-		} else {
-			$name = $this->_properties['last_name'];
-		}
-		return $name;
+//		if ($this->_properties['first_name'] === $this->_properties['last_name'] ||
+//				isset($this->_properties['first_name'])) {
+//			$name = $this->_properties['first_name'];
+//		} else {
+			return $this->lastName();
+//		}
+//		return $name;
 	}
 
 		/**
