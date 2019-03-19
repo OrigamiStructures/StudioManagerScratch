@@ -68,21 +68,92 @@ class DataOwnerTest extends TestCase
     }
 
     /**
-     * Test userId method
+     * Test username method
      *
      * @return void
      */
     public function testUsername()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->DataOwner[1]->username() === 'gaildrake',
+				'Failed to detect a matching username');
+        $this->assertFalse($this->DataOwner[1]->username() === 'random data',
+				'Incorrectly matched a non-matching username');
     }
+	
     /**
-     * Test userId method
+     * Test ownerOf using a string
      *
      * @return void
      */
-    public function testOwnerOf()
+    public function testOwnerOfUsingString()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->DataOwner[0]->ownerOf('008ab31c-124d-4e15-a4e1-45fccd7becac'),
+				'Failed to detect ownership-of based on a string');
+        $this->assertFalse($this->DataOwner[0]->ownerOf('bad-124d-4e15-a4e1-45fccd7becac'),
+				'Incorrectly detected ownership-of based on a string');
     }
+	
+    /**
+     * Test ownerOf using an object
+     *
+     * @return void
+     */
+    public function testOwnerOfUsingObject()
+    {
+		$good_object = new \stdClass();
+		$good_object->user_id = '008ab31c-124d-4e15-a4e1-45fccd7becac';
+		$bad_object = new \stdClass();
+		$bad_object->user_id = 'bad-124d-4e15-a4e1-45fccd7becac';
+		
+        $this->assertTrue($this->DataOwner[0]->ownerOf($good_object),
+				'Failed to detect ownership-of based on an object property');
+        $this->assertFalse($this->DataOwner[0]->ownerOf($bad_object),
+				'Incorrectly detected ownership-of based on a non-matching object property');
+    }
+	
+    /**
+     * Test ownerOf using an object with missing property
+     *
+     * @return void
+     */
+    public function testOwnerOfUsingObjectMissingProperty()
+    {
+ 		$bad_object = new \stdClass();
+		$bad_object->other_property = 'bad-124d-4e15-a4e1-45fccd7becac';
+
+		$this->assertFalse($this->DataOwner[0]->ownerOf($bad_object),
+				'Failed to return false when checkin ownership on a missing property');
+    }
+	
+    /**
+     * Test ownerOf using an array
+     *
+     * @return void
+     */
+    public function testOwnerOfUsingArray()
+    {
+		$good_array = ['user_id' => '008ab31c-124d-4e15-a4e1-45fccd7becac'];
+		$bad_array = ['user_id' => 'bad-124d-4e15-a4e1-45fccd7becac'];
+		
+        $this->assertTrue($this->DataOwner[0]->ownerOf($good_array),
+				'Failed to detect ownership-of based on an array node');
+        $this->assertFalse($this->DataOwner[0]->ownerOf($bad_array),
+				'Incorrectly detected ownership-of based on a non-matching array node');
+    }
+	
+    /**
+     * Test ownerOf using an array
+     *
+     * @return void
+     */
+    public function testOwnerOfUsingArrayMissingNode()
+    {
+		$bad_array = ['other_node' => 'bad-124d-4e15-a4e1-45fccd7becac'];
+		
+        $this->assertFalse($this->DataOwner[0]->ownerOf($bad_array),
+				'Failed to return false when checking ownership on a missing array node');
+    }
+	
+	
+	
 }

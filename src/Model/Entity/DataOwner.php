@@ -24,11 +24,14 @@ class DataOwner extends Entity {
 				return $this->id() === $param;
 				break;
 			case is_object($param):
-				return $this->id() === $param->user_id;
+				if (isset($param->user_id)) {
+					return $this->id() === $param->user_id;
+				}
+				return FALSE;
 				break;
-			case is_string($param):
+			case is_array($param):
 				if (isset($param['user_id'])) {
-					return $this->id() === $param;
+					return $this->id() === $param['user_id'];
 				}
 			default:
 				return FALSE;
