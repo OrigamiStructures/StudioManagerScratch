@@ -12,25 +12,19 @@ class ContactsTableTest extends TestCase
 {
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\ContactsTable
+     */
+    public $Contacts;
+
+    /**
      * Fixtures
      *
      * @var array
      */
     public $fixtures = [
-        'app.contacts',
-        'app.users',
-        'app.members',
-        'app.images',
-        'app.dispositions',
-        'app.locations',
-        'app.pieces',
-        'app.groups',
-        'app.groups_members',
-        'app.artworks',
-        'app.editions',
-        'app.series',
-        'app.formats',
-        'app.subscriptions'
+        'app.contacts'
     ];
 
     /**
@@ -41,8 +35,8 @@ class ContactsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Contacts') ? [] : ['className' => 'App\Model\Table\ContactsTable'];
-        $this->Contacts = TableRegistry::get('Contacts', $config);
+        $config = TableRegistry::getTableLocator()->exists('Contacts') ? [] : ['className' => ContactsTable::class];
+        $this->Contacts = TableRegistry::getTableLocator()->get('Contacts', $config);
     }
 
     /**
@@ -83,6 +77,66 @@ class ContactsTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test beforeMarshal method
+     *
+     * @return void
+     */
+    public function testBeforeMarshal()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test spawn method
+     *
+     * @return void
+     */
+    public function testSpawn()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findContacts method
+     *
+     * @return void
+     */
+    public function testFindContacts()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findInMembers method
+     *
+     * @return void
+     */
+    public function testFindInMembers()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findKind method
+     *
+     * @return void
+     */
+    public function testFindKind()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findDetail method
+     *
+     * @return void
+     */
+    public function testFindDetail()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
