@@ -61,16 +61,6 @@ class MemberTest extends TestCase
     }
 
     /**
-     * Test name method
-     *
-     * @return void
-     */
-    public function testName()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test isCollector method
      *
      * @return void
