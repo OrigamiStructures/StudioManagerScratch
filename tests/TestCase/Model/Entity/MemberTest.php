@@ -37,7 +37,6 @@ class MemberTest extends TestCase
         parent::setUp();
         $this->Members = $this->getTableLocator()->get('Members');
         $this->Member = $this->Members->find('all')->toArray();
-        pr($this->Member);
     }
 
     /**
@@ -57,7 +56,62 @@ class MemberTest extends TestCase
      *
      * @return void
      */
-    public function testName()
+    public function testNamePlainPerson()
+    {
+        $this->assertTrue($this->Member[0]->name() === 'Don Drake');
+    }
+
+    public function testNameFLPerson()
+    {
+        $this->assertTrue($this->Member[1]->name() === 'Gail Drake');
+    }
+
+    public function testNameLFPerson()
+    {
+        $this->assertTrue($this->Member[0]->name() === 'Drake, Don');
+    }
+
+    public function testNameLabeledPerson()
+    {
+        $this->assertTrue($this->Member[1]->name() === 'Person: Gail Drake');
+    }
+
+    public function testNamePlainOrg()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNameFLOrg()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNameLFOrg()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNameLabeledOrg()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNamePlainGroup()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNameFLGroup()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNameLFGroup()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testNameLabeledGroup()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
