@@ -63,17 +63,17 @@ class MemberTest extends TestCase
 
     public function testNameFLPerson()
     {
-        $this->assertTrue($this->Member[1]->name() === 'Gail Drake');
+        $this->assertTrue($this->Member[1]->name(FIRST_LAST) === 'Gail Drake');
     }
 
     public function testNameLFPerson()
     {
-        $this->assertTrue($this->Member[0]->name() === 'Drake, Don');
+        $this->assertTrue($this->Member[0]->name(LAST_FIRST) === 'Drake, Don');
     }
 
     public function testNameLabeledPerson()
     {
-        $this->assertTrue($this->Member[1]->name() === 'Person: Gail Drake');
+        $this->assertTrue($this->Member[1]->name(LABELED) === 'Person: Gail Drake');
     }
 
     public function testNamePlainOrg()

@@ -116,7 +116,7 @@ class Member extends Entity
 				return $this->_reverseName();
 				break;
 			case LABELED:
-				return "{$this->type()}: {$this->_name()})";
+				return "{$this->type()}: {$this->_name()}";
 				break;
 			default:
 				return $this->_name();
