@@ -2,7 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use App\Interfaces\LayerAccessInterface;
@@ -132,7 +132,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 */
 	private function getValidPropery($argObj) {
 		$property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
-		if($property && is_a($property, '\App\Lib\Layer')) {
+		if($property && is_a($property, '\App\Model\Lib\Layer')) {
 			return $property;
 		} else {
 			return FALSE;
@@ -150,7 +150,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		}
 		
         $property = is_null($layer) ? null : $this->get($layer);
-        if (is_null($property) || !is_a($property, '\App\Lib\Layer')) {
+        if (is_null($property) || !is_a($property, '\App\Model\Lib\Layer')) {
             return [];
         }
 
@@ -176,7 +176,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
     {
         $value = $this->get($property);
         if (is_object($value) 
-            && $value instanceof \App\Lib\Layer 
+            && $value instanceof \App\Model\Lib\Layer 
             && $value->count() === 0
         ) {
             return true;

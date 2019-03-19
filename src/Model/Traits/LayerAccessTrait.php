@@ -2,7 +2,7 @@
 namespace App\Model\Traits;
 
 use App\Model\Lib\LayerAccessArgs;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use App\Model\Lib\ValueSource;
 
 /**

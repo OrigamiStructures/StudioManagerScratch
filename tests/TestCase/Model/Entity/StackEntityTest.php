@@ -5,7 +5,7 @@ use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\StackEntity;
 use Cake\TestSuite\TestCase;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use App\ORM\Entity\Address;
 
 /**
@@ -304,7 +304,7 @@ class StackEntityTest extends TestCase
         $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
         
         $this->StackEntity->set('pieces', $pieces);
-        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
         
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
@@ -324,8 +324,8 @@ class StackEntityTest extends TestCase
         
         $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
         
-        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
-        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
+        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
         $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
         
         //do the same process to multiple values and use the guard feature
@@ -340,8 +340,8 @@ class StackEntityTest extends TestCase
 //        
 //        $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
 //        
-//        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
-//        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
+//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
 //        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
     }
 
@@ -355,7 +355,7 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testGet(){
-        $this->assertInstanceOf('\App\Lib\Layer', $this->StackEntity->get('pieces'));
+        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'));
         $this->assertEquals(null, $this->StackEntity->get('members'));
     }
 

@@ -2,7 +2,7 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\StackEntity;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 
 define('ADDRESS', 'addresses');
 define('CONTACT', 'contacts');

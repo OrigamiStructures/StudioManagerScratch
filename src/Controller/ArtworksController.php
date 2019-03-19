@@ -11,7 +11,7 @@ use App\Controller\ArtStackController;
 use App\Controller\Component\LayersComponent;
 use Cake\Cache\Cache;
 use App\Model\Lib\IdentitySets;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 
 /**
  * Artworks Controller

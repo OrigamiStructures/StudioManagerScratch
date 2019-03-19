@@ -2,7 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Table\StacksTable;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use Cake\Cache\Cache;
 use App\Model\Lib\StackSet;
 use App\Model\Entity\ArtStack;

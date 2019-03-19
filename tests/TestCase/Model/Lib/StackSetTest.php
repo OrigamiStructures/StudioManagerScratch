@@ -6,7 +6,7 @@ namespace App\Test\TestCase\Model\Lib;
 use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\StackEntity;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use App\ORM\Entity\Address;
 use App\Model\Lib\StackSet;
 use Cake\TestSuite\TestCase;

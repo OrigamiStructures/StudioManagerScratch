@@ -26,7 +26,7 @@ echo $this->Form->end();
 ?>
 
 <?php
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 
 echo $this->element('Disposition/testing/dispo_table');
 if (isset($stacks)) {
@@ -41,7 +41,7 @@ if (isset($stacks)) {
 		// Layer object's __contruct() accept an array of entities 
 		// and that's what $stack->load( ) returns. 
 		// Layer turns an array of entities into a quasi-db tool.
-		// See \App\Lib\Layer
+		// See \App\Model\Lib\Layer
 		$distinct_pieces_args = $stack->accessArgs()
 				->setLayer('pieces')
 				->filterValue($joins->distinct('id', 'piece_id'));

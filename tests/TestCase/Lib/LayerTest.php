@@ -1,7 +1,7 @@
 <?php
 namespace App\Test\TestCase\Lib;
 
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use Cake\TestSuite\TestCase;
 use Cake\ORM\Locator\TableLocator;
 use App\Exception\BadClassConfigurationException;
@@ -77,13 +77,13 @@ class LayerTest extends TestCase
         $record = $this->pieceRecords[0];
         
         $layer = new Layer([], 'edition');
-        $this->assertInstanceOf('App\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
         
         $layer = new Layer([$record], 'edition');
-        $this->assertInstanceOf('App\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
         
         $layer = new Layer([$record]);
-        $this->assertInstanceOf('App\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
     }
     
     /**

@@ -24,7 +24,7 @@ class RolodexCard extends StackEntity {
 	}
 	
 	public function isMember() {
-		return is_a($this->memberships, '\App\Lib\Layer');
+		return is_a($this->memberships, '\App\Model\Lib\Layer');
 	}
 	
 	public function memberships() {

@@ -1,5 +1,5 @@
 <?php
-namespace App\Lib;
+namespace App\Model\Lib;
 
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
