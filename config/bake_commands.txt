@@ -53,6 +53,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/MemberTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
