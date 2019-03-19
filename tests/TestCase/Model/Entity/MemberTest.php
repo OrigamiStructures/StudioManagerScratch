@@ -78,7 +78,7 @@ class MemberTest extends TestCase
 
     public function testNamePlainOrg()
     {
-        $this->assertTrue($this->Member[2]->name() === 'Drake Family');
+        $this->assertTrue($this->Member[4]->name() === 'Alice Goask');
     }
 
     public function testNameFLOrg()
@@ -88,7 +88,7 @@ class MemberTest extends TestCase
 
     public function testNameLFOrg()
     {
-        $this->assertTrue($this->Member[2]->name(LAST_FIRST) === 'Drake Family');
+        $this->assertTrue($this->Member[4]->name(LAST_FIRST) === 'Alice Goask');
     }
 
     public function testNameLabeledOrg()
@@ -98,22 +98,22 @@ class MemberTest extends TestCase
 
     public function testNamePlainGroup()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[2]->name() === 'Drake Family');
     }
 
     public function testNameFLGroup()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[6]->name(FIRST_LAST) === 'Collectors');
     }
 
     public function testNameLFGroup()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[2]->name(LAST_FIRST) === 'Drake Family');
     }
 
     public function testNameLabeledGroup()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[6]->name(LABELED) === 'Group: Collectors');
     }
 
     /**
