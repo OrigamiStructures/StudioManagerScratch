@@ -43,7 +43,7 @@ class Member extends Entity
 	 * 
 	 * @return string
 	 */
-    public function _name(){
+    protected function _name(){
         switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(' ', [
@@ -61,7 +61,7 @@ class Member extends Entity
 	/**
 	 * The assembled `reverse name`; last/first format
 	 */
-    public function _reverseName(){
+    protected function _reverseName(){
         switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(', ', [
@@ -136,7 +136,7 @@ class Member extends Entity
 		return FALSE;
 	}
 	
-	protected function collector() {
+	public function collector() {
 		return $this->collector;
 	}
     
