@@ -3,7 +3,7 @@ namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\DataOwner;
 use Cake\TestSuite\TestCase;
-use App\Model\Table\DataOwnerTable as DataOwners;
+use App\Model\Table\DataOwnersTable;
 
 /**
  * App\Model\Entity\DataOwner Test Case
@@ -39,6 +39,7 @@ class DataOwnerTest extends TestCase
         parent::setUp();
         $this->DataOwners = $this->getTableLocator()->get('DataOwners');
         $this->DataOwner = $this->DataOwners->find('all')->toArray();
+		pr($this->DataOwner);
     }
 
     /**

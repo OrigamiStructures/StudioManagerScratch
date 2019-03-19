@@ -15,7 +15,7 @@ use Cake\ORM\Query;
  * CakePHP DataOwner
  * @author dondrake
  */
-class DataOwnerTable extends Table {
+class DataOwnersTable extends Table {
 	
 	public function initialize(array $config) {
 		$this->setTable('users');
