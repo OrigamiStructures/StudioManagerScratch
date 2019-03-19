@@ -40,12 +40,19 @@ class UsersFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
-            'created' => '2015-12-10 21:32:02',
-            'modified' => '2015-12-10 21:32:02',
+            'id' => '008ab31c-124d-4e15-a4e1-45fccd7becac',
             'member_id' => 1,
-            'username' => 'Lorem ipsum dolor sit amet',
-            'password' => 'Lorem ipsum dolor sit amet'
+            'username' => 'dondrake',
+        ],
+        [
+            'id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+            'member_id' => 2,
+            'username' => 'gaildrake',
+        ],
+        [
+            'id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+            'member_id' => 3,
+            'username' => 'drakefamily',
         ],
     ];
 }

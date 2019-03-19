@@ -26,7 +26,7 @@ class DataOwnerTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.data_owner',
+        'app.users',
     ];
 
     /**
@@ -38,7 +38,7 @@ class DataOwnerTest extends TestCase
     {
         parent::setUp();
         $this->DataOwners = $this->getTableLocator()->get('DataOwners');
-        $this->DataOwner = $this->DataOwners->find('all')->toArray();
+        $this->DataOwner = $this->DataOwners->find('hook')->toArray();
 		pr($this->DataOwner);
     }
 
