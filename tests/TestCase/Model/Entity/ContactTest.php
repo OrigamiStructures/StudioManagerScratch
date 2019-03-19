@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\Contact;
 use Cake\TestSuite\TestCase;
+use App\Model\Table\Contacts;
 
 /**
  * App\Model\Entity\Contact Test Case
@@ -11,11 +12,25 @@ class ContactTest extends TestCase
 {
 
     /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.contacts',
+    ];
+    /**
      * Test subject
      *
      * @var \App\Model\Entity\Contact
      */
     public $Contact;
+    /**
+     * Table model
+     *
+     * @var \App\Model\Table\Contacts
+     */
+    public $Contacts;
 
     /**
      * setUp method
@@ -25,7 +40,8 @@ class ContactTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Contact = new Contact();
+        $this->Contacts = $this->getTableLocator()->get('Contacts');
+        $this->Contact = $this->Contacts->find('all')->toArray();
     }
 
     /**
@@ -35,7 +51,7 @@ class ContactTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Contact);
+        unset($this->Contact, $this->Contacts);
 
         parent::tearDown();
     }
@@ -47,7 +63,9 @@ class ContactTest extends TestCase
      */
     public function testGetContact()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue(
+				$this->Contact[0]
+				->getContact() === 'ddrake@dreamingmind.com');
     }
 
     /**
@@ -57,17 +75,34 @@ class ContactTest extends TestCase
      */
     public function testGetLabel()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue(
+				$this->Contact[1]
+				->getLabel() === 'phone');
     }
 
     /**
-     * Test asString method
+     * Test asString method with default delimeter
      *
      * @return void
      */
-    public function testAsString()
+    public function testAsStringDefaultDelimeter()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue(
+				$this->Contact[0]
+				->asString() === 'email: ddrake@dreamingmind.com');
+    }
+
+    /**
+     * Test asString method with custom delimeter
+     *
+     * @return void
+     */
+    public function testAsStringCustomDelimeter()
+    {
+        $this->assertTrue(
+				$this->Contact[3]
+				->asString(': post to ') 
+				=== 'curl-addr: post to dev.amp-fg.com/JSONStatusRequest');
     }
 
     /**
@@ -77,7 +112,7 @@ class ContactTest extends TestCase
      */
     public function testAsArray()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertArraySubset(['email' => 'ddrake@dreamingmind.com'], $this->Contact[0]->asArray());
     }
 
     /**
@@ -87,16 +122,61 @@ class ContactTest extends TestCase
      */
     public function testIsType()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Contact[3]->isType('curl-addr'),
+				'Simple type check did not find a match');
     }
 
     /**
-     * Test isPrimary method
+     * Test isType with a case-mismatched value
      *
      * @return void
      */
-    public function testIsPrimary()
+    public function testIsTypeWithCaseMismatch()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Contact[3]->isType('Curl-Addr'),
+				'Case-mismatch type check did not find a match');
     }
+
+    /**
+     * Test isType with no matching type
+     *
+     * @return void
+     */
+    public function testIsTypeWithNoMatch()
+    {
+        $this->assertFalse($this->Contact[3]->isType('no match'),
+				'Search for non-existent type returned TRUE');
+    }
+
+    /**
+     * Test isPrimary when true
+     *
+     * @return void
+     */
+    public function testIsPrimaryWhenTrue()
+    {
+        $this->assertTrue($this->Contact[0]->isPrimary(),
+				'Did not detect when primary was set to 1');
+    }
+    /**
+     * Test isPrimary when false
+     *
+     * @return void
+     */
+    public function testIsPrimaryWhenFalse()
+    {
+        $this->assertFalse($this->Contact[1]->isPrimary(),
+				'Did not detect when primary was set to 0');
+    }
+    /**
+     * Test isPrimary when null
+     *
+     * @return void
+     */
+    public function testIsPrimaryWhenNull()
+    {
+        $this->assertFalse($this->Contact[2]->isPrimary(),
+				'Did not detect when primary was set to null');
+    }
+	
 }
