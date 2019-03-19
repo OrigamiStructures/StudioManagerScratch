@@ -78,22 +78,22 @@ class MemberTest extends TestCase
 
     public function testNamePlainOrg()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[2]->name() === 'Drake Family');
     }
 
     public function testNameFLOrg()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[3]->name(FIRST_LAST) === 'Wonderland Group');
     }
 
     public function testNameLFOrg()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[2]->name(LAST_FIRST) === 'Drake Family');
     }
 
     public function testNameLabeledOrg()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[3]->name(LABELED) === 'Institution: Wonderland Group');
     }
 
     public function testNamePlainGroup()
