@@ -117,13 +117,18 @@ class MemberTest extends TestCase
     }
 
     /**
-     * Test isCollector method
+     * Test isCollector with 1, 0, null
      *
      * @return void
      */
     public function testIsCollector()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[0]->isCollector(),
+            'Collector not detected on collector = 1');
+        $this->assertFalse($this->Member[2]->isCollector(),
+            'Collector wrongly detected on collector = null');
+        $this->assertFalse($this->Member[3]->isCollector(),
+            'Collector wrongly detected on collector = 0');
     }
 
     /**
@@ -133,7 +138,12 @@ class MemberTest extends TestCase
      */
     public function testCollector()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        pr($this->Member[0]->collector());
+        $this->assertEquals(TRUE, $this->Member[0]->collector(),
+            'collector did not return expected true value');
+        pr($this->Member[2]->collector());
+        $this->assertEquals(FALSE, $this->Member[2]->collector(),
+            'collector did not return expected false value');
     }
 
     /**
