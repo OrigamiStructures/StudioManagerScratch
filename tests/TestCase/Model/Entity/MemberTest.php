@@ -53,21 +53,11 @@ class MemberTest extends TestCase
     }
 
     /**
-     * Test _name method
+     * Test name method
      *
      * @return void
      */
     public function testName()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test _reverseName method
-     *
-     * @return void
-     */
-    public function testReverseName()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -78,6 +68,16 @@ class MemberTest extends TestCase
      * @return void
      */
     public function testIsCollector()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test collector method
+     *
+     * @return void
+     */
+    public function testCollector()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
