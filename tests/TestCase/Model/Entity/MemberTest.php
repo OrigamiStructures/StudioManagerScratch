@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\Member;
 use Cake\TestSuite\TestCase;
+use App\Model\Table\MembersTable;
 
 /**
  * App\Model\Entity\Member Test Case
@@ -11,11 +12,20 @@ class MemberTest extends TestCase
 {
 
     /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.members',
+    ];
+    /**
      * Test subject
      *
      * @var \App\Model\Entity\Member
      */
     public $Member;
+    public $Members;
 
     /**
      * setUp method
@@ -25,7 +35,9 @@ class MemberTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Member = new Member();
+        $this->Members = $this->getTableLocator()->get('Members');
+        $this->Member = $this->Members->find('all')->toArray();
+        pr($this->Member);
     }
 
     /**
@@ -35,7 +47,7 @@ class MemberTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Member);
+        unset($this->Member, $this->Members);
 
         parent::tearDown();
     }
