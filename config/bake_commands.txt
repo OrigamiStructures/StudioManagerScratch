@@ -50,6 +50,10 @@ vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.ph
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
 # entity
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
 Stack/Layer suite
