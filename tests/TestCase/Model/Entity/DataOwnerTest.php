@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\DataOwner;
 use Cake\TestSuite\TestCase;
+use App\Model\Table\DataOwnerTable as DataOwners;
 
 /**
  * App\Model\Entity\DataOwner Test Case
@@ -16,6 +17,17 @@ class DataOwnerTest extends TestCase
      * @var \App\Model\Entity\DataOwner
      */
     public $DataOwner;
+	public $DataOwners;
+
+
+	/**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.data_owner',
+    ];
 
     /**
      * setUp method
@@ -25,7 +37,8 @@ class DataOwnerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->DataOwner = new DataOwner();
+        $this->DataOwners = $this->getTableLocator()->get('DataOwners');
+        $this->DataOwner = $this->DataOwners->find('all')->toArray();
     }
 
     /**
@@ -35,19 +48,22 @@ class DataOwnerTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->DataOwner);
+        unset($this->DataOwner, $this->DataOwners);
 
         parent::tearDown();
     }
 
     /**
-     * Test id method
+     * Test id method for simple equivalence/non-equivalence
      *
      * @return void
      */
     public function testId()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+//        $this->assertTrue($this->DataOwner[0]->id() === '008ab31c-124d-4e15-a4e1-45fccd7becac',
+//				'Failed to detect a matching id');
+//        $this->assertFalse($this->DataOwner[0]->id() === 'bad-124d-4e15-a4e1-45fccd7becac',
+//				'Incorrectly matched a non-matching id');
     }
 
     /**
@@ -55,7 +71,16 @@ class DataOwnerTest extends TestCase
      *
      * @return void
      */
-    public function testUserId()
+    public function testUsername()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+    /**
+     * Test userId method
+     *
+     * @return void
+     */
+    public function testOwnerOf()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -14,8 +14,26 @@ class DataOwner extends Entity {
 		return $this->id;
 	}
 	
-	public function userId() {
+	public function username() {
 		return $this->username;
+	}
+	
+	public function ownerOf($param) {
+		switch ($param) {
+			case is_string($param):
+				return $this->id() === $param;
+				break;
+			case is_object($param):
+				return $this->id() === $param->user_id;
+				break;
+			case is_string($param):
+				if (isset($param['user_id'])) {
+					return $this->id() === $param;
+				}
+			default:
+				return FALSE;
+				break;
+		}
 	}
 	
 }
