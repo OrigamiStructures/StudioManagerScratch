@@ -77,7 +77,20 @@ class StackEntityTest extends TestCase
         parent::tearDown();
     }
     
-    
+
+	/**
+	 * Test find method
+	 *
+	 * @return void
+	 */
+	public function testFind() {
+        $arg = $this->StackEntity->find();
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
+            'find() did not create a LayerAccessArgs object');
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
+            'The access object created by find() did not contain the expected data');
+	}
+
 
 // <editor-fold defaultstate="collapsed" desc="Load method tests">
 
