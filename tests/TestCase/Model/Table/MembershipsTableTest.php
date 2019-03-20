@@ -54,23 +54,15 @@ class MembershipsTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
      * Test initializeAssociations method
      *
      * @return void
      */
     public function testInitializeAssociations()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue(
+            is_a($this->Memberships->GroupIdentities, 'Cake\ORM\Association\BelongsTo'),
+            'The GroupIdentities belongsTo association was not made.');
     }
 
     /**
@@ -80,6 +72,10 @@ class MembershipsTableTest extends TestCase
      */
     public function testFindHook()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $groupHooks = $this->Memberships->find('hook');
+        $this->assertTrue(is_a($groupHooks[0], 'App\Model\Entity\GroupIdentity'),
+            'hook result entity is not a GroupIdentity entity.');
+        $this->assertTrue(is_a($groupHooks[0], 'App\Model\Entity\Member'),
+            'hook result entity does not extend Member entity');
     }
 }
