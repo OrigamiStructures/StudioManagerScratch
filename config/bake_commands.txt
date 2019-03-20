@@ -34,7 +34,6 @@ bin/cake bake.bake test ModLib StackSet
 cd /Library/WebServer/Documents/StudioManagerScratch
 
 # App\Lib
-vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestsTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberMessagingTest.php
@@ -46,6 +45,10 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/MembershipsTableTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 # behaviors
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
@@ -61,10 +64,18 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 # Stack/Layer suite
 # --------------------------------------------------------------------
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
-vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
+
+# RolodexCard entity suite
+# --------------------------------------------------------------------
+vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================

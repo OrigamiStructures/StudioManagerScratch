@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Lib;
+namespace App\Test\TestCase\Model\Lib;
 
 use App\Model\Lib\Layer;
 use Cake\TestSuite\TestCase;
