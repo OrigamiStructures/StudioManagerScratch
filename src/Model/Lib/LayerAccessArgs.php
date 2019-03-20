@@ -124,6 +124,11 @@ protected $data;
         return $this->data;
     }
 	
+    
+    public function load() {
+        return $this->data()->load($this);
+    }
+    
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
 	public function setLayer($param) {
