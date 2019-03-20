@@ -103,16 +103,18 @@ class StackSetTest extends TestCase {
 //	public function testInsert() {
 //		$this->markTestIncomplete('Not implemented yet.');
 //	}
-//
-//	/**
-//	 * Test all method
-//	 *
-//	 * @return void
-//	 */
-//	public function testAll() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
+
+	/**
+	 * Test find method
+	 *
+	 * @return void
+	 */
+	public function testFind() {
+        $arg = $this->StackEntities->element(1)->find();
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'));
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'));
+	}
+
 //	/**
 //	 * Test members method
 //	 *
