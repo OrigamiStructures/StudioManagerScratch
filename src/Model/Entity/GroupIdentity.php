@@ -15,4 +15,12 @@ use App\Model\Entity\Member;
  */
 class GroupIdentity extends Member {
     
+	public function groupId() {
+		return $this->group_id;
+	}
+	
+	public function groupIsActive() {
+		return $this->group_active;
+	}
+		
 }

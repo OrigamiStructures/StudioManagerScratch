@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use App\Model\Entity\GroupIdentity;
 use Cake\ORM\Entity;
 
 /**
@@ -10,12 +11,12 @@ use Cake\ORM\Entity;
  */
 class Membership extends GroupIdentity {
 	
-	public function groupId() {
-		return $this->group_id;
-	}
-	
-	public function groupIsActive() {
-		return $this->group_active;
-	}
-		
+//	public function groupId() {
+//		return $this->group_id;
+//	}
+//	
+//	public function groupIsActive() {
+//		return $this->group_active;
+//	}
+//		
 }
