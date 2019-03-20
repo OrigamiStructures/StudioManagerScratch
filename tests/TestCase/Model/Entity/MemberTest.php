@@ -129,6 +129,8 @@ class MemberTest extends TestCase
             'Collector wrongly detected on collector = null');
         $this->assertFalse($this->Member[3]->isCollector(),
             'Collector wrongly detected on collector = 0');
+        $this->assertTrue($this->Member[8]->isCollector(),
+            'Collector wrongly detected on collector = 2');
     }
 
     /**
@@ -138,11 +140,11 @@ class MemberTest extends TestCase
      */
     public function testCollector()
     {
-        pr($this->Member[0]->collector());
-        $this->assertEquals(TRUE, $this->Member[0]->collector(),
-            'collector did not return expected true value');
-        pr($this->Member[2]->collector());
-        $this->assertEquals(FALSE, $this->Member[2]->collector(),
+        $this->assertEquals(1, $this->Member[0]->collector(),
+            'collector did not return expected 1 value');
+        $this->assertEquals(null, $this->Member[2]->collector(),
+            'collector did not return expected null value');
+        $this->assertEquals(2, $this->Member[8]->collector(),
             'collector did not return expected false value');
     }
 
@@ -153,7 +155,12 @@ class MemberTest extends TestCase
      */
     public function testCollectedCount()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals(1, $this->Member[0]->collectedCount(),
+            'collector did not return expected 1 value');
+        $this->assertEquals(0, $this->Member[2]->collectedCount(),
+            'collector did not return expected null value');
+        $this->assertEquals(2, $this->Member[8]->collectedCount(),
+            'collector did not return expected false value');
     }
 
     /**
