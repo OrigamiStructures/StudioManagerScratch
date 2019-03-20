@@ -96,15 +96,6 @@ class StackSetTest extends TestCase {
 	}
 
 	/**
-	 * Test insert method
-	 *
-	 * @return void
-	 */
-//	public function testInsert() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-
-	/**
 	 * Test find method
 	 *
 	 * @return void
@@ -117,72 +108,16 @@ class StackSetTest extends TestCase {
             'The access object created by find() did not contain the expected data');
 	}
 
-//	/**
-//	 * Test members method
-//	 *
-//	 * @return void
-//	 */
-//	public function testMembers() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test element method
-//	 *
-//	 * @return void
-//	 */
-//	public function testElement() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test member method
-//	 *
-//	 * @return void
-//	 */
-//	public function testMember() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test count method
-//	 *
-//	 * @return void
-//	 */
-//	public function testCount() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test isMember method
-//	 *
-//	 * @return void
-//	 */
-//	public function testIsMember() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test ownerOf method
-//	 *
-//	 * @return void
-//	 */
-//	public function testOwnerOf() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test IDs method
-//	 *
-//	 * @return void
-//	 */
-//	public function testIDs() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATON">
 
 // <editor-fold defaultstate="collapsed" desc="Load method tests">
+    
+    public function testLoadDirectlyOnStackSet() {
+        $this->assertTrue(is_array($this->StackEntities->load()),
+            'load() did not return an array as expected');
+        $this->assertArrayHasKey(4, $this->StackEntities->load(), 
+            'load() didn\'t have an expected key (an item ID)');
+    }
 
     public function testLoadIndexItemFromLayer() {
         
@@ -239,11 +174,7 @@ class StackSetTest extends TestCase {
         
     }
     /**
-     * Test load method
-     * 
-     * These all pass through to Layer and that class tests edge cases.
-     * So all I need here is verification of the proper passthrough 
-     * of all the variants
+     * Test load first of a layer from each stack method
      *
      * @return void
      */
@@ -261,7 +192,6 @@ class StackSetTest extends TestCase {
             ->setLimit(1)
             ->setLayer('formats')
             ->load();
-        pr($format);
         $this->assertEquals(2, count($format),
 				'loading using [\'first\'] did not return one entity');
     }
