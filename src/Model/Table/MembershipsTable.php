@@ -54,9 +54,10 @@ class MembershipsTable extends Table {
 		$result = $query
 			->contain(['GroupIdentities'])
 			->mapReduce($this->hookMapper(), $this->dummyReducer())
-            ->toArray()
+//            ->toArray()
 			;
-		return $result['groupIdentities'];
+//		return $result['groupIdentities'];
+		return $result;
 	}
 	
 	protected function hookMapper() {

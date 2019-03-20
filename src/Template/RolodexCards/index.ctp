@@ -4,7 +4,7 @@
 $search = ($rolodexCards->accessArgs()->setLayer('identity'));
 foreach($rolodexCards->all() as $id => $card) {
 	osd($card);die;
-	osd($card->memberships()));die;
+	osd($card->memberships());die;
 //	$card->find('all')
 //			->layer('memberships')
 //			->filter('sourceValue', 'filterValue', 'condition')

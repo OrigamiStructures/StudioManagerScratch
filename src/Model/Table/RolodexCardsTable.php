@@ -140,7 +140,7 @@ class RolodexCardsTable extends StacksTable {
 	
 	protected function marshalData_owner($id, $stack) {
 		if ($stack->count('identity')) {
-			$dataOwner = $this->_associations->get('DataOwner')
+			$dataOwner = $this->_associations->get('DataOwners')
 					->find('hook')
 					->where(['id' => $stack->identity->element(0)->user_id]);
 			$stack->set(['$dataOwner' => $dataOwner->toArray()]);
@@ -159,6 +159,7 @@ class RolodexCardsTable extends StacksTable {
 			if(!empty($memberships)) {
 				//remove residue from the mapper-reducer
 				$memberships = $memberships['groupIdentities'];
+//				$memberships = $memberships;
 			}
 			$stack->set(['memberships' => $memberships]);
 		}
