@@ -43,7 +43,7 @@ class MembershipsTable extends Table {
 	 * The Group record is mostly discarded, its few needed data points 
 	 * being placed in the GroupIdentity (Member) entity (see the mapper 
 	 * function). The GroupIdentity entity will add access to this data 
-	 * in its extention of Member.
+	 * in its extension of Member.
 	 * 
 	 * @param Query $query
 	 * @param array $options
@@ -54,8 +54,9 @@ class MembershipsTable extends Table {
 		$result = $query
 			->contain(['GroupIdentities'])
 			->mapReduce($this->hookMapper(), $this->dummyReducer())
+            ->toArray()
 			;
-		return $result;
+		return $result['groupIdentities'];
 	}
 	
 	protected function hookMapper() {
