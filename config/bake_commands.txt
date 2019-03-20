@@ -43,6 +43,7 @@ vendor/bin/phpunit test tests/TestCase/Lib/SystemStateTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/MembershipsTableTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 # behaviors
