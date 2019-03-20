@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Model\Entity;
 
 use App\Model\Entity\StackEntity;
@@ -20,7 +14,7 @@ class RolodexCard extends StackEntity {
 
 
 	public function name() {
-		return $this->primaryEntity()->name();
+		return $this->identity->element(0)->name();
 	}
 	
 	public function isMember() {
@@ -29,7 +23,7 @@ class RolodexCard extends StackEntity {
 	
 	public function memberships() {
 		if ($this->isMember()) {
-			return $this->memberships;
+			return $this->memberships->all();
 		}
 		return [];
 	}
