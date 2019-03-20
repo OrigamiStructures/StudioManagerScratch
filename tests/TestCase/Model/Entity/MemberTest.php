@@ -215,7 +215,7 @@ class MemberTest extends TestCase
      */
     public function testFirstName()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('Don', $this->Member[0]->firstName());
     }
 
     /**
@@ -225,7 +225,7 @@ class MemberTest extends TestCase
      */
     public function testLastName()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('Drake', $this->Member[0]->lastName());
     }
 
     /**
@@ -235,6 +235,6 @@ class MemberTest extends TestCase
      */
     public function testType()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('Person', $this->Member[0]->type());
     }
 }
