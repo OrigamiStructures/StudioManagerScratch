@@ -50,7 +50,7 @@ class IdentityTest extends TestCase
         parent::tearDown();
     }
 
-/**
+    /**
      * Test firstName method
      *
      * @return void
