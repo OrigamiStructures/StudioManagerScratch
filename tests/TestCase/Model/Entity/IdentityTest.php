@@ -11,11 +11,20 @@ class IdentityTest extends TestCase
 {
 
     /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.members',
+    ];
+    /**
      * Test subject
      *
-     * @var \App\Model\Entity\Identity
+     * @var \App\Model\Entity\Member
      */
     public $Identity;
+    public $Identities;
 
     /**
      * setUp method
@@ -25,7 +34,8 @@ class IdentityTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Identity = new Identity();
+        $this->Identities = $this->getTableLocator()->get('Members');
+        $this->Identity = $this->Identities->find('all')->toArray();
     }
 
     /**
@@ -35,18 +45,41 @@ class IdentityTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Identity);
+        unset($this->Identity, $this->Identities);
 
         parent::tearDown();
     }
 
-    /**
-     * Test initial setup
+/**
+     * Test firstName method
      *
      * @return void
      */
-    public function testInitialization()
+    public function testFirstNamePassthrough()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('Don', $this->Identity[0]->firstName(),
+            'A Passthrough method (firstName) into Members etity failed.');
+    }
+
+    /**
+     * Test lastName method
+     *
+     * @return void
+     */
+    public function testLastNamePassthrough()
+    {
+        $this->assertEquals('Drake', $this->Identity[0]->lastName(),
+            'A Passthrough method (lastName) into Members etity failed.');
+    }
+
+    /**
+     * Test type method
+     *
+     * @return void
+     */
+    public function testTypePassthrough()
+    {
+        $this->assertEquals('Person', $this->Identity[0]->type(),
+            'A Passthrough method (type) into Members etity failed.');
     }
 }
