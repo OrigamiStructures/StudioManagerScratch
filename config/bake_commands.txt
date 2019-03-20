@@ -72,6 +72,8 @@ vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
 --------------------------------------------------------------------
 bin/cake bake fixture --records --count 77 Addresses //puts real address data in test files
 bin/cake bake fixture --records --count 19 Artworks
+bin/cake bake fixture --records --count 9 Members //there were some minor edits after bake
+bin/cake bake fixture --records --conditions 'member_id IN (3,4,5,6)' Groups // didn't work
 
 ### One complete artwork stack set
 --------------------------------------------------------------------
