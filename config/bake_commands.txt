@@ -58,8 +58,8 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/MemberTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
-Stack/Layer suite
---------------------------------------------------------------------
+# Stack/Layer suite
+# --------------------------------------------------------------------
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
