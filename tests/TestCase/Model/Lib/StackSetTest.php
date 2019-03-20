@@ -184,16 +184,32 @@ class StackSetTest extends TestCase {
 
 // <editor-fold defaultstate="collapsed" desc="Load method tests">
 
-    /**
-     * Test load method
-     * 
-     * These all pass through to Layer and that class tests edge cases.
-     * So all I need here is verification of the proper passthrough 
-     * of all the variants
-     *
-     * @return void
-     */
-    public function testLoad() {
+    public function testLoadIndexItemFromLayerNew() {
+        
+        $formats = $this->StackEntities->find()
+            ->setLayer('formats')
+            ->setIdIndex(5)
+            ->load();
+        
+//		var_dump($formats);
+        $format = array_shift($formats);
+//		var_dump($format);
+        $this->assertEquals('Watercolor 6 x 15"', $format->description,
+				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
+				. 'did not return an entity with an expected property value.');
+
+        $formats = $this->StackEntities->find()
+            ->setLayer('formats')
+            ->setIdIndex(8)
+            ->load();
+        
+        $format = array_shift($formats);
+        $this->assertStringStartsWith('Digital output', $format->description,
+				'loading a valid format by array value ...->load(\'formats\', 8)... '
+				. 'did not return an entity with an expected property value.');
+    }
+
+    public function testLoadIndexItemFromLayerOld() {
 		$format_index_5_arg = $this->StackEntities->accessArgs()
 				->setLayer('formats')
 				->setIdIndex(5);
@@ -213,6 +229,18 @@ class StackSetTest extends TestCase {
         $this->assertStringStartsWith('Digital output', $format->description,
 				'loading a valid format by array value ...->load(\'formats\', 8)... '
 				. 'did not return an entity with an expected property value.');
+    }
+
+    /**
+     * Test load method
+     * 
+     * These all pass through to Layer and that class tests edge cases.
+     * So all I need here is verification of the proper passthrough 
+     * of all the variants
+     *
+     * @return void
+     */
+    public function testLoad() {
 
 		$argObj = $this->StackEntities->accessArgs()
 				->setLayer('pieces')
