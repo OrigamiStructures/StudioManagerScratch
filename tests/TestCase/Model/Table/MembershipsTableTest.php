@@ -1,15 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\GroupsTable;
+use App\Model\Table\MembershipsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\GroupsTable Test Case
+ * App\Model\Table\MembershipsTable Test Case
  */
-class GroupsTableTest extends TestCase
+class MembershipsTableTest extends TestCase
 {
+
+    /**
+     * Test subject
+     *
+     * @var \App\Model\Table\MembershipsTable
+     */
+    public $Memberships;
 
     /**
      * Fixtures
@@ -19,7 +26,7 @@ class GroupsTableTest extends TestCase
     public $fixtures = [
         'app.groups',
         'app.members',
-        'app.groups_members'
+//        'app.group_members'
     ];
 
     /**
@@ -30,9 +37,8 @@ class GroupsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Groups') ? [] : ['className' => 'App\Model\Table\GroupsTable'];
-        $this->Groups = TableRegistry::get('Groups', $config);
-        
+        $config = TableRegistry::getTableLocator()->exists('Memberships') ? [] : ['className' => MembershipsTable::class];
+        $this->Memberships = TableRegistry::getTableLocator()->get('Memberships', $config);
     }
 
     /**
@@ -42,7 +48,7 @@ class GroupsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Groups);
+        unset($this->Memberships);
 
         parent::tearDown();
     }
@@ -58,21 +64,21 @@ class GroupsTableTest extends TestCase
     }
 
     /**
-     * Test validationDefault method
+     * Test initializeAssociations method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testInitializeAssociations()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test buildRules method
+     * Test findHook method
      *
      * @return void
      */
-    public function testBuildRules()
+    public function testFindHook()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
