@@ -86,6 +86,22 @@ class LayerTest extends TestCase
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
     }
     
+
+	/**
+	 * Test find method
+	 *
+	 * @return void
+	 */
+	public function testFind() {
+        $layer = new Layer([], 'edition');
+        $arg =  $layer->find();      
+        
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
+            'find() did not create a LayerAccessArgs object');
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Lib\Layer'),
+            'The access object created by find() did not contain the expected data');
+	}
+
     /**
      * One of the two args must give a way to identify the layer type
      * 
