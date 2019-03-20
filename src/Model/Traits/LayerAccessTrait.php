@@ -13,8 +13,13 @@ use App\Model\Lib\ValueSource;
 trait LayerAccessTrait {
 	
 	public function accessArgs() {
-		return new LayerAccessArgs();
+        return new LayerAccessArgs();
 	}
+    
+    public function find() {
+        $args = new LayerAccessArgs($this);
+        return $args;
+    }
 		
 	public function layer(array $entities) {
 		return new Layer($entities);

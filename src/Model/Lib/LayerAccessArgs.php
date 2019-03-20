@@ -46,6 +46,8 @@ class LayerAccessArgs {
 	
 use ErrorRegistryTrait;
 
+protected $data;
+
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 	
 	/**
@@ -111,9 +113,16 @@ use ErrorRegistryTrait;
 
 // </editor-fold>
 
-	public function __construct() {
+	public function __construct($data = FALSE) {
+        if($data) {
+            $this->data = $data;
+        }
 		return $this;
 	}
+    
+    public function data() {
+        return $this->data;
+    }
 	
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
