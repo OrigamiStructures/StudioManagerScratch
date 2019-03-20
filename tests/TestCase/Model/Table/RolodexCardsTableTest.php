@@ -65,13 +65,14 @@ class RolodexCardsTableTest extends TestCase
 //        $this->RolodexCards->initialize();
         $this->assertTrue(is_a($this->RolodexCards->Identities, 'App\Model\Table\IdentitiesTable'),
             'Initialize() did not set up IdentitiesTable (alias for MembersTable).');
-        $this->assertTrue(is_a($this->RolodexCards->DataOwners, 'App\Model\Table\DataOwnersTable'),
-            'Initialize() did not set up DataOwnersTable (alias for UsersTable).');
-        $this->assertTrue(is_a($this->RolodexCards->Memberships, 'App\Model\Table\MembershipsTable'),
+        pr('Memberships: ' . $this->RolodexCards->Memberships);
+        $this->assertTrue(is_a($this->RolodexCards->Memberships, 'Cake\ORM\Association\BelongsTo'),
             'Initialize() did not set up MembershipsTable (alias for GroupsTable which '
             . 'creates the GroupIdentities layer).');
-        pr($this->RolodexCards->DataOwners);
-        pr($this->RolodexCards->Memberships);
+        pr('DataOwners: ' . $this->RolodexCards->DataOwners);
+        $this->assertTrue(is_a($this->RolodexCards->DataOwners, 'Cake\ORM\Association\BelongsTo'),
+            'Initialize() did not set up DataOwnersTable (alias for UsersTable).');
+        
     }
 
     /**
