@@ -156,11 +156,11 @@ class MemberTest extends TestCase
     public function testCollectedCount()
     {
         $this->assertEquals(1, $this->Member[0]->collectedCount(),
-            'collector did not return expected 1 value');
+            'collector did not return expected value 1');
         $this->assertEquals(0, $this->Member[2]->collectedCount(),
-            'collector did not return expected null value');
+            'collector null did not return expected value 0');
         $this->assertEquals(2, $this->Member[8]->collectedCount(),
-            'collector did not return expected false value');
+            'collector did not return expected value 2');
     }
 
     /**
@@ -170,7 +170,14 @@ class MemberTest extends TestCase
      */
     public function testIsDispositionParticipant()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals(TRUE, $this->Member[1]->isDispositionParticipant(),
+            'isDispositionParticipant did not return expected True for value 1');
+        $this->assertEquals(FALSE, $this->Member[2]->isDispositionParticipant(),
+            'isDispositionParticipant did not return expected False value null');
+        $this->assertEquals(FALSE, $this->Member[3]->isDispositionParticipant(),
+            'isDispositionParticipant did not return expected False value 0');
+        $this->assertEquals(TRUE, $this->Member[7]->isDispositionParticipant(),
+            'isDispositionParticipant did not return expected True value 4');
     }
 
     /**
@@ -180,7 +187,14 @@ class MemberTest extends TestCase
      */
     public function testDispositionCount()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals(1, $this->Member[1]->dispositionCount(),
+            'dispositionCount did not return expected value 1');
+        $this->assertEquals(0, $this->Member[2]->dispositionCount(),
+            'dispositionCount did not return expected value 0');
+        $this->assertEquals(0, $this->Member[3]->dispositionCount(),
+            'dispositionCount did not return expected value 0');
+        $this->assertEquals(4, $this->Member[7]->dispositionCount(),
+            'dispositionCount did not return expected value 4');
     }
 
     /**
@@ -190,7 +204,8 @@ class MemberTest extends TestCase
      */
     public function testIsActive()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Member[0]->isActive());
+        $this->assertFalse($this->Member[8]->isActive());
     }
 
     /**

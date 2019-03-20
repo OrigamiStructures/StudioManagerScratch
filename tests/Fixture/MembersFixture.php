@@ -159,7 +159,7 @@ class MembersFixture extends TestFixture
                 'first_name' => 'Rae',
                 'last_name' => 'Trujillo',
                 'member_type' => 'Person',
-                'active' => true,
+                'active' => false,
                 'disposition_count' => 2,
                 'collector' => 2
             ],

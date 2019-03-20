@@ -164,10 +164,7 @@ class Member extends Entity
 	}
 	
 	public function isActive() {
-		if($this->active === 1) {
-			return TRUE;
-		}
-		return FALSE;
+		return $this->active;
 	}
 	
 	public function firstName() {
