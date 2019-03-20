@@ -17,6 +17,7 @@ cd/Library/WebServer/Documents/StudioManagerScratch
 ====================================================================
 bin/cake bake.bake test table ArtStacks
 bin/cake bake.bake test --fixtures app.art_stacks,app.artworks,app.editions,app.formats,app.pieces,app.dispositions_pieces table ArtStacks
+bin/cake bake.bake test table RolodexCards
 
 ## BAKING ENTITY TESTS
 ====================================================================
@@ -43,6 +44,7 @@ vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/MembershipsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
