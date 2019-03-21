@@ -52,8 +52,8 @@ class RolodexCardsTable extends StacksTable {
         $this->belongsToMany(
 			'Memberships', 
 			['joinTable' => 'groups_members'])
-			->setTargetForeignKey('group_id')
 			->setForeignKey('member_id')
+			->setTargetForeignKey('group_id')
 			->setProperty('memberships')
 			->setFinder('hook')
 			;
@@ -132,14 +132,16 @@ class RolodexCardsTable extends StacksTable {
 	}
 	
 	protected function marshalIdentity($id, $stack) {
-			$identity = $this->Identities->find('all')->where(['id' => $id]);
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id]);
 			$stack->set(['identity' => $identity->toArray()]);
 			return $stack;
 	}
 	
 	protected function marshalData_owner($id, $stack) {
 		if ($stack->count('identity')) {
-			$dataOwner = $this->_associations->get('DataOwners')
+			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')
 					->where(['id' => $stack->identity->element(0)->user_id]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
@@ -158,8 +160,7 @@ class RolodexCardsTable extends StacksTable {
                 $accum[] = $entity->group_id;
                 return $accum;
             }, []);
-            
-            $stack = $this->addMemberships($IDs, $stack);
+            $memberships = $this->addMemberships($IDs, $stack);
 		}
 		return $stack;
 	}
@@ -170,17 +171,10 @@ class RolodexCardsTable extends StacksTable {
         } else {
             $memberships = $this->_associations->get('Memberships')
                 ->find('hook')
-                ->where(['member_id IN' => $IDs])
+                ->where(['id IN' => $IDs])
                 ;
-
             $memberships = $memberships->toArray();
-            if(isset($memberships['groupIdentities'])) {
-                //remove residue from the mapper-reducer
-                $memberships = $memberships['groupIdentities'];
-                $stack->set(['memberships' => $memberships]);
-            } else {
-                $stack->set(['memberships' => []]);
-            }
+            $stack->set(['memberships' => $memberships]);
         }
         return $stack;
     }

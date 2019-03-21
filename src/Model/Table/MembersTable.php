@@ -86,18 +86,20 @@ class MembersTable extends AppTable
 			'foreignKey' => 'member_id',
 			'dependent' => TRUE,
 		]);
-        $this->belongsToMany('Groups', [
-            'className' => 'Groups',
+        $this->belongsToMany('Memberships', 
+			['joinTable' => 'groups_members',
             'foreignKey' => 'member_id',
-            'targetForeignKey' => 'group_id',
-            'joinTable' => 'groups_members'
-        ]);
-        $this->hasOne('ProxyGroups', [
-            'className' => 'ProxyGroups',
-            'foreignKey' => 'member_id',
-            'propertyName' => 'proxy_group',
-            'dependent' => TRUE
-        ]);
+            'targetForeignKey' => 'group_id',]);
+//        $this->belongsToMany('Groups', [
+//            'className' => 'Groups',
+//            'joinTable' => 'groups_members'
+//        ]);
+//        $this->hasOne('ProxyGroups', [
+//            'className' => 'ProxyGroups',
+//            'foreignKey' => 'member_id',
+//            'propertyName' => 'proxy_group',
+//            'dependent' => TRUE
+//        ]);
     }
 
 // </editor-fold>
