@@ -11,8 +11,11 @@ use App\Model\Lib\ValueSource;
  * @author dondrake
  */
 trait LayerAccessTrait {
-	
-	public function accessArgs() {
+    
+    protected $primary;
+
+
+    public function accessArgs() {
         return new LayerAccessArgs();
 	}
     
