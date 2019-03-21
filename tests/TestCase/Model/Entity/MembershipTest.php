@@ -31,9 +31,7 @@ class MembershipTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.groups',
         'app.members',
-//        'app.group_members'
     ];
 
     /**
@@ -44,9 +42,15 @@ class MembershipTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Memberships') ? [] : ['className' => MembershipsTable::class];
-        $this->Memberships = TableRegistry::getTableLocator()->get('Memberships', $config);
-        $this->Membership = $this->Memberships->find('hook');
+        $config = TableRegistry::getTableLocator()
+            ->exists('Memberships') ? [] : ['className' => MembershipsTable::class];
+        $this->Memberships = TableRegistry::getTableLocator()
+            ->get('Memberships', $config);
+        $this->Membership = $this
+            ->Memberships
+            ->find('hook')
+//            ->where(['type IN' => ['Institution', 'Organization', 'Group']])
+            ->toArray();
     }
 
     /**
@@ -60,21 +64,6 @@ class MembershipTest extends TestCase
         unset($this->Membership);
 
         parent::tearDown();
-    }
-
-    /**
-     * Test groupId method
-     *
-     * @return void
-     */
-    public function testGroupId()
-    {
-        $this->assertEquals(1, $this->Membership[0]->groupId(),
-            'No group id or the wrong id was migrated from the '
-            . 'group record onto the groupIdentity record');
-        $this->assertEquals(4, $this->Membership[3]->groupId(),
-            'No group id or the wrong id was migrated from the '
-            . 'group record onto the groupIdentity record');
     }
 
     /**
@@ -96,7 +85,8 @@ class MembershipTest extends TestCase
      */
     public function testFirstNamePassthrough()
     {
-        $this->assertEquals('', $this->Membership[0]->firstName(),
+//        pr($this->Membership);
+        $this->assertEquals('', $this->Membership[2]->firstName(),
             'A Passthrough method (firstName) into Members etity failed.');
     }
 
@@ -107,7 +97,7 @@ class MembershipTest extends TestCase
      */
     public function testLastNamePassthrough()
     {
-        $this->assertEquals('Drake Family', $this->Membership[0]->lastName(),
+        $this->assertEquals('Drake Family', $this->Membership[2]->lastName(),
             'A Passthrough method (lastName) into Members etity failed.');
     }
 
@@ -118,7 +108,7 @@ class MembershipTest extends TestCase
      */
     public function testTypePassthrough()
     {
-        $this->assertEquals('Group', $this->Membership[0]->type(),
+        $this->assertEquals('Group', $this->Membership[6]->type(),
             'A Passthrough method (type) into Members etity failed.');
     }
 }
