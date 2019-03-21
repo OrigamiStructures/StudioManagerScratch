@@ -83,10 +83,6 @@ class Layer implements LayerAccessInterface {
             
         }
     }
-    
-    public function all() {
-        return $this->_data;
-    }
 	
     /**
      * Does the set contain an entity with ID = $id
