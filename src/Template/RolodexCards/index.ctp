@@ -3,9 +3,9 @@
 //osd($rolodexCards);
 $search = ($rolodexCards->accessArgs()->setLayer('identity'));
 foreach($rolodexCards->all() as $id => $card) {
-	osd($card, $card->name());//die;
+//	osd($card);//die;
 //	osd($card->name());//die;
-//	osd($card->memberships());//die;
+//	osd($card->memberships);die;
 //	$card->find('all')
 //			->layer('memberships')
 //			->filter('sourceValue', 'filterValue', 'condition')
@@ -19,10 +19,12 @@ foreach($rolodexCards->all() as $id => $card) {
 			
 //	osd($card->distinct('memberships', 'name'));
 //	osd($card->primaryEntity());
-//	echo "<h1>{$card->name()}</h1>";
-//	if ($card->hasMemberships()) {
-//		collection($card->memberships->distinct())->map(function($entity){
-//			echo '<p>' . $membership->name() . '</p>';
-//		});
-//	}
+	echo "<h1>{$card->name()}</h1>";
+	if ($card->isMember()) {
+		$result = collection($card->memberships())->reduce(function($product, $entity){
+			$product .= '<p>' . $entity->name() . '</p>';
+            return $product;
+		},'');
+        echo $result;
+	}
 }
