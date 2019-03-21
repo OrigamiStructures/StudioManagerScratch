@@ -109,7 +109,6 @@ class RolodexCardsTable extends StacksTable {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = FALSE;
-//            $stack = Cache::read(cacheTools::key($id), cacheTools::config());
 			if (!$stack && !$this->stacks->isMember($id)) {
 				$stack = $this->marshalStack($id);
 			}
@@ -149,8 +148,6 @@ class RolodexCardsTable extends StacksTable {
 	}
 	
 	protected function marshalMemberships($id, $stack) {
-//		osd($this->_associations->get('Memberships'));die;
-//		osd($this->associations());die;
 		if ($stack->count('identity')) {
             $records = $this->GroupsMembers
                 ->find('all')
@@ -164,7 +161,6 @@ class RolodexCardsTable extends StacksTable {
             
             $stack = $this->addMemberships($IDs, $stack);
 		}
-//         osd($stack);
 		return $stack;
 	}
     
