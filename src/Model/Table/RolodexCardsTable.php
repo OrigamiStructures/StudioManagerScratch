@@ -16,10 +16,10 @@ use Cake\Cache\Cache;
  */
 class RolodexCardsTable extends StacksTable {
 
-    protected $layerTables = ['Identities'];
+    protected $layerTables = ['Identities', 'GroupsMembers'];
 
 	protected $stackSchema = 	[
-			['name' => 'identity',		'specs' => ['type' => 'layer']],
+            ['name' => 'identity',		'specs' => ['type' => 'layer']],
             ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
             ['name' => 'memberships',	'specs' => ['type' => 'layer']],
         ];
@@ -143,7 +143,7 @@ class RolodexCardsTable extends StacksTable {
 			$dataOwner = $this->_associations->get('DataOwners')
 					->find('hook')
 					->where(['id' => $stack->identity->element(0)->user_id]);
-			$stack->set(['$dataOwner' => $dataOwner->toArray()]);
+			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
 	}
@@ -152,18 +152,41 @@ class RolodexCardsTable extends StacksTable {
 //		osd($this->_associations->get('Memberships'));die;
 //		osd($this->associations());die;
 		if ($stack->count('identity')) {
-			$memberships = $this->_associations->get('Memberships')
-					->find('hook')
-					->where(['member_id' => $id])
-					->toArray();
-			if(!empty($memberships)) {
-				//remove residue from the mapper-reducer
-				$memberships = $memberships['groupIdentities'];
-//				$memberships = $memberships;
-			}
-			$stack->set(['memberships' => $memberships]);
+            $records = $this->GroupsMembers
+                ->find('all')
+                ->where(['member_id' => $id])
+                ->toArray();
+            $joins = collection($records);
+            $IDs = $joins->reduce(function($accum, $entity, $index){
+                $accum[] = $entity->group_id;
+                return $accum;
+            }, []);
+            
+            $stack = $this->addMemberships($IDs, $stack);
 		}
+//         osd($stack);
 		return $stack;
 	}
+    
+    private function addMemberships($IDs, $stack) {
+        if(empty($IDs)) {
+            $stack->set(['memberships' => []]);
+        } else {
+            $memberships = $this->_associations->get('Memberships')
+                ->find('hook')
+                ->where(['member_id IN' => $IDs])
+                ;
+
+            $memberships = $memberships->toArray();
+            if(isset($memberships['groupIdentities'])) {
+                //remove residue from the mapper-reducer
+                $memberships = $memberships['groupIdentities'];
+                $stack->set(['memberships' => $memberships]);
+            } else {
+                $stack->set(['memberships' => []]);
+            }
+        }
+        return $stack;
+    }
 
 }
