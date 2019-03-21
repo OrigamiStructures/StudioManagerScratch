@@ -23,17 +23,17 @@ class MembershipsTable extends Table {
 
 	public function initialize(array $config) {
 		$this->setTable('members');
-//		$this->initializeAssociations();
+		$this->initializeAssociations();
 		parent::initialize($config);
 	}
 
-	protected function _initializeAssociations() {
+	public function initializeAssociations() {
         $this->belongsToMany(
 			'RolodexCards', 
 			['joinTable' => 'groups_members'])
 			->setForeignKey('group_id')
 			->setTargetForeignKey('member_id')
-//			->setProperty('members')
+			->setProperty('members')
 			;
 	}
 
