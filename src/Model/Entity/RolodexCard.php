@@ -12,7 +12,6 @@ class RolodexCard extends StackEntity {
 	
 	protected $_primary = 'identity';
 
-
 	public function name() {
 		return $this->identity->element(0)->name();
 	}
@@ -23,7 +22,7 @@ class RolodexCard extends StackEntity {
 	
 	public function memberships() {
 		if ($this->isMember()) {
-			return $this->memberships->all();
+			return $this->memberships->load();
 		}
 		return [];
 	}
