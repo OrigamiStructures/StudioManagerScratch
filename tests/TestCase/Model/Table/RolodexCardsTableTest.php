@@ -26,6 +26,7 @@ class RolodexCardsTableTest extends TestCase
     public $fixtures = [
         'app.members',
         'app.users',
+        'app.groups_members',
     ];
 
     /**
