@@ -496,27 +496,35 @@ class LayerTest extends TestCase
             ->loadDistinct();
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct,
-            'distinct on a valid property did not return expected values');
+            'distinct on a valid property did not return expected values '
+            . 'when using an argObj');
         
         $distinct = $layer->find()
             ->setValueSource('format_id')
             ->loadDistinct();
         $this->assertEquals([36], $distinct,
-            'distinct on a valid property did not return expected values');
+            'distinct on a valid property did not return expected values '
+            . 'when using an argObj');
     }
     
-//    public function testDistinctWithBadProperyArgObj() {
-//        $layer = new Layer($this->fivePieces);
-//        $distinct = $layer->distinct('wrong');
-//        $this->assertEmpty($distinct, 'Distinct on a non-existent '
-//            . 'property/method value source did not return an empty array');
-//    }
-//    
-//    public function testDistinctWithMethodCallArgObj() {
-//        $layer = new Layer($this->fivePieces);
-//        $distinct = $layer->distinct('key');
-//        $this->assertArraySubset(['35_36'], $distinct,
-//            'Distinct call on a method source didn\'t return expected value');
-//    }
+    public function testDistinctWithBadProperyArgObj() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->find()
+            ->setValueSource('wrong')
+            ->loadDistinct();
+        $this->assertEmpty($distinct, 'Distinct on a non-existent '
+            . 'property/method value source did not return an empty array '
+            . 'when using an argObj');
+    }
+    
+    public function testDistinctWithMethodCallArgObj() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->find()
+            ->setValueSource('key')
+            ->loadDistinct();
+        $this->assertArraySubset(['35_36'], $distinct,
+            'Distinct call on a method source didn\'t return expected value '
+            . 'when using an argObj');
+    }
     
 }
