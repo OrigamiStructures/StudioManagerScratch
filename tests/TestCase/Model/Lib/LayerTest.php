@@ -464,20 +464,59 @@ class LayerTest extends TestCase
         $this->assertTrue($first < $middle && $middle < $last);
     }
     
-    public function testDistinctWithValidProperty() {
+    public function testDistinctWithValidPropertyManual() {
         $layer = new Layer($this->fivePieces);
         
         $distinct = $layer->distinct('number');
         sort($distinct);
-        $this->assertEquals([1,2,3,4,5], $distinct);
-        $this->assertEquals([36], $layer->distinct('format_id'));
+        $this->assertEquals([1,2,3,4,5], $distinct,
+            'distinct on a valid property did not return expected values');
+        $this->assertEquals([36], $layer->distinct('format_id'),
+            'distinct on a valid property did not return expected values');
     }
     
-    public function testDistinctWithBadPropery() {
+    public function testDistinctWithBadProperyManual() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->distinct('wrong');
-        $this->assertEmpty($distinct);
-        pr($distinct);
+        $this->assertEmpty($distinct, 'Distinct on a non-existent '
+            . 'property/method value source did not return an empty array');
     }
+    
+    public function testDistinctWithMethodCallManual() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->distinct('key');
+        $this->assertArraySubset(['35_36'], $distinct,
+            'Distinct call on a method source didn\'t return expected value');
+    }
+    
+    public function testDistinctWithValidPropertyArgObj() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->find()
+            ->setValueSource('number')
+            ->loadDistinct();
+        sort($distinct);
+        $this->assertEquals([1,2,3,4,5], $distinct,
+            'distinct on a valid property did not return expected values');
+        
+        $distinct = $layer->find()
+            ->setValueSource('format_id')
+            ->loadDistinct();
+        $this->assertEquals([36], $distinct,
+            'distinct on a valid property did not return expected values');
+    }
+    
+//    public function testDistinctWithBadProperyArgObj() {
+//        $layer = new Layer($this->fivePieces);
+//        $distinct = $layer->distinct('wrong');
+//        $this->assertEmpty($distinct, 'Distinct on a non-existent '
+//            . 'property/method value source did not return an empty array');
+//    }
+//    
+//    public function testDistinctWithMethodCallArgObj() {
+//        $layer = new Layer($this->fivePieces);
+//        $distinct = $layer->distinct('key');
+//        $this->assertArraySubset(['35_36'], $distinct,
+//            'Distinct call on a method source didn\'t return expected value');
+//    }
     
 }

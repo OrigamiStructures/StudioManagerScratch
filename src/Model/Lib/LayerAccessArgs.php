@@ -198,11 +198,13 @@ protected $data;
 				}
 				break;
 			case 'value':
+                  $this->evaluateLayer();
 				if (!$this->hasValueObject() && $this->hasLayer()) {
 					$this->buildValueObject();
 				}
 				break;
 			case 'key':
+                  $this->evaluateLayer();
 				if (!$this->hasKeyObject() && $this->hasLayer()) {
 					$this->buildKeyObject();
 				}
@@ -213,6 +215,12 @@ protected $data;
 				break;
 		}
 	}
+    
+    private function evaluateLayer() {
+        if (!$this->hasLayer() && is_a($this->data(), 'App\Model\Lib\Layer')) {
+            $this->setLayer($this->data()->layerName());
+        }
+    }
 	
 	private function buildKeyObject() {
 		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->valueOf('keySource'));
