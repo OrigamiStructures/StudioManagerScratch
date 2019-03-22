@@ -22,6 +22,7 @@ bin/cake bake.bake test table RolodexCards
 ## BAKING ENTITY TESTS
 ====================================================================
 bin/cake bake.bake test entity ArtStack
+bin/cake bake.bake test entity RolodexCard
 
 ## BAKING CUSTOM FOLDER TESTS
 ====================================================================
@@ -78,6 +79,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
