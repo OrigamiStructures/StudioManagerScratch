@@ -26,7 +26,6 @@ class RolodexCardsTableTest extends TestCase
     public $fixtures = [
         'app.members',
         'app.users',
-        'app.groups'
     ];
 
     /**
@@ -62,16 +61,31 @@ class RolodexCardsTableTest extends TestCase
      */
     public function testInitialize()
     {
-//        $this->RolodexCards->initialize();
-        $this->assertTrue(is_a($this->RolodexCards->Identities, 'App\Model\Table\IdentitiesTable'),
-            'Initialize() did not set up IdentitiesTable (alias for MembersTable).');
-        pr('Memberships: ' . $this->RolodexCards->Memberships);
-        $this->assertTrue(is_a($this->RolodexCards->Memberships, 'Cake\ORM\Association\BelongsTo'),
-            'Initialize() did not set up MembershipsTable (alias for GroupsTable which '
-            . 'creates the GroupIdentities layer).');
-        pr('DataOwners: ' . $this->RolodexCards->DataOwners);
-        $this->assertTrue(is_a($this->RolodexCards->DataOwners, 'Cake\ORM\Association\BelongsTo'),
-            'Initialize() did not set up DataOwnersTable (alias for UsersTable).');
+        
+        $this->assertTrue(
+            is_a(
+                $this->RolodexCards->Identities, 
+                'App\Model\Table\IdentitiesTable'),
+            
+            'Initialize() did not set up IdentitiesTable (alias for MembersTable).'
+        );
+
+        $this->assertTrue(
+            is_a(
+                $this->RolodexCards->associations()->get('Memberships'), 
+                'Cake\ORM\Association\BelongsToMany'),
+            
+            'Initialize() did not set up MembershipsTable (alias for '
+            . 'MembersTable which creates the Memberships layer).'
+        );
+
+        $this->assertTrue(
+            is_a(
+                $this->RolodexCards->associations()->get('DataOwners'), 
+                'Cake\ORM\Association\BelongsTo'),
+            
+            'Initialize() did not set up DataOwnersTable (alias for UsersTable).'
+        );
         
     }
 
@@ -80,8 +94,22 @@ class RolodexCardsTableTest extends TestCase
      *
      * @return void
      */
-    public function testFindRolodexCards()
+    public function testFindRolodexCardsBasicStructure()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $targets = ['layer' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        
+        $this->assertTrue(
+            is_a($cards, 'App\Model\Lib\StackSet'),
+            'The found cards did not come packaged in a StackSet.'
+        );
+        
+        $card = $cards->member(2);
+        
+        $this->assertTrue(
+            is_a($card, 'App\Model\Entity\RolodexCard'),
+            'The StackSet does not contain RolodexCard instances.'
+        );
+        pr($cards);
     }
 }
