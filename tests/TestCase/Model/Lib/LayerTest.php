@@ -153,6 +153,18 @@ class LayerTest extends TestCase
         $this->expectExceptionMessageRegExp('/expects to find \$entity->id/');
         $layer = new Layer([$art], null);
     }
+    
+    public function testMembersFromTheTrait() {
+        $layer = new Layer($this->fivePieces);
+        $this->assertCount(5, $layer->members(),
+            'members() did not return an array of the expected size');
+    }
+    
+    public function testMemberFromTheTrait() {
+        $layer = new Layer($this->fivePieces);
+        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->member(962),
+            'member(x) did not return a piece entity');
+    }
         
     /**
      * test name property

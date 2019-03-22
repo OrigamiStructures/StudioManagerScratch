@@ -47,6 +47,22 @@ trait LayerAccessTrait {
 		return $result;
 	}
     
+	/**
+	 * Get the IDs of all the primary entities in the stored stack entities
+	 * 
+	 * @return array
+	 */
+	public function members() {
+		return array_keys($this->_data);
+	}
+	
+	public function member($id) {
+		if (in_array($id, $this->members())) {
+			return $this->_data[$id];
+		}
+		return null;
+	}
+    
 //	public function all($property);
 //	
 	public function loadDistinct($property, $layer = ''){

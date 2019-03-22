@@ -1,3 +1,4 @@
+
 <?php
 namespace App\Model\Lib;
 
@@ -11,9 +12,9 @@ use App\Model\Lib\LayerAccessArgs;
  * 
  * This is a collector class which holds sets of Entities that extend StackEntity
  * 
- * This class provides access to the stored entities and thier data 
+ * This class provides access to the stored entities and their data 
  * to make it easier to pull out stacks, layers, and merged collections of 
- * enties from multiple stack.
+ * entities from multiple stack.
  *
  * @author dondrake
  */
@@ -60,7 +61,7 @@ class StackSet implements LayerAccessInterface {
 	 * @param LayerAccessArgs $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	protected function load(LayerAccessArgs $argObj = null) {
 		
 		if (is_null($argObj)) {
 			return $this->_data;
@@ -80,22 +81,6 @@ class StackSet implements LayerAccessInterface {
 		
 	}
 	
-	/**
-	 * Get the IDs of all the primary entities in the stored stack entities
-	 * 
-	 * @return array
-	 */
-	public function members() {
-		return array_keys($this->_data);
-	}
-	
-	public function member($id) {
-		if (in_array($id, $this->members())) {
-			return $this->_data[$id];
-		}
-		return null;
-	}
-    
     /**
      * Get the count of stored Stack objects
      * 
