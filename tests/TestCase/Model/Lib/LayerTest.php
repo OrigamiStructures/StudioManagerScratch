@@ -348,7 +348,8 @@ class LayerTest extends TestCase
 		 * process needs to be tightened up. visibleProperties() need 
 		 * Entity::accessible to be set to something other than '*' ?
 		 */
-        $this->assertEquals(0, count($layer->load($first_badSearch_args)));        
+        $this->assertEquals(0, count($layer->load($first_badSearch_args)),
+            'Find first on a bad source pointer still found someting.');        
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
 				->setLimit(1)
@@ -463,18 +464,20 @@ class LayerTest extends TestCase
         $this->assertTrue($first < $middle && $middle < $last);
     }
     
-    public function testDistinct() {
+    public function testDistinctWithValidProperty() {
         $layer = new Layer($this->fivePieces);
         
         $distinct = $layer->distinct('number');
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct);
         $this->assertEquals([36], $layer->distinct('format_id'));
-        
-//        foreach ($this->fivePieces as $entity) {
-//            $this->assertContains($entity->id, $layer->IDs());
-//        }
-//        $this->markTestIncomplete('Not implemented yet.');
+    }
+    
+    public function testDistinctWithBadPropery() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->distinct('wrong');
+        $this->assertEmpty($distinct);
+        pr($distinct);
     }
     
 }

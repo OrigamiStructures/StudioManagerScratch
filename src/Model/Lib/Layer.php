@@ -397,7 +397,11 @@ class Layer implements LayerAccessInterface {
 //        osd($this->_entities[965]);;
         $set = new Collection($this->_data);
         $asKeys = $set->reduce(function ($accumulated, $entity) use ($ValueSource){
-                return $accumulated += [$ValueSource->value($entity) => True];
+            $value = $ValueSource->value($entity);
+                if (!empty($value)) {
+                    $accumulated += [$value => True];
+                }            
+                return $accumulated;
              }, []);
         return array_keys($asKeys);
     }
