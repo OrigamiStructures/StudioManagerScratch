@@ -165,6 +165,7 @@ class RolodexCardsTableTest extends TestCase
         $targets = ['layer' => 'identity', 'ids' => [2,3]];
         $cards = $this->RolodexCards->find('stackFrom', $targets);
 //        pr($cards);
+        //'008ab31c-124d-4e15-a4e1-45fccd7becac'
         
         $person = $cards->member(2);
         $group = $cards->member(3);
@@ -174,5 +175,22 @@ class RolodexCardsTableTest extends TestCase
         
         $this->assertEquals('Drake Family', $group->identity->element(0)->name(),
             'Not the group name expected');
+        
+        $this->assertEquals(
+            'f22f9b46-345f-4c6f-9637-060ceacb21b2', 
+            $person->data_owner->element(0)->id(),
+            'Not the owner expected');
+        
+        $this->assertEquals(
+            'f22f9b46-345f-4c6f-9637-060ceacb21b2', 
+            $group->data_owner->element(0)->id(),
+            'Not the owner expected');
+        
+        $this->assertEquals('Drake Family', $person->memberships->element(0)->name(),
+            'Not the membership name expected');
+        
+        $this->assertEquals('Wonderland Group', $person->memberships->element(1)->name(),
+            'Not the membership name expected');
+        
     }
 }
