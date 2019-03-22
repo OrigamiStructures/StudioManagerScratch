@@ -105,7 +105,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param LayerAccessArgs $argObj
 	 * @return array
 	 */
-	protected function load(LayerAccessArgs $argObj = null) {
+	public function load(LayerAccessArgs $argObj = null) {
 		
 		if (is_null($argObj)) {
 			return [$this->primaryId() => $this];

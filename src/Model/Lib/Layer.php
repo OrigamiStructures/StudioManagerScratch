@@ -183,7 +183,7 @@ class Layer implements LayerAccessInterface {
 	 * @param LayerAccessArgs $argObj
 	 * @return array
 	 */
-	protected function load(LayerAccessArgs $argObj = null) {
+	public function load(LayerAccessArgs $argObj = null) {
 		if(is_null($argObj)) {
 			return $this->_data;
 		}
