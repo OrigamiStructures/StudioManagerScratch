@@ -129,6 +129,10 @@ protected $data;
         return $this->data()->load($this);
     }
     
+    public function loadDistinct() {
+        return $this->data()->loadDistinct($this);
+    }
+    
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
 	public function setLayer($param) {

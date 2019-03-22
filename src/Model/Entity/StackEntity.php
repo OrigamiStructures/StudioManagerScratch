@@ -158,11 +158,28 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	}
 
 	public function distinct($property, $layer = '') {
-		if($this->has($layer)) {
-			return $this->$layer->distinct($property);
+        $args = $this->normalizeDistinctArgs($property, $layer);
+		if($args->hasLayer()) {
+			return $this->$layer->distinct($args);
 		}
 		return [];
 	}
+    
+    private function normalizeDistinctArgs($property, $layer) {
+        if (is_string($property)) {
+            if(empty($layer)) {
+                throw new BadMethodCallException(
+                    'a layer must be specified for distinct() on a StackEntity');
+            } else {
+                $args = $this->accessArgs()
+                    ->setLayer($layer)
+                    ->setValueSource($property);
+            }
+        } else {
+            $args = $property;
+        }
+        return $args;
+    }
 	
     /**
      * Adds Layer property empty checks to other native checks

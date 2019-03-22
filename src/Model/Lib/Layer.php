@@ -390,15 +390,27 @@ class Layer implements LayerAccessInterface {
     }
     
 	public function distinct($property, $layer = '') {
-        if (!$this->has($property)) {
-            return [];
-        }
+        $ValueSource = $this->normalizeDistinctArgs($property);
+//        if (!$this->has($property)) {
+//            return [];
+//        }
 //        osd($this->_entities[965]);;
         $set = new Collection($this->_data);
-        $asKeys = $set->reduce(function ($accumulated, $entity) use ($property){
-                return $accumulated += [$entity->$property => True];
+        $asKeys = $set->reduce(function ($accumulated, $entity) use ($ValueSource){
+                return $accumulated += [$ValueSource->value($entity) => True];
              }, []);
         return array_keys($asKeys);
+    }
+    
+    private function normalizeDistinctArgs($property) {
+        if (is_string($property)) {
+            $arg = $this->accessArgs()
+                ->setLayer($this->layerName())
+                ->setValueSource($property);
+        } else {
+            $arg = $property;
+        }
+        return $arg->ValueSource;
     }
 	
     /**

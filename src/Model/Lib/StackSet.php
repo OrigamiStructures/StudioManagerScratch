@@ -152,16 +152,41 @@ class StackSet implements LayerAccessInterface {
 		
 	}
 
+    /**
+     * Get a list of all unique values for a data-node on all members of a layer
+     * 
+     * Since this is a set, many versions of Layer will be scanned
+     * 
+     * @param mixed $property an ArgObj (value-source, layer) or string
+     * @param string $layer
+     * @return array Contains unique values of property across all stored layers
+     */
 	public function distinct($property, $layer = '') {
+        $args = $this->normalizeDistinctArguemnts($property, $layer);
 		$accumulation = [];
-//		if($layer !== '') {
 			foreach($this->_data as $stackEntity) {
-				$result = $stackEntity->distinct($property, $layer);
+				$result = $stackEntity->distinct($args, $layer);
 				$accumulation = array_merge($accumulation, $result);
 			}
 //		}
 		return array_unique($accumulation);
 	}
+    
+    private function normalizeDistinctArguemnts($property, $layer) {
+        if (is_string($property)) {
+            if(empty($layer)) {
+                throw new BadMethodCallException(
+                    'a layer must be specified for distinct() on a StackSet');
+            } else {
+                $args = $this->accessArgs()
+                    ->setLayer($layer)
+                    ->setValueSource($property);
+            }
+        } else {
+            $args = $property;
+        }
+        return $args;
+    }
 
 	public function filter($property, $value) {
 		

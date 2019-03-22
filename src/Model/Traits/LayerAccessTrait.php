@@ -65,8 +65,8 @@ trait LayerAccessTrait {
     
 //	public function all($property);
 //	
-	public function loadDistinct($property, $layer = ''){
-		
+	public function loadDistinct($argObj){
+		return $this->distinct($argObj);
 	}
 	
 	/**
