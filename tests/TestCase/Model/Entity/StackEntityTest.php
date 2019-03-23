@@ -245,7 +245,7 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testDistinct() {
-        pr($this->StackEntity->find()->setLayer('pieces')->load());
+//        pr($this->StackEntity->find()->setLayer('pieces')->load());
         $this->assertEquals([5, 8], $this->StackEntity->distinct('edition_id', 'pieces'),
 				'A valid layer and property did not return the expected values');
         $this->assertEmpty($this->StackEntity->distinct('edition_id', 'badLayer'),
