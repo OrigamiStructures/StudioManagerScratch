@@ -227,11 +227,22 @@ class StackSetTest extends TestCase {
 				'Distinct did not return the expected set of edition types '
 				. 'from a set of stack entities');
 		
-		$this->assertEmpty($this->StackEntities->distinct('type', 'badLayer'),
-				'Distinct did not return an empty array when passed a bad layer');
-		
-		$this->assertEmpty($this->StackEntities->distinct('garbage', 'editions'),
-				'Distinct did not return an empty array when passed a bad property');
+//		$this->assertEmpty($this->StackEntities->distinct('type', 'badLayer'),
+//				'Distinct did not return an empty array when passed a bad layer');
+//		
+//		$this->assertEmpty($this->StackEntities->distinct('garbage', 'editions'),
+//				'Distinct did not return an empty array when passed a bad property');
+	}
+
+	public function testDistinctArgObj() {
+		$this->assertEquals(["Unique","Open Edition","Limited Edition"], 
+			$this->StackEntities
+				->find()
+				->setLayer('editions')
+				->setValueSource('type')
+				->loadDistinct(),
+			'Distinct did not return the expected set of edition types '
+			. 'from a set of stack entities');
 	}
 
 //	/**
