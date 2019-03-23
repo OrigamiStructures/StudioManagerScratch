@@ -58,6 +58,10 @@ class StackEntity extends Entity implements LayerAccessInterface {
     public function hasNo($layer) {
         return $this->count($layer) === 0;
     }
+    
+    public function hasLayer($layer) {
+        return $this->count($layer) > 0;
+    }
 	
 	/**
 	 * Get the name of the primary layer in the stack
@@ -159,7 +163,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 
 	public function distinct($property, $layer = '') {
         $args = $this->normalizeDistinctArgs($property, $layer);
-		if($args->hasLayer()) {
+		if($args->ValueSource->isValid() && $this->hasLayer($args->valueOf('_value_source'))) {
 			return $this->$layer->distinct($args);
 		}
 		return [];
