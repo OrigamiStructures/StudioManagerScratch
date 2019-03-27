@@ -112,29 +112,58 @@ trait LayerAccessTrait {
 	/**
 	 * Reduce an array of entities to a value array
 	 * 
-	 * @param array $data Contains entities of type registered in the Source object
-	 * @param ValueSource $valueSource
+	 * The values may be from a property or from a method on the 
+	 * entity. If from a method, that method can have no arguemnts. 
+	 * 
+	 * @param array $data Array of entities
+	 * @param string|ValueSource $node Name (or object defining) a property or method
+	 * @return array Array containing the unique values found
 	 */
-	public function valueList($data, ValueSource $valueSource) {
-		$collection = collection($data);
-		$collection->reduce(function($accum, $entity) use ($ValueSource){
-			$accum[] = $ValueSource->value($entity);
-			return $accum;
-		}, []);
+	public function valueList($data, $node) {
+		$ValueSource = $this->defineValueSource($data, $node);
+		if ($ValueSource) {
+			$result = (new Collection($data))
+					->reduce(function ($accumulated, $entity) use ($ValueSource){
+						array_push($accumulated, $ValueSource->value($entity));
+						return $accumulated;
+					}, []);
+		} else {
+			$result = [];
+		}
+		return $result;
 	}
 	
-//	public function validateSource($entity, $source) {
-//		return $entity->has($source) && method_exists($this->entityClass('namespaced'), $value_source) ;
-//	}
-//	
-//	public function value($entity, $source) {
-//		if(in_array($source, $entity->visibleProperties())) {
-//			$result = $entity->$source;
-//		} else {
-//			$result = $entity->$source();
-//		}
-//		return $result;
-//	}
+	/**
+	 * Get unique values from a set of entities
+	 * 
+	 * The values may be from a property or from a method on the 
+	 * entity. If from a method, that method can have no arguemnts. 
+	 * 
+	 * @param array $data Array of entities
+	 * @param string|ValueSource $node Name (or object defining) a property or method
+	 * @return array Array containing the unique values found
+	 */
+	public function distinct($data, $node) {
+		return array_unique($this->valueList($data, $node));
+	}
+	
+	/**
+	 * Create the ValueSource object for distinct()
+	 * 
+	 * @param array $data
+	 * @param mixed $node
+	 * @return boolean|ValueSource
+	 */
+	private function defineValueSource($data, $node) {
+		if (empty($data)) {
+			return FALSE;
+		}
+		if (is_a($node, 'App\Model\Lib\ValueSource')) {
+			return $node;
+		}
+		$entity = array_pop($data);
+		return new ValueSource($entity, $node);
+	}
 	
 	public function filter($argObj) {
 		
