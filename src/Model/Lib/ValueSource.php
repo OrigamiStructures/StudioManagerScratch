@@ -62,6 +62,27 @@ class ValueSource {
 	}
 	
 	/**
+	 * Report the name of the configured entity
+	 * 
+	 * @return string
+	 */
+	public function entityName() {
+		return lcfirst(namespaceSplit($this->_name));
+	}
+	
+	/**
+	 * Report the name of the node that will provide data
+	 * 
+	 * @return string
+	 */
+	public function sourceNode() {
+		if ($this->_isMethod) {
+			return "$this->_source()";
+		}
+		return $this->_source;
+	}
+	
+	/**
 	 * Can a value be returned from this object?
 	 * 
 	 * @return boolean
