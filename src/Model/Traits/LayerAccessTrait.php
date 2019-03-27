@@ -66,7 +66,7 @@ trait LayerAccessTrait {
 //	public function all($property);
 //	
 	public function loadDistinct($argObj){
-		return $this->distinct($argObj);
+//		return $this->distinct($argObj);
 	}
 	
 	/**
@@ -132,7 +132,7 @@ trait LayerAccessTrait {
 	public function valueList($data, $sourcePoint) {
 		$ValueSource = $this->defineValueSource($data, $sourcePoint);
 		if ($ValueSource) {
-			$result = (new Collection($data))
+			$result = collection($data)
 					->reduce(function ($harvest, $entity) use ($ValueSource){
 						array_push($harvest, $ValueSource->value($entity));
 						return $harvest;
@@ -153,7 +153,7 @@ trait LayerAccessTrait {
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
 	 * @return array Array containing the unique values found
 	 */
-	public function distinct($data, $sourcePoint) {
+	public function trait_distinct($data, $sourcePoint) {
 		return array_unique($this->valueList($data, $sourcePoint));
 	}
 	

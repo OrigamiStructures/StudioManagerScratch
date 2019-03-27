@@ -526,5 +526,67 @@ class LayerTest extends TestCase
             'Distinct call on a method source didn\'t return expected value '
             . 'when using an argObj');
     }
+	
+	// TRAIT TESTING
+	
+	// value list
+	public function testValueListOnEmptyArray() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->valueList([], 'key');
+		$this->assertEmpty($actual);
+	}
+		
+	public function testValueListFromMethod() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->valueList($this->pieceRecords, 'key');
+		$this->assertArraySubset([4=>'35_', 5=>'35_36'], $actual);
+	}
+	
+	public function testValueListFromProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->valueList($this->pieceRecords, 'format_id');
+		$this->assertArraySubset([4=>'', 5=>'36'], $actual);
+	}
+	
+	// distinct
+    public function testDistinctOnEmptyArray() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->trait_distinct([], 'key');
+		$this->assertEmpty($actual);
+	}
+		
+	public function testDistinctFromMethod() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->trait_distinct($this->pieceRecords, 'key');
+		$this->assertArraySubset([0 => '35_', 5 => '35_36', 15 => '35_37', 50 => '36_38'], $actual);
+	}
+	
+	public function testDistinctFromProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->trait_distinct($this->pieceRecords, 'format_id');
+		$this->assertArraySubset([0 => '', 5 => '36', 15 => '37', 50 => '38'], $actual);
+	}
+	
+	//key value list
+    public function testKeyValueOnEmptyArray() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->keyValueList([], 'key', 'key');
+		$this->assertEmpty($actual);
+	}
+		
+	public function testKeyValueFromMethodProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->keyValueList($this->pieceRecords, 'key', 'id');
+//		pr($actual);
+		$this->assertArraySubset(['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], $actual);
+	}
+	
+	public function testKeyValueFromProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->keyValueList($this->pieceRecords, 'format_id', 'id');
+//		pr($actual);
+		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
+	}
+	
     
 }
