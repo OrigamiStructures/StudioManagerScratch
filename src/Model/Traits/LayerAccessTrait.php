@@ -97,16 +97,26 @@ trait LayerAccessTrait {
 	/**
 	 * Reduce an array of entities to a key=>value array
 	 * 
-	 * @param array $data Contains entities of type registered in the Source objects
-	 * @param ValueSource $KeySource
-	 * @param ValueSource $ValueSource
+	 * The keys and values may be from properties or from methods on the 
+	 * entity. If from a method, that method can have no arguemnts. 
+	 * 
+	 * @param array $data Array of entities
+	 * @param string|KeySource $keySource Name of (or ValueSource defining) a property or method
+	 * @param string|ValueSource $valueSource Name of (or ValueSource defining) a property or method
 	 */
-	public function keyValueList($data, ValueSource $KeySource,	ValueSource$ValueSource) {
-		$collection = collection($data);
-		$collection->reduce(function($accum, $entity) use ($KeySource, $ValueSource){
-			$accum[$KeySource->value($entity)] = $ValueSource->value($entity);
-			return $accum;
-		}, []);
+	public function keyValueList($data, $keySource,	$valueSource) {
+		$KeySource = $this->defineValueSource($data, $keySource);
+		$ValueSource = $this->defineValueSource($data, $valueSource);
+		if($KeySource && $ValueSource) {
+			$result = collection($data)
+					->reduce(function($harvest, $entity) use ($KeySource, $ValueSource){
+						$harvest[$KeySource->value($entity)] = $ValueSource->value($entity);
+						return $harvest;
+					}, []);
+		} else {
+			$result = [];
+		}
+		return $result;
 	}
 	
 	/**
@@ -116,16 +126,16 @@ trait LayerAccessTrait {
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
 	 * @param array $data Array of entities
-	 * @param string|ValueSource $node Name (or object defining) a property or method
+	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
 	 * @return array Array containing the unique values found
 	 */
-	public function valueList($data, $node) {
-		$ValueSource = $this->defineValueSource($data, $node);
+	public function valueList($data, $sourcePoint) {
+		$ValueSource = $this->defineValueSource($data, $sourcePoint);
 		if ($ValueSource) {
 			$result = (new Collection($data))
-					->reduce(function ($accumulated, $entity) use ($ValueSource){
-						array_push($accumulated, $ValueSource->value($entity));
-						return $accumulated;
+					->reduce(function ($harvest, $entity) use ($ValueSource){
+						array_push($harvest, $ValueSource->value($entity));
+						return $harvest;
 					}, []);
 		} else {
 			$result = [];
@@ -140,29 +150,29 @@ trait LayerAccessTrait {
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
 	 * @param array $data Array of entities
-	 * @param string|ValueSource $node Name (or object defining) a property or method
+	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
 	 * @return array Array containing the unique values found
 	 */
-	public function distinct($data, $node) {
-		return array_unique($this->valueList($data, $node));
+	public function distinct($data, $sourcePoint) {
+		return array_unique($this->valueList($data, $sourcePoint));
 	}
 	
 	/**
 	 * Create the ValueSource object for distinct()
 	 * 
 	 * @param array $data
-	 * @param mixed $node
+	 * @param mixed $sourcePoint
 	 * @return boolean|ValueSource
 	 */
-	private function defineValueSource($data, $node) {
+	private function defineValueSource($data, $sourcePoint) {
 		if (empty($data)) {
 			return FALSE;
 		}
-		if (is_a($node, 'App\Model\Lib\ValueSource')) {
-			return $node;
+		if (is_a($sourcePoint, 'App\Model\Lib\ValueSource')) {
+			return $sourcePoint;
 		}
 		$entity = array_pop($data);
-		return new ValueSource($entity, $node);
+		return new ValueSource($entity, $sourcePoint);
 	}
 	
 	public function filter($argObj) {
