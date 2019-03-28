@@ -467,7 +467,7 @@ class LayerTest extends TestCase
     public function testDistinctWithValidPropertyManual() {
         $layer = new Layer($this->fivePieces);
         
-        $distinct = $layer->distinct('number');
+        $distinct = $layer->trait_distinct($this->fivePieces, 'number');
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct,
             'distinct on a valid property did not return expected values');
@@ -477,19 +477,19 @@ class LayerTest extends TestCase
     
     public function testDistinctWithBadProperyManual() {
         $layer = new Layer($this->fivePieces);
-        $distinct = $layer->distinct('wrong');
+        $distinct = $layer->trait_distinct($this->fivePieces, 'wrong');
         $this->assertEmpty($distinct, 'Distinct on a non-existent '
             . 'property/method value source did not return an empty array');
     }
     
     public function testDistinctWithMethodCallManual() {
         $layer = new Layer($this->fivePieces);
-        $distinct = $layer->distinct('key');
+        $distinct = $layer->trait_distinct($this->fivePieces, 'key');
         $this->assertArraySubset(['35_36'], $distinct,
             'Distinct call on a method source didn\'t return expected value');
     }
     
-    public function testDistinctWithValidPropertyArgObj() {
+    public function testLoadDistinctWithValidPropertyArgObj() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->find()
             ->setValueSource('number')
@@ -507,7 +507,7 @@ class LayerTest extends TestCase
             . 'when using an argObj');
     }
     
-    public function testDistinctWithBadProperyArgObj() {
+    public function testLoadDistinctWithBadProperyArgObj() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->find()
             ->setValueSource('wrong')
@@ -517,7 +517,7 @@ class LayerTest extends TestCase
             . 'when using an argObj');
     }
     
-    public function testDistinctWithMethodCallArgObj() {
+    public function testLoadDistinctWithMethodCallArgObj() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->find()
             ->setValueSource('key')
@@ -540,12 +540,14 @@ class LayerTest extends TestCase
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->valueList($this->pieceRecords, 'key');
 		$this->assertArraySubset([4=>'35_', 5=>'35_36'], $actual);
+		$this->assertCount(53, $actual);
 	}
 	
 	public function testValueListFromProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->valueList($this->pieceRecords, 'format_id');
-		$this->assertArraySubset([4=>'', 5=>'36'], $actual);
+		$this->assertArraySubset([0=>'36', 5=>'37',10=>38], $actual);
+		$this->assertCount(13, $actual);
 	}
 	
 	// distinct
@@ -564,7 +566,7 @@ class LayerTest extends TestCase
 	public function testDistinctFromProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->trait_distinct($this->pieceRecords, 'format_id');
-		$this->assertArraySubset([0 => '', 5 => '36', 15 => '37', 50 => '38'], $actual);
+		$this->assertArraySubset([0 => '36', 5 => '37', 10 => '38'], $actual);
 	}
 	
 	//key value list

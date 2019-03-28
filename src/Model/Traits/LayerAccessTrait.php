@@ -66,7 +66,8 @@ trait LayerAccessTrait {
 //	public function all($property);
 //	
 	public function loadDistinct($argObj){
-//		return $this->distinct($argObj);
+		$result = $this->load($argObj);
+		return $this->trait_distinct($result, $argObj->ValueSource);
 	}
 	
 	/**
@@ -134,7 +135,9 @@ trait LayerAccessTrait {
 		if ($ValueSource) {
 			$result = collection($data)
 					->reduce(function ($harvest, $entity) use ($ValueSource){
-						array_push($harvest, $ValueSource->value($entity));
+						if (!is_null($ValueSource->value($entity))) {
+							array_push($harvest, $ValueSource->value($entity));
+						}
 						return $harvest;
 					}, []);
 		} else {
