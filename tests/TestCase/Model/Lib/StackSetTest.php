@@ -221,47 +221,30 @@ class StackSetTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testDistinct() {
+	public function testLoadDistinct() {
 		$this->assertEquals(["Unique","Open Edition","Limited Edition"], 
-				$this->StackEntities->distinct('type', 'editions'),
-				'Distinct did not return the expected set of edition types '
-				. 'from a set of stack entities');
-		
-//		$this->assertEmpty($this->StackEntities->distinct('type', 'badLayer'),
-//				'Distinct did not return an empty array when passed a bad layer');
-//		
-//		$this->assertEmpty($this->StackEntities->distinct('garbage', 'editions'),
-//				'Distinct did not return an empty array when passed a bad property');
-	}
-
-	public function testDistinctArgObj() {
-		$this->assertEquals(["Unique","Open Edition","Limited Edition"], 
-			$this->StackEntities
+				$this->StackEntities
 				->find()
 				->setLayer('editions')
 				->setValueSource('type')
 				->loadDistinct(),
+				'Distinct did not return the expected set of edition types '
+				. 'from a set of stack entities');
+		
+	}
+
+	public function testTraitDistinct() {
+		$result = $this->StackEntities
+				->find()
+				->setLayer('editions')
+				->load();
+		$actual = $this->StackEntities->trait_distinct($result, 'type');
+		$this->assertEquals(
+			["Unique","Open Edition","Limited Edition"], 
+			$actual,
 			'Distinct did not return the expected set of edition types '
 			. 'from a set of stack entities');
 	}
-
-//	/**
-//	 * Test filter method
-//	 *
-//	 * @return void
-//	 */
-//	public function testFilter() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test keyedList method
-//	 *
-//	 * @return void
-//	 */
-//	public function testKeyedList() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
 
 	/**
 	 * Test linkedTo method
