@@ -244,41 +244,26 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testDistinctWithGoodStrings() {
-        $this->assertEquals([5, 8], $this->StackEntity->distinct('edition_id', 'pieces'),
-				'A valid layer and property did not return the expected values');
+    public function testLoadDistinctWithGoodArgObj() {
+		$actual = $this->StackEntity
+			->find()
+			->setLayer('pieces')
+			->setValueSource('edition_id')
+			->loadDistinct();
+        $this->assertEquals([5, 8], $actual,
+			'A valid layer and property did not return the expected values');
     }
-
-    public function testDistinctWithBadStrings() {
-        $this->assertEmpty($this->StackEntity->distinct('edition_id', 'badLayer'),
-				'A bad layer did not return an empty array');
-        $this->assertEmpty($this->StackEntity->distinct('garbage', 'pieces'),
-				'A bad property did not return an empty array');
-    }
-
-    public function testDistinctWithGoodArgOb() {
-        $this->assertEquals([5, 8], $this->StackEntity
+	
+	public function testTraitDistinct() {
+		$result = $this->StackEntity
 				->find()
-				->setValueSource('edition_id')
 				->setLayer('pieces')
-				->loadDistinct(),
-				'A valid layer and property did not return the expected values');
-    }
-
-//    public function testDistinctWithBadArgObj() {
-//        $this->assertEmpty($this->StackEntity
-//				->find()
-//				->setValueSource('edition_id')
-//				->setLayer('badLayer')
-//				->loadDistinct(),
-//				'A bad layer did not return an empty array');
-//        $this->assertEmpty($this->StackEntity
-//				->find()
-//				->setValueSource('garbage')
-//				->setLayer('pieces')
-//				->loadDistinct(),
-//				'A bad property did not return an empty array');
-//    }
+				->specifyFilter('quantity', 2, '>')
+				->load();
+		$actual = $this->StackEntity->trait_distinct($result, 'edition_id');
+		$this->assertArraySubset([8], $actual);
+		
+	}
 
     /**
      * Test IDs method
