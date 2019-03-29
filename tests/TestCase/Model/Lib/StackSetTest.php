@@ -238,7 +238,6 @@ class StackSetTest extends TestCase {
 				->find()
 				->setLayer('editions')
 				->load();
-		pr($result);
 		$actual = $this->StackEntities->trait_distinct('type', $result);
 		$this->assertEquals(
 			["Unique","Open Edition","Limited Edition"], 
