@@ -467,7 +467,7 @@ class LayerTest extends TestCase
     public function testDistinctWithValidPropertyManual() {
         $layer = new Layer($this->fivePieces);
         
-        $distinct = $layer->trait_distinct($this->fivePieces, 'number');
+        $distinct = $layer->trait_distinct('number', $this->fivePieces);
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct,
             'distinct on a valid property did not return expected values');
@@ -477,14 +477,14 @@ class LayerTest extends TestCase
     
     public function testDistinctWithBadProperyManual() {
         $layer = new Layer($this->fivePieces);
-        $distinct = $layer->trait_distinct($this->fivePieces, 'wrong');
+        $distinct = $layer->trait_distinct('wrong', $this->fivePieces);
         $this->assertEmpty($distinct, 'Distinct on a non-existent '
             . 'property/method value source did not return an empty array');
     }
     
     public function testDistinctWithMethodCallManual() {
         $layer = new Layer($this->fivePieces);
-        $distinct = $layer->trait_distinct($this->fivePieces, 'key');
+        $distinct = $layer->trait_distinct('key', $this->fivePieces);
         $this->assertArraySubset(['35_36'], $distinct,
             'Distinct call on a method source didn\'t return expected value');
     }
@@ -532,20 +532,20 @@ class LayerTest extends TestCase
 	// value list
 	public function testValueListOnEmptyArray() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList([], 'key');
+		$actual = $layer->valueList('key', []);
 		$this->assertEmpty($actual);
 	}
 		
 	public function testValueListFromMethod() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList($this->pieceRecords, 'key');
+		$actual = $layer->valueList('key'$this->pieceRecords);
 		$this->assertArraySubset([4=>'35_', 5=>'35_36'], $actual);
 		$this->assertCount(53, $actual);
 	}
 	
 	public function testValueListFromProperty() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList($this->pieceRecords, 'format_id');
+		$actual = $layer->valueList('format_id', $this->pieceRecords);
 		$this->assertArraySubset([0=>'36', 5=>'37',10=>38], $actual);
 		$this->assertCount(13, $actual);
 	}
@@ -553,39 +553,39 @@ class LayerTest extends TestCase
 	// distinct
     public function testDistinctOnEmptyArray() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->trait_distinct([], 'key');
+		$actual = $layer->trait_distinct('key', []);
 		$this->assertEmpty($actual);
 	}
 		
 	public function testDistinctFromMethod() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->trait_distinct($this->pieceRecords, 'key');
+		$actual = $layer->trait_distinct('key', $this->pieceRecords);
 		$this->assertArraySubset([0 => '35_', 5 => '35_36', 15 => '35_37', 50 => '36_38'], $actual);
 	}
 	
 	public function testDistinctFromProperty() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->trait_distinct($this->pieceRecords, 'format_id');
+		$actual = $layer->trait_distinct('format_id', $this->pieceRecords);
 		$this->assertArraySubset([0 => '36', 5 => '37', 10 => '38'], $actual);
 	}
 	
 	//key value list
     public function testKeyValueOnEmptyArray() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->keyValueList([], 'key', 'key');
+		$actual = $layer->keyValueList('key', 'key', []);
 		$this->assertEmpty($actual);
 	}
 		
 	public function testKeyValueFromMethodProperty() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->keyValueList($this->pieceRecords, 'key', 'id');
+		$actual = $layer->keyValueList('key', 'id', $this->pieceRecords);
 //		pr($actual);
 		$this->assertArraySubset(['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], $actual);
 	}
 	
 	public function testKeyValueFromProperty() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->keyValueList($this->pieceRecords, 'format_id', 'id');
+		$actual = $layer->keyValueList('format_id', 'id', $this->pieceRecords);
 //		pr($actual);
 		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
 	}

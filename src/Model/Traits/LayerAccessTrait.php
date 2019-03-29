@@ -67,7 +67,7 @@ trait LayerAccessTrait {
 //	
 	public function loadDistinct($argObj){
 		$result = $this->load($argObj);
-		return $this->trait_distinct($result, $argObj->ValueSource);
+		return $this->trait_distinct($argObj->ValueSource, $result);
 	}
 	
 	/**
@@ -101,11 +101,12 @@ trait LayerAccessTrait {
 	 * The keys and values may be from properties or from methods on the 
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
-	 * @param array $data Array of entities
 	 * @param string|KeySource $keySource Name of (or ValueSource defining) a property or method
 	 * @param string|ValueSource $valueSource Name of (or ValueSource defining) a property or method
+	 * @param array $data Array of entities
+	 * @return array 
 	 */
-	public function keyValueList($data, $keySource,	$valueSource) {
+	public function keyValueList($keySource, $valueSource, $data) {
 		$KeySource = $this->defineValueSource($data, $keySource);
 		$ValueSource = $this->defineValueSource($data, $valueSource);
 		if($KeySource && $ValueSource) {
@@ -126,12 +127,12 @@ trait LayerAccessTrait {
 	 * The values may be from a property or from a method on the 
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
-	 * @param array $data Array of entities
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
+	 * @param array $data Array of entities
 	 * @return array Array containing the unique values found
 	 */
-	public function valueList($data, $sourcePoint) {
-		$ValueSource = $this->defineValueSource($data, $sourcePoint);
+	public function valueList($sourcePoint, $data) {
+		$ValueSource = $this->defineValueSource($sourcePoint, $data);
 		if ($ValueSource) {
 			$result = collection($data)
 					->reduce(function ($harvest, $entity) use ($ValueSource){
@@ -152,22 +153,22 @@ trait LayerAccessTrait {
 	 * The values may be from a property or from a method on the 
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
-	 * @param array $data Array of entities
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
+	 * @param array $data Array of entities
 	 * @return array Array containing the unique values found
 	 */
-	public function trait_distinct($data, $sourcePoint) {
-		return array_unique($this->valueList($data, $sourcePoint));
+	public function trait_distinct($sourcePoint, $data) {
+		return array_unique($this->valueList($sourcePoint, $data));
 	}
 	
 	/**
 	 * Create the ValueSource object for distinct()
 	 * 
-	 * @param array $data
 	 * @param mixed $sourcePoint
+	 * @param array $data
 	 * @return boolean|ValueSource
 	 */
-	private function defineValueSource($data, $sourcePoint) {
+	private function defineValueSource($sourcePoint, $data) {
 		if (empty($data)) {
 			return FALSE;
 		}

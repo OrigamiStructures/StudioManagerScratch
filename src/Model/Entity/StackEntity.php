@@ -167,7 +167,10 @@ class StackEntity extends Entity implements LayerAccessInterface {
 			return [];
 		}
 		if($args->ValueSource->isValid()) {
-			return $this->{$args->valueOf('layer')}->distinct($args);
+			$data = $args->valueOf('layer')->members();
+			return $this
+				->{$args->valueOf('layer')}
+				->trait_distinct($data, $args);
 		}
 		return [];
 	}
