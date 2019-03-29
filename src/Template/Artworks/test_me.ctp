@@ -33,24 +33,25 @@ if (isset($stacks)) {
 	foreach ($stacks->all() as $stack) {
 		
 		$artwork = $stack->primaryEntity();
-		$dispoID_list_match = $stack->accessArgs()
+		$joins = $stack->find()
 				->setLayer('dispositionsPieces')
-				->specifyFilter('disposition_id', $dispLayer->IDs());
-		$joins = new Layer($stack->load($dispoID_list_match));
-		
+				->specifyFilter('disposition_id', $dispLayer->IDs())
+				->load();
+
 		// Layer object's __contruct() accept an array of entities 
 		// and that's what $stack->load( ) returns. 
 		// Layer turns an array of entities into a quasi-db tool.
 		// See \App\Model\Lib\Layer
-		$distinct_pieces_args = $stack->accessArgs()
+		$distinct_pieces = $stack->find()
 				->setLayer('pieces')
-				->filterValue($joins->distinct('id', 'piece_id'));
-		$distinct_pieces = $stack->load($distinct_pieces_args);
+				->filterValue($stack->trait_distinct('piece_id', $joins))
+				->load();
 		$pieces = new Layer($distinct_pieces);
 		
-		$distinct_formats_args = $stack->accessArgs()
+		$formats = $stack->find()
 				->setLayer('formats')
-				->specifyFilter('id', $pieces->distinct('format_id'));
+				->specifyFilter('id', $pieces->trait_distinct('format_id'))
+				->load();
 		$formats = new Layer($stack->load($distinct_formats_args));	
 		
 		$distinct_editions_args = $stack->accessArgs()
