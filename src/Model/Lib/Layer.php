@@ -412,6 +412,10 @@ class Layer implements LayerAccessInterface {
              }, []);
         return array_keys($asKeys);
     }
+	
+	public function unwrap() {
+		return $this->_data;
+	}
     
     private function normalizeDistinctArgs($property) {
         if (is_string($property)) {
