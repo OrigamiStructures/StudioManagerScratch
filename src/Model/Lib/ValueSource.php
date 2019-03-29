@@ -89,7 +89,9 @@ class ValueSource {
 	 */
 	public function isValid() {
 		$ambiguous = $this->_isMethod && $this->_isProperty;
-		return $this->_isEntity && !$ambiguous && ($this->_isMethod || $this->_isProperty);
+		return $this->_isEntity 
+				&& !$ambiguous 
+				&& ($this->_isMethod || $this->_isProperty);
 	}
 	
 	/**
@@ -100,8 +102,9 @@ class ValueSource {
 	 */
 	public function value(Entity $entity) {
 		if (!$this->registeredEntity($entity) || !$this->isValid()) {
-			$this->registerError('If ' . get_class($entity) . ' is a generic entity, you\'ll have '
-					. 'to bake the model and entity to use it, even if they are left empty.');
+			$this->registerError('If ' . get_class($entity) . 
+					' is a generic entity, you\'ll have to bake the model '
+					. 'and entity to use it, even if they are left empty.');
 			return FALSE;
 		}
 		if ($this->_isMethod) {

@@ -52,7 +52,8 @@ class StackEntityTest extends TestCase
         parent::setUp();
         $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', []);
         $artID = 4; //jabberwocky
-        $stacks = $this->ArtStacks->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
+        $stacks = $this->ArtStacks
+				->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
         $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
         
         $this->StackEntity->arrayProp = ['a','b','c'];
@@ -111,7 +112,8 @@ class StackEntityTest extends TestCase
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
 		
 		$this->assertCount(2, $this->StackEntity->load($formats_arg));
-		$format_index_5 = $this->StackEntity->accessArgs()
+		$format_index_5 = $this->StackEntity
+				->accessArgs()
 				->setLayer('formats')
 				->setIdIndex(5);
         $format = $this->StackEntity->load($format_index_5);
@@ -125,22 +127,31 @@ class StackEntityTest extends TestCase
 				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
-        $this->assertEquals(140, $piece->quantity,
-				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
-				. 'did not return an entity with an expected property value.');
+        $this->assertEquals(
+				140, 
+				$piece->quantity,
+				'loading a valid format by property/value test ...'
+				. '->load(\'pieces\', [\'quantity\', 140])... did not '
+				. 'return an entity with an expected property value.');
 
 		
 		$all_pieces_args = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
 				->setLimit('all');
-        $this->assertEquals(5, count($this->StackEntity->load($all_pieces_args)),
-				'loading using \'all\' did not return the expected number of entities');
+        $this->assertEquals(
+				5, 
+				count($this->StackEntity->load($all_pieces_args)),
+				'loading using \'all\' did not return the expected '
+				. 'number of entities');
 
 		$all_formats_args = $this->StackEntity->accessArgs()
 				->setLayer('formats')
 				->setLimit('all');
-        $this->assertEquals(2, count($this->StackEntity->load($all_formats_args)),
-				'loading using [\'all\'] did not return the expected number of entities');
+        $this->assertEquals(
+				2, 
+				count($this->StackEntity->load($all_formats_args)),
+				'loading using [\'all\'] did not return the expected '
+				. 'number of entities');
 
 		$first_piece_args = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
@@ -148,10 +159,13 @@ class StackEntityTest extends TestCase
         $this->assertEquals(1, count($this->StackEntity->load($first_piece_args)),
 				'loading using \'first\' did not return one entity');
 
-		$first_format_args = $this->StackEntity->accessArgs()
+		$first_format_args = $this->StackEntity
+				->accessArgs()
 				->setLayer('formats')
 				->setLimit('first');
-        $this->assertEquals(1, count($this->StackEntity->load($first_format_args)),
+        $this->assertEquals(
+				1, 
+				count($this->StackEntity->load($first_format_args)),
 				'loading using [\'first\'] did not return one entity');
 
         // unknown layer combinded with a field search
@@ -159,9 +173,11 @@ class StackEntityTest extends TestCase
 				->setLimit('first')
 				->setValueSource('edition_id')
 				->filterValue(8);
-        $this->assertEquals(0, count($this->StackEntity->load($first_editionId_is_8_arg)),
-				'loading using an unknow layer name and a property/value search returned something '
-				. 'other than the 0 expected entities.');
+        $this->assertEquals(
+				0, 
+				count($this->StackEntity->load($first_editionId_is_8_arg)),
+				'loading using an unknow layer name and a property/value '
+				. 'search returned something other than the 0 expected entities.');
     }
 
 // </editor-fold>
@@ -271,13 +287,17 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testIDs()     {
-		$this->assertTrue($this->StackEntity->IDs() === [4], 
+		$this->assertTrue(
+				$this->StackEntity->IDs() === [4], 
 				'IDs() did not return the expected primary id for this stack');
-        $this->assertEquals([20, 38, 40, 509, 955], $this->StackEntity->IDs('pieces'),
+        $this->assertEquals(
+				[20, 38, 40, 509, 955], 
+				$this->StackEntity->IDs('pieces'),
 				'IDs() on a valid layer did not return the expected array of values');
         $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
-		$this->assertEmpty($this->StackEntity->IDs('bad_layer'), 'IDs(badLayer) '
-				. 'did not return an empty array');
+		$this->assertEmpty(
+				$this->StackEntity->IDs('bad_layer'), 
+				'IDs(badLayer) did not return an empty array');
     }
 
     /**
@@ -307,10 +327,14 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testIsEmpty(){
-        $this->assertTrue($this->StackEntity->isEmpty('member'), 'An uset property');
+        $this->assertTrue(
+				$this->StackEntity->isEmpty('member'), 
+				'An uset property');
         $emptyLayer = new Layer([], 'addresses');
         $this->StackEntity->addresses = $emptyLayer;
-        $this->assertTrue($this->StackEntity->isEmpty('addresses'), 'An empty layer property, count = 0');
+        $this->assertTrue(
+				$this->StackEntity->isEmpty('addresses'), 
+				'An empty layer property, count = 0');
     }
 
     /**
@@ -321,15 +345,25 @@ class StackEntityTest extends TestCase
     public function testSet(){
         //extract an array, unset that value then 'set' the value
         //the set is a (string, value) arg arrangement
-		$all_pieces_arg = $this->StackEntity->accessArgs()->setLayer('pieces')->setLimit('all');
+		$all_pieces_arg = $this->StackEntity
+				->accessArgs()
+				->setLayer('pieces')
+				->setLimit('all');
         $pieces = $this->StackEntity->load($all_pieces_arg);
-        $this->assertTrue(is_array($pieces), 'the load value is an array');
+        $this->assertTrue(
+				is_array($pieces), 
+				'the load value is an array');
         
         unset($this->StackEntity->pieces);
-        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
+        $this->assertTrue(
+				$this->StackEntity->isEmpty('pieces'), 
+				'piece value is gone');
         
         $this->StackEntity->set('pieces', $pieces);
-        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->get('pieces'), 
+				'layer object was made');
         
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
@@ -344,14 +378,29 @@ class StackEntityTest extends TestCase
         unset($this->StackEntity->pieces);
         unset($this->StackEntity->dispositionsPieces);
         
-        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
-        $this->assertTrue($this->StackEntity->isEmpty('dispositionsPieces'), 'piece value is gone');
+        $this->assertTrue(
+				$this->StackEntity->isEmpty('pieces'), 
+				'piece value is gone');
+        $this->assertTrue(
+				$this->StackEntity->isEmpty('dispositionsPieces'), 
+				'piece value is gone');
         
-        $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
+        $this->StackEntity->set([
+			'pieces' => $pieces, 
+			'dispositionsPieces' => $dp, 
+			'something' => ['array']]);
         
-        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
-        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
-        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->get('pieces'), 
+				'layer object was made');
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->get('dispositionsPieces'), 
+				'layer object was made');
+        $this->assertTrue(
+				is_array($this->StackEntity->get('something')),
+				'array was set');
         
         //do the same process to multiple values and use the guard feature
         //to test the [prop=>val, prop=>val] argument syntax
@@ -380,7 +429,9 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testGet(){
-        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'));
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->get('pieces'));
         $this->assertEquals(null, $this->StackEntity->get('members'));
     }
 
