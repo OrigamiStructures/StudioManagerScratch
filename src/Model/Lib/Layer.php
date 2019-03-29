@@ -389,9 +389,9 @@ class Layer implements LayerAccessInterface {
         return array_keys($this->load());
     }
 	
-	public function trait_distinct($valueSource, $data = null) {
+	public function trait_distinct($sourcePoint, $data = null) {
 		if (is_null($data)) {
-			$data = $this->members();
+			$data = $this->_data;
 		}
 		return array_unique($this->valueList($sourcePoint, $data));
 	}
