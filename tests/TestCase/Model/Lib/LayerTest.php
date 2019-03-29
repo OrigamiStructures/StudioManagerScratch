@@ -538,7 +538,7 @@ class LayerTest extends TestCase
 		
 	public function testValueListFromMethod() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList('key'$this->pieceRecords);
+		$actual = $layer->valueList('key', $this->pieceRecords);
 		$this->assertArraySubset([4=>'35_', 5=>'35_36'], $actual);
 		$this->assertCount(53, $actual);
 	}
@@ -579,14 +579,12 @@ class LayerTest extends TestCase
 	public function testKeyValueFromMethodProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->keyValueList('key', 'id', $this->pieceRecords);
-//		pr($actual);
 		$this->assertArraySubset(['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], $actual);
 	}
 	
 	public function testKeyValueFromProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->keyValueList('format_id', 'id', $this->pieceRecords);
-//		pr($actual);
 		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
 	}
 	
