@@ -107,8 +107,8 @@ trait LayerAccessTrait {
 	 * @return array 
 	 */
 	public function keyValueList($keySource, $valueSource, $data) {
-		$KeySource = $this->defineValueSource($data, $keySource);
-		$ValueSource = $this->defineValueSource($data, $valueSource);
+		$KeySource = $this->defineValueSource($keySource, $data);
+		$ValueSource = $this->defineValueSource($valueSource, $data);
 		if($KeySource && $ValueSource) {
 			$result = collection($data)
 					->reduce(function($harvest, $entity) use ($KeySource, $ValueSource){

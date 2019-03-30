@@ -550,7 +550,7 @@ class LayerTest extends TestCase
 		$this->assertCount(13, $actual);
 	}
 	
-	// distinct
+//	 distinct
     public function testDistinctOnEmptyArray() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->trait_distinct('key', []);
@@ -575,7 +575,7 @@ class LayerTest extends TestCase
 		$actual = $layer->keyValueList('key', 'key', []);
 		$this->assertEmpty($actual);
 	}
-		
+//		
 	public function testKeyValueFromMethodProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->keyValueList('key', 'id', $this->pieceRecords);
