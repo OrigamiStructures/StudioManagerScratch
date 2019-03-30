@@ -33,10 +33,11 @@ if (isset($stacks)) {
 	foreach ($stacks->all() as $stack) {
 		
 		$artwork = $stack->primaryEntity();
-		$joins = $stack->find()
+		$joinArray = $stack->find()
 				->setLayer('dispositionsPieces')
 				->specifyFilter('disposition_id', $dispLayer->IDs())
 				->load();
+		$joinLayer = new Layer($joinArray);
 
 		// Layer object's __contruct() accept an array of entities 
 		// and that's what $stack->load( ) returns. 
@@ -44,33 +45,40 @@ if (isset($stacks)) {
 		// See \App\Model\Lib\Layer
 		$distinct_pieces = $stack->find()
 				->setLayer('pieces')
-				->filterValue($stack->trait_distinct('piece_id', $joins))
+				->filterValue($stack->trait_distinct('piece_id', $joinArray))
 				->load();
+		
+		$formatIDs = $stack->trait_distinct('format_id', $distinct_pieces);
 		$pieces = new Layer($distinct_pieces);
 		
 		$formats = $stack->find()
 				->setLayer('formats')
-				->specifyFilter('id', $pieces->trait_distinct('format_id'))
+				->specifyFilter('id', $formatIDs)
 				->load();
-		$formats = new Layer($stack->load($distinct_formats_args));	
 		
-		$distinct_editions_args = $stack->accessArgs()
+		$editionIDs = $stack->trait_distinct('edition_id', $formats);
+		$formats = new Layer($formats);	
+
+		$editions = $stack->find()
 				->setLayer('editions')
-				->specifyFilter('id', $formats->distinct('edition_id'));
-		$editions = new Layer($stack->load($distinct_editions_args));
+				->specifyFilter('id', $editionIDs)
+				->load();
+		$editions = new Layer($editions);
 		
 		$indexed_dispo = $stack->accessArgs();
 		
         echo "<h1>{$artwork->title}</h1>";
-		$allInLayer = $editions->accessArgs()->setLimit('all');
-        foreach ($editions->load($allInLayer) as $edition) {
+//		$allInLayer = $editions->accessArgs()->setLimit('all');
+        foreach ($editions->load() as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-            foreach ($formats->load($allInLayer) as $format) {
+            foreach ($formats->load() as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
-				$pieces_for_format_arg = $pieces->accessArgs()
-						->specifyFilter('format_id', $format->id);
-				foreach ($pieces->load($pieces_for_format_arg) as $piece) {
+				$assignedPieces = $pieces->find()
+						->specifyFilter('format_id', $format->id)
+						->load();
+				foreach ($assignedPieces as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
+					die;
 					$dispo_joins_for_piece_arg = $joins->accessArgs()
 							->specifyFilter('piece_id', $piece->id);
 					foreach ($joins->load($dispo_joins_for_piece_arg) as $link) {
