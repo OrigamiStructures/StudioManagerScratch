@@ -179,6 +179,25 @@ class StackEntityTest extends TestCase
 				'loading using an unknow layer name and a property/value '
 				. 'search returned something other than the 0 expected entities.');
     }
+	
+	public function testLoadWithArrayFilter() {
+		pr($this->StackEntity->find()
+				->setLayer('pieces')
+				->setValueSource('id')
+				->loadDistinct());
+		/*
+		 * [0] => 20
+    [1] => 38
+    [2] => 40
+    [3] => 509
+    [4] => 955
+		 */
+		$actual = $this->StackEntity->find()
+				->setLayer('pieces')
+				->specifyFilter('id', [40, 509], 'in_array')
+				->load();
+		pr($actual);
+	}
 
 // </editor-fold>
 	
