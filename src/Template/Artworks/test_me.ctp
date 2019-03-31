@@ -92,31 +92,30 @@ if (isset($stacks)) {
 //die;
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
-	debug($activity->count());
-	debug($activity->entityClass());
-	debug($activity->trait_distinct('disposition_id'));	
-	debug($activity->trait_distinct('piece_id'));	
+
 	foreach ($activity->load() as $dispId => $disposition) {
-//		
-		echo '<h3>' . $disposition->displayTitle . "($disposition->id)" . '</h3><ul>';
+		$joinArray = $stacks->find()
+				->setLayer('dispositionsPieces')
+				->specifyFilter('disposition_id', $dispId)
+				->load();
+		$joinLayer = new Layer($joinArray, 'dispositionsPieces');
+		
+		$distinct_pieces = $stacks->find()
+				->setLayer('pieces')
+				->specifyFilter(
+						'id', 
+						$joinLayer->trait_distinct('piece_id'), 
+						'in_array')
+				->load();
+		$pieces = new Layer($distinct_pieces, 'pieces');
+		
+		echo '<h3>' . $disposition->displayTitle . " (id: $disposition->id)" . '</h3><ul>';
         foreach ($pieces->sort('format_id') as $piece) {
 			
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
-			
-			$format = $stack->find()
-					->setLayer('formats')
-					->specifyFilter('id', $piece->format_id)
-					->load()[$piece->format_id];
-			
-			$edition = $stack->find()
-					->setLayer('editions')
-					->specifyFilter('id', $piece->edition_id)
-					->load()[$piece->edition_id];
-			
-			$artwork = $stack->find()
-					->setLayer('artwork')
-					->specifyFilter('id', $edition->artwork_id)
-					->load()[$edition->artwork_id];
+			$format = $stack->formats->member($piece->format_id);
+			$edition = $stack->editions->member($piece->edition_id);
+			$artwork = $stack->primaryEntity();
 
 			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 
