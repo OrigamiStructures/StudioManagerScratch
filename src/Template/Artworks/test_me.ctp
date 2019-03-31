@@ -63,9 +63,7 @@ if (isset($stacks)) {
 				->specifyFilter('id', $editionIDs)
 				->load();
 		$editions = new Layer($editions);
-		
-		$indexed_dispo = $stack->accessArgs();
-		
+				
         echo "<h1>{$artwork->title}</h1>";
 //		$allInLayer = $editions->accessArgs()->setLimit('all');
         foreach ($editions->load() as $edition) {
@@ -94,7 +92,8 @@ if (isset($stacks)) {
 //die;
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
-	
+	debug($activity->count());
+	debug($activity->entityClass());
 	debug($activity->trait_distinct('disposition_id'));	
 	debug($activity->trait_distinct('piece_id'));	
 	foreach ($activity->load() as $dispId => $disposition) {
