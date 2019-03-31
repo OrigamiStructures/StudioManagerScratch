@@ -35,17 +35,16 @@ if (isset($stacks)) {
 		$artwork = $stack->primaryEntity();
 		$joinArray = $stack->find()
 				->setLayer('dispositionsPieces')
-				->specifyFilter('disposition_id', $dispLayer->IDs())
+				->specifyFilter('disposition_id', $activity->IDs())
 				->load();
 		$joinLayer = new Layer($joinArray);
-
-		// Layer object's __contruct() accept an array of entities 
-		// and that's what $stack->load( ) returns. 
-		// Layer turns an array of entities into a quasi-db tool.
-		// See \App\Model\Lib\Layer
+		
 		$distinct_pieces = $stack->find()
 				->setLayer('pieces')
-				->filterValue($stack->trait_distinct('piece_id', $joinArray))
+				->specifyFilter(
+						'id', 
+						$joinLayer->trait_distinct('piece_id'), 
+						'in_array')
 				->load();
 		
 		$formatIDs = $stack->trait_distinct('format_id', $distinct_pieces);
@@ -78,12 +77,13 @@ if (isset($stacks)) {
 						->load();
 				foreach ($assignedPieces as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
-					die;
-					$dispo_joins_for_piece_arg = $joins->accessArgs()
-							->specifyFilter('piece_id', $piece->id);
-					foreach ($joins->load($dispo_joins_for_piece_arg) as $link) {
-						$indexed_dispo->setIdIndex($link->disposition_id); // this is an id search
-						echo "<li>{$dispLayer->load($indexed_dispo)->displayTitle}</li>";
+					$pieceActivity = $joinLayer->find()
+							->specifyFilter('piece_id', $piece->id)
+							->load();
+					foreach ($pieceActivity as $link) {
+						echo "<li>"
+						. "{$activity->member($link->disposition_id)->displayTitle}"
+						. "</li>";
 					}
 					echo '</ul></li></ul>';
                }
@@ -95,42 +95,31 @@ if (isset($stacks)) {
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
 	
-	$format_for_piece_arg = $dispLayer->accessArgs()
-			->setLayer('formats')
-			->setValueSource('id');
-	$edition_for_format = $dispLayer->accessArgs()
-			->setLayer('editions')
-			->setValueSource('id');
-	$artwork_for_edition = $dispLayer->accessArgs()
-			->setLayer('artwork')
-			->setValueSource('id');
-	$dispo_joins_args = $dispLayer->accessArgs()
-			->setLayer('dispositionsPieces')
-			->setValueSource('disposition_id');
-	$linked_pieces_args = $dispLayer->accessArgs()
-			->setLayer('pieces')
-			->setValueSource('id');
-	
-	foreach ($dispLayer->load($allInLayer) as $dispId => $disposition) {
+	debug($activity->trait_distinct('disposition_id'));	
+	debug($activity->trait_distinct('piece_id'));	
+	foreach ($activity->load() as $dispId => $disposition) {
 //		
-		$dispo_joins_args->filterValue($dispLayer->IDs());
-		$joins = new Layer($stacks->load($dispo_joins_args));
-		$linked_pieces_args->filterValue($joins->distinct('piece_id'));
-		$pieces = new Layer($stacks->load($linked_pieces_args));
-				
 		echo '<h3>' . $disposition->displayTitle . "($disposition->id)" . '</h3><ul>';
         foreach ($pieces->sort('format_id') as $piece) {
 			
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			
-			$format_for_piece_arg->filterValue($piece->format_id);
-			$format = $stack->load($format_for_piece_arg)[$piece->format_id];	
-			$edition_for_format->filterValue($piece->edition_id);
-			$edition = $stack->load($edition_for_format)[$piece->edition_id];
-			$artwork_for_edition->filterValue($edition->artwork_id);
-			$artwork = $stack->load($artwork_for_edition)[$edition->artwork_id];
+			$format = $stack->find()
+					->setLayer('formats')
+					->specifyFilter('id', $piece->format_id)
+					->load()[$piece->format_id];
 			
-            echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
+			$edition = $stack->find()
+					->setLayer('editions')
+					->specifyFilter('id', $piece->edition_id)
+					->load()[$piece->edition_id];
+			
+			$artwork = $stack->find()
+					->setLayer('artwork')
+					->specifyFilter('id', $edition->artwork_id)
+					->load()[$edition->artwork_id];
+
+			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 
                 $edition->displayTitle . ', ' . 
                 $format->displayTitle . 
