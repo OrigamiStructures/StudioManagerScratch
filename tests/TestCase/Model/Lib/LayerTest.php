@@ -596,5 +596,13 @@ class LayerTest extends TestCase
 		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
 	}
 	
-    
+    public function testLoadKeyValueListSimple() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->setKeySource('format_id')
+				->setValueSource('id')
+//				->setLayer('piece')
+				->loadKeyValueList();
+		pr($actual);
+	}
 }
