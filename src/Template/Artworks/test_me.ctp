@@ -43,11 +43,11 @@ if (isset($stacks)) {
 				->setLayer('pieces')
 				->specifyFilter(
 						'id', 
-						$joinLayer->trait_distinct('piece_id'), 
+						$joinLayer->distinct('piece_id'), 
 						'in_array')
 				->load();
 		
-		$formatIDs = $stack->trait_distinct('format_id', $distinct_pieces);
+		$formatIDs = $stack->distinct('format_id', $distinct_pieces);
 		$pieces = new Layer($distinct_pieces);
 		
 		$formats = $stack->find()
@@ -55,7 +55,7 @@ if (isset($stacks)) {
 				->specifyFilter('id', $formatIDs)
 				->load();
 		
-		$editionIDs = $stack->trait_distinct('edition_id', $formats);
+		$editionIDs = $stack->distinct('edition_id', $formats);
 		$formats = new Layer($formats);	
 
 		$editions = $stack->find()
@@ -104,7 +104,7 @@ if (isset($stacks)) {
 				->setLayer('pieces')
 				->specifyFilter(
 						'id', 
-						$joinLayer->trait_distinct('piece_id'), 
+						$joinLayer->distinct('piece_id'), 
 						'in_array')
 				->load();
 		$pieces = new Layer($distinct_pieces, 'pieces');
