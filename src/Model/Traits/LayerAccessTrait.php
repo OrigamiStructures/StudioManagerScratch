@@ -114,15 +114,19 @@ trait LayerAccessTrait {
 	 * @param array $data Array of entities
 	 * @return array 
 	 */
-	public function keyValueList($keySource, $valueSource, $data) {
-		$KeySource = $this->defineValueSource($keySource, $data);
-		$ValueSource = $this->defineValueSource($valueSource, $data);
+	public function keyValueList($keySource, $valueSource, $data = null) {
+		$rawData = $this->insureData($data);
+		if ($rawData === []) {
+			return $rawData;
+		}
+		$KeySource = $this->defineValueSource($keySource, $rawData);
+		$ValueSource = $this->defineValueSource($valueSource, $rawData);
 		if($KeySource && $ValueSource) {
-			$result = collection($data)
-					->reduce(function($harvest, $entity) use ($KeySource, $ValueSource){
-						$harvest[$KeySource->value($entity)] = $ValueSource->value($entity);
-						return $harvest;
-					}, []);
+			$result = collection($rawData)
+				->reduce(function($harvest, $entity) use ($KeySource, $ValueSource){
+					$harvest[$KeySource->value($entity)] = $ValueSource->value($entity);
+					return $harvest;
+				}, []);
 		} else {
 			$result = [];
 		}
@@ -136,13 +140,17 @@ trait LayerAccessTrait {
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
-	 * @param array $data Array of entities
+	 * @param array $data Array of entities (required except for Layer calls)
 	 * @return array Array containing the unique values found
 	 */
-	public function valueList($sourcePoint, $data =[]) {
-		$ValueSource = $this->defineValueSource($sourcePoint, $data);
+	public function valueList($sourcePoint, $data = null) {
+		$rawData = $this->insureData($data);
+		if ($rawData === []) {
+			return $rawData;
+		}
+		$ValueSource = $this->defineValueSource($sourcePoint, $rawData);
 		if ($ValueSource) {
-			$result = collection($data)
+			$result = collection($rawData)
 					->reduce(function ($harvest, $entity) use ($ValueSource){
 						if (!is_null($ValueSource->value($entity))) {
 							array_push($harvest, $ValueSource->value($entity));
@@ -162,7 +170,7 @@ trait LayerAccessTrait {
 	 * entity. If from a method, that method can have no arguemnts. 
 	 * 
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
-	 * @param array $data Array of entities
+	 * @param array $data Array of entities (required except for Layer calls)
 	 * @return array Array containing the unique values found
 	 */
 	public function trait_distinct($sourcePoint, $data = null) {
@@ -170,6 +178,19 @@ trait LayerAccessTrait {
 		return array_unique($this->valueList($sourcePoint, $rawData));
 	}
 	
+	/**
+	 * Insure some array is passed for methods where the arg is optional
+	 * 
+	 * Methods that can act on an array allow that arg to be optional 
+	 * when it is the last arg so that it doesn't have to be passed 
+	 * explicitly in a Layer. But the StackSet and StackEntity require 
+	 * it be passed. This insures that when passed, it is used; when 
+	 * not passed in a Layer, the layer data is used; and when it 
+	 * can't be known, an empty array is used (silent error state)
+	 * 
+	 * @param null|array $data
+	 * @return array
+	 */
 	private function insureData($data) {
 		if ($data !== null) {
 			$result = $data;
