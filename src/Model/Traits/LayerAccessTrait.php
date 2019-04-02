@@ -88,7 +88,7 @@ trait LayerAccessTrait {
 		$data = $this->load($args);
 		$KeySource = $args->keyObject();
 		$ValueSource = $args->sourceObject();
-		return $this->keyValueList($data, $KeySource, $ValueSource);
+		return $this->keyValueList($KeySource, $ValueSource, $data);
 	}
 	
 	/**
