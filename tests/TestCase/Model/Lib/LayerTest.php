@@ -587,13 +587,19 @@ class LayerTest extends TestCase
 	public function testKeyValueFromMethodProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->keyValueList('key', 'id', $this->pieceRecords);
-		$this->assertArraySubset(['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], $actual);
+		$this->assertArraySubset(
+				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], 
+				$actual,
+				'Direct keyValueList request with a method for the '
+				. 'key did not return the expected array');
 	}
 	
 	public function testKeyValueFromProperty() {
 		$layer = new Layer([], 'contacts');
 		$actual = $layer->keyValueList('format_id', 'id', $this->pieceRecords);
-		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
+		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual,
+				'Basic loadKeyValueList with two properties did not '
+				. 'return the expected array');
 	}
 	
     public function testLoadKeyValueListSimple() {
@@ -603,6 +609,20 @@ class LayerTest extends TestCase
 				->setValueSource('id')
 				->setLayer('piece')
 				->loadKeyValueList();
-		pr($actual);
+		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
 	}
+	
+    public function testLoadKeyValueListMethodForKey() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->setKeySource('key')
+				->setValueSource('id')
+				->loadKeyValueList();
+		$this->assertArraySubset(
+				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], 
+				$actual,
+				'loadKeyValueList with a method supplied for the key '
+				. 'did not return the expected array');
+	}
+	
 }
