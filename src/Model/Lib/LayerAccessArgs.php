@@ -182,10 +182,10 @@ protected $data;
 	}
 
 	public function setKeySource($source) {
-		if ($this->hasKeySourceSource() && $this->valueOf('keySource') != $source) {
+		if ($this->hasKeySource() && $this->valueOf('keySource') != $source) {
 			$this->registerError('Can\'t change `keySource` after it\'s been set.');
 		} else {
-			$this->_value_source = $source;
+			$this->_key_source = $source;
 			$this->setupValueObjects('key');
 		}
 		return $this;
