@@ -69,11 +69,20 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return string
 	 */
 	public function primaryLayer() {
+		if (!isset($this->_primary)) {
+			throw new BadClassConfigurationException(
+					'The name of the primary entity ($this->_primary) must '
+					. 'be set for this StackEntity');
+		}
 		return $this->_primary;
 	}
 	
+	/**
+	 * Return the owner of the primary entity
+	 * 
+	 * @return string
+	 */
 	public function dataOwner() {
-		osd($this->primaryEntity());die;
 		return $this->primaryEntity()->user_id;
 	}
 	
@@ -83,7 +92,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return string
 	 */
 	public function primaryId() {
-		return $this->IDs($this->_primary)[0];
+		return $this->primaryEntity()->id;
 	}
 	
 	/**
@@ -92,8 +101,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return Entity
 	 */
 	public function primaryEntity() {
-		$allArg = $this->accessArgs()->setLimit('first');
-		return $this->get($this->primaryLayer())->load($allArg);
+//		$allArg = $this->accessArgs()->setLimit('first');
+		return $this->get($this->primaryLayer())->element(0);
 	}
     
 	/**

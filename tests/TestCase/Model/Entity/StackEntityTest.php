@@ -7,6 +7,7 @@ use App\Model\Entity\StackEntity;
 use Cake\TestSuite\TestCase;
 use App\Model\Lib\Layer;
 use App\ORM\Entity\Address;
+use App\Exception\BadClassConfigurationException;
 
 /**
  * App\Model\Entity\StackEntity Test Case
@@ -261,6 +262,14 @@ class StackEntityTest extends TestCase
         $entity = $this->StackEntity->primaryEntity();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
+	
+	/**
+	 * @expectedException App\Exception\BadClassConfigurationException
+	 */
+	public function testPrimaryEntityUnsetProperty() {
+		$entity = New StackEntity();
+        $entity->primaryEntity();
+	}
 
     /**
      * Test distinct method
@@ -324,6 +333,10 @@ class StackEntityTest extends TestCase
     
     }
 
+	public function testDataOwner() {
+		$actual = $this->StackEntity->dataOwner();
+		$this->assertTrue('f22f9b46-345f-4c6f-9637-060ceacb21b2' === $actual);
+	}
 // </editor-fold>
     
 // <editor-fold defaultstate="collapsed" desc="Modified parent methods">
