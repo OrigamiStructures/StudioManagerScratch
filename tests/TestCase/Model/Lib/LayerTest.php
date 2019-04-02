@@ -601,7 +601,7 @@ class LayerTest extends TestCase
 		$actual = $layer->find()
 				->setKeySource('format_id')
 				->setValueSource('id')
-//				->setLayer('piece')
+				->setLayer('piece')
 				->loadKeyValueList();
 		pr($actual);
 	}
