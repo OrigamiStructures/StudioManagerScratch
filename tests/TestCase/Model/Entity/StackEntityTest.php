@@ -283,7 +283,7 @@ class StackEntityTest extends TestCase
 				->setLayer('pieces')
 				->specifyFilter('quantity', 2, '>')
 				->load();
-		$actual = $this->StackEntity->trait_distinct('edition_id', $result);
+		$actual = $this->StackEntity->distinct('edition_id', $result);
 		$this->assertArraySubset([8], $actual);
 		
 	}

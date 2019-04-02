@@ -467,24 +467,24 @@ class LayerTest extends TestCase
     public function testDistinctWithValidPropertyManual() {
         $layer = new Layer($this->fivePieces);
         
-        $distinct = $layer->trait_distinct('number', $this->fivePieces);
+        $distinct = $layer->distinct('number', $this->fivePieces);
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct,
             'distinct on a valid property did not return expected values');
-        $this->assertEquals([36], $layer->trait_distinct('format_id'),
+        $this->assertEquals([36], $layer->distinct('format_id'),
             'distinct on a valid property did not return expected values');
     }
     
     public function testDistinctWithBadProperyManual() {
         $layer = new Layer($this->fivePieces);
-        $distinct = $layer->trait_distinct('wrong', $this->fivePieces);
+        $distinct = $layer->distinct('wrong', $this->fivePieces);
         $this->assertEmpty($distinct, 'Distinct on a non-existent '
             . 'property/method value source did not return an empty array');
     }
     
     public function testDistinctWithMethodCallManual() {
         $layer = new Layer($this->fivePieces);
-        $distinct = $layer->trait_distinct('key', $this->fivePieces);
+        $distinct = $layer->distinct('key', $this->fivePieces);
         $this->assertArraySubset(['35_36'], $distinct,
             'Distinct call on a method source didn\'t return expected value');
     }
@@ -553,19 +553,19 @@ class LayerTest extends TestCase
 //	 distinct
     public function testDistinctOnEmptyArray() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->trait_distinct('key', []);
+		$actual = $layer->distinct('key', []);
 		$this->assertEmpty($actual);
 	}
 		
 	public function testDistinctFromMethod() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->trait_distinct('key', $this->pieceRecords);
+		$actual = $layer->distinct('key', $this->pieceRecords);
 		$this->assertArraySubset([0 => '35_', 5 => '35_36', 15 => '35_37', 50 => '36_38'], $actual);
 	}
 	
 	public function testDistinctFromProperty() {
 		$layer = new Layer([], 'contacts');
-		$actual = $layer->trait_distinct('format_id', $this->pieceRecords);
+		$actual = $layer->distinct('format_id', $this->pieceRecords);
 		$this->assertArraySubset([0 => '36', 5 => '37', 10 => '38'], $actual);
 	}
 	

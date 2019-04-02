@@ -75,7 +75,7 @@ trait LayerAccessTrait {
 				);
 		}
 		$result = $this->load($argObj);
-		return $this->trait_distinct($ValueSource, $result);
+		return $this->distinct($ValueSource, $result);
 	}
 	
 	/**
@@ -173,7 +173,7 @@ trait LayerAccessTrait {
 	 * @param array $data Array of entities (required except for Layer calls)
 	 * @return array Array containing the unique values found
 	 */
-	public function trait_distinct($sourcePoint, $data = null) {
+	public function distinct($sourcePoint, $data = null) {
 		$rawData = $this->insureData($data);
 		return array_unique($this->valueList($sourcePoint, $rawData));
 	}
