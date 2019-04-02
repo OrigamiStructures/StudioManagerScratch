@@ -94,17 +94,36 @@ class RolodexCardTest extends TestCase
     }
 
     /**
+     * Test membershipEntities method
+     *
+     * @return void
+     */
+    public function testMembershipEntities()
+    {
+        $this->assertCount(2, $this->Person->membershipEntities(),
+            'The person card\'s membershipEntities() accessor did not work');
+        
+        $this->assertCount(0, $this->Group->membershipEntities(),
+            'The group card\'s membershipEntities() accessor did not work');
+        
+    }
+
+    /**
      * Test memberships method
      *
      * @return void
      */
     public function testMemberships()
     {
-        $this->assertCount(2, $this->Person->memberships(),
-            'The person card\'s memberships() accessor did not work');
+        $this->assertArraySubset(
+				['Drake Family', 'Wonderland Group'], 
+				$this->Person->memberships(),
+            'The person card\'s memberships() (name listcreator) did not work');
         
-        $this->assertCount(0, $this->Group->memberships(),
-            'The group card\'s memberships() accessor did not work');
+        $this->assertArraySubset(
+				[], 
+				$this->Group->memberships(),
+            'The group card\'s memberships() (name listcreator) did not work');
         
     }
 }

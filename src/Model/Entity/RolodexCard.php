@@ -20,10 +20,14 @@ class RolodexCard extends StackEntity {
 		return is_a($this->memberships, '\App\Model\Lib\Layer');
 	}
 	
-	public function memberships() {
+	public function membershipEntities() {
 		if ($this->isMember()) {
 			return $this->memberships->load();
 		}
 		return [];
+	}
+	
+	public function memberships() {
+		return $this->distinct('name', $this->membershipEntities());
 	}
 }
