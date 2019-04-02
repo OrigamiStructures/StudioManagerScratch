@@ -471,7 +471,7 @@ class LayerTest extends TestCase
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct,
             'distinct on a valid property did not return expected values');
-        $this->assertEquals([36], $layer->distinct('format_id'),
+        $this->assertEquals([36], $layer->trait_distinct('format_id'),
             'distinct on a valid property did not return expected values');
     }
     

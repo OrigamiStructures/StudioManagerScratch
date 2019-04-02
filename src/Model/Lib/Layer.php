@@ -396,38 +396,10 @@ class Layer implements LayerAccessInterface {
 		return array_unique($this->valueList($sourcePoint, $data));
 	}
 	
-	public function distinct($property, $layer = '') {
-        $ValueSource = $this->normalizeDistinctArgs($property);
-//        if (!$this->has($property)) {
-//            return [];
-//        }
-//        osd($this->_entities[965]);;
-        $set = new Collection($this->_data);
-        $asKeys = $set->reduce(function ($accumulated, $entity) use ($ValueSource){
-            $value = $ValueSource->value($entity);
-                if (!empty($value)) {
-                    $accumulated += [$value => True];
-                }            
-                return $accumulated;
-             }, []);
-        return array_keys($asKeys);
-    }
-	
 	public function unwrap() {
 		return $this->_data;
 	}
     
-    private function normalizeDistinctArgs($property) {
-        if (is_string($property)) {
-            $arg = $this->accessArgs()
-                ->setLayer($this->layerName())
-                ->setValueSource($property);
-        } else {
-            $arg = $property;
-        }
-        return $arg->ValueSource;
-    }
-	
     /**
      * Get the records with a matching foreign key value
      * 
