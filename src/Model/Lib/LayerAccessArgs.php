@@ -129,8 +129,8 @@ protected $data;
         return $this->data()->load($this);
     }
     
-    public function loadDistinct() {
-        return $this->data()->loadDistinct($this);
+    public function loadDistinct($sourcePoint = null) {
+        return $this->data()->loadDistinct($this, $sourcePoint);
     }
     
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">

@@ -65,9 +65,17 @@ trait LayerAccessTrait {
     
 //	public function all($property);
 //	
-	public function loadDistinct($argObj){
+	public function loadDistinct($argObj, $sourcePoint = null){
+		if (is_null($sourcePoint)) {
+			$ValueSource = $argObj->ValueSource;
+		} else {
+			$ValueSource = new ValueSource(
+					$argObj->valueOf('layer'), 
+					$sourcePoint
+				);
+		}
 		$result = $this->load($argObj);
-		return $this->trait_distinct($argObj->ValueSource, $result);
+		return $this->trait_distinct($ValueSource, $result);
 	}
 	
 	/**
