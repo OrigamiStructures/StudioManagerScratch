@@ -126,4 +126,23 @@ class RolodexCardTest extends TestCase
             'The group card\'s memberships() (name listcreator) did not work');
         
     }
+
+    /**
+     * Test memberships method
+     *
+     * @return void
+     */
+    public function testMembershipIDs()
+    {
+        $this->assertArraySubset(
+				[3,4], 
+				$this->Person->membershipIDs(),
+            'The person card\'s membershipIDs() did not work');
+        
+        $this->assertArraySubset(
+				[], 
+				$this->Group->membershipIDs(),
+            'The group card\'s membershipIDs() did not work');
+        
+    }
 }
