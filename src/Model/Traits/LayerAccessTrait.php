@@ -139,7 +139,7 @@ trait LayerAccessTrait {
 	 * @param array $data Array of entities
 	 * @return array Array containing the unique values found
 	 */
-	public function valueList($sourcePoint, $data) {
+	public function valueList($sourcePoint, $data =[]) {
 		$ValueSource = $this->defineValueSource($sourcePoint, $data);
 		if ($ValueSource) {
 			$result = collection($data)
@@ -165,8 +165,20 @@ trait LayerAccessTrait {
 	 * @param array $data Array of entities
 	 * @return array Array containing the unique values found
 	 */
-	public function trait_distinct($sourcePoint, $data) {
-		return array_unique($this->valueList($sourcePoint, $data));
+	public function trait_distinct($sourcePoint, $data = null) {
+		$rawData = $this->insureData($data);
+		return array_unique($this->valueList($sourcePoint, $rawData));
+	}
+	
+	private function insureData($data) {
+		if ($data !== null) {
+			$result = $data;
+		} elseif (is_a($this, 'App\Model\Lib\Layer')) {
+			$result = $this->_data;
+		} else {
+			$result = [];
+		}
+		return $result;
 	}
 	
 	/**
