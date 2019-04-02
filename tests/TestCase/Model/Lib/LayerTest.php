@@ -527,6 +527,14 @@ class LayerTest extends TestCase
             . 'when using an argObj');
     }
 	
+	public function testLoadDistinctWithSourcePoint() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->specifyFilter('collected', 0, '>')
+				->loadDistinct('edition_id');
+		$this->assertEquals([35], $actual);
+	}
+	
 	// TRAIT TESTING
 	
 	// value list
