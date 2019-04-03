@@ -15,12 +15,19 @@ namespace App\Controller;
 class RolodexCardsController extends AppController {
 	
 	public function index() {
-//		$this->set('rolodexCards', $this->RolodexCards->Memberships->find('all')->contain(['Members']));
-//		$this->set('rolodexCards', $this->RolodexCards->find('all')->contain(['DataOwner', 'Memberships']));
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
-//		osd($ids);
 		$rolodexCards = $this->RolodexCards->find('stackFrom',  ['layer' => 'identity', 'ids' => $ids]);
 		$this->set('rolodexCards', $rolodexCards);
-//		$this->set('rolodexCards', $this->RolodexCards->Identities->find('all'));
+	}
+	
+	public function groups() {
+		$CategoryCards = $this->getTableLocator()->get('CategoryCards');
+		$ids = $CategoryCards
+				->Identities->find('list')
+				->where(['member_type' => 'Institution'])
+				->toArray();
+		$categoryCards = $CategoryCards->find('stackFrom',  ['layer' => 'identity', 'ids' => $ids]);
+//		osd($categoryCards);die;
+		$this->set('categoryCards', $categoryCards);
 	}
 }
