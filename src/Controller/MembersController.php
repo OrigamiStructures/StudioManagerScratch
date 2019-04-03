@@ -209,7 +209,7 @@ class MembersController extends AppController
         $this->SystemState->referer($this->referer());
 		$dispositions = [];
         $query = $this->Members->find('memberReview');
-		$members = $this->paginate($query);
+		$members = $this->paginate($query, ['limit' => 1000]);
 		
         if($this->SystemState->urlArgIsKnown('member')){
 			$dispositions = $this->Members->Dispositions->find()
