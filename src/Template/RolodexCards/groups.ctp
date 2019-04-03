@@ -12,7 +12,7 @@ foreach($categoryCards->all() as $id => $card) {
 		echo $output;
 	}
 	
-	if ($card->hasMembers()) {
+	if ($card->isGroup()) {
 		echo "<h2>Members</h2>";
 		$output = collection($card->members())
 				->reduce(function($memberList, $name) {
