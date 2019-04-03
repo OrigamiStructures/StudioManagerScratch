@@ -102,10 +102,7 @@ class RolodexCardsTable extends StacksTable {
 	 * @return StackSet
 	 */
     protected function stacksFromIdentities($ids) {
-        if (!is_array($ids)) {
-            $msg = "The ids must be provided as an array.";
-            throw new \BadMethodCallException($msg);
-        }
+        $this->validateIdArgument($ids);
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = FALSE;
@@ -118,6 +115,12 @@ class RolodexCardsTable extends StacksTable {
 			}       
 		}
 		return $this->stacks;
+	}
+	protected function validateIdArgument($ids) {
+        if (!is_array($ids)) {
+            $msg = "The ids must be provided as an array.";
+            throw new \BadMethodCallException($msg);
+        }
 	}
 		
 	protected function marshalStack($id) {
