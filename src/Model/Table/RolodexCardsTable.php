@@ -101,14 +101,15 @@ class RolodexCardsTable extends StacksTable {
 	}
 	
 	protected function loadFromDataOwner($ids) {
-		$record = $this->Identities
+		$records = $this->Identities
 				->find('all')
-				->where(['user_id IN' => $ids])
-				->select('user_id', 'id');
-		$IDs = $joins->reduce(function($accum, $entity, $index){
-			$accum[] = $entity->id;
-			return $accum;
-		}, []);
+				->select(['id', 'user_id'])
+				->where(['user_id IN' => $ids]);
+		$IDs = collection($records)
+				->reduce(function($accum, $entity, $index){
+					$accum[] = $entity->id;
+					return $accum;
+				}, []);
 		return $this->stacksFromIdentities($IDs);
 	}
 
