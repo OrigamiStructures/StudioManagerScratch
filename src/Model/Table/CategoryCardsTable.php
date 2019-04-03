@@ -30,4 +30,35 @@ class CategoryCardsTable extends RolodexCardsTable
 		return $this->stacksFromIdentities($IDs);
 	}
 	
+	protected function marshalMembers($id, $stack) {
+		if ($stack->count('identity')) {
+            $records = $this->GroupsMembers
+                ->find('all')
+                ->where(['group_id' => $id])
+                ->toArray();
+			
+            $joins = collection($records);
+            $IDs = $joins->reduce(function($accum, $entity, $index){
+                $accum[] = $entity->member_id;
+                return $accum;
+            }, []);
+            $members = $this->addMembers($IDs, $stack);
+		}
+		return $stack;
+	}
+    
+    private function addMembers($IDs, $stack) {
+        if(empty($IDs)) {
+            $stack->set(['members' => []]);
+        } else {
+            $members = $this->Members
+                ->find('hook')
+                ->where(['id IN' => $IDs])
+                ;
+            $members = $members->toArray();
+            $stack->set(['members' => $members]);
+        }
+        return $stack;
+    }
+	
 }
