@@ -99,8 +99,8 @@ trait LayerAccessTrait {
 	 */
 	public function loadValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
-		$ValueSource = $this->args->sourceObject();
-		return $this->valueList($data, $ValueSource);
+		$ValueSource = $args->sourceObject();
+		return $this->valueList($ValueSource, $data);
 	}
 	
 	/**
