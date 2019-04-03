@@ -25,10 +25,13 @@ class RolodexCardsTable extends StacksTable {
         ];
 	
     protected $seedPoints = [
-			'identity', 
-			'data_owner', 
-			'memberships', 
-		];
+		'identity', 
+		'identities',
+		'data_owner', 
+		'data_owners',
+		'membership', 
+		'memberships'
+	];
 	
 	/**
 	 * Initialize method
@@ -74,8 +77,7 @@ class RolodexCardsTable extends StacksTable {
 	public function findRolodexCards(Query $query, $options) {
         return $this->integer($query, 'id', $options['values']);
 			}
-	
-			
+		
 	/**
 	 * Load the artwork stacks to support these artworks
 	 * 
@@ -86,6 +88,30 @@ class RolodexCardsTable extends StacksTable {
 		return $this->stacksFromIdentities($ids);
 	}
 	
+	protected function loadFromMembership($ids) {
+		$records = $this->GroupsMembers
+			->find('all')
+			->where(['group_id IN' => $ids]);
+		$joins = collection($records);
+		$IDs = $joins->reduce(function($accum, $entity, $index){
+			$accum[] = $entity->member_id;
+			return $accum;
+		}, []);
+		return $this->stacksFromIdentities($IDs);
+	}
+	
+	protected function loadFromDataOwner($ids) {
+		$record = $this->Identities
+				->find('all')
+				->where(['user_id IN' => $ids])
+				->select('user_id', 'id');
+		$IDs = $joins->reduce(function($accum, $entity, $index){
+			$accum[] = $entity->id;
+			return $accum;
+		}, []);
+		return $this->stacksFromIdentities($IDs);
+	}
+
 	/**
 	 * Read the stack from cache or assemble it and cache it
 	 * 
@@ -102,7 +128,6 @@ class RolodexCardsTable extends StacksTable {
 	 * @return StackSet
 	 */
     protected function stacksFromIdentities($ids) {
-        $this->validateIdArgument($ids);
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = FALSE;
@@ -117,41 +142,6 @@ class RolodexCardsTable extends StacksTable {
 		return $this->stacks;
 	}
 	
-	protected function stackFromMemberships($ids) {
-        $this->validateIdArgument($ids);
-		$records = $this->GroupsMembers
-			->find('all')
-			->where(['group_id' => $id])
-			->toArray();
-		$joins = collection($records);
-		$IDs = $joins->reduce(function($accum, $entity, $index){
-			$accum[] = $entity->member_id;
-			return $accum;
-		}, []);
-		return $this->stacksFromIdentities($IDs);
-	}
-	
-	protected function stackFromDataOwner($ids) {
-        $this->validateIdArgument($ids);
-		$record = $this->Identities
-				->find('all')
-				->where(['user_id' => $ids])
-				->select('user_id', 'id')
-				->toArray();
-		$IDs = $joins->reduce(function($accum, $entity, $index){
-			$accum[] = $entity->id;
-			return $accum;
-		}, []);
-		return $this->stacksFromIdentities($IDs);
-	}
-	
-	protected function validateIdArgument($ids) {
-        if (!is_array($ids)) {
-            $msg = "The ids must be provided as an array.";
-            throw new \BadMethodCallException($msg);
-        }
-	}
-		
 	protected function marshalStack($id) {
 
 		$layers = Hash::extract($this->stackSchema, '{n}.name');
