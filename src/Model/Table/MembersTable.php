@@ -455,4 +455,11 @@ class MembersTable extends AppTable
         return $entity;
     }
 	
+	public function findHook(Query $query, array $options) {
+		
+		$result = $query
+            ->where(['active' => 1]);
+		return $result;
+	}
+	
 }
