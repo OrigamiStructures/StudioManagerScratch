@@ -16,6 +16,11 @@ class RolodexCard extends StackEntity {
 		return $this->primaryEntity()->name();
 	}
 	
+	/**
+	 * Is `memberships` a Layer object (TRUE) or array (FALSE)
+	 * 
+	 * @return boolean
+	 */
 	public function isMember() {
 		return is_a($this->memberships, '\App\Model\Lib\Layer');
 	}
