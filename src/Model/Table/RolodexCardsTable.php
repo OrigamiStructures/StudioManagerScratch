@@ -116,6 +116,35 @@ class RolodexCardsTable extends StacksTable {
 		}
 		return $this->stacks;
 	}
+	
+	protected function stackFromMemberships($ids) {
+        $this->validateIdArgument($ids);
+		$records = $this->GroupsMembers
+			->find('all')
+			->where(['group_id' => $id])
+			->toArray();
+		$joins = collection($records);
+		$IDs = $joins->reduce(function($accum, $entity, $index){
+			$accum[] = $entity->member_id;
+			return $accum;
+		}, []);
+		return $this->stacksFromIdentities($IDs);
+	}
+	
+	protected function stackFromDataOwner($ids) {
+        $this->validateIdArgument($ids);
+		$record = $this->Identities
+				->find('all')
+				->where(['user_id' => $ids])
+				->select('user_id', 'id')
+				->toArray();
+		$IDs = $joins->reduce(function($accum, $entity, $index){
+			$accum[] = $entity->id;
+			return $accum;
+		}, []);
+		return $this->stacksFromIdentities($IDs);
+	}
+	
 	protected function validateIdArgument($ids) {
         if (!is_array($ids)) {
             $msg = "The ids must be provided as an array.";
