@@ -136,6 +136,10 @@ protected $data;
 	public function loadKeyValueList() {
 		return $this->data()->loadKeyValueList($this);
 	}
+	
+	public function loadValueList() {
+		return $this->data()->loadValueList($this);
+	}
     
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
