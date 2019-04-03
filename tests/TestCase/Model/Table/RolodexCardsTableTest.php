@@ -193,4 +193,40 @@ class RolodexCardsTableTest extends TestCase
             'Not the membership name expected');
         
     }
+	
+	public function testStackFromMembership() {
+		$cards = $this->RolodexCards->find(
+				'stackFrom', 
+				['layer' => 'membership', 'ids' => [4]]);
+		$this->assertCount(2, $cards->load(),
+				'building from membership ids did not find the right '
+				. 'number of stacks');
+		$this->assertArraySubset(
+			[1,2], 
+			$cards->find()
+				->setLayer('identity')
+				->setValueSource('id')
+				->loadValueList(),
+				'building from membership ids did not pull the correct '
+				. 'identity records to head the stacks');
+	}
+	
+	public function testStackFromDataOwner() {
+		$cards = $this->RolodexCards->find(
+				'stackFrom', 
+				['layer' => 'data_owner', 'ids' => ['f22f9b46-345f-4c6f-9637-060ceacb21b2']]);
+		$this->assertCount(9, $cards->load(),
+				'building from data_owner ids did not find the right '
+				. 'number of stacks');
+		$this->assertArraySubset(
+			[1,2,3,4,5,6,7,8,9], 
+			$cards->find()
+				->setLayer('identity')
+				->setValueSource('id')
+				->loadValueList(),
+				'building from data_owner ids did not pull the correct '
+				. 'identity records to head the stacks');
+	}
+		 
+
 }
