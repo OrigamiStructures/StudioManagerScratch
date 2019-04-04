@@ -18,9 +18,6 @@ class OrganizationCardsTable extends CategoryCardsTable {
 	public function initialize(array $config) {
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
-//		$this->layerTables[] = 'Members';
-//		$this->stackSchema[] = ['name' => 'members',	'specs' => ['type' => 'layer']];
-//		$this->seedPoints = array_merge($this->seedPoints, ['member', 'members']);
 		parent::initialize($config);
 	}
 }
