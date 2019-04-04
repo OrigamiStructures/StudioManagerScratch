@@ -2,6 +2,8 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\CategoryCard;
+use App\Model\Traits\ContactableTrait;
+use App\Model\Traits\ReceiverTrait;
 
 /**
  * Description of CategoryCard
@@ -10,5 +12,6 @@ use App\Model\Entity\CategoryCard;
  */
 class OrganizationCard extends CategoryCard{
 	
+	use ContactableTrait, ReceiverTrait;
 	
 }
