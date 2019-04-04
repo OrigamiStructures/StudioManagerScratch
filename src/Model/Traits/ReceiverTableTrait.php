@@ -7,7 +7,7 @@ namespace App\Model\Traits;
  *
  * @author dondrake
  */
-trait ReceiverTrait {
+trait ReceiverTableTrait {
 	
 	public function initializeReceiverCard() {
 		$this->layerTables[] = 'Dispositons';

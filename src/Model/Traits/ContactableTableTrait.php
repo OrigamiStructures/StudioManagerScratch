@@ -7,7 +7,7 @@ namespace App\Model\Traits;
  *
  * @author dondrake
  */
-trait ContactableTrait {
+trait ContactableTableTrait {
 	
 	public function initializeContactableCard() {
 		$this->layerTables = array_merge($this->layerTables, ['Addresses', 'Contacts']);

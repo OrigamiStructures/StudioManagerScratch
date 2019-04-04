@@ -4,8 +4,8 @@ namespace App\Model\Table;
 use App\Model\Table\RolodexCardsTable;
 
 use Cake\ORM\Table;
-use App\Model\Traits\ContactableTrait;
-use App\Model\Traits\ReceiverTrait;
+use App\Model\Traits\ContactableTableTrait;
+use App\Model\Traits\ReceiverTableTrait;
 
 /**
  * CakePHP PersonCardsTable
@@ -14,8 +14,8 @@ use App\Model\Traits\ReceiverTrait;
 class PersonCardsTable extends RolodexCardsTable {
 	
 	
-	use ContactableTrait;
-	use ReceiverTrait;
+	use ContactableTableTrait;
+	use ReceiverTableTrait;
 	
 	public function initialize(array $config) {
 		$this->initializeContactableCard();

@@ -3,8 +3,8 @@
 namespace App\Model\Table;
 
 use App\Model\Table\CategoryCardsTable;
-use App\Model\Traits\ContactableTrait;
-use App\Model\Traits\ReceiverTrait;
+use App\Model\Traits\ContactableTableTrait;
+use App\Model\Traits\ReceiverTableTrait;
 
 /**
  * CakePHP OrganizationCardsTable
@@ -12,8 +12,8 @@ use App\Model\Traits\ReceiverTrait;
  */
 class OrganizationCardsTable extends CategoryCardsTable {
 	
-	use ContactableTrait;
-	use ReceiverTrait;
+	use ContactableTableTrait;
+	use ReceiverTableTrait;
 	
 	public function initialize(array $config) {
 		$this->initializeContactableCard();
