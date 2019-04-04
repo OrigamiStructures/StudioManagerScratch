@@ -2,12 +2,26 @@
 foreach($categoryCards->all() as $id => $card) {
 	echo "<h1>{$card->name()}</h1>";
 	
+	$output = collection($card->contacts())
+			->reduce(function($accum, $name) {
+		$accum .= '<p>' . $name . '</p>';
+		return $accum;
+	}, '');
+	echo $output;
+	
+	$output = collection($card->addresses())
+			->reduce(function($accum, $name) {
+		$accum .= '<p>' . $name . '</p>';
+		return $accum;
+	}, '');
+	echo $output;
+	
 	if ($card->isMember()) {
 		echo "<h2>Memberships</h2>";
 		$output = collection($card->memberships())
-				->reduce(function($membershipList, $name) {
-			$membershipList .= '<p>' . $name . '</p>';
-			return $membershipList;
+				->reduce(function($accum, $name) {
+			$accum .= '<p>' . $name . '</p>';
+			return $accum;
 		}, '');
 		echo $output;
 	}
@@ -15,9 +29,9 @@ foreach($categoryCards->all() as $id => $card) {
 	if ($card->isGroup()) {
 		echo "<h2>Members</h2>";
 		$output = collection($card->members())
-				->reduce(function($memberList, $name) {
-			$memberList .= '<p>' . $name . '</p>';
-			return $memberList;
+				->reduce(function($accum, $name) {
+			$accum .= '<p>' . $name . '</p>';
+			return $accum;
 		}, '');
 		echo $output;
 	}
