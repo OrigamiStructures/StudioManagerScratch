@@ -21,7 +21,7 @@ trait ContactableTrait {
 		return [];
 	}
 	
-	public function memberIDs() {
+	public function contactIDs() {
 		return $this->valueList('id', $this->contactEntities());
 	}
 
