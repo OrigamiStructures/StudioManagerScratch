@@ -21,7 +21,7 @@ class RolodexCardsController extends AppController {
 	}
 	
 	public function groups() {
-		$CategoryCards = $this->getTableLocator()->get('CategoryCards');
+		$CategoryCards = $this->getTableLocator()->get('OrganizationCards');
 		$ids = $CategoryCards
 				->Identities->find('list')
 				->where(['member_type' => 'Institution'])
