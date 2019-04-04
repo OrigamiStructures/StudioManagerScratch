@@ -42,7 +42,7 @@ class CategoryCardsTable extends RolodexCardsTable
                 $accum[] = $entity->member_id;
                 return $accum;
             }, []);
-            $members = $this->addMembers($IDs, $stack);
+            $stack = $this->addMembers($IDs, $stack);
 		}
 		return $stack;
 	}

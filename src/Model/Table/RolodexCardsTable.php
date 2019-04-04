@@ -183,7 +183,7 @@ class RolodexCardsTable extends StacksTable {
                 $accum[] = $entity->group_id;
                 return $accum;
             }, []);
-            $memberships = $this->addMemberships($IDs, $stack);
+            $stack = $this->addMemberships($IDs, $stack);
 		}
 		return $stack;
 	}
