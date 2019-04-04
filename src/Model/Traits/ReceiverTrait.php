@@ -10,9 +10,19 @@ namespace App\Model\Traits;
 trait ReceiverTrait {
 	
 	public function initializeReceiverCard() {
-//		$this->layerTables[] = 'Members';
-//		$this->stackSchema[] = ['name' => 'members',	'specs' => ['type' => 'layer']];
-//		$this->seedPoints = array_merge($this->seedPoints, ['member', 'members']);
+		$this->layerTables[] = 'Dispositons';
+		$this->stackSchema[] = ['name' => 'dispositions',	'specs' => ['type' => 'layer']];
+		$this->seedPoints = array_merge($this->seedPoints, ['disposition', 'dispositions']);
 	}
+	
+	public function loadFromDisposition($ids) {
+		
+	}
+	
+	public function marshalDispositions($id, $stack) {
+		return $stack;
+	}
+	
+	
 	
 }

@@ -10,9 +10,31 @@ namespace App\Model\Traits;
 trait ContactableTrait {
 	
 	public function initializeContactableCard() {
-//		$this->layerTables[] = 'Members';
-//		$this->stackSchema[] = ['name' => 'members',	'specs' => ['type' => 'layer']];
-//		$this->seedPoints = array_merge($this->seedPoints, ['member', 'members']);
+		$this->layerTables = array_merge($this->layerTables, ['addresses', 'contacts']);
+		$this->stackSchema[] = ['name' => 'addresses',	'specs' => ['type' => 'layer']];
+		$this->stackSchema[] = ['name' => 'contacts',	'specs' => ['type' => 'layer']];
+		$this->seedPoints = array_merge($this->seedPoints, [
+			'address', 
+			'addresses', 
+			'contact', 
+			'contacts'
+			]);
+	}
+	
+	public function loadFromAddress($ids) {
+		
+	}
+	
+	public function marshalAddresses($id, $stack) {
+		return $stack;
+	}
+	
+	public function loadFromContact($ids) {
+		
+	}
+	
+	public function marshalContacts($id, $stack) {
+		return $stack;
 	}
 	
 }
