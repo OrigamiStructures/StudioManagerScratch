@@ -87,6 +87,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/CategoryCardsTableTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
