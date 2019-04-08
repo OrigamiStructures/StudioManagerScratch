@@ -183,7 +183,7 @@ class RolodexCardsTable extends StacksTable {
                 $accum[] = $entity->group_id;
                 return $accum;
             }, []);
-            $memberships = $this->addMemberships($IDs, $stack);
+            $stack = $this->addMemberships($IDs, $stack);
 		}
 		return $stack;
 	}
@@ -196,8 +196,7 @@ class RolodexCardsTable extends StacksTable {
                 ->find('hook')
                 ->where(['id IN' => $IDs])
                 ;
-            $memberships = $memberships->toArray();
-            $stack->set(['memberships' => $memberships]);
+            $stack->set(['memberships' => $memberships->toArray()]);
         }
         return $stack;
     }
