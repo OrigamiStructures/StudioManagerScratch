@@ -27,7 +27,7 @@ class ArtStacksController extends AppController
         $pieceSet = $this->ArtStacks->layer('Pieces')->find()->where(['edition_id' => 35]) ->toArray();
         
         $layer = new Layer($pieceSet);
-        osd($layer->distinct('edition_id'));
+        osd($layer->trait_distinct($piecesSet, 'edition_id'));
     }
 
 }

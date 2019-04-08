@@ -27,7 +27,7 @@ interface LayerAccessInterface {
 	public function layer(array $entities);
 	
 	/* Done */
-	public function distinct($propery, $layer = '');
+//	public function distinct($propery, $layer = '');
 	
 	/* Done */
 	public function element($number);

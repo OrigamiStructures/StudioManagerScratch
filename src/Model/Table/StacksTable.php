@@ -198,4 +198,7 @@ class StacksTable extends Table
 		return $q;
 	}
 
+	public function hasSeed($name) {
+		return in_array($name, $this->seedPoints);
+	}
 }

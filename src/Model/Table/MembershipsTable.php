@@ -22,14 +22,19 @@ use Cake\ORM\Query;
 class MembershipsTable extends Table {
 
 	public function initialize(array $config) {
-		$this->setTable('groups');
+		$this->setTable('members');
 		$this->initializeAssociations();
 		parent::initialize($config);
 	}
 
 	public function initializeAssociations() {
-		$this->belongsTo('GroupIdentities')
-				->setForeignKey('member_id');
+        $this->belongsToMany(
+			'RolodexCards', 
+			['joinTable' => 'groups_members'])
+			->setForeignKey('group_id')
+			->setTargetForeignKey('member_id')
+			->setProperty('members')
+			;
 	}
 
 	/**
@@ -52,31 +57,32 @@ class MembershipsTable extends Table {
 	public function findHook(Query $query, array $options) {
 		
 		$result = $query
-			->contain(['GroupIdentities'])
-			->mapReduce($this->hookMapper(), $this->dummyReducer())
+            ->where(['active' => 1])
+//			->contain(['GroupIdentities'])
+//			->mapReduce($this->hookMapper(), $this->dummyReducer())
 //            ->toArray()
 			;
 //		return $result['groupIdentities'];
 		return $result;
 	}
 	
-	protected function hookMapper() {
-		return function ($group, $key, $mapReduce) {
-			$groupIdentity = $group->group_identity;
-			$groupIdentity->group_id = $group->id;
-			$groupIdentity->group_active = $group->active;
-			unset($groupIdentity->created, $groupIdentity->modified);
-			$group = $groupIdentity;
-			$group->clean();
-			
-			$mapReduce->emitIntermediate($group, 'groupIdentities');
-		};
-	}
-	
-	protected function dummyReducer() {
-		return function ($group, $groupIdentity, $mapReduce) {
-			$mapReduce->emit($group, 'groupIdentities');
-		};
-	}
+//	protected function hookMapper() {
+//		return function ($group, $key, $mapReduce) {
+//			$groupIdentity = $group->group_identity;
+//			$groupIdentity->group_id = $group->id;
+//			$groupIdentity->group_active = $group->active;
+//			unset($groupIdentity->created, $groupIdentity->modified);
+//			$group = $groupIdentity;
+//			$group->clean();
+//			
+//			$mapReduce->emitIntermediate($group, 'groupIdentities');
+//		};
+//	}
+//	
+//	protected function dummyReducer() {
+//		return function ($group, $groupIdentity, $mapReduce) {
+//			$mapReduce->emit($group, 'groupIdentities');
+//		};
+//	}
 
 }

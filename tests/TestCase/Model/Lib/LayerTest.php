@@ -153,6 +153,18 @@ class LayerTest extends TestCase
         $this->expectExceptionMessageRegExp('/expects to find \$entity->id/');
         $layer = new Layer([$art], null);
     }
+    
+    public function testMembersFromTheTrait() {
+        $layer = new Layer($this->fivePieces);
+        $this->assertCount(5, $layer->members(),
+            'members() did not return an array of the expected size');
+    }
+    
+    public function testMemberFromTheTrait() {
+        $layer = new Layer($this->fivePieces);
+        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->member(962),
+            'member(x) did not return a piece entity');
+    }
         
     /**
      * test name property
@@ -336,7 +348,8 @@ class LayerTest extends TestCase
 		 * process needs to be tightened up. visibleProperties() need 
 		 * Entity::accessible to be set to something other than '*' ?
 		 */
-        $this->assertEquals(0, count($layer->load($first_badSearch_args)));        
+        $this->assertEquals(0, count($layer->load($first_badSearch_args)),
+            'Find first on a bad source pointer still found someting.');        
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
 				->setLimit(1)
@@ -451,18 +464,165 @@ class LayerTest extends TestCase
         $this->assertTrue($first < $middle && $middle < $last);
     }
     
-    public function testDistinct() {
+    public function testDistinctWithValidPropertyManual() {
         $layer = new Layer($this->fivePieces);
         
-        $distinct = $layer->distinct('number');
+        $distinct = $layer->distinct('number', $this->fivePieces);
         sort($distinct);
-        $this->assertEquals([1,2,3,4,5], $distinct);
-        $this->assertEquals([36], $layer->distinct('format_id'));
-        
-//        foreach ($this->fivePieces as $entity) {
-//            $this->assertContains($entity->id, $layer->IDs());
-//        }
-//        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals([1,2,3,4,5], $distinct,
+            'distinct on a valid property did not return expected values');
+        $this->assertEquals([36], $layer->distinct('format_id'),
+            'distinct on a valid property did not return expected values');
     }
     
+    public function testDistinctWithBadProperyManual() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->distinct('wrong', $this->fivePieces);
+        $this->assertEmpty($distinct, 'Distinct on a non-existent '
+            . 'property/method value source did not return an empty array');
+    }
+    
+    public function testDistinctWithMethodCallManual() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->distinct('key', $this->fivePieces);
+        $this->assertArraySubset(['35_36'], $distinct,
+            'Distinct call on a method source didn\'t return expected value');
+    }
+    
+    public function testLoadDistinctWithValidPropertyArgObj() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->find()
+            ->setValueSource('number')
+            ->loadDistinct();
+        sort($distinct);
+        $this->assertEquals([1,2,3,4,5], $distinct,
+            'distinct on a valid property did not return expected values '
+            . 'when using an argObj');
+        
+        $distinct = $layer->find()
+            ->setValueSource('format_id')
+            ->loadDistinct();
+        $this->assertEquals([36], $distinct,
+            'distinct on a valid property did not return expected values '
+            . 'when using an argObj');
+    }
+    
+    public function testLoadDistinctWithBadProperyArgObj() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->find()
+            ->setValueSource('wrong')
+            ->loadDistinct();
+        $this->assertEmpty($distinct, 'Distinct on a non-existent '
+            . 'property/method value source did not return an empty array '
+            . 'when using an argObj');
+    }
+    
+    public function testLoadDistinctWithMethodCallArgObj() {
+        $layer = new Layer($this->fivePieces);
+        $distinct = $layer->find()
+            ->setValueSource('key')
+            ->loadDistinct();
+        $this->assertArraySubset(['35_36'], $distinct,
+            'Distinct call on a method source didn\'t return expected value '
+            . 'when using an argObj');
+    }
+	
+	public function testLoadDistinctWithSourcePoint() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->specifyFilter('collected', 0, '>')
+				->loadDistinct('edition_id');
+		$this->assertEquals([35], $actual);
+	}
+	
+	// TRAIT TESTING
+	
+	// value list
+	public function testValueListOnEmptyArray() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->valueList('key', []);
+		$this->assertEmpty($actual);
+	}
+		
+	public function testValueListFromMethod() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->valueList('key', $this->pieceRecords);
+		$this->assertArraySubset([4=>'35_', 5=>'35_36'], $actual);
+		$this->assertCount(53, $actual);
+	}
+	
+	public function testValueListFromProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->valueList('format_id', $this->pieceRecords);
+		$this->assertArraySubset([0=>'36', 5=>'37',10=>38], $actual);
+		$this->assertCount(13, $actual);
+	}
+	
+//	 distinct
+    public function testDistinctOnEmptyArray() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->distinct('key', []);
+		$this->assertEmpty($actual);
+	}
+		
+	public function testDistinctFromMethod() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->distinct('key', $this->pieceRecords);
+		$this->assertArraySubset([0 => '35_', 5 => '35_36', 15 => '35_37', 50 => '36_38'], $actual);
+	}
+	
+	public function testDistinctFromProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->distinct('format_id', $this->pieceRecords);
+		$this->assertArraySubset([0 => '36', 5 => '37', 10 => '38'], $actual);
+	}
+	
+	//key value list
+    public function testKeyValueOnEmptyArray() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->keyValueList('key', 'key', []);
+		$this->assertEmpty($actual);
+	}
+//		
+	public function testKeyValueFromMethodProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->keyValueList('key', 'id', $this->pieceRecords);
+		$this->assertArraySubset(
+				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], 
+				$actual,
+				'Direct keyValueList request with a method for the '
+				. 'key did not return the expected array');
+	}
+	
+	public function testKeyValueFromProperty() {
+		$layer = new Layer([], 'contacts');
+		$actual = $layer->keyValueList('format_id', 'id', $this->pieceRecords);
+		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual,
+				'Basic loadKeyValueList with two properties did not '
+				. 'return the expected array');
+	}
+	
+    public function testLoadKeyValueListSimple() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->setKeySource('format_id')
+				->setValueSource('id')
+				->setLayer('piece')
+				->loadKeyValueList();
+		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
+	}
+	
+    public function testLoadKeyValueListMethodForKey() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->setKeySource('key')
+				->setValueSource('id')
+				->loadKeyValueList();
+		$this->assertArraySubset(
+				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], 
+				$actual,
+				'loadKeyValueList with a method supplied for the key '
+				. 'did not return the expected array');
+	}
+	
 }

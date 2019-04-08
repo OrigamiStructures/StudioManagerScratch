@@ -2,21 +2,13 @@
 
 namespace App\Model\Entity;
 
-use App\Model\Entity\GroupIdentity;
+use App\Model\Entity\Member;
 use Cake\ORM\Entity;
 
 /**
  * CakePHP Membership
  * @author dondrake
  */
-class Membership extends GroupIdentity {
+class Membership extends Member {
 	
-//	public function groupId() {
-//		return $this->group_id;
-//	}
-//	
-//	public function groupIsActive() {
-//		return $this->group_active;
-//	}
-//		
 }

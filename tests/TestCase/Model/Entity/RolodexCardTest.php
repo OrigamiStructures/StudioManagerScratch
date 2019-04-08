@@ -15,7 +15,20 @@ class RolodexCardTest extends TestCase
      *
      * @var \App\Model\Entity\RolodexCard
      */
-    public $RolodexCard;
+    public $Person;
+    public $Groups;
+    public $RolodexCards;
+
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.members',
+        'app.users',
+        'app.groups_members',
+    ];
 
     /**
      * setUp method
@@ -25,7 +38,14 @@ class RolodexCardTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->RolodexCard = new RolodexCard();
+        $this->RolodexCards = $this->getTableLocator()->get('RolodexCards');
+        
+        $targets = ['layer' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        
+        $this->Person = $cards->element(0);
+        $this->Group = $cards->element(1);
+        
     }
 
     /**
@@ -35,7 +55,10 @@ class RolodexCardTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->RolodexCard);
+        unset(
+            $this->Person,
+            $this->Group,
+            $this->RolodexCards);
 
         parent::tearDown();
     }
@@ -47,7 +70,12 @@ class RolodexCardTest extends TestCase
      */
     public function testName()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('Gail Drake', $this->Person->name(),
+            'The person card\'s name() passthrough did not work');
+        
+        $this->assertEquals('Drake Family', $this->Group->name(),
+            'The group card\'s name() passthrough did not work');
+        
     }
 
     /**
@@ -57,7 +85,27 @@ class RolodexCardTest extends TestCase
      */
     public function testIsMember()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Person->isMember(),
+            'The person card\'s isMember() check did not work');
+        
+        $this->assertFalse($this->Group->isMember(),
+            'The group card\'s isMember() check did not work');
+        
+    }
+
+    /**
+     * Test membershipEntities method
+     *
+     * @return void
+     */
+    public function testMembershipEntities()
+    {
+        $this->assertCount(2, $this->Person->membershipEntities(),
+            'The person card\'s membershipEntities() accessor did not work');
+        
+        $this->assertCount(0, $this->Group->membershipEntities(),
+            'The group card\'s membershipEntities() accessor did not work');
+        
     }
 
     /**
@@ -67,6 +115,34 @@ class RolodexCardTest extends TestCase
      */
     public function testMemberships()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertArraySubset(
+				['Drake Family', 'Wonderland Group'], 
+				$this->Person->memberships(),
+            'The person card\'s memberships() (name listcreator) did not work');
+        
+        $this->assertArraySubset(
+				[], 
+				$this->Group->memberships(),
+            'The group card\'s memberships() (name listcreator) did not work');
+        
+    }
+
+    /**
+     * Test memberships method
+     *
+     * @return void
+     */
+    public function testMembershipIDs()
+    {
+        $this->assertArraySubset(
+				[3,4], 
+				$this->Person->membershipIDs(),
+            'The person card\'s membershipIDs() did not work');
+        
+        $this->assertArraySubset(
+				[], 
+				$this->Group->membershipIDs(),
+            'The group card\'s membershipIDs() did not work');
+        
     }
 }
