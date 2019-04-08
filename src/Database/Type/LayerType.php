@@ -1,7 +1,7 @@
 <?php
 namespace App\Database\Type;
 
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
  use Cake\Database\Expression\FunctionExpression;
 use Cake\Database\Type as BaseType;
 use Cake\Database\Type\ExpressionTypeInterface;

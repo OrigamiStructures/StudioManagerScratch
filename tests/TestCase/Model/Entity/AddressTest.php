@@ -96,7 +96,6 @@ class AddressTest extends TestCase
      */
     public function testIsPrimary() {
         $data = $this->primaryProviders();
-		pr($this->primaryProviders());
         foreach($data as $datum) {
            $this->assertEquals($datum[0], $datum[1]->isPrimary()); 
         }

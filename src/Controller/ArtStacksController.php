@@ -3,7 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Cache\Cache;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use App\Model\Table\ArtworksTable as ArtStacks;
 
 /**
@@ -27,7 +27,7 @@ class ArtStacksController extends AppController
         $pieceSet = $this->ArtStacks->layer('Pieces')->find()->where(['edition_id' => 35]) ->toArray();
         
         $layer = new Layer($pieceSet);
-        osd($layer->distinct('edition_id'));
+        osd($layer->trait_distinct($piecesSet, 'edition_id'));
     }
 
 }

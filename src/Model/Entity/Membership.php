@@ -1,12 +1,14 @@
 <?php
+
 namespace App\Model\Entity;
 
+use App\Model\Entity\Member;
 use Cake\ORM\Entity;
 
 /**
- * CakePHP HasMembers
+ * CakePHP Membership
  * @author dondrake
  */
-class HasMember extends Entity {
+class Membership extends Member {
 	
 }

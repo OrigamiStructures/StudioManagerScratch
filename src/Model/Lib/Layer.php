@@ -1,5 +1,5 @@
 <?php
-namespace App\Lib;
+namespace App\Model\Lib;
 
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
@@ -388,19 +388,11 @@ class Layer implements LayerAccessInterface {
     public function IDs($layer = null) {
         return array_keys($this->load());
     }
-    
-	public function distinct($property, $layer = '') {
-        if (!$this->has($property)) {
-            return [];
-        }
-//        osd($this->_entities[965]);;
-        $set = new Collection($this->_data);
-        $asKeys = $set->reduce(function ($accumulated, $entity) use ($property){
-                return $accumulated += [$entity->$property => True];
-             }, []);
-        return array_keys($asKeys);
-    }
 	
+	public function unwrap() {
+		return $this->_data;
+	}
+    
     /**
      * Get the records with a matching foreign key value
      * 

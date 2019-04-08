@@ -1,9 +1,12 @@
 <?php
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 namespace App\Controller;
-
-use App\Model\Table\MembersTable as RolodexCards;
 
 /**
  * CakePHP RolodexCardsController
@@ -11,29 +14,20 @@ use App\Model\Table\MembersTable as RolodexCards;
  */
 class RolodexCardsController extends AppController {
 	
-	public function initialize() {
-		parent::initialize();
-//		$this->loadModel('RolodexCards');
-	}
-	public function testMe() {
-		
-		$ids = [1,2,21,20,19,22];
-		$cards = $this->RolodexCards->find('stackFrom', ['layer' => 'member', 'ids' => $ids]);
-		$this->set('cards', $cards);
-//		$this->labeled(
-//				$cards->load('member',['member_type', 'Institution'])
-//				);
-//
-//		$this->labeled(
-//				$cards->load('member',['member_type', 'Person'])
-//				);
-//
-//		die;
+	public function index() {
+		$ids = $this->RolodexCards->Identities->find('list')->toArray();
+		$rolodexCards = $this->RolodexCards->find('stackFrom',  ['layer' => 'identity', 'ids' => $ids]);
+		$this->set('rolodexCards', $rolodexCards);
 	}
 	
-	public function labeled($cards) {
-		foreach($cards as $card) {
-			echo "<p>{$card->name(LABELED)}</p>";
-		}
+	public function groups() {
+		$CategoryCards = $this->getTableLocator()->get('OrganizationCards');
+		$ids = $CategoryCards
+				->Identities->find('list')
+				->where(['member_type' => 'Institution'])
+				->toArray();
+		$categoryCards = $CategoryCards->find('stackFrom',  ['layer' => 'identity', 'ids' => $ids]);
+//		osd($categoryCards);die;
+		$this->set('categoryCards', $categoryCards);
 	}
 }

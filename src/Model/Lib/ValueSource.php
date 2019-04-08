@@ -62,13 +62,36 @@ class ValueSource {
 	}
 	
 	/**
+	 * Report the name of the configured entity
+	 * 
+	 * @return string
+	 */
+	public function entityName() {
+		return lcfirst(namespaceSplit($this->_name));
+	}
+	
+	/**
+	 * Report the name of the node that will provide data
+	 * 
+	 * @return string
+	 */
+	public function sourceNode() {
+		if ($this->_isMethod) {
+			return "$this->_source()";
+		}
+		return $this->_source;
+	}
+	
+	/**
 	 * Can a value be returned from this object?
 	 * 
 	 * @return boolean
 	 */
 	public function isValid() {
 		$ambiguous = $this->_isMethod && $this->_isProperty;
-		return $this->_isEntity && !$ambiguous && ($this->_isMethod || $this->_isProperty);
+		return $this->_isEntity 
+				&& !$ambiguous 
+				&& ($this->_isMethod || $this->_isProperty);
 	}
 	
 	/**
@@ -79,8 +102,9 @@ class ValueSource {
 	 */
 	public function value(Entity $entity) {
 		if (!$this->registeredEntity($entity) || !$this->isValid()) {
-			$this->registerError('If ' . get_class($entity) . ' is a generic entity, you\'ll have '
-					. 'to bake the model and entity to use it, even if they are left empty.');
+			$this->registerError('If ' . get_class($entity) . 
+					' is a generic entity, you\'ll have to bake the model '
+					. 'and entity to use it, even if they are left empty.');
 			return FALSE;
 		}
 		if ($this->_isMethod) {

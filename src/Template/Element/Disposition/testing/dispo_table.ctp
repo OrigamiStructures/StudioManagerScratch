@@ -5,12 +5,12 @@
 ?>
 <table>
 	<?php if(is_object($result)) : ?>
-	<caption><?= 'Records found: ' . $dispLayer->count(); ?></caption>
+	<caption><?= 'Records found: ' . $activity->count(); ?></caption>
 	<tbody>
 		<?= $this->Html->tableHeaders($columns) ?>
 		<?php //$pieceLists = [];
-		$allInLayer = $dispLayer->accessArgs()->setLimit('all');
-		foreach ($dispLayer->load($allInLayer) as $disposition): //Layer::load
+		$allInLayer = $activity->accessArgs()->setLimit('all');
+		foreach ($activity->load($allInLayer) as $disposition): //Layer::load
 //			$pieceLists[$disposition->id] = 
 //				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
 			$properties = array_intersect_key($disposition->properties(), array_flip($columns));

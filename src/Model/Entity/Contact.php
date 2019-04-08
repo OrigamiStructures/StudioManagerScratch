@@ -77,6 +77,6 @@ class Contact extends Entity
      * @return boolean
      */
     public function isPrimary() {
-        return $this->primary > 0;
+        return $this->primary_contact > 0;
     }
 }

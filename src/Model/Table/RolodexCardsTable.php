@@ -1,194 +1,204 @@
 <?php
+
 namespace App\Model\Table;
 
 use App\Model\Table\StacksTable;
-use App\SiteMetrics\CollectTimerMetrics;
+use App\Model\Behavior\IntegerQueryBehavior;
+use Cake\ORM\Behavior\TimestampBehavior;
+use Cake\Utility\Hash;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
-use App\Cache\ArtStackCacheTools as cacheTools;
+
 
 /**
- * CakePHP RolodexCardsTable
- * @author dondrake
+ * Members Model
+ *
  */
 class RolodexCardsTable extends StacksTable {
-	
-    /**
-     * {@inheritdoc}
-     */
-    protected $layerTables = ['Members', 'Contacts', 'Addresses', 'Groups', 'GroupsMembers'];
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected $stackSchema = 	[
-			['name' => 'member',		'specs' => ['type' => 'layer']],
-            ['name' => 'contacts',		'specs' => ['type' => 'layer']],
-            ['name' => 'addresses',		'specs' => ['type' => 'layer']],
-            ['name' => 'member_of',		'specs' => ['type' => 'layer']],
-			['name' => 'group',			'specs' => ['type' => 'layer']],
-            ['name' => 'has_members',	'specs' => ['type' => 'layer']],
-        ];
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected $seedPoints = [
-			'member', 
-			'contact', 'contacts', 
-			'address', 'addresses', 
-			'member_of', 'members_of', 
-			'group', 'groups', 
-			'has_members', 'has_member', 
-		];
 
+    protected $layerTables = ['Identities', 'GroupsMembers'];
+
+	protected $stackSchema = 	[
+            ['name' => 'identity',		'specs' => ['type' => 'layer']],
+            ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
+            ['name' => 'memberships',	'specs' => ['type' => 'layer']],
+        ];
+	
+    protected $seedPoints = [
+		'identity', 
+		'identities',
+		'data_owner', 
+		'data_owners',
+		'membership', 
+		'memberships'
+	];
 	
 	/**
-     * Initialize method
-     *
-     * @param array $config The configuration for the Table.
-     * @return void
-     */
-    public function initialize(array $config) {
-        parent::initialize($config);
+	 * Initialize method
+	 *
+	 * @param array $config The configuration for the Table.
+	 * @return void
+	 */
+	public function initialize(array $config) {
 		$this->setTable('members');
+		$this->_initializeAssociations();
+		parent::initialize($config);
+	}
+
+	protected function _initializeAssociations() {
+		// also see $this::layerTables setup by StackTable
+		$this->belongsTo('DataOwners')
+			->setProperty('dataOwner')
+			->setForeignKey('user_id')
+			->setFinder('hook')
+			;
+        $this->belongsToMany(
+			'Memberships', 
+			['joinTable' => 'groups_members'])
+			->setForeignKey('member_id')
+			->setTargetForeignKey('group_id')
+			->setProperty('memberships')
+			->setFinder('hook')
+			;
+	}
+
+    protected function _initializeBehaviors() {
+        $this->addBehavior('IntegerQuery');
+        $this->addBehavior('Timestamp');
     }
 	
-// <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">
-	
+	/**
+	 * By id or array of IDs
+	 * 
+	 * @param \App\Model\Table\Query $query
+	 * @param array $options
+	 * @return array
+	 */
+	public function findRolodexCards(Query $query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+			}
+		
 	/**
 	 * Load the artwork stacks to support these artworks
 	 * 
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
-	protected function loadFromMember($ids) {
-		return $this->stacksFromMembers($ids);
+	protected function loadFromIdentity($ids) {
+		return $this->stacksFromIdentities($ids);
 	}
-
-// </editor-fold>
+	
+	protected function loadFromMembership($ids) {
+		$records = $this->GroupsMembers
+			->find('all')
+			->where(['group_id IN' => $ids]);
+		$joins = collection($records);
+		$IDs = $joins->reduce(function($accum, $entity, $index){
+			$accum[] = $entity->member_id;
+			return $accum;
+		}, []);
+		return $this->stacksFromIdentities($IDs);
+	}
+	
+	protected function loadFromDataOwner($ids) {
+		$records = $this->Identities
+				->find('all')
+				->select(['id', 'user_id'])
+				->where(['user_id IN' => $ids]);
+		$IDs = collection($records)
+				->reduce(function($accum, $entity, $index){
+					$accum[] = $entity->id;
+					return $accum;
+				}, []);
+		return $this->stacksFromIdentities($IDs);
+	}
 
 	/**
 	 * Read the stack from cache or assemble it and cache it
 	 * 
-	 * This is an alternate finder for cases where you have a set 
-	 * of Members id. 
+	 * This is the destination for all the loadFrom variants. 
+	 * They work to derive the member_id values required to 
+	 * run this stack building process
+	 * 
+	 * There will be other marshalling methods added by the 
+	 * various sub classes. Each sub class holds its own. 
+	 * They are all named by the column names listed in the 
+	 * schema defined in the table. 
 	 * 
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    public function stacksFromMembers($ids) {
-        if (!is_array($ids)) {
-            $msg = "The ids must be provided as an array.";
-            throw new \BadMethodCallException($msg);
-        }
-        
-		$t = CollectTimerMetrics::instance();
-		
-        $this->stacks = new StackSet();
-		
+    protected function stacksFromIdentities($ids) {
+		$this->stacks = new StackSet();
         foreach ($ids as $id) {
-            $le = $t->startLogEntry("ArtStack.$id");
-            $stack = FALSE;
-            $t->start("read", $le);
-            $stack = Cache::read(cacheTools::key($id), cacheTools::config());
-            $t->end('read', $le);
-            
-            if (!$stack && !$this->stacks->isMember($id)) {
-                $t->start("build", $le);
-                $stack = $this->newEntity([]);
-                
-                $member = $this->Members->find('members', ['values' => [$id]]);
-                    $stack->set(['member' => $member->toArray()]);
-                
-                if ($stack->count('member')) {
-					// First do the simple finds
-                    $contacts = $this->Contacts->find('inMembers', ['values' => [$id]]);
-                    $addresses = $this->Addresses->find('inMembers', ['values' => [$id]]);
-                    $group = $this->Groups->find('inMembers', ['values' => [$id]]);
-                    $stack->set([
-						'contacts' => $contacts->toArray(),
-						'addresses' => $addresses->toArray(),
-						'group' => $group->toArray(),
-						]);
-					
-					// TODO
-					//$artist_managers the artist records that assign management 
-					//$managed_artists the artist records allowing the management role
-					//These would be summary layers. Full Detail stack object could 
-					// be built from these summary records. 
-					
-					//Burrow through and set up the Members for the Groups that contain this
-					$memberships = $this->lookupMemberships($id);
-                    $stack->set(['member_of' => $memberships]);
-					
-					//Burrow through and set up the members of this group
-					$group_members = $this->lookupGroupMembers($id, $stack);
-					$stack->set(['has_members' => ((is_array($group_members)) ? 
-						$group_members : $group_members->toArray())]);
-                
-					$t->end('build', $le);
-					$t->start("write", $le);
-	//                Cache::write(cacheTools::key($id), $stack, cacheTools::config());
-					$t->end('write', $le);
-				}
-
-				$t->logTimers($le);
-
-				if ($stack->count('member')) {
-					$stack->clean();
-					$this->stacks->insert($id, $stack);
-				}            
+			$stack = FALSE;
+			if (!$stack && !$this->stacks->isMember($id)) {
+				$stack = $this->marshalStack($id);
 			}
+			if ($stack->count('identity')) {
+				$stack->clean();
+				$this->stacks->insert($id, $stack);
+			}       
 		}
-			
-        return $this->stacks;
-    }
-	
-	/**
-	 * Get the Groups that have this Card as a Member
-	 * 
-	 * What exactly do we need to store? ProxyMember + Group.id ?
-	 * 
-	 * @param string $member_id
-	 * @return array
-	 */
-	private function lookupMemberships($member_id) {
-		$memberships = $this->GroupsMembers->find('inMembers', [
-			'values' => [$member_id],
-			'contain' => ['Groups' => ['ProxyMembers']]]);
-			
-		$collection = new \Cake\Collection\Collection($memberships);
-		$memberships = $collection->reduce(function($accum, $entity){
-			$member = $entity->group->proxy_member;
-			$member->group_id = $entity->group->id;
-			$accum[] = $member;
-			return $accum;
-		}, []);
-			
-		return $memberships;
+		return $this->stacks;
 	}
 	
-	/**
-	 * Get the Members if this is a group
-	 * 
-	 * @param string $member_id
-	 * @return array
-	 */
-	private function lookupGroupMembers($member_id, $stack) {
-		if($stack->isGroup()) {
-			$group_members = $this->GroupsMembers->
-				find('inGroups', ['values' => [$stack->getGroupId]])->
-					contain('Members');
-			
-			$collection = new \Cake\Collection\Collection($group_members);
-			$members = $collection->reduce(function($accum, $entity){
-				$accum[] = $entity->member;
-				return $accum;
-			}, []);
+	protected function marshalStack($id) {
 
-			return $members;
+		$layers = Hash::extract($this->stackSchema, '{n}.name');
+		$stack = $this->newEntity([]);
+		foreach($layers as $layer) {
+			$method = 'marshal'.ucfirst($layer);
+			$stack = $this->$method($id, $stack);
 		}
-		return [];
+		return $stack;
 	}
+	
+	protected function marshalIdentity($id, $stack) {
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id]);
+			$stack->set(['identity' => $identity->toArray()]);
+			return $stack;
+	}
+	
+	protected function marshalData_owner($id, $stack) {
+		if ($stack->count('identity')) {
+			$dataOwner = $this->associations()->get('DataOwners')
+					->find('hook')
+					->where(['id' => $stack->identity->element(0)->user_id]);
+			$stack->set(['data_owner' => $dataOwner->toArray()]);
+		}
+		return $stack;
+	}
+	
+	protected function marshalMemberships($id, $stack) {
+		if ($stack->count('identity')) {
+            $records = $this->GroupsMembers
+                ->find('all')
+                ->where(['member_id' => $id])
+                ->toArray();
+            $joins = collection($records);
+            $IDs = $joins->reduce(function($accum, $entity, $index){
+                $accum[] = $entity->group_id;
+                return $accum;
+            }, []);
+            $stack = $this->addMemberships($IDs, $stack);
+		}
+		return $stack;
+	}
+    
+    private function addMemberships($IDs, $stack) {
+        if(empty($IDs)) {
+            $stack->set(['memberships' => []]);
+        } else {
+            $memberships = $this->_associations->get('Memberships')
+                ->find('hook')
+                ->where(['id IN' => $IDs])
+                ;
+            $stack->set(['memberships' => $memberships->toArray()]);
+        }
+        return $stack;
+    }
+
 }

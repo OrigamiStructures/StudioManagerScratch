@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Entity;
 
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use App\Model\Entity\StackEntity;
 
 /**

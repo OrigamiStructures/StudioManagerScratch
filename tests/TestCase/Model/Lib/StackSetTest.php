@@ -6,7 +6,7 @@ namespace App\Test\TestCase\Model\Lib;
 use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\StackEntity;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 use App\ORM\Entity\Address;
 use App\Model\Lib\StackSet;
 use Cake\TestSuite\TestCase;
@@ -96,153 +96,103 @@ class StackSetTest extends TestCase {
 	}
 
 	/**
-	 * Test insert method
+	 * Test find method
 	 *
 	 * @return void
 	 */
-//	public function testInsert() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test all method
-//	 *
-//	 * @return void
-//	 */
-//	public function testAll() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test members method
-//	 *
-//	 * @return void
-//	 */
-//	public function testMembers() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test element method
-//	 *
-//	 * @return void
-//	 */
-//	public function testElement() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test member method
-//	 *
-//	 * @return void
-//	 */
-//	public function testMember() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test count method
-//	 *
-//	 * @return void
-//	 */
-//	public function testCount() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test isMember method
-//	 *
-//	 * @return void
-//	 */
-//	public function testIsMember() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test ownerOf method
-//	 *
-//	 * @return void
-//	 */
-//	public function testOwnerOf() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test IDs method
-//	 *
-//	 * @return void
-//	 */
-//	public function testIDs() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
+	public function testFind() {
+        $arg = $this->StackEntities->element(1)->find();
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
+            'find() did not create a LayerAccessArgs object');
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
+            'The access object created by find() did not contain the expected data');
+	}
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATON">
 
 // <editor-fold defaultstate="collapsed" desc="Load method tests">
+    
+    public function testLoadDirectlyOnStackSet() {
+        $this->assertTrue(is_array($this->StackEntities->load()),
+            'load() did not return an array as expected');
+        $this->assertArrayHasKey(4, $this->StackEntities->load(), 
+            'load() didn\'t have an expected key (an item ID)');
+    }
 
-    /**
-     * Test load method
-     * 
-     * These all pass through to Layer and that class tests edge cases.
-     * So all I need here is verification of the proper passthrough 
-     * of all the variants
-     *
-     * @return void
-     */
-    public function testLoad() {
-		$format_index_5_arg = $this->StackEntities->accessArgs()
-				->setLayer('formats')
-				->setIdIndex(5);
-        $formats = $this->StackEntities->load($format_index_5_arg);
-//		var_dump($formats);
-		$format = array_shift($formats);
-//		var_dump($format);
+    public function testLoadIndexItemFromLayer() {
+        
+        $formats = $this->StackEntities->find()
+            ->setLayer('formats')
+            ->setIdIndex(5)
+            ->load();
+        
+        $format = array_shift($formats);
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
 				. 'did not return an entity with an expected property value.');
 
-		$argObj = $this->StackEntities->accessArgs()
-				->setLayer('formats')
-				->setIdIndex(8);
-        $formats = $this->StackEntities->load($argObj);
-		$format = array_shift($formats);
+        $formats = $this->StackEntities->find()
+            ->setLayer('formats')
+            ->setIdIndex(8)
+            ->load();
+        
+        $format = array_shift($formats);
         $this->assertStringStartsWith('Digital output', $format->description,
 				'loading a valid format by array value ...->load(\'formats\', 8)... '
 				. 'did not return an entity with an expected property value.');
+    }
 
-		$argObj = $this->StackEntities->accessArgs()
-				->setLayer('pieces')
-				->setValueSource('quantity')
-				->filterValue(140);
-        $pieces = $this->StackEntities->load($argObj);
-//		pr($this->StackEntities);
-//		pr($pieces);
+    public function testLoadHandFiltering() {
+        
+        $pieces = $this->StackEntities->find()
+            ->setLayer('pieces')
+            ->setValueSource('quantity')
+            ->filterValue(140)
+            ->load();
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
 				. 'did not return an entity with an expected property value.');
-
-		$argObj = $this->StackEntities->accessArgs()->setLimit('all')
-				->setLayer('pieces');
-        $this->assertEquals(21, count($this->StackEntities->load($argObj)),
+    }
+    
+    public function testLoadAllOfLayer() {
+        
+        $pieces = $this->StackEntities->find()
+            ->setLimit('all')
+            ->setLayer('pieces')
+            ->load();
+        $this->assertEquals(21, count($pieces),
 				'loading using \'all\' did not return the expected number of entities');
 
-		$argObj = $this->StackEntities->accessArgs()->setLimit('all')
-				->setLayer('formats');
-        $this->assertEquals(4, count($this->StackEntities->load($argObj)),
+        
+        $formats = $this->StackEntities->find()
+            ->setLimit('all')
+            ->setLayer('formats')
+            ->load();
+        $this->assertEquals(4, count($formats),
 				'loading using [\'all\'] did not return the expected number of entities');
-
-		$argObj = $this->StackEntities->accessArgs()
-				->setLimit('first')
-				->setLayer('pieces');
-        $this->assertEquals(2, count($this->StackEntities->load($argObj)),
+        
+    }
+    /**
+     * Test load first of a layer from each stack method
+     *
+     * @return void
+     */
+    public function testLoadFirstOfLayer() {
+        
+        $piece = $this->StackEntities->find()
+            ->setLimit('first')
+            ->setLayer('pieces')
+            ->load();
+        $this->assertEquals(2, count($piece),
 				'loading using \'first\' did not return the first '
 				. 'from each Entity in the stack');
 
-		$argObj = $this->StackEntities->accessArgs()
-				->setLimit(1)
-				->setLayer('formats');
-        $this->assertEquals(2, count($this->StackEntities->load($argObj)),
+        $format = $this->StackEntities->find()
+            ->setLimit(1)
+            ->setLayer('formats')
+            ->load();
+        $this->assertEquals(2, count($format),
 				'loading using [\'first\'] did not return one entity');
     }
 
@@ -271,36 +221,30 @@ class StackSetTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testDistinct() {
+	public function testLoadDistinct() {
 		$this->assertEquals(["Unique","Open Edition","Limited Edition"], 
-				$this->StackEntities->distinct('type', 'editions'),
+				$this->StackEntities
+				->find()
+				->setLayer('editions')
+				->setValueSource('type')
+				->loadDistinct(),
 				'Distinct did not return the expected set of edition types '
 				. 'from a set of stack entities');
 		
-		$this->assertEmpty($this->StackEntities->distinct('type', 'badLayer'),
-				'Distinct did not return an empty array when passed a bad layer');
-		
-		$this->assertEmpty($this->StackEntities->distinct('garbage', 'editions'),
-				'Distinct did not return an empty array when passed a bad property');
 	}
 
-//	/**
-//	 * Test filter method
-//	 *
-//	 * @return void
-//	 */
-//	public function testFilter() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
-//
-//	/**
-//	 * Test keyedList method
-//	 *
-//	 * @return void
-//	 */
-//	public function testKeyedList() {
-//		$this->markTestIncomplete('Not implemented yet.');
-//	}
+	public function testTraitDistinct() {
+		$result = $this->StackEntities
+				->find()
+				->setLayer('editions')
+				->load();
+		$actual = $this->StackEntities->distinct('type', $result);
+		$this->assertEquals(
+			["Unique","Open Edition","Limited Edition"], 
+			$actual,
+			'Distinct did not return the expected set of edition types '
+			. 'from a set of stack entities');
+	}
 
 	/**
 	 * Test linkedTo method

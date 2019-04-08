@@ -2,7 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 
 /**
  * ArtStack Entity

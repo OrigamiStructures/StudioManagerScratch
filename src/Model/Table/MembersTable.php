@@ -23,9 +23,9 @@ use App\Model\Behavior\StringQueryBehavior;
  */
 class MembersTable extends AppTable
 {
-    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
+    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities']];
     
-    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
+    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities'], 'ProxyGroups' => ['Members']];
 	
 // <editor-fold defaultstate="collapsed" desc="Core">
 
@@ -54,10 +54,10 @@ class MembersTable extends AppTable
 
     protected function _initializeBehaviors() {
         $this->addBehavior('IntegerQuery');
+        $this->addBehavior('Timestamp');
     }
 
         protected function _initializeAssociations() {
-        $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -86,18 +86,20 @@ class MembersTable extends AppTable
 			'foreignKey' => 'member_id',
 			'dependent' => TRUE,
 		]);
-        $this->belongsToMany('Groups', [
-            'className' => 'Groups',
+        $this->belongsToMany('Memberships', 
+			['joinTable' => 'groups_members',
             'foreignKey' => 'member_id',
-            'targetForeignKey' => 'group_id',
-            'joinTable' => 'groups_members'
-        ]);
-        $this->hasOne('ProxyGroups', [
-            'className' => 'ProxyGroups',
-            'foreignKey' => 'member_id',
-            'propertyName' => 'proxy_group',
-            'dependent' => TRUE
-        ]);
+            'targetForeignKey' => 'group_id',]);
+//        $this->belongsToMany('Groups', [
+//            'className' => 'Groups',
+//            'joinTable' => 'groups_members'
+//        ]);
+//        $this->hasOne('ProxyGroups', [
+//            'className' => 'ProxyGroups',
+//            'foreignKey' => 'member_id',
+//            'propertyName' => 'proxy_group',
+//            'dependent' => TRUE
+//        ]);
     }
 
 // </editor-fold>
@@ -452,5 +454,12 @@ class MembersTable extends AppTable
         $entity = $this->patchEntity($entity, $dme);
         return $entity;
     }
+	
+	public function findHook(Query $query, array $options) {
+		
+		$result = $query
+            ->where(['active' => 1]);
+		return $result;
+	}
 	
 }

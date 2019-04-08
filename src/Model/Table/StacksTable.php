@@ -77,7 +77,7 @@ class StacksTable extends Table
 	 */
 	protected function _initializeSchema(TableSchema $schema) {
         foreach ($this->stackSchema as $column) {
-            $schema->addColumn($column['name'], $column['specs']);
+				$schema->addColumn($column['name'], $column['specs']);
         }
         return $schema;
     }
@@ -86,7 +86,7 @@ class StacksTable extends Table
 	 * The primary access point to get a concrete stack
 	 * 
 	 * Stacks are meant to provide full context for other detail 
-	 * data sets that have been retirieved for some process. This allows 
+	 * data sets that have been retrieved for some process. This allows 
 	 * working data queries to be small and focused. Once completed, the 
 	 * Stack tables back-fill the context.
 	 * 
@@ -198,4 +198,7 @@ class StacksTable extends Table
 		return $q;
 	}
 
+	public function hasSeed($name) {
+		return in_array($name, $this->seedPoints);
+	}
 }

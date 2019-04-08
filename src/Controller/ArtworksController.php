@@ -11,7 +11,7 @@ use App\Controller\ArtStackController;
 use App\Controller\Component\LayersComponent;
 use Cake\Cache\Cache;
 use App\Model\Lib\IdentitySets;
-use App\Lib\Layer;
+use App\Model\Lib\Layer;
 
 /**
  * Artworks Controller
@@ -347,11 +347,11 @@ class ArtworksController extends ArtStackController
         if (is_object($result)) {
 //            $result = $disp->containAncestry($result);
             $dispositions = $result->toArray();
-            $dispLayer = new Layer($dispositions);
+            $activity = new Layer($dispositions);
             
             $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
             $stacks = $ArtStacks->find('stackFrom', 
-                ['layer' => 'disposition', 'ids' => $dispLayer->IDs()]);
+                ['layer' => 'disposition', 'ids' => $activity->IDs()]);
 			
 			osd(count($stacks->all()));
             
@@ -372,7 +372,7 @@ class ArtworksController extends ArtStackController
         }
 
 //		osd($dispLayer);die;
-        $this->set(compact('stacks', 'result', 'methods', 'dispositions', 'dispLayer'));
+        $this->set(compact('stacks', 'result', 'methods', 'dispositions', 'activity'));
     }
 
     public function composeStack($flat) {

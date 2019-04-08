@@ -43,12 +43,12 @@ class Member extends Entity
 	 * 
 	 * @return string
 	 */
-    public function _getName(){
-        switch ($this->getType()) {
+    protected function _name(){
+        switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(' ', [
-					$this->getFirstName(), 
-					$this->getLastName()
+					$this->firstName(), 
+					$this->lastName()
 				]);
                 break;
             default:
@@ -61,12 +61,12 @@ class Member extends Entity
 	/**
 	 * The assembled `reverse name`; last/first format
 	 */
-    public function _getReverseName(){
-        switch ($this->getType()) {
+    protected function _reverseName(){
+        switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(', ', [
-					$this->getLastName(), 
-					$this->getFirstName(),
+					$this->lastName(), 
+					$this->firstName(),
 				]);
                 break;
             default:
@@ -82,18 +82,18 @@ class Member extends Entity
 	 * Handles messy usage of the first/last name fields for these 
 	 * names that only need one field
 	 * 
-	 * @todo The Member UX needs to route Institution/Group names to first_name
+	 * @todo The Member UX needs to route Institution/Group names to last_name
 	 * 
 	 * @return string
 	 */
 	protected function _institutionName() {
-		if ($this->_properties['first_name'] === $this->_properties['last_name'] ||
-				isset($this->_properties['first_name'])) {
-			$name = $this->_properties['first_name'];
-		} else {
-			$name = $this->_properties['last_name'];
-		}
-		return $name;
+//		if ($this->_properties['first_name'] === $this->_properties['last_name'] ||
+//				isset($this->_properties['first_name'])) {
+//			$name = $this->_properties['first_name'];
+//		} else {
+			return $this->lastName();
+//		}
+//		return $name;
 	}
 
 		/**
@@ -110,16 +110,16 @@ class Member extends Entity
 	public function name($format = FIRST_LAST) {
 		switch ($format) {
 			case FIRST_LAST:
-				return $this->name;
+				return $this->_name();
 				break;
 			case LAST_FIRST:
-				return $this->reverseName;
+				return $this->_reverseName();
 				break;
 			case LABELED:
-				return "{$this->getType()}: $this->name";
+				return "{$this->type()}: {$this->_name()}";
 				break;
 			default:
-				return $this->name;
+				return $this->_name();
 				break;
 		}
 	}
@@ -130,18 +130,18 @@ class Member extends Entity
 	 * @return boolean
 	 */
 	public function isCollector() {
-		if (!is_null($this->getCollector()) && $this->getCollector() > 0 ) {
+		if (!is_null($this->collector()) && $this->collector() > 0 ) {
 			return TRUE;
 		}
 		return FALSE;
 	}
 	
-	protected function getCollector() {
+	public function collector() {
 		return $this->collector;
 	}
     
-	public function getCollectedCount() {
-		$count = $this->getCollector();
+	public function collectedCount() {
+		$count = $this->collector();
 		if (!is_null($count) && $count > 0 ) {
 			return $count;
 		}
@@ -149,13 +149,13 @@ class Member extends Entity
 	}
 	
 	public function isDispositionParticipant() {
-		if (!is_null($this->getDispositionCount()) && $this->getDispositionCount() > 0 ) {
+		if (!is_null($this->dispositionCount()) && $this->dispositionCount() > 0 ) {
 			return TRUE;
 		}
 		return FALSE;
 	}
 	
-	public function getDispositionCount() {
+	public function dispositionCount() {
 		$count = $this->disposition_count;
 		if (!is_null($count) && $count > 0 ) {
 			return $count;
@@ -164,21 +164,18 @@ class Member extends Entity
 	}
 	
 	public function isActive() {
-		if($this->active === 1) {
-			return TRUE;
-		}
-		return FALSE;
+		return $this->active;
 	}
 	
-	public function getFirstName() {
+	public function firstName() {
 		return $this->first_name;
 	}
 	
-	public function getLastName() {
+	public function lastName() {
 		return $this->last_name;
 	}
 	
-	public function getType() {
+	public function type() {
 		return $this->member_type;
 	}
 }

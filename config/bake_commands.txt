@@ -17,10 +17,19 @@ cd/Library/WebServer/Documents/StudioManagerScratch
 ====================================================================
 bin/cake bake.bake test table ArtStacks
 bin/cake bake.bake test --fixtures app.art_stacks,app.artworks,app.editions,app.formats,app.pieces,app.dispositions_pieces table ArtStacks
+bin/cake bake.bake test table RolodexCardsTable
+bin/cake bake.bake test table CategoryCardsTable
+bin/cake bake.bake test table OrganizationCardsTable
+bin/cake bake.bake test table PersonCardsTable
+bin/cake bake.bake test table MembershipsTable
 
 ## BAKING ENTITY TESTS
 ====================================================================
 bin/cake bake.bake test entity ArtStack
+bin/cake bake.bake test entity RolodexCard
+bin/cake bake.bake test entity CategoryCard
+bin/cake bake.bake test entity OrganizationCard
+bin/cake bake.bake test entity PersonCard
 
 ## BAKING CUSTOM FOLDER TESTS
 ====================================================================
@@ -34,7 +43,6 @@ bin/cake bake.bake test ModLib StackSet
 cd /Library/WebServer/Documents/StudioManagerScratch
 
 # App\Lib
-vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestsTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberMessagingTest.php
@@ -43,22 +51,43 @@ vendor/bin/phpunit test tests/TestCase/Lib/SystemStateTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/MembershipsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 # behaviors
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
 # entity
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/MemberTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
-Stack/Layer suite
---------------------------------------------------------------------
-vendor/bin/phpunit test tests/TestCase/Lib/LayerTest.php
+# Stack/Layer suite
+# --------------------------------------------------------------------
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
+
+# RolodexCard entity suite
+# --------------------------------------------------------------------
+vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/CategoryCardsTableTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
@@ -67,6 +96,8 @@ vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
 --------------------------------------------------------------------
 bin/cake bake fixture --records --count 77 Addresses //puts real address data in test files
 bin/cake bake fixture --records --count 19 Artworks
+bin/cake bake fixture --records --count 9 Members //there were some minor edits after bake
+bin/cake bake fixture --records --conditions 'member_id IN (3,4,5,6)' Groups // didn't work
 
 ### One complete artwork stack set
 --------------------------------------------------------------------

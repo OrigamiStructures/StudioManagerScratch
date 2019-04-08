@@ -46,6 +46,8 @@ class LayerAccessArgs {
 	
 use ErrorRegistryTrait;
 
+protected $data;
+
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 	
 	/**
@@ -111,10 +113,34 @@ use ErrorRegistryTrait;
 
 // </editor-fold>
 
-	public function __construct() {
+	public function __construct($data = FALSE) {
+        if($data) {
+            $this->data = $data;
+        }
 		return $this;
 	}
+    
+    public function data() {
+        return $this->data;
+    }
 	
+    
+    public function load() {
+        return $this->data()->load($this);
+    }
+    
+    public function loadDistinct($sourcePoint = null) {
+        return $this->data()->loadDistinct($this, $sourcePoint);
+    }
+	
+	public function loadKeyValueList() {
+		return $this->data()->loadKeyValueList($this);
+	}
+	
+	public function loadValueList() {
+		return $this->data()->loadValueList($this);
+	}
+    
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
 	public function setLayer($param) {
@@ -160,10 +186,10 @@ use ErrorRegistryTrait;
 	}
 
 	public function setKeySource($source) {
-		if ($this->hasKeySourceSource() && $this->valueOf('keySource') != $source) {
+		if ($this->hasKeySource() && $this->valueOf('keySource') != $source) {
 			$this->registerError('Can\'t change `keySource` after it\'s been set.');
 		} else {
-			$this->_value_source = $source;
+			$this->_key_source = $source;
 			$this->setupValueObjects('key');
 		}
 		return $this;
@@ -180,11 +206,13 @@ use ErrorRegistryTrait;
 				}
 				break;
 			case 'value':
+                  $this->evaluateLayer();
 				if (!$this->hasValueObject() && $this->hasLayer()) {
 					$this->buildValueObject();
 				}
 				break;
 			case 'key':
+                  $this->evaluateLayer();
 				if (!$this->hasKeyObject() && $this->hasLayer()) {
 					$this->buildKeyObject();
 				}
@@ -195,6 +223,12 @@ use ErrorRegistryTrait;
 				break;
 		}
 	}
+    
+    private function evaluateLayer() {
+        if (!$this->hasLayer() && is_a($this->data(), 'App\Model\Lib\Layer')) {
+            $this->setLayer($this->data()->layerName());
+        }
+    }
 	
 	private function buildKeyObject() {
 		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->valueOf('keySource'));

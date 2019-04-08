@@ -41,11 +41,23 @@ class GroupsMembersFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'created' => '2015-12-10 21:29:22',
-            'modified' => '2015-12-10 21:29:22',
-            'user_id' => 1,
-            'group_id' => 1,
+            'group_id' => 3,
             'member_id' => 1
+        ],
+        [
+            'id' => 2,
+            'group_id' => 4,
+            'member_id' => 1
+        ],
+        [
+            'id' => 3,
+            'group_id' => 3,
+            'member_id' => 2
+        ],
+        [
+            'id' => 4,
+            'group_id' => 4,
+            'member_id' => 2
         ],
     ];
 }
