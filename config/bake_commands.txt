@@ -17,12 +17,19 @@ cd/Library/WebServer/Documents/StudioManagerScratch
 ====================================================================
 bin/cake bake.bake test table ArtStacks
 bin/cake bake.bake test --fixtures app.art_stacks,app.artworks,app.editions,app.formats,app.pieces,app.dispositions_pieces table ArtStacks
-bin/cake bake.bake test table RolodexCards
+bin/cake bake.bake test table RolodexCardsTable
+bin/cake bake.bake test table CategoryCardsTable
+bin/cake bake.bake test table OrganizationCardsTable
+bin/cake bake.bake test table PersonCardTable
+bin/cake bake.bake test table MembershipsTable
 
 ## BAKING ENTITY TESTS
 ====================================================================
 bin/cake bake.bake test entity ArtStack
 bin/cake bake.bake test entity RolodexCard
+bin/cake bake.bake test entity CategoryCard
+bin/cake bake.bake test entity OrganizationCard
+bin/cake bake.bake test entity PersonCard
 
 ## BAKING CUSTOM FOLDER TESTS
 ====================================================================
