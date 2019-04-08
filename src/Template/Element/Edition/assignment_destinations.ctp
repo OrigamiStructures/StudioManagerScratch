@@ -1,7 +1,7 @@
 <!-- Element/Edition/assignment_destinations.ctp -->
 <?php 
 $radio_destination_data = [];
-foreach($providers as $provider) {
+foreach($providers->providers as $provider) {
 	$key_value = get_class($provider) . "\\{$provider->id}";
 	$entry = [
 		'value' => $key_value,

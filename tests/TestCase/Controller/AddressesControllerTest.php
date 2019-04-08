@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Controller;
 
 use App\Controller\AddressesController;
 use Cake\TestSuite\IntegrationTestCase;
+use App\Test\Fixture\AddressesFixture;
 
 /**
  * App\Controller\AddressesController Test Case
@@ -39,7 +40,9 @@ class AddressesControllerTest extends IntegrationTestCase
      */
     public function testIndex()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+//        $addresses = new AddressesFixture();
+        $addresses = $this->getTableLocator()->get('Addresses');
+        print_r($addresses->find('all')->toArray());
     }
 
     /**

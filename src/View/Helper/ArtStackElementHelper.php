@@ -22,6 +22,8 @@ use BadMethodCallException;
  * choices based on edition type. Those more compelx rules are found in the 
  * EditionFactoryHelper heirarchy.
  * 
+ * @todo This class is being replaced by the LayersComponent. 
+ * 
  * @author dondrake
  */
 class ArtStackElementHelper extends Helper {
@@ -31,171 +33,6 @@ class ArtStackElementHelper extends Helper {
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
 		$this->SystemState = $this->_View->SystemState;
-	}
-	
-	/**
-	 * Choose an element to render a layer based on context and a rule set
-	 * 
-	 * @param string $layer Layer that needs context rules evaluation
-	 * @return string Name of the selected element
-	 */
-	public function choose($layer) {
-		$method = "{$layer}Rule";
-		return $this->$method();
-	}
-	
-	/**
-	 * Choose Form wrapper in creation/refinement cases
-	 * 
-	 * Review will get no decorating wrapper
-	 * 
-	 * Most Creation and all Refine calls set wrap the page content 
-	 *		in a form with a default 'action' attribute
-	 * 
-	 * CreateUnique must wrap and set 'action' manually 
-	 *		because it borrows Artworks->create() for processing
-	 */
-	protected function contentDecorationRule() {
-		switch ($this->SystemState->now()) {
-			case ARTWORK_CREATE_UNIQUE:
-				$element = 'Artwork/createunique_decoration';
-				break;
-			case ARTWORK_CREATE:
-			case ARTWORK_REFINE:
-				$element = 'Artwork/form_decoration';
-				break;
-			default:
-				$element = 'Artwork/no_decoration';
-				break;
-		}
-		return $element;
-	}
-	/**
-	 * The artworks div may be destined to have one or many artwork sections
-	 */
-	protected function artworksContentRule() {
-		if (!is_null($this->SystemState->artwork)) {
-			$element = 'Artwork/full';			
-		} elseif (!is_null($this->SystemState->artworks) && count($this->SystemState->artworks) > 0) {
-			$element = 'Artwork/many';	
-		} else {
-			// there was no spec'd artwork and no pagination result
-			// so this is a new user
-			$element = 'Training/welcome_new_art';
-		}
-		return $element;
-	}
-	
-	protected function artworkContentRule() {
-		switch ($this->SystemState->now()) {
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Artwork/create_unique';
-				break;
-			case ARTWORK_CREATE :
-			case ARTWORK_REFINE :
-				// Refinement must choose based on the context of the edit
-				// Always display if the target is downstream
-				// Always fieldset if this is the target
-				if ($this->SystemState->controller() === 'artworks') {
-					$element = 'Artwork/fieldset';
-					break;
-				}
-			case ARTWORK_REVIEW :
-			case PIECE_RENUMBER :
-			default :
-				$element = 'Artwork/describe';
-		}
-//		osd($element); die;
-		return $element;
-	}
-	
-	/**
-	 * Choose the Edition element to go in the current section.edition
-	 * 
-	 * @return string
-	 */
-	protected function editionContentRule() {
-		$controller = $this->SystemState->controller();
-		
-		switch ($this->SystemState->now()) {
-			case ARTWORK_REVIEW :
-				$element = 'Edition/describe';
-				break;
-			case ARTWORK_CREATE :
-				if ($controller === 'formats') {
-					$element = 'Edition/describe';
-				} else {
-					$element = 'Edition/fieldset';
-				}
-				break;
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Edition/create_unique';
-				break;
-			case ARTWORK_REFINE :
-//				osd($this->SystemState->queryArg('edition'),'query arg');
-//				osd($this->SystemState->edition->id,'edition');
-						
-				// Refinement much choose based on the context of the edit
-				// Always display if the target is downstream
-				// Always fieldset if this is the target
-				// fieldset if target is upstream and this is the only child
-				if ($controller === 'formats') {
-					$element = 'Edition/describe';
-//				} elseif ($controller === 'editions' && 
-//						$this->SystemState->edition->id === $this->SystemState->queryArg('edition')) ||
-//						($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1)) 
-				} elseif ($controller === 'editions' ||
-						($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1)) {
-					$element = 'Edition/fieldset';
-				} else {
-					$element = 'Edition/describe';
-				}
-				break;
-			default :
-				$element = 'Edition/describe';
-		}
-		return $element;
-	}
-	
-	/**
-	 * Choose the Format element to go in the current section.format
-	 * 
-	 * @return string
-	 */
-	protected function formatContentRule() {
-		switch ($this->SystemState->now()) {
-			case ARTWORK_REVIEW :
-				$element = 'Format/describe';
-				break;
-			case ARTWORK_CREATE :
-				$element = 'Format/fieldset';
-				break;
-			case ARTWORK_REFINE :
-				$controller = $this->SystemState->controller();
-				// Refinement must choose based on the context of the edit
-				// Always display if the target is downstream
-				// Always fieldset if this is the target
-				// fieldset if target is upstream and this is the only child
-				if ($controller === 'formats') {
-					$element = 'Format/fieldset';
-				} elseif ($controller === 'artworks' && 
-						$this->SystemState->artwork->edition_count === 1 &&
-						$this->SystemState->edition->format_count === 1) {
-					$element = 'Format/fieldset';
-				} elseif ($controller === 'editions' && 
-						$this->SystemState->edition->format_count === 1) {
-					$element = 'Format/fieldset';
-				} else {
-					$element = 'Format/describe';
-				}
-				break;
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Format/create_unique';
-				break;
-			default :
-				$element = 'Artwork/describe';
-		}
-		return $element;
 	}
 	
 	/**
@@ -219,7 +56,7 @@ class ArtStackElementHelper extends Helper {
 			
 		} else {
 			$first_class = get_class($entity);
-			$second_class = !is_null($edition) ? get_class($edition) : NULL ;
+			$second_class = !is_null($edition) ? get_class($edition) : 'NULL' ;
 			
 			throw new \BadMethodCallException(
 					"Method requires an entity of type Edition or Format, or two entities of types Format and Edition. "

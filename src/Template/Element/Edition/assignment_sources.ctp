@@ -6,8 +6,11 @@ $assignment_source_data = [];
 /**
  * Build some data arrays to feed into the output loop. 
  * Just keeping the logic isolated. Build variables, use variables
+ * 
+ * @todo much of this should go to the AssignHelper, the 'correct' place 
+ *		for re-usable output logic.
  */
-$source = new \Cake\Collection\Collection($providers);
+$source = new \Cake\Collection\Collection($providers->providers);
 $source_output = $source->reduce(function($accumulator, $provider) use($helper, $edition) {
 	$key = $provider->key();
 	$acumulator[$key] = [];
@@ -30,7 +33,7 @@ $source_output = $source->reduce(function($accumulator, $provider) use($helper, 
 
 //osd($source_output);
 
-if (App\Lib\SystemState::isNumberedEdition($edition->type)) {
+if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) {
 	// checkboxes, all checked by default
 	$count = 0;
 	foreach($source_output as $source) {
@@ -62,6 +65,7 @@ if (App\Lib\SystemState::isNumberedEdition($edition->type)) {
 		$input = str_replace(['<div class="input checkbox">', '</div>'], ['', ''], $input);
 		
 		echo '<div class="input checkbox">';
+                echo $this->Form->checkbox("source_for_pieces_$count", $attr);;
 		echo $this->Form->label(
 				"source_for_pieces_$count", 
 				$input . $source['text'] . ' ' . $source['range'], 

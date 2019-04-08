@@ -1,6 +1,6 @@
 			<!-- Element/Edition/assignment_to_move.ctp -->
 			<?php 
-			if (\App\Lib\SystemState::isNumberedEdition($edition->type)) {
+			if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) {
 				$label = 'Pieces to move. Enter numbers (13) or ranges (5-10) separated by commas (, )';
 			} else {
 				$label = 'Enter the quantity of pieces to move.';

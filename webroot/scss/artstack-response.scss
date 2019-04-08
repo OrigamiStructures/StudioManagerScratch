@@ -31,6 +31,10 @@
 .fi.wrench:before { content: "\f215"; }
 .fi.cog:before { content: "\f123"; }
 
+section.container {
+	padding: 1rem 2rem;
+}
+
 /* small up */ 
 @media only screen { 
 }
@@ -104,7 +108,7 @@ section.artwork, section.format {
 	  grid-area: descriptions;
   } 
   
-  div.editions, div.formats {
+  div.editions, div.formats, section.format.summary {
 	  grid-area: children;
   }
   

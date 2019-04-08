@@ -1,17 +1,22 @@
 <?php
-$edition = $providers['edition'];
-$artwork = $providers['edition']['artwork'];
+/**
+ * @todo $edition is only created and stored to support the 
+ *		ArtStackTools->links() method which does detailed validation 
+ *		of current conditions. This is pretty questionable because it is 
+ *		now clear that I've locked in the requirement for specifically 
+ *		named variable to exist before the helper will run. Current 
+ *		circumstances (with $providers->edition in place) show the coupling.
+ */
+ $edition = $providers->edition;
+ /**
+ * @todo $artwork will be available more directly (from ArtworkStack->stackquery() 
+ *		so this wont be necessary later.
+ */
+$artwork = $providers->edition->artwork;
 $this->set(compact('edition', 'artwork'));
 $this->loadHelper('Edition');
 
 // from Edition/text.ctp
-$q = [
-	'controller' => 'editions', 
-	'?' => [
-		'artwork' => $artwork->id,
-		'edition' => $edition->id,
-	]];
-$l = $this->InlineTools->inlineReviewRefine($q);
 $edition_index = isset($edition_index) ? $edition_index : 0 ; 
 
 ?>
@@ -25,15 +30,17 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 				<div class="text">
 					<!--Edition/text.ctp-->
 					<?= $this->Form->input("editions.$edition_index.id", 
-							['type' => 'hidden', 'value' => $edition->id]); ?>
+							['type' => 'hidden', 'value' => $providers->edition->id]); ?>
 
 					<?php
-					if (!empty($edition->series_id)) {
-						echo $this->Html->tag('h3', "Part of the {$edition->series->title} Series");
+					if (!empty($providers->edition->series_id)) {
+						echo $this->Html->tag('h3', "Part of the {$providers->edition->series->title} Series");
 					}
 					?>
 
-					<?= $this->Html->tag('h2', "{$l}$edition->displayTitle"); ?>
+					<?= $this->Html->tag('h2', 
+							$this->ArtStackTools->links('edition', ['review', 'refine']) . 
+							$providers->edition->displayTitle); ?>
 					<!--END Edition/text.ctp-->
 				</div>
 

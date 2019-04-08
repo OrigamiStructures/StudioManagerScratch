@@ -11,6 +11,8 @@ use App\Lib\RenumberRequest;
 use App\Lib\RenumberRequests;
 use App\Lib\RenumberMessaging;
 use Cake\Network\Exception\BadRequestException;
+use App\Controller\Component\LayersComponent;
+use App\Model\Lib\Providers;
 
 /**
  * Pieces Controller
@@ -20,7 +22,7 @@ use Cake\Network\Exception\BadRequestException;
 class PiecesController extends AppController
 {
 	
-	public $components = ['ArtworkStack'];
+	public $components = ['ArtworkStack', 'Layers'];
 	
 	/**
 	 * Before filter
@@ -132,8 +134,6 @@ class PiecesController extends AppController
 		$this->set('_serialize', ['piece']);
 	}
 
-// </editor-fold>
-	
 	/**
      * Delete method
      *
@@ -153,8 +153,10 @@ class PiecesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
-	public function review() {
-		
+// </editor-fold>
+	
+ 	public function review() {
+
 	}
 	
 	/**
@@ -169,7 +171,7 @@ class PiecesController extends AppController
 		$EditionStack = $this->loadComponent('EditionStack');
 		extract($EditionStack->stackQuery()); // providers, pieces
 		/* prevent inappropriate entry */
-		if (!in_array($providers['edition']->type, $this->SystemState->limitedEditionTypes())) {
+		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
 			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 		}	
@@ -182,9 +184,9 @@ class PiecesController extends AppController
 		 * If it's not a post, we'll just render the basic form
 		 * to get the users renumbering request and give a submit button
 		 */
-		if ($this->request->is('post') &&
+		if ($this->request->is('post') /*&&
 				// don't know why this second test is necessary
-				!isset($this->request->data['cancel'])) {
+				!isset($this->request->data['cancel'])*/) {
 			/*
 			 * If it is a post, there are two possibile TRDs because 
 			 * the page can have up to two different forms. 
@@ -287,7 +289,8 @@ class PiecesController extends AppController
 		 * $messagePackage is a RenumberMessaging object
 		*/
 //		osd($pieces->toArray(), 'pieces');
-		$this->set(compact(['providers', 'pieces', 'messagePackage']));
+		$this->set('elements', $this->Layers->setElements());
+		$this->set(compact(['providers', 'pieces', 'messagePackage', 'elements']));
 	}
 	
 	/**
@@ -301,6 +304,9 @@ class PiecesController extends AppController
 	 * approval. We'll have to cache that form's data so the inputs 
 	 * can stay properly populated as the while we show the summaries 
 	 * and wait for approval or re-submission of changes
+     * 
+     * @todo Don't pass $post_data directly to db... is this validated 
+     *      or destined for a save use?
 	 * 
 	 * @param array $post_data the user's renumbering requests
 	 * @param array $pieces array of all piece entities ordered by number

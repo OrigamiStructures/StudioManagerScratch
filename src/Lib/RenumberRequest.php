@@ -6,7 +6,16 @@ use Cake\Core\Configure;
 /**
  * RenumberRequest manages To and From values in a renumbering request
  * 
- * One move pair is handled by each object instance
+ * One move pair is handled by each object instance. 
+ * This object contains all the information about the request, the old/new 
+ * numbers and any error information about the requested change.
+ * 
+ * This class does not perform logic to implement rules, it only records the 
+ * state of the individual request. RequestNumbers does the rule logic and 
+ * prods this object to set the correct state.
+ * 
+ * This class has one logic method, message(), which synthesizes its internal 
+ * state into an array of messages that describes that state. 
  *
  * @author dondrake
  */
@@ -43,12 +52,12 @@ class RenumberRequest {
 	/**
 	 * The total number of pieces that are to receive this $new number
 	 * 
-	 * A truthy value here indicates this piece cannot recieve the indicated 
+	 * A truthy value here indicates this piece cannot receive the indicated 
 	 * new number because that number has been used for other pieces also. 
 	 *
 	 * @var int|boolean
 	 */
-	public $duplicate_new_number = FALSE;
+	public $_duplicate_new_number = FALSE;
 	
 	public $_vague_receiver = FALSE;
 	
@@ -65,9 +74,25 @@ class RenumberRequest {
 	public function __construct($old, $new) {
 		$this->_old = $old;
 		$this->_new = $new;
+        if (is_null($new)) {
+//            $this->badNumber(TRUE);
+			$this->_vague_provider = TRUE;
+        }
 		return $this;
 	}
 	
+    public function newNum() {
+        return $this->_new;
+    }
+	
+    public function oldNum() {
+        return $this->_old;
+    }
+	
+	public function hasSummary() {
+		return $this->_renumber_message;
+	}
+
 	/**
 	 * Give limited access to internal properties
 	 * 
@@ -78,10 +103,11 @@ class RenumberRequest {
 	 * @return mixed
 	 */
 	public function __get($name) {
-		if (in_array($name, ['new', 'old', 'renumber_message'])) {
-			return $this->{"_$name"};
+//		if (in_array($name, ['new', 'old', 'renumber_message'])) {
+//			return $this->{"_$name"};
 			
-		} elseif (Configure::read('debug')) {
+//		} elseif (Configure::read('debug')) {
+		if (Configure::read('debug')) {
 			return $this->$name;
 		}
 		
@@ -98,59 +124,70 @@ class RenumberRequest {
 	 */
 	public function duplicate($count) {
 		if (!is_null($this->_new)) {
-			$this->duplicate_new_number = ($count === 1) ? FALSE : $count;
+			$this->_duplicate_new_number = ($count == 1) ? FALSE : $count;
 		}
-		
+//        print_r("duplicate new num: $this->duplicate_new_number");
 	}
 	
 	/**
 	 * Is the new symbol/number valid or invalid
 	 * 
+     * NULL = no new number provided
 	 * TRUE = error, invalid new number
 	 * FALSE = valid symbol
 	 * 
+     * @param null|boolean $error_indication
 	 * @param boolean $error_indication
 	 */
-	public function bad_number($error_indication) {
+	public function badNumber($error_indication) {
 		$this->_bad_new_number = $error_indication;
 	}
 	
-	public function vague_receiver($error_indication) {
+	public function vagueReceiver($error_indication) {
 		$this->_vague_receiver = $error_indication;
 	}
 	
-	public function vague_provider($error_indication) {
-		$this->_vague_receiver = $error_indication;
-		return $this;
-	}
+//	public function vague_provider($error_indication) {
+//		$this->_vague_receiver = $error_indication;
+//		return $this;
+//	}
 	
 	/**
+	 * Return an array of error messages for this request
 	 * 
-	 * @ Change this to allow multiple error messages (and return an array?)
+	 * Select messages based on settings in various flag properties
 	 * 
-	 * @return string
+	 * @todo logic for use of _renumber_message seems suspect. also is it missnamed in RenumberMessage use?
+	 * 
+	 * @return array Empty array if no errors
 	 */
 	public function message() {
+        $this->_renumber_message = TRUE;
 		$this->_message = [];
-		if ($this->_bad_new_number) {
-			if (is_null($this->_new)) {
-				$this->_message[] = "#$this->_old was reassigned but no new number was provided.";
-			} else {
-				$this->_message[] = "There is no #$this->_new in this edition.";
-			}
+        
+		if ($this->_vague_provider) {
+			$this->_message[] = "#$this->_old was reassigned but no new number was provided.";
 			$this->_renumber_message = FALSE;
 		}
-		if ($this->duplicate_new_number) {
-			$this->_message[] = "Can't change multiple pieces ($this->duplicate_new_number) to #$this->_new";
+		if ($this->_bad_new_number) {
+//			if (is_null($this->_new)) {
+//				
+//			} else {
+				$this->_message[] = "There is no #$this->_new in this edition.";
+//			}
+			$this->_renumber_message = FALSE;
+		}
+		if ($this->_duplicate_new_number) {
+			$this->_message[] = "Can't change multiple pieces ($this->_duplicate_new_number) to #$this->_new.";
 			$this->_renumber_message = FALSE;
 		}
 		if ($this->_implied_change) {
-			$this->_message[] = "Other changes implie the change of "
-					. "#$this->old to #$this->new.";
+			$this->_message[] = "Other changes implied the change of "
+					. "#$this->_old to #$this->_new.";
 			$this->_renumber_message = FALSE;
 		}
 		if ($this->_vague_receiver) {
-			$this->_message[] = "Can't determine which piece should receive #$this->old.";
+			$this->_message[] = "Can't determine which piece should receive #$this->_old.";
 		}
 		if ($this->_renumber_message) {
 			array_unshift($this->_message, "Change piece #$this->_old to #$this->_new.");
@@ -165,7 +202,7 @@ class RenumberRequest {
 	 * #6 should become #4 even if they don't say so. If we detect 
 	 * that case then the object creation would chain this 
 	 * method like:
-	 * $request = (new RenumberRequest($old, $new, $id))->implied();
+	 * $request = (new RenumberRequest($old, $new))->implied();
 	 * 
 	 * @return \App\Lib\RenumberRequest
 	 */
@@ -173,4 +210,15 @@ class RenumberRequest {
 		$this->_implied_change = $boolean;
 		return $this;
 	}
+	
+	
+	public function __debugInfo() {
+		$properties = get_class_vars(get_class($this));
+		$output = [];
+		foreach ($properties as $name => $value) {
+			$output[$name] = $this->$name;
+		}
+		return $output;
+	}
+	
 }

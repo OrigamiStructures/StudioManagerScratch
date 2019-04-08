@@ -35,6 +35,6 @@ class MemberViewHelper extends Helper {
         $class = $this->_classMap[$member->member_type];
         $icon_type = $this->_iconMap[$member->member_type];
         $icon = $this->Html->tag('i', '', ['class' => $icon_type . ' inline_icon'] );
-        return $this->Html->tag('span', $icon . h($member->name), ['class' => $class]);
+        return $this->Html->tag('span', $icon . h($member->name()), ['class' => $class]);
     }
 }

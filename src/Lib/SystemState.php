@@ -12,9 +12,29 @@ use App\Model\Table\UsersTable;
 use App\Model\Entity\User;
 use Cake\ORM\TableRegistry;
 use Cake\Cache\Cache;
+use Cake\ORM\Entity;
 
 /**
- * Description of SystemState
+ * SystemState
+ * 
+ * This class was designed to be available in all places at all times 
+ * in order to make some commonly needed methods (like artistId()) easily 
+ * accessible. Also, it overrides Cakes viewVars system which was designed 
+ * to carry variables from the Controllers into the View layer. This class 
+ * is composed into all standard Cake classes and makes the viewVars 
+ * available all over the place.
+ * 
+ * Besides these basic goals, the class was created with the belief that 
+ * the application would use the State design pattern (“Allow an object to alter 
+ * its behavior when its internal state changes. The object will appear to 
+ * change its class.”). I missunderstood both this application and the 
+ * use of the design pattern... so...
+ * 
+ * @todo There are some static methods that organize things like Edition types 
+ *		and Disposition types. These methods could be in a separate class 
+ *		with all static methods instead of this mixed bag.
+ * @todo Carrying viewVars around like this breaks encapsulation and 
+ *		promotes coupling. Not a great idea in retrospect.
  *
  * @author dondrake
  */
@@ -35,7 +55,9 @@ class SystemState implements EventListenerInterface {
 	 * @var Request
 	 */
 	public $request;
-	
+	public static $rq;
+
+
 	/**
 	 * The current system state
 	 * 
@@ -65,7 +87,7 @@ class SystemState implements EventListenerInterface {
 	protected $_admin_roles = [ADMIN_SYSTEM, ADMIN_ARTIST];
 
 	public function __construct(Request $request) {
-		$this->request = $request;
+		$this->request = self::$rq = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
         $stateChange = NULL;
@@ -82,57 +104,6 @@ class SystemState implements EventListenerInterface {
         ];
     }
 	
-	static function limitedEditionTypes() {
-		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED];
-	}
-	
-	static function isNumberedEdition($edition_type) {
-		return in_array(
-			$edition_type, 
-			[EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED]);
-	}
-	
-	static function openEditionTypes() {
-		return [EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
-	}
-
-	static function isOpenEdition($edition_type) {
-		return in_array(
-			$edition_type, 
-			[EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
-	}
-	
-	static function singleFormatEditionTypes() {
-		return [EDITION_UNIQUE, EDITION_RIGHTS];
-	}
-	
-	static function multiFormatEditionTypes() {
-		return [EDITION_LIMITED, PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
-				EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN];
-	}
-	
-	static function isValidEditionType($type) {
-		return in_array($type, [EDITION_UNIQUE, EDITION_RIGHTS, EDITION_LIMITED, 
-			PORTFOLIO_LIMITED, PUBLICATION_LIMITED,
-			EDITION_OPEN, PORTFOLIO_OPEN, PUBLICATION_OPEN]);
-	}
-
-
-	static function collectedDispositionTypes() {
-		return [DISPOSITION_TRANSFER_SALE,  DISPOSITION_TRANSFER_SUBSCRIPTION, 
-			DISPOSITION_TRANSFER_DONATION,  DISPOSITION_TRANSFER_GIFT, 
-			DISPOSITION_TRANSFER_RIGHTS
-			];
-	}
-	static function scrappedDispositionTypes() {
-		return [DISPOSITION_UNAVAILABLE_LOST, DISPOSITION_UNAVAILABLE_DAMAGED, 
-			DISPOSITION_UNAVAILABLE_STOLEN, DISPOSITION_NFS];
-	}
-	
-	static function unavailableDispositionTypes() {
-		return array_merge(self::collectedDispositionTypes(), self::scrappedDispositionTypes());
-	}
-
 	/**
 	 * Make stored viewVars available
 	 * 
@@ -216,6 +187,8 @@ class SystemState implements EventListenerInterface {
 	 * 'yyyy' could be some random string or a name. id's always hidden at 'xxx'
 	 * 
 	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/66
+	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/111
+	 * @ticket https://github.com/OrigamiStructures/StudioManagerScratch/issues/120
 	 * @return string
 	 */
 	public function artistId($id = NULL) {
@@ -240,7 +213,11 @@ class SystemState implements EventListenerInterface {
 		}
 	}
 	
-	/**
+	public static function userId() {
+		return self::$rq->session()->read('Auth.User.artist_id');
+	}
+
+		/**
 	 * 
 	 * @param type $event
 	 */
@@ -289,17 +266,35 @@ class SystemState implements EventListenerInterface {
 	 * 
 	 * SystemState::hasFocus('artwork', 641)
 	 * SystemState::hasFocus('member', 1215)
+	 * or
+	 * SystemState::hasFocus($artwork) // Artwork entity
+	 * SystemState::hasFocus($format) // Format entity
 	 * 
-	 * @param string $name
+	 * @param entity|string $name
 	 * @param string $value
 	 * @return boolean
 	 */
-	public function hasFocus($name, $value) {
+	public function hasFocus($name, $value = NULL) {
+		if (is_object($name)) {
+			$value = $name->id;
+			$name = $this::stripNamespace($name);
+		} 
 		$result = $this->request->query($name);
 		if (!is_null($result)) {
 			return $result == $value;
 		}
 		return FALSE;
+	}
+	
+	/**
+	 * Get the class name from a full namespaced name
+	 * 
+	 * @param Object $obj
+	 * @return string
+	 */
+	static function stripNamespace($obj) {
+		$class = explode('\\',get_class($obj));
+		return lcfirst(array_pop($class));
 	}
 	
 	/**

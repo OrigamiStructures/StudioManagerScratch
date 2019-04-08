@@ -22,7 +22,7 @@
         </tr>
         <tr>
             <th><?= __('Member') ?></th>
-            <td><?= $location->has('member') ? $this->Html->link($location->member->name, ['controller' => 'Members', 'action' => 'view', $location->member->id]) : '' ?></td>
+            <td><?= $location->has('member') ? $this->Html->link($location->member->name(), ['controller' => 'Members', 'action' => 'view', $location->member->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Name') ?></th>

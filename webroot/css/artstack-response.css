@@ -37,6 +37,9 @@ $badge-font-size: 0.6rem;*/
 .fi.cog:before {
   content: "\f123"; }
 
+section.container {
+  padding: 1rem 2rem; }
+
 /* small up */
 /* small screen only */
 /* medium screen up */
@@ -71,7 +74,7 @@ div.image {
 div.text {
   grid-area: descriptions; }
 
-div.editions, div.formats {
+div.editions, div.formats, section.format.summary {
   grid-area: children; }
 
 nav.top-bar {

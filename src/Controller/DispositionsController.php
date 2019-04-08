@@ -142,11 +142,6 @@ class DispositionsController extends AppController
 //		osd($disposition);die;
 		$result = $this->Dispositions->connection()->transactional(function () use ($disposition) {
 			$result = TRUE;
-			
-//			$DispositionsPieces = \Cake\ORM\TableRegistry::get('DispositionsPieces');
-//			$pieces = $DispositionsPieces->find(['disposition_id' => $disposition->id])->toArray();
-			
-//			$result = $result && $DispositionsPieces->deleteAll(['disposition_id' => $disposition->id]);
 			$result = $result && $this->Dispositions->delete($disposition);
 			
 			return $result;
@@ -191,7 +186,7 @@ class DispositionsController extends AppController
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 			}
 		}
-		$labels = $this->Dispositions->disposition_label;
+		$labels = $this->Dispositions->labels();
 		$this->set(compact('disposition', 'labels', 'errors'));
 	}
 	

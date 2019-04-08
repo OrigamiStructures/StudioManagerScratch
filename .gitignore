@@ -9,3 +9,5 @@ nbproject/project.properties
 nbproject/project.xml
 webroot/files
 webroot/img
+/config/cache.php
+.idea

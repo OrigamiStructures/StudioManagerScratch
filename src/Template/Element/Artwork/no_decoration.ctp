@@ -3,15 +3,14 @@
  * One of three content wrapper versions. 
  * 
  * form, createunique, and no _decoration.ctp place nothing or a form 
- * around the page element. ArtStackElement::contentDecorationRule() chooses.
+ * around the page element.
  * 
  * 'action' attribute is the one difference between the two form versions.
  */
-$artworks_element = $this->ArtElement->choose('artworksContent');
 ?>
 
 	<!-- Template/Artwork/no_decoration.ctp -->
 	
-	<?= $this->element($artworks_element);?>
+	<?= $this->element('Artwork/many');?>
 	
 	<!-- END Template/Artwork/no_decoration.ctp -->

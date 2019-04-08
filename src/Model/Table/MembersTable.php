@@ -8,6 +8,8 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\Event;
 use ArrayObject;
+use App\Model\Behavior\IntegerQueryBehavior;
+use App\Model\Behavior\StringQueryBehavior;
 
 /**
  * Members Model
@@ -21,18 +23,11 @@ use ArrayObject;
  */
 class MembersTable extends AppTable
 {
-    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers']];
+    private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities']];
     
-    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['ProxyMembers'], 'ProxyGroups' => ['Members']];
+    private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities'], 'ProxyGroups' => ['Members']];
 	
-    public function implementedEvents()
-    {
-		$events = [
-            'Model.beforeMarshal' => 'beforeMarshal',
-        ];
-		return array_merge(parent::implementedEvents(), $events);
-    }
-
+// <editor-fold defaultstate="collapsed" desc="Core">
 
     /**
      * Initialize method
@@ -40,15 +35,29 @@ class MembersTable extends AppTable
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config)     {
         parent::initialize($config);
+        $this->_intializeProperties();
+        $this->_initializeBehaviors();
+        $this->_initializeAssociations();
+    }
 
+
+// <editor-fold defaultstate="collapsed" desc="Initialization details">
+
+
+    protected function _intializeProperties() {
         $this->table('members');
         $this->displayField('name');
         $this->primaryKey('id');
+    }
 
+    protected function _initializeBehaviors() {
+        $this->addBehavior('IntegerQuery');
         $this->addBehavior('Timestamp');
+    }
+
+        protected function _initializeAssociations() {
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -59,9 +68,9 @@ class MembersTable extends AppTable
         $this->hasMany('Dispositions', [
             'foreignKey' => 'member_id'
         ]);
-        $this->hasMany('Locations', [
-            'foreignKey' => 'member_id'
-        ]);
+//        $this->hasMany('Locations', [
+//            'foreignKey' => 'member_id'
+//        ]);
         $this->hasMany('Addresses', [
             'foreignKey' => 'member_id',
             'dependent' => TRUE
@@ -73,19 +82,27 @@ class MembersTable extends AppTable
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
         ]);
-        $this->belongsToMany('Groups', [
-            'className' => 'Groups',
+		$this->hasOne('Artists', [
+			'foreignKey' => 'member_id',
+			'dependent' => TRUE,
+		]);
+        $this->belongsToMany('Memberships', 
+			['joinTable' => 'groups_members',
             'foreignKey' => 'member_id',
-            'targetForeignKey' => 'group_id',
-            'joinTable' => 'groups_members'
-        ]);
-        $this->hasOne('ProxyGroups',[
-            'className' => 'ProxyGroups',
-            'foreignKey' => 'member_id',
-            'propertyName' => 'proxy_group',
-            'dependent' => TRUE
-        ]);
+            'targetForeignKey' => 'group_id',]);
+//        $this->belongsToMany('Groups', [
+//            'className' => 'Groups',
+//            'joinTable' => 'groups_members'
+//        ]);
+//        $this->hasOne('ProxyGroups', [
+//            'className' => 'ProxyGroups',
+//            'foreignKey' => 'member_id',
+//            'propertyName' => 'proxy_group',
+//            'dependent' => TRUE
+//        ]);
     }
+
+// </editor-fold>
 
     /**
      * Default validation rules.
@@ -93,8 +110,7 @@ class MembersTable extends AppTable
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
+    public function validationDefault(Validator $validator)     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
@@ -112,81 +128,30 @@ class MembersTable extends AppTable
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
-    {
+    public function buildRules(RulesChecker $rules)     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['image_id'], 'Images'));
         $rules->addDelete([$this, 'deleteRule']);
         return $rules;
     }
-    
+
+
     public function deleteRule($entity, $options) {
         return $entity->user_id === $this->SystemState->artistId();
     }
-    
-    /**
-     * Custom finder for the member review action
-     * 
-     * Returns either a list of members or a specific member based upon the existance
-     * of the member query argument
-     * 
-     * @param Query $query
-     * @param array $options
-     * @return Query
-     */
-    public function findMemberReview(Query $query, array $options) {
-        $query = $this->findMemberList($query, $options);
-        $query = $this->findContainment($query, $options);
-        $query->orderAsc('last_name');
-        return $query;
+
+
+    public function implementedEvents() {
+        $events = [
+            'Model.beforeMarshal' => 'beforeMarshal',
+        ];
+        return array_merge(parent::implementedEvents(), $events);
     }
-    
-    /**
-     * Custom finder for the memberList
-     * 
-     * @param Query $query
-     * @param array $options
-     * @return Query
-     */
-    public function findMemberList(Query $query, array $options) {
-        $query->where([
-            'Members.active' => 1,
-            'Members.user_id' => $this->SystemState->artistId()
-        ]);
-        return $query;
-    }
-    
-    /**
-     * Custom finder to setup containment based upon member type
-     * 
-     * @param Query $query
-     * @param array $options
-     * @return Query
-     */
-    public function findContainment(Query $query, array $options) {
-        if($this->SystemState->urlArgIsKnown('member')){
-			$member_id = $this->SystemState->queryArg('member');
-            $query->where([
-               'Members.id' => $member_id
-            ]);
-			
-			/**
-			 * The type arg is never included so this always does 'group' containment
-			 * and Disposition containment doesn't work
-			 */
-//            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
-//                $query->contain($this->_person_containment);
-//                $query->contain($this->_persons_disposition);
-//            } else {
-                $query->contain($this->_complete_containment);
-//                $query->contain($this->_groups_disposition);
-//            }
-        } else {
-            $query->contain($this->_complete_containment);
-        }
-        return $query;
-    }
-    
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Lifecycle">
+
     /**
      * Implemented beforeMarshal event
      * 
@@ -194,14 +159,15 @@ class MembersTable extends AppTable
      * @param \App\Model\Table\ArrayObject $data
      * @param \App\Model\Table\ArrayObject $options
      */
-	public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
         $this->bmSetupGroup($data);
         $this->bmSetupSort($data);
         $data['user_id'] = $this->SystemState->artistId();
-	}
-    
+    }
+
+
     /**
-     * Setup the group element for User, Category and Instituion
+     * Setup the group element for User, Category and Institution
      * 
      * @param ArrayObject $data
      */
@@ -217,7 +183,8 @@ class MembersTable extends AppTable
                 break;
         }
     }
-    
+
+
     /**
      * Setup the last_name as a sorting name for Categories and Institutions
      * 
@@ -234,7 +201,203 @@ class MembersTable extends AppTable
                 break;
         }
     }
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Custom Finders (legacy methods)">
+
+    /**
+     * Custom finder for the member review action
+     * 
+     * Returns either a list of members or a specific member based upon the existance
+     * of the member query argument
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findMemberReview(Query $query, array $options) {
+        $query = $this->findMemberList($query, $options);
+        $query = $this->findContainment($query, $options);
+        $query->orderAsc('last_name');
+        return $query;
+    }
+
+
+    /**
+     * Custom finder for the memberList
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findMemberList(Query $query, array $options) {
+        $query->where([
+            'Members.active' => 1,
+            'Members.user_id' => $this->SystemState->artistId()
+        ]);
+        return $query;
+    }
+
+
+    /**
+     * Custom finder to setup containment based upon member type
+     * 
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
+    public function findContainment(Query $query, array $options) {
+        if ($this->SystemState->urlArgIsKnown('member')) {
+            $member_id = $this->SystemState->queryArg('member');
+            $query->where([
+                'Members.id' => $member_id
+            ]);
+
+
+            /**
+             * The type arg is never included so this always does 'group' containment
+             * and Disposition containment doesn't work
+             */
+//            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
+//                $query->contain($this->_person_containment);
+//                $query->contain($this->_persons_disposition);
+//            } else {
+            $query->contain($this->_complete_containment);
+//                $query->contain($this->_groups_disposition);
+//            }
+        } else {
+            $query->contain($this->_complete_containment);
+        }
+        return $query;
+    }
+
+    public function findSearch(Query $query, $options) {
+            $query->where(['first_name LIKE' => "%{$options[0]}%"])
+                      ->orWhere(['last_name LIKE' => "%{$options[0]}%"]);
+            return $query->toArray();
+    }
+	
+// </editor-fold>
     
+// <editor-fold defaultstate="collapsed" desc="Custom Finders">
+    
+    /**
+     * Find members by id
+     * 
+     * @param Query $query
+     * @param array $options Pass args on $options['values'] = [ ]
+     * @return Query
+     */
+    public function findMembers(Query $query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
+     * Find images by id
+     * 
+     * @param Query $query
+     * @param array $options Pass args on $options['values'] = [ ]
+     * @return Query
+     */
+    public function findhasImages(Query $query, $options) {
+        return $this->integer($query, 'image_id', $options['values']);
+    }
+    
+    /**
+     * Find collector by quantity collected
+     * 
+     * Members counts how many pieces a member has collected. 
+     * 
+     * @param Query $query
+     * @param array $options Pass args on $options['values'] = [ ]
+     * @return Query
+     */
+    public function findCollectors(Query $query, $options) {
+        return $this->integer($query, 'collector', $options['values']);
+    }
+    
+    /**
+     * Find disposition count
+     * 
+     * @param Query $query
+     * @param array $options Pass args on $options['values'] = [ ]
+     * @return Query
+     */
+    public function findDispositionCounts(Query $query, $options) {
+        return $this->integer($query, 'disposition_count', $options['values']);
+    }
+    
+    /**
+     * Find member types
+     * 
+     * @param Query $query
+     * @param array $options Pass args on $options['value'] = 'string-arg'
+     * @return Query
+     */
+    public function findType(Query $query, $options) {
+        return $this->string($query, 'member_type', $options['value']);
+    }
+    
+    /**
+     * Find active group records
+     * 
+     * @param Query $query
+     * @param array $options None required (or used)
+     * @return Query
+     */
+    public function findActiveGroups(Query $query, $options) {
+        return $this->string->findType($query, 'member_type NOT', 'Person')
+            ->findByActive(1);
+    }
+   
+    /**
+     * Find inactive group records
+     * 
+     * @param Query $query
+     * @param array $options None required (or used)
+     * @return Query
+     */
+    public function findInactiveGroups(Query $query, $options) {
+        return $this->string->findType($query, 'member_type NOT', 'Person')
+            ->findByActive(0);
+    }
+   
+    /**
+     * Find active people records
+     * 
+     * @param Query $query
+     * @param array $options None required (or used)
+     * @return Query
+     */
+    public function findActivePeople(Query $query, $options) {
+        return $this->string->findType($query, 'member_type', 'Person')
+            ->findByActive(1);
+    }
+   
+    /**
+     * Find inactive people records
+     * 
+     * @param Query $query
+     * @param array $options None required (or used)
+     * @return Query
+     */
+    public function findInactivePeople(Query $query, $options) {
+        return $this->string->findType($query, 'member_type', 'Person')
+            ->findByActive(0);
+    }
+   
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Dynamic finders">
+    
+    /**
+     * I'm leaving first_name, last_name, and active 
+     * for dynamic finders to handle
+     */
+
+// </editor-fold>
+
     /**
      * Modify the provided string and return it as a properly sortable name
      * 
@@ -292,10 +455,11 @@ class MembersTable extends AppTable
         return $entity;
     }
 	
-	public function findSearch(Query $query, $options) {
-		$query->where(['first_name LIKE' => "%{$options[0]}%"])
-			  ->orWhere(['last_name LIKE' => "%{$options[0]}%"]);
-		return $query->toArray();
+	public function findHook(Query $query, array $options) {
+		
+		$result = $query
+            ->where(['active' => 1]);
+		return $result;
 	}
 	
 }

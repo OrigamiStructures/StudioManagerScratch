@@ -19,7 +19,6 @@ use Cake\Event\Event;
 use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
-use App\Lib\SState;
 use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
 
@@ -51,7 +50,6 @@ class AppController extends Controller
 		
 		parent::__construct($request, $response, $name, $eventManager, $components);
         $this->eventManager()->on($this->SystemState);
-//		$this->eventManager()->on(new SState());
 //		$this->SystemState->afterLogin(new Event('thing'));
 	}
 	
@@ -145,11 +143,35 @@ class AppController extends Controller
 	}
 	
 	public function testMe() {
+		
 		$ar = [	1 => ['new' => '', 'old' => 1],
 				2 => ['new' => '3', 'old' => 2],
 				3 => ['new' => '2', 'old' => 3],
 			];
-		extract(array_shift($ar));
+		
+		$result = $ar[3] + $ar[2] + $ar[1];
+		extract($result);
+		
+		$stuff = [
+			function() {
+				return $this->SystemState->queryArg();
+			},
+			function($val) {
+				return ucwords($val);
+			}
+		];
+		
+		$a1 = ['a', 'b', 'c'];
+		$a2 = ['d', 'e', 'f'];
+		$a3 = ['a', 'g', 'h', 'i'];
+		
+		$combined = array_merge($a1, $a3, $a2);
+		
+		$this->set('stuff', $stuff);
+		$this->set(compact('new', 'old', 'combined'));
+		
+		
+		
 //		osd($new);
 //		osd($old);
 ////		die;

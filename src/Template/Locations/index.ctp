@@ -31,7 +31,7 @@
                 <td><?= h($location->created) ?></td>
                 <td><?= h($location->modified) ?></td>
                 <td><?= $location->has('user') ? $this->Html->link($location->user->id, ['controller' => 'Users', 'action' => 'view', $location->user->id]) : '' ?></td>
-                <td><?= $location->has('member') ? $this->Html->link($location->member->name, ['controller' => 'Members', 'action' => 'view', $location->member->id]) : '' ?></td>
+                <td><?= $location->has('member') ? $this->Html->link($location->member->name(), ['controller' => 'Members', 'action' => 'view', $location->member->id]) : '' ?></td>
                 <td><?= h($location->name) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $location->id]) ?>

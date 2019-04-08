@@ -133,12 +133,12 @@ if (!Configure::read('App.fullBaseUrl')) {
     unset($httpHost, $s);
 }
 
-Cache::config(Configure::consume('Cache'));
-ConnectionManager::config(Configure::consume('Datasources'));
-Email::configTransport(Configure::consume('EmailTransport'));
-Email::config(Configure::consume('Email'));
-Log::config(Configure::consume('Log'));
-Security::salt(Configure::consume('Security.salt'));
+Cache::setConfig(Configure::consume('Cache'));
+ConnectionManager::setConfig(Configure::consume('Datasources'));
+Email::setConfigTransport(Configure::consume('EmailTransport'));
+Email::setConfig(Configure::consume('Email'));
+Log::setConfig(Configure::consume('Log'));
+Security::setSalt(Configure::consume('Security.salt'));
 
 /**
  * The default crypto extension in 3.0 is OpenSSL.
@@ -187,7 +187,8 @@ Plugin::load('Proffer');
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
 if (Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
+	Configure::write('DebugKit.forceEnable', true);
+	Plugin::load('DebugKit', ['bootstrap' => true]);
 	Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
 }
 
@@ -207,6 +208,7 @@ Type::build('datetime')->useLocaleParser();
 
 Configure::write('Users.config', ['users']);
 
+Type::map('layer', 'App\Database\Type\LayerType');
 
 /**
  * Constants
@@ -341,3 +343,15 @@ define('REJECTION_DONT_RECORD', FALSE);
 
 define('CLEAR', TRUE);
 
+// <editor-fold defaultstate="collapsed" desc="TEMPLATE LAYERS">
+/**
+ * Template layer element names are sent to the View in a 
+ * simple array. To make the elements easy to access without 
+ * resorting to an associative array, I'm using constants 
+ * to stand in for the index numbers.
+ */
+define('WRAPPER_LAYER', 0);
+define('ARTWORK_LAYER', 1);
+define('EDITION_LAYER', 2);
+define('FORMAT_LAYER', 3);
+// </editor-fold>

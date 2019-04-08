@@ -14,7 +14,7 @@
 
 	foreach($dispositions as $disposition) : 
 		$q['?'] = ['disposition' => $disposition->id];
-		$l = $this->InlineTools->inlineReviewRefineDelete($q);
+		$l = $this->ArtStackTools->inlineReviewRefineDelete($q);
 ?>
 	<tr class="disposition-detail">
 		<td><?= $l; ?></td>

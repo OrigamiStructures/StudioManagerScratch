@@ -11,10 +11,6 @@ namespace App\Lib;
  * standardized and they all call a single helper variable for service. So the 
  * underlying helper class must be managed so the correct rule set is used.
  * 
- * @todo The factory part of this class should be isolated from the default 
- *		method implementations. Then the new class with the implementations can be 
- *		used as the Parent class for all the sub-classes. Right now, this 
- *		factory class is serving as the Parent... crazy.
  * @author dondrake
  */
 class EditionHelperFactory {

@@ -18,11 +18,11 @@
     </ul>
 </nav>
 <div class="members view large-9 medium-8 columns content">
-    <h3><?= h($member->name) ?></h3>
+    <h3><?= h($member->name()) ?></h3>
     <table class="vertical-table">
         <tr>
             <th><?= __('Name') ?></th>
-            <td><?= h($member->name) ?></td>
+            <td><?= h($member->name()) ?></td>
         </tr>
         <tr>
             <th><?= __('Image') ?></th>

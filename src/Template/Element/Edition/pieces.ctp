@@ -2,7 +2,7 @@
 <?php 
 // COUPLING ALERT
 // EditionHelper sets $pieces and that variable 
-// is used by ArtStackElement in the table choice logic
+// is used by ArtStackElement in the piece table choice logic
 // HELPER CALL ORDER IS CRITICAL
 /** 
  * COUPLING SOLUTION?

@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 use Cake\Collection\Collection;
 use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\EntityDebugTrait;
 
 /**
  * Disposition Entity.
@@ -30,7 +31,8 @@ class Disposition extends Entity
 {
 
 	use ParentEntityTrait;
-
+//	use EntityDebugTrait;
+	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -103,6 +105,38 @@ class Disposition extends Entity
 	}
 
 	public function _getMemberName() {
-		return $this->first_name . ' ' . $this->last_name;
+		if ($this->first_name === $this->last_name) {
+			return $this->first_name;
+		} else {
+			return $this->first_name . ' ' . $this->last_name;
+		}
 	}
+	
+	public function properties() {
+		return $this->_properties;
+	}
+	
+	public function pieceCount() {
+		if ($this->has('pieces')) {
+			return count($this->pieces) . ' ' . 
+				(count($this->pieces) === 1 ? 'piece' : 'pieces');
+		}
+		return 'piece count unknown';
+	}
+	
+	public function dateRange() {
+		if ($this->start_date == $this->end_date) {
+			return "on {$this->start_date->format('M d, Y')}";
+		} else {
+			return "from {$this->start_date->format('M d, Y')} "
+			. "through {$this->end_date->format('M d, Y')}";
+		}
+		
+	}
+	
+	public function _getDisplayTitle() {
+		return $this->label . " to $this->memberName {$this->dateRange()}";
+	}
+	
+	
 }

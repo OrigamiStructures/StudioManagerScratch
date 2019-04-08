@@ -14,6 +14,6 @@
 ?>
 
 <p>
-<?= $this->InlineTools->inlineReviewDelete($review_url, $remove_url); ?>
+<?= $this->ArtStackTools->inlineReviewDelete($review_url, $remove_url); ?>
 <?= $this->DispositionTools->identity($standing_disposition->member); ?>
 </p>

@@ -12,6 +12,13 @@ class FormatsTableTest extends TestCase
 {
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\FormatsTable
+     */
+    public $Formats;
+
+    /**
      * Fixtures
      *
      * @var array
@@ -19,14 +26,10 @@ class FormatsTableTest extends TestCase
     public $fixtures = [
         'app.formats',
         'app.users',
-        'app.members',
-        'app.dispositions',
-        'app.locations',
-        'app.pieces',
+        'app.images',
         'app.editions',
-        'app.artworks',
-        'app.groups',
-        'app.groups_members'
+        'app.subscriptions',
+        'app.pieces'
     ];
 
     /**
@@ -37,8 +40,8 @@ class FormatsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Formats') ? [] : ['className' => 'App\Model\Table\FormatsTable'];
-        $this->Formats = TableRegistry::get('Formats', $config);
+        $config = TableRegistry::getTableLocator()->exists('Formats') ? [] : ['className' => FormatsTable::class];
+        $this->Formats = TableRegistry::getTableLocator()->get('Formats', $config);
     }
 
     /**
@@ -79,6 +82,126 @@ class FormatsTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test afterSave method
+     *
+     * @return void
+     */
+    public function testAfterSave()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findChoiceList method
+     *
+     * @return void
+     */
+    public function testFindChoiceList()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findSoldOut method
+     *
+     * @return void
+     */
+    public function testFindSoldOut()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findCollectedPieceCount method
+     *
+     * @return void
+     */
+    public function testFindCollectedPieceCount()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findCollectedPiecePercentage method
+     *
+     * @return void
+     */
+    public function testFindCollectedPiecePercentage()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test inSubscription method
+     *
+     * @return void
+     */
+    public function testInSubscription()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findHasFluid method
+     *
+     * @return void
+     */
+    public function testFindHasFluid()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findEmpty method
+     *
+     * @return void
+     */
+    public function testFindEmpty()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findSearch method
+     *
+     * @return void
+     */
+    public function testFindSearch()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test clearCache method
+     *
+     * @return void
+     */
+    public function testClearCache()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test readCache method
+     *
+     * @return void
+     */
+    public function testReadCache()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test writeCache method
+     *
+     * @return void
+     */
+    public function testWriteCache()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

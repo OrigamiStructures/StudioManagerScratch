@@ -9,8 +9,8 @@ if($SystemState->now() != MEMBER_CREATE):
         ]];
     ?>
     <h1>
-        <?=$this->InlineTools->refineLink($q); ?>
-        <?=h($member->name)?>
+        <?=$this->ArtStackTools->refineLink($q); ?>
+        <?=h($member->name())?>
     </h1>
 <?php
 endif;

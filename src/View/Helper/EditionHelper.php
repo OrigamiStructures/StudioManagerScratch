@@ -3,6 +3,7 @@ namespace App\View\Helper;
 
 use Cake\View\Helper;
 use App\Lib\PieceFilter;
+use Cake\ORM\TableRegistry;
 
 /**
  * Base class for different Edition/Format type output
@@ -158,7 +159,7 @@ class EditionHelper extends Helper {
 			return '';
 		}
 		
-		$PiecesTable = \Cake\ORM\TableRegistry::get('Pieces');
+		$PiecesTable = TableRegistry::get('Pieces');
 		$pieces = $PiecesTable->find('canDispose', ['format_id' => $format->id])->toArray();
 		$action = $disposition ? 'refine' : 'create';
 		
