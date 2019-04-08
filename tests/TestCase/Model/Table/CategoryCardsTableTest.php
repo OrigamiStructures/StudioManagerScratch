@@ -24,9 +24,9 @@ class CategoryCardsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.category_cards',
+        'app.identities',
         'app.data_owners',
-        'app.memberships'
+        'app.members'
     ];
 
     /**
@@ -60,6 +60,29 @@ class CategoryCardsTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+		$this->CategoryCardsTable->initialize([]);
+
+		$this->assertTrue(
+			is_a(
+				$this->CategoryCardsTable->Members,
+				'App\Model\Table\MembersTable'
+			),
+			'The MembersTable object did not get initialized properly'
+		);
+		
+		$this->assertTrue(
+			$this->CategoryCardsTable->getSchema()->hasColumn('members'),
+			'The schema did not get a members column added'
+		);
+		
+		$this->assertTrue(
+			$this->CategoryCardsTable->getSchema()->getColumnType('members') 
+				=== 'layer',
+			'The schema column `members` is not a `layer` type'
+		);
+		
+		$this->assertTrue($this->CategoryCardsTable->hasSeed('members'));
+		$this->assertTrue($this->CategoryCardsTable->hasSeed('member'));
+		
     }
 }

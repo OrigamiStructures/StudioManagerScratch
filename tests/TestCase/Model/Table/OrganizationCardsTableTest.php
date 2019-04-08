@@ -24,9 +24,9 @@ class OrganizationCardsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.organization_cards',
+        'app.identities',
         'app.data_owners',
-        'app.memberships'
+        'app.members'
     ];
 
     /**
