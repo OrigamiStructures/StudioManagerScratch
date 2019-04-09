@@ -85,4 +85,8 @@ class CategoryCardsTableTest extends TestCase
 		$this->assertTrue($this->CategoryCardsTable->hasSeed('member'));
 		
     }
+	
+	public function testCartegoryCardsData() {
+		
+	}
 }

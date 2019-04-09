@@ -24,9 +24,12 @@ class PersonCardsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.person_cards',
+        'app.identities',
         'app.data_owners',
-        'app.memberships'
+        'app.groups_members',
+        'app.contacts',
+		'app.addresses',
+		'app.dispositions'
     ];
 
     /**
