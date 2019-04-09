@@ -196,8 +196,7 @@ class RolodexCardsTable extends StacksTable {
                 ->find('hook')
                 ->where(['id IN' => $IDs])
                 ;
-            $memberships = $memberships->toArray();
-            $stack->set(['memberships' => $memberships]);
+            $stack->set(['memberships' => $memberships->toArray()]);
         }
         return $stack;
     }
