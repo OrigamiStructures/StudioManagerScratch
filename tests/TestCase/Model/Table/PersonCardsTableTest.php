@@ -26,7 +26,7 @@ class PersonCardsTableTest extends TestCase
     public $fixtures = [
         'app.identities',
         'app.data_owners',
-        'app.groups_members',
+        'app.members',
         'app.contacts',
 		'app.addresses',
 		'app.dispositions'
@@ -61,88 +61,87 @@ class PersonCardsTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testInitializeTables()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+		$this->PersonCardsTable->initialize([]);
+
+		$this->assertTrue(
+			is_a(
+				$this->PersonCardsTable->Contacts,
+				'App\Model\Table\ContactsTable'
+			),
+			'The ContactsTable object did not get initialized properly'
+		);
+		
+		$this->assertTrue(
+			is_a(
+				$this->PersonCardsTable->Addresses,
+				'App\Model\Table\AddressesTable'
+			),
+			'The AddressesTable object did not get initialized properly'
+		);
+		
+		$this->assertTrue(
+			is_a(
+				$this->PersonCardsTable->Dispositions,
+				'App\Model\Table\DispositionsTable'
+			),
+			'The DispositionsTable object did not get initialized properly'
+		);
+		
     }
 
-    /**
-     * Test initializeContactableCard method
-     *
-     * @return void
-     */
-    public function testInitializeContactableCard()
+    public function testInitializeSchema()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+		$this->PersonCardsTable->initialize([]);
+
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->hasColumn('contacts'),
+			'The schema did not get a members contacts added'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->getColumnType('contacts') 
+				=== 'layer',
+			'The schema column `contacts` is not a `layer` type'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->hasColumn('addresses'),
+			'The schema did not get a members addresses added'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->getColumnType('addresses') 
+				=== 'layer',
+			'The schema column `addresses` is not a `layer` type'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->hasColumn('dispositions'),
+			'The schema did not get a members dispositions added'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->getColumnType('dispositions') 
+				=== 'layer',
+			'The schema column `dispositions` is not a `layer` type'
+		);
+		
     }
 
-    /**
-     * Test loadFromAddress method
-     *
-     * @return void
-     */
-    public function testLoadFromAddress()
+    public function testInitializeSeeds()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+		$this->PersonCardsTable->initialize([]);
+		
+		$this->assertTrue($this->PersonCardsTable->hasSeed('contact'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('contacts'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('address'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('addresses'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('disposition'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('dispositions'));
+		
     }
 
-    /**
-     * Test marshalAddresses method
-     *
-     * @return void
-     */
-    public function testMarshalAddresses()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
 
-    /**
-     * Test loadFromContact method
-     *
-     * @return void
-     */
-    public function testLoadFromContact()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalContacts method
-     *
-     * @return void
-     */
-    public function testMarshalContacts()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test initializeReceiverCard method
-     *
-     * @return void
-     */
-    public function testInitializeReceiverCard()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test loadFromDisposition method
-     *
-     * @return void
-     */
-    public function testLoadFromDisposition()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalDispositions method
-     *
-     * @return void
-     */
-    public function testMarshalDispositions()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
 }

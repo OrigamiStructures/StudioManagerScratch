@@ -27,7 +27,13 @@ class CategoryCardsTable extends RolodexCardsTable
 			$accum[] = $entity->group_id;
 			return $accum;
 		}, []);
-		return $this->stacksFromIdentities($IDs);
+
+		return $this->stacksFromIdentities($this->groupsOnly($IDs));
+	}
+	
+	private function groupsOnly($IDs) {
+		return $this->Identities->find('list', ['valueField' => 'id'])
+				->where(['id IN' => $IDs, 'member_type' => 'Group']);
 	}
 	
 	protected function marshalMembers($id, $stack) {
