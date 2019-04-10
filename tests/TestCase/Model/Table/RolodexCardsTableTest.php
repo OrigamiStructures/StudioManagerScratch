@@ -106,7 +106,7 @@ class RolodexCardsTableTest extends TestCase
             'The found cards did not come packaged in a StackSet.'
         );
         
-        $card = $cards->member(2);
+        $card = $cards->element(2, LAYERACC_ID);
         
         $this->assertInstanceOf('App\Model\Entity\RolodexCard', $card,
             'The StackSet does not contain RolodexCard instances.'
@@ -138,8 +138,8 @@ class RolodexCardsTableTest extends TestCase
         $cards = $this->RolodexCards->find('stackFrom', $targets);
 //        pr($cards);
         
-        $person = $cards->member(2);
-        $group = $cards->member(3);
+        $person = $cards->element(2, LAYERACC_ID);
+        $group = $cards->element(3, LAYERACC_ID);
         
         $this->assertCount(1, $person->identity->load(),
             'The person card doesn\'t have a single Identity entity');
@@ -167,8 +167,8 @@ class RolodexCardsTableTest extends TestCase
 //        pr($cards);
         //'008ab31c-124d-4e15-a4e1-45fccd7becac'
         
-        $person = $cards->member(2);
-        $group = $cards->member(3);
+        $person = $cards->element(2, LAYERACC_ID);
+        $group = $cards->element(3, LAYERACC_ID);
         
         $this->assertEquals('Gail Drake', $person->identity->element(0)->name(),
             'Not the person name expected');
