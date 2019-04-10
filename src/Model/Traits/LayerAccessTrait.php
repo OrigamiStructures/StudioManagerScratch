@@ -52,12 +52,12 @@ trait LayerAccessTrait {
 	 * 
 	 * @return array
 	 */
-	public function members() {
+	public function IDs() {
 		return array_keys($this->_data);
 	}
 	
 	public function member($id) {
-		if (in_array($id, $this->members())) {
+		if (in_array($id, $this->IDs())) {
 			return $this->_data[$id];
 		}
 		return null;
@@ -226,10 +226,6 @@ trait LayerAccessTrait {
 
 //	
 	public function linkedTo($foreign, $foreign_id, $linked = null){
-		
-	}
-	
-	public function IDs($layer = null){
 		
 	}
 	

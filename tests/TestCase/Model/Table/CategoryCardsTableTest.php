@@ -104,6 +104,7 @@ class CategoryCardsTableTest extends TestCase
 						['layer' => 'identities', 'ids' => [3, 7]]
 				);
 		
+		$this->assertTrue('identity', $groups->member(3)->primary());
 		$this->assertEquals(2, $groups->count(), 
 				'The set doesn\'t contain 2 CategoryCards as expected');
 		$this->assertEquals(2, count($groups->member(3)->members()), 

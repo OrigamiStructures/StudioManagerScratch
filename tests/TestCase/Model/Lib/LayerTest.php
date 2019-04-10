@@ -156,7 +156,7 @@ class LayerTest extends TestCase
     
     public function testMembersFromTheTrait() {
         $layer = new Layer($this->fivePieces);
-        $this->assertCount(5, $layer->members(),
+        $this->assertCount(5, $layer->IDs(),
             'members() did not return an array of the expected size');
     }
     
