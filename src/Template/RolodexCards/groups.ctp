@@ -28,7 +28,7 @@ foreach($categoryCards->all() as $id => $card) {
 	
 	if ($card->isGroup()) {
 		echo "<h2>Members</h2>";
-		$output = collection($card->members())
+		$output = collection($card->IDs())
 				->reduce(function($accum, $name) {
 			$accum .= '<p>' . $name . '</p>';
 			return $accum;
