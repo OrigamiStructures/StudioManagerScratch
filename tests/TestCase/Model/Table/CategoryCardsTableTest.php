@@ -104,11 +104,12 @@ class CategoryCardsTableTest extends TestCase
 						['layer' => 'identities', 'ids' => [3, 7]]
 				);
 		
+//		$this->assertTrue('identity', $groups->element(3, LAYERACC_ID)->primary());
 		$this->assertEquals(2, $groups->count(), 
 				'The set doesn\'t contain 2 CategoryCards as expected');
-		$this->assertEquals(2, count($groups->member(3)->members()), 
+		$this->assertEquals(2, count($groups->element(3, LAYERACC_ID)->members()), 
 				'The aniticipated 2 member group was not included');
-		$this->assertEquals(0, count($groups->member(7)->members()), 
+		$this->assertEquals(0, count($groups->element(7, LAYERACC_ID)->members()), 
 				'The aniticipated 0 member group was not included');
 	}
 	
@@ -123,7 +124,7 @@ class CategoryCardsTableTest extends TestCase
 		$this->assertEquals(1, $groups->count(), 
 				'The set doesn\'t contain 1 CategoryCards as expected when '
 				. 'building up from members');
-		$this->assertEquals(2, count($groups->member(3)->members()), 
+		$this->assertEquals(2, count($groups->element(3, LAYERACC_ID)->members()), 
 				'The aniticipated 2 member group was not included when '
 				. 'building up from members');
 	}

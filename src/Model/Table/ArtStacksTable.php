@@ -89,7 +89,7 @@ class ArtStacksTable extends StacksTable
             'editions' // this is the second Layer arg
 		);
         if ($editions->count()) {
-            return $this->stacksFromArtworks($editions->distinct($editions->members(), 'artwork_id'));
+            return $this->stacksFromArtworks($editions->distinct($editions->IDs(), 'artwork_id'));
         } else {
             return $this->stacksFromArtworks([]);
         }

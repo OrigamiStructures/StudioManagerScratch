@@ -80,7 +80,7 @@ if (isset($stacks)) {
 							->load();
 					foreach ($pieceActivity as $link) {
 						echo "<li>"
-						. "{$activity->member($link->disposition_id)->displayTitle}"
+						. "{$activity->element($link->disposition_id, LAYERACC_ID)->displayTitle}"
 						. "</li>";
 					}
 					echo '</ul></li></ul>';
@@ -113,8 +113,8 @@ if (isset($stacks)) {
         foreach ($pieces->sort('format_id') as $piece) {
 			
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
-			$format = $stack->formats->member($piece->format_id);
-			$edition = $stack->editions->member($piece->edition_id);
+			$format = $stack->formats->element($piece->format_id, LAYERACC_ID);
+			$edition = $stack->editions->element($piece->edition_id, LAYERACC_ID);
 			$artwork = $stack->primaryEntity();
 
 			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
