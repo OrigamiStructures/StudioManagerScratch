@@ -5,6 +5,8 @@ use App\Model\Lib\LayerAccessArgs;
 use App\Model\Lib\Layer;
 use App\Model\Lib\ValueSource;
 
+define('LAYERACC_ID', FALSE);
+define('LAYERACC_INDEX', TRUE);
 /**
  * Description of LayerAccessTrait
  *
@@ -37,14 +39,22 @@ trait LayerAccessTrait {
 	 * @param int $number Array index 0 through n
 	 * @return Entity
 	 */
-	public function element($number){
-		$data = array_values($this->load());
-		if(count($data) > $number) {
-			$result =  $data[$number];
+	public function element($key, $byIndex = LAYERACC_INDEX){
+		if ($byIndex) {
+			$data = array_values($this->load());
+			if (count($data) > $key) {
+				$result = $data[$key];
+			} else {
+				$result = null;
+			}
 		} else {
-			$result = null;
+			if (in_array($key, $this->IDs())) {
+				$result = $this->_data[$key];
+			} else {
+				$result = null;
+			}
 		}
-		return $result;
+			return $result;
 	}
     
 	/**
@@ -56,13 +66,6 @@ trait LayerAccessTrait {
 		return array_keys($this->_data);
 	}
 	
-	public function member($id) {
-		if (in_array($id, $this->IDs())) {
-			return $this->_data[$id];
-		}
-		return null;
-	}
-    
 //	public function all($property);
 //	
 	public function loadDistinct($argObj, $sourcePoint = null){
