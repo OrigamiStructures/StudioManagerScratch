@@ -191,6 +191,37 @@ class StackEntity extends Entity implements LayerAccessInterface {
         return parent::isEmpty($property);
     }
 	
+	/**
+	 * For an array with a single item, should it be unwrapped
+	 * 
+	 * @param array $data
+	 * @param boolean $unwrap
+	 * @return string|array
+	 */
+	protected function _resolveWrapper($data, $unwrap) {
+		if ($unwrap) {
+			$result = array_shift($data);
+		}
+		return $result;
+	}
+	
+	/**
+	 * For an array of entities, should they be made into a Layer
+	 * 
+	 * It's possible for an empty array to come, so getting 
+	 * the entity type is important to insure Layer can construct
+	 * 
+	 * @param array $data
+	 * @param boolean $asArray
+	 * @return array|Layer
+	 */
+	protected function _resolveReturnStructure($data, $asArray, $entityType) {
+		if (!$asArray) {
+			$data = layer($data, $entityType);
+		}
+		return $data;
+	}
+
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
 
 	/**
