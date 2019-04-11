@@ -10,10 +10,11 @@ use App\Model\Entity\StackEntity;
  */
 class RolodexCard extends StackEntity {
 	
-	protected $_primary = 'identity';
+	protected $_cap = 'identity';
+	protected $_capDisplaySource = 'name';
 
 	public function name() {
-		return $this->primaryEntity()->name();
+		return $this->capElement()->name();
 	}
 	
 	/**
@@ -39,45 +40,6 @@ class RolodexCard extends StackEntity {
 	
 	public function canParticipate() {
 		return FALSE;
-	}
-	
-	/**
-	 * Get the card identity entity
-	 * 
-	 * Optionally get the entity as an array element
-	 * 
-	 * @param boolean $unwrap 
-	 * @return entity|array
-	 */
-	public function identityElement($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->identity->load();
-		return $this->_resolveWrapper($result, $unwrap);
-	}
-	
-	/**
-	 * Get id of the card identity
-	 * 
-	 * Optionally get the id as an array element
-	 * 
-	 * @param boolean $unwrap 
-	 * @return string|array
-	 */
-	public function identityID($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->identity->IDs();
-		return $this->_resolveWrapper($result, $unwrap);
-	}
-	
-	/**
-	 * Get name of the card identity
-	 * 
-	 * Optionally get the name as an array element
-	 * 
-	 * @param boolean $unwrap 
-	 * @return string|array
-	 */
-	public function identity($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->valueList('name', $this->identityElement());
-		return $this->_resolveWrapper($result, $unwrap);
 	}
 
 	/**

@@ -21,7 +21,8 @@ class ArtStack extends StackEntity {
 	 *
 	 * @var string
 	 */
-	protected $_primary = 'artwork';
+	protected $_cap = 'artwork';
+	protected $_capDisplayValue = 'title';
 
 	/**
      * Fields that can be mass assigned using newEntity() or patchEntity().

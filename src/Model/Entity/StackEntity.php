@@ -26,6 +26,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
     
+	protected $_cap = FALSE;
+	protected $_capDisplaySource = FALSE;
     /**
      * Is the id a member of the set
      * 
@@ -65,26 +67,82 @@ class StackEntity extends Entity implements LayerAccessInterface {
     }
 	
 	/**
-	 * Get the name of the primary layer in the stack
-	 * 
-	 * @return string
-	 */
-	public function primaryLayer() {
-		if (!isset($this->_primary)) {
-			throw new BadClassConfigurationException(
-					'The name of the primary entity ($this->_primary) must '
-					. 'be set for this StackEntity');
-		}
-		return $this->_primary;
-	}
-	
-	/**
 	 * Return the owner of the primary entity
 	 * 
 	 * @return string
 	 */
 	public function dataOwner() {
-		return $this->primaryEntity()->user_id;
+		return $this->capElement()->user_id;
+	}
+	
+	/**
+	 * Get the card identity entity
+	 * 
+	 * Optionally get the entity as an array element
+	 * 
+	 * @param boolean $unwrap 
+	 * @return entity|array
+	 */
+	public function capElement($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->{$this->capLayerName()}->load();
+		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	/**
+	 * Get id of the card cap entity
+	 * 
+	 * Optionally get the id as an array element
+	 * 
+	 * @param boolean $unwrap 
+	 * @return string|array
+	 */
+	public function capID($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->{$this->capLayerName()}->IDs();
+		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	/**
+	 * Get displayValue for the card's cap entity
+	 * 
+	 * Optionally get the name as an array element
+	 * 
+	 * @param boolean $unwrap 
+	 * @return string|array
+	 */
+	public function capDisplayValue($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->valueList($this->capDisplaySource(), $this->capElement());
+		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	/**
+	 * Get the name of the displaySource (property or method) for capEntity
+	 * 
+	 * This is the analog of Table::displayField.
+	 * 
+	 * @return string
+	 * @throws BadClassConfigurationException
+	 */
+	public function capDisplaySource() {
+		if ($this->_capDisplaySource === FALSE) {
+			throw new BadClassConfigurationException(
+				'A display source (_capDisplaySource) must be set for the '
+				. 'cap record in the stack entity ' . get_class($this));
+		}	
+		return $this->_capDisplaySource;
+}
+
+	/**
+	 * Get the name of the cap layer for this stackEntity
+	 * 
+	 * @return string
+	 */
+	public function capLayerName() {
+		if ($this->_cap === FALSE) {
+			throw new BadClassConfigurationException(
+				'The name of the cap entity ($this->_cap) must '
+				. 'be set in the stack entity ' . get_class($this));
+		}
+		return $this->_cap;
 	}
 	
 	/**
@@ -92,19 +150,19 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * 
 	 * @return string
 	 */
-	public function primaryId() {
-		return $this->primaryEntity()->id;
-	}
+//	public function primaryId() {
+//		return $this->primaryEntity()->id;
+//	}
 	
 	/**
 	 * Get the primary entity in the stack
 	 * 
 	 * @return Entity
 	 */
-	public function primaryEntity() {
-//		$allArg = $this->accessArgs()->setLimit('first');
-		return $this->get($this->primaryLayer())->element(0);
-	}
+//	public function primaryEntity() {
+////		$allArg = $this->accessArgs()->setLimit('first');
+//		return $this->get($this->capLayer())->element(0);
+//	}
     
 	/**
 	 * Load data from the StackEntity context
@@ -122,7 +180,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	public function load(LayerAccessArgs $argObj = null) {
 		
 		if (is_null($argObj)) {
-			return [$this->primaryId() => $this];
+			return [$this->capID() => $this];
 		}
 		
         $property = $this->getValidPropery($argObj);
