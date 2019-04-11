@@ -125,9 +125,13 @@ protected $data;
     }
 	
     
-    public function load() {
-        return $this->data()->load($this);
-    }
+    public function load($asArray = LAYERACC_ARRAY) {
+		$result = $this->data()->load($this);
+		if (!$asArray) {
+			$result = layer($result); 
+		}
+		return $result;
+	}
     
     public function loadDistinct($sourcePoint = null) {
         return $this->data()->loadDistinct($this, $sourcePoint);

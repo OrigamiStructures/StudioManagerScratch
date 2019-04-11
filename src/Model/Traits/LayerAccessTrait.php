@@ -5,6 +5,12 @@ use App\Model\Lib\LayerAccessArgs;
 use App\Model\Lib\Layer;
 use App\Model\Lib\ValueSource;
 
+define('LAYERACC_ID', FALSE);
+define('LAYERACC_INDEX', TRUE);
+
+define('LAYERACC_LAYER', FALSE);
+define('LAYERACC_ARRAY', TRUE);
+
 /**
  * Description of LayerAccessTrait
  *
@@ -29,22 +35,31 @@ trait LayerAccessTrait {
 	}
 	
 	/**
-	 * Return the n-th stored element (starting from 0)
+	 * Return the n-th stored element or element(ID)
 	 * 
 	 * Data is stored in id-indexed arrays, but this method will let you 
-	 * pluck the n-th item without bothering with the id-indexes
+	 * pluck the id's or n-th item out
 	 * 
-	 * @param int $number Array index 0 through n
+	 * @param int $number Array index 0 through n or Id of element
+	 * @param boolean $byIndex LAYERACC_INDEX or LAYERACC_ID
 	 * @return Entity
 	 */
-	public function element($number){
-		$data = array_values($this->load());
-		if(count($data) > $number) {
-			$result =  $data[$number];
+	public function element($key, $byIndex = LAYERACC_INDEX){
+		if ($byIndex) {
+			$data = array_values($this->load());
+			if (count($data) > $key) {
+				$result = $data[$key];
+			} else {
+				$result = null;
+			}
 		} else {
-			$result = null;
+			if (in_array($key, $this->IDs())) {
+				$result = $this->_data[$key];
+			} else {
+				$result = null;
+			}
 		}
-		return $result;
+			return $result;
 	}
     
 	/**
@@ -52,17 +67,10 @@ trait LayerAccessTrait {
 	 * 
 	 * @return array
 	 */
-	public function members() {
+	public function IDs() {
 		return array_keys($this->_data);
 	}
 	
-	public function member($id) {
-		if (in_array($id, $this->members())) {
-			return $this->_data[$id];
-		}
-		return null;
-	}
-    
 //	public function all($property);
 //	
 	public function loadDistinct($argObj, $sourcePoint = null){
@@ -226,10 +234,6 @@ trait LayerAccessTrait {
 
 //	
 	public function linkedTo($foreign, $foreign_id, $linked = null){
-		
-	}
-	
-	public function IDs($layer = null){
 		
 	}
 	

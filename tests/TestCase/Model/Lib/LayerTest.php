@@ -156,14 +156,14 @@ class LayerTest extends TestCase
     
     public function testMembersFromTheTrait() {
         $layer = new Layer($this->fivePieces);
-        $this->assertCount(5, $layer->members(),
-            'members() did not return an array of the expected size');
+        $this->assertCount(5, $layer->IDs(),
+            'IDs() did not return an array of the expected size');
     }
     
     public function testMemberFromTheTrait() {
         $layer = new Layer($this->fivePieces);
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->member(962),
-            'member(x) did not return a piece entity');
+        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->element(962, LAYERACC_ID),
+            'element(x, LAYERACC_ID) did not return a piece entity');
     }
         
     /**

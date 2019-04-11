@@ -8,6 +8,7 @@ use Cake\Utility\Hash;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
+use App\Exception\BadClassConfigurationException;
 
 /**
  * Stacks
