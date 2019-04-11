@@ -25,10 +25,7 @@ class CategoryCard extends RolodexCard{
 		} else {
 			$result = [];
 		}
-		if (!$asArray) {
-			$result = layer($result, 'member');
-		}
-		return $result;
+		return $this->_resolveReturnStructure($result, $asArray, 'member');
 	}
 	
 	public function memberIDs() {

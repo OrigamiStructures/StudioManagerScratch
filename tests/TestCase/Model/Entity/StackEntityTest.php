@@ -240,8 +240,8 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryLayer()     {
-        $this->assertEquals('artwork', $this->StackEntity->primaryLayer());
+    public function testCapLayer()     {
+        $this->assertEquals('artwork', $this->StackEntity->capLayerName());
     }
 
     /**
@@ -249,8 +249,8 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryId()     {
-        $this->assertEquals(4, $this->StackEntity->primaryId());
+    public function testCapId()     {
+        $this->assertEquals(4, $this->StackEntity->capId());
     }
 
     /**
@@ -258,17 +258,17 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryEntity()     {
-        $entity = $this->StackEntity->primaryEntity();
+    public function testCapEntity()     {
+        $entity = $this->StackEntity->capElement();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
 	
 	/**
 	 * @expectedException App\Exception\BadClassConfigurationException
 	 */
-	public function testPrimaryEntityUnsetProperty() {
+	public function testCapEntityUnsetProperty() {
 		$entity = New StackEntity();
-        $entity->primaryEntity();
+        $entity->capElement();
 	}
 
     /**
