@@ -25,7 +25,6 @@ class StackSet implements LayerAccessInterface {
 	
 	protected $_stackName;
 
-	
 	/**
 	 * Add another entity to the collection
 	 * 
