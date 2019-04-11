@@ -6,9 +6,6 @@ use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
 use App\Lib\Traits\ErrorRegistryTrait;
 
-define('LAYERACC_LAYER', FALSE);
-define('LAYERACC_ARRAY', TRUE);
-
 /**
  * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
  * 

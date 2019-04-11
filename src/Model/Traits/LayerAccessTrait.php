@@ -7,6 +7,10 @@ use App\Model\Lib\ValueSource;
 
 define('LAYERACC_ID', FALSE);
 define('LAYERACC_INDEX', TRUE);
+
+define('LAYERACC_LAYER', FALSE);
+define('LAYERACC_ARRAY', TRUE);
+
 /**
  * Description of LayerAccessTrait
  *
