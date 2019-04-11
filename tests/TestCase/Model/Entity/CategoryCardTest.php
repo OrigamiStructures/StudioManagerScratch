@@ -61,11 +61,11 @@ class CategoryCardTest extends TestCase
     }
 
     /**
-     * Test memberEntities method
+     * Test memberElements method
      *
      * @return void
      */
-    public function testMemberEntities()
+    public function testMemberElements()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
