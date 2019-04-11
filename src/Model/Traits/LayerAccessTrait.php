@@ -31,12 +31,13 @@ trait LayerAccessTrait {
 	}
 	
 	/**
-	 * Return the n-th stored element (starting from 0)
+	 * Return the n-th stored element or element(ID)
 	 * 
 	 * Data is stored in id-indexed arrays, but this method will let you 
-	 * pluck the n-th item without bothering with the id-indexes
+	 * pluck the id's or n-th item out
 	 * 
-	 * @param int $number Array index 0 through n
+	 * @param int $number Array index 0 through n or Id of element
+	 * @param boolean $byIndex LAYERACC_INDEX or LAYERACC_ID
 	 * @return Entity
 	 */
 	public function element($key, $byIndex = LAYERACC_INDEX){
