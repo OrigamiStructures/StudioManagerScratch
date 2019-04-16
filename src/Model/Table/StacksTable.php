@@ -115,8 +115,34 @@ class StacksTable extends AppTable
             return new StackSet();
         }
         $method = 'distillFrom' . $this->_entityName($seed);
+		
         return $this->$method($ids);
     }
+	
+	/**
+	 * Read the stacks from cache or assemble and cache them
+	 * 
+	 * This is the destination for all the distillFor variants. 
+	 * It calls all the individual marshaller methods for 
+	 * the current concrete stack table
+	 * 
+	 * @param array $ids Member ids
+	 * @return StackSet
+	 */
+    protected function stacksFromCaps($ids) {
+		$this->stacks = new StackSet();
+        foreach ($ids as $id) {
+			$stack = FALSE;
+			if (!$stack && !$this->stacks->isMember($id)) {
+				$stack = $this->marshalStack($id);
+			}
+			if (!$stack->isEmpty()) {
+				$stack->clean();
+				$this->stacks->insert($id, $stack);
+			}
+		}
+		return $this->stacks;
+	}
     
 // <editor-fold defaultstate="collapsed" desc="finder args validation">
 
