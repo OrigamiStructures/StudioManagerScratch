@@ -54,7 +54,7 @@ class StackEntityTest extends TestCase
         $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', []);
         $artID = 4; //jabberwocky
         $stacks = $this->ArtStacks
-				->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
+				->find('stacksFor', ['seed' => 'artworks', 'ids' => [$artID]]);
         $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
         
         $this->StackEntity->arrayProp = ['a','b','c'];

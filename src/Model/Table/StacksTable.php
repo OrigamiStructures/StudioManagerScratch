@@ -91,13 +91,13 @@ class StacksTable extends Table
 	 * Stack tables back-fill the context.
 	 * 
 	 * $options requires two indexes, 
-	 *		'layer' with a value matching any allowed starting point 
-	 *		'ids' containing an array of ids for the named layer
+	 *		'seed' with a value matching any allowed starting point 
+	 *		'ids' containing an array of ids for the named seed
 	 * 
 	 * <code>
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'disposition', 'ids' => $ids]);
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'artworks', 'ids' => $ids]);
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'format', 'ids' => $ids]);
+	 * $ArtStacks->find('stacksFor',  ['seed' => 'disposition', 'ids' => $ids]);
+	 * $ArtStacks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $ids]);
+	 * $ArtStacks->find('stacksFor',  ['seed' => 'format', 'ids' => $ids]);
 	 * </code>
 	 * 
 	 * @param Query $query
@@ -105,14 +105,14 @@ class StacksTable extends Table
 	 * @return StackSet
 	 * @throws \BadMethodCallException
 	 */
-	public function findStackFrom($query, $options) {
+	public function findStacksFor($query, $options) {
         
         $this->validateArguments($options);
-        extract($options); //$layer, $ids
+        extract($options); //$seed, $ids
         if (empty($ids)) {
             return new StackSet();
         }
-        $method = 'loadFrom' . $this->_entityName($layer);
+        $method = 'loadFrom' . $this->_entityName($seed);
         return $this->$method($ids);
     }
     
@@ -126,15 +126,15 @@ class StacksTable extends Table
      */
     protected function validateArguments($options) {
         $msg = FALSE;
-        if (!array_key_exists('layer', $options) || !array_key_exists('ids', $options)) {
-            $msg = "Options array argument must include both 'layer' and 'ids' keys.";
+        if (!array_key_exists('seed', $options) || !array_key_exists('ids', $options)) {
+            $msg = "Options array argument must include both 'seed' and 'ids' keys.";
             throw new \BadMethodCallException($msg);
         }
 
         if (!is_array($options['ids'])) {
             $msg = "The ids must be provided as an array.";
-        } elseif (!in_array($options['layer'], $this->seedPoints)) {
-            $msg = "{$this->getRegistryAlias()} can't do lookups starting from {$options['layer']}";
+        } elseif (!in_array($options['seed'], $this->seedPoints)) {
+            $msg = "{$this->getRegistryAlias()} can't do lookups starting from {$options['seed']}";
         }
         if ($msg) {
             throw new \BadMethodCallException($msg);

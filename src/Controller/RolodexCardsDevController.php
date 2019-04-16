@@ -18,7 +18,7 @@ class RolodexCardsDevController extends AppController {
 	public function testMe() {
 		
 		$ids = [1,2,21,20,19,22];
-		$cards = $this->RolodexCardsDev->find('stackFrom', ['layer' => 'member', 'ids' => $ids]);
+		$cards = $this->RolodexCardsDev->find('stacksFor', ['seed' => 'member', 'ids' => $ids]);
 		$this->set('cards', $cards);
 //		$this->labeled(
 //				$cards->load('member',['member_type', 'Institution'])
