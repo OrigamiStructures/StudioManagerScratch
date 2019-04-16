@@ -71,7 +71,7 @@ class ArtStacksTable extends StacksTable
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
-	protected function loadFromArtwork($ids) {
+	protected function distillFromArtwork($ids) {
 		return $this->stacksFromArtworks($ids);
 	}
 
@@ -81,7 +81,7 @@ class ArtStacksTable extends StacksTable
 	 * @param array $ids Edition ids
 	 * @return StackSet
 	 */
-	protected function loadFromEdition($ids) {
+	protected function distillFromEdition($ids) {
 		$editions = new Layer($this
             ->_loadLayer('edition', $ids)
             ->select(['id', 'artwork_id'])
@@ -101,7 +101,7 @@ class ArtStacksTable extends StacksTable
 	 * @param array $ids Format ids
 	 * @return StackSet
 	 */
-	protected function loadFromFormat($ids) {
+	protected function distillFromFormat($ids) {
 		$formats = new Layer($this
             ->_loadLayer('formats', $ids)
             ->select(['id', 'edition_id'])
@@ -129,7 +129,7 @@ class ArtStacksTable extends StacksTable
 	 * @return StackSet
 	 */
 
-	protected function loadFromPiece($ids) {
+	protected function distillFromPiece($ids) {
 		$pieces = new Layer($this
             ->_loadLayer('pieces', $ids)
             ->select(['id', 'edition_id'])
@@ -157,9 +157,9 @@ class ArtStacksTable extends StacksTable
 	 * @return StackSet
 	 */
 
-	protected function loadFromDisposition($ids) {
+	protected function distillFromDisposition($ids) {
 		$joins = $this->
-				_loadFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
+				_distillFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
         if ($joins->count()) {
             $dispositionPieces = $this->
                 dispositionsPieces = new Layer($joins->toArray());
@@ -192,7 +192,7 @@ class ArtStacksTable extends StacksTable
 	 * @return StackSet
 	 */
 
-	protected function loadFromSeries($ids) {
+	protected function distillFromSeries($ids) {
 		$editions = new Layer($this
             ->Editions->find('inSeries', $ids)
             ->select(['id', 'artwork_id', 'series_id'])
@@ -254,7 +254,7 @@ class ArtStacksTable extends StacksTable
                 
                 if ($stack->count('pieces')) {
                     $dispositionsPieces = $this->
-                        _loadFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
+                        _distillFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
                     $stack->set('dispositionsPieces', $dispositionsPieces->toArray());
                 }      
                 

@@ -104,7 +104,7 @@ class UserStacksTable extends StacksTable
 	 * @return UserStack
 	 * @throws \BadMethodCallException
 	 */
-	protected function loadFromUser($ids) {
+	protected function distillFromUser($ids) {
 		return $this->stackFromUser($ids);
 	}
 
@@ -149,7 +149,7 @@ class UserStacksTable extends StacksTable
 			$addresses = $this->Addresses->find('inMembers', ['values' => [$member_id]]);
 			$artists = $this->Artists->find('inMembers', ['values' => [$id]]);
 			$groupsMembers = $this->
-				_loadFromJoinTable('GroupsMembers', 'member_id', [$member_id]);
+				_distillFromJoinTable('GroupsMembers', 'member_id', [$member_id]);
 			
 			$t->end('build', $le);
 

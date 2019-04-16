@@ -97,8 +97,8 @@ class RolodexCardsTableTest extends TestCase
      */
     public function testFindRolodexCardsBasicStructure()
     {
-        $targets = ['layer' => 'identity', 'ids' => [2,3]];
-        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        $targets = ['seed' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stacksFor', $targets);
 //        pr($cards);
         
         $this->assertTrue(
@@ -134,8 +134,8 @@ class RolodexCardsTableTest extends TestCase
     }
     
     public function testRolodexCardDataQuantity() {
-        $targets = ['layer' => 'identity', 'ids' => [2,3]];
-        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        $targets = ['seed' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stacksFor', $targets);
 //        pr($cards);
         
         $person = $cards->element(2, LAYERACC_ID);
@@ -162,8 +162,8 @@ class RolodexCardsTableTest extends TestCase
     }
     
     public function testRolodexCardDataQuality() {
-        $targets = ['layer' => 'identity', 'ids' => [2,3]];
-        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        $targets = ['seed' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stacksFor', $targets);
 //        pr($cards);
         //'008ab31c-124d-4e15-a4e1-45fccd7becac'
         
@@ -196,8 +196,8 @@ class RolodexCardsTableTest extends TestCase
 	
 	public function testStackFromMembership() {
 		$cards = $this->RolodexCards->find(
-				'stackFrom', 
-				['layer' => 'membership', 'ids' => [4]]);
+				'stacksFor', 
+				['seed' => 'membership', 'ids' => [4]]);
 		$this->assertCount(2, $cards->load(),
 				'building from membership ids did not find the right '
 				. 'number of stacks');
@@ -213,8 +213,8 @@ class RolodexCardsTableTest extends TestCase
 	
 	public function testStackFromDataOwner() {
 		$cards = $this->RolodexCards->find(
-				'stackFrom', 
-				['layer' => 'data_owner', 'ids' => ['f22f9b46-345f-4c6f-9637-060ceacb21b2']]);
+				'stacksFor', 
+				['seed' => 'data_owner', 'ids' => ['f22f9b46-345f-4c6f-9637-060ceacb21b2']]);
 		$this->assertCount(9, $cards->load(),
 				'building from data_owner ids did not find the right '
 				. 'number of stacks');

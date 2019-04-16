@@ -18,7 +18,7 @@ class CategoryCardsTable extends RolodexCardsTable
 		parent::initialize($config);
 	}
 	
-	protected function loadFromMember($ids) {
+	protected function distillFromMember($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
 			->where(['member_id IN' => $ids]);

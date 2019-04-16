@@ -63,7 +63,7 @@ class RolodexCardsDevTable extends StacksTable {
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
-	protected function loadFromMember($ids) {
+	protected function distillFromMember($ids) {
 		return $this->stacksFromMembers($ids);
 	}
 

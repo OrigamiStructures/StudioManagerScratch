@@ -15,7 +15,7 @@ trait ReceiverTableTrait {
 		$this->seedPoints = array_merge($this->seedPoints, ['disposition', 'dispositions']);
 	}
 	
-	public function loadFromDisposition($ids) {
+	public function distillFromDisposition($ids) {
 		
 	}
 	
