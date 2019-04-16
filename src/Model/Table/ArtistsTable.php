@@ -3,7 +3,7 @@ namespace App\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
-use Cake\ORM\Table;
+use App\Model\Table\AppTable;
 use Cake\Validation\Validator;
 use App\Model\Behavior\IntegerQueryBehavior;
 
@@ -13,7 +13,6 @@ use App\Model\Behavior\IntegerQueryBehavior;
  * @property \App\Model\Table\MembersTable|\Cake\ORM\Association\BelongsTo $Members
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\MemberUsersTable|\Cake\ORM\Association\BelongsTo $MemberUsers
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Users
  *
  * @method \App\Model\Entity\Artist get($primaryKey, $options = [])
  * @method \App\Model\Entity\Artist newEntity($data = null, array $options = [])
@@ -24,8 +23,7 @@ use App\Model\Behavior\IntegerQueryBehavior;
  * @method \App\Model\Entity\Artist[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Artist findOrCreate($search, callable $callback = null, $options = [])
  */
-class ArtistsTable extends Table
-{
+class ArtistsTable extends AppTable{
 
     /**
      * Initialize method

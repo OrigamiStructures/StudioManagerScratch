@@ -8,14 +8,14 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Table;
 use Cake\ORM\Query;
+use App\Model\Table\AppTable;
 
 /**
  * CakePHP DataOwner
  * @author dondrake
  */
-class DataOwnersTable extends Table {
+class DataOwnersTable extends AppTable {
 	
 	public function initialize(array $config) {
 		$this->setTable('users');
