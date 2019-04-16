@@ -23,11 +23,6 @@ use App\SiteMetrics\CollectTimerMetrics;
 class ArtStacksTable extends StacksTable
 {
 
-	/**
-     * {@inheritdoc}
-     */
-    protected $layerTables = ['Artworks', 'Editions', 'Formats', 'Pieces'];
-    
     /**
      * {@inheritdoc}
      */
@@ -61,6 +56,7 @@ class ArtStacksTable extends StacksTable
     public function initialize(array $config) {
         parent::initialize($config);
 		$this->setTable('artworks');
+		$this->addLayerTable(['Artworks', 'Editions', 'Formats', 'Pieces']);
     }
     
 // <editor-fold defaultstate="collapsed" desc="Concrete Start-from implementations">
