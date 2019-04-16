@@ -57,7 +57,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
         }
         return 0;
     }
-    
+	
     public function hasNo($layer) {
         return $this->count($layer) === 0;
     }
@@ -237,8 +237,11 @@ class StackEntity extends Entity implements LayerAccessInterface {
      * @param string $property The property to check.
      * @return bool
      */
-    public function isEmpty($property)
+    public function isEmpty($property = null)
     {
+		if (is_null($property)) {
+			$property = $this->capLayerName();
+		}
         $value = $this->get($property);
         if (is_object($value) 
             && $value instanceof \App\Model\Lib\Layer 
