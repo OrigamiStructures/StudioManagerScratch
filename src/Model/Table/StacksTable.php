@@ -2,7 +2,7 @@
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
-use Cake\ORM\Table;
+use App\Model\Table\AppTable;
 use Cake\ORM\TableRegistry;
 use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
@@ -15,7 +15,7 @@ use App\Exception\UnknownTableException;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\Core\ConventionsTrait
  */
-class StacksTable extends Table
+class StacksTable extends AppTable
 {
     
     use ConventionsTrait;
@@ -215,7 +215,7 @@ class StacksTable extends Table
 	public function addLayerTable(array $addedTables)
     {
         foreach ($addedTables as $index => $addedTable) {
-            if(is_a(TableRegistry::getTableLocator()->get($addedTable), 'Cake\ORM\Table')){
+            if(is_a(TableRegistry::getTableLocator()->get($addedTable), 'App\Model\Table\AppTable')){
                 $this->layerTables[] = $addedTable;
             } else {
                 throw new UnknownTableException("StacksTable initialization discovered
