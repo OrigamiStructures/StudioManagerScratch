@@ -112,7 +112,7 @@ class StacksTable extends Table
         if (empty($ids)) {
             return new StackSet();
         }
-        $method = 'loadFrom' . $this->_entityName($seed);
+        $method = 'distillFrom' . $this->_entityName($seed);
         return $this->$method($ids);
     }
     
@@ -188,7 +188,7 @@ class StacksTable extends Table
 	 * @param string $column Name of the integer column to search
 	 * @param array $ids
 	     */
-	protected function _loadFromJoinTable($table, $column, $ids) {
+	protected function _distillFromJoinTable($table, $column, $ids) {
 		$joinTable = TableRegistry::getTableLocator()
 				->get($table)
 				->addBehavior('IntegerQuery');
