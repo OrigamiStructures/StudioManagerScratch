@@ -2,11 +2,12 @@
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
-use Cake\ORM\Table;
+use App\Model\Table\AppTable;
 use Cake\ORM\TableRegistry;
 use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
+use App\Exception\UnknownTableException;
 
 /**
  * StacksTable Model
@@ -14,7 +15,7 @@ use Cake\Database\Schema\TableSchema;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\Core\ConventionsTrait
  */
-class StacksTable extends Table
+class StacksTable extends AppTable
 {
     
     use ConventionsTrait;
@@ -45,6 +46,7 @@ class StacksTable extends Table
      * @return void
      */
     public function initialize(array $config) {
+        //Check if proper table is created
         parent::initialize($config);
     }
     
@@ -200,5 +202,26 @@ class StacksTable extends Table
 
 	public function hasSeed($name) {
 		return in_array($name, $this->seedPoints);
+	}
+
+    /**
+     * Add layer tables
+     *
+     * Check to be sure that the added tables are all valid tables
+     *
+     * @throws UnknownTableException
+     * @param array $addedTables
+     */
+	public function addLayerTable(array $addedTables)
+    {
+        foreach ($addedTables as $index => $addedTable) {
+            if(is_a(TableRegistry::getTableLocator()->get($addedTable), 'App\Model\Table\AppTable')){
+                $this->layerTables[] = $addedTable;
+            } else {
+                throw new UnknownTableException("StacksTable initialization discovered
+                $addedTable is not a valid table name");
+            }
+        }
+        $this->layerTables = array_unique($this->layerTables);
 	}
 }

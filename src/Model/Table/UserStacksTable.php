@@ -30,14 +30,6 @@ class UserStacksTable extends StacksTable
     /**
      * {@inheritdoc}
      */
-    protected $layerTables = [
-		'Users', 'Members', 'Contacts', 
-		'Addresses', 'Artists', 'GroupsMembers'
-	];
-    
-    /**
-     * {@inheritdoc}
-     */
     protected $stackSchema = 	[	
 		['name' => 'user', 'specs' => ['type' => 'layer']],
 		['name' => 'member', 'specs' => ['type' => 'layer']],
@@ -61,6 +53,10 @@ class UserStacksTable extends StacksTable
      * @return void
      */
     public function initialize(array $config) {
+        $this->addLayerTable([
+            'Users', 'Members', 'Contacts',
+            'Addresses', 'Artists', 'GroupsMembers'
+        ]);
         parent::initialize($config);
     }
     

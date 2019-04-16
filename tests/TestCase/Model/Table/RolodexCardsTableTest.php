@@ -1,6 +1,7 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
+use App\Exception\UnknownTableException;
 use App\Model\Table\RolodexCardsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -88,6 +89,16 @@ class RolodexCardsTableTest extends TestCase
             'Initialize() did not set up DataOwnersTable (alias for UsersTable).'
         );
         
+    }
+
+    /**
+     * Test bad addLayerTable
+     *
+     * @expectedException App\Exception\UnknownTableException
+     */
+    public function testAddLayerTableWithBadTable()
+    {
+        $this->RolodexCards->addLayerTable(['badName']);
     }
 
     /**

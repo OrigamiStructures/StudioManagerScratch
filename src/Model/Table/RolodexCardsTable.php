@@ -16,8 +16,6 @@ use Cake\Cache\Cache;
  */
 class RolodexCardsTable extends StacksTable {
 
-    protected $layerTables = ['Identities', 'GroupsMembers'];
-
 	protected $stackSchema = 	[
             ['name' => 'identity',		'specs' => ['type' => 'layer']],
             ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
@@ -40,8 +38,9 @@ class RolodexCardsTable extends StacksTable {
 	 * @return void
 	 */
 	public function initialize(array $config) {
-		$this->setTable('members');
+        $this->setTable('members');
 		$this->_initializeAssociations();
+        $this->addLayerTable(['Identities', 'GroupsMembers']);
 		parent::initialize($config);
 	}
 
