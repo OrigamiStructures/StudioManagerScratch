@@ -22,6 +22,11 @@ use App\SiteMetrics\CollectTimerMetrics;
  */
 class ArtStacksTable extends StacksTable
 {
+	
+	/**
+	 * {@inheritdoc}
+	 */
+	protected $root = 'artwork';
 
     /**
      * {@inheritdoc}

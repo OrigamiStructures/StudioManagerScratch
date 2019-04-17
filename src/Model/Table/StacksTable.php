@@ -8,7 +8,9 @@ use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use App\Exception\UnknownTableException;
+use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
+use Cake\Utility\Hash;
 
 /**
  * StacksTable Model
@@ -21,6 +23,11 @@ class StacksTable extends AppTable
     
     use ConventionsTrait;
     
+	/**
+	 * The tip-of-the-iceberg layer for this data stack
+	 */
+	protected $root = NULL;
+
     /**
      *
      * @var array
@@ -50,12 +57,25 @@ class StacksTable extends AppTable
         //Check if proper table is created
         parent::initialize($config);
 		$this->configureStackCache();
+		$this->validateRoot();
     }
+	
+	private function validateRoot() {
+		if (is_null($this->root)) {
+			throw new MissingStackTableRootException('You must set the '
+					. '`root` property for ' . get_class());
+		}
+		if (!in_array($this->root, Hash::extract($this->stackSchema, '{n}.name'))){
+			throw new MissingStackTableRootException('The `root` property in '
+					. get_class() . ' must be listed in the stackSchema '
+					. 'and be of type = layer');
+		}
+	}
 	
 	/**
 	 * Setup the cache for this concrete stack table
 	 */
-	protected function configureStackCache() {
+	private function configureStackCache() {
 		if (is_null(Cache::getConfig($this->cacheName()))) {
 			Cache::setConfig($this->cacheName(),
 					[
@@ -187,7 +207,7 @@ class StacksTable extends AppTable
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    protected function stacksFromCaps($ids) {
+    protected function stacksFromRoot($ids) {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
