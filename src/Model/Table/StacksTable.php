@@ -152,10 +152,30 @@ class StacksTable extends AppTable
         if (empty($ids)) {
             return new StackSet();
         }
-        $method = 'distillFrom' . $this->_entityName($seed);
+//        $method = 'distillFrom' . $this->_entityName($seed);
 		
-        return $this->$method($ids);
+		return $this->{$this->distillMethodName($seed)}($ids);
     }
+	
+	/**
+	 * Get the method name for distilling a given seed into stack IDs
+	 * 
+	 * @param string $seed
+	 * @return string
+	 */
+	protected function distillMethodName($seed) {
+		return 'distillFrom' . $this->_entityName($seed);
+	}
+	
+	/**
+	 * Get the method name for marshaling a given layer
+	 * 
+	 * @param string $layer
+	 * @return string
+	 */
+	protected function marshalMethodName($layer) {
+		return 'marshal' . $this->_camelize($layer);
+	}
 	
 	/**
 	 * Read the stacks from cache or assemble and cache them
@@ -172,13 +192,14 @@ class StacksTable extends AppTable
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
 			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
-				$stack = $this->marshalStack($id);
+				$stack = $this->newVersionMarshalStack($id);
 			}
-			if (!$stack->isEmpty()) {
-				$stack->clean();
-				$this->stacks->insert($id, $stack);
-				$this->writeCache($id, $data);
-			}
+			
+			if ($stack->isEmpty()) { continue; }
+			
+			$stack->clean();
+			$this->stacks->insert($id, $stack);
+			$this->writeCache($id, $data);
 		}
 		return $this->stacks;
 	}
