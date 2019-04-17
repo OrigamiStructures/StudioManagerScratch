@@ -10,7 +10,7 @@ namespace App\Model\Traits;
 trait ContactableTableTrait {
 	
 	public function initializeContactableCard() {
-		$this->layerTables = array_merge($this->layerTables, ['Addresses', 'Contacts']);
+	    $this->addLayerTable(['Addresses', 'Contacts']);
 		$this->stackSchema[] = ['name' => 'addresses',	'specs' => ['type' => 'layer']];
 		$this->stackSchema[] = ['name' => 'contacts',	'specs' => ['type' => 'layer']];
 		$this->seedPoints = array_merge($this->seedPoints, [
@@ -21,7 +21,7 @@ trait ContactableTableTrait {
 			]);
 	}
 	
-	public function loadFromAddress($ids) {
+	public function distillFromAddress($ids) {
 		$IDs = $this->Addresses->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids]);
 		return $this->stacksFromIdentities(array_unique($IDs->toArray()));
@@ -36,7 +36,7 @@ trait ContactableTableTrait {
 		return $stack;
 	}
 	
-	public function loadFromContact($ids) {
+	public function distillFromContact($ids) {
 		$IDs = $this->Contact->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids]);
 		return $this->stacksFromIdentities(array_unique($IDs->toArray()));

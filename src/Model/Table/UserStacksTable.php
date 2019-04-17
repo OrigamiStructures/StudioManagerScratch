@@ -30,14 +30,6 @@ class UserStacksTable extends StacksTable
     /**
      * {@inheritdoc}
      */
-    protected $layerTables = [
-		'Users', 'Members', 'Contacts', 
-		'Addresses', 'Artists', 'GroupsMembers'
-	];
-    
-    /**
-     * {@inheritdoc}
-     */
     protected $stackSchema = 	[	
 		['name' => 'user', 'specs' => ['type' => 'layer']],
 		['name' => 'member', 'specs' => ['type' => 'layer']],
@@ -61,6 +53,10 @@ class UserStacksTable extends StacksTable
      * @return void
      */
     public function initialize(array $config) {
+        $this->addLayerTable([
+            'Users', 'Members', 'Contacts',
+            'Addresses', 'Artists', 'GroupsMembers'
+        ]);
         parent::initialize($config);
     }
     
@@ -104,7 +100,7 @@ class UserStacksTable extends StacksTable
 	 * @return UserStack
 	 * @throws \BadMethodCallException
 	 */
-	protected function loadFromUser($ids) {
+	protected function distillFromUser($ids) {
 		return $this->stackFromUser($ids);
 	}
 
@@ -149,7 +145,7 @@ class UserStacksTable extends StacksTable
 			$addresses = $this->Addresses->find('inMembers', ['values' => [$member_id]]);
 			$artists = $this->Artists->find('inMembers', ['values' => [$id]]);
 			$groupsMembers = $this->
-				_loadFromJoinTable('GroupsMembers', 'member_id', [$member_id]);
+				_distillFromJoinTable('GroupsMembers', 'member_id', [$member_id]);
 			
 			$t->end('build', $le);
 

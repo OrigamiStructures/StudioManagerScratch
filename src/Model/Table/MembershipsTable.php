@@ -2,7 +2,7 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Table;
+use App\Model\Table\AppTable;
 use Cake\ORM\Query;
 
 /**
@@ -19,7 +19,7 @@ use Cake\ORM\Query;
  * CakePHP Memberships
  * @author dondrake
  */
-class MembershipsTable extends Table {
+class MembershipsTable extends AppTable {
 
 	public function initialize(array $config) {
 		$this->setTable('members');

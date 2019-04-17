@@ -350,8 +350,8 @@ class ArtworksController extends ArtStackController
             $activity = new Layer($dispositions);
             
             $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
-            $stacks = $ArtStacks->find('stackFrom', 
-                ['layer' => 'disposition', 'ids' => $activity->IDs()]);
+            $stacks = $ArtStacks->find('stacksFor', 
+                ['seed' => 'disposition', 'ids' => $activity->IDs()]);
 			
 			osd(count($stacks->all()));
             

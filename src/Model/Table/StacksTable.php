@@ -2,11 +2,15 @@
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
-use Cake\ORM\Table;
+use App\Model\Table\AppTable;
 use Cake\ORM\TableRegistry;
 use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
+use App\Exception\UnknownTableException;
+use App\Exception\MissingStackTableRootException;
+use Cake\Cache\Cache;
+use Cake\Utility\Hash;
 
 /**
  * StacksTable Model
@@ -14,11 +18,16 @@ use Cake\Database\Schema\TableSchema;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @mixin \Cake\Core\ConventionsTrait
  */
-class StacksTable extends Table
+class StacksTable extends AppTable
 {
     
     use ConventionsTrait;
     
+	/**
+	 * The tip-of-the-iceberg layer for this data stack
+	 */
+	protected $rootName = NULL;
+
     /**
      *
      * @var array
@@ -45,9 +54,75 @@ class StacksTable extends Table
      * @return void
      */
     public function initialize(array $config) {
+        //Check if proper table is created
         parent::initialize($config);
+		$this->configureStackCache();
+		$this->validateRoot();
     }
-    
+	
+	/**
+	 * Insure the stackTable properly identifies the root in the schema
+	 * 
+	 * A stack is `tree` data, but organinzed in layers. The `root` layer 
+	 * must be identified and must be a column type = layer in the schema. 
+	 * 
+	 * This value will be transfered into all the different stackEntity 
+	 * types that the heirarchy can create and will be an important value 
+	 * when working with those entities.
+	 * 
+	 * @throws MissingStackTableRootException
+	 */
+	private function validateRoot() {
+		if (is_null($this->rootName)) {
+			throw new MissingStackTableRootException('You must set the '
+					. '`root` property for ' . get_class($this));
+		}
+		if (!in_array($this->rootName, Hash::extract($this->stackSchema, '{n}.name'))){
+			throw new MissingStackTableRootException('The `root` property in '
+					. get_class($this) . ' must be listed in the stackSchema '
+					. 'and be of type = layer');
+		}
+	}
+	
+	/**
+	 * Setup the cache for this concrete stack table
+	 */
+	private function configureStackCache() {
+		if (is_null(Cache::getConfig($this->cacheName()))) {
+			Cache::setConfig($this->cacheName(),
+					[
+				'className' => 'File',
+				'path' => CACHE . 'artwork' . DS,
+				'prefix' => "$this->cacheName()_",
+				'duration' => '+1 week',
+				'serialize' => true,
+			]);
+		}	
+	}
+	
+	/**
+	 * Generate a cache key
+	 * 
+	 * @param string $key An Rolodexwork id
+	 * @return string The key
+	 */
+	public static function cacheKey($key) {
+		return $key;
+	}
+	
+	/**
+	 * Get the Cache config name for this concrete stack table
+	 * 
+	 * @return string
+	 */
+	public static function cacheName() {
+		return namespaceSplit(get_class())[1];
+	}
+
+	public function rootName() {
+		return $this->rootName;
+	}
+	
 	/**
 	 * Lazy load the required tables
 	 * 
@@ -91,13 +166,13 @@ class StacksTable extends Table
 	 * Stack tables back-fill the context.
 	 * 
 	 * $options requires two indexes, 
-	 *		'layer' with a value matching any allowed starting point 
-	 *		'ids' containing an array of ids for the named layer
+	 *		'seed' with a value matching any allowed starting point 
+	 *		'ids' containing an array of ids for the named seed
 	 * 
 	 * <code>
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'disposition', 'ids' => $ids]);
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'artworks', 'ids' => $ids]);
-	 * $ArtStacks->find('stackFrom',  ['layer' => 'format', 'ids' => $ids]);
+	 * $ArtStacks->find('stacksFor',  ['seed' => 'disposition', 'ids' => $ids]);
+	 * $ArtStacks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $ids]);
+	 * $ArtStacks->find('stacksFor',  ['seed' => 'format', 'ids' => $ids]);
 	 * </code>
 	 * 
 	 * @param Query $query
@@ -105,17 +180,108 @@ class StacksTable extends Table
 	 * @return StackSet
 	 * @throws \BadMethodCallException
 	 */
-	public function findStackFrom($query, $options) {
+	public function findStacksFor($query, $options) {
         
         $this->validateArguments($options);
-        extract($options); //$layer, $ids
+        extract($options); //$seed, $ids
         if (empty($ids)) {
             return new StackSet();
         }
-        $method = 'loadFrom' . $this->_entityName($layer);
-        return $this->$method($ids);
+//        $method = 'distillFrom' . $this->_entityName($seed);
+		
+		return $this->{$this->distillMethodName($seed)}($ids);
     }
-    
+	
+	/**
+	 * Get the method name for distilling a given seed into stack IDs
+	 * 
+	 * @param string $seed
+	 * @return string
+	 */
+	protected function distillMethodName($seed) {
+		return 'distillFrom' . $this->_entityName($seed);
+	}
+	
+	/**
+	 * Get the method name for marshaling a given layer
+	 * 
+	 * @param string $layer
+	 * @return string
+	 */
+	protected function marshalMethodName($layer) {
+		return 'marshal' . $this->_camelize($layer);
+	}
+	
+	/**
+	 * Read the stacks from cache or assemble and cache them
+	 * 
+	 * This is the destination for all the distillFor variants. 
+	 * It calls all the individual marshaller methods for 
+	 * the current concrete stack table
+	 * 
+	 * @param array $ids Member ids
+	 * @return StackSet
+	 */
+    protected function stacksFromRoot($ids) {
+		$this->stacks = new StackSet();
+        foreach ($ids as $id) {
+			$stack = $this->readCache($id);
+			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
+				$stack = $this->newVersionMarshalStack($id);
+			}
+			
+			if ($stack->isEmpty()) { continue; }
+			
+			$stack->clean();
+			$this->stacks->insert($id, $stack);
+			$this->writeCache($id, $data);
+		}
+		return $this->stacks;
+	}
+	
+	/**
+	 * Read cache to see if the ID'd stack is present
+	 * 
+     * @param string $id Stack id will generate the cache data key
+     * @param string $config name of the configuration to use
+     * @return mixed The cached data, or FALSE
+	 */
+	protected function readCache($id) {
+		return Cache::read($this->cacheKey($id), $this->cacheName());
+	}
+	
+	/**
+	 * Write a stack to the cache
+	 * 
+     * @param string $id 
+     * @param mixed $stack 
+     * @return bool True on successful cached, false on failure
+	 */
+	protected function writeCache($id, $stack) {
+		return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
+	}
+	
+	public function layers() {
+		return Hash::extract($this->stackSchema, '{n}.name');
+	}
+	
+	/**
+	 * Create, then populate a new StackEntity
+	 * 
+	 * @param type $id
+	 * @return type
+	 */
+	protected function newVersionMarshalStack($id) {
+		$stack = $this->newEntity([])
+				->setRoot($this->rootName())
+				->setRootDisplaySource($this->getDisplayField());
+
+		foreach($this->layers() as $layer) {
+			$stack = $this->{$this->marshalMethodName($layer)}($id, $stack);
+		}
+		return $stack;
+	}
+	
 // <editor-fold defaultstate="collapsed" desc="finder args validation">
 
     /**
@@ -126,15 +292,15 @@ class StacksTable extends Table
      */
     protected function validateArguments($options) {
         $msg = FALSE;
-        if (!array_key_exists('layer', $options) || !array_key_exists('ids', $options)) {
-            $msg = "Options array argument must include both 'layer' and 'ids' keys.";
+        if (!array_key_exists('seed', $options) || !array_key_exists('ids', $options)) {
+            $msg = "Options array argument must include both 'seed' and 'ids' keys.";
             throw new \BadMethodCallException($msg);
         }
 
         if (!is_array($options['ids'])) {
             $msg = "The ids must be provided as an array.";
-        } elseif (!in_array($options['layer'], $this->seedPoints)) {
-            $msg = "{$this->getRegistryAlias()} can't do lookups starting from {$options['layer']}";
+        } elseif (!in_array($options['seed'], $this->seedPoints)) {
+            $msg = "{$this->getRegistryAlias()} can't do lookups starting from {$options['seed']}";
         }
         if ($msg) {
             throw new \BadMethodCallException($msg);
@@ -188,7 +354,7 @@ class StacksTable extends Table
 	 * @param string $column Name of the integer column to search
 	 * @param array $ids
 	     */
-	protected function _loadFromJoinTable($table, $column, $ids) {
+	protected function _distillFromJoinTable($table, $column, $ids) {
 		$joinTable = TableRegistry::getTableLocator()
 				->get($table)
 				->addBehavior('IntegerQuery');
@@ -200,5 +366,26 @@ class StacksTable extends Table
 
 	public function hasSeed($name) {
 		return in_array($name, $this->seedPoints);
+	}
+
+    /**
+     * Add layer tables
+     *
+     * Check to be sure that the added tables are all valid tables
+     *
+     * @throws UnknownTableException
+     * @param array $addedTables
+     */
+	public function addLayerTable(array $addedTables)
+    {
+        foreach ($addedTables as $index => $addedTable) {
+            if(is_a(TableRegistry::getTableLocator()->get($addedTable), 'App\Model\Table\AppTable')){
+                $this->layerTables[] = $addedTable;
+            } else {
+                throw new UnknownTableException("StacksTable initialization discovered
+                $addedTable is not a valid table name");
+            }
+        }
+        $this->layerTables = array_unique($this->layerTables);
 	}
 }

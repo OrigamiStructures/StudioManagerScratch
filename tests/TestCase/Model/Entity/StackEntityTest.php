@@ -54,7 +54,7 @@ class StackEntityTest extends TestCase
         $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', []);
         $artID = 4; //jabberwocky
         $stacks = $this->ArtStacks
-				->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
+				->find('stacksFor', ['seed' => 'artworks', 'ids' => [$artID]]);
         $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
         
         $this->StackEntity->arrayProp = ['a','b','c'];
@@ -241,7 +241,7 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testCapLayer()     {
-        $this->assertEquals('artwork', $this->StackEntity->capLayerName());
+        $this->assertEquals('artwork', $this->StackEntity->rootLayerName());
     }
 
     /**
@@ -250,7 +250,7 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testCapId()     {
-        $this->assertEquals(4, $this->StackEntity->capId());
+        $this->assertEquals(4, $this->StackEntity->rootID());
     }
 
     /**
@@ -259,16 +259,16 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testCapEntity()     {
-        $entity = $this->StackEntity->capElement();
+        $entity = $this->StackEntity->rootElement();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
 	
 	/**
-	 * @expectedException App\Exception\BadClassConfigurationException
+	 * @expectedException InvalidArgumentException
 	 */
 	public function testCapEntityUnsetProperty() {
 		$entity = New StackEntity();
-        $entity->capElement();
+        $entity->rootElement();
 	}
 
     /**
