@@ -26,7 +26,39 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
     
-	protected $root = FALSE;
+	/**
+	 * Name of the tip-of-the-iceberg entity for this stack
+	 * 
+	 * The value migrates forward from the concrete stackTable 
+	 * during creation and population of the entity and its values
+	 * 
+	 * @see App\Model\Table\StacksTable::newVersionMarshalStack()
+	 *
+	 * @var string
+	 */
+	protected $rootName = FALSE;
+	
+	/**
+	 * The displayField source for the root entity
+	 * 
+	 * displayField() is a Table concept and is used for several find() 
+	 * variants. Since stackEntities mimic some of these features, they 
+	 * need to include a displayField() equivalent.
+	 * 
+	 * StackTable migrates this table-based value into to stackEntities 
+	 * where it takes on the additonal ability to be the name of a method 
+	 * that has no arguemnts (eg: name( ) ).
+	 * 
+	 * [1] The value wil be the moved forward from one of two sources:
+	 *		displayField() of the root layers underlying table
+	 *		$rootDisplaySource of the concrete stackTable for this entity
+	 * 
+	 * @todo Make [1] a true statement
+	 * 
+	 * @see App\Model\Table\StacksTable::newVersionMarshalStack()
+	 *
+	 * @var string
+	 */
 	protected $rootDisplaySource = FALSE;
     /**
      * Is the id a member of the set
