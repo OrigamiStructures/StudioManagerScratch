@@ -15,6 +15,12 @@ use Cake\Cache\Cache;
  *
  */
 class RolodexCardsTable extends StacksTable {
+	
+	/**
+	 * {@inheritdoc}
+	 */
+	protected $rootName = 'identity';
+	protected $rootDisplaySource = 'name';
 
 	protected $stackSchema = 	[
             ['name' => 'identity',		'specs' => ['type' => 'layer']],

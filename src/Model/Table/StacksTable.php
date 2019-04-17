@@ -8,7 +8,9 @@ use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use App\Exception\UnknownTableException;
+use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
+use Cake\Utility\Hash;
 
 /**
  * StacksTable Model
@@ -21,6 +23,11 @@ class StacksTable extends AppTable
     
     use ConventionsTrait;
     
+	/**
+	 * The tip-of-the-iceberg layer for this data stack
+	 */
+	protected $rootName = NULL;
+
     /**
      *
      * @var array
@@ -50,12 +57,37 @@ class StacksTable extends AppTable
         //Check if proper table is created
         parent::initialize($config);
 		$this->configureStackCache();
+		$this->validateRoot();
     }
+	
+	/**
+	 * Insure the stackTable properly identifies the root in the schema
+	 * 
+	 * A stack is `tree` data, but organinzed in layers. The `root` layer 
+	 * must be identified and must be a column type = layer in the schema. 
+	 * 
+	 * This value will be transfered into all the different stackEntity 
+	 * types that the heirarchy can create and will be an important value 
+	 * when working with those entities.
+	 * 
+	 * @throws MissingStackTableRootException
+	 */
+	private function validateRoot() {
+		if (is_null($this->rootName)) {
+			throw new MissingStackTableRootException('You must set the '
+					. '`root` property for ' . get_class($this));
+		}
+		if (!in_array($this->rootName, Hash::extract($this->stackSchema, '{n}.name'))){
+			throw new MissingStackTableRootException('The `root` property in '
+					. get_class($this) . ' must be listed in the stackSchema '
+					. 'and be of type = layer');
+		}
+	}
 	
 	/**
 	 * Setup the cache for this concrete stack table
 	 */
-	protected function configureStackCache() {
+	private function configureStackCache() {
 		if (is_null(Cache::getConfig($this->cacheName()))) {
 			Cache::setConfig($this->cacheName(),
 					[
@@ -87,7 +119,10 @@ class StacksTable extends AppTable
 		return namespaceSplit(get_class())[1];
 	}
 
-    
+	public function rootName() {
+		return $this->rootName;
+	}
+	
 	/**
 	 * Lazy load the required tables
 	 * 
@@ -187,7 +222,7 @@ class StacksTable extends AppTable
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    protected function stacksFromCaps($ids) {
+    protected function stacksFromRoot($ids) {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
@@ -226,10 +261,27 @@ class StacksTable extends AppTable
 		return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
 	}
 	
-	protected function newVersionMarshalStack($id) {
-		
+	public function layers() {
+		return Hash::extract($this->stackSchema, '{n}.name');
 	}
-    
+	
+	/**
+	 * Create, then populate a new StackEntity
+	 * 
+	 * @param type $id
+	 * @return type
+	 */
+	protected function newVersionMarshalStack($id) {
+		$stack = $this->newEntity([])
+				->setRoot($this->rootName())
+				->setRootDisplaySource($this->getDisplayField());
+
+		foreach($this->layers() as $layer) {
+			$stack = $this->{$this->marshalMethodName($layer)}($id, $stack);
+		}
+		return $stack;
+	}
+	
 // <editor-fold defaultstate="collapsed" desc="finder args validation">
 
     /**
