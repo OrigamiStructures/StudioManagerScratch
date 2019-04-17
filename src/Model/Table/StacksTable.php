@@ -75,10 +75,10 @@ class StacksTable extends AppTable
 	private function validateRoot() {
 		if (is_null($this->rootName)) {
 			throw new MissingStackTableRootException('You must set the '
-					. '`root` property for ' . get_class($this));
+					. '`rootName` property for ' . get_class($this));
 		}
 		if (!in_array($this->rootName, Hash::extract($this->stackSchema, '{n}.name'))){
-			throw new MissingStackTableRootException('The `root` property in '
+			throw new MissingStackTableRootException('The `rootName` property in '
 					. get_class($this) . ' must be listed in the stackSchema '
 					. 'and be of type = layer');
 		}
@@ -262,7 +262,12 @@ class StacksTable extends AppTable
 	}
 	
 	public function layers() {
-		return Hash::extract($this->stackSchema, '{n}.name');
+		$schema = collection($this->stackSchema);
+		$layerColumns = $schema->filter(function($column, $key) {
+				return $column['specs']['type'] === 'layer';
+			})->toArray();
+//		debug($layerColumns->toArray());
+		return Hash::extract($layerColumns, '{n}.name');
 	}
 	
 	/**
