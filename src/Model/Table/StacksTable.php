@@ -8,6 +8,7 @@ use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use App\Exception\UnknownTableException;
+use Cake\Cache\Cache;
 
 /**
  * StacksTable Model
@@ -48,7 +49,44 @@ class StacksTable extends AppTable
     public function initialize(array $config) {
         //Check if proper table is created
         parent::initialize($config);
+		$this->configureStackCache();
     }
+	
+	/**
+	 * Setup the cache for this concrete stack table
+	 */
+	protected function configureStackCache() {
+		if (is_null(Cache::getConfig($this->cacheName()))) {
+			Cache::setConfig($this->cacheName(),
+					[
+				'className' => 'File',
+				'path' => CACHE . 'artwork' . DS,
+				'prefix' => "$this->cacheName()_",
+				'duration' => '+1 week',
+				'serialize' => true,
+			]);
+		}	
+	}
+	
+	/**
+	 * Generate a cache key
+	 * 
+	 * @param string $key An Rolodexwork id
+	 * @return string The key
+	 */
+	public static function cacheKey($key) {
+		return $key;
+	}
+	
+	/**
+	 * Get the Cache config name for this concrete stack table
+	 * 
+	 * @return string
+	 */
+	public static function cacheName() {
+		return namespaceSplit(get_class())[1];
+	}
+
     
 	/**
 	 * Lazy load the required tables
@@ -132,16 +170,43 @@ class StacksTable extends AppTable
     protected function stacksFromCaps($ids) {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
-			$stack = FALSE;
-			if (!$stack && !$this->stacks->isMember($id)) {
+			$stack = $this->readCache($id);
+			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
 				$stack = $this->marshalStack($id);
 			}
 			if (!$stack->isEmpty()) {
 				$stack->clean();
 				$this->stacks->insert($id, $stack);
+				$this->writeCache($id, $data);
 			}
 		}
 		return $this->stacks;
+	}
+	
+	/**
+	 * Read cache to see if the ID'd stack is present
+	 * 
+     * @param string $id Stack id will generate the cache data key
+     * @param string $config name of the configuration to use
+     * @return mixed The cached data, or FALSE
+	 */
+	protected function readCache($id) {
+		return Cache::read($this->cacheKey($id), $this->cacheName());
+	}
+	
+	/**
+	 * Write a stack to the cache
+	 * 
+     * @param string $id 
+     * @param mixed $stack 
+     * @return bool True on successful cached, false on failure
+	 */
+	protected function writeCache($id, $stack) {
+		return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
+	}
+	
+	protected function newVersionMarshalStack($id) {
+		
 	}
     
 // <editor-fold defaultstate="collapsed" desc="finder args validation">
