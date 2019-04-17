@@ -10,7 +10,16 @@ use App\Model\Entity\StackEntity;
  */
 class RolodexCard extends StackEntity {
 	
+	/**
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
+	 */
 	protected $rootName = 'identity';
+
+	/**
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
+	 */
 	protected $rootDisplaySource = 'name';
 
 	public function name() {

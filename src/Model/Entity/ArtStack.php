@@ -17,11 +17,15 @@ use App\Model\Lib\Layer;
 class ArtStack extends StackEntity {
     	
 	/**
-	 * Name of the tip of this stack
-	 *
-	 * @var string
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
 	 */
 	protected $rootName = 'artwork';
+	
+	/**
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
+	 */
 	protected $rootDisplayValue = 'title';
 
 	/**

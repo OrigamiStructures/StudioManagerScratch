@@ -264,7 +264,7 @@ class StackEntityTest extends TestCase
     }
 	
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException App\Exception\BadClassConfigurationException
 	 */
 	public function testCapEntityUnsetProperty() {
 		$entity = New StackEntity();
