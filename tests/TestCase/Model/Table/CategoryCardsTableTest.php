@@ -100,8 +100,8 @@ class CategoryCardsTableTest extends TestCase
 		
 		$groups = $this->CategoryCardsTable
 				->find(
-						'stackFrom', 
-						['layer' => 'identities', 'ids' => [3, 7]]
+						'stacksFor', 
+						['seed' => 'identities', 'ids' => [3, 7]]
 				);
 		
 //		$this->assertTrue('identity', $groups->element(3, LAYERACC_ID)->primary());
@@ -117,8 +117,8 @@ class CategoryCardsTableTest extends TestCase
 		
 		$groups = $this->CategoryCardsTable
 				->find(
-						'stackFrom', 
-						['layer' => 'members', 'ids' => [1]]
+						'stacksFor', 
+						['seed' => 'members', 'ids' => [1]]
 				);
 
 		$this->assertEquals(1, $groups->count(), 

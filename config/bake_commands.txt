@@ -76,14 +76,14 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
 # Stack/Layer suite
 # --------------------------------------------------------------------
+
+# RolodexCard entity suite
+# --------------------------------------------------------------------
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
-
-# RolodexCard entity suite
-# --------------------------------------------------------------------
 vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php

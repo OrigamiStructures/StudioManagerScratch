@@ -63,8 +63,8 @@ class StackSetTest extends TestCase {
 			4, //jabberwocky
 			5, //global warming survival kit
 		];
-		$this->StackEntities = $this->ArtStacks->find('stackFrom',
-				['layer' => 'artworks', 'ids' => $artIDs]);
+		$this->StackEntities = $this->ArtStacks->find('stacksFor',
+				['seed' => 'artworks', 'ids' => $artIDs]);
 //        $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
 //        $this->StackEntity->arrayProp = ['a','b','c'];
 //        $this->StackEntity->stringProp = 'This is a string property';
@@ -203,7 +203,7 @@ class StackSetTest extends TestCase {
 	 * Test element (a trait method) in StackSet context
 	 */
 	public function testElement() {
-		$this->assertTrue($this->StackEntities->element(1)->capId() === 5);
+		$this->assertTrue($this->StackEntities->element(1)->rootID() === 5);
 		$this->assertTrue($this->StackEntities->element(2) === null);
 	}
 	

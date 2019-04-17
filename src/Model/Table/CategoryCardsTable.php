@@ -12,13 +12,13 @@ class CategoryCardsTable extends RolodexCardsTable
 {
 	
 	public function initialize(array $config) {
-		$this->layerTables[] = 'Members';
+	    $this->addLayerTable(['Members']);
 		$this->stackSchema[] = ['name' => 'members',	'specs' => ['type' => 'layer']];
 		$this->seedPoints = array_merge($this->seedPoints, ['member', 'members']);
 		parent::initialize($config);
 	}
 	
-	protected function loadFromMember($ids) {
+	protected function distillFromMember($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
 			->where(['member_id IN' => $ids]);

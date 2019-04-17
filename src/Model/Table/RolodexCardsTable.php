@@ -15,8 +15,12 @@ use Cake\Cache\Cache;
  *
  */
 class RolodexCardsTable extends StacksTable {
-
-    protected $layerTables = ['Identities', 'GroupsMembers'];
+	
+	/**
+	 * {@inheritdoc}
+	 */
+	protected $rootName = 'identity';
+	protected $rootDisplaySource = 'name';
 
 	protected $stackSchema = 	[
             ['name' => 'identity',		'specs' => ['type' => 'layer']],
@@ -40,8 +44,9 @@ class RolodexCardsTable extends StacksTable {
 	 * @return void
 	 */
 	public function initialize(array $config) {
-		$this->setTable('members');
+        $this->setTable('members');
 		$this->_initializeAssociations();
+        $this->addLayerTable(['Identities', 'GroupsMembers']);
 		parent::initialize($config);
 	}
 
@@ -84,11 +89,11 @@ class RolodexCardsTable extends StacksTable {
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
-	protected function loadFromIdentity($ids) {
+	protected function distillFromIdentity($ids) {
 		return $this->stacksFromIdentities($ids);
 	}
 	
-	protected function loadFromMembership($ids) {
+	protected function distillFromMembership($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
 			->where(['group_id IN' => $ids]);
@@ -100,7 +105,7 @@ class RolodexCardsTable extends StacksTable {
 		return $this->stacksFromIdentities($IDs);
 	}
 	
-	protected function loadFromDataOwner($ids) {
+	protected function distillFromDataOwner($ids) {
 		$records = $this->Identities
 				->find('all')
 				->select(['id', 'user_id'])
@@ -116,7 +121,7 @@ class RolodexCardsTable extends StacksTable {
 	/**
 	 * Read the stack from cache or assemble it and cache it
 	 * 
-	 * This is the destination for all the loadFrom variants. 
+	 * This is the destination for all the distillFrom variants. 
 	 * They work to derive the member_id values required to 
 	 * run this stack building process
 	 * 

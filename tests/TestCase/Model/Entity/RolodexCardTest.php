@@ -40,8 +40,8 @@ class RolodexCardTest extends TestCase
         parent::setUp();
         $this->RolodexCards = $this->getTableLocator()->get('RolodexCards');
         
-        $targets = ['layer' => 'identity', 'ids' => [2,3]];
-        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        $targets = ['seed' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stacksFor', $targets);
         
         $this->Person = $cards->element(0);
         $this->Group = $cards->element(1);
