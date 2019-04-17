@@ -20,6 +20,10 @@ class RolodexCardsTable extends StacksTable {
 	 * {@inheritdoc}
 	 */
 	protected $rootName = 'identity';
+	
+	/**
+	 * {@inheritdoc}
+	 */
 	protected $rootDisplaySource = 'name';
 
 	protected $stackSchema = 	[
