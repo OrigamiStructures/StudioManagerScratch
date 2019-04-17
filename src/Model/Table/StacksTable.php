@@ -92,8 +92,8 @@ class StacksTable extends AppTable
 			Cache::setConfig($this->cacheName(),
 					[
 				'className' => 'File',
-				'path' => CACHE . 'artwork' . DS,
-				'prefix' => "$this->cacheName()_",
+				'path' => CACHE . 'stack_entities' . DS,
+				'prefix' => $this->cacheName() . '_',
 				'duration' => '+1 week',
 				'serialize' => true,
 			]);
@@ -106,7 +106,7 @@ class StacksTable extends AppTable
 	 * @param string $key An Rolodexwork id
 	 * @return string The key
 	 */
-	public static function cacheKey($key) {
+	public function cacheKey($key) {
 		return $key;
 	}
 	
@@ -115,8 +115,9 @@ class StacksTable extends AppTable
 	 * 
 	 * @return string
 	 */
-	public static function cacheName() {
-		return namespaceSplit(get_class())[1];
+	public function cacheName() {
+		$raw = namespaceSplit(get_class($this))[1];
+		return str_replace('Table', '', $raw);
 	}
 
 	public function rootName() {
@@ -234,7 +235,7 @@ class StacksTable extends AppTable
 			
 			$stack->clean();
 			$this->stacks->insert($id, $stack);
-			$this->writeCache($id, $data);
+			$this->writeCache($id, $stack);
 		}
 		return $this->stacks;
 	}

@@ -110,7 +110,7 @@ class RolodexCardsTableTest extends TestCase
 			'pieces',			
 			'dispositionsPieces'
 		];
-		$this->assertEmpty($expected, $stackTable->layers());
+		$this->assertEquals($expected, $stackTable->layers());
 	}
     /**
      * Test findRolodexCards method
