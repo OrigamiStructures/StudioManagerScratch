@@ -26,8 +26,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
     
-	protected $_cap = FALSE;
-	protected $_capDisplaySource = FALSE;
+	protected $root = FALSE;
+	protected $rootDisplaySource = FALSE;
     /**
      * Is the id a member of the set
      * 
@@ -72,7 +72,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return string
 	 */
 	public function dataOwner() {
-		return $this->capElement()->user_id;
+		return $this->rootElement()->user_id;
 	}
 	
 	/**
@@ -83,9 +83,19 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param boolean $unwrap 
 	 * @return entity|array
 	 */
-	public function capElement($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->{$this->capLayerName()}->load();
+	public function rootElement($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->{$this->rootLayerName()}->load();
 		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	public function setRoot($layer) {
+		$this->root = $layer;
+		return $this;
+	}
+	
+	public function setRootDisplaySource($source) {
+		$this->rootDisplaySource = $source;
+		return $this;
 	}
 	
 	/**
@@ -96,8 +106,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param boolean $unwrap 
 	 * @return string|array
 	 */
-	public function capID($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->{$this->capLayerName()}->IDs();
+	public function rootID($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->{$this->rootLayerName()}->IDs();
 		return $this->_resolveWrapper($result, $unwrap);
 	}
 	
@@ -109,8 +119,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param boolean $unwrap 
 	 * @return string|array
 	 */
-	public function capDisplayValue($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->valueList($this->capDisplaySource(), $this->capElement());
+	public function rootDisplayValue($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->valueList($this->rootDisplaySource(), $this->rootElement());
 		return $this->_resolveWrapper($result, $unwrap);
 	}
 	
@@ -122,13 +132,13 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return string
 	 * @throws BadClassConfigurationException
 	 */
-	public function capDisplaySource() {
-		if ($this->_capDisplaySource === FALSE) {
+	public function rootDisplaySource() {
+		if ($this->rootDisplaySource === FALSE) {
 			throw new BadClassConfigurationException(
-				'A display source (_capDisplaySource) must be set for the '
-				. 'cap record in the stack entity ' . get_class($this));
+				'A display source (rootDisplaySource) must be set for the '
+				. 'root record in the stack entity ' . get_class($this));
 		}	
-		return $this->_capDisplaySource;
+		return $this->rootDisplaySource;
 }
 
 	/**
@@ -136,13 +146,13 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * 
 	 * @return string
 	 */
-	public function capLayerName() {
-		if ($this->_cap === FALSE) {
+	public function rootLayerName() {
+		if ($this->rootName === FALSE) {
 			throw new BadClassConfigurationException(
-				'The name of the cap entity ($this->_cap) must '
+				'The name of the root entity ($this->rootName) must '
 				. 'be set in the stack entity ' . get_class($this));
 		}
-		return $this->_cap;
+		return $this->rootName;
 	}
 	
 	/**
@@ -180,7 +190,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	public function load(LayerAccessArgs $argObj = null) {
 		
 		if (is_null($argObj)) {
-			return [$this->capID() => $this];
+			return [$this->rootID() => $this];
 		}
 		
         $property = $this->getValidPropery($argObj);
@@ -240,7 +250,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
     public function isEmpty($property = null)
     {
 		if (is_null($property)) {
-			$property = $this->capLayerName();
+			$property = $this->rootLayerName();
 		}
         $value = $this->get($property);
         if (is_object($value) 

@@ -26,7 +26,7 @@ class ArtStacksTable extends StacksTable
 	/**
 	 * {@inheritdoc}
 	 */
-	protected $root = 'artwork';
+	protected $rootName = 'artwork';
 
     /**
      * {@inheritdoc}

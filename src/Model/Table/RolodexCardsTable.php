@@ -19,7 +19,8 @@ class RolodexCardsTable extends StacksTable {
 	/**
 	 * {@inheritdoc}
 	 */
-	protected $root = 'identity';
+	protected $rootName = 'identity';
+	protected $rootDisplaySource = 'name';
 
 	protected $stackSchema = 	[
             ['name' => 'identity',		'specs' => ['type' => 'layer']],

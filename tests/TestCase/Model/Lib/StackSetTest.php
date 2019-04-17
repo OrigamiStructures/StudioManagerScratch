@@ -203,7 +203,7 @@ class StackSetTest extends TestCase {
 	 * Test element (a trait method) in StackSet context
 	 */
 	public function testElement() {
-		$this->assertTrue($this->StackEntities->element(1)->capId() === 5);
+		$this->assertTrue($this->StackEntities->element(1)->rootID() === 5);
 		$this->assertTrue($this->StackEntities->element(2) === null);
 	}
 	

@@ -10,11 +10,11 @@ use App\Model\Entity\StackEntity;
  */
 class RolodexCard extends StackEntity {
 	
-	protected $_cap = 'identity';
-	protected $_capDisplaySource = 'name';
+	protected $rootName = 'identity';
+	protected $rootDisplaySource = 'name';
 
 	public function name() {
-		return $this->capElement()->name();
+		return $this->rootElement()->name();
 	}
 	
 	/**
