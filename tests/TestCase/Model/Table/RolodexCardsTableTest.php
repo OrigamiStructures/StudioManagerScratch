@@ -158,7 +158,6 @@ class RolodexCardsTableTest extends TestCase
     public function testRolodexCardDataQuantity() {
         $targets = ['seed' => 'identity', 'ids' => [2,3]];
         $cards = $this->RolodexCards->find('stacksFor', $targets);
-//        pr($cards);
         
         $person = $cards->element(2, LAYERACC_ID);
         $group = $cards->element(3, LAYERACC_ID);

@@ -188,9 +188,12 @@ class StacksTable extends AppTable
         if (empty($ids)) {
             return new StackSet();
         }
-//        $method = 'distillFrom' . $this->_entityName($seed);
+
+//		$IDs = $this->{$this->distillMethodName($seed)}($ids);
+//		return $this->stacksFromRoot($IDs);
 		
-		return $this->{$this->distillMethodName($seed)}($ids);
+		$IDs = $this->{$this->distillMethodName($seed)}($ids);
+		return $this->stacksFromRoot($IDs);
     }
 	
 	/**

@@ -94,7 +94,7 @@ class RolodexCardsTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromIdentity($ids) {
-		return $this->stacksFromRoot($ids);
+		return $ids;
 	}
 	
 	protected function distillFromMembership($ids) {
@@ -106,7 +106,7 @@ class RolodexCardsTable extends StacksTable {
 			$accum[] = $entity->member_id;
 			return $accum;
 		}, []);
-		return $this->stacksFromRoot($IDs);
+		return $IDs;
 	}
 	
 	protected function distillFromDataOwner($ids) {
@@ -119,7 +119,7 @@ class RolodexCardsTable extends StacksTable {
 					$accum[] = $entity->id;
 					return $accum;
 				}, []);
-		return $this->stacksFromRoot($IDs);
+		return $IDs;
 	}
 		
 	protected function marshalIdentity($id, $stack) {
