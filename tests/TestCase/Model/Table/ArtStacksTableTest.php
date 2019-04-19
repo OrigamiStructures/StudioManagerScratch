@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Cache\Cache;
 
 /**
  * App\Model\Table\ArtStacksTable Test Case
@@ -51,6 +52,7 @@ class ArtStacksTableTest extends TestCase
      */
     public function tearDown()
     {
+		Cache::clear(FALSE, $this->ArtStacks->cacheName());
         unset($this->ArtStacks);
 
         parent::tearDown();
@@ -117,6 +119,7 @@ class ArtStacksTableTest extends TestCase
     {
         $stacks = $this->ArtStacks->find('stacksFor', $args);
         $this->assertEquals($count, $stacks->count());  
+//        $this->assertEquals($count, count($stacks));  
     }
     
     public function noneFoundProvider() {
@@ -151,6 +154,7 @@ class ArtStacksTableTest extends TestCase
         $this->assertTrue($entity->exists('formats', $fo), "===\nformat is $fo\n===");
         $this->assertEquals($p_cnt, $entity->count('pieces'));
         $this->assertEquals($d_cnt, $entity->count('dispositionsPieces'));
+		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
     
     public function stackSeedLayerVariantProvider() {
@@ -213,6 +217,7 @@ class ArtStacksTableTest extends TestCase
     {
         $this->expectExceptionMessage($msg);
         $this->ArtStacks->find('stacksFor', $args);
+		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
     
     public function badArgsProvider() {
