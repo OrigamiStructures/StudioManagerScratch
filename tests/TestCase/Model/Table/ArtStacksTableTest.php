@@ -223,20 +223,20 @@ class ArtStacksTableTest extends TestCase
     public function badArgsProvider() {
         return [
             'unknown layer' => [
-                ['seed' => 'unkown', 'ids' => [4,5,6]], 
+                ['seed' => 'unknown', 'ids' => [4,5,6]], 
                 "ArtStacks can't do lookups",
             ],
             'bad layer key' => [
                 ['wrong' => 'pieces', 'ids' => [4,5,6]], 
-                "both 'layer' and 'ids' keys",
+                "both 'seed' and 'ids' keys",
             ],
             'bad id key' => [
                 ['seed' => 'pieces', 'wrong' => [4,5,6]], 
-                "both 'layer' and 'ids' keys",
+                "both 'seed' and 'ids' keys",
             ],
             'missing key' => [
                 ['ids' => [4,5,6]], 
-                "both 'layer' and 'ids' keys",
+                "both 'seed' and 'ids' keys",
             ],
             'ids not in array' => [
                 ['seed' => 'pieces', 'ids' => 12], 
@@ -262,17 +262,5 @@ class ArtStacksTableTest extends TestCase
 //        $this->assertEquals(1, $stacks->count());
         
     }
-    /**
-     * Test stacksFromAtworksWithBadArg method
-     * 
-     * @expectedException BadMethodCallException
-     *
-     * @return void
-     */
-    public function testStacksFromAtworksWithBadArg()
-    {
-        $this->expectExceptionMessage('provided as an array');
-        $stacks = $this->ArtStacks->stacksFromArtworks(3);
-        print_r($stacks);
-    }
+
 }
