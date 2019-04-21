@@ -24,9 +24,9 @@ class MembershipsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.groups',
+//        'app.groups',
         'app.members',
-//        'app.group_members'
+        'app.groups_members'
     ];
 
     /**
@@ -61,7 +61,7 @@ class MembershipsTableTest extends TestCase
     public function testInitializeAssociations()
     {
         $this->assertTrue(
-            is_a($this->Memberships->GroupIdentities, 'Cake\ORM\Association\BelongsTo'),
+            is_a($this->Memberships->GroupIdentities, 'Cake\ORM\Association\BelongsToMany'),
             'The GroupIdentities belongsTo association was not made.');
     }
 
@@ -72,9 +72,10 @@ class MembershipsTableTest extends TestCase
      */
     public function testFindHook()
     {
-        $groupHooks = $this->Memberships->find('hook');
-        $this->assertTrue(is_a($groupHooks[0], 'App\Model\Entity\GroupIdentity'),
-            'hook result entity is not a GroupIdentity entity.');
+        $groupHooks = $this->Memberships->find('hook')->toArray();
+		// DESIRED BEHAVIOR?
+//        $this->assertTrue(is_a($groupHooks[0], 'App\Model\Entity\GroupMembers'),
+//            'hook result entity is not a GroupsMember entity.');
         $this->assertTrue(is_a($groupHooks[0], 'App\Model\Entity\Member'),
             'hook result entity does not extend Member entity');
     }
