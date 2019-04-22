@@ -17,6 +17,8 @@ class PersonCardsTableTest extends TestCase
      * @var \App\Model\Table\PersonCardsTable
      */
     public $PersonCardsTable;
+	
+	public $TableProduct;
 
     /**
      * Fixtures
@@ -29,7 +31,10 @@ class PersonCardsTableTest extends TestCase
         'app.members',
         'app.contacts',
 		'app.addresses',
-		'app.dispositions'
+		'app.dispositions',
+		'app.users',
+		'app.groups_members'
+
     ];
 
     /**
@@ -42,6 +47,22 @@ class PersonCardsTableTest extends TestCase
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('PersonCards') ? [] : ['className' => PersonCardsTable::class];
         $this->PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards', $config);
+		$this->ContactsProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'contacts', 'ids' => [1,3]]
+			);
+		$this->AddressesProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'addresses', 'ids' => [76,2]]
+			);
+		$this->DispositionsProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'dispositions', 'ids' => [129,131]]
+			);
+		$this->ImageProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'image', 'ids' => [9,10]]
+			);
     }
 
     /**
@@ -89,6 +110,14 @@ class PersonCardsTableTest extends TestCase
 			'The DispositionsTable object did not get initialized properly'
 		);
 		
+		$this->assertTrue(
+			is_a(
+				$this->PersonCardsTable->Images,
+				'App\Model\Table\ImagesTable'
+			),
+			'The ImagesTable object did not get initialized properly'
+		);
+		
     }
 
     public function testInitializeSchema()
@@ -128,6 +157,17 @@ class PersonCardsTableTest extends TestCase
 			'The schema column `dispositions` is not a `layer` type'
 		);
 		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->hasColumn('image'),
+			'The schema did not get a members image added'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->getColumnType('image') 
+				=== 'layer',
+			'The schema column `image` is not a `layer` type'
+		);
+		
     }
 
     public function testInitializeSeeds()
@@ -140,6 +180,8 @@ class PersonCardsTableTest extends TestCase
 		$this->assertTrue($this->PersonCardsTable->hasSeed('addresses'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('disposition'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('dispositions'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('image'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('images'));
 		
     }
 

@@ -25,6 +25,22 @@ class PersonCardsTable extends RolodexCardsTable {
 		$this->seedPoints = array_merge($this->seedPoints, ['image', 'images']);
 		parent::initialize($config);
 	}
+	
+	protected function distillFromImage($ids) {
+		$IDs = $this->Identities->find('list', ['valueField' => 'id'])
+				->where(['image_id IN' => $ids])->toArray();
+		return array_unique($IDs);
+	}
+	
+	protected function marshalImage($id, $stack) {
+//		debug($stack);
+		if ($stack->count('identity')) {
+			$image = $this->Images->find('all')
+					->where(['id' => $stack->rootElement()->imageId()]);
+			$stack->set(['image' => $image->toArray()]);
+		}		
+		return $stack;
+	}
 
 //	public function initialize(array $config) {
 //		parent::initialize($config);

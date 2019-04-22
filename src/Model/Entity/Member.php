@@ -124,6 +124,10 @@ class Member extends Entity
 		}
 	}
 	
+	public function imageId() {
+		return $this->image_id;
+	}
+	
 	/**
 	 * Has this Memeber collected artwork
 	 * 
