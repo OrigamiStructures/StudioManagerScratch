@@ -23,8 +23,9 @@ trait ContactableTableTrait {
 	
 	public function distillFromAddress($ids) {
 		$IDs = $this->Addresses->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids]);
-		return $this->stacksFromIdentities(array_unique($IDs->toArray()));
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 	}
 	
 	public function marshalAddresses($id, $stack) {
@@ -37,9 +38,10 @@ trait ContactableTableTrait {
 	}
 	
 	public function distillFromContact($ids) {
-		$IDs = $this->Contact->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids]);
-		return $this->stacksFromIdentities(array_unique($IDs->toArray()));
+		$IDs = $this->Contacts->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 
 	}
 	

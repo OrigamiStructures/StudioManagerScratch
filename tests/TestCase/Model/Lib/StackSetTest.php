@@ -262,6 +262,16 @@ class StackSetTest extends TestCase {
         $this->assertEquals(4, count($open), 'open edition 8 should have 4 pieces');
         $this->assertEquals(0, count($none), 'nothing, bad layer and foreign, has no pieces');
 	}
+	
+	/**
+	 * Layer content for multiple stacks should accumulate
+	 */
+	public function testLoadLayerContentAccumulation() {
+		$this->assertCount(4, $this->StackEntities
+				->find()
+				->setLayer('editions')
+				->load());
+	}
 
 // </editor-fold>
 }

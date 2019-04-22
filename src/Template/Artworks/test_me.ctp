@@ -32,7 +32,7 @@ echo $this->element('Disposition/testing/dispo_table');
 if (isset($stacks)) {
 	foreach ($stacks->all() as $stack) {
 		
-		$artwork = $stack->primaryEntity();
+		$artwork = $stack->rootElement();
 		$joinArray = $stack->find()
 				->setLayer('dispositionsPieces')
 				->specifyFilter('disposition_id', $activity->IDs())
@@ -115,7 +115,7 @@ if (isset($stacks)) {
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			$format = $stack->formats->element($piece->format_id, LAYERACC_ID);
 			$edition = $stack->editions->element($piece->edition_id, LAYERACC_ID);
-			$artwork = $stack->primaryEntity();
+			$artwork = $stack->rootElement();
 
 			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 

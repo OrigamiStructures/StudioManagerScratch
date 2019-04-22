@@ -101,7 +101,7 @@ class UserStacksTable extends StacksTable
 	 * @throws \BadMethodCallException
 	 */
 	protected function distillFromUser($ids) {
-		return $this->stackFromUser($ids);
+		$ids;
 	}
 
     

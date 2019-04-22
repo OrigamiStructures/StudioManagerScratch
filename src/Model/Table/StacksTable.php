@@ -75,10 +75,10 @@ class StacksTable extends AppTable
 	private function validateRoot() {
 		if (is_null($this->rootName)) {
 			throw new MissingStackTableRootException('You must set the '
-					. '`root` property for ' . get_class($this));
+					. '`rootName` property for ' . get_class($this));
 		}
 		if (!in_array($this->rootName, Hash::extract($this->stackSchema, '{n}.name'))){
-			throw new MissingStackTableRootException('The `root` property in '
+			throw new MissingStackTableRootException('The `rootName` property in '
 					. get_class($this) . ' must be listed in the stackSchema '
 					. 'and be of type = layer');
 		}
@@ -92,8 +92,8 @@ class StacksTable extends AppTable
 			Cache::setConfig($this->cacheName(),
 					[
 				'className' => 'File',
-				'path' => CACHE . 'artwork' . DS,
-				'prefix' => "$this->cacheName()_",
+				'path' => CACHE . 'stack_entities' . DS,
+				'prefix' => $this->cacheName() . '_',
 				'duration' => '+1 week',
 				'serialize' => true,
 			]);
@@ -106,7 +106,7 @@ class StacksTable extends AppTable
 	 * @param string $key An Rolodexwork id
 	 * @return string The key
 	 */
-	public static function cacheKey($key) {
+	public function cacheKey($key) {
 		return $key;
 	}
 	
@@ -115,8 +115,9 @@ class StacksTable extends AppTable
 	 * 
 	 * @return string
 	 */
-	public static function cacheName() {
-		return namespaceSplit(get_class())[1];
+	public function cacheName() {
+		$raw = namespaceSplit(get_class($this))[1];
+		return str_replace('Table', '', $raw);
 	}
 
 	public function rootName() {
@@ -187,9 +188,12 @@ class StacksTable extends AppTable
         if (empty($ids)) {
             return new StackSet();
         }
-//        $method = 'distillFrom' . $this->_entityName($seed);
+
+//		$IDs = $this->{$this->distillMethodName($seed)}($ids);
+//		return $this->stacksFromRoot($IDs);
 		
-		return $this->{$this->distillMethodName($seed)}($ids);
+		$IDs = $this->{$this->distillMethodName($seed)}($ids);
+		return $this->stacksFromRoot($IDs);
     }
 	
 	/**
@@ -234,7 +238,7 @@ class StacksTable extends AppTable
 			
 			$stack->clean();
 			$this->stacks->insert($id, $stack);
-			$this->writeCache($id, $data);
+			$this->writeCache($id, $stack);
 		}
 		return $this->stacks;
 	}
@@ -262,7 +266,12 @@ class StacksTable extends AppTable
 	}
 	
 	public function layers() {
-		return Hash::extract($this->stackSchema, '{n}.name');
+		$schema = collection($this->stackSchema);
+		$layerColumns = $schema->filter(function($column, $key) {
+				return $column['specs']['type'] === 'layer';
+			})->toArray();
+//		debug($layerColumns->toArray());
+		return Hash::extract($layerColumns, '{n}.name');
 	}
 	
 	/**

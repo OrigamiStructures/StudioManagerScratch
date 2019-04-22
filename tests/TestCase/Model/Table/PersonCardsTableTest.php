@@ -17,6 +17,14 @@ class PersonCardsTableTest extends TestCase
      * @var \App\Model\Table\PersonCardsTable
      */
     public $PersonCardsTable;
+	
+	public $ContactsProduct;
+
+	public $AddressesProduct;
+
+	public $DispositionsProduct;
+
+	public $ImageProduct;
 
     /**
      * Fixtures
@@ -29,7 +37,10 @@ class PersonCardsTableTest extends TestCase
         'app.members',
         'app.contacts',
 		'app.addresses',
-		'app.dispositions'
+		'app.dispositions',
+		'app.users',
+		'app.groups_members'
+
     ];
 
     /**
@@ -42,6 +53,29 @@ class PersonCardsTableTest extends TestCase
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('PersonCards') ? [] : ['className' => PersonCardsTable::class];
         $this->PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards', $config);
+		$this->ContactsProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'contacts', 'ids' => [1,5]]
+			);
+		foreach($this->ContactsProduct->load() as $Stack) {
+//			debug($Stack->dispositions);
+		}
+		//members 1 dondrake, 2 gaildrake
+		//
+		$this->AddressesProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'addresses', 'ids' => [76,2]]
+			);
+		//members 1 dondrake, 2 gaildrake
+		//
+		$this->DispositionsProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'dispositions', 'ids' => [129,131]]
+			);
+		$this->ImageProduct = $this->PersonCardsTable->find(
+				'stacksFor', 
+				['seed' => 'image', 'ids' => [9,10]]
+			);
     }
 
     /**
@@ -51,6 +85,7 @@ class PersonCardsTableTest extends TestCase
      */
     public function tearDown()
     {
+		\Cake\Cache\Cache::clear(FALSE, $this->PersonCardsTable->cacheName());
         unset($this->PersonCardsTable);
 
         parent::tearDown();
@@ -87,6 +122,14 @@ class PersonCardsTableTest extends TestCase
 				'App\Model\Table\DispositionsTable'
 			),
 			'The DispositionsTable object did not get initialized properly'
+		);
+		
+		$this->assertTrue(
+			is_a(
+				$this->PersonCardsTable->Images,
+				'App\Model\Table\ImagesTable'
+			),
+			'The ImagesTable object did not get initialized properly'
 		);
 		
     }
@@ -128,6 +171,17 @@ class PersonCardsTableTest extends TestCase
 			'The schema column `dispositions` is not a `layer` type'
 		);
 		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->hasColumn('image'),
+			'The schema did not get a members image added'
+		);
+		
+		$this->assertTrue(
+			$this->PersonCardsTable->getSchema()->getColumnType('image') 
+				=== 'layer',
+			'The schema column `image` is not a `layer` type'
+		);
+		
     }
 
     public function testInitializeSeeds()
@@ -140,8 +194,117 @@ class PersonCardsTableTest extends TestCase
 		$this->assertTrue($this->PersonCardsTable->hasSeed('addresses'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('disposition'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('dispositions'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('image'));
+		$this->assertTrue($this->PersonCardsTable->hasSeed('images'));
 		
     }
 
+	public function testContactsProduct() {
+		$this->assertTrue($this->ContactsProduct->count() === 2, 
+				'ContactProduct does not contain 2 entities.');
+		$this->assertArraySubset([1,2],$this->ContactsProduct->IDs(),
+				'ContactProduct does not contain the 2 specific expected entities.');
+		$this->assertTrue(
+				count($this->ContactsProduct->find()->setLayer('contacts')->load())
+				=== 5,
+				'The combined count of contacts was not 5 (4 + 1).'
+			);
+		$this->assertTrue(
+				count($this->ContactsProduct->find()->setLayer('addresses')->load())
+				=== 3,
+				'The combined count of addresses was not 3 (2 + 1).'
+			);
+		$this->assertTrue(
+				count($this->ContactsProduct->find()->setLayer('image')->load())
+				=== 2,
+				'The combined count of images was not 2 (1 + 1).'
+			);
+		$this->assertTrue(
+				count($this->ContactsProduct->find()->setLayer('dispositions')->load())
+				=== 4,
+				'The combined count of dispositions was not 4 (3 + 1).'
+			);
+	}
+	
+	public function testAddressesProduct() {
+		$this->assertTrue($this->AddressesProduct->count() === 2, 
+				'AddressesProduct does not contain 2 entities.');
+		$this->assertArraySubset([2,1],$this->AddressesProduct->IDs(),
+				'AddressesProduct does not contain the 2 specific expected entities.');
+		$this->assertTrue(
+				count($this->AddressesProduct->find()->setLayer('contacts')->load())
+				=== 5,
+				'The combined count of contacts was not 5 (4 + 1).'
+			);
+		$this->assertTrue(
+				count($this->AddressesProduct->find()->setLayer('addresses')->load())
+				=== 3,
+				'The combined count of addresses was not 3 (2 + 1).'
+			);
+		$this->assertTrue(
+				count($this->AddressesProduct->find()->setLayer('image')->load())
+				=== 2,
+				'The combined count of images was not 2 (1 + 1).'
+			);
+		$this->assertTrue(
+				count($this->AddressesProduct->find()->setLayer('dispositions')->load())
+				=== 4,
+				'The combined count of dispositions was not 4 (3 + 1).'
+			);
+	}
+
+	public function testImageProduct() {
+		$this->assertTrue($this->ImageProduct->count() === 2, 
+				'ImageProduct does not contain 2 entities.');
+		$this->assertArraySubset([1,2],$this->ImageProduct->IDs(),
+				'ImageProduct does not contain the 2 specific expected entities.');
+		$this->assertTrue(
+				count($this->ImageProduct->find()->setLayer('contacts')->load())
+				=== 5,
+				'The combined count of contacts was not 5 (4 + 1).'
+			);
+		$this->assertTrue(
+				count($this->ImageProduct->find()->setLayer('addresses')->load())
+				=== 3,
+				'The combined count of addresses was not 3 (2 + 1).'
+			);
+		$this->assertTrue(
+				count($this->ImageProduct->find()->setLayer('image')->load())
+				=== 2,
+				'The combined count of images was not 2 (1 + 1).'
+			);
+		$this->assertTrue(
+				count($this->ImageProduct->find()->setLayer('dispositions')->load())
+				=== 4,
+				'The combined count of dispositions was not 4 (3 + 1).'
+			);
+	}
+
+	public function testReceiverProduct() {
+		$this->assertTrue($this->DispositionsProduct->count() === 2, 
+				'DispositionsProduct does not contain 2 entities.');
+		$this->assertArraySubset([1,2],$this->DispositionsProduct->IDs(),
+				'DispositionsProduct does not contain the 2 specific expected entities.');
+		$this->assertTrue(
+				count($this->DispositionsProduct->find()->setLayer('contacts')->load())
+				=== 5,
+				'The combined count of contacts was not 5 (4 + 1).'
+			);
+		$this->assertTrue(
+				count($this->DispositionsProduct->find()->setLayer('addresses')->load())
+				=== 3,
+				'The combined count of addresses was not 3 (2 + 1).'
+			);
+		$this->assertTrue(
+				count($this->DispositionsProduct->find()->setLayer('image')->load())
+				=== 2,
+				'The combined count of images was not 2 (1 + 1).'
+			);
+		$this->assertTrue(
+				count($this->DispositionsProduct->find()->setLayer('dispositions')->load())
+				=== 4,
+				'The combined count of dispositions was not 4 (3 + 1).'
+			);
+	}
 
 }

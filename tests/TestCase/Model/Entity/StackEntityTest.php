@@ -240,7 +240,7 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testCapLayer()     {
+    public function testRootLayerNamLayer()     {
         $this->assertEquals('artwork', $this->StackEntity->rootLayerName());
     }
 
@@ -249,7 +249,7 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testCapId()     {
+    public function testRootId()     {
         $this->assertEquals(4, $this->StackEntity->rootID());
     }
 
@@ -258,7 +258,7 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testCapEntity()     {
+    public function testrootElement()     {
         $entity = $this->StackEntity->rootElement();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }

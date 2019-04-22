@@ -94,7 +94,7 @@ class RolodexCardsTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromIdentity($ids) {
-		return $this->stacksFromIdentities($ids);
+		return $ids;
 	}
 	
 	protected function distillFromMembership($ids) {
@@ -106,7 +106,7 @@ class RolodexCardsTable extends StacksTable {
 			$accum[] = $entity->member_id;
 			return $accum;
 		}, []);
-		return $this->stacksFromIdentities($IDs);
+		return $IDs;
 	}
 	
 	protected function distillFromDataOwner($ids) {
@@ -119,50 +119,9 @@ class RolodexCardsTable extends StacksTable {
 					$accum[] = $entity->id;
 					return $accum;
 				}, []);
-		return $this->stacksFromIdentities($IDs);
+		return $IDs;
 	}
-
-	/**
-	 * Read the stack from cache or assemble it and cache it
-	 * 
-	 * This is the destination for all the distillFrom variants. 
-	 * They work to derive the member_id values required to 
-	 * run this stack building process
-	 * 
-	 * There will be other marshalling methods added by the 
-	 * various sub classes. Each sub class holds its own. 
-	 * They are all named by the column names listed in the 
-	 * schema defined in the table. 
-	 * 
-	 * @param array $ids Member ids
-	 * @return StackSet
-	 */
-    protected function stacksFromIdentities($ids) {
-		$this->stacks = new StackSet();
-        foreach ($ids as $id) {
-			$stack = FALSE;
-			if (!$stack && !$this->stacks->isMember($id)) {
-				$stack = $this->marshalStack($id);
-			}
-			if ($stack->count('identity')) {
-				$stack->clean();
-				$this->stacks->insert($id, $stack);
-			}       
-		}
-		return $this->stacks;
-	}
-	
-	protected function marshalStack($id) {
-
-		$layers = Hash::extract($this->stackSchema, '{n}.name');
-		$stack = $this->newEntity([]);
-		foreach($layers as $layer) {
-			$method = 'marshal'.ucfirst($layer);
-			$stack = $this->$method($id, $stack);
-		}
-		return $stack;
-	}
-	
+		
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
@@ -171,7 +130,7 @@ class RolodexCardsTable extends StacksTable {
 			return $stack;
 	}
 	
-	protected function marshalData_owner($id, $stack) {
+	protected function marshalDataOwner($id, $stack) {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')

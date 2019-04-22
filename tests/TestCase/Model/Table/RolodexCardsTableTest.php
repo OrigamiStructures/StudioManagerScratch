@@ -101,6 +101,17 @@ class RolodexCardsTableTest extends TestCase
         $this->RolodexCards->addLayerTable(['badName']);
     }
 
+	public function testLayer() {
+		$stackTable = new TestStack(); //defined at bottom of this page
+		$expected = [
+			'artwork',			
+			'editions',			
+			'formats',			
+			'pieces',			
+			'dispositionsPieces'
+		];
+		$this->assertEquals($expected, $stackTable->layers());
+	}
     /**
      * Test findRolodexCards method
      *
@@ -147,7 +158,6 @@ class RolodexCardsTableTest extends TestCase
     public function testRolodexCardDataQuantity() {
         $targets = ['seed' => 'identity', 'ids' => [2,3]];
         $cards = $this->RolodexCards->find('stacksFor', $targets);
-//        pr($cards);
         
         $person = $cards->element(2, LAYERACC_ID);
         $group = $cards->element(3, LAYERACC_ID);
@@ -239,5 +249,20 @@ class RolodexCardsTableTest extends TestCase
 				. 'identity records to head the stacks');
 	}
 		 
+
+}
+
+class TestStack extends \App\Model\Table\StacksTable {
+	
+	protected $rootName = 'artwork';
+	protected $stackSchema = 	[	
+            ['name' => 'artwork',				'specs' => ['type' => 'layer']],
+            ['name' => 'editions',				'specs' => ['type' => 'layer']],
+            ['name' => 'formats',				'specs' => ['type' => 'layer']],
+            ['name' => 'stringy',				'specs' => ['type' => 'string']],
+            ['name' => 'pieces',				'specs' => ['type' => 'layer']],
+            ['name' => 'dispositionsPieces',	'specs' => ['type' => 'layer']],
+            ['name' => 'other',					'specs' => ['type' => 'integer']],
+        ];
 
 }
