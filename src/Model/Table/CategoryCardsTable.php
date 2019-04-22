@@ -28,7 +28,7 @@ class CategoryCardsTable extends RolodexCardsTable
 			return $accum;
 		}, []);
 
-		return $this->stacksFromIdentities($this->groupsOnly($IDs));
+		return $this->groupsOnly($IDs);
 	}
 	
 	private function groupsOnly($IDs) {
