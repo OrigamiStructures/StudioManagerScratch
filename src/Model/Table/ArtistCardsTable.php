@@ -12,10 +12,8 @@ class ArtistCardsTable extends PersonCardsTable {
 		
 	public function initialize(array $config) {
 	    $this->addLayerTable(['Artists', 'Managers']);
-		$this->stackSchema[] = ['name' => 'artist',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge(
-				$this->seedPoints, 
-				[
+		$this->addStackSchema(['artist', 'manager']);
+		$this->addSeedPoint([
 					'artist', 'artists',
 					'manager', 'managers'
 				]);
