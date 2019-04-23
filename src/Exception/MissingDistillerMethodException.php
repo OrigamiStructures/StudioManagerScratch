@@ -10,8 +10,8 @@ class MissingDistillerMethodException extends Exception
     {
 		
 		/**
-		 * When adding tables to a layer table system,
-         * make sure it's actually a table.
+		 * When adding seeds to a layer
+         * make sure there are distiller functions to back it up
 		 */
 		
         parent::__construct($message, $code, $previous);
