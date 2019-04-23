@@ -116,7 +116,7 @@ class RolodexCardsTableTest extends TestCase
     /**
      * Test bad addSeedPoint
      *
-     * @expectedException MissingDistillerMethodException
+     * @expectedException App\Exception\MissingDistillerMethodException
      */
     public function testAddSeedPoingWiothBadSeed()
     {
