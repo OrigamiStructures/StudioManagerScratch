@@ -13,7 +13,7 @@ class CategoryCardsTable extends RolodexCardsTable
 	
 	public function initialize(array $config) {
 	    $this->addLayerTable(['Members']);
-		$this->stackSchema[] = ['name' => 'members',	'specs' => ['type' => 'layer']];
+	    $this->addStackSchema(['members']);
 		$this->seedPoints = array_merge($this->seedPoints, ['member', 'members']);
 		parent::initialize($config);
 	}

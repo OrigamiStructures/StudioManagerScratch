@@ -30,18 +30,6 @@ class UserStacksTable extends StacksTable
     /**
      * {@inheritdoc}
      */
-    protected $stackSchema = 	[	
-		['name' => 'user', 'specs' => ['type' => 'layer']],
-		['name' => 'member', 'specs' => ['type' => 'layer']],
-		['name' => 'contacts', 'specs' => ['type' => 'layer']],
-		['name' => 'addresses', 'specs' => ['type' => 'layer']],
-		['name' => 'artists', 'specs' => ['type' => 'layer']],
-		['name' => 'groups_members', 'specs' => ['type' => 'layer']],
-	];
-    
-    /**
-     * {@inheritdoc}
-     */
     protected $seedPoints = [
 		'user', 'users',
 	];
@@ -56,6 +44,10 @@ class UserStacksTable extends StacksTable
         $this->addLayerTable([
             'Users', 'Members', 'Contacts',
             'Addresses', 'Artists', 'GroupsMembers'
+        ]);
+        $this->addStackSchema([
+            'user', 'member', 'contacts',
+            'addresses', 'artists', 'groups_members'
         ]);
         parent::initialize($config);
     }

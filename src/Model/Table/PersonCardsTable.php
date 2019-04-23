@@ -21,7 +21,7 @@ class PersonCardsTable extends RolodexCardsTable {
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
 		$this->addLayerTable(['Images']);
-		$this->stackSchema[] = ['name' => 'image',	'specs' => ['type' => 'layer']];
+        $this->addStackSchema(['image']);
 		$this->seedPoints = array_merge($this->seedPoints, ['image', 'images']);
 		parent::initialize($config);
 	}

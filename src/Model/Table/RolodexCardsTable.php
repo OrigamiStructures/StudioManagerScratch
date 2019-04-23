@@ -26,12 +26,6 @@ class RolodexCardsTable extends StacksTable {
 	 */
 	protected $rootDisplaySource = 'name';
 
-	protected $stackSchema = 	[
-            ['name' => 'identity',		'specs' => ['type' => 'layer']],
-            ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
-            ['name' => 'memberships',	'specs' => ['type' => 'layer']],
-        ];
-	
     protected $seedPoints = [
 		'identity', 
 		'identities',
@@ -51,6 +45,7 @@ class RolodexCardsTable extends StacksTable {
         $this->setTable('members');
 		$this->_initializeAssociations();
         $this->addLayerTable(['Identities', 'GroupsMembers']);
+        $this->addStackSchema(['identity', 'data_owner', 'memberships']);
 		parent::initialize($config);
 	}
 

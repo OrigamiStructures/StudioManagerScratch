@@ -11,8 +11,7 @@ trait ContactableTableTrait {
 	
 	public function initializeContactableCard() {
 	    $this->addLayerTable(['Addresses', 'Contacts']);
-		$this->stackSchema[] = ['name' => 'addresses',	'specs' => ['type' => 'layer']];
-		$this->stackSchema[] = ['name' => 'contacts',	'specs' => ['type' => 'layer']];
+	    $this->addStackSchema(['addresses', 'contacts']);
 		$this->seedPoints = array_merge($this->seedPoints, [
 			'address', 
 			'addresses', 
