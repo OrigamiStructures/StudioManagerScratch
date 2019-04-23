@@ -112,6 +112,7 @@ bin/cake bake fixture --records --conditions artwork_id=19 --count 3 --table edi
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 3 --table formats ArtStackFormat
 bin/cake bake fixture --records --conditions 'edition_id IN (35, 36)' --count 100 --table pieces ArtStackPiece
 bin/cake bake fixture --records --conditions 'id IN (122,123,124,125,126,127,128,129,130,131,132)' --count 11 --table dispositions Dispositions
+bin/cake bake fixture --records --count 5 --table artists Artists
 
 //This bakes a stub
 bin/cake bake fixture --count 1 --table art_stacks ArtStacks
