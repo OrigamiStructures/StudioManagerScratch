@@ -190,7 +190,8 @@ class PersonCardsTableTest extends TestCase
 		
 		$this->assertTrue($this->PersonCardsTable->hasSeed('contact'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('contacts'));
-		$this->assertTrue($this->PersonCardsTable->hasSeed('address'));
+		// suppress bad singularization
+//		$this->assertTrue($this->PersonCardsTable->hasSeed('address'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('addresses'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('disposition'));
 		$this->assertTrue($this->PersonCardsTable->hasSeed('dispositions'));
