@@ -4,7 +4,19 @@ namespace App\Model\Table;
 use App\Model\Table\PersonCardsTable;
 
 /**
- * CakePHP OrganizationCardsTable
+ * CakePHP ArtistCardsTable
+ * 
+ * @todo When is this enstantiated? Note below:
+ * The name of this card implies it will only be made if the Identity 
+ * also appears as the member_id of an Artist record. There is no code 
+ * in the distillers or marshaller to guarantee this fact.
+ * 
+ * If the RolodexCardsTable is a factory it is possible that it will 
+ * take steps during after distillation to enhance the root ID set to 
+ * make full determination of the table types required for each stack. 
+ * I don't really understand the use patterns enough to know how to 
+ * proceed at this point.
+ * 
  * @author dondrake
  */
 class ArtistCardsTable extends PersonCardsTable {
@@ -32,17 +44,6 @@ class ArtistCardsTable extends PersonCardsTable {
 	/**
 	 * 
 	 * 
-	 * @todo This needs to account for publishing settings in the record. 
-	 * It may be that we have to check to see the current user and filter 
-	 * the find based on their relationship to the record and the publish 
-	 * settings, or we may grab everything and filter it at a later point. 
-	 * But the data MUST be filtered because we don't want an API delivery 
-	 * to expose data it shouldn't. It may actually be too early to filter 
-	 * at this point. We are, after all, only working out which stacks are 
-	 * required to support these id'd artists and NOT actually getting 
-	 * data for direct display. These id's are assumed to have come through 
-	 * a legitimate process and need context.
-	 * 
 	 * @param array $ids
 	 * @return array
 	 */
@@ -54,13 +55,10 @@ class ArtistCardsTable extends PersonCardsTable {
 	}
 	
 	protected function marshalArtists($id, $stack) {
-//		osd($stack);
-//		osd($stack->rootElement());die;
 		if ($stack->count('identity')) {
 			$image = $this->Artists->find('all')
-					->where(['manager_id' => $stack->dataOwner()])
-					->contain(['Members']);
-			$stack->set(['image' => $image->toArray()]);
+					->where(['member_id' => $stack->rootId()]);
+			$stack->set(['artists' => $image->toArray()]);
 		}		
 		return $stack;
 	}
@@ -70,16 +68,32 @@ class ArtistCardsTable extends PersonCardsTable {
 	 * 
 	 * @todo This is the point we should honor Artist permission settings
 	 * 
+	 * @todo make a map_reducer?
+	 * 
 	 * @param string $id
 	 * @param StackEntity $stack
 	 * @return StackEntity
 	 */
 	protected function marshalManagers($id, $stack) {
-//		if ($stack->count('identity')) {
-//			$image = $this->Images->find('all')
-//					->where(['id' => $stack->rootElement()->imageId()]);
-//			$stack->set(['image' => $image->toArray()]);
-//		}		
+		if ($stack->count('identity')) {
+			$managerIds = $stack->artists->valueList('manager_id');
+			$dataOwner = $this->associations()->get('DataOwners')
+				->find(
+					'hook', 
+					['contain' => [
+						'Members' =>[
+							'fields' => [
+								'Members.first_name',
+								'Members.last_name'
+							]
+						]
+					]]
+				)
+				->where(['DataOwners.id IN' => $managerIds])
+				->toArray();
+			
+			$stack->set(['managers' => $dataOwner]);			
+		}		
 		return $stack;
 	}
 	
