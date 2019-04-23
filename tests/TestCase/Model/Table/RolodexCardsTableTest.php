@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Model\Table;
 
 use App\Exception\UnknownTableException;
 use App\Exception\MissingMarshallerException;
+use App\Exception\MissingDistillerMethodException;
 use App\Model\Table\RolodexCardsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -107,9 +108,19 @@ class RolodexCardsTableTest extends TestCase
      *
      * @expectedException App\Exception\MissingMarshallerException
      */
-    public function testAddStackSchemaWithBadFuctionName()
+    public function testAddStackSchemaWithBadFunctionName()
     {
         $this->RolodexCards->addStackSchema(['badName']);
+    }
+
+    /**
+     * Test bad addSeedPoint
+     *
+     * @expectedException MissingDistillerMethodException
+     */
+    public function testAddSeedPoingWiothBadSeed()
+    {
+        $this->RolodexCards->addSeedPoint(['badName']);
     }
 
 	public function testLayer() {
