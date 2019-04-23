@@ -135,7 +135,7 @@ class RolodexCardsTable extends StacksTable {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')
-					->where(['id' => $stack->identity->element(0)->user_id]);
+					->where(['id' => $stack->rootId()]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
