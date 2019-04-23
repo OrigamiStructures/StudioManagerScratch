@@ -421,7 +421,9 @@ class StacksTable extends AppTable
         foreach ($seedPoints as $index => $seedPoint) {
             $methodName = $this->distillMethodName($seedPoint);
             if(method_exists($this, $methodName)){
-                $this->seedPoints[] = $seedPoint;
+                if(!in_array($seedPoint, $this->seedPoints)){
+                    $this->seedPoints[] = $seedPoint;
+                }
             } else {
                 throw new MissingDistillerMethodException("StacksTable initialization discovered
                 there is not a proper $methodName function");
