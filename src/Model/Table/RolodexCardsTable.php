@@ -8,6 +8,7 @@ use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\Utility\Hash;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 
 
 /**
@@ -168,5 +169,23 @@ class RolodexCardsTable extends StacksTable {
         }
         return $stack;
     }
+	
+	protected function writeCache($id, $stack) {
+		if (Configure::read('rolodexCache')) {
+			$result = parent::writeCache($id, $stack);
+		} else {
+			$result = FALSE;
+		}
+		return $result;
+	}
+	
+	protected function readCache($id) {
+		if (Configure::read('rolodexCache')) {
+			$result = parent::readCache($id, $stack);
+		} else {
+			$result = FALSE;
+		}
+		return $result;
+	}
 
 }
