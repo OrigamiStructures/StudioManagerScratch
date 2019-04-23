@@ -72,6 +72,10 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MemberTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/CategoryCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/OrganizationCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/PersonCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
 # Stack/Layer suite
@@ -93,6 +97,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/CategoryCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/OrganizationCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/PersonCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 
 ## COMMANDS TO BAKE FIXTURES
 ====================================================================
