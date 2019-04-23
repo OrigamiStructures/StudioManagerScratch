@@ -387,27 +387,22 @@ class StackEntityTest extends TestCase
         
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
-		$all_pieces_arg = $this->StackEntity->accessArgs()
-				->setLayer('pieces')
-				->setLimit('all');
-        $pieces = $this->StackEntity->load($all_pieces_arg);
-		$all_dispo_pieces_arg = $this->StackEntity->accessArgs()->
-				setLayer('dispositionsPieces')
-				->setLimit('all');
-        $dp = $this->StackEntity->load($all_dispo_pieces_arg);
+		$dp = $this->StackEntity->find()
+				->setLayer('dispositions_pieces')
+				->load();
         unset($this->StackEntity->pieces);
-        unset($this->StackEntity->dispositionsPieces);
+        unset($this->StackEntity->dispositions_pieces);
         
         $this->assertTrue(
 				$this->StackEntity->isEmpty('pieces'), 
 				'piece value is gone');
         $this->assertTrue(
-				$this->StackEntity->isEmpty('dispositionsPieces'), 
+				$this->StackEntity->isEmpty('dispositions_pieces'), 
 				'piece value is gone');
         
         $this->StackEntity->set([
 			'pieces' => $pieces, 
-			'dispositionsPieces' => $dp, 
+			'dispositions_pieces' => $dp, 
 			'something' => ['array']]);
         
         $this->assertInstanceOf(
