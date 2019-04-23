@@ -402,7 +402,7 @@ class StacksTable extends AppTable
     public function addStackSchema(array $addedSchemaNames)
     {
         foreach ($addedSchemaNames as $schemaName) {
-            $functionName = "marshall" . ucfirst($schemaName);
+            $functionName = "marshall" . str_replace('_', '', ucwords($schemaName, '_'));;
             if(function_exists($functionName)){
                 $this->stackSchema[] = [
                     'name' => $schemaName,
