@@ -22,12 +22,14 @@ use App\Model\Table\PersonCardsTable;
 class ArtistCardsTable extends PersonCardsTable {
 		
 	public function initialize(array $config) {
+		parent::initialize($config);
 	    $this->addLayerTable(['Artists']);
-		$this->addStackSchema(['artist', 'manager']);
+		$this->addStackSchema(['artists', 'managers']);
 		$this->addSeedPoint([
 					'artist', 'artists',
 					'manager', 'managers'
 				]);
+//		debug($this->layers());die;
 	}
 	
 	protected function distillFromArtist($ids) {

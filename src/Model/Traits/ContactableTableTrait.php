@@ -13,7 +13,7 @@ trait ContactableTableTrait {
 	    $this->addLayerTable(['Addresses', 'Contacts']);
 	    $this->addStackSchema(['addresses', 'contacts']);
 		$this->addSeedPoint([
-            'address', 'addresses',
+            'addresses',
             'contact', 'contacts'
         ]);
 	}
