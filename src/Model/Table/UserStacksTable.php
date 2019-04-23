@@ -27,13 +27,6 @@ use App\Model\Entity\UserStack;
 class UserStacksTable extends StacksTable
 {
     	
-    /**
-     * {@inheritdoc}
-     */
-    protected $seedPoints = [
-		'user', 'users',
-	];
-	
 	/**
      * Initialize method
      *
@@ -48,6 +41,9 @@ class UserStacksTable extends StacksTable
         $this->addStackSchema([
             'user', 'member', 'contacts',
             'addresses', 'artists', 'groups_members'
+        ]);
+        $this->addSeedPoint([
+            'user', 'users',
         ]);
         parent::initialize($config);
     }
