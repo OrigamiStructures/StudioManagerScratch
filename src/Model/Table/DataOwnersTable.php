@@ -20,6 +20,9 @@ class DataOwnersTable extends AppTable {
 	public function initialize(array $config) {
 		$this->setTable('users');
 		parent::initialize($config);
+		$this->belongsTo('Members', [
+            'foreignKey' => 'member_id'
+        ]);
 	}
 	
 	/**
@@ -30,7 +33,7 @@ class DataOwnersTable extends AppTable {
 	 * @return query
 	 */
 	public function findHook(Query $query, $options) {
-		return $query->select(['id', 'username']);
+		return $query->select(['DataOwners.id', 'DataOwners.username', 'DataOwners.member_id']);
 	}
 	
 }

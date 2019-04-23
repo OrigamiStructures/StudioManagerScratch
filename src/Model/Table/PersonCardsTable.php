@@ -28,7 +28,8 @@ class PersonCardsTable extends RolodexCardsTable {
 	
 	protected function distillFromImage($ids) {
 		$IDs = $this->Identities->find('list', ['valueField' => 'id'])
-				->where(['image_id IN' => $ids])->toArray();
+				->where(['image_id IN' => $ids])
+				->toArray();
 		return array_unique($IDs);
 	}
 	
