@@ -8,6 +8,8 @@ use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use App\Exception\UnknownTableException;
+use App\Exception\MissingMarshallerException;
+use App\Exception\MissingDistillerMethodException;
 use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
@@ -397,4 +399,35 @@ class StacksTable extends AppTable
         }
         $this->layerTables = array_unique($this->layerTables);
 	}
+
+    public function addStackSchema(array $addedSchemaNames)
+    {
+        foreach ($addedSchemaNames as $schemaName) {
+            $methodName = $this->marshalMethodName($schemaName);
+            if(method_exists($this, $methodName)){
+                $this->stackSchema[] = [
+                    'name' => $schemaName,
+                    'specs' => ['type' => 'layer']
+                    ];
+            } else {
+                throw new MissingMarshallerException("StacksTable initialization discovered
+                there is not a proper $methodName function");
+            }
+        }
+    }
+
+    public function addSeedPoint(array $seedPoints)
+    {
+        foreach ($seedPoints as $index => $seedPoint) {
+            $methodName = $this->distillMethodName($seedPoint);
+            if(method_exists($this, $methodName)){
+                if(!in_array($seedPoint, $this->seedPoints)){
+                    $this->seedPoints[] = $seedPoint;
+                }
+            } else {
+                throw new MissingDistillerMethodException("StacksTable initialization discovered
+                there is not a proper $methodName function");
+            }
+        }
+    }
 }

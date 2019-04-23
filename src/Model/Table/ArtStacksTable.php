@@ -28,30 +28,6 @@ class ArtStacksTable extends StacksTable
 	 */
 	protected $rootName = 'artwork';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $stackSchema = 	[	
-            ['name' => 'artwork',				'specs' => ['type' => 'layer']],
-            ['name' => 'editions',				'specs' => ['type' => 'layer']],
-            ['name' => 'formats',				'specs' => ['type' => 'layer']],
-            ['name' => 'pieces',				'specs' => ['type' => 'layer']],
-            ['name' => 'dispositionsPieces',	'specs' => ['type' => 'layer']],
-        ];
-    
-    /**
-     * {@inheritdoc}
-     */
-    protected $seedPoints = [
-			'disposition', 'dispositions', 
-			'piece', 'pieces', 
-			'format', 'formats', 
-			'edition', 'editions', 
-			'artwork', 'artworks', 
-			'series',
-		];
-
-	
 	/**
      * Initialize method
      *
@@ -60,7 +36,16 @@ class ArtStacksTable extends StacksTable
      */
     public function initialize(array $config) {
 		$this->setTable('artworks');
+		$this->addStackSchema(['artwork', 'editions', 'formats', 'pieces', 'dispositions_pieces']);
 		$this->addLayerTable(['Artworks', 'Editions', 'Formats', 'Pieces']);
+		$this->addSeedPoint([
+            'disposition', 'dispositions',
+            'piece', 'pieces',
+            'format', 'formats',
+            'edition', 'editions',
+            'artwork', 'artworks',
+            'series',
+        ]);
         parent::initialize($config);
     }
     

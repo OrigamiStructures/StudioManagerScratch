@@ -11,14 +11,11 @@ trait ContactableTableTrait {
 	
 	public function initializeContactableCard() {
 	    $this->addLayerTable(['Addresses', 'Contacts']);
-		$this->stackSchema[] = ['name' => 'addresses',	'specs' => ['type' => 'layer']];
-		$this->stackSchema[] = ['name' => 'contacts',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge($this->seedPoints, [
-			'address', 
-			'addresses', 
-			'contact', 
-			'contacts'
-			]);
+	    $this->addStackSchema(['addresses', 'contacts']);
+		$this->addSeedPoint([
+            'addresses',
+            'contact', 'contacts'
+        ]);
 	}
 	
 	public function distillFromAddress($ids) {

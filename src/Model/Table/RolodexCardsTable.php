@@ -8,6 +8,7 @@ use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\Utility\Hash;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 
 
 /**
@@ -26,21 +27,6 @@ class RolodexCardsTable extends StacksTable {
 	 */
 	protected $rootDisplaySource = 'name';
 
-	protected $stackSchema = 	[
-            ['name' => 'identity',		'specs' => ['type' => 'layer']],
-            ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
-            ['name' => 'memberships',	'specs' => ['type' => 'layer']],
-        ];
-	
-    protected $seedPoints = [
-		'identity', 
-		'identities',
-		'data_owner', 
-		'data_owners',
-		'membership', 
-		'memberships'
-	];
-	
 	/**
 	 * Initialize method
 	 *
@@ -51,6 +37,15 @@ class RolodexCardsTable extends StacksTable {
         $this->setTable('members');
 		$this->_initializeAssociations();
         $this->addLayerTable(['Identities', 'GroupsMembers']);
+        $this->addStackSchema(['identity', 'data_owner', 'memberships']);
+        $this->addSeedPoint([
+            'identity',
+            'identities',
+            'data_owner',
+            'data_owners',
+            'membership',
+            'memberships'
+        ]);
 		parent::initialize($config);
 	}
 
@@ -134,7 +129,7 @@ class RolodexCardsTable extends StacksTable {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')
-					->where(['id' => $stack->identity->element(0)->user_id]);
+					->where(['id' => $stack->dataOwner()]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
@@ -168,5 +163,23 @@ class RolodexCardsTable extends StacksTable {
         }
         return $stack;
     }
+	
+	protected function writeCache($id, $stack) {
+		if (Configure::read('rolodexCache')) {
+			$result = parent::writeCache($id, $stack);
+		} else {
+			$result = FALSE;
+		}
+		return $result;
+	}
+	
+	protected function readCache($id) {
+		if (Configure::read('rolodexCache')) {
+			$result = parent::readCache($id, $stack);
+		} else {
+			$result = FALSE;
+		}
+		return $result;
+	}
 
 }
