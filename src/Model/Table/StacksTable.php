@@ -8,6 +8,7 @@ use Cake\Core\ConventionsTrait;
 use App\Model\Lib\StackSet;
 use Cake\Database\Schema\TableSchema;
 use App\Exception\UnknownTableException;
+use App\Exception\MissingMarshallerException;
 use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
@@ -397,4 +398,21 @@ class StacksTable extends AppTable
         }
         $this->layerTables = array_unique($this->layerTables);
 	}
+
+    public function addStackSchema(array $addedSchemaNames)
+    {
+        foreach ($addedSchemaNames as $schemaName) {
+            $functionName = "marshall" . ucfirst($schemaName);
+            if(function_exists($functionName)){
+                $this->stackSchema[] = [
+                    'name' => $schemaName,
+                    'specs' => ['type' => 'layer']
+                    ];
+            } else {
+                throw new MissingMarshallerException("StacksTable initialization discovered
+                there is not a proper $functionName function");
+            }
+
+        }
+    }
 }
