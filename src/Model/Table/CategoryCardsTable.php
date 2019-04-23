@@ -12,10 +12,10 @@ class CategoryCardsTable extends RolodexCardsTable
 {
 	
 	public function initialize(array $config) {
+		parent::initialize($config);
 	    $this->addLayerTable(['Members']);
 	    $this->addStackSchema(['members']);
 		$this->addSeedPoint(['member', 'members']);
-		parent::initialize($config);
 	}
 	
 	protected function distillFromMember($ids) {
