@@ -22,7 +22,7 @@ class PersonCardsTable extends RolodexCardsTable {
 		$this->initializeReceiverCard();
 		$this->addLayerTable(['Images']);
         $this->addStackSchema(['image']);
-		$this->seedPoints = array_merge($this->seedPoints, ['image', 'images']);
+		$this->addSeedPoint(['image', 'images']);
 		parent::initialize($config);
 	}
 	

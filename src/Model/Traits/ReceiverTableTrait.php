@@ -11,10 +11,7 @@ trait ReceiverTableTrait {
 	public function initializeReceiverCard() {
 	    $this->addLayerTable(['Dispositions']);
 	    $this->addStackSchema(['dispositions']);
-		$this->seedPoints = array_merge($this->seedPoints, [
-			'disposition', 
-			'dispositions'
-			]);
+	    $this->addSeedPoint(['disposition', 'dispositions']);
 	}
 	
 	public function distillFromDisposition($ids) {
