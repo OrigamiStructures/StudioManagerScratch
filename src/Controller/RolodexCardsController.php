@@ -15,6 +15,10 @@ namespace App\Controller;
 class RolodexCardsController extends AppController {
 	
 	public function index() {
+		$ArtistCards = $this->getTableLocator()->get('ArtistCards');
+		osd($ArtistCards);//die;
+		$stacks = $ArtistCards->find('stacksFor', ['seed' => 'artists', 'ids' => [1]]);
+		osd($stacks);die;
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
 		$rolodexCards = $this->RolodexCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
 		$this->set('rolodexCards', $rolodexCards);
