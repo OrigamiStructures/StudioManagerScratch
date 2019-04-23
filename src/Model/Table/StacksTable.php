@@ -402,15 +402,15 @@ class StacksTable extends AppTable
     public function addStackSchema(array $addedSchemaNames)
     {
         foreach ($addedSchemaNames as $schemaName) {
-            $functionName = "marshall" . str_replace('_', '', ucwords($schemaName, '_'));;
-            if(function_exists($functionName)){
+            $methodName = $this->marshalMethodName($schemaName);
+            if(method_exists($this, $methodName)){
                 $this->stackSchema[] = [
                     'name' => $schemaName,
                     'specs' => ['type' => 'layer']
                     ];
             } else {
                 throw new MissingMarshallerException("StacksTable initialization discovered
-                there is not a proper $functionName function");
+                there is not a proper $methodName function");
             }
 
         }
