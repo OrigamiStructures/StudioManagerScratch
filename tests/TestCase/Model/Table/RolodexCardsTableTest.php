@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Model\Table;
 
 use App\Exception\UnknownTableException;
+use App\Exception\MissingMarshallerException;
 use App\Model\Table\RolodexCardsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -99,6 +100,16 @@ class RolodexCardsTableTest extends TestCase
     public function testAddLayerTableWithBadTable()
     {
         $this->RolodexCards->addLayerTable(['badName']);
+    }
+
+    /**
+     * Test bad addStackSchema
+     *
+     * @expectedException App\Exception\MissingMarshallerException
+     */
+    public function testAddStackSchemaWithBadFuctionName()
+    {
+        $this->RolodexCards->addStackSchema(['badName']);
     }
 
 	public function testLayer() {
