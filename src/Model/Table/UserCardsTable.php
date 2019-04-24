@@ -39,11 +39,18 @@ class UserCardsTable extends ArtistCardsTable {
 	 */
 	
 	protected function distillFromManagedAritst($ids) {
-		
+		$IDs = $this->Artists->find('list', ['valueField' => 'member_id'])
+				->where(['manager_id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 	}
 	
 	protected function distillFromPermission($ids) {
 		
+		$IDs = $this->Permissions->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 	}
 	
 	protected function distillFromRolodex($ids) {
