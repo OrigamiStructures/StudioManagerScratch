@@ -163,6 +163,19 @@ class MembersFixture extends TestFixture
                 'disposition_count' => 2,
                 'collector' => 2
             ],
+            [
+                'id' => 75,
+                'created' => '2016-03-21 18:14:52',
+                'modified' => '2016-08-22 19:23:46',
+                'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'image_id' => null,
+                'first_name' => 'Leonardo',
+                'last_name' => 'DiVinci',
+                'member_type' => 'Person',
+                'active' => false,
+                'disposition_count' => 0,
+                'collector' => 0
+            ],
         ];
         parent::init();
     }
