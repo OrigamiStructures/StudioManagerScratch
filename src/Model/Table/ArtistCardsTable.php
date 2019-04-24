@@ -46,7 +46,8 @@ class ArtistCardsTable extends PersonCardsTable {
 	 */
 	protected function distillFromManager($ids) {
 		$IDs = $this->Artists->find('list', ['valueField' => 'member_id'])
-				->where(['manager_id IN' => $ids])
+				->find('managedBy', ['ids' => $ids])
+//				->where(['manager_id IN' => $ids])
 				->toArray();
 		return array_unique($IDs);
 	}
