@@ -91,7 +91,6 @@ class ArtistCardsTableTest extends TestCase
     {
 		$this->AritstCardsTable->initialize([]);
 
-		debug(get_class($this->AritstCardsTable->Artists));
 		$this->assertTrue(
 			is_a(
 				$this->AritstCardsTable->Artists,
@@ -157,57 +156,81 @@ class ArtistCardsTableTest extends TestCase
     }
 
 	public function testArtistsProduct() {
-		debug($this->ArtistsProduct);
+//		debug($this->ArtistsProduct);
 		$this->assertTrue($this->ArtistsProduct->count() === 2, 
 				'ArtistProduct does not contain 2 entities.');
-		$this->assertArraySubset([1,2],$this->ArtistsProduct->IDs(),
+		$this->assertArraySubset([1,75],$this->ArtistsProduct->IDs(),
 				'ArtistProduct does not contain the 2 specific expected entities.');
 		$this->assertTrue(
 				count($this->ArtistsProduct->find()->setLayer('contacts')->load())
-				=== 5,
-				'The combined count of contacts was not 5 (4 + 1).'
+				=== 4,
+				'The combined count of contacts was not 4 (4 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ArtistsProduct->find()->setLayer('addresses')->load())
-				=== 3,
-				'The combined count of addresses was not 3 (2 + 1).'
+				=== 2,
+				'The combined count of addresses was not 2 (2 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ArtistsProduct->find()->setLayer('image')->load())
-				=== 2,
-				'The combined count of images was not 2 (1 + 1).'
+				=== 1,
+				'The combined count of images was not 1 (1 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ArtistsProduct->find()->setLayer('dispositions')->load())
-				=== 4,
-				'The combined count of dispositions was not 4 (3 + 1).'
+				=== 3,
+				'The combined count of dispositions was not 3 (3 + 0).'
+			);
+		$this->assertTrue(
+				count($this->ArtistsProduct->find()->setLayer('artists')->load())
+				=== 3,
+				'The combined count of artists was not 3 (1 + 2).'
+			);
+		$this->assertTrue(
+				count($this->ArtistsProduct->find()->setLayer('managers')->load())
+				=== 3,
+				'The combined count of managers was not 3 (1 + 2).'
+				. 'load() needs to be changed. String keys are overlapping '
+				. 'and preventing a full count of linked records'
 			);
 	}
 	
 	public function testManagersProduct() {
-		$this->assertTrue($this->ManagersProduct->count() === 2, 
+		$this->assertTrue($this->ManagersProduct->count() === 3, 
 				'ManagersProduct does not contain 2 entities.');
-		$this->assertArraySubset([2,1],$this->ManagersProduct->IDs(),
+		$this->assertArraySubset([1,2,75],$this->ManagersProduct->IDs(),
 				'ManagersProduct does not contain the 2 specific expected entities.');
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('contacts')->load())
 				=== 5,
-				'The combined count of contacts was not 5 (4 + 1).'
+				'The combined count of contacts was not 5 (4 + 1 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('addresses')->load())
 				=== 3,
-				'The combined count of addresses was not 3 (2 + 1).'
+				'The combined count of addresses was not 3 (2 + 1 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('image')->load())
 				=== 2,
-				'The combined count of images was not 2 (1 + 1).'
+				'The combined count of images was not 2 (1 + 1 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('dispositions')->load())
 				=== 4,
-				'The combined count of dispositions was not 4 (3 + 1).'
+				'The combined count of dispositions was not 4 (3 + 1 + 0).'
+			);
+		$this->assertTrue(
+				count($this->ManagersProduct->find()->setLayer('artists')->load())
+				=== 5,
+				'The combined count of images was not 5.'
+			);
+		$this->assertTrue(
+				count($this->ManagersProduct->find()->setLayer('managers')->load())
+				=== 5,
+				'The combined count of dispositions was not 4 (1 + 2 + 2).'
+				. 'load() needs to be changed. String keys are overlapping '
+				. 'and preventing a full count of linked records'
 			);
 	}
 
