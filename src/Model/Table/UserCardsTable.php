@@ -11,39 +11,54 @@ use App\Model\Table\ArtistCardsTable;
 class UserCardsTable extends ArtistCardsTable {
 		
 	public function initialize(array $config) {
-	    $this->addLayerTable(['Users', 'Artists']);
-		$this->stackSchema[] = ['name' => 'user',	'specs' => ['type' => 'layer']];
-		$this->stackSchema[] = ['name' => 'managed_artist',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge(
-				$this->seedPoints, 
-				[
-					'user', 'users',
-					'managed_artist', 'managed_artists'
-				]);
 		parent::initialize($config);
+		$this->addStackSchema([
+			'managed_artists', 
+			'permissions',
+			'rolodex']);
+		$this->addSeedPoint(
+			[
+				'user', 
+				'users', 
+				'managed_artist', 
+				'managed_artists', 
+				'permission', 
+				'permissions',
+				'rolodex'
+			]
+		);
 	}
 	
 	/**
 	 * The rolodex cards for a user ? :
-	 *		Any contacts
+	 *		Any contacts/members
 	 *		Any managed artists
 	 *		Any managers
 	 * 
 	 * @param type $ids
 	 */
-	protected function distillFromUsers($ids) {
+	
+	protected function distillFromManagedAritst($ids) {
 		
 	}
 	
-	protected function distillFromManagedAritsts($ids) {
+	protected function distillFromPermission($ids) {
 		
 	}
 	
-	protected function marshalUser($id, $stack) {
+	protected function distillFromRolodex($ids) {
 		
 	}
 	
-	protected function marshalManagedArtist($id, $stack) {
+	protected function marshalManagedArtists($id, $stack) {
+		
+	}
+	
+	protected function marshalPermissions($id, $stack) {
+		
+	}
+	
+	protected function marshalRolodex($id, $stack) {
 		
 	}
 	
