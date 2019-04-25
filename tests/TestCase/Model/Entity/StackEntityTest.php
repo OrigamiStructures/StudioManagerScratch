@@ -73,6 +73,7 @@ class StackEntityTest extends TestCase
      */
     public function tearDown()
     {
+		\Cake\Cache\Cache::clear(FALSE, $this->ArtStacks->cacheName());
         unset($this->StackEntity);
         unset($this->ArtStacks);
 
