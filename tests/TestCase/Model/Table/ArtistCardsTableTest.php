@@ -36,7 +36,7 @@ class ArtistCardsTableTest extends TestCase
 		'app.dispositions',
 		'app.users',
 		'app.groups_members',
-		'app.artists'
+		'app.manifests'
 
     ];
 
