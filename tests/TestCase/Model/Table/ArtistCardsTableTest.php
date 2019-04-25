@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\ArtistCardsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Cache\Cache;
 
 /**
  * App\Model\Table\ArtistCardsTable Test Case
@@ -18,7 +19,7 @@ class ArtistCardsTableTest extends TestCase
      */
     public $AritstCardsTable;
 	
-	public $ArtistsProduct;
+	public $ManifestsProduct;
 
 	public $ManagersProduct;
 
@@ -54,9 +55,9 @@ class ArtistCardsTableTest extends TestCase
 				: ['className' => ArtistCardsTable::class];
         $this->AritstCardsTable = TableRegistry::getTableLocator()
 				->get('ArtistCards', $config);
-		$this->ArtistsProduct = $this->AritstCardsTable->find(
+		$this->ManifestsProduct = $this->AritstCardsTable->find(
 				'stacksFor', 
-				['seed' => 'artists', 'ids' => [1,5]]
+				['seed' => 'manifests', 'ids' => [1,5]]
 			);
 		//members 1 dondrake, 2 gaildrake
 		//
@@ -67,7 +68,8 @@ class ArtistCardsTableTest extends TestCase
 					'f22f9b46-345f-4c6f-9637-060ceacb21b2']
 				]
 			);
-    }
+ 		Cache::clear(FALSE, $this->AritstCardsTable->cacheName());
+   }
 
     /**
      * tearDown method
@@ -76,8 +78,7 @@ class ArtistCardsTableTest extends TestCase
      */
     public function tearDown()
     {
-		\Cake\Cache\Cache::clear(FALSE, $this->AritstCardsTable->cacheName());
-        unset($this->AritstCardsTable);
+        unset($this->ArtistCardsTable);
 
         parent::tearDown();
     }
@@ -93,10 +94,10 @@ class ArtistCardsTableTest extends TestCase
 
 		$this->assertTrue(
 			is_a(
-				$this->AritstCardsTable->Artists,
-				'App\Model\Table\ArtistsTable'
+				$this->AritstCardsTable->Manifests,
+				'App\Model\Table\ManifestsTable'
 			),
-			'The ArtistsTable object did not get initialized properly'
+			'The ManifestsTable object did not get initialized properly'
 		);
 		
     }
@@ -106,14 +107,14 @@ class ArtistCardsTableTest extends TestCase
 		$this->AritstCardsTable->initialize([]);
 
 		$this->assertTrue(
-			$this->AritstCardsTable->getSchema()->hasColumn('artists'),
-			'The schema did not get an artists column added'
+			$this->AritstCardsTable->getSchema()->hasColumn('manifest'),
+			'The schema did not get an manifest column added'
 		);
 		
 		$this->assertTrue(
-			$this->AritstCardsTable->getSchema()->getColumnType('artists') 
+			$this->AritstCardsTable->getSchema()->getColumnType('manifest') 
 				=== 'layer',
-			'The schema column `artists` is not a `layer` type'
+			'The schema column `manifest` is not a `layer` type'
 		);
 		
 		$this->assertTrue(
@@ -148,46 +149,46 @@ class ArtistCardsTableTest extends TestCase
 		$this->assertTrue($this->AritstCardsTable->hasSeed('dispositions'));
 		$this->assertTrue($this->AritstCardsTable->hasSeed('image'));
 		$this->assertTrue($this->AritstCardsTable->hasSeed('images'));
-		$this->assertTrue($this->AritstCardsTable->hasSeed('artist'));
-		$this->assertTrue($this->AritstCardsTable->hasSeed('artists'));
+		$this->assertTrue($this->AritstCardsTable->hasSeed('manifest'));
+		$this->assertTrue($this->AritstCardsTable->hasSeed('manifests'));
 		$this->assertTrue($this->AritstCardsTable->hasSeed('manager'));
 		$this->assertTrue($this->AritstCardsTable->hasSeed('managers'));
 		
     }
 
-	public function testArtistsProduct() {
-//		debug($this->ArtistsProduct);
-		$this->assertTrue($this->ArtistsProduct->count() === 2, 
+	public function testManifestsProduct() {
+//		debug($this->ManifestsProduct);
+		$this->assertTrue($this->ManifestsProduct->count() === 2, 
 				'ArtistProduct does not contain 2 entities.');
-		$this->assertArraySubset([1,75],$this->ArtistsProduct->IDs(),
+		$this->assertArraySubset([1,75],$this->ManifestsProduct->IDs(),
 				'ArtistProduct does not contain the 2 specific expected entities.');
 		$this->assertTrue(
-				count($this->ArtistsProduct->find()->setLayer('contacts')->load())
+				count($this->ManifestsProduct->find()->setLayer('contacts')->load())
 				=== 4,
 				'The combined count of contacts was not 4 (4 + 0).'
 			);
 		$this->assertTrue(
-				count($this->ArtistsProduct->find()->setLayer('addresses')->load())
+				count($this->ManifestsProduct->find()->setLayer('addresses')->load())
 				=== 2,
 				'The combined count of addresses was not 2 (2 + 0).'
 			);
 		$this->assertTrue(
-				count($this->ArtistsProduct->find()->setLayer('image')->load())
+				count($this->ManifestsProduct->find()->setLayer('image')->load())
 				=== 1,
 				'The combined count of images was not 1 (1 + 0).'
 			);
 		$this->assertTrue(
-				count($this->ArtistsProduct->find()->setLayer('dispositions')->load())
+				count($this->ManifestsProduct->find()->setLayer('dispositions')->load())
 				=== 3,
 				'The combined count of dispositions was not 3 (3 + 0).'
 			);
 		$this->assertTrue(
-				count($this->ArtistsProduct->find()->setLayer('artists')->load())
+				count($this->ManifestsProduct->find()->setLayer('manifest')->load())
 				=== 3,
-				'The combined count of artists was not 3 (1 + 2).'
+				'The combined count of manifest was not 3 (1 + 2).'
 			);
 		$this->assertTrue(
-				count($this->ArtistsProduct->find()->setLayer('managers')->load())
+				count($this->ManifestsProduct->find()->setLayer('managers')->load())
 				=== 3,
 				'The combined count of managers was not 3 (1 + 2).'
 				. 'load() needs to be changed. String keys are overlapping '
@@ -221,7 +222,7 @@ class ArtistCardsTableTest extends TestCase
 				'The combined count of dispositions was not 4 (3 + 1 + 0).'
 			);
 		$this->assertTrue(
-				count($this->ManagersProduct->find()->setLayer('artists')->load())
+				count($this->ManagersProduct->find()->setLayer('manifest')->load())
 				=== 5,
 				'The combined count of images was not 5.'
 			);

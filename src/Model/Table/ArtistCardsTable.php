@@ -23,16 +23,16 @@ class ArtistCardsTable extends PersonCardsTable {
 		
 	public function initialize(array $config) {
 		parent::initialize($config);
-	    $this->addLayerTable(['Artists']);
-		$this->addStackSchema(['artists', 'managers']);
+	    $this->addLayerTable(['Manifests']);
+		$this->addStackSchema(['manifest', 'managers']);
 		$this->addSeedPoint([
-					'artist', 'artists',
+					'manifest', 'manifests',
 					'manager', 'managers'
 				]);
 	}
 	
-	protected function distillFromArtist($ids) {
-		$IDs = $this->Artists->find('list', ['valueField' => 'member_id'])
+	protected function distillFromManifest($ids) {
+		$IDs = $this->Manifests->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids])
 				->toArray();
 		return array_unique($IDs);
@@ -45,18 +45,18 @@ class ArtistCardsTable extends PersonCardsTable {
 	 * @return array
 	 */
 	protected function distillFromManager($ids) {
-		$IDs = $this->Artists->find('list', ['valueField' => 'member_id'])
+		$IDs = $this->Manifests->find('list', ['valueField' => 'member_id'])
 				->find('managedBy', ['ids' => $ids])
 //				->where(['manager_id IN' => $ids])
 				->toArray();
 		return array_unique($IDs);
 	}
 	
-	protected function marshalArtists($id, $stack) {
+	protected function marshalManifest($id, $stack) {
 		if ($stack->count('identity')) {
-			$image = $this->Artists->find('all')
+			$image = $this->Manifests->find('all')
 					->where(['member_id' => $stack->rootId()]);
-			$stack->set(['artists' => $image->toArray()]);
+			$stack->set(['manifest' => $image->toArray()]);
 		}		
 		return $stack;
 	}
@@ -74,7 +74,7 @@ class ArtistCardsTable extends PersonCardsTable {
 	 */
 	protected function marshalManagers($id, $stack) {
 		if ($stack->count('identity')) {
-			$managerIds = $stack->artists->valueList('manager_id');
+			$managerIds = $stack->manifest->valueList('manager_id');
 			$dataOwner = $this->associations()->get('DataOwners')
 				->find(
 					'hook', 

@@ -35,7 +35,7 @@ class ManifestsTable extends AppTable{
     {
         parent::initialize($config);
 
-        $this->setTable('artists');
+        $this->setTable('manifests');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 		
@@ -119,17 +119,17 @@ class ManifestsTable extends AppTable{
 	/**
 	 * Find a manager's artist manifests (or those for several managers)
 	 * 
-	 * Artists::find('managedBy', ['ids' => [x,y])
-	 * Artists::find('managedBy', ['id' => x])
+	 * Manifests::find('managedBy', ['ids' => [x,y])
+	 * Manifests::find('managedBy', ['id' => x])
 	 * 
 	 * @param type $query
 	 * @param type $options
 	 */
 	public function findManagedBy($query, $options) {
 		if (array_key_exists('ids', $options)) {
-			$condition = ['Artists.manager_id IN' => $options['ids']];
+			$condition = ['Manifests.manager_id IN' => $options['ids']];
 		} elseif (array_key_exists('id', $options)) {
-			$condition = ['Artists.manager_id IN' => $options['ids']];
+			$condition = ['Manifests.manager_id IN' => $options['ids']];
 		} else {
 			$msg = 'You must include \'ids\'=>[x,y] or '
 					. '\'id\'=>x in your options array.';
@@ -141,17 +141,17 @@ class ManifestsTable extends AppTable{
 	/**
 	 * Find the artist manifests issued by a user (or several users)
 	 * 
-	 * Artists::find('issuedBy', ['ids' => [x,y])
-	 * Artists::find('issuedBy', ['id' => x])
+	 * Manifests::find('issuedBy', ['ids' => [x,y])
+	 * Manifests::find('issuedBy', ['id' => x])
 	 * 
 	 * @param type $query
 	 * @param type $options
 	 */
 	public function findIssuedBy($query, $options) {
 		if (array_key_exists('ids', $options)) {
-			$condition = ['Artists.user_id IN' => $options['ids']];
+			$condition = ['Manifests.user_id IN' => $options['ids']];
 		} elseif (array_key_exists('id', $options)) {
-			$condition = ['Artists.user_id IN' => $options['ids']];
+			$condition = ['Manifests.user_id IN' => $options['ids']];
 		} else {
 			$msg = 'You must include \'ids\'=>[x,y] or '
 					. '\'id\'=>x in your options array.';
@@ -163,17 +163,17 @@ class ManifestsTable extends AppTable{
 	/**
 	 * Find the manifests for a member/artist (or several member/artists)
 	 * 
-	 * Artists::find('manifestFor', ['ids' => [x,y])
-	 * Artists::find('manifest', ['id' => x])
+	 * Manifests::find('manifestFor', ['ids' => [x,y])
+	 * Manifests::find('manifest', ['id' => x])
 	 * 
 	 * @param type $query
 	 * @param type $options
 	 */
 	public function findManifestsFor($query, $options) {
 		if (array_key_exists('ids', $options)) {
-			$condition = ['Artists.member_id IN' => $options['ids']];
+			$condition = ['Manifests.member_id IN' => $options['ids']];
 		} elseif (array_key_exists('id', $options)) {
-			$condition = ['Artists.member_id IN' => $options['ids']];
+			$condition = ['Manifests.member_id IN' => $options['ids']];
 		} else {
 			$msg = 'You must include \'ids\'=>[x,y] or '
 					. '\'id\'=>x in your options array.';
