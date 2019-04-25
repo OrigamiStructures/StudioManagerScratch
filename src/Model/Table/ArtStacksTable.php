@@ -151,7 +151,7 @@ class ArtStacksTable extends StacksTable
 				_distillFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
         if ($joins->count()) {
             $dispositionPieces = $this->
-                dispositionsPieces = new Layer($joins->toArray());
+                dispositions_pieces = new Layer($joins->toArray());
         }
         if (isset($dispositionPieces) && $dispositionPieces->count()) {
             $pieces = new Layer($this
@@ -245,9 +245,9 @@ class ArtStacksTable extends StacksTable
 //                } 
 //                
 //                if ($stack->count('pieces')) {
-//                    $dispositionsPieces = $this->
+//                    $dispositions_pieces = $this->
 //                        _distillFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
-//                    $stack->set('dispositionsPieces', $dispositionsPieces->toArray());
+//                    $stack->set('dispositions_pieces', $dispositions_pieces->toArray());
 //                }      
 //                
 //                $t->end('build', $le);
@@ -272,7 +272,7 @@ class ArtStacksTable extends StacksTable
 	 * 'editions',			
 	 * 'formats',			
 	 * 'pieces',			
-	 * 'dispositionsPieces'
+	 * 'dispositions_pieces'
 	 */
 	
 	public function marshalArtwork($id, $stack) {
@@ -310,9 +310,9 @@ class ArtStacksTable extends StacksTable
 	public function marshalDispositionsPieces($id, $stack) {
 		if ($stack->count('pieces')) {
 			$pieceIds = $stack->pieces->IDs();
-			$dispositionsPieces = $this->
+			$dispositions_pieces = $this->
 				_distillFromJoinTable('DispositionsPieces', 'piece_id', $pieceIds);
-			$stack->set('dispositionsPieces', $dispositionsPieces->toArray());
+			$stack->set('dispositions_pieces', $dispositions_pieces->toArray());
 		}
 		return $stack;
 	}

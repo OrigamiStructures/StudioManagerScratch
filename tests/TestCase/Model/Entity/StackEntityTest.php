@@ -411,7 +411,7 @@ class StackEntityTest extends TestCase
 				'layer object was made');
         $this->assertInstanceOf(
 				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('dispositionsPieces'), 
+				$this->StackEntity->get('dispositions_pieces'), 
 				'layer object was made');
         $this->assertTrue(
 				is_array($this->StackEntity->get('something')),
@@ -420,17 +420,17 @@ class StackEntityTest extends TestCase
         //do the same process to multiple values and use the guard feature
         //to test the [prop=>val, prop=>val] argument syntax
 //        $pieces = $this->StackEntity->load('pieces', 'all');
-//        $dp = $this->StackEntity->load('dispositionsPieces', 'all');
+//        $dp = $this->StackEntity->load('dispositions_pieces', 'all');
 //        unset($this->StackEntity->pieces);
-//        unset($this->StackEntity->dispositionsPieces);
+//        unset($this->StackEntity->dispositions_pieces);
 //        
 //        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
-//        $this->assertTrue($this->StackEntity->isEmpty('dispositionsPieces'), 'piece value is gone');
+//        $this->assertTrue($this->StackEntity->isEmpty('dispositions_pieces'), 'piece value is gone');
 //        
-//        $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
+//        $this->StackEntity->set(['pieces' => $pieces, 'dispositions_pieces' => $dp, 'something' => ['array']]);
 //        
 //        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
-//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
+//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositions_pieces'), 'layer object was made');
 //        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
     }
 
