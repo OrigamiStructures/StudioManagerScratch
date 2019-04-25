@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ArtistsTable;
+use App\Model\Table\ArtistManifestsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
  * App\Model\Table\ArtistsTable Test Case
  */
-class ArtistsTableTest extends TestCase
+class ManifestsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ArtistsTable
+     * @var \App\Model\Table\ArtistManifestsTable
      */
-    public $Artists;
+    public $Manifests;
 
     /**
      * Fixtures
@@ -24,7 +24,7 @@ class ArtistsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.artists',
+        'app.manifests',
         'app.members',
         'app.users',
         'app.member_users'
@@ -38,8 +38,8 @@ class ArtistsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Artists') ? [] : ['className' => ArtistsTable::class];
-        $this->Artists = TableRegistry::getTableLocator()->get('Artists', $config);
+        $config = TableRegistry::getTableLocator()->exists('Manifests') ? [] : ['className' => ArtistManifestsTable::class];
+        $this->Manifests = TableRegistry::getTableLocator()->get('Manifests', $config);
     }
 
     /**
@@ -49,7 +49,7 @@ class ArtistsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Artists);
+        unset($this->Manifests);
 
         parent::tearDown();
     }

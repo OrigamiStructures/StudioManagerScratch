@@ -6,9 +6,9 @@ use App\Controller\AppController;
 /**
  * Artists Controller
  *
- * @property \App\Model\Table\ArtistsTable $Artists
+ * @property \App\Model\Table\ArtistManifestsTable $Artists
  *
- * @method \App\Model\Entity\Artist[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method \App\Model\Entity\Manifest[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class ArtistsController extends AppController
 {

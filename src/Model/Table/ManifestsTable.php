@@ -14,16 +14,16 @@ use App\Model\Behavior\IntegerQueryBehavior;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\MemberUsersTable|\Cake\ORM\Association\BelongsTo $MemberUsers
  *
- * @method \App\Model\Entity\Artist get($primaryKey, $options = [])
- * @method \App\Model\Entity\Artist newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Artist[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Artist|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Artist|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Artist patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Artist[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Artist findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Manifest get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Manifest newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Manifest[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Manifest|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Manifest|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Manifest patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Manifest[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Manifest findOrCreate($search, callable $callback = null, $options = [])
  */
-class ArtistsTable extends AppTable{
+class ManifestsTable extends AppTable{
 
     /**
      * Initialize method

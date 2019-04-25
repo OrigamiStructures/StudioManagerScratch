@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\User[] $users
  * @property \App\Model\Entity\MemberUser $member_user
  */
-class Artist extends Entity
+class Manifest extends Entity
 {
 
     /**
