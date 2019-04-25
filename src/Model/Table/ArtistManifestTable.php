@@ -74,24 +74,55 @@ class ArtistManifestsTable extends StackTable {
 		return $this->distillFromManifest($manifest_ids);
 	}
 	
+	
+	public function marshalIdentity($id, $stack) {
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id]);
+			$stack->set(['identity' => $identity->toArray()]);
+			return $stack;
+	}
+	
+	public function marshalManifests($id, $stack) {
+		if ($stack->count('identity')) {
+			$manifests = $this->Manifests
+                ->find('all')
+                ->where(['member_id' => $id]);
+			$stack->set(['manifests' => $manifests->toArray()]);
+		}
+		return $stack;
+	}
+	
 	public function marshalDataOwner($id, $stack) {
-		
+		if ($stack->count('identity')) {
+			$dataOwner = $this->DataOwners
+					->find('hook')
+					->where(['id' => $stack->dataOwner()]);
+			$stack->set(['data_owner' => $dataOwner->toArray()]);
+		}
+		return $stack;
 	}
 	
-	public function marshalManager($id, $stack) {
-		
-	}
-	
-	public function marshalMaifest($id, $stack) {
-		
-	}
-	
-	public function marshalArtist($id, $stack) {
-		
+	public function marshalManagers($id, $stack) {
+		if ($stack->count('manifest')) {
+			$manager_ids = $stack->manifests->valueList('manager_id');
+			$managers = $this->DataOwners
+					->find('hook')
+					->where(['id IN' => $manager_ids]);
+			$stack->set(['managers' => $managers->toArray()]);
+		}		
+		return $stack;
 	}
 	
 	public function marshalPermissions($id, $stack) {
-		
+		if ($stack->count('identity')) {
+			$manifest_ids = $stack->manifests->valueList('id');
+			$permissions = $this->Permissions
+                ->find('all')
+                ->where(['manifest_id IN' => $manifest_ids]);
+			$stack->set(['permissions' => $permissions->toArray()]);
+		}
+		return $stack;
 	}
 	
 }
