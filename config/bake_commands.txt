@@ -22,6 +22,7 @@ bin/cake bake.bake test table CategoryCardsTable
 bin/cake bake.bake test table OrganizationCardsTable
 bin/cake bake.bake test table PersonCardsTable
 bin/cake bake.bake test table MembershipsTable
+bin/cake bake.bake test table ArtistManifestsTable
 
 ## BAKING ENTITY TESTS
 ====================================================================
@@ -56,6 +57,9 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/RolodexCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/CategoryCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/OrganizationCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/PersonCardsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistManifestsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/PermissionsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestsTableTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
