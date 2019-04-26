@@ -121,12 +121,12 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	}
 	
 	public function setRoot($layer) {
-		$this->rootName = $layer;
+		$this->set('rootName', $layer);
 		return $this;
 	}
 	
 	public function setRootDisplaySource($source) {
-		$this->rootDisplaySource = $source;
+		$this->set('rootDisplaySource', $source);
 		return $this;
 	}
 	
@@ -179,12 +179,12 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return string
 	 */
 	public function rootLayerName() {
-		if ($this->rootName === FALSE) {
+		if ($this->get('rootName') === FALSE) {
 			throw new BadClassConfigurationException(
 				'The name of the root entity ($this->rootName) must '
 				. 'be set in the stack entity ' . get_class($this));
 		}
-		return $this->rootName;
+		return $this->get('rootName');
 	}
 	
 	/**
