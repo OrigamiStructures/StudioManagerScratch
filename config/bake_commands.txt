@@ -43,6 +43,8 @@ bin/cake bake.bake test ModLib StackSet
 --------------------------------------------------------------------
 cd /Library/WebServer/Documents/StudioManagerScratch
 
+vendor/bin/phpunit test tests/TestCase/Lib/FGCurlTest.php
+
 # App\Lib
 vendor/bin/phpunit test tests/TestCase/Lib/RangeTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestsTest.php
@@ -50,7 +52,6 @@ vendor/bin/phpunit test tests/TestCase/Lib/RenumberMessagingTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/RenumberRequestTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/SystemStateTest.php
 vendor/bin/phpunit test tests/TestCase/Lib/WildcardTest.php
-vendor/bin/phpunit test tests/TestCase/Lib/FGCurlTest.php
 # table
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/MembershipsTableTest.php
@@ -60,9 +61,9 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/OrganizationCardsTableTest.ph
 vendor/bin/phpunit test tests/TestCase/Model/Table/PersonCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistManifestsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/PermissionsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestsTableTest.php
 # Model\Lib
-vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
@@ -77,10 +78,6 @@ vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MembershipTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/MemberTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/RolodexCardTest.php
-vendor/bin/phpunit test tests/TestCase/Model/Table/CategoryCardsTableTest.php
-vendor/bin/phpunit test tests/TestCase/Model/Table/OrganizationCardsTableTest.php
-vendor/bin/phpunit test tests/TestCase/Model/Table/PersonCardsTableTest.php
-vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/StackEntityTest.php
 
 # Stack/Layer suite
