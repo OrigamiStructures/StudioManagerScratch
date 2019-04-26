@@ -39,10 +39,6 @@ class PermissionsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Layers', [
-            'foreignKey' => 'layer_id',
-            'joinType' => 'INNER'
-        ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'

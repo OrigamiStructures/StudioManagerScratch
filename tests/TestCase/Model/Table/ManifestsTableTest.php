@@ -27,7 +27,6 @@ class ManifestsTableTest extends TestCase
         'app.manifests',
         'app.members',
         'app.users',
-        'app.member_users'
     ];
 
     /**

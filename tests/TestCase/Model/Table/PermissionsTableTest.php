@@ -25,7 +25,6 @@ class PermissionsTableTest extends TestCase
      */
     public $fixtures = [
         'app.permissions',
-        'app.layers',
         'app.users',
         'app.manifests'
     ];

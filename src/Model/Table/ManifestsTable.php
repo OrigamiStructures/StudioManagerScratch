@@ -49,10 +49,6 @@ class ManifestsTable extends AppTable{
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('MemberUsers', [
-            'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
-        ]);
         $this->hasMany('Users', [
             'foreignKey' => 'artist_id'
         ]);
