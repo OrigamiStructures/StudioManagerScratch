@@ -121,7 +121,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	}
 	
 	public function setRoot($layer) {
-		$this->root = $layer;
+		$this->rootName = $layer;
 		return $this;
 	}
 	
