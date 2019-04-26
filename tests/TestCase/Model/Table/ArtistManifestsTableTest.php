@@ -46,7 +46,7 @@ class ArtistManifestsTableTest extends TestCase
      */
     public function tearDown()
     {
-		Cache::clear(FALSE, $this->AritistManifestsTable->cacheName());
+		Cache::clear(FALSE, $this->ArtistManifestsTable->cacheName());
         unset($this->ArtistManifestsTable);
 
         parent::tearDown();
