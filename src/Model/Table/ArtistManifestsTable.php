@@ -22,7 +22,7 @@ class ArtistManifestsTable extends StacksTable {
 
 	public function initialize(array $config) {
 		$this->setTable('manifests');
-	    $this->addLayerTable(['Identities', 'Permissions', 'DataOwners']);
+	    $this->addLayerTable(['Manifests', 'Identities', 'Permissions', 'DataOwners']);
 		$this->addSeedPoint([
 			'data_owner', 
 			'manager',
@@ -63,9 +63,7 @@ class ArtistManifestsTable extends StacksTable {
 	}
 	
 	protected function distillFromIdentity($ids) {
-		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
-				->find('manifestsFor', ['ids' => $ids]);
-		return array_unique($IDs);
+		return array_unique($ids);
 	}
 	
 	protected function distillFromPermission($ids) {
