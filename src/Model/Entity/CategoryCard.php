@@ -19,19 +19,21 @@ class CategoryCard extends RolodexCard{
 	}
 	
 	
-	public function memberEntities() {
+	public function memberElements($asArray = LAYERACC_ARRAY) {
 		if($this->hasMembers()) {
-			return $this->members->load();
+			$result = $this->members->load();
+		} else {
+			$result = [];
 		}
-		return [];
+		return $this->_resolveReturnStructure($result, $asArray, 'member');
 	}
 	
 	public function memberIDs() {
-		return $this->valueList('id', $this->memberEntities());
+		return $this->valueList('id', $this->memberElements());
 	}
 	
 	public function members() {
-		return $this->valueList('name', $this->memberEntities());
+		return $this->valueList('name', $this->memberElements());
 	}
 	
 }

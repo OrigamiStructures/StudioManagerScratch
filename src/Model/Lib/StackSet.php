@@ -25,7 +25,6 @@ class StackSet implements LayerAccessInterface {
 	
 	protected $_stackName;
 
-	
 	/**
 	 * Add another entity to the collection
 	 * 
@@ -35,7 +34,7 @@ class StackSet implements LayerAccessInterface {
 	public function insert($id, $stack) {
 		$this->_data[$id] = $stack;
 		if (!isset($this->_stackName)) {
-			$this->_stackName = $stack->primaryLayer();
+			$this->_stackName = $stack->rootLayerName();
 		}
 	}
 	

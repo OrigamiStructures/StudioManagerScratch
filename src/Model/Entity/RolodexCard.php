@@ -10,10 +10,20 @@ use App\Model\Entity\StackEntity;
  */
 class RolodexCard extends StackEntity {
 	
-	protected $_primary = 'identity';
+	/**
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
+	 */
+	protected $rootName = 'identity';
+
+	/**
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
+	 */
+	protected $rootDisplaySource = 'name';
 
 	public function name() {
-		return $this->primaryEntity()->name();
+		return $this->rootElement()->name();
 	}
 	
 	/**
@@ -40,20 +50,40 @@ class RolodexCard extends StackEntity {
 	public function canParticipate() {
 		return FALSE;
 	}
-	
-	public function membershipEntities() {
-		if ($this->isMember()) {
-			return $this->memberships->load();
+
+	/**
+	 * Get the membership elements
+	 * 
+	 * Optionally get the entities as a Layer
+	 * 
+	 * @param boolean $asLayer 
+	 * @return array|layer
+	 */
+	public function membershipElements($asArray = LAYERACC_ARRAY) {
+		if($this->isMember()) {
+			$result = $this->memberships->load();
+		} else {
+			$result = [];
 		}
-		return [];
+		return $this->_resolveReturnStructure($result, $asArray, 'memberships');
 	}
 	
+	/**
+	 * Get the IDs of the Groups this card belongs to
+	 * 
+	 * @return array
+	 */
 	public function membershipIDs() {
-		return $this->valueList('id', $this->membershipEntities());
+		return $this->valueList('id', $this->membershipElements());
 	}
 	
+	/**
+	 * Get the names of the Groups this card belongs to
+	 * 
+	 * @return array
+	 */
 	public function memberships() {
-		return $this->distinct('name', $this->membershipEntities());
+		return $this->distinct('name', $this->membershipElements());
 	}
 	
 }

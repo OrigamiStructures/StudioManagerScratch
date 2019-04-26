@@ -12,13 +12,13 @@ class CategoryCardsTable extends RolodexCardsTable
 {
 	
 	public function initialize(array $config) {
-		$this->layerTables[] = 'Members';
-		$this->stackSchema[] = ['name' => 'members',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge($this->seedPoints, ['member', 'members']);
 		parent::initialize($config);
+	    $this->addLayerTable(['Members']);
+	    $this->addStackSchema(['members']);
+		$this->addSeedPoint(['member', 'members']);
 	}
 	
-	protected function loadFromMember($ids) {
+	protected function distillFromMember($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
 			->where(['member_id IN' => $ids]);
@@ -27,7 +27,13 @@ class CategoryCardsTable extends RolodexCardsTable
 			$accum[] = $entity->group_id;
 			return $accum;
 		}, []);
-		return $this->stacksFromIdentities($IDs);
+
+		return $this->groupsOnly($IDs);
+	}
+	
+	private function groupsOnly($IDs) {
+		return $this->Identities->find('list', ['valueField' => 'id'])
+				->where(['id IN' => $IDs, 'member_type' => 'Group']);
 	}
 	
 	protected function marshalMembers($id, $stack) {

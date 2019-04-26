@@ -18,12 +18,29 @@ class PersonCardsTable extends RolodexCardsTable {
 	use ReceiverTableTrait;
 	
 	public function initialize(array $config) {
+		parent::initialize($config);
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
-		$this->layerTables[] = 'Images';
-		$this->stackSchema[] = ['name' => 'image',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge($this->seedPoints, ['image', 'images']);
-		parent::initialize($config);
+		$this->addLayerTable(['Images']);
+        $this->addStackSchema(['image']);
+		$this->addSeedPoint(['image', 'images']);
+	}
+	
+	protected function distillFromImage($ids) {
+		$IDs = $this->Identities->find('list', ['valueField' => 'id'])
+				->where(['image_id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
+	}
+	
+	protected function marshalImage($id, $stack) {
+//		debug($stack);
+		if ($stack->count('identity')) {
+			$image = $this->Images->find('all')
+					->where(['id' => $stack->rootElement()->imageId()]);
+			$stack->set(['image' => $image->toArray()]);
+		}		
+		return $stack;
 	}
 
 //	public function initialize(array $config) {

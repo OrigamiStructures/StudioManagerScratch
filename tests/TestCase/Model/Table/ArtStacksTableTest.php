@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Cache\Cache;
 
 /**
  * App\Model\Table\ArtStacksTable Test Case
@@ -51,6 +52,7 @@ class ArtStacksTableTest extends TestCase
      */
     public function tearDown()
     {
+		Cache::clear(FALSE, $this->ArtStacks->cacheName());
         unset($this->ArtStacks);
 
         parent::tearDown();
@@ -69,7 +71,7 @@ class ArtStacksTableTest extends TestCase
                 'editions' => 'layer',
                 'formats' => 'layer',
                 'pieces' => 'layer',
-                'dispositionsPieces' => 'layer'
+                'dispositions_pieces' => 'layer'
             ], $this->ArtStacks->getSchema()->typeMap());
     }
 
@@ -101,7 +103,7 @@ class ArtStacksTableTest extends TestCase
      */
     public function testFindStackFromOnEmptyIds()
     {
-        $stacks = $this->ArtStacks->find('stackFrom', ['layer' => 'artwork', 'ids' => []]);
+        $stacks = $this->ArtStacks->find('stacksFor', ['seed' => 'artwork', 'ids' => []]);
         $this->assertEquals(0, $stacks->count());
         
     }
@@ -115,22 +117,23 @@ class ArtStacksTableTest extends TestCase
      */
     public function testFindStackFromOnNoneFound($args, $count)
     {
-        $stacks = $this->ArtStacks->find('stackFrom', $args);
+        $stacks = $this->ArtStacks->find('stacksFor', $args);
         $this->assertEquals($count, $stacks->count());  
+//        $this->assertEquals($count, count($stacks));  
     }
     
     public function noneFoundProvider() {
         return [
-            [['layer' => 'disposition', 'ids' => [6000]], 0],
-            [['layer' => 'disposition', 'ids' => []], 0],
-            [['layer' => 'pieces', 'ids' => [6000]], 0],
-            [['layer' => 'pieces', 'ids' => []], 0],
-            [['layer' => 'formats', 'ids' => [6000]], 0],
-            [['layer' => 'formats', 'ids' => []], 0],
-            [['layer' => 'editions', 'ids' => [6000]], 0],
-            [['layer' => 'editions', 'ids' => []], 0],
-            [['layer' => 'artwork', 'ids' => [6000]], 0],
-            [['layer' => 'artwork', 'ids' => []], 0],
+            [['seed' => 'disposition', 'ids' => [6000]], 0],
+            [['seed' => 'disposition', 'ids' => []], 0],
+            [['seed' => 'pieces', 'ids' => [6000]], 0],
+            [['seed' => 'pieces', 'ids' => []], 0],
+            [['seed' => 'formats', 'ids' => [6000]], 0],
+            [['seed' => 'formats', 'ids' => []], 0],
+            [['seed' => 'editions', 'ids' => [6000]], 0],
+            [['seed' => 'editions', 'ids' => []], 0],
+            [['seed' => 'artwork', 'ids' => [6000]], 0],
+            [['seed' => 'artwork', 'ids' => []], 0],
         ];
     }
     
@@ -143,58 +146,59 @@ class ArtStacksTableTest extends TestCase
      */
     public function testFindStackFromLayerVariants($args, $art, $ed, $fo, $p_cnt, $d_cnt)
     {
-        $stacks = $this->ArtStacks->find('stackFrom', $args);
+        $stacks = $this->ArtStacks->find('stacksFor', $args);
         $this->assertEquals(1, $stacks->count());
         $entity = $stacks->ownerOf('artwork', $art)[0];
         
         $this->assertTrue($entity->exists('editions', $ed), "===\nedition is $ed\n===");
         $this->assertTrue($entity->exists('formats', $fo), "===\nformat is $fo\n===");
         $this->assertEquals($p_cnt, $entity->count('pieces'));
-        $this->assertEquals($d_cnt, $entity->count('dispositionsPieces'));
+        $this->assertEquals($d_cnt, $entity->count('dispositions_pieces'));
+		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
     
     public function stackSeedLayerVariantProvider() {
         return [
         // george art13 ed21 fmt22 - 15 pieces 510-524 - 8 disp-id (12-15,48,51)
             'disposition for George' => [
-                ['layer' => 'disposition', 'ids' => [12,14,48]],
+                ['seed' => 'disposition', 'ids' => [12,14,48]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'dispositions for George' => [
-                ['layer' => 'dispositions', 'ids' => [12,14,48]],
+                ['seed' => 'dispositions', 'ids' => [12,14,48]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
         // george art13 ed21 fmt22 - 15 pieces 510-524 - 8 pc-id 8 disp-id (12-15,48,51)
             'piece for George' => [
-                ['layer' => 'piece', 'ids' => [510,520]],
+                ['seed' => 'piece', 'ids' => [510,520]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'pieces for George' => [
-                ['layer' => 'pieces', 'ids' => [510]],
+                ['seed' => 'pieces', 'ids' => [510]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'format for George' => [
-                ['layer' => 'format', 'ids' => [22]],
+                ['seed' => 'format', 'ids' => [22]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'formats for George' => [
-                ['layer' => 'formats', 'ids' => [22]],
+                ['seed' => 'formats', 'ids' => [22]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'edition for George' => [
-                ['layer' => 'edition', 'ids' => [21]],
+                ['seed' => 'edition', 'ids' => [21]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'editions for George' => [
-                ['layer' => 'editions', 'ids' => [21]],
+                ['seed' => 'editions', 'ids' => [21]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'artwork for George' => [
-                ['layer' => 'artwork', 'ids' => [13]],
+                ['seed' => 'artwork', 'ids' => [13]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'artworks for George' => [
-                ['layer' => 'artworks', 'ids' => [13]],
+                ['seed' => 'artworks', 'ids' => [13]],
                 13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
         ];
@@ -212,29 +216,30 @@ class ArtStacksTableTest extends TestCase
     public function testFindStackFromBadArgs($args, $msg)
     {
         $this->expectExceptionMessage($msg);
-        $this->ArtStacks->find('stackFrom', $args);
+        $this->ArtStacks->find('stacksFor', $args);
+		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
     
     public function badArgsProvider() {
         return [
             'unknown layer' => [
-                ['layer' => 'unkown', 'ids' => [4,5,6]], 
+                ['seed' => 'unknown', 'ids' => [4,5,6]], 
                 "ArtStacks can't do lookups",
             ],
             'bad layer key' => [
                 ['wrong' => 'pieces', 'ids' => [4,5,6]], 
-                "both 'layer' and 'ids' keys",
+                "both 'seed' and 'ids' keys",
             ],
             'bad id key' => [
-                ['layer' => 'pieces', 'wrong' => [4,5,6]], 
-                "both 'layer' and 'ids' keys",
+                ['seed' => 'pieces', 'wrong' => [4,5,6]], 
+                "both 'seed' and 'ids' keys",
             ],
             'missing key' => [
                 ['ids' => [4,5,6]], 
-                "both 'layer' and 'ids' keys",
+                "both 'seed' and 'ids' keys",
             ],
             'ids not in array' => [
-                ['layer' => 'pieces', 'ids' => 12], 
+                ['seed' => 'pieces', 'ids' => 12], 
                 "provided as an array",
             ],
         ];
@@ -257,17 +262,5 @@ class ArtStacksTableTest extends TestCase
 //        $this->assertEquals(1, $stacks->count());
         
     }
-    /**
-     * Test stacksFromAtworksWithBadArg method
-     * 
-     * @expectedException BadMethodCallException
-     *
-     * @return void
-     */
-    public function testStacksFromAtworksWithBadArg()
-    {
-        $this->expectExceptionMessage('provided as an array');
-        $stacks = $this->ArtStacks->stacksFromArtworks(3);
-        print_r($stacks);
-    }
+
 }

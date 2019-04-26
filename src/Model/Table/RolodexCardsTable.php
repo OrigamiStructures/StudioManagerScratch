@@ -8,6 +8,7 @@ use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\Utility\Hash;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 
 
 /**
@@ -15,24 +16,17 @@ use Cake\Cache\Cache;
  *
  */
 class RolodexCardsTable extends StacksTable {
-
-    protected $layerTables = ['Identities', 'GroupsMembers'];
-
-	protected $stackSchema = 	[
-            ['name' => 'identity',		'specs' => ['type' => 'layer']],
-            ['name' => 'data_owner',	'specs' => ['type' => 'layer']],
-            ['name' => 'memberships',	'specs' => ['type' => 'layer']],
-        ];
 	
-    protected $seedPoints = [
-		'identity', 
-		'identities',
-		'data_owner', 
-		'data_owners',
-		'membership', 
-		'memberships'
-	];
+	/**
+	 * {@inheritdoc}
+	 */
+	protected $rootName = 'identity';
 	
+	/**
+	 * {@inheritdoc}
+	 */
+	protected $rootDisplaySource = 'name';
+
 	/**
 	 * Initialize method
 	 *
@@ -40,8 +34,18 @@ class RolodexCardsTable extends StacksTable {
 	 * @return void
 	 */
 	public function initialize(array $config) {
-		$this->setTable('members');
+        $this->setTable('members');
 		$this->_initializeAssociations();
+        $this->addLayerTable(['Identities', 'GroupsMembers']);
+        $this->addStackSchema(['identity', 'data_owner', 'memberships']);
+        $this->addSeedPoint([
+            'identity',
+            'identities',
+            'data_owner',
+            'data_owners',
+            'membership',
+            'memberships'
+        ]);
 		parent::initialize($config);
 	}
 
@@ -84,11 +88,11 @@ class RolodexCardsTable extends StacksTable {
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
-	protected function loadFromIdentity($ids) {
-		return $this->stacksFromIdentities($ids);
+	protected function distillFromIdentity($ids) {
+		return $ids;
 	}
 	
-	protected function loadFromMembership($ids) {
+	protected function distillFromMembership($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
 			->where(['group_id IN' => $ids]);
@@ -97,10 +101,10 @@ class RolodexCardsTable extends StacksTable {
 			$accum[] = $entity->member_id;
 			return $accum;
 		}, []);
-		return $this->stacksFromIdentities($IDs);
+		return $IDs;
 	}
 	
-	protected function loadFromDataOwner($ids) {
+	protected function distillFromDataOwner($ids) {
 		$records = $this->Identities
 				->find('all')
 				->select(['id', 'user_id'])
@@ -110,50 +114,9 @@ class RolodexCardsTable extends StacksTable {
 					$accum[] = $entity->id;
 					return $accum;
 				}, []);
-		return $this->stacksFromIdentities($IDs);
+		return $IDs;
 	}
-
-	/**
-	 * Read the stack from cache or assemble it and cache it
-	 * 
-	 * This is the destination for all the loadFrom variants. 
-	 * They work to derive the member_id values required to 
-	 * run this stack building process
-	 * 
-	 * There will be other marshalling methods added by the 
-	 * various sub classes. Each sub class holds its own. 
-	 * They are all named by the column names listed in the 
-	 * schema defined in the table. 
-	 * 
-	 * @param array $ids Member ids
-	 * @return StackSet
-	 */
-    protected function stacksFromIdentities($ids) {
-		$this->stacks = new StackSet();
-        foreach ($ids as $id) {
-			$stack = FALSE;
-			if (!$stack && !$this->stacks->isMember($id)) {
-				$stack = $this->marshalStack($id);
-			}
-			if ($stack->count('identity')) {
-				$stack->clean();
-				$this->stacks->insert($id, $stack);
-			}       
-		}
-		return $this->stacks;
-	}
-	
-	protected function marshalStack($id) {
-
-		$layers = Hash::extract($this->stackSchema, '{n}.name');
-		$stack = $this->newEntity([]);
-		foreach($layers as $layer) {
-			$method = 'marshal'.ucfirst($layer);
-			$stack = $this->$method($id, $stack);
-		}
-		return $stack;
-	}
-	
+		
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
@@ -162,11 +125,11 @@ class RolodexCardsTable extends StacksTable {
 			return $stack;
 	}
 	
-	protected function marshalData_owner($id, $stack) {
+	protected function marshalDataOwner($id, $stack) {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')
-					->where(['id' => $stack->identity->element(0)->user_id]);
+					->where(['id' => $stack->dataOwner()]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
@@ -200,5 +163,23 @@ class RolodexCardsTable extends StacksTable {
         }
         return $stack;
     }
+	
+	protected function writeCache($id, $stack) {
+		if (Configure::read('rolodexCache')) {
+			$result = parent::writeCache($id, $stack);
+		} else {
+			$result = FALSE;
+		}
+		return $result;
+	}
+	
+	protected function readCache($id) {
+		if (Configure::read('rolodexCache')) {
+			$result = parent::readCache($id, $stack);
+		} else {
+			$result = FALSE;
+		}
+		return $result;
+	}
 
 }

@@ -2,7 +2,7 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Table;
+use App\Model\Table\AppTable;
 use Cake\ORM\Query;
 
 /**
@@ -10,16 +10,15 @@ use Cake\ORM\Query;
  * 
  * This table reveals any Memberships a Rolodex Card has.
  * 
- * This table uses the Groups repository as Memberships. Since that table 
- * has only basic info about the groupiness of a Member record (another 
- * RolodexCard), this table establishes an association to the Members 
- * repository so the identity of this group can be known. So, in this 
+ * This table uses the Members repository as Memberships. That table 
+ * establishes an association to the Members repository so the identity 
+ * of this group can be known. So, in this 
  * table context Members is known as GroupIdentity.
  * 
  * CakePHP Memberships
  * @author dondrake
  */
-class MembershipsTable extends Table {
+class MembershipsTable extends AppTable {
 
 	public function initialize(array $config) {
 		$this->setTable('members');
@@ -28,9 +27,12 @@ class MembershipsTable extends Table {
 	}
 
 	public function initializeAssociations() {
+		// DOESN'T CHANGE ENTITY TO GroupIdentity
+		// A DESIRED BEHAVIOR?
         $this->belongsToMany(
-			'RolodexCards', 
-			['joinTable' => 'groups_members'])
+			'GroupIdentities', 
+			[	'className' => 'Identities',
+				'joinTable' => 'groups_members'])
 			->setForeignKey('group_id')
 			->setTargetForeignKey('member_id')
 			->setProperty('members')

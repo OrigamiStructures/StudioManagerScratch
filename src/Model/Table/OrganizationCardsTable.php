@@ -16,8 +16,8 @@ class OrganizationCardsTable extends CategoryCardsTable {
 	use ReceiverTableTrait;
 	
 	public function initialize(array $config) {
+		parent::initialize($config);
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
-		parent::initialize($config);
 	}
 }

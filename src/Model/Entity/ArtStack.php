@@ -17,11 +17,16 @@ use App\Model\Lib\Layer;
 class ArtStack extends StackEntity {
     	
 	/**
-	 * Name of the tip of this stack
-	 *
-	 * @var string
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
 	 */
-	protected $_primary = 'artwork';
+	protected $rootName = 'artwork';
+	
+	/**
+	 * @todo Let StackTable::marshalStack() set this
+	 * {@inheritdoc}
+	 */
+	protected $rootDisplayValue = 'title';
 
 	/**
      * Fields that can be mass assigned using newEntity() or patchEntity().

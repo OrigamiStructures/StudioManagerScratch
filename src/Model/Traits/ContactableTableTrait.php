@@ -10,21 +10,19 @@ namespace App\Model\Traits;
 trait ContactableTableTrait {
 	
 	public function initializeContactableCard() {
-		$this->layerTables = array_merge($this->layerTables, ['Addresses', 'Contacts']);
-		$this->stackSchema[] = ['name' => 'addresses',	'specs' => ['type' => 'layer']];
-		$this->stackSchema[] = ['name' => 'contacts',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge($this->seedPoints, [
-			'address', 
-			'addresses', 
-			'contact', 
-			'contacts'
-			]);
+	    $this->addLayerTable(['Addresses', 'Contacts']);
+	    $this->addStackSchema(['addresses', 'contacts']);
+		$this->addSeedPoint([
+            'addresses',
+            'contact', 'contacts'
+        ]);
 	}
 	
-	public function loadFromAddress($ids) {
+	public function distillFromAddress($ids) {
 		$IDs = $this->Addresses->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids]);
-		return $this->stacksFromIdentities(array_unique($IDs->toArray()));
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 	}
 	
 	public function marshalAddresses($id, $stack) {
@@ -36,10 +34,11 @@ trait ContactableTableTrait {
 		return $stack;
 	}
 	
-	public function loadFromContact($ids) {
-		$IDs = $this->Contact->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids]);
-		return $this->stacksFromIdentities(array_unique($IDs->toArray()));
+	public function distillFromContact($ids) {
+		$IDs = $this->Contacts->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 
 	}
 	

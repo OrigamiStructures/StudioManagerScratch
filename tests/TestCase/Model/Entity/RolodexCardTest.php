@@ -40,8 +40,8 @@ class RolodexCardTest extends TestCase
         parent::setUp();
         $this->RolodexCards = $this->getTableLocator()->get('RolodexCards');
         
-        $targets = ['layer' => 'identity', 'ids' => [2,3]];
-        $cards = $this->RolodexCards->find('stackFrom', $targets);
+        $targets = ['seed' => 'identity', 'ids' => [2,3]];
+        $cards = $this->RolodexCards->find('stacksFor', $targets);
         
         $this->Person = $cards->element(0);
         $this->Group = $cards->element(1);
@@ -94,17 +94,17 @@ class RolodexCardTest extends TestCase
     }
 
     /**
-     * Test membershipEntities method
+     * Test membershipElements method
      *
      * @return void
      */
-    public function testMembershipEntities()
+    public function testmembershipElements()
     {
-        $this->assertCount(2, $this->Person->membershipEntities(),
-            'The person card\'s membershipEntities() accessor did not work');
+        $this->assertCount(2, $this->Person->membershipElements(),
+            'The person card\'s membershipElements() accessor did not work');
         
-        $this->assertCount(0, $this->Group->membershipEntities(),
-            'The group card\'s membershipEntities() accessor did not work');
+        $this->assertCount(0, $this->Group->membershipElements(),
+            'The group card\'s membershipElements() accessor did not work');
         
     }
 

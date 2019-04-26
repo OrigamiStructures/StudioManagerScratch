@@ -51,7 +51,7 @@ class MembersFixture extends TestFixture
                 'created' => '2016-03-08 01:20:42',
                 'modified' => '2016-03-08 01:20:42',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-                'image_id' => null,
+                'image_id' => '9',
                 'first_name' => 'Don',
                 'last_name' => 'Drake',
                 'member_type' => 'Person',
@@ -64,7 +64,7 @@ class MembersFixture extends TestFixture
                 'created' => '2016-03-08 01:20:58',
                 'modified' => '2016-03-08 01:20:58',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-                'image_id' => null,
+                'image_id' => '10',
                 'first_name' => 'Gail',
                 'last_name' => 'Drake',
                 'member_type' => 'Person',
@@ -162,6 +162,19 @@ class MembersFixture extends TestFixture
                 'active' => false,
                 'disposition_count' => 2,
                 'collector' => 2
+            ],
+            [
+                'id' => 75,
+                'created' => '2016-03-21 18:14:52',
+                'modified' => '2016-08-22 19:23:46',
+                'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'image_id' => null,
+                'first_name' => 'Leonardo',
+                'last_name' => 'DiVinci',
+                'member_type' => 'Person',
+                'active' => false,
+                'disposition_count' => 0,
+                'collector' => 0
             ],
         ];
         parent::init();

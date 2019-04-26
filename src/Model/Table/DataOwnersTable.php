@@ -8,18 +8,21 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Table;
 use Cake\ORM\Query;
+use App\Model\Table\AppTable;
 
 /**
  * CakePHP DataOwner
  * @author dondrake
  */
-class DataOwnersTable extends Table {
+class DataOwnersTable extends AppTable {
 	
 	public function initialize(array $config) {
 		$this->setTable('users');
 		parent::initialize($config);
+		$this->belongsTo('Members', [
+            'foreignKey' => 'member_id'
+        ]);
 	}
 	
 	/**
@@ -30,7 +33,7 @@ class DataOwnersTable extends Table {
 	 * @return query
 	 */
 	public function findHook(Query $query, $options) {
-		return $query->select(['id', 'username']);
+		return $query->select(['DataOwners.id', 'DataOwners.username', 'DataOwners.member_id']);
 	}
 	
 }

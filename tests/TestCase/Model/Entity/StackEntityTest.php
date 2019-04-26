@@ -54,7 +54,7 @@ class StackEntityTest extends TestCase
         $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks', []);
         $artID = 4; //jabberwocky
         $stacks = $this->ArtStacks
-				->find('stackFrom', ['layer' => 'artworks', 'ids' => [$artID]]);
+				->find('stacksFor', ['seed' => 'artworks', 'ids' => [$artID]]);
         $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
         
         $this->StackEntity->arrayProp = ['a','b','c'];
@@ -73,6 +73,7 @@ class StackEntityTest extends TestCase
      */
     public function tearDown()
     {
+		\Cake\Cache\Cache::clear(FALSE, $this->ArtStacks->cacheName());
         unset($this->StackEntity);
         unset($this->ArtStacks);
 
@@ -240,8 +241,8 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryLayer()     {
-        $this->assertEquals('artwork', $this->StackEntity->primaryLayer());
+    public function testRootLayerNamLayer()     {
+        $this->assertEquals('artwork', $this->StackEntity->rootLayerName());
     }
 
     /**
@@ -249,8 +250,8 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryId()     {
-        $this->assertEquals(4, $this->StackEntity->primaryId());
+    public function testRootId()     {
+        $this->assertEquals(4, $this->StackEntity->rootID());
     }
 
     /**
@@ -258,17 +259,17 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testPrimaryEntity()     {
-        $entity = $this->StackEntity->primaryEntity();
+    public function testrootElement()     {
+        $entity = $this->StackEntity->rootElement();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
 	
 	/**
 	 * @expectedException App\Exception\BadClassConfigurationException
 	 */
-	public function testPrimaryEntityUnsetProperty() {
+	public function testCapEntityUnsetProperty() {
 		$entity = New StackEntity();
-        $entity->primaryEntity();
+        $entity->rootElement();
 	}
 
     /**
@@ -387,27 +388,22 @@ class StackEntityTest extends TestCase
         
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
-		$all_pieces_arg = $this->StackEntity->accessArgs()
-				->setLayer('pieces')
-				->setLimit('all');
-        $pieces = $this->StackEntity->load($all_pieces_arg);
-		$all_dispo_pieces_arg = $this->StackEntity->accessArgs()->
-				setLayer('dispositionsPieces')
-				->setLimit('all');
-        $dp = $this->StackEntity->load($all_dispo_pieces_arg);
+		$dp = $this->StackEntity->find()
+				->setLayer('dispositions_pieces')
+				->load();
         unset($this->StackEntity->pieces);
-        unset($this->StackEntity->dispositionsPieces);
+        unset($this->StackEntity->dispositions_pieces);
         
         $this->assertTrue(
 				$this->StackEntity->isEmpty('pieces'), 
 				'piece value is gone');
         $this->assertTrue(
-				$this->StackEntity->isEmpty('dispositionsPieces'), 
+				$this->StackEntity->isEmpty('dispositions_pieces'), 
 				'piece value is gone');
         
         $this->StackEntity->set([
 			'pieces' => $pieces, 
-			'dispositionsPieces' => $dp, 
+			'dispositions_pieces' => $dp, 
 			'something' => ['array']]);
         
         $this->assertInstanceOf(
@@ -416,7 +412,7 @@ class StackEntityTest extends TestCase
 				'layer object was made');
         $this->assertInstanceOf(
 				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('dispositionsPieces'), 
+				$this->StackEntity->get('dispositions_pieces'), 
 				'layer object was made');
         $this->assertTrue(
 				is_array($this->StackEntity->get('something')),
@@ -425,17 +421,17 @@ class StackEntityTest extends TestCase
         //do the same process to multiple values and use the guard feature
         //to test the [prop=>val, prop=>val] argument syntax
 //        $pieces = $this->StackEntity->load('pieces', 'all');
-//        $dp = $this->StackEntity->load('dispositionsPieces', 'all');
+//        $dp = $this->StackEntity->load('dispositions_pieces', 'all');
 //        unset($this->StackEntity->pieces);
-//        unset($this->StackEntity->dispositionsPieces);
+//        unset($this->StackEntity->dispositions_pieces);
 //        
 //        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
-//        $this->assertTrue($this->StackEntity->isEmpty('dispositionsPieces'), 'piece value is gone');
+//        $this->assertTrue($this->StackEntity->isEmpty('dispositions_pieces'), 'piece value is gone');
 //        
-//        $this->StackEntity->set(['pieces' => $pieces, 'dispositionsPieces' => $dp, 'something' => ['array']]);
+//        $this->StackEntity->set(['pieces' => $pieces, 'dispositions_pieces' => $dp, 'something' => ['array']]);
 //        
 //        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
-//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositionsPieces'), 'layer object was made');
+//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositions_pieces'), 'layer object was made');
 //        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
     }
 

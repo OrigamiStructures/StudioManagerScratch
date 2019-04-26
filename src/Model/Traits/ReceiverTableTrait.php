@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Model\Traits;
 
 /**
@@ -10,19 +9,26 @@ namespace App\Model\Traits;
 trait ReceiverTableTrait {
 	
 	public function initializeReceiverCard() {
-		$this->layerTables[] = 'Dispositons';
-		$this->stackSchema[] = ['name' => 'dispositions',	'specs' => ['type' => 'layer']];
-		$this->seedPoints = array_merge($this->seedPoints, ['disposition', 'dispositions']);
+	    $this->addLayerTable(['Dispositions']);
+	    $this->addStackSchema(['dispositions']);
+	    $this->addSeedPoint(['disposition', 'dispositions']);
 	}
 	
-	public function loadFromDisposition($ids) {
-		
+	public function distillFromDisposition($ids) {
+		$IDs = $this->Dispositions->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
 	}
 	
 	public function marshalDispositions($id, $stack) {
+		if ($stack->count('identity')) {
+			$dispositions = $this->Dispositions->find('all')
+					->where(['member_id' => $id]);
+			$stack->set(['dispositions' => $dispositions->toArray()]);
+		}
 		return $stack;
 	}
-	
 	
 	
 }

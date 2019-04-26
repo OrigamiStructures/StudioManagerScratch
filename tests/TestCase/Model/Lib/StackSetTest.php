@@ -63,8 +63,8 @@ class StackSetTest extends TestCase {
 			4, //jabberwocky
 			5, //global warming survival kit
 		];
-		$this->StackEntities = $this->ArtStacks->find('stackFrom',
-				['layer' => 'artworks', 'ids' => $artIDs]);
+		$this->StackEntities = $this->ArtStacks->find('stacksFor',
+				['seed' => 'artworks', 'ids' => $artIDs]);
 //        $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
 //        $this->StackEntity->arrayProp = ['a','b','c'];
 //        $this->StackEntity->stringProp = 'This is a string property';
@@ -203,7 +203,7 @@ class StackSetTest extends TestCase {
 	 * Test element (a trait method) in StackSet context
 	 */
 	public function testElement() {
-		$this->assertTrue($this->StackEntities->element(1)->primaryId() === 5);
+		$this->assertTrue($this->StackEntities->element(1)->rootID() === 5);
 		$this->assertTrue($this->StackEntities->element(2) === null);
 	}
 	
@@ -261,6 +261,16 @@ class StackSetTest extends TestCase {
         $this->assertEquals(1, count($unique), 'unique edition 5 should have 1 piece');
         $this->assertEquals(4, count($open), 'open edition 8 should have 4 pieces');
         $this->assertEquals(0, count($none), 'nothing, bad layer and foreign, has no pieces');
+	}
+	
+	/**
+	 * Layer content for multiple stacks should accumulate
+	 */
+	public function testLoadLayerContentAccumulation() {
+		$this->assertCount(4, $this->StackEntities
+				->find()
+				->setLayer('editions')
+				->load());
 	}
 
 // </editor-fold>

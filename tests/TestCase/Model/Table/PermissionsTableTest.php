@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ArtistsTable;
+use App\Model\Table\PermissionsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ArtistsTable Test Case
+ * App\Model\Table\PermissionsTable Test Case
  */
-class ArtistsTableTest extends TestCase
+class PermissionsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ArtistsTable
+     * @var \App\Model\Table\PermissionsTable
      */
-    public $Artists;
+    public $Permissions;
 
     /**
      * Fixtures
@@ -24,10 +24,9 @@ class ArtistsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.artists',
-        'app.members',
+        'app.permissions',
         'app.users',
-        'app.member_users'
+        'app.manifests'
     ];
 
     /**
@@ -38,8 +37,8 @@ class ArtistsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Artists') ? [] : ['className' => ArtistsTable::class];
-        $this->Artists = TableRegistry::getTableLocator()->get('Artists', $config);
+        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     /**
@@ -49,7 +48,7 @@ class ArtistsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Artists);
+        unset($this->Permissions);
 
         parent::tearDown();
     }

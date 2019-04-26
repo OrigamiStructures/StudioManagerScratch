@@ -8,6 +8,7 @@ use Cake\Utility\Hash;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
+use App\Exception\BadClassConfigurationException;
 
 /**
  * Stacks
@@ -25,6 +26,40 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	
 	use LayerAccessTrait;
     
+	/**
+	 * Name of the tip-of-the-iceberg entity for this stack
+	 * 
+	 * The value migrates forward from the concrete stackTable 
+	 * during creation and population of the entity and its values
+	 * 
+	 * @see App\Model\Table\StacksTable::newVersionMarshalStack()
+	 *
+	 * @var string
+	 */
+	protected $rootName = FALSE;
+	
+	/**
+	 * The displayField source for the root entity
+	 * 
+	 * displayField() is a Table concept and is used for several find() 
+	 * variants. Since stackEntities mimic some of these features, they 
+	 * need to include a displayField() equivalent.
+	 * 
+	 * StackTable migrates this table-based value into to stackEntities 
+	 * where it takes on the additonal ability to be the name of a method 
+	 * that has no arguemnts (eg: name( ) ).
+	 * 
+	 * [1] The value wil be the moved forward from one of two sources:
+	 *		displayField() of the root layers underlying table
+	 *		$rootDisplaySource of the concrete stackTable for this entity
+	 * 
+	 * @todo Make [1] a true statement
+	 * 
+	 * @see App\Model\Table\StacksTable::newVersionMarshalStack()
+	 *
+	 * @var string
+	 */
+	protected $rootDisplaySource = FALSE;
     /**
      * Is the id a member of the set
      * 
@@ -54,7 +89,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
         }
         return 0;
     }
-    
+	
     public function hasNo($layer) {
         return $this->count($layer) === 0;
     }
@@ -64,26 +99,92 @@ class StackEntity extends Entity implements LayerAccessInterface {
     }
 	
 	/**
-	 * Get the name of the primary layer in the stack
-	 * 
-	 * @return string
-	 */
-	public function primaryLayer() {
-		if (!isset($this->_primary)) {
-			throw new BadClassConfigurationException(
-					'The name of the primary entity ($this->_primary) must '
-					. 'be set for this StackEntity');
-		}
-		return $this->_primary;
-	}
-	
-	/**
 	 * Return the owner of the primary entity
 	 * 
 	 * @return string
 	 */
 	public function dataOwner() {
-		return $this->primaryEntity()->user_id;
+		return $this->rootElement()->user_id;
+	}
+	
+	/**
+	 * Get the card identity entity
+	 * 
+	 * Optionally get the entity as an array element
+	 * 
+	 * @param boolean $unwrap 
+	 * @return entity|array
+	 */
+	public function rootElement($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->{$this->rootLayerName()}->load();
+		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	public function setRoot($layer) {
+		$this->root = $layer;
+		return $this;
+	}
+	
+	public function setRootDisplaySource($source) {
+		$this->rootDisplaySource = $source;
+		return $this;
+	}
+	
+	/**
+	 * Get id of the card cap entity
+	 * 
+	 * Optionally get the id as an array element
+	 * 
+	 * @param boolean $unwrap 
+	 * @return string|array
+	 */
+	public function rootID($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->{$this->rootLayerName()}->IDs();
+		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	/**
+	 * Get displayValue for the card's cap entity
+	 * 
+	 * Optionally get the name as an array element
+	 * 
+	 * @param boolean $unwrap 
+	 * @return string|array
+	 */
+	public function rootDisplayValue($unwrap = LAYERACC_UNWRAP) {
+		$result = $this->valueList($this->rootDisplaySource(), $this->rootElement());
+		return $this->_resolveWrapper($result, $unwrap);
+	}
+	
+	/**
+	 * Get the name of the displaySource (property or method) for capEntity
+	 * 
+	 * This is the analog of Table::displayField.
+	 * 
+	 * @return string
+	 * @throws BadClassConfigurationException
+	 */
+	public function rootDisplaySource() {
+		if ($this->rootDisplaySource === FALSE) {
+			throw new BadClassConfigurationException(
+				'A display source (rootDisplaySource) must be set for the '
+				. 'root record in the stack entity ' . get_class($this));
+		}	
+		return $this->rootDisplaySource;
+}
+
+	/**
+	 * Get the name of the cap layer for this stackEntity
+	 * 
+	 * @return string
+	 */
+	public function rootLayerName() {
+		if ($this->rootName === FALSE) {
+			throw new BadClassConfigurationException(
+				'The name of the root entity ($this->rootName) must '
+				. 'be set in the stack entity ' . get_class($this));
+		}
+		return $this->rootName;
 	}
 	
 	/**
@@ -91,19 +192,19 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * 
 	 * @return string
 	 */
-	public function primaryId() {
-		return $this->primaryEntity()->id;
-	}
+//	public function primaryId() {
+//		return $this->primaryEntity()->id;
+//	}
 	
 	/**
 	 * Get the primary entity in the stack
 	 * 
 	 * @return Entity
 	 */
-	public function primaryEntity() {
-//		$allArg = $this->accessArgs()->setLimit('first');
-		return $this->get($this->primaryLayer())->element(0);
-	}
+//	public function primaryEntity() {
+////		$allArg = $this->accessArgs()->setLimit('first');
+//		return $this->get($this->capLayer())->element(0);
+//	}
     
 	/**
 	 * Load data from the StackEntity context
@@ -121,7 +222,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	public function load(LayerAccessArgs $argObj = null) {
 		
 		if (is_null($argObj)) {
-			return [$this->primaryId() => $this];
+			return [$this->rootID() => $this];
 		}
 		
         $property = $this->getValidPropery($argObj);
@@ -178,8 +279,11 @@ class StackEntity extends Entity implements LayerAccessInterface {
      * @param string $property The property to check.
      * @return bool
      */
-    public function isEmpty($property)
+    public function isEmpty($property = null)
     {
+		if (is_null($property)) {
+			$property = $this->rootLayerName();
+		}
         $value = $this->get($property);
         if (is_object($value) 
             && $value instanceof \App\Model\Lib\Layer 
@@ -190,6 +294,37 @@ class StackEntity extends Entity implements LayerAccessInterface {
         return parent::isEmpty($property);
     }
 	
+	/**
+	 * For an array with a single item, should it be unwrapped
+	 * 
+	 * @param array $data
+	 * @param boolean $unwrap
+	 * @return string|array
+	 */
+	protected function _resolveWrapper($data, $unwrap) {
+		if ($unwrap) {
+			$result = array_shift($data);
+		}
+		return $result;
+	}
+	
+	/**
+	 * For an array of entities, should they be made into a Layer
+	 * 
+	 * It's possible for an empty array to come, so getting 
+	 * the entity type is important to insure Layer can construct
+	 * 
+	 * @param array $data
+	 * @param boolean $asArray
+	 * @return array|Layer
+	 */
+	protected function _resolveReturnStructure($data, $asArray, $entityType) {
+		if (!$asArray) {
+			$data = layer($data, $entityType);
+		}
+		return $data;
+	}
+
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
 
 	/**
