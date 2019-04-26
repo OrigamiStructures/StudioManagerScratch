@@ -71,7 +71,7 @@ class ArtStacksTableTest extends TestCase
                 'editions' => 'layer',
                 'formats' => 'layer',
                 'pieces' => 'layer',
-                'dispositionsPieces' => 'layer'
+                'dispositions_pieces' => 'layer'
             ], $this->ArtStacks->getSchema()->typeMap());
     }
 
@@ -153,7 +153,7 @@ class ArtStacksTableTest extends TestCase
         $this->assertTrue($entity->exists('editions', $ed), "===\nedition is $ed\n===");
         $this->assertTrue($entity->exists('formats', $fo), "===\nformat is $fo\n===");
         $this->assertEquals($p_cnt, $entity->count('pieces'));
-        $this->assertEquals($d_cnt, $entity->count('dispositionsPieces'));
+        $this->assertEquals($d_cnt, $entity->count('dispositions_pieces'));
 		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
     
