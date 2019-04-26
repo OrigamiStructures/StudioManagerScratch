@@ -4,12 +4,14 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Artist Entity
+ * Manifest Entity
  *
  * @property int $id
  * @property int $member_id
  * @property string $user_id
- * @property int $member_user_id
+ * @property string $manager_id
+ * @property bool $publish_manager
+ * @property bool $publish_manager_contact
  *
  * @property \App\Model\Entity\Member $member
  * @property \App\Model\Entity\User[] $users
@@ -30,7 +32,9 @@ class Manifest extends Entity
     protected $_accessible = [
         'member_id' => true,
         'user_id' => true,
-        'member_user_id' => true,
+        'manager_id' => true,
+        'publish_manager' => true,
+        'publish_manager_contact' => true,
         'member' => true,
         'users' => true,
         'member_user' => true

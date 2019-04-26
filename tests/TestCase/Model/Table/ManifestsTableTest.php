@@ -1,12 +1,12 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ArtistManifestsTable;
+use App\Model\Table\ManifestsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ArtistsTable Test Case
+ * App\Model\Table\ManifestsTable Test Case
  */
 class ManifestsTableTest extends TestCase
 {
@@ -14,7 +14,7 @@ class ManifestsTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ArtistManifestsTable
+     * @var \App\Model\Table\ManifestsTable
      */
     public $Manifests;
 
@@ -38,7 +38,7 @@ class ManifestsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Manifests') ? [] : ['className' => ArtistManifestsTable::class];
+        $config = TableRegistry::getTableLocator()->exists('Manifests') ? [] : ['className' => ManifestsTable::class];
         $this->Manifests = TableRegistry::getTableLocator()->get('Manifests', $config);
     }
 
@@ -80,6 +80,56 @@ class ManifestsTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findArtists method
+     *
+     * @return void
+     */
+    public function testFindArtists()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findInMembers method
+     *
+     * @return void
+     */
+    public function testFindInMembers()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findManagedBy method
+     *
+     * @return void
+     */
+    public function testFindManagedBy()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findIssuedBy method
+     *
+     * @return void
+     */
+    public function testFindIssuedBy()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findManifestsFor method
+     *
+     * @return void
+     */
+    public function testFindManifestsFor()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
