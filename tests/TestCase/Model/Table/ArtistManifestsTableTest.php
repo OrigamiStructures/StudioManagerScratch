@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\ArtistManifestsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cake\Cache\Cache;
 
 /**
  * App\Model\Table\ArtistManifestsTable Test Case
@@ -45,6 +46,7 @@ class ArtistManifestsTableTest extends TestCase
      */
     public function tearDown()
     {
+		Cache::clear(FALSE, $this->AritistManifestsTable->cacheName());
         unset($this->ArtistManifestsTable);
 
         parent::tearDown();
@@ -56,106 +58,6 @@ class ArtistManifestsTableTest extends TestCase
      * @return void
      */
     public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test distillFromManager method
-     *
-     * @return void
-     */
-    public function testDistillFromManager()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test distillFromDataOwner method
-     *
-     * @return void
-     */
-    public function testDistillFromDataOwner()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test distillFromManifest method
-     *
-     * @return void
-     */
-    public function testDistillFromManifest()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test distillFromIdentity method
-     *
-     * @return void
-     */
-    public function testDistillFromIdentity()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test distillFromPermission method
-     *
-     * @return void
-     */
-    public function testDistillFromPermission()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalIdentity method
-     *
-     * @return void
-     */
-    public function testMarshalIdentity()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalManifests method
-     *
-     * @return void
-     */
-    public function testMarshalManifests()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalDataOwner method
-     *
-     * @return void
-     */
-    public function testMarshalDataOwner()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalManagers method
-     *
-     * @return void
-     */
-    public function testMarshalManagers()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test marshalPermissions method
-     *
-     * @return void
-     */
-    public function testMarshalPermissions()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
