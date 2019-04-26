@@ -5,10 +5,10 @@ use App\Model\Table\StacksTable;
 
 
 /**
- * CakePHP ArtistManifestTable
+ * CakePHP ArtistManifestsTable
  * @author dondrake
  */
-class ArtistManifestsTable extends StackTable {
+class ArtistManifestsTable extends StacksTable {
 	
 	/**
 	 * {@inheritdoc}
@@ -22,8 +22,7 @@ class ArtistManifestsTable extends StackTable {
 
 	public function initialize(array $config) {
 		$this->setTable('manifests');
-		parent::initialize($config);
-	    $this->addLayerTable(['Identity', 'Permissions', 'DataOwner']);
+	    $this->addLayerTable(['Identities', 'Permissions', 'DataOwners']);
 		$this->addSeedPoint([
 			'data_owner', 
 			'manager',
@@ -42,6 +41,7 @@ class ArtistManifestsTable extends StackTable {
 			'managers',
 			'permissions'
 		]);
+		parent::initialize($config);
 	}
 	
 	public function distillFromManager($ids) {
