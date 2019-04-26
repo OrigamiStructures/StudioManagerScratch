@@ -82,7 +82,7 @@ class MembersTable extends AppTable
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
         ]);
-		$this->hasOne('Artists', [
+		$this->hasOne('Manifests', [
 			'foreignKey' => 'member_id',
 			'dependent' => TRUE,
 		]);
