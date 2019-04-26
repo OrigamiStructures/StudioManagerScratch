@@ -44,38 +44,38 @@ class ArtistManifestsTable extends StacksTable {
 		parent::initialize($config);
 	}
 	
-	public function distillFromManager($ids) {
+	protected function distillFromManager($ids) {
 		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
 				->find('managedBy', ['ids' => $ids]);
 		return array_unique($IDs);
 	}
 	
-	public function distillFromDataOwner($ids) {
+	protected function distillFromDataOwner($ids) {
 		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
 				->find('issuedBy', ['ids' => $ids]);
 		return array_unique($IDs);
 	}
 	
-	public function distillFromManifest($ids) {
+	protected function distillFromManifest($ids) {
 		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
 				->where(['id IN' => $ids]);
 		return array_unique($IDs);
 	}
 	
-	public function distillFromIdentity($ids) {
+	protected function distillFromIdentity($ids) {
 		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
 				->find('manifestsFor', ['ids' => $ids]);
 		return array_unique($IDs);
 	}
 	
-	public function distillFromPermission($ids) {
+	protected function distillFromPermission($ids) {
 		$manifest_ids = $this->Permissions->find('list', ['fieldValue' => 'manifest_id'])
 				->where(['id IN' => $ids]);
 		return $this->distillFromManifest($manifest_ids);
 	}
 	
 	
-	public function marshalIdentity($id, $stack) {
+	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
                 ->where(['id' => $id]);
@@ -83,7 +83,7 @@ class ArtistManifestsTable extends StacksTable {
 			return $stack;
 	}
 	
-	public function marshalManifests($id, $stack) {
+	protected function marshalManifests($id, $stack) {
 		if ($stack->count('identity')) {
 			$manifests = $this->Manifests
                 ->find('all')
@@ -93,7 +93,7 @@ class ArtistManifestsTable extends StacksTable {
 		return $stack;
 	}
 	
-	public function marshalDataOwner($id, $stack) {
+	protected function marshalDataOwner($id, $stack) {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->DataOwners
 					->find('hook')
@@ -103,7 +103,7 @@ class ArtistManifestsTable extends StacksTable {
 		return $stack;
 	}
 	
-	public function marshalManagers($id, $stack) {
+	protected function marshalManagers($id, $stack) {
 		if ($stack->count('manifest')) {
 			$manager_ids = $stack->manifests->valueList('manager_id');
 			$managers = $this->DataOwners
@@ -114,7 +114,7 @@ class ArtistManifestsTable extends StacksTable {
 		return $stack;
 	}
 	
-	public function marshalPermissions($id, $stack) {
+	protected function marshalPermissions($id, $stack) {
 		if ($stack->count('identity')) {
 			$manifest_ids = $stack->manifests->valueList('id');
 			$permissions = $this->Permissions
