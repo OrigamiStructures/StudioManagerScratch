@@ -153,7 +153,7 @@ class StacksTable extends AppTable
 	 * @param TableSchema $schema
 	 * @return TableSchema
 	 */
-	protected function _initializeSchema(Cake\Database\Schema\TableSchema $schema) {
+    protected function _initializeSchema(TableSchema $schema) {
         foreach ($this->stackSchema as $column) {
 				$schema->addColumn($column['name'], $column['specs']);
         }
