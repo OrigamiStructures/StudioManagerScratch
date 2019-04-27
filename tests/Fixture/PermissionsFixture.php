@@ -43,11 +43,27 @@ class PermissionsFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'layer_name' => 'Lorem ipsum dolor sit amet',
-                'layer_id' => 1,
-                'user_id' => 'Lorem ipsum dolor sit amet',
+                'layer_name' => 'artwork',
+                'layer_id' => 0,
+                'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'manifest_id' => 1,
                 'edit' => 1
+            ],
+            [
+                'id' => 2,
+                'layer_name' => 'edition',
+                'layer_id' => 6,
+                'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'manifest_id' => 3,
+                'edit' => 0
+            ],
+            [
+                'id' => 3,
+                'layer_name' => 'artwork',
+                'layer_id' => 4,
+                'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'manifest_id' => 3,
+                'edit' => 0
             ],
         ];
         parent::init();
