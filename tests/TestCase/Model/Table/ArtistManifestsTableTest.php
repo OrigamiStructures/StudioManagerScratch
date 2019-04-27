@@ -11,6 +11,8 @@ use Cake\Cache\Cache;
  */
 class ArtistManifestsTableTest extends TestCase
 {
+	
+	public $ArtistManifests;
 
     /**
      * Test subject
@@ -25,7 +27,11 @@ class ArtistManifestsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-    ];
+			'app.members',
+			'app.users',
+			'app.manifests',
+			'app.permissions'
+		];
 
     /**
      * setUp method
@@ -35,8 +41,16 @@ class ArtistManifestsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('ArtistManifests') ? [] : ['className' => ArtistManifestsTable::class];
-        $this->ArtistManifestsTable = TableRegistry::getTableLocator()->get('ArtistManifests', $config);
+        $config = TableRegistry::getTableLocator()
+				->exists('ArtistManifests') 
+				? [] 
+				: ['className' => ArtistManifestsTable::class];
+        $this->ArtistManifestsTable = TableRegistry::getTableLocator()
+				->get('ArtistManifests', $config);
+		
+		$this->ArtistManifests = $this->ArtistManifestsTable
+				->find('stacksFor', ['seed' => 'identity', 'ids' => [1]]);
+		debug($this->ArtistManifests);
     }
 
     /**
@@ -59,6 +73,7 @@ class ArtistManifestsTableTest extends TestCase
      */
     public function testInitialize()
     {
+		debug($this->ArtistManifests);
         $this->markTestIncomplete('Not implemented yet.');
     }
 }
