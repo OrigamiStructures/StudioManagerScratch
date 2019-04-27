@@ -130,6 +130,7 @@ bin/cake bake fixture --records --count 985 --table pieces Pieces
 bin/cake bake fixture --records --count 985 --table formats Formats
 bin/cake bake fixture --records --count 985 --table editions Editions
 bin/cake bake fixture --records --count 985 --table artworks Artworks
+bin/cake bake fixture --records --count 20 --table permissions Permissions
 
 ## Help for bake fixture
 ====================================================================
