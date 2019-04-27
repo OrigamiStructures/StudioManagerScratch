@@ -16,7 +16,7 @@ class RolodexCardsController extends AppController {
 	
 	public function index() {
 		$ArtistManifests = $this->getTableLocator()->get('ArtistManifests');
-		$stacks = $ArtistManifests->find('stacksFor', ['seed' => 'identity', 'ids' => [2]]);
+		$stacks = $ArtistManifests->find('stacksFor', ['seed' => 'identity', 'ids' => [1]]);
 		osd($stacks);
 
 		

@@ -168,4 +168,51 @@ class ArtistManifestsTableTest extends TestCase
             'The card\'s permissions does not contain Permission instances.'
         );
     }
+	
+    
+    public function testAritstManifestDataQuantity() {
+        $manifest = $this->ArtistManifests->element(0);
+        
+        $this->assertCount(1, $manifest->identity->load(),
+            'The manifest doesn\'t have a single Identity entity');
+        
+        $this->assertCount(1, $manifest->data_owner->load(),
+            'The manifest doesn\'t have a single DataOwner entity');
+        
+        $this->assertCount(2, $manifest->manifests->load(),
+            'The manifest doesn\'t have a two Manifest entities');
+        
+        $this->assertCount(2, $manifest->managers->load(),
+            'The manifest doesn\'t have a two manager entities');
+        
+        $this->assertCount(3, $manifest->permissions->load(),
+            'The manifest doesn\'t have a three Permissions entities');
+	}
+	
+    public function testAritstManifestDataQuality() {
+        $manifest = $this->ArtistManifests->element(0);
+        
+        $this->assertEquals('Don Drake', $manifest->rootElement()->name(),
+            'Not the person name expected');
+        
+        $this->assertEquals(
+            'f22f9b46-345f-4c6f-9637-060ceacb21b2', 
+            $manifest->data_owner->element(0)->id(),
+            'Not the owner expected');
+        
+        $this->assertEquals(
+            [1,3], 
+            $manifest->manifests->IDs(),
+            'Not the manifests expected');
+        
+        $this->assertEquals([
+			'708cfc57-1162-4c5b-9092-42c25da131a9',
+			'f22f9b46-345f-4c6f-9637-060ceacb21b2'
+		], $manifest->managers->IDs(),
+            'Not the managers expected');
+        
+        $this->assertEquals([1,2,3], $manifest->permissions->IDs(),
+            'Not the permissions expected');
+	}
+	
 }
