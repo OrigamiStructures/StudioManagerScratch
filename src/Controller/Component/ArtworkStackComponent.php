@@ -10,6 +10,7 @@ use App\Model\Table\SeriesTable;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 use Cake\Cache\Cache;
+use App\Model\Lib\Providers;
 //use Cake\Controller\Component\PaginatorComponent;
 
 /**
@@ -26,6 +27,9 @@ use Cake\Cache\Cache;
  * of a special rule set to manage piece records. This task is passed off to 
  * a separate component.
  * 
+ * @todo Exceptions in this or calling code should clear the art stack cache, probably 
+ *			a special Exception class should be written that takes care of the cache.
+ * 
  * @author dondrake
  */
 class ArtworkStackComponent extends Component {
@@ -36,7 +40,7 @@ class ArtworkStackComponent extends Component {
 	
 	public $full_containment = [
 		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
-			'Series', 'Pieces', /*'Formats.Users',*/ 'Formats' => [
+			'Series', 'Pieces' => ['Dispositions'], /*'Formats.Users',*/ 'Formats' => [
 				'Images', 'Pieces' => ['Dispositions'], /*'Subscriptions'*/
 				]
 			]
@@ -108,11 +112,12 @@ class ArtworkStackComponent extends Component {
 			$artworks = $this->Paginator->paginate($this->Artworks, [
 				'contain' => $this->full_containment,
 				// https://github.com/OrigamiStructures/StudioManagerScratch/issues/70
-				'limit' => 5,
+//				'limit' => 5,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()]
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artworks', clone $artworks);
+//			osd($artworks->toArray());die;
 			return $artworks->toArray();
 		} else {
 			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
@@ -134,21 +139,57 @@ class ArtworkStackComponent extends Component {
 				'contain' => $this->full_containment,
 				'conditions' => ['Artworks.user_id' => $this->SystemState->artistId()],
 				'cache' => 'artwork',
+//				'key' => "{$this->SystemState->artistId()}_{$this->SystemState->queryArg('artwork')}"
 			]);
 			// menus need an untouched copy of the query for nav construction
 			$this->controller->set('menu_artwork', unserialize(serialize($artwork)));
 			// create requires some levels to be empty so the forms don't populate
 			if ($this->SystemState->is(ARTWORK_CREATE)) {
-				return $this->pruneEntities($artwork);
+				$artwork = $this->pruneEntities($artwork);
 			} else if ($this->SystemState->is(ARTWORK_REFINE)) {
 				// make the nodes to edit be at the top. show others for context
-				return $this->filterEntities($artwork); // TO BE WRITTEN
+				$artwork = $this->filterEntities($artwork); // TO BE WRITTEN
 			} else if ($this->SystemState->is(ARTWORK_REVIEW)) {
 				// filter to the specific case the user requested
-				return $this->filterEntities($artwork);
+//				$artwork = $this->filterEntities($artwork);
 			}
-			return $artwork;
+			return [$artwork];
 		}
+	}
+	
+	/**
+	 * 
+	 * @throws \BadMethodCallException
+	 */
+	public function focusedStack() {
+		$query_arg = $this->SystemState->queryArg();
+		if (!key_exists('artwork', $query_arg) || 
+				!key_exists('edition', $query_arg)) {
+			throw new \BadMethodCallException('focusedStack() requires both \'artwork\' '
+					. 'and \'edition\' IDs in the url query. One or both are missing');
+		}
+		$artwork = $this->stackQuery();
+		$providers = [];
+		$pieces = [];
+		$providers['edition'] = 
+				$artwork[0]->editions[
+					$artwork[0]->indexOfEdition($this->SystemState->queryArg('edition'))
+				];
+		$providers += $providers['edition']->formats;
+		foreach ($providers as $index => $provider) {
+			if ($index === 'edition') {
+				$provider->unassigned = $provider->pieces;
+			} else {
+				$provider->fluid = $provider->pieces; 
+			}
+			$pieces = array_merge($pieces, $provider->pieces);
+		}
+//		osd($providers);die;
+		return [
+			'providers' => new Providers($providers), 
+			'pieces' => $pieces,
+			'artwork' => $artwork[0],
+			];
 	}
 	
 	public function allocatePieces($artwork) {

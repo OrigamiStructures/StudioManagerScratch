@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use App\Model\Entity\Traits\EntityDebugTrait;
 
 /**
  * User Entity.
@@ -24,6 +25,8 @@ use Cake\ORM\Entity;
  */
 class User extends Entity
 {
+	
+//	use EntityDebugTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -38,4 +41,5 @@ class User extends Entity
         '*' => true,
         'id' => false,
     ];
+	
 }

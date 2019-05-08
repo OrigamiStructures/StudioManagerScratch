@@ -2,6 +2,8 @@
 /*$badge-padding: 0.3em;
 $badge-minwidth: 2.1em;
 $badge-font-size: 0.6rem;*/
+/*$input-font-size: rem-calc(16);*/
+/*$table-padding: rem-calc(8 10 10);*/
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -510,19 +512,19 @@ div.artworks section.artwork {
     section.artwork > div.text:last-child:not(:first-child), section.artwork > div.editions:last-child:not(:first-child) {
       float: right; }
 
-  section.artwork.editing > div.image {
+  form section.artwork > div.image {
     width: 25%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.artwork.editing > div.image:last-child:not(:first-child) {
+    form section.artwork > div.image:last-child:not(:first-child) {
       float: right; }
-  section.artwork.editing > div.text, section.artwork.editing > div.editions {
+  form section.artwork > div.text, form section.artwork > div.editions {
     width: 75%;
     float: left;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem; }
-    section.artwork.editing > div.text:last-child:not(:first-child), section.artwork.editing > div.editions:last-child:not(:first-child) {
+    form section.artwork > div.text:last-child:not(:first-child), form section.artwork > div.editions:last-child:not(:first-child) {
       float: right; } }
 /**
 ==============================================================
@@ -544,15 +546,21 @@ div.editions section.edition {
 
 @media only screen {
   /* small up */
-  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats {
+  section.edition > div.text, section.edition > div.pieces, section.edition > div.formats, section.edition.focus > div.text, section.edition.focus > div.pieces, section.edition.focus > div.formats {
     width: 100%;
     float: left;
     padding-left: 0;
     padding-right: 0; }
-    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child) {
+    section.edition > div.text:last-child:not(:first-child), section.edition > div.pieces:last-child:not(:first-child), section.edition > div.formats:last-child:not(:first-child), section.edition.focus > div.text:last-child:not(:first-child), section.edition.focus > div.pieces:last-child:not(:first-child), section.edition.focus > div.formats:last-child:not(:first-child) {
       float: right; }
-  section.edition > div.text h2 {
+  section.edition > div.text h2, section.edition.focus > div.text h2 {
     font-size: 1.5rem; } }
+section.edition.focus table {
+  display: inline-block;
+  /*width: 100%;*/ }
+  section.edition.focus table td.tools div.input.text, section.edition.focus table div.submit {
+    display: inline-block; }
+
 /*div.editions {*/
 @media only screen and (min-width: 40.063em) {
   /* medium up */
@@ -570,7 +578,6 @@ div.editions section.edition {
     padding-right: 0.9375rem; }
     section.edition > div.pieces:last-child:not(:first-child) {
       float: right; } }
-/*}*/
 /**
 ==============================================================
 FORMAT
@@ -659,13 +666,13 @@ div.formats {
         padding-right: 0; }
         div.formats section.format > div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.editing > fieldset div.image {
+      div.formats section.format > fieldset div.image {
         /*@include grid-column-row();*/
         width: 100%;
         float: left;
         padding-left: 0;
         padding-right: 0; }
-        div.formats section.format.editing > fieldset div.image:last-child:not(:first-child) {
+        div.formats section.format > fieldset div.image:last-child:not(:first-child) {
           float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
     div.formats section.format div.text {
@@ -682,7 +689,7 @@ div.formats {
       padding-right: 0.9375rem; }
       div.formats section.format div.pieces:last-child:not(:first-child) {
         float: right; }
-    div.formats section.format.editing > fieldset > div.image {
+    div.formats section.format > fieldset > div.image {
       max-width: 75rem;
       margin-left: auto;
       margin-right: auto;
@@ -695,46 +702,46 @@ div.formats {
       padding-left: 0;
       padding-right: 0;
       margin-left: 0; }
-      div.formats section.format.editing > fieldset > div.image::before, div.formats section.format.editing > fieldset > div.image::after {
+      div.formats section.format > fieldset > div.image::before, div.formats section.format > fieldset > div.image::after {
         content: ' ';
         display: table; }
-      div.formats section.format.editing > fieldset > div.image::after {
+      div.formats section.format > fieldset > div.image::after {
         clear: both; }
-      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+      div.formats section.format > fieldset > div.image:last-child:not(:first-child) {
         float: right; }
-      div.formats section.format.editing > fieldset > div.image, div.formats section.format.editing > fieldset > div.image:last-child {
+      div.formats section.format > fieldset > div.image, div.formats section.format > fieldset > div.image:last-child {
         float: none; }
-      div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+      div.formats section.format > fieldset > div.image:last-child:not(:first-child) {
         float: right; }
-    div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+    div.formats section.format > fieldset > div.text, div.formats section.format > fieldset div.pieces {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+      div.formats section.format > fieldset > div.text:last-child:not(:first-child), div.formats section.format > fieldset div.pieces:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) and (max-width: 64em) {
-    div.formats section.format.format_focus > div.text {
+    div.formats section.format.focus > div.text {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
+      div.formats section.format.focus > div.text:last-child:not(:first-child) {
         float: right; } }
   @media only screen and (min-width: 40.063em) {
-    div.formats section.format.format_focus div.pieces {
+    div.formats section.format.focus div.pieces {
       width: 100%;
       float: left;
       padding-left: 0;
       padding-right: 0; }
-      div.formats section.format.format_focus div.pieces:last-child:not(:first-child) {
+      div.formats section.format.focus div.pieces:last-child:not(:first-child) {
         float: right; }
-      div.formats section.format.format_focus div.pieces button {
-        display: none; }
-      div.formats section.format.format_focus div.pieces table {
+      div.formats section.format.focus div.pieces button {
+        display: inline-block; }
+      div.formats section.format.focus div.pieces table {
         display: block; }
-    div.formats section.format.format_focus div.pieces:hover table {
-      position: relative; } }
+    div.formats section.format.focus div.pieces:hover table {
+      /*position: relative;*/ } }
   @media only screen and (min-width: 64.063em) {
     div.formats {
       /* large up */ }
@@ -760,28 +767,28 @@ div.formats {
         padding-right: 0.9375rem; }
         div.formats section.format > div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.editing > fieldset > div.image {
+      div.formats section.format > fieldset > div.image {
         /*@include grid-column-row();*/
         width: 33.33333%;
         float: left;
         padding-left: 0;
         padding-right: 0;
         margin-left: auto; }
-        div.formats section.format.editing > fieldset > div.image:last-child:not(:first-child) {
+        div.formats section.format > fieldset > div.image:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.editing > fieldset > div.text, div.formats section.format.editing > fieldset div.pieces {
+      div.formats section.format > fieldset > div.text, div.formats section.format > fieldset div.pieces {
         width: 66.66667%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
-        div.formats section.format.editing > fieldset > div.text:last-child:not(:first-child), div.formats section.format.editing > fieldset div.pieces:last-child:not(:first-child) {
+        div.formats section.format > fieldset > div.text:last-child:not(:first-child), div.formats section.format > fieldset div.pieces:last-child:not(:first-child) {
           float: right; }
-      div.formats section.format.format_focus > div.text {
+      div.formats section.format.focus > div.text {
         width: 83.33333%;
         float: left;
         padding-left: 0.9375rem;
         padding-right: 0.9375rem; }
-        div.formats section.format.format_focus > div.text:last-child:not(:first-child) {
+        div.formats section.format.focus > div.text:last-child:not(:first-child) {
           float: right; } }
 
 /**
@@ -1182,25 +1189,37 @@ there are many elements shown on the page.
 @media only screen {
   /* small up */
   div.pieces button {
-    display: none; }
+    display: inline-block; }
   div.pieces table {
-    display: block; } }
+    display: block; }
+    div.pieces table tbody td {
+      /*				padding: 0;
+      				margin: 0;*/
+      font-size: 90%;
+      line-height: 1; } }
 @media only screen and (min-width: 40.063em) {
   div.pieces {
     position: relative; }
     div.pieces button {
-      display: block; }
+      display: inline-block; }
     div.pieces table {
-      display: none; }
+      display: block; }
+    div.pieces table.secondary {
+      overflow-y: scroll;
+      max-height: 15em; }
 
+  /**
+  @todo This is in flux while 'focus' and general table display is resolved
+  		The rem's were to make pieces->renumber work
+  */
   div.pieces:hover button {
-    display: none; }
+    /*display: none;*/ }
   div.pieces:hover table {
-    display: block;
-    position: absolute;
-    top: 0;
-    overflow-y: visible;
-    z-index: 1000; } }
+    /*			display: block;
+    			position: absolute;
+    			top: 0;
+    			overflow-y: visible;
+    			z-index: 1000;*/ } }
 /*section.format {
 	@include grid-row;
 	padding-top: 1em;
@@ -1298,5 +1317,30 @@ span.inline_icon.nav {
   font-size: 80%; }
   span.inline_icon.nav i.fi-pencil {
     font-size: 85%; }
+
+/*    // Caption
+    caption {
+      font-weight: $global-weight-bold;
+      padding: $table-padding;
+    }
+
+    // Table head and foot
+    thead,
+    tfoot {
+      background: $table-head-background;
+      color: $table-head-font-color;
+
+      // Rows within head and foot
+      tr {
+        background: transparent;
+      }
+
+      // Cells within head and foot
+      th,
+      td {
+        padding: $table-padding;
+        font-weight: $global-weight-bold;
+        text-align: left;
+      }*/
 
 /*# sourceMappingURL=prime.css.map */

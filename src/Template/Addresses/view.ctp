@@ -20,7 +20,7 @@
         </tr>
         <tr>
             <th><?= __('Member') ?></th>
-            <td><?= $address->has('member') ? $this->Html->link($address->member->name, ['controller' => 'Members', 'action' => 'view', $address->member->id]) : '' ?></td>
+            <td><?= $address->has('member') ? $this->Html->link($address->member->name(), ['controller' => 'Members', 'action' => 'view', $address->member->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Address1') ?></th>

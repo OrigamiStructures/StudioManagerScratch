@@ -10,7 +10,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 <head>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!--<link href='https://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>-->
+	<link href='https://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<title>
         <?= $cakeDescription ?>:
@@ -19,6 +19,9 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
     <?= $this->Html->meta('icon') ?>
     <?= $this->fetch('meta') ?>
 	
+	<?= $this->Html->css('artstack-response'); ?>
+    <?= $this->Html->css('glyphicon.css') ?>
+<!-- 	
 	<?= $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); ?> 
 	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.js'); ?> 
 	<?= $this->Html->script('app.js'); ?>
@@ -27,27 +30,27 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 
 	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
     <?= $this->Html->css('app.css') ?>
-    <?= $this->Html->css('glyphicon.css') ?>
     <?= $this->Html->css('prime.css') ?>
     <?= $this->fetch('css') ?>
+-->
 </head>
 <body>
 	<nav class="top-bar">
-	  <div class="top-bar-left">
+	  <!--<div class="top-bar-left">-->
 		<?= $this->element('Menu/menu'); ?>
-	  </div>
-	  <div class="top-bar-right">
+<!--	  </div>
+	  <div class="top-bar-right">-->
 		  <form id="search" action="/search" method="post">
 			<ul class="menu">
 			  <li><input placeholder="Search" name="search"></li>
 			  <li><button form="search" type="submit" class="button tiny">Search</button></li>
 			</ul>
 		  </form>
-	  </div>
+	  <!--</div>-->
 	</nav>
-	<nav class="breadcrumbs">
+<!--	<nav class="breadcrumbs">
 		<?= $this->Html->getCrumbList([], 'All Art'); ?>
-	</nav>
+	</nav>-->
 	<?= $this->cell('StandingDisposition', [] , ['SystemState' => $SystemState]); ?>
 	<?php // $this->element($this->DispositionTools->panel($standing_disposition) 
 //			? 'Disposition/panel' 

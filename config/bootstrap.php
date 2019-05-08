@@ -133,12 +133,12 @@ if (!Configure::read('App.fullBaseUrl')) {
     unset($httpHost, $s);
 }
 
-Cache::config(Configure::consume('Cache'));
-ConnectionManager::config(Configure::consume('Datasources'));
-Email::configTransport(Configure::consume('EmailTransport'));
-Email::config(Configure::consume('Email'));
-Log::config(Configure::consume('Log'));
-Security::salt(Configure::consume('Security.salt'));
+Cache::setConfig(Configure::consume('Cache'));
+ConnectionManager::setConfig(Configure::consume('Datasources'));
+Email::setConfigTransport(Configure::consume('EmailTransport'));
+Email::setConfig(Configure::consume('Email'));
+Log::setConfig(Configure::consume('Log'));
+Security::setSalt(Configure::consume('Security.salt'));
 
 /**
  * The default crypto extension in 3.0 is OpenSSL.
@@ -181,11 +181,15 @@ Request::addDetector('tablet', function ($request) {
  */
 
 Plugin::load('Migrations');
+Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
+Plugin::load('Proffer');
 
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
 if (Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
+	Configure::write('DebugKit.forceEnable', true);
+	Plugin::load('DebugKit', ['bootstrap' => true]);
+	Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
 }
 
 /**
@@ -202,11 +206,9 @@ DispatcherFactory::add('ControllerFactory');
 Type::build('date')->useLocaleParser();
 Type::build('datetime')->useLocaleParser();
 
-Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
 Configure::write('Users.config', ['users']);
-Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
-Plugin::load('Proffer');
 
+Type::map('layer', 'App\Database\Type\LayerType');
 
 /**
  * Constants
@@ -218,7 +220,9 @@ define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
 
-// <editor-fold defaultstate="collapsed" desc="SYSTEM STATES">
+// <editor-fold defaultstate="collapsed" desc="SYSTEM STATES, ARTWORK_REVIEW etc.">
+
+// These are used in Lib/StateMap.php to map Controller actions
 //Member State
 define('MEMBER_CREATE', 1);
 define('MEMBER_REVIEW', 2);
@@ -241,15 +245,16 @@ define('DISPOSITION_REFINE', 4);
 define('PIECE_RENUMBER', 5);
 // </editor-fold>
 
-//Edition Types
-define('EDITION_UNIQUE'			, 'Unique');
-define('EDITION_RIGHTS'			, 'Rights');
-define('EDITION_LIMITED'		, 'Limited Edition');
-define('EDITION_OPEN'			, 'Open Edition');
-define('PORTFOLIO_LIMITED'		, 'Limited Portfolio');
-define('PORTFOLIO_OPEN'			, 'Open Portfolio');
-define('PUBLICATION_LIMITED'	, 'Limited Publication');
-define('PUBLICATION_OPEN'		, 'Open Publication');
+// <editor-fold defaultstate="collapsed" desc="EDITION TYPES">
+define('EDITION_UNIQUE', 'Unique');
+define('EDITION_RIGHTS', 'Rights');
+define('EDITION_LIMITED', 'Limited Edition');
+define('EDITION_OPEN', 'Open Edition');
+define('PORTFOLIO_LIMITED', 'Limited Portfolio');
+define('PORTFOLIO_OPEN', 'Open Portfolio');
+define('PUBLICATION_LIMITED', 'Limited Publication');
+define('PUBLICATION_OPEN', 'Open Publication');
+// </editor-fold>
 
 // Serves as a boolean argument in method call(s)
 define('NUMBERED_PIECES', 1);
@@ -269,63 +274,84 @@ define('SYSTEM_CONSUME_REFERER' , FALSE);
 // boolean argument to control the kind of return value from a method
 define('PIECE_ENTITY_RETURN'	, FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
-// general piece collection filter options
+
+// <editor-fold defaultstate="collapsed" desc="PIECE FILTERS">
+
 // NOTES ON ADDING TO THIS SECTION
 // PieceTableHelper::_map needs matching entry to identify the
 // filter strategy callable or sort strategy callable
+define('PIECE_FILTER_LOAN_FOR_RANGE', 'for_loan_in_range');
+define('PIECE_FILTER_FOR_SALE_ON_DATE', 'for_sale_on_date');
+define('PIECE_FILTER_COLLECTED', 'collected');
+define('PIECE_FILTER_NOT_COLLECTED', 'not_collected');
+define('PIECE_FILTER_ASSIGNED', 'assigned');
+define('PIECE_FILTER_UNASSIGNED', 'not_assigned');
+define('PIECE_FILTER_FLUID', 'fluid');
+define('PIECE_FILTER_RIGHTS', 'rights');
+define('PIECE_FILTER_NONE', 'none');
+define('PIECE_SORT_NONE', 'none');
+// </editor-fold>
 
-define('PIECE_FILTER_LOAN_FOR_RANGE'	, 'for_loan_in_range');
-define('PIECE_FILTER_FOR_SALE_ON_DATE'	, 'for_sale_on_date');
-define('PIECE_FILTER_COLLECTED'			, 'collected');
-define('PIECE_FILTER_NOT_COLLECTED'		, 'not_collected');
-define('PIECE_FILTER_ASSIGNED'			, 'assigned');
-define('PIECE_FILTER_UNASSIGNED'		, 'not_assigned');
-define('PIECE_FILTER_FLUID'				, 'fluid');
-define('PIECE_FILTER_RIGHTS'			, 'rights');
-define('PIECE_FILTER_NONE'				, 'none');
-define('PIECE_SORT_NONE'				, 'none');
-
-define('DISPOSITION_TRANSFER'			, 'transfer');
-define('DISPOSITION_LOAN'				, 'loan');
-define('DISPOSITION_STORE'				, 'storage');
-define('DISPOSITION_UNAVAILABLE'		, 'unavailable');
+// <editor-fold defaultstate="collapsed" desc="DISPOSITION TYPES">
+define('DISPOSITION_TRANSFER', 'transfer');
+define('DISPOSITION_LOAN', 'loan');
+define('DISPOSITION_STORE', 'storage');
+define('DISPOSITION_UNAVAILABLE', 'unavailable');
 //define('DISPOSITION_REVIEW'				, 'review');
 
 
-define('DISPOSITION_TRANSFER_SALE'		, 'Sale');
+define('DISPOSITION_TRANSFER_SALE', 'Sale');
 define('DISPOSITION_TRANSFER_SUBSCRIPTION', 'Subscription');
-define('DISPOSITION_TRANSFER_DONATION'	, 'Donation');
-define('DISPOSITION_TRANSFER_GIFT'		, 'Gift');
-define('DISPOSITION_TRANSFER_RIGHTS'	, 'Published');
+define('DISPOSITION_TRANSFER_DONATION', 'Donation');
+define('DISPOSITION_TRANSFER_GIFT', 'Gift');
+define('DISPOSITION_TRANSFER_RIGHTS', 'Published');
 //
-define('DISPOSITION_LOAN_SHOW'			, 'Show');
-define('DISPOSITION_LOAN_CONSIGNMENT'	, 'Consignment');
-define('DISPOSITION_LOAN_PRIVATE'		, 'Loan');
-define('DISPOSITION_LOAN_RENTAL'		, 'Rental');
-define('DISPOSITION_LOAN_RIGHTS'		, 'Licensed');
+define('DISPOSITION_LOAN_SHOW', 'Show');
+define('DISPOSITION_LOAN_CONSIGNMENT', 'Consignment');
+define('DISPOSITION_LOAN_PRIVATE', 'Loan');
+define('DISPOSITION_LOAN_RENTAL', 'Rental');
+define('DISPOSITION_LOAN_RIGHTS', 'Licensed');
+define('DISPOSITION_REVIEW_CONTACT', 'Contact'); 
 //
-define('DISPOSITION_UNAVAILABLE_LOST'	, 'Lost');
+define('DISPOSITION_UNAVAILABLE_LOST', 'Lost');
 define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
-define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
+define('DISPOSITION_UNAVAILABLE_STOLEN', 'Stolen');
+define('DISPOSITION_NFS', 'Not For Sale');
 //
-define('DISPOSITION_STORE_STORAGE'		, 'Storage');
-//
-define('DISPOSITION_REVIEW_CONTACT'		, 'Contact');
+define('DISPOSITION_STORE_STORAGE', 'Storage');
+// </editor-fold>
+
 
 define('PIECE_SPLIT_RETURN_NEW', 'new');
 define('PIECE_SPLIT_RETURN_BOTH', 'both');
 
-define('ICON_REVIEW', 'fi-eye');
-define('ICON_REFINE', 'fi-pencil');
-define('ICON_REMOVE', 'fi-trash');
+// <editor-fold defaultstate="collapsed" desc="FONT ICONS">
+define('ICON_REVIEW', 'fi eye');
+define('ICON_REFINE', 'fi pencil');
+define('ICON_REMOVE', 'fi trash');
+define('ICON_WRENCH', 'fi wrench');
+define('ICON_COG', 'fi cog');
 
 define('ICON_MEMBER_TYPE_INSTITUTION', 'fi-results-demographics');
 define('ICON_MEMBER_TYPE_PERSON', 'fi-torsos-female-male');
 define('ICON_MEMBER_TYPE_USER', 'fi-torsos-all');
-define('ICON_MEMBER_TYPE_CATEGORY', 'fi-results');
+define('ICON_MEMBER_TYPE_CATEGORY', 'fi-results'); 
+// </editor-fold>
 
 define('REJECTION_RECORD', TRUE);
 define('REJECTION_DONT_RECORD', FALSE);
 
 define('CLEAR', TRUE);
 
+// <editor-fold defaultstate="collapsed" desc="TEMPLATE LAYERS">
+/**
+ * Template layer element names are sent to the View in a 
+ * simple array. To make the elements easy to access without 
+ * resorting to an associative array, I'm using constants 
+ * to stand in for the index numbers.
+ */
+define('WRAPPER_LAYER', 0);
+define('ARTWORK_LAYER', 1);
+define('EDITION_LAYER', 2);
+define('FORMAT_LAYER', 3);
+// </editor-fold>

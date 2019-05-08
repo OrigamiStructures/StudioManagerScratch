@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -14,6 +7,9 @@ use Cake\Collection\Collection;
 use App\Model\Entity\Piece;
 use Cake\I18n\Time;
 use Cake\Cache\Cache;
+use App\Lib\Traits\EditionStackCache;
+use App\Model\Lib\Providers;
+use App\Lib\EditionTypeMap;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -24,9 +20,21 @@ use Cake\Cache\Cache;
  * edition content. The actual movement of Pieces across the Edition/Format 
  * layers is passed of to a separate component.
  * 
+ * @todo Exception in this or calling code should clear the edition stack cache, probably 
+ *			a special Exception class should be written that takes care of the cache.
+ * 
+ * @todo This Component seems to mingle PieceTable tasks and AssignmentForm services
+ * The logic of having much of this code in this component is suspect. Many parts 
+ * could be in the PieceTable class. The stackQuery() data could be extracted by 
+ * and returned from ArtworkStack::stackQuery(); either as optional return data or 
+ * through a separate method in that class. And even that Component might be 
+ * better as a Model class.  
+ * 
  * @author dondrake
  */
 class EditionStackComponent extends Component {
+	
+	use EditionStackCache;
 	
 	protected $pieces_to_save ;
 	protected $pieces_to_delete;
@@ -69,10 +77,19 @@ class EditionStackComponent extends Component {
 	 * ]
 	 * </pre>
 	 * 
+	 * @todo make providers an object?
+	 * This would allow it to contain its own ownerTitle hash map. This map 
+	 * allows piece->key() to lookup its assigned owner's display title. 
+	 * Currently, redundant code in the elements build the hash. A helper 
+	 * solution has to return the table as a variable or save it as a property. 
+	 * but it has difficulty knowing if the property is for the current 
+	 * version of $providers. 
 	 * 
 	 * @return tuple 'providers, pieces'
 	 */
 	public function stackQuery() {
+	$stack = $this->readCache($this->SystemState->queryArg('edition'));
+	if ($stack === FALSE) {
 		$Pieces = TableRegistry::get('Pieces');
 		$Formats = TableRegistry::get('Formats');
 		$Editions = TableRegistry::get('Editions');
@@ -85,7 +102,7 @@ class EditionStackComponent extends Component {
 				->where($edition_condition)
 				->contain('Artworks')
 				->toArray()[0];
-		//osd($edition);
+		$artwork = $edition->artwork;
 		$unassigned = $Pieces->find('unassigned', $piece_condition);
 		$edition->unassigned = $unassigned->toArray();
 		
@@ -96,13 +113,23 @@ class EditionStackComponent extends Component {
 		});
 
 		$providers = ['edition' => $edition] + $formats->toArray();
+		$artwork->editions = [$edition];
+		$artwork->editions[0]->formats = $formats;
 		
 		// this may need ->order() later for piece-table reporting of open editions
-		$pieces = $Pieces->find()->where($piece_condition)->contain('Dispositions')->order('Pieces.number'); 
-//		sql($pieces);
-//		osd($pieces->toArray());die;
+		$pieces = $Pieces->find()
+				->where($piece_condition)
+				->contain('Dispositions')
+				->order('Pieces.number'); 
+		$stack = [
+			'providers' => new Providers($providers), 
+			'pieces' => ($pieces->toArray()),
+			'artwork' => $artwork,
+			];
+		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
+		}
 		
-		return ['providers' => $providers, 'pieces' => $pieces];
+		return $stack;
 				
 	}
 	
@@ -131,7 +158,7 @@ class EditionStackComponent extends Component {
 			$patch = ['format_id' => NULL];
 		}
 		
-		if (\App\Lib\SystemState::isNumberedEdition($edition->type)) {
+		if (EditionTypeMap::isNumbered($edition->type)) {
 			$this->_prepareNumberedPieces($assignment, $patch);
 		} else {
 			$this->_prepareOpenPieces($assignment, $patch, $edition->id);
@@ -178,8 +205,7 @@ class EditionStackComponent extends Component {
 		$update_trigger_value = [
 			'created' => new \DateTime('now')
 		];
-		$formats = $assignment->_providers;
-		array_shift($formats);
+		$formats = $assignment->_providers->formats;
 		$trigger_pieces = (new Collection($formats))
 			->reduce(function($accumulator, $format) use ($Pieces, $update_trigger_value){
 				if (!empty($format->fluid)) {

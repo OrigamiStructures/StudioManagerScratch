@@ -4,6 +4,8 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 use App\Model\Entity\Traits\ParentEntityTrait;
 use App\Model\Entity\Traits\DispositionTrait;
+use App\Model\Entity\Traits\EntityDebugTrait;
+use Cake\ORM\TableRegistry;
 
 /**
  * Piece Entity.
@@ -27,6 +29,7 @@ class Piece extends Entity
 
 	use ParentEntityTrait;
 	use DispositionTrait;
+//	use EntityDebugTrait;
 	
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -71,10 +74,21 @@ class Piece extends Entity
 	/**
 	 * provide a key that relates Pieces back to their Format or Edition
 	 * 
-	 * @return array [edition_id, format_id]
+	 * for an unassigned piece, will yield something like 917_
+	 * for assigend piece, will yield something like 917_1119
+	 * 
+	 * Format and Edition entities can report thier matching key() 
+	 * values, allowing an index lookup system or other entity matching logic. 
+	 * 
+	 * @return string
 	 */
 	public function key() {
 		return $this->_key([$this->edition_id, $this->format_id]);
+	}
+	
+	public function _getDisplayTitle() {
+		return (!is_null($this->number) ? "piece #$this->number" : "$this->quantity pieces");
+		
 	}
 	
 	/**
@@ -136,7 +150,7 @@ class Piece extends Entity
 	 */
 	public function _getDispositions() {
 		if (!isset($this->_properties['dispositions'])) {
-			$Pieces = \Cake\ORM\TableRegistry::get('Pieces');
+			$Pieces = TableRegistry::get('Pieces');
 			$existing_dispositions = $Pieces->get($this->id, ['contain' => ['Dispositions']]);
 			$this->_properties['dispositions'] = $existing_dispositions->dispositions;
 		}
@@ -158,7 +172,7 @@ class Piece extends Entity
 	 * @return boolean
 	 */
 	public function isCollected() {
-		return (boolean) $this->_properties['collected'];
+		return $this->get('collected');
 	}
 	
 	/**

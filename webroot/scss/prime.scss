@@ -21,10 +21,16 @@ there are many elements shown on the page.
 @media only screen { /* small up */ 
 	div.pieces {
 		button {
-			display: none;
+			display: inline-block;
 		}
 		table {
 			display: block;
+			tbody td {
+/*				padding: 0;
+				margin: 0;*/
+				font-size: 90%;
+				line-height: 1;
+			}
 		}
 	}
 }
@@ -32,23 +38,32 @@ there are many elements shown on the page.
 	div.pieces {
 		position: relative;
 		button {
-			display: block;
+			display: inline-block;
 		}
 		table {
-			display: none;
+			display: block;
+		}
+		table.secondary {
+			overflow-y: scroll;
+			max-height: 15em;
 		}
 	}
 
-	div.pieces:hover {
+/**
+@todo This is in flux while 'focus' and general table display is resolved
+		The rem's were to make pieces->renumber work
+*/
+
+div.pieces:hover {
 		button {
-			display: none;
+			/*display: none;*/
 		}
 		table {
-			display: block;
+/*			display: block;
 			position: absolute;
 			top: 0;
 			overflow-y: visible;
-			z-index: 1000;
+			z-index: 1000;*/
 		}
 	}
 }
@@ -143,3 +158,27 @@ span.inline_icon.nav {
     }
 }
 
+/*    // Caption
+    caption {
+      font-weight: $global-weight-bold;
+      padding: $table-padding;
+    }
+
+    // Table head and foot
+    thead,
+    tfoot {
+      background: $table-head-background;
+      color: $table-head-font-color;
+
+      // Rows within head and foot
+      tr {
+        background: transparent;
+      }
+
+      // Cells within head and foot
+      th,
+      td {
+        padding: $table-padding;
+        font-weight: $global-weight-bold;
+        text-align: #{$global-left};
+      }*/

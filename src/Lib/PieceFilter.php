@@ -16,6 +16,16 @@ use App\Lib\Traits\PieceFilterTrait;
  * This class selects a concrete class that knows the data structures and 
  * filtering rules for the current situation. 
  * 
+ * @todo Refine thinking on the role of this class
+ * The description above mentions filtering, presentation, and function. This is 
+ * probably too broad a scope of responsibility for one class. Give some thought 
+ * to what is really needed from this class and dial it in. I believe this class 
+ * gets composed into the concrete Edition helper classes, so consider that too. 
+ * 
+ * @todo Insure inclusion of Use Cases: Range-strings, ajax based UX
+ * Changes noted in App\Lib\Range and App\Form\AssignmentForm suggest new 
+ * capabilities may be required in this class.  
+ * 
  * @author dondrake
  */
 class PieceFilter {
@@ -92,11 +102,17 @@ class PieceFilter {
 				
 		if (is_array($valid_pieces)) {
 			return $valid_pieces;
-		} else {
+		} elseif (is_object($valid_pieces)) {
 			return $valid_pieces->toArray();
+		} else {
+			/*
+			 *  the assumption is that the Exception class will clear 
+			 *  query and element caches to prevent getting locked into 
+			 *  this error state.
+			 */
+			throw new \App\Exception\BadEditionStackContentException(
+					'PieceFilter was provided no pieces at all. The originating edition or format must not have included any and it\'s not safe to make assumptions about thier existance (or non-existance). Double check the process that created the pieces\' parent object.');
 		}
-		
-		//return is_array($valid_pieces) ? $valid_pieces : $valid_pieces->toArray();
 	}
     
 	/**

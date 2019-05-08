@@ -1,12 +1,10 @@
 <!-- Element/Format/summary.ctp -->
-<section class="edtion">
-	<div class="row">
-		<div class="columns small-12 medium-9 description">
-            <?php
+<?php
                 $count = count($formats);
                 $word = ($count > 1) ? 'formats' : 'format';
-                echo $this->Html->tag('h4', "contains $count $word" );
+                echo $this->Html->tag('p', "<!-- contains $count $word -->" );
+//				echo "<div></div>";
+                echo $this->Html->tag('p', 
+						$this->ArtStackTools->links('format', ['review', 'refine']) . 
+						$format->displayTitle );
             ?>
-		</div>
-	</div>
-</section>

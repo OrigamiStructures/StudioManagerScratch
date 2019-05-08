@@ -2,11 +2,12 @@
 
 <?php 
 // Gets the name of the element based on SystemState->now()
-$artwork_element = $ArtStackElement->choose('artworkContent');
+//$artwork_element = $this->ArtElement->choose('artworkContent');
+//$artworks_element = $elements[ARTWORK_LAYER];
 ?>
 
-<section class="artwork<?= $editing ? ' editing' : ''; ?>">
-	<?= $this->element($artwork_element) ?>
+<section class="artwork">
+	<?= $this->element($elements[ARTWORK_LAYER]($artwork)) ?>
 
 	<div class="editions">
 		<?php $this->set('editions', $artwork->editions); ?>

@@ -1,6 +1,6 @@
 <!-- Element/Pieces/overview_rows.ctp -->
 <?php
-$owners = new \Cake\Collection\Collection($providers);
+$owners = new \Cake\Collection\Collection($providers->providers);
 $owner_title = $owners->reduce(function($accumulator, $owner) {
 	$accumulator[$owner->key()] = $owner->display_title;
 	return $accumulator;
@@ -14,7 +14,7 @@ foreach($pieces as $piece) :
 	?>
 	<tr>
 		<?php 
-		if (in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) : ;
+		if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) : ;
 		?>
 		<td><?= $piece->number; ?></td>
 		<?php 

@@ -5,6 +5,7 @@ use Cake\View\Helper;
 use Cake\Cache\Cache;
 use App\View\Helper\Traits\ValidationErrors;
 use App\Lib\SystemState;
+use App\Lib\EditionTypeMap;
 
 /**
  * CakePHP DispositionToolsHelper
@@ -14,7 +15,7 @@ class DispositionToolsHelper extends Helper {
 	
 	use ValidationErrors;
 	
-	public $helpers = ['Html', 'Form', 'InlineTools'];
+	public $helpers = ['Html', 'Form', 'ArtStackTools'];
 		
 	protected $_disposition;
 	
@@ -92,7 +93,7 @@ class DispositionToolsHelper extends Helper {
                 '?' => [
                     'address' => $address->id,
                 ]];
-            $controls = $this->InlineTools->inlineReviewDelete($review_url, $remove_url);
+            $controls = $this->ArtStackTools->inlineReviewDelete($review_url, $remove_url);
 			$label = $this->Html->tag('p', $controls . $address->address_line);
 		} else {
 			$label = $this->Html->link($address->address_line, [
@@ -110,7 +111,7 @@ class DispositionToolsHelper extends Helper {
 
 	public function dispositionLabel($disposition) {
 		if (!is_null($disposition->member)) {
-			return $this->_toLabel($disposition->member->name);
+			return $this->_toLabel($disposition->member->name());
 		} else {
 			return $disposition->label;
 		}
@@ -136,10 +137,11 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	public function connect($entity) {
-		$class = array_pop((explode('\\', get_class($entity))));
-		$method = "_connect$class";
-		
-		return $this->$method($entity);
+            $class = SystemState::stripNamespace($entity);
+//            $class = array_pop((explode('\\', get_class($entity))));
+            $method = "_connect$class";
+
+            return $this->$method($entity);
 	}
 	
 	/**
@@ -157,7 +159,7 @@ class DispositionToolsHelper extends Helper {
 		
 		$in_disposition = $this->_pieceInDisposition($piece);
 		if (!$in_disposition) {
-			if (SystemState::isOpenEdition($edition->type)) {
+			if (EditionTypeMap::isUnNumbered($edition->type)) {
 				return $this->_connectOpenPiece($piece);
 				
 			} else {
@@ -251,7 +253,7 @@ class DispositionToolsHelper extends Helper {
             return $this->_disconnectMember($member);
         }
 		
-        $label = $this->_toLabel($member->name);
+        $label = $this->_toLabel($member->name());
 		
         if($disposition){
             $action = 'refine';
@@ -360,6 +362,7 @@ class DispositionToolsHelper extends Helper {
 		define('DISPOSITION_UNAVAILABLE_LOST'	, 'Lost');
 		define('DISPOSITION_UNAVAILABLE_DAMAGED', 'Damaged');
 		define('DISPOSITION_UNAVAILABLE_STOLEN' , 'Stolen');
+		define('DISPOSITION_NFS' , 'Not For Sale');
 		 */
 	}
 	
@@ -398,6 +401,7 @@ class DispositionToolsHelper extends Helper {
 			case DISPOSITION_UNAVAILABLE_LOST :
 			case DISPOSITION_UNAVAILABLE_DAMAGED :
 			case DISPOSITION_UNAVAILABLE_STOLEN :
+			case DISPOSITION_NFS :
 				$label = "Add to $disposition_type";
 				break;
 			default :

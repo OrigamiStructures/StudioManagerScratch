@@ -169,9 +169,10 @@ class MembersController extends AppController
      * 
      * @param string $entity_type 'contacts', 'addresses', or 'groups'
      */
-    public function addElement($entity_type) {
+    public function addNode($entity_type) {
         if(!in_array($entity_type, ['contacts', 'addresses', 'groups'])){
-            throw new \BadMethodCallException('Entity type must be either contacts or addresses');
+            throw new \BadMethodCallException('Entity type must be '
+					. 'either contacts, addresses, or groups');
         }
 
 		$table = Inflector::pluralize(Inflector::classify($entity_type));
@@ -182,12 +183,15 @@ class MembersController extends AppController
         $start = count($member->$entity_type);
 //        osd($member->$entity_type);die;
         
-        $additional_object = new Collection($this->Members->$table->spawn(1,[], $start));
-        $additional_object = $additional_object->map(function($value) use ($entity){
-            return new $entity($value);
-        });
+        $additional_object = new Collection($this->Members->
+				$table->spawn(1,[], $start));
+        $additional_object = $additional_object->map(
+				function($value) use ($entity){
+					return new $entity($value);
+				});
                 
-        $member->$entity_type = (!empty($member->$entity_type) ? $member->$entity_type : []) + $additional_object->toArray();
+        $member->$entity_type = (!empty($member->$entity_type) ? 
+				$member->$entity_type : []) + $additional_object->toArray();
         
         $this->set('member', $member);
         $this->set('_serialize', ['member']);

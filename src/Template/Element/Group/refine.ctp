@@ -19,7 +19,6 @@ if(!empty($member['groups'])):
 <?php
 endif;
 
-$this->set('type', 'groups');
-echo $this->element('Contact/add');
+echo $this->element('Contact/add', ['type' => 'groups']);
 ?>
 <!-- END Element/Group/refine.ctp -->

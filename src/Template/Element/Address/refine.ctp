@@ -8,7 +8,6 @@ if(!empty($member['addresses'])):
     }
 endif;
 
-$this->set('type', 'addresses');
-echo $this->element('Contact/add');
+echo $this->element('Contact/add', ['type' => 'addresses']);
 ?>
 <!-- END Element/Address/refine.ctp -->

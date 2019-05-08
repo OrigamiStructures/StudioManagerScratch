@@ -57,6 +57,7 @@ class StateMap {
     'review' => ARTWORK_REVIEW,
     'create' => ARTWORK_CREATE,
     'refine' => ARTWORK_REFINE,
+	'assign' => NULL, // not sure what this should be. Can't recall how these are used
   ),
   'Formats' => 
   array (
@@ -111,7 +112,7 @@ class StateMap {
     'review' => MEMBER_REVIEW,
     'create' => MEMBER_CREATE,
     'refine' => MEMBER_REFINE,
-    'addElement' => MEMBER_REFINE,
+    'addNode' => MEMBER_REFINE,
   ),
   'Menus' => 
   array (

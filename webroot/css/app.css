@@ -3,6 +3,8 @@
 /*$badge-padding: 0.3em;
 $badge-minwidth: 2.1em;
 $badge-font-size: 0.6rem;*/
+/*$input-font-size: rem-calc(16);*/
+/*$table-padding: rem-calc(8 10 10);*/
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -1960,12 +1962,12 @@ textarea {
   display: block;
   box-sizing: border-box;
   width: 100%;
-  height: 2.4375rem;
+  height: 2.1875rem;
   padding: 0.5rem;
   border: 1px solid #cacaca;
   margin: 0 0 1rem;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.75rem;
   color: #8a8a8a;
   background-color: #fefefe;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
@@ -2087,12 +2089,12 @@ legend {
     margin-left: -0.1875rem; }
 
 select {
-  height: 2.4375rem;
+  height: 2.1875rem;
   padding: 0.5rem;
   border: 1px solid #cacaca;
   border-radius: 0;
   margin: 0 0 1rem;
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-family: inherit;
   line-height: normal;
   color: #8a8a8a;
@@ -3232,7 +3234,7 @@ table {
 
   caption {
     font-weight: bold;
-    padding: 0.5rem 0.625rem 0.625rem; }
+    padding: 0.125rem; }
 
   thead,
   tfoot {
@@ -3245,7 +3247,7 @@ table {
     thead td,
     tfoot th,
     tfoot td {
-      padding: 0.5rem 0.625rem 0.625rem;
+      padding: 0.125rem;
       font-weight: bold;
       text-align: left; }
 
@@ -3253,7 +3255,7 @@ table {
     background-color: #f1f1f1; }
   tbody th,
   tbody td {
-    padding: 0.5rem 0.625rem 0.625rem; }
+    padding: 0.125rem; }
 
 @media screen and (max-width: 63.9375em) {
   table.stack thead {

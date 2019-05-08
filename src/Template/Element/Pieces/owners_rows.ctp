@@ -1,4 +1,4 @@
-<!-- Element/Edition/overview_rows.ctp -->
+<!-- Element/Edition/owners_rows.ctp -->
 <?php
 /**
  * For use when the pieces table is show in an Editon or Format context and 
@@ -8,7 +8,7 @@ foreach($pieces as $piece) :
 ?>
 	<tr>
 		<?php 
-		if (in_array($edition->type, \App\Lib\SystemState::limitedEditionTypes())) : ;
+		if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) : ;
 		?>
 		<td><?= $piece->number; ?></td>
 		<?php 
@@ -21,4 +21,4 @@ foreach($pieces as $piece) :
 <?php
 endforeach;
 ?>
-<!-- END Element/Edition/overview_rows.ctp -->
+<!-- END Element/Edition/owners_rows.ctp -->

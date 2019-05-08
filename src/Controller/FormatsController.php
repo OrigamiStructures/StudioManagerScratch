@@ -3,16 +3,21 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
+use App\Lib\Traits\ArtReviewTrait;
+use App\Controller\ArtStackController;
+use App\Controller\Component\LayersComponent;
 
 /**
  * Formats Controller
  *
  * @property \App\Model\Table\FormatsTable $Formats
  */
-class FormatsController extends AppController
+class FormatsController extends ArtStackController
 {
 
-	public $components = ['ArtworkStack'];
+	use ArtReviewTrait;
+	
+	public $components = ['ArtworkStack', 'Layers'];
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD">
 	/**
@@ -117,16 +122,18 @@ class FormatsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 	
+	/**
+	 * Show detailed view of a single Format
+	 * 
+	 * Provides Artwork and Edition summaries, full explanation of 
+	 * the Format, and full Piece display with basic information
+	 * 
+	 * Driven by artwork, edition, format IDs in URL query
+	 */
 	public function review() {
 		$artwork = $this->ArtworkStack->stackQuery();
-		$this->ArtworkStack->layerChoiceLists();
-//		$element_management = [
-//			'artwork' => 'full',
-//			'edition' => 'many',
-//			'format' => 'many',
-//		];
-//		$this->set('element_management', $element_management);
-		$this->set('artwork', $artwork);
+		$this->set('artworks', $artwork);
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
 	
@@ -161,6 +168,7 @@ class FormatsController extends AppController
 		
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
 	
@@ -196,6 +204,7 @@ class FormatsController extends AppController
 		
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
+		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');		
 	}
 	

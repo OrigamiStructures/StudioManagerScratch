@@ -2,7 +2,10 @@
 namespace App\Model\Entity;
 use App\Model\Entity\Image;
 use Cake\ORM\Entity;
-use App\Model\Entity\Traits\ParentEntity;
+use App\Model\Entity\Traits\ParentEntityTrait;
+use App\Model\Entity\Traits\EntityDebugTrait;
+
+
 /**
  * Artwork Entity.
  *
@@ -19,7 +22,8 @@ use App\Model\Entity\Traits\ParentEntity;
 class Artwork extends Entity
 {
 	
-	use Traits\ParentEntityTrait;
+	use ParentEntityTrait;
+//	use EntityDebugTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -34,7 +38,7 @@ class Artwork extends Entity
         '*' => true,
         'id' => false,
     ];
-    
+	    
 	/**
 	 * From an inverted artwork stack, identify the tip-of-the-iceberg
 	 * 

@@ -2,7 +2,7 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
-use App\View\Helper\EditionFactoryHelper;
+use App\View\Helper\EditionHelper;
 
 /**
  * UniqueHelper: rule based view/tool rendering for Unique and Rights Editions
@@ -11,7 +11,7 @@ use App\View\Helper\EditionFactoryHelper;
  *   
  * @author dondrake
  */
-class UniqueHelper extends EditionFactoryHelper {
+class UniqueHelper extends EditionHelper {
 	
 	protected function _formatPieceSummary($format, $edition) {
 		$piece = $format->pieces[0];

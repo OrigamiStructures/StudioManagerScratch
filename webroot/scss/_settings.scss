@@ -45,6 +45,12 @@
 // 1. Global
 // ---------
 
+$small-screen-end: 40em;
+$medium-screen-start: 40.063em;
+$medium-screen-end: 64em;
+$large-screen-start: 64.063em;
+
+
 $global-width: rem-calc(1200);
 $global-font-size: 100%;
 $global-lineheight: 1.5;
@@ -83,6 +89,15 @@ $breakpoints: (
   xxlarge: 1440px,
 );
 $breakpoint-classes: (small medium large);
+
+$small-screen-end: 40em;
+$medium-screen-start: 40.063em;
+$medium-screen-end: 64em;
+$large-screen-start: 64.063em;
+$large-screen-end: 75em;
+$xlarge-screen-start: 75.063em;
+$xlarge-screen-end: 87.5em;
+$xxlarge-screen-start: 87.563em;
 
 // 3. The Grid
 // -----------
@@ -336,7 +351,8 @@ $select-triangle-color: #333;
 $select-radius: $global-radius;
 $input-color: $dark-gray;
 $input-font-family: inherit;
-$input-font-size: rem-calc(16);
+/*$input-font-size: rem-calc(16);*/
+$input-font-size: rem-calc(12);
 $input-background: $white;
 $input-background-focus: $white;
 $input-background-disabled: $light-gray;
@@ -478,7 +494,9 @@ $switch-paddle-transition: all 0.25s ease-out;
 $table-background: $white;
 $table-color-scale: 5%;
 $table-border: 1px solid smart-scale($table-background, $table-color-scale);
-$table-padding: rem-calc(8 10 10);
+/*$table-padding: rem-calc(8 10 10);*/
+$table-padding: rem-calc(2);
+
 $table-hover-scale: 2%;
 $table-row-hover: darken($table-background, $table-hover-scale);
 $table-row-stripe-hover: darken($table-background, $table-color-scale + $table-hover-scale);

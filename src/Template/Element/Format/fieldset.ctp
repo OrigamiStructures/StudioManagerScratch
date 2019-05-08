@@ -33,14 +33,14 @@ $format_index = isset($format_index) ? $format_index : 0 ;
 							</div>
 						</fieldset>
 						<?php 
-						/**
-						 * PENDING FURTHER STUDY
-						 * While this last form fieldset may not exist for some layer refinement 
-						 * they always appear during creation. And since the 'unique' tailored creation 
-						 * is actualy a refinement of a empty stubbed record, we'll need a special 
-						 * cancel button to delete that stub. Other special buttons may turn up.
-						 */
-//						echo $ArtStackElement->choose('artFinalFormButtons'); 
+				/**
+				 * PENDING FURTHER STUDY
+				 * While this last form fieldset may not exist for some layer refinement 
+				 * they always appear during creation. And since the 'unique' tailored creation 
+				 * is actualy a refinement of a empty stubbed record, we'll need a special 
+				 * cancel button to delete that stub. Other special buttons may turn up.
+				 */
+//				echo $ArtStackElement->choose('artFinalFormButtons'); // This helper is being deleted
 						?>
 						<?= $this->Form->submit('Submit', ['class' => 'button']); ?>
 	<?php // osd($artwork); ?>

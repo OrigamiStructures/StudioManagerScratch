@@ -18,8 +18,12 @@ use CakeDC\Users\Exception\BadConfigurationException;
  * are trigged by change to Editions->quantity. Both piece increase and decrease 
  * are performed according to set rules and those rules are defined in this class.
  * 
- * Piece assignment and reassignment are user directed processes and are handled 
- * in a separte class that responds to spefic user assignment requests.
+ * Piece assignment and reassignment are user directed processes that 
+ * move pieces between an Edition layer and its Format layer(s). 
+ * That process is handled in the PieceAssignmentComponent.
+ * 
+ * @todo Make this handle custom numbering schemes (see notes in Range)
+ * @todo Make this handle user-defined finite numbering schemes (see notes in Range)
  * 
  * @author dondrake
  */
@@ -56,7 +60,8 @@ class PieceAllocationComponent extends Component {
 	}
 	
 	/**
-	 * 
+	 * @todo Flagged as a serious issue:
+	 *		https://github.com/OrigamiStructures/StudioManagerScratch/issues/41
 	 */
 	public function allocate() {
 		$index = array_keys($this->artwork->editions)[0];
@@ -66,7 +71,8 @@ class PieceAllocationComponent extends Component {
 //			$this->multiple_formats = (boolean) $this->artwork->multiple; // an input value from creation forms
 //		}
 		unset($this->pieces);
-		if ($this->SystemState->is(ARTWORK_CREATE) && ($this->onePiece() || !$this->multiple_formats)) {
+		if ($this->SystemState->is(ARTWORK_CREATE) && 
+				($this->onePiece() || !$this->multiple_formats)) {
 			$this->piecesToFormat();
 		}
 	}
@@ -126,20 +132,25 @@ class PieceAllocationComponent extends Component {
 	protected function resizeOpenEdition($original, $change) {
 		// both increase and decrease will need to do queries
 		$this->Pieces = TableRegistry::get('Pieces');
-		$piece = $this->Pieces->find('unassigned', ['edition_id' => $this->edition->id])->toArray();
+		$piece = $this->Pieces
+				->find('unassigned', ['edition_id' => $this->edition->id])
+				->toArray();
 
 		if ($change > 0) {
 			$this->increaseOpenEdition($change, $piece);
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
-			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+			$original_edition = $editions->get($this->edition->id, 
+				['contain' => ['Formats']]);
 
 			if (abs($change) > $original_edition->undisposed_piece_count ) {
-				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
+				$this->edition->errors('quantity', 'The quantity was set '
+						. 'lower than the allowed minimum');
 				return;
 			}
-			return $this->decreaseOpenEdition($change, $original_edition); // return [] deletions required
+			// return [] deletions required
+			return $this->decreaseOpenEdition($change, $original_edition); 
 		}
 	}
 	
@@ -156,17 +167,21 @@ class PieceAllocationComponent extends Component {
 		} else {
 			
 			$editions = TableRegistry::get('Editions');
-			$original_edition = $editions->get($this->edition->id, ['contain' => ['Formats']]);
+			$original_edition = $editions->get($this->edition->id, 
+				['contain' => ['Formats']]);
 
 			$pieces = TableRegistry::get('Pieces');
-			$highestNumberDisposed = $pieces->highestNumberDisposed(['edition_id' => $this->edition->id]);
+			$highestNumberDisposed = $pieces->highestNumberDisposed(
+				['edition_id' => $this->edition->id]);
 			$edition_tail = $original_edition->quantity - $highestNumberDisposed;
 						
 			if (abs($change) > $edition_tail ) {
-				$this->edition->errors('quantity', 'The quantity was set lower than the allowed minimum');
+				$this->edition->errors('quantity', 'The quantity was set '
+						. 'lower than the allowed minimum');
 				return;
 			}
-			return $this->decreaseLimitedEdition($change, $pieces, $original_edition); // return [] deletions required
+			// return [] deletions required
+			return $this->decreaseLimitedEdition($change, $pieces, $original_edition); 
 		}
 	}
 	

@@ -2,6 +2,8 @@
 namespace App\View\Helper;
 
 use Cake\View\Helper;
+use CakeDC\Users\Exception\BadConfigurationException;
+use BadMethodCallException;
 
 /**
  * ArtStackElement encapsulates rendering rules to select output elements for the view
@@ -20,6 +22,8 @@ use Cake\View\Helper;
  * choices based on edition type. Those more compelx rules are found in the 
  * EditionFactoryHelper heirarchy.
  * 
+ * @todo This class is being replaced by the LayersComponent. 
+ * 
  * @author dondrake
  */
 class ArtStackElementHelper extends Helper {
@@ -29,148 +33,6 @@ class ArtStackElementHelper extends Helper {
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
 		$this->SystemState = $this->_View->SystemState;
-	}
-	
-	/**
-	 * Choose an element to render a layer based on context and a rule set
-	 * 
-	 * @param string $layer Layer that needs context rules evaluation
-	 * @return string Name of the selected element
-	 */
-	public function choose($layer) {
-		$method = "{$layer}Rule";
-		return $this->$method();
-	}
-	
-	/**
-	 * The artworks div may be destined to have one or many artwork sections
-	 */
-	protected function artworksContentRule() {
-		if (!is_null($this->SystemState->artwork)) {
-			$element = 'Artwork/full';			
-		} elseif (!is_null($this->SystemState->artworks) && count($this->SystemState->artworks) > 0) {
-			$element = 'Artwork/many';	
-		} else {
-			// there was no spec'd artwork and no pagination result
-			// so this is a new user
-			$element = 'Training/welcome_new_art';
-		}
-		return $element;
-	}
-	
-	protected function artworkContentRule() {
-		switch ($this->SystemState->now()) {
-			case ARTWORK_REVIEW :
-					$element = 'Artwork/describe';
-				break;
-			case ARTWORK_CREATE :
-			case ARTWORK_REFINE :
-				// Refinement must choose based on the context of the edit
-				// Always display if the target is downstream
-				// Always fieldset if this is the target
-				if ($this->SystemState->controller() === 'artworks') {
-					$element = 'Artwork/fieldset';
-				} else {
-					$element = 'Artwork/describe';
-				}
-				break;
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Artwork/create_unique';
-				break;
-			default :
-				$element = 'Artwork/describe';
-		}
-//		osd($element); die;
-		return $element;
-	}
-	
-	/**
-	 * Choose the Edition element to go in the current section.edition
-	 * 
-	 * @return string
-	 */
-	protected function editionContentRule() {
-		$controller = $this->SystemState->controller();
-		
-		switch ($this->SystemState->now()) {
-			case ARTWORK_REVIEW :
-				$element = 'Edition/describe';
-				break;
-			case ARTWORK_CREATE :
-				if ($controller === 'formats') {
-					$element = 'Edition/describe';
-				} else {
-					$element = 'Edition/fieldset';
-				}
-				break;
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Edition/create_unique';
-				break;
-			case ARTWORK_REFINE :
-//				osd($this->SystemState->queryArg('edition'),'query arg');
-//				osd($this->SystemState->edition->id,'edition');
-						
-				// Refinement much choose based on the context of the edit
-				// Always display if the target is downstream
-				// Always fieldset if this is the target
-				// fieldset if target is upstream and this is the only child
-				if ($controller === 'formats') {
-					$element = 'Edition/describe';
-//				} elseif ($controller === 'editions' && 
-//						$this->SystemState->edition->id === $this->SystemState->queryArg('edition')) ||
-//						($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1)) 
-				} elseif ($controller === 'editions' ||
-						($controller === 'artworks' && $this->SystemState->artwork->edition_count === 1)) {
-					$element = 'Edition/fieldset';
-				} else {
-					$element = 'Edition/describe';
-				}
-				break;
-			default :
-				$element = 'Artwork/describe';
-		}
-		return $element;
-	}
-	
-	/**
-	 * Choose the Format element to go in the current section.format
-	 * 
-	 * @return string
-	 */
-	protected function formatContentRule() {
-		switch ($this->SystemState->now()) {
-			case ARTWORK_REVIEW :
-				$element = 'Format/describe';
-				break;
-			case ARTWORK_CREATE :
-				$element = 'Format/fieldset';
-				break;
-			case ARTWORK_REFINE :
-				$controller = $this->SystemState->controller();
-				// Refinement must choose based on the context of the edit
-				// Always display if the target is downstream
-				// Always fieldset if this is the target
-				// fieldset if target is upstream and this is the only child
-				if ($controller === 'formats') {
-					$element = 'Format/fieldset';
-				} elseif ($controller === 'artworks' && 
-						$this->SystemState->artwork->edition_count === 1 &&
-						$this->SystemState->edition->format_count === 1) {
-					$element = 'Format/fieldset';
-				} elseif ($controller === 'editions' && 
-						$this->SystemState->edition->format_count === 1) {
-					$element = 'Format/fieldset';
-				} else {
-					$element = 'Format/describe';
-				}
-				break;
-			case ARTWORK_CREATE_UNIQUE :
-				$element = 'Format/create_unique';
-				break;
-			default :
-				$element = 'Artwork/describe';
-		}
-		return $element;
 	}
 	
 	/**
@@ -194,13 +56,25 @@ class ArtStackElementHelper extends Helper {
 			
 		} else {
 			$first_class = get_class($entity);
-			$second_class = !is_null($edition) ? get_class($edition) : NULL ;
+			$second_class = !is_null($edition) ? get_class($edition) : 'NULL' ;
 			
 			throw new \BadMethodCallException(
 					"Method requires an entity of type Edition or Format, or two entities of types Format and Edition. "
 					. "$first_class and $second_class were passed.");
 		}
 	}
+	
+	/**
+	 * Based on the system state and edition, choose a piece table element
+	 * 
+	 * @todo This method is a functional stub. 
+	 *		See _formatPieceTable() docblock for other possibly relevant details
+	 *		We need to work out a rule set to flesh out 
+	 *		the desired and required system function
+	 * 
+	 * @param entity $edition 
+	 * @return string Name of the Piece Table wrapper element
+	 */
 	protected function _editionPieceTable($edition) {
 		if (!is_null($this->SystemState->artworks)) {
 			// paginated result does not render piece tables
@@ -224,12 +98,15 @@ class ArtStackElementHelper extends Helper {
 	}
 	
 	/**
-	 * Choose wich pieces element has the info needed in this context
+	 * Based on the system state and format, choose a piece table element
 	 * 
 	 * Data specific to the edition type and current task/context is 
 	 * decided on by the EditionFactoryHelper. This just sets the template.
 	 * 
 	 * $pieces MUST BE SET BY EditionHelper HEIRARCHY FIRST
+	 * 
+	 * @todo Can't this logic elimiate the need for the logic that sets 
+	 *			class tag 'focus' in Elements/Format/full.ctp?
 	 * 
 	 * @return string Name of the element to render
 	 */

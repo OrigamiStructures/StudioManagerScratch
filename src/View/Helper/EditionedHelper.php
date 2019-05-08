@@ -1,7 +1,7 @@
 <?php
 namespace App\View\Helper;
 
-use App\View\Helper\EditionFactoryHelper;
+use App\View\Helper\EditionHelper;
 use Cake\ORM\TableRegistry;
 
 
@@ -13,7 +13,7 @@ use Cake\ORM\TableRegistry;
  *   
  * @author dondrake
  */
-class EditionedHelper extends EditionFactoryHelper {
+class EditionedHelper extends EditionHelper {
 
 	/**
 	 * Limited/Open edition level reporting on quantity, unassigned, and reassignable
@@ -79,6 +79,16 @@ class EditionedHelper extends EditionFactoryHelper {
 	 */
 	protected function _editionPieceTools($edition) {
 		$assignment_tool = '';
+		if ($edition->type === EDITION_LIMITED) {
+			$assignment_tool = $this->Html->link("Renumber pieces",
+					[
+				'controller' => 'pieces',
+				'action' => 'renumber', '?' => [
+					'artwork' => $edition->artwork_id,
+					'edition' => $edition->id,
+				]
+			]);
+		}		
 		if ($edition->hasUnassigned() || ($edition->hasFluid() && $edition->format_count > 1)) {
 			
 			if ($edition->hasUnassigned()) {
@@ -87,9 +97,9 @@ class EditionedHelper extends EditionFactoryHelper {
 			if ($edition->hasFluid() && ($edition->fluid_piece_count !== $edition->unassigned_piece_count)) {
 				$label[] = 'Reassign';
 			}
-			$label = implode('/', $label);
+			$label = ' | ' . implode('/', $label);
 		
-			$assignment_tool = $this->Html->link("$label pieces to formats",
+			$assignment_tool .= $this->Html->link("$label pieces to formats",
 				['controller' => 'editions', 'action' => 'assign', '?' => [
 					'artwork' => $edition->artwork_id,
 					'edition' => $edition->id,
@@ -297,7 +307,7 @@ class EditionedHelper extends EditionFactoryHelper {
 			$pieces = $this->pieceFilter()->filter($edition->pieces, 'edition');
 			
 			if ($edition->hasUnassigned()) {
-				$caption = 'Pieces in this edtion that haven\'t been assigned to a format.';
+				$caption = 'Available to assign to a format.';
 			} else {
 				$caption = '';
 //				// this information is already shown for empty editions
