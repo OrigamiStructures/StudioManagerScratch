@@ -1,16 +1,10 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
-use App\Model\Table\EditionsTable;
-use App\Model\Table\FormatsTable;
-use App\Model\Table\PiecesTable;
+use App\Lib\RequestUtility;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Controller\ArtStackController;
-use App\Controller\Component\LayersComponent;
-use Cake\Cache\Cache;
-use App\Model\Lib\IdentitySets;
 use App\Model\Lib\Layer;
 
 /**
@@ -167,10 +161,6 @@ class ArtworksController extends ArtStackController
         return $this->redirect(['action' => 'index']);
     }
 	
-    public function sample() {
-
-    }
-
     /**
      * Display one or a page of Artworks
      * 
@@ -187,13 +177,24 @@ class ArtworksController extends ArtStackController
      * or it may all be handled by another method.
      */
     public function review() {
-        if ($this->SystemState->urlArgIsKnown('artwork')) {
-            $this->_try_flatness_redirect(
-            $this->SystemState->queryArg('artwork'), 
-            $this->SystemState->queryArg('edition'));
-        }
-
-        $result = $this->ArtworkStack->stackQuery();
+		$ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
+        if (RequestUtility::urlArgIsKnown('artwork', $this->request)) {
+			$ids = [RequestUtility::queryArg('artwork', $this->request)];
+			// load the one stack
+			// redirect based on the entities report of flatness
+//            $this->_try_flatness_redirect(
+//            RequestUtility::queryArg('artwork', $this->request), 
+//            RequestUtility::queryArg('edition', $this->request));
+        } else {
+			$records = $this->Artworks
+					->find('all')
+					->select(['id'])
+					->toArray();
+			$ids = (new Layer($records))->IDs();
+		}
+		$result = $ArtStacks->find('stacksFor', 
+			['seed' => 'artwork', 'ids' => $ids]);
+//		osd($result);die;
 
         $this->set('artworks', $result);
         $this->set('elements', $this->Layers->setElements());
