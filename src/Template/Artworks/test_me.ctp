@@ -34,7 +34,7 @@ if (isset($stacks)) {
 		
 		$artwork = $stack->rootElement();
 		$joinArray = $stack->find()
-				->setLayer('dispositionsPieces')
+				->setLayer('dispositions_pieces')
 				->specifyFilter('disposition_id', $activity->IDs())
 				->load();
 		$joinLayer = new Layer($joinArray);
@@ -95,10 +95,10 @@ if (isset($stacks)) {
 
 	foreach ($activity->load() as $dispId => $disposition) {
 		$joinArray = $stacks->find()
-				->setLayer('dispositionsPieces')
+				->setLayer('dispositions_pieces')
 				->specifyFilter('disposition_id', $dispId)
 				->load();
-		$joinLayer = new Layer($joinArray, 'dispositionsPieces');
+		$joinLayer = new Layer($joinArray, 'dispositions_pieces');
 		
 		$distinct_pieces = $stacks->find()
 				->setLayer('pieces')
