@@ -1,18 +1,19 @@
 <?php
 namespace App\Lib;
 
+use App\Lib\RequestUtility;
 use Cake\Network\Request;
 use Cake\Filesystem\Folder;
-use Cake\Filesystem\File;
+//use Cake\Filesystem\File;
 use Cake\Collection\Collection;
 use App\Lib\StateMap;
 use Cake\Event\EventListenerInterface;
-use Cake\Utility\Inflector;
-use App\Model\Table\UsersTable;
+//use Cake\Utility\Inflector;
+//use App\Model\Table\UsersTable;
 use App\Model\Entity\User;
 use Cake\ORM\TableRegistry;
 use Cake\Cache\Cache;
-use Cake\ORM\Entity;
+//use Cake\ORM\Entity;
 
 /**
  * SystemState
@@ -250,18 +251,6 @@ class SystemState implements EventListenerInterface {
 	}
 	
 	/**
-	 * Is the value one of the URL query arguements?
-	 * 
-	 * These are the variables after the '?' in a URL
-	 * 
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function urlArgIsKnown($name) {
-		return !is_null($this->request->query($name));
-	}
-	
-	/**
 	 * Is an ID'd record referenced in the URL arguments?
 	 * 
 	 * SystemState::hasFocus('artwork', 641)
@@ -298,6 +287,20 @@ class SystemState implements EventListenerInterface {
 	}
 	
 	/**
+	 * Is the value one of the URL query arguements?
+	 * 
+	 * These are the variables after the '?' in a URL
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function urlArgIsKnown($name) {
+		osd('depricated SystemState::urlArgIsKnown()');
+		return RequestUtility::urlArgIsKnown($name, $this->request);
+//		return !is_null($this->request->query($name));
+	}
+	
+	/**
 	 * Return one of the URL query arguements
 	 * 
 	 * If it doesn't exist, get array of all args
@@ -306,19 +309,25 @@ class SystemState implements EventListenerInterface {
 	 * @return string|array
 	 */
 	public function queryArg($name = NULL) {
-		if (!is_null($name)) {
-			return $this->request->query($name);
-		} else {
-			return $this->request->query;
-		}	
+		osd('depricated SystemState::queryArg()');
+		return RequestUtility::queryArg($name, $this->request);
+//		if (!is_null($name)) {
+//			return $this->request->query($name);
+//		} else {
+//			return $this->request->query;
+//		}	
 	}
 	
 	public function controller() {
-		return strtolower($this->request->controller);
+		osd('depricated SystemState::controller()');
+		return RequestUtility::controller($this->request);
+//		return strtolower($this->request->controller);
 	}
 	
 	public function action() {	
-		return strtolower($this->request->action);
+		osd('depricated SystemState::action()');
+		return RequestUtility::action($this->request);
+//		return strtolower($this->request->action);
 	}
 
 	/**

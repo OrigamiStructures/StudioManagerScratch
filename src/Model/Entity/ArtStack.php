@@ -26,7 +26,7 @@ class ArtStack extends StackEntity {
 	 * @todo Let StackTable::marshalStack() set this
 	 * {@inheritdoc}
 	 */
-	protected $rootDisplayValue = 'title';
+	public $rootDisplaySource = 'title';
 
 	/**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -52,4 +52,11 @@ class ArtStack extends StackEntity {
 		
 	}
 	
+	public function title() {
+		return $this->rootDisplayValue();
+	}
+	
+	public function description() {
+		return $this->rootElement()->description;
+	}
 }

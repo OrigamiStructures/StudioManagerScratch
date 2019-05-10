@@ -20,7 +20,7 @@ class RolodexCard extends StackEntity {
 	 * @todo Let StackTable::marshalStack() set this
 	 * {@inheritdoc}
 	 */
-	protected $rootDisplaySource = 'name';
+	public $rootDisplaySource = 'name';
 
 	public function name() {
 		return $this->rootElement()->name();

@@ -36,8 +36,8 @@ class ArtStacksTable extends StacksTable
      */
     public function initialize(array $config) {
 		$this->setTable('artworks');
-		$this->addStackSchema(['artwork', 'editions', 'formats', 'pieces', 'dispositions_pieces']);
-		$this->addLayerTable(['Artworks', 'Editions', 'Formats', 'Pieces']);
+		$this->addStackSchema(['artwork', 'editions', 'series', 'formats', 'pieces', 'dispositions_pieces']);
+		$this->addLayerTable(['Artworks', 'Editions', 'Series', 'Formats', 'Pieces']);
 		$this->addSeedPoint([
             'disposition', 'dispositions',
             'piece', 'pieces',
@@ -286,6 +286,17 @@ class ArtStacksTable extends StacksTable
 			$editions = $this->Editions->find('inArtworks', ['values' => [$id]]);
 			$stack->set('editions', $editions->toArray());
 		}
+		return $stack;
+	}
+	
+	public function marshalSeries($id, $stack) {
+		if ($stack->count('editions')) {
+			$series_ids = $stack->editions->distinct('series_id');
+			$series_ids = empty($series_ids) ? [''] : $series_ids;
+			$series = $this->Series->find('all')
+					->where(['id IN' => $series_ids]);
+			$stack->set(['series' => $series->toArray()]);
+		} 
 		return $stack;
 	}
 	

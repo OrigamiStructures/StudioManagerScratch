@@ -25,7 +25,7 @@ class RolodexCardsTable extends StacksTable {
 	/**
 	 * {@inheritdoc}
 	 */
-	protected $rootDisplaySource = 'name';
+	public $rootDisplaySource = 'name';
 
 	/**
 	 * Initialize method

@@ -22,10 +22,10 @@ use App\Controller\AppController;
 class ArtStackController extends AppController{
 	
 	public function initialize() {
-		if (in_array($this->request->action, 
-				['review', 'refine', 'create', 'createUnique', 'assign'])) {
-			$this->viewBuilder()->className('ArtStack');
-		}
+//		if (in_array($this->request->action, 
+//				['review', 'refine', 'create', 'createUnique', 'assign'])) {
+//			$this->viewBuilder()->className('ArtStack');
+//		}
 		parent::initialize();
 	}
 	

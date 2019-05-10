@@ -59,7 +59,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 *
 	 * @var string
 	 */
-	protected $rootDisplaySource = FALSE;
+	public $rootDisplaySource = FALSE;
     /**
      * Is the id a member of the set
      * 
@@ -152,7 +152,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @return string|array
 	 */
 	public function rootDisplayValue($unwrap = LAYERACC_UNWRAP) {
-		$result = $this->valueList($this->rootDisplaySource(), $this->rootElement());
+		$result = $this->valueList($this->rootDisplaySource(), [$this->rootElement()]);
 		return $this->_resolveWrapper($result, $unwrap);
 	}
 	
