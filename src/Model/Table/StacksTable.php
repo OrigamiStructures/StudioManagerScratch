@@ -253,7 +253,11 @@ class StacksTable extends AppTable
      * @return mixed The cached data, or FALSE
 	 */
 	protected function readCache($id) {
-		return Cache::read($this->cacheKey($id), $this->cacheName());
+		if (\Cake\Core\Configure::read('stackCache')) {
+			return Cache::read($this->cacheKey($id), $this->cacheName());
+		} else {
+			return FALSE;
+		}
 	}
 	
 	/**
@@ -264,7 +268,11 @@ class StacksTable extends AppTable
      * @return bool True on successful cached, false on failure
 	 */
 	protected function writeCache($id, $stack) {
-		return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
+		if (\Cake\Core\Configure::read('stackCache')) {
+			return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
+		} else {
+			return FALSE;
+		}
 	}
 	
 	public function layers() {
