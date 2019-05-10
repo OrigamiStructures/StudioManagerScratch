@@ -80,45 +80,5 @@ class SeriesTable extends AppTable
         return $rules;
     }
 	
-	public function choiceList($options) {
-//		debug(\Cake\Error\Debugger::trace());die;
-		if ($this->SystemState->is(ARTWORK_CREATE)) {
-			return $this->find('unimplemented', $options);
-		} else {
-			return $this->find('choiceList', $options);
-		}
-	}
-
-		/**
-	 * Get the full series list for an artist
-	 * 
-	 * For a select input, id => title
-	 * 
-	 * @param Query $query
-	 * @param string $artist_id
-	 * @return query result-object 
-	 */
-	public function findChoiceList(Query $query, $options) {
-		return $query->where(['Series.user_id' => $options['artist_id']])->find('list');
-	}
-	
-	/**
-	 * Get the unimplemented series list for an artist's single artwork
-	 * 
-	 * For a select input, id => title
-	 * 
-	 * @param Query $query
-	 * @param array $options
-	 * @return query result-object 
-	 */
-	public function findUnimplemented(Query $query, $options) {
-		$options += ['artwork_id' => '', 'artist_id' => ''];
-		
-		$query = $this->find('choiceList', $options)
-			->notMatching('Editions', function($q) use ($options) {
-				return $q->where(['artwork_id' => $options['artwork_id'], 'series_id >=' => '0']);
-			});
-		return $query;
-	}
 	
 }
