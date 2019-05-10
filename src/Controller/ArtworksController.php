@@ -416,4 +416,16 @@ class ArtworksController extends ArtStackController
         return $artwork;
     }
 	
+	public function editionMigration() {
+		$ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
+		$records = $this->Artworks
+				->find('all')
+				->select(['id'])
+				->toArray();
+		$ids = (new Layer($records))->IDs();
+		$result = $ArtStacks->find('stacksFor', 
+			['seed' => 'artwork', 'ids' => $ids]);
+
+        $this->set('artworks', $result);
+	}
 }
