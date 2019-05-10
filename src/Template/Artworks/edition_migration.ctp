@@ -3,9 +3,12 @@ $unique = [4,5,6,13,14,19];
 $onePoem = [7,8,9,10,16,17];
 $conversation = [11,18];
 foreach ($artworks->load() as $artwork_index => $artwork){
+	if (!is_array($artwork->series)) {
+		osd($artwork->series->distinct('title'));
+//		echo $this->Html->tag('h2',$artwork->series->load()->title);
+	}
 	echo $this->Html->tag('h1',$artwork->rootID() . ' || ' . $artwork->title());
 	echo $this->Html->para(null, $artwork->description());
-	osd($artwork->series);
 	$formats = $artwork->formats->load();
 	
 	foreach ($formats as $format) {
