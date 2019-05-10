@@ -52,4 +52,11 @@ class ArtStack extends StackEntity {
 		
 	}
 	
+	public function title() {
+		return $this->rootDisplayValue();
+	}
+	
+	public function description() {
+		return $this->rootElement()->description;
+	}
 }
