@@ -295,7 +295,7 @@ class ArtStacksTable extends StacksTable
 			$series_ids = empty($series_ids) ? [''] : $series_ids;
 			$series = $this->Series->find('all')
 					->where(['id IN' => $series_ids]);
-			$stack->set(['series' => $series->toArray()]);
+			$stack->set('series', $series->toArray());
 		} 
 		return $stack;
 	}
