@@ -426,6 +426,36 @@ class ArtworksController extends ArtStackController
 		$result = $ArtStacks->find('stacksFor', 
 			['seed' => 'artwork', 'ids' => $ids]);
 
+		foreach ($result->load() as $artwork) {
+			$this->writeFormatJoin($artwork);
+		}
+		
         $this->set('artworks', $result);
+	}
+	
+	private function writeFormatJoin($artwork) {
+		osd('save');
+		$EditionsFormats = TableRegistry::getTableLocator()->get('EditionsFormats');
+		foreach ($artwork->formats->load() as $format) {
+		$join = new \App\Model\Entity\EditionsFormat(
+			[
+				'change_piece' => $format->id,
+				'format_id' => $format->range_flag,
+				'edition_id' => $format->edition_id,
+				'user_id' => $format->user_id,
+				'image_id' => $format->image_id,
+				'assigned_piece_count' => $format->assigned_piece_count,
+				'fluid_piece_count' => $format->fluid_piece_count,
+				'collected_piece_count' => $format->collected_piece_count,
+			]
+		);
+		
+		if ($EditionsFormats->save($join)) {
+			$this->Flash->success("Saved f-$format->range_flag e-$format->edition_id");
+		} else {
+			$this->Flash->error("Failed f-$format->range_flag e-$format->edition_id");
+			osd($join->errors());
+		}
+		}
 	}
 }
