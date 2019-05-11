@@ -486,6 +486,10 @@ class Layer implements LayerAccessInterface {
     public function has($property) {
         return in_array($property, $this->_entityProperties);
     }
+	
+	public function hasElements() {
+		return $this->count() > 0;
+	}
 
 
     /**
