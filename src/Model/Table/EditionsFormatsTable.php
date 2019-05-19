@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Table\AppTable;
 
 /**
  * EditionsFormats Model
@@ -22,7 +23,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\EditionsFormat[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\EditionsFormat findOrCreate($search, callable $callback = null, $options = [])
  */
-class EditionsFormatsTable extends Table
+class EditionsFormatsTable extends AppTable
 {
 
     /**
@@ -48,6 +49,14 @@ class EditionsFormatsTable extends Table
         $this->belongsTo('Editions', [
             'foreignKey' => 'edition_id'
         ]);
+        $this->_initializeBehaviors();
+    }
+
+
+    protected function _initializeBehaviors() {
+        $this->addBehavior('Timestamp');
+        $this->addBehavior('IntegerQuery');
+        $this->addBehavior('StringQuery');
     }
 
     /**
@@ -92,4 +101,28 @@ class EditionsFormatsTable extends Table
 
         return $rules;
     }
+	
+    /**
+     * Find Formats by id
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findFormats($query, $options) {
+        return $this->integer($query, 'id', $options['values']);
+    }
+    
+    /**
+     * Find in editions
+     * 
+     * @param Query $query
+     * @param array $options see IntegerQueryBehavior
+     * @return Query
+     */
+    public function findInEditions($query, $options) {
+        return $this->integer($query, 'edition_id', $options['values']);
+    }
+    
+	
 }
