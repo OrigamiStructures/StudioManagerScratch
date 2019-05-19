@@ -1,42 +1,4 @@
 <?php
-$unique = [4,5,6,13,14,19];
-$onePoem = [7,8,9,10,16,17];
-$conversation = [11,18];
-
-foreach ($artworks->load() as $artwork){
-//	osd($artwork->series);
-	if ($artwork->series->hasElements()) {
-		osd($artwork->series->distinct('title'));
-	}
-	echo $this->Html->tag('h1',$artwork->rootID() . ' || ' . $artwork->title());
-	echo $this->Html->para(null, $artwork->description());
-	osd($artwork->editions->IDs(), 'editions');
-	
-	$formats = $artwork->formats->load();
-	
-	// each format
-	// write the editions_formats join records
-	// find piece on original id and change to new format_id
-	// hand-create the new format records from $f array below
-//	foreach ($formats as $format) {
-//		$join = new App\Model\Entity\EditionsFormat(
-//			[
-//				'change_piece' => $format->id,
-//				'format_id' => $format->range_flag,
-//				'edition_id' => $format->edition_id,
-//				'user_id' => $format->user_id,
-//				'image_id' => $format->image_id,
-//				'assigned_piece_count' => $format->assigned_piece_count,
-//				'fluid_piece_count' => $format->fluid_piece_count,
-//				'collected_piece_count' => $format->collected_piece_count,
-//			]
-//		);
-//		osd($join);
-//	}
-//	osd($artwork->formats->load());
-
-}
-
 $f = [
 	[
 		1, 
@@ -127,3 +89,72 @@ $f = [
 		. 'Pamphlet stitched, bound in cloth over board covers.'
 	]
 ];
+$unique = [4,5,6,13,14,19];
+$onePoem = [7,8,9,10,16,17];
+$conversation = [11,18];
+
+$pieces = [];
+foreach ($artworks->load() as $artwork){
+//	osd($artwork->series);
+	if ($artwork->series->hasElements()) {
+		osd($artwork->series->distinct('title'));
+	}
+	echo $this->Html->tag('h1',$artwork->rootID() . ' || ' . $artwork->title());
+	echo $this->Html->para(null, $artwork->description());
+	osd($artwork->editions->IDs(), 'editions');
+	
+	$formats = $artwork->formats->load();
+	
+	// each format
+	// write the editions_formats join records
+	// find piece on original id and change to new format_id
+	// hand-create the new format records from $f array below
+	foreach ($formats as $format) {
+		$batch = $artwork
+				->find()
+				->setLayer('pieces')
+				->specifyFilter('format_id', $format->id)
+				->load();
+		foreach ($batch as $linked_piece) {
+			echo $this->Html->para(NULL, describeOriginal($artwork, $format, $linked_piece));
+			$linked_piece->format_id = $format->range_flag;
+			echo $this->Html->para(NULL, describeNew($artwork, $f, $linked_piece));
+		}
+		$pieces += $batch;
+		unset($batch);
+	}
+//	osd($artwork->formats->load());
+//	//edition 23 is unused
+	//format 24 is unsued
+}
+$edition_id_set = $artworks->find()
+		->setLayer('editions')
+		->setValueSource('id')
+		->loadDistinct();
+sort($edition_id_set);
+//osd($edition_id_set);
+
+function describeOriginal($art, $format, $piece) {
+	$pattern = '%s #%s/q%s %s:%s';
+	return sprintf(
+			$pattern, 
+			$art->title(), 
+			$piece->number, 
+			$piece->quantity,
+			$piece->format_id,
+			$format->description
+		); 
+}
+
+function describeNew($art, $format, $piece) {
+	$pattern = '%s #%s/q%s %s:%s';
+	return sprintf(
+			$pattern, 
+			$art->title(), 
+			$piece->number, 
+			$piece->quantity, 
+			$piece->format_id - 1,
+			$format[$piece->format_id - 1]['description']
+		); 
+}
+
