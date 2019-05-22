@@ -459,7 +459,7 @@ class ArtworksController extends ArtStackController
 							->setLayer('pieces')
 							->specifyFilter('format_id', $format->id)
 							->load(),
-						$join->format_id);
+						$join->id);
 			} else {
 				$this->Flash->error("Failed f-$format->range_flag e-$format->edition_id");
 				osd($join->errors());
