@@ -372,7 +372,6 @@ class ArtworksController extends ArtStackController
 //            osd($t->result());
         }
 
-		osd($stacks);die;
         $this->set(compact('stacks', 'result', 'methods', 'dispositions', 'activity'));
     }
 
@@ -430,10 +429,7 @@ class ArtworksController extends ArtStackController
 		foreach ($result->load() as $artwork) {
 			$this->writeFormatJoin($artwork);
 		}
-		$PieceTable = TableRegistry::getTableLocator()->get('Pieces');
-		$PieceTable->removeBehavior('CounterCache');
-		$theSave = $PieceTable->saveMany($this->relinkedPieces);
-		osd($theSave, 'result of saved pieces');
+		$this->saveRelinkedPieces();
         $this->set('artworks', $result);
 	}
 	
@@ -469,6 +465,21 @@ class ArtworksController extends ArtStackController
 				osd($join->errors());
 			}
 		}
+	}
+	
+	private function saveRelinkedPieces() {
+		$PieceTable = TableRegistry::getTableLocator()->get('Pieces');
+		$PieceTable->removeBehavior('CounterCache');
+		foreach ($this->relinkedPieces as $piece) {
+			if ($PieceTable->save($piece)) {
+				$this->Flash->success("Saved p-$piece->id f-$piece->format_id");
+			} else {
+				$this->Flash->error("Failed p-$piece->id f-$piece->format_id");
+				osd($piece->errors());
+			}
+		}
+//		$theSave = $PieceTable->saveMany($this->relinkedPieces);
+//		osd($theSave, 'result of saved pieces');
 	}
 	
 	private function relinkPieces($pieces, $newFormatId) {
