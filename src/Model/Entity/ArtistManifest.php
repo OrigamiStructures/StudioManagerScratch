@@ -17,7 +17,7 @@ class ArtistManifest extends StackEntity {
 	/**
 	 * {@inheritdoc}
 	 */
-	protected $rootDisplaySource;
+	public $rootDisplaySource;
 	
 	
 }
