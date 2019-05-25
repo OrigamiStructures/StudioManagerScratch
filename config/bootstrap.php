@@ -355,3 +355,7 @@ define('ARTWORK_LAYER', 1);
 define('EDITION_LAYER', 2);
 define('FORMAT_LAYER', 3);
 // </editor-fold>
+
+function layer($data) {
+	return new \App\Model\Lib\Layer($data);
+}
