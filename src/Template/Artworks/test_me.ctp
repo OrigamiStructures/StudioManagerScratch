@@ -56,13 +56,13 @@ if (isset($stacks)) {
 				->load();
 		
 		$editionIDs = $stack->distinct('edition_id', $formats);
-		$formats = new Layer($formats);	
+		$formats = new Layer($formats, 'editions_format');	
 
 		$editions = $stack->find()
 				->setLayer('editions')
 				->specifyFilter('id', $editionIDs)
 				->load();
-		$editions = new Layer($editions);
+		$editions = new Layer($editions, 'editions');
 				
         echo "<h1>{$artwork->title}</h1>";
 //		$allInLayer = $editions->accessArgs()->setLimit('all');
@@ -114,13 +114,16 @@ if (isset($stacks)) {
 			
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			$format = $stack->formats->element($piece->format_id, LAYERACC_ID);
+			if(is_null($format)) {
+				osd($stack->formats->IDs(), "Piece format $piece->format_id");
+			}
 			$edition = $stack->editions->element($piece->edition_id, LAYERACC_ID);
 			$artwork = $stack->rootElement();
 
 			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
                 $artwork->title . ', ' . 
                 $edition->displayTitle . ', ' . 
-                $format->displayTitle . 
+//                $format->displayTitle . 
                 '</li>';
         }
         echo '</ul></li></ul>';

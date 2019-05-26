@@ -37,7 +37,7 @@ class ArtStacksTable extends StacksTable
     public function initialize(array $config) {
 		$this->setTable('artworks');
 		$this->addStackSchema(['artwork', 'editions', 'series', 'formats', 'pieces', 'dispositions_pieces']);
-		$this->addLayerTable(['Artworks', 'Editions', 'Series', 'Formats', 'Pieces']);
+		$this->addLayerTable(['Artworks', 'Editions', 'Series', 'Formats', 'EditionsFormats', 'Pieces']);
 		$this->addSeedPoint([
             'disposition', 'dispositions',
             'piece', 'pieces',
@@ -303,7 +303,7 @@ class ArtStacksTable extends StacksTable
 	public function marshalFormats($id, $stack) {
 		if ($stack->count('editions')) {
 			$editionIds = $stack->editions->IDs();
-			$formats = $this->Formats->find('inEditions', ['values' => $editionIds]);
+			$formats = $this->EditionsFormats->find('inEditions', ['values' => $editionIds]);
 			$stack->set(['formats' => $formats->toArray()]);
 		} 
 		return $stack;

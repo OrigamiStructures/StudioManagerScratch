@@ -201,7 +201,7 @@ class PiecesTable extends AppTable {
      * @return int
      */
     public function editionsAssignedPieceCount($event, $entity, $table) {
-        return $this->find('inEdition', [$entity->edition_id])
+        return $this->find('inEditions', ['values' => [$entity->edition_id]])
             ->find('assigned')
             ->sumOf('quantity');
         /**
@@ -221,7 +221,7 @@ class PiecesTable extends AppTable {
      */
     public function formatsFluidPieceCount($event, $entity, $table) {
         return $this
-                ->find('assignedTo', [$entity->format_id])
+                ->find('assignedTo', ['values' => [$entity->format_id]])
                 ->find('fluid')
                 ->sumOf('quantity');
     }
@@ -238,7 +238,7 @@ class PiecesTable extends AppTable {
      */
     public function editionsFluidPieceCount($event, $entity, $table) {
         return $this
-            ->find('InEdition', [$entity->edition_id])
+            ->find('InEditions', ['values' => [$entity->edition_id]])
             ->find('Assigned')
             ->find('fluid')
             ->sumOf('quantity');
