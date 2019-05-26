@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use CakeDC\Users\Controller\AppController;
 use App\Model\Lib\Layer;
+use App\Lib\Range;
 
 /**
  * CakePHP AdministratorController
@@ -52,55 +53,92 @@ class AdministratorController extends AppController {
 				'pieces'
 			);
 		
+		$this->errors = [
+			'pieces' => [
+				'missing format' => []
+			]
+		];
 		$this->artworks = $artworks->load();
 		$this->editions = $editions->load();
 		$this->formats = $formats->load();
 		$this->pieces = $pieces->load();
 		
 		foreach ($artworks->IDs() as $artworkID) {
-			osd($artworkID, 'ARTWORK');
 			$this->recordArtworkUse($artworkID);
-			$editionIDs = $editions
+			$editionIDs = array_keys($editions
 						->find()
 						->specifyFilter('artwork_id', $artworkID)
-						->loadValueList('id');
-			osd($editionIDs, 'edition ids');
+						->load());
 			foreach ($editionIDs as $editionID) {
-				osd($editionID, 'EDITION');
-				$formatIDs = $formats
+				$formatIDs = array_keys($formats
 						->find()
 						->specifyFilter('edition_id', $editionID)
-						->loadValueList('id');
-				$pieceIDs = $pieces
+						->load());
+				$pieceSet = $pieces
 						->find()
 						->specifyFilter('edition_id', $editionID)
-						->loadValueList('id');
-				$pieceFormats = $pieces
-						->find()
-						->specifyFilter('edition_id', $editionID)
-						->loadDistinct('format_id');
-				$this->recordEditionUse($editionID);
+						->load(LAYERACC_LAYER);
+				$pieceIDs = $pieceSet->IDs();
+				$pieceFormats = $pieceSet->distinct('format_id');
+				
+				$this->verifyPieceFormatLink($pieceFormats, $formatIDs, $pieceSet);
 				$this->recordPieceUse($pieceIDs);
-				osd($formatIDs, "format ids, edition #$editionID, artwork #$artworkID");
-				osd($pieceFormats, "pieces formats, edition #$editionID, artwork #$artworkID");
+				
+				$this->recordEditionUse($editionID);
+			}
+			
+		}
+		osd($this->errors);
+		osd(Range::arrayToString(array_keys($this->pieces)), 'Unreferenced pieces');
+		osd(array_keys($this->editions), 'Unreferenced editions');
+	}
+	
+	private function recordEditionUse($id) {
+		unset($this->editions[$id]);
+	}
+	
+	private function recordFormatUse($id) {
+		
+	}
+	
+	private function recordArtworkUse($id) {
+		
+	}
+	
+	/**
+	 * Remove pieces from the master checklist
+	 * 
+	 * @param type $id
+	 */
+	private function recordPieceUse($pieceIDs) {
+		foreach ($pieceIDs as $pieceId) {
+			unset($this->pieces[$pieceId]);
+		}
+	}
+	
+	/**
+	 * Verifies that pieces reference only formats from the editions pool
+	 * 
+	 * @param type $pieceFormats
+	 * @param type $formatIDs
+	 * @param type $pieceSet
+	 */
+	private function verifyPieceFormatLink($pieceFormats, $formatIDs, $pieceSet) {
+		foreach ($pieceFormats as $formatId) {
+			if (!in_array($formatId, $formatIDs)){
+				$pieces = $pieceSet
+						->find()
+						->specifyFilter('format_id', $formatId)
+						->load();
+				$this->errors['pieces']['missing format'] =
+						array_merge(
+								$this->errors['pieces']['missing format'], 
+								$pieces->IDs()
+						);
 			}
 		}
 	}
 	
-	private function recordEditionUse($id) {
-		
-	}
 	
-	public function recordFormatUse($id) {
-		
-	}
-	
-	public function recordArtworkUse($id) {
-		
-	}
-	
-	public function recordPieceUse($id) {
-		
-	}
 	
 }
