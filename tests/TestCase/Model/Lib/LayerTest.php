@@ -625,4 +625,21 @@ class LayerTest extends TestCase
 				. 'did not return the expected array');
 	}
 	
+	/**
+	 * A compound filter and fetch 
+	 * 
+	 * The filter field and desired result field are different.
+	 * This was a bug due to the reuse of ValueSource
+	 * by both the filter and the value list return code
+	 */
+	public function testFilterAndLoadValueList() {
+		$pieces = new Layer($this->pieceRecords);
+		$editionIDs = $pieces
+				->find()
+				->specifyFilter('edition_id', '36')
+				->setValueSource('id')
+				->loadValueList();
+		debug($editionIDs);
+		$this->markTestIncomplete();
+	}
 }

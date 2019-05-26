@@ -372,7 +372,6 @@ class ArtworksController extends ArtStackController
 //            osd($t->result());
         }
 
-//		osd($dispLayer);die;
         $this->set(compact('stacks', 'result', 'methods', 'dispositions', 'activity'));
     }
 
@@ -417,6 +416,7 @@ class ArtworksController extends ArtStackController
     }
 	
 	public function editionMigration() {
+		$this->relinkedPieces = [];
 		$ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
 		$records = $this->Artworks
 				->find('all')
@@ -429,18 +429,19 @@ class ArtworksController extends ArtStackController
 		foreach ($result->load() as $artwork) {
 			$this->writeFormatJoin($artwork);
 		}
-		
+		$this->saveRelinkedPieces();
         $this->set('artworks', $result);
 	}
 	
 	private function writeFormatJoin($artwork) {
-		osd('save');
 		$EditionsFormats = TableRegistry::getTableLocator()->get('EditionsFormats');
 		foreach ($artwork->formats->load() as $format) {
 		$join = new \App\Model\Entity\EditionsFormat(
 			[
 				'change_piece' => $format->id,
 				'format_id' => $format->range_flag,
+				'title' => $format->title,
+				'description' => $format->description,
 				'edition_id' => $format->edition_id,
 				'user_id' => $format->user_id,
 				'image_id' => $format->image_id,
@@ -450,12 +451,55 @@ class ArtworksController extends ArtStackController
 			]
 		);
 		
-		if ($EditionsFormats->save($join)) {
-			$this->Flash->success("Saved f-$format->range_flag e-$format->edition_id");
-		} else {
-			$this->Flash->error("Failed f-$format->range_flag e-$format->edition_id");
-			osd($join->errors());
-		}
+			if ($EditionsFormats->save($join)) {
+				$this->Flash->success("Saved f-$format->range_flag e-$format->edition_id");
+				$this->relinkPieces(
+						$artwork
+							->find()
+							->setLayer('pieces')
+							->specifyFilter('format_id', $format->id)
+							->load(),
+						$join->id);
+			} else {
+				$this->Flash->error("Failed f-$format->range_flag e-$format->edition_id");
+				osd($join->errors());
+			}
 		}
 	}
+	
+	private function saveRelinkedPieces() {
+		$PieceTable = TableRegistry::getTableLocator()->get('Pieces');
+		$PieceTable->removeBehavior('CounterCache');
+		foreach ($this->relinkedPieces as $piece) {
+			if ($PieceTable->save($piece)) {
+				$this->Flash->success("Saved p-$piece->id f-$piece->format_id");
+			} else {
+				$this->Flash->error("Failed p-$piece->id f-$piece->format_id");
+				osd($piece->errors());
+			}
+		}
+//		$theSave = $PieceTable->saveMany($this->relinkedPieces);
+//		osd($theSave, 'result of saved pieces');
+	}
+	
+	private function relinkPieces($pieces, $newFormatId) {
+		foreach ($pieces as $piece) {
+			$this->relinkedPieces[] = new \App\Model\Entity\Piece ([
+				'id' => $piece->id,
+				'format_id' => $newFormatId
+			]);
+		}
+//		$job_lot = collection($pieces);
+//		$result = $job_lot->reduce(
+//				function ($accum, $piece) use ($newFormatId) {
+//					return $accum[] = 
+//							[
+//								'id' => $piece->id,
+//								'format_id' => $newFormatId
+//							];
+//				}, []
+//		);
+//		$this->relinkedPieces = array_merge($this->relinkedPieces, $result);
+	} 
+	
 }

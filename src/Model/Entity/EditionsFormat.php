@@ -41,4 +41,18 @@ class EditionsFormat extends Entity
         'format' => true,
         'edition' => true
     ];
+	
+	/**
+	protected $_salable;
+
+	/**
+	 * Fully detailed descriptive label for the edition
+	 * 
+	 * @return string
+	 */
+	public function _getDisplayTitle() {
+		$title = empty($this->title) ? 'Format: ' . $this->description : $this->title;
+		return $title;
+	}
+	
 }
