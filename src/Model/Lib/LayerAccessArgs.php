@@ -5,6 +5,7 @@ use BadMethodCallException;
 use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
 use App\Lib\Traits\ErrorRegistryTrait;
+use App\Model\Lib\ValueSourceRegistry;
 
 /**
  * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
@@ -98,6 +99,11 @@ protected $data;
 	
 // <editor-fold defaultstate="collapsed" desc="VALUE-SOURCE PROPERTIES">
 
+	private $source_node = [
+		'value' => FALSE,
+		'key' => FALSE,
+		'filter' => FALSE
+	];
 	private $_key_source = FALSE;
 	private $_value_source = FALSE;
 	public $KeySource;
@@ -114,6 +120,7 @@ protected $data;
 // </editor-fold>
 
 	public function __construct($data = FALSE) {
+		$this->_registry = new ValueSourceRegistry();
         if($data) {
             $this->data = $data;
         }
@@ -199,8 +206,28 @@ protected $data;
 		return $this;
 	}
 	
+	/**
+	 * Make a ValueSource object or defer the tas for later
+	 * 
+	 * 'layer'
+	 *		if the Value and Key objects haven't been made yet but 
+	 *		the source node is know for either, we can now make 
+	 *		that object since the layer is now known
+	 * 'value'
+	 *		set the layer if we can
+	 *		if the ValueObject isn't yet constructued but the layer is 
+	 *		known, make the object since the source node is now known
+	 * 'key'
+	 *		set the layer if we can
+	 *		if the KeyObject isn't yet constructued but the layer is 
+	 *		known, make the object since the key node is now known
+
+	 * 
+	 * @param type $origin
+	 */
 	private function setupValueObjects($origin) {
 		switch ($origin) {
+			// change to two cases, 'layer' and default (all named vsource objects)s
 			case 'layer':
 				if (!$this->hasValueObject() && $this->hasValueSource()) {
 					$this->buildValueObject();
