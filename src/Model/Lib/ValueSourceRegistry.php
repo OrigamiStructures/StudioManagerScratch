@@ -19,7 +19,7 @@ class ValueSourceRegistry extends ObjectRegistry {
 	
 	protected function _create($class, $alias, $config) {
 		osd(func_get_args());die;
-		return new $class($config);
+		return new $class($config['entity'], $config['node']);
 	}
 
 	protected function _resolveClassName($class) {
