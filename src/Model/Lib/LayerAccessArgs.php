@@ -181,7 +181,7 @@ protected $data;
 	}
 
 	public function setValueSource($source) {
-		if ($this->hasValueSource() && $this->source_node['value'] != $source) {
+		if ($this->hasAccessNode('value') && $this->source_node['value'] != $source) {
 			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
 		} else {
 			$this->source_node['value'] = $source;
@@ -223,7 +223,7 @@ protected $data;
 		switch ($origin) {
 			// change to two cases, 'layer' and default (all named vsource objects)s
 			case 'layer':
-				if (!$this->hasValueObject() && $this->hasValueSource()) {
+				if (!$this->hasValueObject() && $this->hasAccessNode('value')) {
 					$this->buildValueObject();
 				}
 				if (!$this->hasKeyObject() && $this->hasAccessNode('key')) {
@@ -274,10 +274,6 @@ protected $data;
 
 	public function hasAccessNode($name) {
 		return $this->source_node[$name] !== FALSE;
-	}
-	
-	public function hasValueSource() {
-		return $this->source_node['value'] !== FALSE;
 	}
 	
 	public function hasValueObject() {
