@@ -104,7 +104,6 @@ protected $data;
 		'key' => FALSE,
 		'filter' => FALSE
 	];
-	private $_value_source = FALSE;
 	public $KeySource;
 	public $ValueSource;
 
@@ -163,10 +162,6 @@ protected $data;
 		return $this;
 	}
 	
-	public function setEntity($param) {
-		$this->setLayer($param);
-	}
-	
 	/**
 	 * 
 	 * @return ValueSource
@@ -186,10 +181,10 @@ protected $data;
 	}
 
 	public function setValueSource($source) {
-		if ($this->hasValueSource() && $this->valueOf('valueSource') != $source) {
+		if ($this->hasValueSource() && $this->source_node['value'] != $source) {
 			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
 		} else {
-			$this->_value_source = $source;
+			$this->source_node['value'] = $source;
 			$this->setupValueObjects('value');
 		}
 		return $this;
@@ -265,7 +260,7 @@ protected $data;
 	}
 	
 	private function buildValueObject() {
-		$this->ValueSource = new ValueSource($this->valueOf('layer'), $this->valueOf('valueSource'));
+		$this->ValueSource = new ValueSource($this->valueOf('layer'), $this->source_node['value']);
 	}
 
 // </editor-fold>
@@ -283,15 +278,15 @@ protected $data;
 
 
 	public function hasValueSource() {
-		return $this->_value_source !== FALSE;
+		return $this->source_node['value'] !== FALSE;
 	}
 	
 	public function hasValueObject() {
-		return isset($this->ValueSource);
+		return !is_null($this->ValueSource);
 	}
 	
 	public function hasKeyObject() {
-		return isset($this->KeySource);
+		return !is_null($this->KeySource);
 	}
 
 	/**
@@ -302,7 +297,7 @@ protected $data;
 	 * @return boolean
 	 */
 	public function isFilter() {
-		return $this->valueOf('value_source') && $this->valueOf('filter_value_isset');
+		return $this->source_node['value'] && $this->valueOf('filter_value_isset');
 	}
 
 // </editor-fold>

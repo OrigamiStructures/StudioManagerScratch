@@ -41,20 +41,6 @@ class LayerAccessArgsTest extends TestCase
      *
      * @return void
      */
-    public function testMultiSet()
-    {
-        $this->args->setValueSource('property')->setLimit('first');
-		$this->assertTrue($this->args->valueOf('valueSource') === 'property', 
-				'The first setting of a chain did not persist');
-		$this->assertTrue($this->args->valueOf('limit') === 1, 
-				'The second setting of a chain did not persist');
-    }
-
-    /**
-     * Test layer method
-     *
-     * @return void
-     */
     public function testLayer()
     {
         $this->markTestIncomplete('Not implemented yet.');
@@ -112,9 +98,9 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testFilter()
     {
-        $this->args->specifyFilter('piece_id', [12,13,14,15]);
+        $this->args->setLayer('piece')->specifyFilter('piece_id', [12,13,14,15]);
 		$this->assertTrue($this->args->isFilter());
-		$this->assertTrue($this->args->valueOf('valueSource') === 'piece_id');
+		$this->assertTrue($this->args->hasValueObject());
 		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
 		$this->assertTrue($this->args->valueOf('filterOperator') === 'in_array');
 		

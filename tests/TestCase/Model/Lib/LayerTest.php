@@ -262,10 +262,10 @@ class LayerTest extends TestCase
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         
- 		$number_is_4_arg = $layer->accessArgs()
-				->setValueSource('number')
-				->filterValue(4);
-        $results = $layer->load($number_is_4_arg); // good find
+		$results = $layer
+				->find()
+				->specifyFilter('number', 4)
+				->load();// good find
         $this->assertTrue(is_array($results));
         $match = array_pop($results);
         $this->assertEquals(4, $match->number);
