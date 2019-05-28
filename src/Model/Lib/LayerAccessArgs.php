@@ -104,7 +104,6 @@ protected $data;
 		'key' => FALSE,
 		'filter' => FALSE
 	];
-	private $_key_source = FALSE;
 	private $_value_source = FALSE;
 	public $KeySource;
 	public $ValueSource;
@@ -197,10 +196,10 @@ protected $data;
 	}
 
 	public function setKeySource($source) {
-		if ($this->hasKeySource() && $this->valueOf('keySource') != $source) {
+		if ($this->hasKeySource() && $this->source_node['key'] != $source) {
 			$this->registerError('Can\'t change `keySource` after it\'s been set.');
 		} else {
-			$this->_key_source = $source;
+			$this->source_node['key'] = $source;
 			$this->setupValueObjects('key');
 		}
 		return $this;
@@ -262,7 +261,7 @@ protected $data;
     }
 	
 	private function buildKeyObject() {
-		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->valueOf('keySource'));
+		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->source_node['key']);
 	}
 	
 	private function buildValueObject() {
@@ -279,7 +278,7 @@ protected $data;
 
 
 	public function hasKeySource() {
-		return $this->_key_source !== FALSE;
+		return $this->source_node['key'] !== FALSE;
 	}
 
 
