@@ -117,7 +117,7 @@ class StackEntityTest extends TestCase
 		$format_index_5 = $this->StackEntity
 				->accessArgs()
 				->setLayer('formats')
-				->setIdIndex(5);
+				->setIdIndex(1);
         $format = $this->StackEntity->load($format_index_5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
@@ -211,7 +211,7 @@ class StackEntityTest extends TestCase
         $this->assertFalse($this->StackEntity->exists('something', 6));
         $this->assertTrue($this->StackEntity->exists('artwork', 4));
         $this->assertTrue($this->StackEntity->exists('editions', 8));
-        $this->assertTrue($this->StackEntity->exists('formats', 5));
+        $this->assertTrue($this->StackEntity->exists('formats', 1));
         $this->assertTrue($this->StackEntity->exists('pieces', 955));
     }
 

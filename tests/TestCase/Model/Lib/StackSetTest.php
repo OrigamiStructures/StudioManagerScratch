@@ -123,7 +123,7 @@ class StackSetTest extends TestCase {
         
         $formats = $this->StackEntities->find()
             ->setLayer('formats')
-            ->setIdIndex(5)
+            ->setIdIndex(1)
             ->load();
         
         $format = array_shift($formats);
@@ -133,7 +133,7 @@ class StackSetTest extends TestCase {
 
         $formats = $this->StackEntities->find()
             ->setLayer('formats')
-            ->setIdIndex(8)
+            ->setIdIndex(2)
             ->load();
         
         $format = array_shift($formats);
