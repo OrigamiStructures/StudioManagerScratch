@@ -191,7 +191,7 @@ protected $data;
 	}
 
 	public function setKeySource($source) {
-		if ($this->hasKeySource() && $this->source_node['key'] != $source) {
+		if ($this->hasAccessNode('key') && $this->source_node['key'] != $source) {
 			$this->registerError('Can\'t change `keySource` after it\'s been set.');
 		} else {
 			$this->source_node['key'] = $source;
@@ -226,7 +226,7 @@ protected $data;
 				if (!$this->hasValueObject() && $this->hasValueSource()) {
 					$this->buildValueObject();
 				}
-				if (!$this->hasKeyObject() && $this->hasKeySource()) {
+				if (!$this->hasKeyObject() && $this->hasAccessNode('key')) {
 					$this->buildKeyObject();
 				}
 				break;
@@ -272,11 +272,10 @@ protected $data;
 	}
 
 
-	public function hasKeySource() {
-		return $this->source_node['key'] !== FALSE;
+	public function hasAccessNode($name) {
+		return $this->source_node[$name] !== FALSE;
 	}
-
-
+	
 	public function hasValueSource() {
 		return $this->source_node['value'] !== FALSE;
 	}
