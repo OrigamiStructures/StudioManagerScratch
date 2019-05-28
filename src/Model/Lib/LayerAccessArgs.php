@@ -261,7 +261,7 @@ protected $_registry;
     }
 	
 	private function buildKeyObject() {
-		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->source_node['key']);
+		$this->KeySource = $this->buildAccessObject('key');
 	}
 	
 	private function buildValueObject() {
