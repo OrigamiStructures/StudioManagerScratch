@@ -265,11 +265,11 @@ protected $_registry;
 	}
 	
 	private function buildValueObject() {
-		$this->ValueSource = new ValueSource($this->valueOf('layer'), $this->source_node['value']);
+		$this->ValueSource = $this->buildAccessObject('value');
 	}
 	
 	private function buildAccessObject($name) {
-		$this->registry()->load(
+		return $this->registry()->load(
 				$name, 
 				[
 					'entity' => $this->valueOf('layer'),
