@@ -49,6 +49,8 @@ use ErrorRegistryTrait;
 
 protected $data;
 
+protected $_registry;
+
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 	
 	/**
@@ -129,6 +131,9 @@ protected $data;
         return $this->data;
     }
 	
+	public function registry() {
+		return $this->_registry;
+	}
     
     public function load($asArray = LAYERACC_ARRAY) {
 		$result = $this->data()->load($this);
@@ -261,6 +266,16 @@ protected $data;
 	
 	private function buildValueObject() {
 		$this->ValueSource = new ValueSource($this->valueOf('layer'), $this->source_node['value']);
+	}
+	
+	private function buildAccessObject($name) {
+		$this->registry()->load(
+				$name, 
+				[
+					'entity' => $this->valueOf('layer'),
+					'node' => $this->source_node[$name]
+				]
+			);
 	}
 
 // </editor-fold>
