@@ -306,7 +306,7 @@ class Layer implements LayerAccessInterface {
         $set = collection($this->_data);
 		
         $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
-				$actual = $argObj->sourceObject()->value($entity);
+				$actual = $argObj->accessNodeObject('value')->value($entity);
 				return $comparison($actual, $argObj->valueOf('filterValue'));
             })->toArray(); 
         return $results;

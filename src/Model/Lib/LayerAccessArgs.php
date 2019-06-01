@@ -169,9 +169,9 @@ protected $_registry;
 	 * 
 	 * @return ValueSource
 	 */
-	public function sourceObject() {
-		return $this->registry()->get('value');
-	}
+//	public function sourceObject() {
+//		return $this->registry()->get('value');
+//	}
 
 	/**
 	 * 
@@ -181,6 +181,10 @@ protected $_registry;
 		return $this->registry()->get('key');
 	}
 
+	public function accessNodeObject($name) {
+		return $this->registry()->get($name);
+	}
+	
 	public function setValueSource($source) {
 		if ($this->hasAccessNodeName('value') && $this->source_node['value'] != $source) {
 			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
