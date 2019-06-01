@@ -177,9 +177,9 @@ protected $_registry;
 	 * 
 	 * @return ValueSource
 	 */
-	public function keyObject() {
-		return $this->registry()->get('key');
-	}
+//	public function keyObject() {
+//		return $this->registry()->get('key');
+//	}
 
 	public function accessNodeObject($name) {
 		return $this->registry()->get($name);

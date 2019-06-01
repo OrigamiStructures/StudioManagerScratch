@@ -97,7 +97,7 @@ trait LayerAccessTrait {
 	 */
 	public function loadKeyValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
-		$KeySource = $args->keyObject();
+		$KeySource = $args->accessNodeObject('key');
 		$ValueSource = $args->accessNodeObject('value');
 		return $this->keyValueList($KeySource, $ValueSource, $data);
 	}
