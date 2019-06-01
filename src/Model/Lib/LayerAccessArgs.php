@@ -224,28 +224,18 @@ protected $_registry;
 		switch ($origin) {
 			// change to two cases, 'layer' and default (all named vsource objects)s
 			case 'layer':
-				if (!$this->hasValueObject() && $this->hasAccessNodeName('value')) {
+				if (!$this->hasSourceObject('value') && $this->hasAccessNodeName('value')) {
 					$this->buildAccessObject('value');
 				}
-				if (!$this->hasKeyObject() && $this->hasAccessNodeName('key')) {
-					$this->buildAccessObject('key');
-				}
-				break;
-			case 'value':
-                  $this->evaluateLayer();
-				if (!$this->hasValueObject() && $this->hasLayer()) {
-					$this->buildAccessObject('value');
-				}
-				break;
-			case 'key':
-                  $this->evaluateLayer();
-				if (!$this->hasKeyObject() && $this->hasLayer()) {
+				if (!$this->hasSourceObject('key') && $this->hasAccessNodeName('key')) {
 					$this->buildAccessObject('key');
 				}
 				break;
 			default:
-				$message = 'setupValueObjects called with unknown origin';
-				$this->registerError($message);
+                $this->evaluateLayer();
+				if (!$this->hasSourceObject($origin) && $this->hasLayer()) {
+					$this->buildAccessObject($origin);
+				}
 				break;
 		}
 	}
@@ -255,14 +245,6 @@ protected $_registry;
             $this->setLayer($this->data()->layerName());
         }
     }
-	
-	private function buildKeyObject() {
-		$this->KeySource = $this->buildAccessObject('key');
-	}
-	
-	private function buildValueObject() {
-		$this->ValueSource = $this->buildAccessObject('value');
-	}
 	
 	private function buildAccessObject($name) {
 		$result = $this->registry()->load(
@@ -287,12 +269,8 @@ protected $_registry;
 		return $this->source_node[$name] !== FALSE;
 	}
 	
-	public function hasValueObject() {
-		return !is_null($this->registry()->get('value'));
-	}
-	
-	public function hasKeyObject() {
-		return !is_null($this->registry()->get('key'));
+	public function hasSourceObject($name) {
+		return !is_null($this->registry()->get($name));
 	}
 
 	/**
