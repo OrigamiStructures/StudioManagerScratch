@@ -306,7 +306,7 @@ class Layer implements LayerAccessInterface {
         $set = collection($this->_data);
 		
         $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
-				$actual = $argObj->ValueSource->value($entity);
+				$actual = $argObj->sourceObject()->value($entity);
 				return $comparison($actual, $argObj->valueOf('filterValue'));
             })->toArray(); 
         return $results;
@@ -359,7 +359,6 @@ class Layer implements LayerAccessInterface {
 	 */
 //	public function keyedList($key, $value, $type = 'all', $options =[]) {
 	public function keyedList(LayerAccessArgs $args) {
-		
 		$validKey = $this->has($key);
 		$valueIsProperty = $validValue = $this->has($value);
 		if (!$valueIsProperty) {
