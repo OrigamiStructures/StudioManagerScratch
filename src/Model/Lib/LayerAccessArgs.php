@@ -106,8 +106,6 @@ protected $_registry;
 		'key' => FALSE,
 		'filter' => FALSE
 	];
-	public $KeySource;
-	public $ValueSource;
 
 	// </editor-fold>
 	
@@ -172,8 +170,7 @@ protected $_registry;
 	 * @return ValueSource
 	 */
 	public function sourceObject() {
-		// make this default the value if its not set
-		return $this->ValueSource;
+		return $this->registry()->get('value');
 	}
 
 	/**
@@ -181,8 +178,7 @@ protected $_registry;
 	 * @return ValueSource
 	 */
 	public function keyObject() {
-		// make this default the value if its not set
-		return $this->KeySource;
+		return $this->registry()->get('key');
 	}
 
 	public function setValueSource($source) {
@@ -229,22 +225,22 @@ protected $_registry;
 			// change to two cases, 'layer' and default (all named vsource objects)s
 			case 'layer':
 				if (!$this->hasValueObject() && $this->hasAccessNodeName('value')) {
-					$this->buildValueObject();
+					$this->buildAccessObject('value');
 				}
 				if (!$this->hasKeyObject() && $this->hasAccessNodeName('key')) {
-					$this->buildKeyObject();
+					$this->buildAccessObject('key');
 				}
 				break;
 			case 'value':
                   $this->evaluateLayer();
 				if (!$this->hasValueObject() && $this->hasLayer()) {
-					$this->buildValueObject();
+					$this->buildAccessObject('value');
 				}
 				break;
 			case 'key':
                   $this->evaluateLayer();
 				if (!$this->hasKeyObject() && $this->hasLayer()) {
-					$this->buildKeyObject();
+					$this->buildAccessObject('key');
 				}
 				break;
 			default:
@@ -269,7 +265,7 @@ protected $_registry;
 	}
 	
 	private function buildAccessObject($name) {
-		return $this->registry()->load(
+		$result = $this->registry()->load(
 				$name, 
 				[
 					'entity' => $this->valueOf('layer'),
@@ -292,11 +288,11 @@ protected $_registry;
 	}
 	
 	public function hasValueObject() {
-		return !is_null($this->ValueSource);
+		return !is_null($this->registry()->get('value'));
 	}
 	
 	public function hasKeyObject() {
-		return !is_null($this->KeySource);
+		return !is_null($this->registry()->get('key'));
 	}
 
 	/**

@@ -78,7 +78,7 @@ trait LayerAccessTrait {
 //	
 	public function loadDistinct($argObj, $sourcePoint = null){
 		if (is_null($sourcePoint)) {
-			$ValueSource = $argObj->ValueSource;
+			$ValueSource = $argObj->sourceObject();
 		} else {
 			$ValueSource = new ValueSource(
 					$argObj->valueOf('layer'), 
