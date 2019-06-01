@@ -222,14 +222,8 @@ protected $_registry;
 	 */
 	private function setupValueObjects($origin) {
 		switch ($origin) {
-			// change to two cases, 'layer' and default (all named vsource objects)s
 			case 'layer':
-				if (!$this->hasSourceObject('value') && $this->hasAccessNodeName('value')) {
-					$this->buildAccessObject('value');
-				}
-				if (!$this->hasSourceObject('key') && $this->hasAccessNodeName('key')) {
-					$this->buildAccessObject('key');
-				}
+				$this->registerSourceNodes();
 				break;
 			default:
                 $this->evaluateLayer();
@@ -240,6 +234,14 @@ protected $_registry;
 		}
 	}
     
+	private function registerSourceNodes() {
+		foreach (array_keys($this->source_node) as $name) {
+			if (!$this->hasSourceObject($name) && $this->hasAccessNodeName($name)) {
+				$this->buildAccessObject($name);
+			}
+		}
+	}
+	
     private function evaluateLayer() {
         if (!$this->hasLayer() && is_a($this->data(), 'App\Model\Lib\Layer')) {
             $this->setLayer($this->data()->layerName());
