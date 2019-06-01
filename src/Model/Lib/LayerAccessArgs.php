@@ -227,7 +227,7 @@ protected $_registry;
 				break;
 			default:
                 $this->evaluateLayer();
-				if (!$this->hasSourceObject($origin) && $this->hasLayer()) {
+				if (!$this->hasAccessNodeObject($origin) && $this->hasLayer()) {
 					$this->buildAccessObject($origin);
 				}
 				break;
@@ -236,7 +236,7 @@ protected $_registry;
     
 	private function registerSourceNodes() {
 		foreach (array_keys($this->source_node) as $name) {
-			if (!$this->hasSourceObject($name) && $this->hasAccessNodeName($name)) {
+			if (!$this->hasAccessNodeObject($name) && $this->hasAccessNodeName($name)) {
 				$this->buildAccessObject($name);
 			}
 		}
@@ -271,7 +271,7 @@ protected $_registry;
 		return $this->source_node[$name] !== FALSE;
 	}
 	
-	public function hasSourceObject($name) {
+	public function hasAccessNodeObject($name) {
 		return !is_null($this->registry()->get($name));
 	}
 

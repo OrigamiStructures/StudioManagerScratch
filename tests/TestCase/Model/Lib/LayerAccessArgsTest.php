@@ -100,7 +100,7 @@ class LayerAccessArgsTest extends TestCase
     {
         $this->args->setLayer('piece')->specifyFilter('piece_id', [12,13,14,15]);
 		$this->assertTrue($this->args->isFilter());
-		$this->assertTrue($this->args->hasSourceObject('value'));
+		$this->assertTrue($this->args->hasAccessNodeObject('value'));
 		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
 		$this->assertTrue($this->args->valueOf('filterOperator') === 'in_array');
 		

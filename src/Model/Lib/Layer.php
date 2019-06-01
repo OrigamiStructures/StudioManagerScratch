@@ -298,7 +298,7 @@ class Layer implements LayerAccessInterface {
 	 */
     public function filter($argObj) {
 		$argObj = $this->NormalizeArgs(func_get_args());
-		if (!$argObj->hasSourceObject('value')) {
+		if (!$argObj->hasAccessNodeObject('value')) {
 //			pr($this->layerName());
 			$argObj->setLayer($this->layerName());
 		}
