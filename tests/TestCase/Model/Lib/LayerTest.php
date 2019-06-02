@@ -605,7 +605,7 @@ class LayerTest extends TestCase
     public function testLoadKeyValueListSimple() {
 		$layer = new Layer($this->pieceRecords);
 		$actual = $layer->find()
-				->setKeySource('format_id')
+				->setAccessNodeObject('key', 'format_id')
 				->setAccessNodeObject('value', 'id')
 				->setLayer('piece')
 				->loadKeyValueList();
@@ -615,7 +615,7 @@ class LayerTest extends TestCase
     public function testLoadKeyValueListMethodForKey() {
 		$layer = new Layer($this->pieceRecords);
 		$actual = $layer->find()
-				->setKeySource('key')
+				->setAccessNodeObject('key', 'key')
 				->setAccessNodeObject('value', 'id')
 				->loadKeyValueList();
 		$this->assertArraySubset(
