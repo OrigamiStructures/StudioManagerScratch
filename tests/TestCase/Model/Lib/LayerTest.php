@@ -633,13 +633,12 @@ class LayerTest extends TestCase
 	 * by both the filter and the value list return code
 	 */
 	public function testFilterAndLoadValueList() {
-//		$pieces = new Layer($this->pieceRecords);
-//		$editionIDs = $pieces
-//				->find()
-//				->specifyFilter('edition_id', '36')
-////				->setAccessNodeObject('value', 'id')
-//				->loadValueList();
-//		debug($editionIDs);
-		$this->markTestIncomplete();
+		$pieces = new Layer($this->pieceRecords);
+		$editionIDs = $pieces
+				->find()
+				->specifyFilter('edition_id', '36')
+				->setAccessNodeObject('value', 'id')
+				->loadValueList();
+		$this->assertArraySubset([1006, 1007, 1008], $editionIDs);
 	}
 }
