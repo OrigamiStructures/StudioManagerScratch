@@ -184,26 +184,6 @@ protected $_registry;
 
 	}
 	
-//	public function setValueSource($source) {
-//		if ($this->hasAccessNodeName('value') && $this->source_node['value'] != $source) {
-//			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
-//		} else {
-//			$this->source_node['value'] = $source;
-//			$this->setupValueObjects('value');
-//		}
-//		return $this;
-//	}
-//
-	public function setKeySource($source) {
-		if ($this->hasAccessNodeName('key') && $this->source_node['key'] != $source) {
-			$this->registerError('Can\'t change `keySource` after it\'s been set.');
-		} else {
-			$this->source_node['key'] = $source;
-			$this->setupValueObjects('key');
-		}
-		return $this;
-	}
-	
 	/**
 	 * Make a ValueSource object or defer the tas for later
 	 * 
