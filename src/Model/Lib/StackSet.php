@@ -152,7 +152,7 @@ class StackSet implements LayerAccessInterface {
 	}
 
 	public function filter($property, $value) {
-		
+		debug('other strike');
 	}
 
 	public function linkedTo($foreign, $foreign_id, $linked = null) {

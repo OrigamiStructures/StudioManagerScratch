@@ -123,7 +123,7 @@ class StackSetTest extends TestCase {
         
         $formats = $this->StackEntities->find()
             ->setLayer('formats')
-            ->setIdIndex(5)
+            ->setIdIndex(1)
             ->load();
         
         $format = array_shift($formats);
@@ -133,7 +133,7 @@ class StackSetTest extends TestCase {
 
         $formats = $this->StackEntities->find()
             ->setLayer('formats')
-            ->setIdIndex(8)
+            ->setIdIndex(2)
             ->load();
         
         $format = array_shift($formats);
@@ -146,9 +146,11 @@ class StackSetTest extends TestCase {
         
         $pieces = $this->StackEntities->find()
             ->setLayer('pieces')
-            ->setValueSource('quantity')
-            ->filterValue(140)
+			->specifyFilter('quantity', 140)
+//            ->setAccessNodeObject('filter', 'quantity')
+//            ->filterValue(140)
             ->load();
+//		debug($pieces);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
@@ -226,7 +228,7 @@ class StackSetTest extends TestCase {
 				$this->StackEntities
 				->find()
 				->setLayer('editions')
-				->setValueSource('type')
+				->setAccessNodeObject('value', 'type')
 				->loadDistinct(),
 				'Distinct did not return the expected set of edition types '
 				. 'from a set of stack entities');

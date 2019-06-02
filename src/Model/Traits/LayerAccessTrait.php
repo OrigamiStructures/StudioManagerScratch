@@ -78,7 +78,7 @@ trait LayerAccessTrait {
 //	
 	public function loadDistinct($argObj, $sourcePoint = null){
 		if (is_null($sourcePoint)) {
-			$ValueSource = $argObj->ValueSource;
+			$ValueSource = $argObj->accessNodeObject('value');
 		} else {
 			$ValueSource = new ValueSource(
 					$argObj->valueOf('layer'), 
@@ -97,8 +97,8 @@ trait LayerAccessTrait {
 	 */
 	public function loadKeyValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
-		$KeySource = $args->keyObject();
-		$ValueSource = $args->sourceObject();
+		$KeySource = $args->accessNodeObject('key');
+		$ValueSource = $args->accessNodeObject('value');
 		return $this->keyValueList($KeySource, $ValueSource, $data);
 	}
 	
@@ -110,7 +110,7 @@ trait LayerAccessTrait {
 	 */
 	public function loadValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
-		$ValueSource = $args->sourceObject();
+		$ValueSource = $args->accessNodeObject('value');
 		return $this->valueList($ValueSource, $data);
 	}
 	
