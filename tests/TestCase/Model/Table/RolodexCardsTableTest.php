@@ -248,7 +248,7 @@ class RolodexCardsTableTest extends TestCase
 			[1,2], 
 			$cards->find()
 				->setLayer('identity')
-				->setValueSource('id')
+				->setAccessNodeObject('value', 'id')
 				->loadValueList(),
 				'building from membership ids did not pull the correct '
 				. 'identity records to head the stacks');
@@ -265,7 +265,7 @@ class RolodexCardsTableTest extends TestCase
 			[1,2,3,4,5,6,7,8,9], 
 			$cards->find()
 				->setLayer('identity')
-				->setValueSource('id')
+				->setAccessNodeObject('value', 'id')
 				->loadValueList(),
 				'building from data_owner ids did not pull the correct '
 				. 'identity records to head the stacks');

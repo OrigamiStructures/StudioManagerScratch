@@ -117,7 +117,7 @@ class StackEntityTest extends TestCase
 		$format_index_5 = $this->StackEntity
 				->accessArgs()
 				->setLayer('formats')
-				->setIdIndex(5);
+				->setIdIndex(1);
         $format = $this->StackEntity->load($format_index_5);
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
@@ -125,7 +125,7 @@ class StackEntityTest extends TestCase
 		
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
-				->setValueSource('quantity')
+				->setAccessNodeObject('filter', 'quantity')
 				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
@@ -173,7 +173,7 @@ class StackEntityTest extends TestCase
         // unknown layer combinded with a field search
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->setLimit('first')
-				->setValueSource('edition_id')
+				->setAccessNodeObject('value', 'edition_id')
 				->filterValue(8);
         $this->assertEquals(
 				0, 
@@ -211,7 +211,7 @@ class StackEntityTest extends TestCase
         $this->assertFalse($this->StackEntity->exists('something', 6));
         $this->assertTrue($this->StackEntity->exists('artwork', 4));
         $this->assertTrue($this->StackEntity->exists('editions', 8));
-        $this->assertTrue($this->StackEntity->exists('formats', 5));
+        $this->assertTrue($this->StackEntity->exists('formats', 1));
         $this->assertTrue($this->StackEntity->exists('pieces', 955));
     }
 
@@ -281,7 +281,7 @@ class StackEntityTest extends TestCase
 		$actual = $this->StackEntity
 			->find()
 			->setLayer('pieces')
-			->setValueSource('edition_id')
+			->setAccessNodeObject('value', 'edition_id')
 			->loadDistinct();
         $this->assertEquals([5, 8], $actual,
 			'A valid layer and property did not return the expected values');
