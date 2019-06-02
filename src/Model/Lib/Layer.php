@@ -298,7 +298,7 @@ class Layer implements LayerAccessInterface {
 	 */
     public function filter($argObj) {
 		$argObj = $this->NormalizeArgs(func_get_args());
-		if (!$argObj->hasAccessNodeObject('value')) {
+		if (!$argObj->hasAccessNodeObject('filter')) {
 //			pr($this->layerName());
 			$argObj->setLayer($this->layerName());
 		}
@@ -306,7 +306,7 @@ class Layer implements LayerAccessInterface {
         $set = collection($this->_data);
 		
         $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
-				$actual = $argObj->accessNodeObject('value')->value($entity);
+				$actual = $argObj->accessNodeObject('filter')->value($entity);
 				return $comparison($actual, $argObj->valueOf('filterValue'));
             })->toArray(); 
         return $results;

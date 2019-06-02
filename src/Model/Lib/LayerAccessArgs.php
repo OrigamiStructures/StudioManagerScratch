@@ -266,7 +266,7 @@ protected $_registry;
 	 * @return boolean
 	 */
 	public function isFilter() {
-		return $this->source_node['value'] && $this->valueOf('filter_value_isset');
+		return $this->source_node['filter'] && $this->valueOf('filter_value_isset');
 	}
 
 // </editor-fold>
@@ -350,7 +350,7 @@ protected $_registry;
 	 */
 	public function specifyFilter($value_source, $filter_value, $filter_operator = FALSE) {
 		$this->setFilterOperator($filter_operator);
-		$this->setAccessNodeObject('value', $value_source);
+		$this->setAccessNodeObject('filter', $value_source);
 		$this->filterValue($filter_value);
 		return $this;
 	}

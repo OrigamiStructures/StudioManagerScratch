@@ -271,7 +271,7 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->setAccessNodeObject('value', 'number')
+				->setAccessNodeObject('filter', 'number')
 				->filterValue('4');
         $results = $layer->load($number_is_4_arg); // good val, casting mismatch
         $this->assertTrue(is_array($results));
@@ -279,14 +279,14 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_badval_arg = $layer->accessArgs()
-				->setAccessNodeObject('value', 'number')
+				->setAccessNodeObject('filter', 'number')
 				->filterValue(9000);
         $results = $layer->load($number_is_badval_arg); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
  		$badproperty_is_3_arg = $layer->accessArgs()
-				->setAccessNodeObject('value', 'boogers')
+				->setAccessNodeObject('filter', 'boogers')
 				->filterValue(3);
         $results = $layer->load($badproperty_is_3_arg); // property doesn't exist
         $this->assertTrue(is_array($results));
@@ -297,15 +297,15 @@ class LayerTest extends TestCase
         $layer = new Layer($this->pieceRecords);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->setAccessNodeObject('value', 'number')
+				->setAccessNodeObject('filter', 'number')
 				->filterValue(4);
         $four = $layer->load($number_is_4_arg);
  		$number_is_3_arg = $layer->accessArgs()
-				->setAccessNodeObject('value', 'number')
+				->setAccessNodeObject('filter', 'number')
 				->filterValue(3);
         $three = $layer->load($number_is_3_arg);
  		$number_is_3and4_arg = $layer->accessArgs()
-				->setAccessNodeObject('value', 'number')
+				->setAccessNodeObject('filter', 'number')
 				->filterValue([4,3]);
         $results = $layer->load($number_is_3and4_arg); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
@@ -319,7 +319,7 @@ class LayerTest extends TestCase
         $this->assertEquals(5, count($layer->load($simpleAllArg)));
  		$all_id_equals_12 = $layer->accessArgs()
 				->setLimit('all')
-				->setAccessNodeObject('value', 'id')
+				->setAccessNodeObject('filter', 'id')
 				->filterValue('12');
         $this->assertEquals(0, count($layer->load($all_id_equals_12)));        
     }
@@ -334,13 +334,13 @@ class LayerTest extends TestCase
 		
  		$first_with_0_dispos_arg = $layer->accessArgs()
 				->setLimit('first')
-				->setAccessNodeObject('value', 'disposition_count')
+				->setAccessNodeObject('filter', 'disposition_count')
 				->filterValue(0);
         $this->assertEquals(1, count($layer->load($first_with_0_dispos_arg)));  
 		
  		$first_badSearch_args = $layer->accessArgs()
 				->setLimit('first')
-				->setAccessNodeObject('value', 'boogers')
+				->setAccessNodeObject('filter', 'boogers')
 				->filterValue(0);
 		/**
 		 * This fails because of the property validation check's loosness 
@@ -353,7 +353,7 @@ class LayerTest extends TestCase
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
 				->setLimit(1)
-				->setAccessNodeObject('value', 'disposition_count')
+				->setAccessNodeObject('filter', 'disposition_count')
 				->filterValue(50);
         $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));        
     }

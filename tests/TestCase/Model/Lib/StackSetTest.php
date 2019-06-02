@@ -146,9 +146,11 @@ class StackSetTest extends TestCase {
         
         $pieces = $this->StackEntities->find()
             ->setLayer('pieces')
-            ->setAccessNodeObject('value', 'quantity')
-            ->filterValue(140)
+			->specifyFilter('quantity', 140)
+//            ->setAccessNodeObject('filter', 'quantity')
+//            ->filterValue(140)
             ->load();
+//		debug($pieces);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '

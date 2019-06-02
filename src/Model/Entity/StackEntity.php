@@ -346,7 +346,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	}
 	
 	public function filter($property, $value) {
-		;
+		debug('strike');
 	}
 	
 // </editor-fold>

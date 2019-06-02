@@ -125,7 +125,7 @@ class StackEntityTest extends TestCase
 		
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
-				->setAccessNodeObject('value', 'quantity')
+				->setAccessNodeObject('filter', 'quantity')
 				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
