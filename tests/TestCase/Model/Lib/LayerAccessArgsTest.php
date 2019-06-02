@@ -143,7 +143,7 @@ class LayerAccessArgsTest extends TestCase
         $this->assertFalse($this->args->isFilter(),
 				'unmodified argObject says it is a valid Filter');
 		
-		$this->args->setValueSource('_value_source');
+		$this->args->setAccessNodeObject('value', '_value_source');
         $this->assertFalse($this->args->isFilter(),
 				'argObject with only a _value_source says it is a valid Filter');
 		

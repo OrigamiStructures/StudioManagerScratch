@@ -169,16 +169,31 @@ protected $_registry;
 		return $this->registry()->get($name);
 	}
 	
-	public function setValueSource($source) {
-		if ($this->hasAccessNodeName('value') && $this->source_node['value'] != $source) {
-			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
+	public function setAccessNodeObject($objectName, $nodeName) {
+		if (
+				$this->hasAccessNodeName($objectName) 
+				&& $this->source_node[$objectName] != $nodeName) 
+		{
+			$this->registerError("Can't change `{$objectName}` object's "
+				. "source node name after it's been set.");
 		} else {
-			$this->source_node['value'] = $source;
-			$this->setupValueObjects('value');
+			$this->source_node[$objectName] = $nodeName;
+			$this->setupValueObjects($objectName);
 		}
 		return $this;
-	}
 
+	}
+	
+//	public function setValueSource($source) {
+//		if ($this->hasAccessNodeName('value') && $this->source_node['value'] != $source) {
+//			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
+//		} else {
+//			$this->source_node['value'] = $source;
+//			$this->setupValueObjects('value');
+//		}
+//		return $this;
+//	}
+//
 	public function setKeySource($source) {
 		if ($this->hasAccessNodeName('key') && $this->source_node['key'] != $source) {
 			$this->registerError('Can\'t change `keySource` after it\'s been set.');
@@ -355,7 +370,7 @@ protected $_registry;
 	 */
 	public function specifyFilter($value_source, $filter_value, $filter_operator = FALSE) {
 		$this->setFilterOperator($filter_operator);
-		$this->setValueSource($value_source);
+		$this->setAccessNodeObject('value', $value_source);
 		$this->filterValue($filter_value);
 		return $this;
 	}

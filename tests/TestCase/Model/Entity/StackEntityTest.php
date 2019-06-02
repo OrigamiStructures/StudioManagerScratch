@@ -125,7 +125,7 @@ class StackEntityTest extends TestCase
 		
 		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
-				->setValueSource('quantity')
+				->setAccessNodeObject('value', 'quantity')
 				->filterValue(140);
         $pieces = $this->StackEntity->load($pieces_qty_equals_140);
         $piece = array_shift($pieces);
@@ -173,7 +173,7 @@ class StackEntityTest extends TestCase
         // unknown layer combinded with a field search
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->setLimit('first')
-				->setValueSource('edition_id')
+				->setAccessNodeObject('value', 'edition_id')
 				->filterValue(8);
         $this->assertEquals(
 				0, 
@@ -281,7 +281,7 @@ class StackEntityTest extends TestCase
 		$actual = $this->StackEntity
 			->find()
 			->setLayer('pieces')
-			->setValueSource('edition_id')
+			->setAccessNodeObject('value', 'edition_id')
 			->loadDistinct();
         $this->assertEquals([5, 8], $actual,
 			'A valid layer and property did not return the expected values');

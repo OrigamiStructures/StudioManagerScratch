@@ -129,7 +129,7 @@ foreach ($artworks->load() as $artwork){
 }
 $edition_id_set = $artworks->find()
 		->setLayer('editions')
-		->setValueSource('id')
+		->setAccessNodeObject('value', 'id')
 		->loadDistinct();
 sort($edition_id_set);
 //osd($edition_id_set);

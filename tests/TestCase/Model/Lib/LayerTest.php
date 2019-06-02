@@ -271,7 +271,7 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->setValueSource('number')
+				->setAccessNodeObject('value', 'number')
 				->filterValue('4');
         $results = $layer->load($number_is_4_arg); // good val, casting mismatch
         $this->assertTrue(is_array($results));
@@ -279,14 +279,14 @@ class LayerTest extends TestCase
         $this->assertEquals(4, $match->number);
         
  		$number_is_badval_arg = $layer->accessArgs()
-				->setValueSource('number')
+				->setAccessNodeObject('value', 'number')
 				->filterValue(9000);
         $results = $layer->load($number_is_badval_arg); // val doesn't exist
         $this->assertTrue(is_array($results));
         $this->assertTrue(empty($results));
 
  		$badproperty_is_3_arg = $layer->accessArgs()
-				->setValueSource('boogers')
+				->setAccessNodeObject('value', 'boogers')
 				->filterValue(3);
         $results = $layer->load($badproperty_is_3_arg); // property doesn't exist
         $this->assertTrue(is_array($results));
@@ -297,15 +297,15 @@ class LayerTest extends TestCase
         $layer = new Layer($this->pieceRecords);
         
  		$number_is_4_arg = $layer->accessArgs()
-				->setValueSource('number')
+				->setAccessNodeObject('value', 'number')
 				->filterValue(4);
         $four = $layer->load($number_is_4_arg);
  		$number_is_3_arg = $layer->accessArgs()
-				->setValueSource('number')
+				->setAccessNodeObject('value', 'number')
 				->filterValue(3);
         $three = $layer->load($number_is_3_arg);
  		$number_is_3and4_arg = $layer->accessArgs()
-				->setValueSource('number')
+				->setAccessNodeObject('value', 'number')
 				->filterValue([4,3]);
         $results = $layer->load($number_is_3and4_arg); // good find
         $this->assertTrue((count($four) + count($three)) === count($results));
@@ -319,7 +319,7 @@ class LayerTest extends TestCase
         $this->assertEquals(5, count($layer->load($simpleAllArg)));
  		$all_id_equals_12 = $layer->accessArgs()
 				->setLimit('all')
-				->setValueSource('id')
+				->setAccessNodeObject('value', 'id')
 				->filterValue('12');
         $this->assertEquals(0, count($layer->load($all_id_equals_12)));        
     }
@@ -334,13 +334,13 @@ class LayerTest extends TestCase
 		
  		$first_with_0_dispos_arg = $layer->accessArgs()
 				->setLimit('first')
-				->setValueSource('disposition_count')
+				->setAccessNodeObject('value', 'disposition_count')
 				->filterValue(0);
         $this->assertEquals(1, count($layer->load($first_with_0_dispos_arg)));  
 		
  		$first_badSearch_args = $layer->accessArgs()
 				->setLimit('first')
-				->setValueSource('boogers')
+				->setAccessNodeObject('value', 'boogers')
 				->filterValue(0);
 		/**
 		 * This fails because of the property validation check's loosness 
@@ -353,7 +353,7 @@ class LayerTest extends TestCase
 		
  		$first_with_50_dispos_arg = $layer->accessArgs()
 				->setLimit(1)
-				->setValueSource('disposition_count')
+				->setAccessNodeObject('value', 'disposition_count')
 				->filterValue(50);
         $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));        
     }
@@ -492,7 +492,7 @@ class LayerTest extends TestCase
     public function testLoadDistinctWithValidPropertyArgObj() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->find()
-            ->setValueSource('number')
+            ->setAccessNodeObject('value', 'number')
             ->loadDistinct();
         sort($distinct);
         $this->assertEquals([1,2,3,4,5], $distinct,
@@ -500,7 +500,7 @@ class LayerTest extends TestCase
             . 'when using an argObj');
         
         $distinct = $layer->find()
-            ->setValueSource('format_id')
+            ->setAccessNodeObject('value', 'format_id')
             ->loadDistinct();
         $this->assertEquals([36], $distinct,
             'distinct on a valid property did not return expected values '
@@ -510,7 +510,7 @@ class LayerTest extends TestCase
     public function testLoadDistinctWithBadProperyArgObj() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->find()
-            ->setValueSource('wrong')
+            ->setAccessNodeObject('value', 'wrong')
             ->loadDistinct();
         $this->assertEmpty($distinct, 'Distinct on a non-existent '
             . 'property/method value source did not return an empty array '
@@ -520,7 +520,7 @@ class LayerTest extends TestCase
     public function testLoadDistinctWithMethodCallArgObj() {
         $layer = new Layer($this->fivePieces);
         $distinct = $layer->find()
-            ->setValueSource('key')
+            ->setAccessNodeObject('value', 'key')
             ->loadDistinct();
         $this->assertArraySubset(['35_36'], $distinct,
             'Distinct call on a method source didn\'t return expected value '
@@ -606,7 +606,7 @@ class LayerTest extends TestCase
 		$layer = new Layer($this->pieceRecords);
 		$actual = $layer->find()
 				->setKeySource('format_id')
-				->setValueSource('id')
+				->setAccessNodeObject('value', 'id')
 				->setLayer('piece')
 				->loadKeyValueList();
 		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
@@ -616,7 +616,7 @@ class LayerTest extends TestCase
 		$layer = new Layer($this->pieceRecords);
 		$actual = $layer->find()
 				->setKeySource('key')
-				->setValueSource('id')
+				->setAccessNodeObject('value', 'id')
 				->loadKeyValueList();
 		$this->assertArraySubset(
 				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008], 
@@ -637,7 +637,7 @@ class LayerTest extends TestCase
 //		$editionIDs = $pieces
 //				->find()
 //				->specifyFilter('edition_id', '36')
-////				->setValueSource('id')
+////				->setAccessNodeObject('value', 'id')
 //				->loadValueList();
 //		debug($editionIDs);
 		$this->markTestIncomplete();

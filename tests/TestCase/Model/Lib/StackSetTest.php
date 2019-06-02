@@ -146,7 +146,7 @@ class StackSetTest extends TestCase {
         
         $pieces = $this->StackEntities->find()
             ->setLayer('pieces')
-            ->setValueSource('quantity')
+            ->setAccessNodeObject('value', 'quantity')
             ->filterValue(140)
             ->load();
         $piece = array_shift($pieces);
@@ -226,7 +226,7 @@ class StackSetTest extends TestCase {
 				$this->StackEntities
 				->find()
 				->setLayer('editions')
-				->setValueSource('type')
+				->setAccessNodeObject('value', 'type')
 				->loadDistinct(),
 				'Distinct did not return the expected set of edition types '
 				. 'from a set of stack entities');
