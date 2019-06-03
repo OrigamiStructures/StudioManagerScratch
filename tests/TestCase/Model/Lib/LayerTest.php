@@ -248,15 +248,10 @@ class LayerTest extends TestCase
 		$id_int_965_arg = $layer->accessArgs()
 				->setIdIndex(965);
         $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_int_965_arg));
-		$id_string_965_arg = $layer->accessArgs()
-				->setIdIndex('965');
-		$this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_string_965_arg));
+		
 		$id_3_bad_arg = $layer->accessArgs()
 				->setIdIndex(3);
         $this->assertTrue(is_array($layer->load($id_3_bad_arg)));
- 		$bad_index_arg = $layer->accessArgs()
-				->setIdIndex('something wrong');
-        $this->assertTrue(is_array($layer->load($bad_index_arg)));
     }
     
     public function testloadUsingPropertyValue() {
