@@ -94,6 +94,24 @@ class StackEntityTest extends TestCase
             'The access object created by find() did not contain the expected data');
 	}
 
+	/**
+	 * Test find method with provided layer argument
+	 *
+	 * @return void
+	 */
+	public function testFindWithLayer() {
+        $arg = $this->StackEntity->find('layerChoice');
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
+            'find() did not create a LayerAccessArgs object');
+		
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
+            'The access object created by find() did not contain the expected data');
+		
+		$this->assertTrue($arg->valueOf('layer') === 'layerChoice', 
+			'The access object created with the \'layer\' option '
+			. 'did not have a layer set');
+	}
+
 
 // <editor-fold defaultstate="collapsed" desc="Load method tests">
 
@@ -114,20 +132,18 @@ class StackEntityTest extends TestCase
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
 		
 		$this->assertCount(2, $this->StackEntity->load($formats_arg));
-		$format_index_5 = $this->StackEntity
-				->accessArgs()
-				->setLayer('formats')
-				->setIdIndex(1);
-        $format = $this->StackEntity->load($format_index_5);
+        $format = $this->StackEntity
+				->find('formats')
+				->setIdIndex(1)
+				->load();
         $this->assertEquals('Watercolor 6 x 15"', $format->description,
 				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
 				. 'did not return an entity with an expected property value.');
 		
-		$pieces_qty_equals_140 = $this->StackEntity->accessArgs()
-				->setLayer('pieces')
-				->setAccessNodeObject('filter', 'quantity')
-				->filterValue(140);
-        $pieces = $this->StackEntity->load($pieces_qty_equals_140);
+        $pieces = $this->StackEntity
+				->find('pieces')
+				->specifyFilter('quantity', 140)
+				->load();
         $piece = array_shift($pieces);
         $this->assertEquals(
 				140, 

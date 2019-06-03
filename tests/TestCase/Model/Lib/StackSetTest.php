@@ -107,6 +107,24 @@ class StackSetTest extends TestCase {
         $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
             'The access object created by find() did not contain the expected data');
 	}
+	
+	/**
+	 * Test find method with provided layer argument
+	 *
+	 * @return void
+	 */
+	public function testFindWithLayer() {
+        $arg = $this->StackEntities->element(1)->find('layerChoice');
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
+            'find() did not create a LayerAccessArgs object');
+		
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
+            'The access object created by find() did not contain the expected data');
+		
+		$this->assertTrue($arg->valueOf('layer') === 'layerChoice', 
+			'The access object created with the \'layer\' option '
+			. 'did not have a layer set');
+	}
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATON">
 
