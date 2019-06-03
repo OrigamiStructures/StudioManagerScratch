@@ -307,6 +307,15 @@ class StackSetTest extends TestCase {
 				'either find( ) with a layer argument or loadValueList( )'
 				. 'with a node-name argument didn\'t return the expected list');
 	}
+	
+	public function testFindKeyValueListWithArguements() {
+		$list = $this->StackEntities
+				->find('formats')
+				->loadKeyValueList('edition_id', 'edition_id');
+		$this->assertArraySubset([5=>5,8=>8,6=>6,20=>20], $list,
+				'either find( ) with a layer argument or loadKeyValueList( )'
+				. 'with arguments didn\'t return the expected list');
+	}
 
 // </editor-fold>
 }

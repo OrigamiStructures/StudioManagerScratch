@@ -145,7 +145,13 @@ protected $_registry;
         return $this->data()->loadDistinct($this, $sourcePoint);
     }
 	
-	public function loadKeyValueList() {
+	public function loadKeyValueList($key = NULL, $value = NULL) {
+		if (!is_null($key)) {
+			$this->setAccessNodeObject('key', $key);
+		}
+		if (!is_null($value)) {
+			$this->setAccessNodeObject('value', $value);
+		}
 		return $this->data()->loadKeyValueList($this);
 	}
 	
