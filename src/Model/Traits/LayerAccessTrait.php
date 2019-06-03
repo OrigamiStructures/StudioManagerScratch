@@ -32,7 +32,9 @@ trait LayerAccessTrait {
 	 * Make an object to set up filtering and access to content
 	 * 
 	 * Returns a LayerAccessArgs object that allows chained calls 
-	 * for object querying. 
+	 * for object querying. Once all the parameters for the access 
+	 * are spec'd, use one of the objects 'load' varients to 
+	 * return the desired data
 	 * 
 	 * Passing a $layer value will run the setLayer( ) method 
 	 * on the returned Args object
