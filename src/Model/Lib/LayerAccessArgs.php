@@ -149,7 +149,10 @@ protected $_registry;
 		return $this->data()->loadKeyValueList($this);
 	}
 	
-	public function loadValueList() {
+	public function loadValueList($valueName = NULL) {
+		if (!is_null($valueName)) {
+			$this->setAccessNodeObject('value', $valueName);
+		}
 		return $this->data()->loadValueList($this);
 	}
     

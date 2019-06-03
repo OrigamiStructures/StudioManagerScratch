@@ -292,6 +292,21 @@ class StackSetTest extends TestCase {
 				->setLayer('editions')
 				->load());
 	}
+	
+	/**
+	 * Tests two streamlined calls
+	 * 
+	 * both the `find( )` and `loadValueList( )` variants that 
+	 * accept arguments to eliminate the `set` calls are used here
+	 */
+	public function testFindAndLoadValueListWithArguments() {
+		$list = $this->StackEntities
+				->find('formats')
+				->loadValueList('edition_id');
+		$this->assertArraySubset([5,8,6,20], $list,
+				'either find( ) with a layer argument or loadValueList( )'
+				. 'with a node-name argument didn\'t return the expected list');
+	}
 
 // </editor-fold>
 }

@@ -641,4 +641,11 @@ class LayerTest extends TestCase
 				->loadValueList();
 		$this->assertArraySubset([1006, 1007, 1008], $editionIDs);
 	}
+	
+	public function testLoadValueListWithAgument() {
+		$list = layer($this->fivePieces)
+				->find()
+				->loadValueList('quantity');
+		$this->assertArraySubset([1,1,1,1,1], $list);
+	}
 }
