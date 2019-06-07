@@ -7,6 +7,11 @@ use App\Model\Table\PersonCardsTable;
  * CakePHP ArtistCardsTable
  * 
  * @todo When is this enstantiated? Note below:
+ * There is more speculation below, but it seems obvious at this 
+ * moment that these are made when a manager needs to work with 
+ * or for their artist. Or when a registered user needs to 
+ * act as themselves as an artist.
+ * 
  * The name of this card implies it will only be made if the Identity 
  * also appears as the member_id of an Artist record. There is no code 
  * in the distillers or marshaller to guarantee this fact.

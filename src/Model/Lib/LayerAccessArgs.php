@@ -26,6 +26,9 @@ use App\Model\Lib\ValueSourceRegistry;
  * page : which page of found data to return
  * limit : how many elements per page
  * 
+ * properties found in PaginationComponent
+ * limit, maxLimit, sortWhiteList, finder, sort, direction, page, order
+ * 
  * Data filtering 
  * ------------------------------------------
  * TRUE allows the entity into the set, FALSE excludes it 
