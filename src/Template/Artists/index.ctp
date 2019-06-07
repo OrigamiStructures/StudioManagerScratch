@@ -1,55 +1,71 @@
+<h1>Issues to address</h1>
+<p>Why does an empty property get an array? The code seems to 
+ indicate it should get an empty Layer (and that would 
+ be more convenient). StackEntity::private function makeLayerObject( )
+ on line 395 does the actual creation in combination with 
+ Layer::construct()</p>
+<p>Do we actually need dispositions in this stack? Or can that be gathered 
+ on a dedicated API request without a listing here? The only reason 
+ to list here would be for a select list.</p>
+<p>Artwork actually SHOULD be in the stack. But it isn't right now because 
+ of the need to transition artwork linking. It is currently linked to the 
+ user_id, but with the new Artist/Manifest system, I think it needs to 
+ be linked to the Member that has the Manifest.</p>
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Artist[]|\Cake\Collection\CollectionInterface $artists
- */
+//osd($artists);
+//die;
+foreach($artists->load() as $artist) :
+	$manifest = $artist->manifest->element(0);
+	$dataOwner = $artist->data_owner->element(0);
+	$otherManagerCount = $artist->managers->count() - 1;
+	
+	/**
+	 * @todo Why does an empty property get an array? The code seems to 
+	 *		indicate it should get an empty Layer (and that would 
+	 *		be more convenient). StackEntity::private function makeLayerObject( )
+	 *		on line 395 does the actual creation in combination with 
+	 *		Layer::construct()
+	 */
+	$dispositionIDs = is_object($artist->dispositions) 
+			? $artist->dispositions->IDs() : [];
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Artist'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="artists index large-9 medium-8 columns content">
-    <h3><?= __('Artists') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('member_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('member_user_id') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($artists as $artist): ?>
-            <tr>
-                <td><?= $this->Number->format($artist->id) ?></td>
-                <td><?= $artist->has('member') ? $this->Html->link($artist->member->name(), ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
-                <td><?= h($artist->user_id) ?></td>
-                <td><?= $this->Number->format($artist->member_user_id) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $artist->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $artist->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $artist->id], ['confirm' => __('Are you sure you want to delete # {0}?', $artist->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
-</div>
+
+	<?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
+	
+<?php if ($manifest->self()) : ?>
+		
+	<?= $this->Html->para('', "You are the creator/owner of this aritst's "
+				. "data and have identified $otherManagerCount "
+				. "other managers for the data. View those details [here/make link]"); ?>
+
+<?php else: ?>
+		
+	<?= $this->Html->para('', 'To request changes in your access to this '
+			. 'artist, contact ' . $dataOwner->username() ); ?>
+
+<?php endif; ?>
+	
+<ul>
+	<li>Contacts
+		<ul>
+			<?php foreach ($artist->contacts() as $contact) : ?>
+			<li><?= $contact ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</li>
+	<li>
+		Addresses
+		<ul>
+			<?php foreach ($artist->addresses() as $address) : ?>
+			<li><?= $address ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</li>
+</ul>
+
+<?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
+	
+<!--	osd($artist->contacts(), 'Contacts');
+	osd($artist->addresses(), 'Addresses');-->
+		
+<?php endforeach; ?>
