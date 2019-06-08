@@ -9,6 +9,14 @@ should probably be renamed). </p>
 	The role of a linking list like artworks is to speed up user access to 
 	 the data they want. Would we want the choice-grain at this level to go 
 	 all the way to Editions?</p>
+<p>&nbsp;&nbsp;
+	I think that's probably not necessary since it adds complexity that only 
+	benefits the subset of users that are heavy edition creators; a minority.</p>
+<p>- Duplicate addresses and contacts may be a problem (as they are in this case). 
+ When a relevant stack is created (rather than loaded from cache) a check could be 
+ made and the stack flagged for editing. Is this a kind of data management service 
+ we'd want to provide? Or a time-of-create/edit check could be done as an alternative. 
+ Preventative vs corrective strategies.</p>
 <?php
 //osd($artists);
 //die;
