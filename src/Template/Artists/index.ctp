@@ -49,6 +49,8 @@ foreach($artists->load() as $artist) :
 	</li>
 </ul>
 
+<?php osd($artist->artworks->find()->loadValueList('identityLabel')); ?>
+
 <?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
 		
 <?php endforeach; ?>
