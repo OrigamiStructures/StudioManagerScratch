@@ -386,21 +386,15 @@ class StackEntityTest extends TestCase
 				->accessArgs()
 				->setLayer('pieces')
 				->setLimit('all');
-        $pieces = $this->StackEntity->load($all_pieces_arg);
-        $this->assertTrue(
-				is_array($pieces), 
-				'the load value is an array');
-        
+        $pieces = $this->StackEntity->load($all_pieces_arg);        
         unset($this->StackEntity->pieces);
-        $this->assertTrue(
-				$this->StackEntity->isEmpty('pieces'), 
-				'piece value is gone');
-        
         $this->StackEntity->set('pieces', $pieces);
+		
         $this->assertInstanceOf(
 				'\App\Model\Lib\Layer', 
 				$this->StackEntity->get('pieces'), 
-				'layer object was made');
+				'set()ing a layer type column with and array of '
+				. 'entities did not produce a Layer object.');
         
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
@@ -410,13 +404,6 @@ class StackEntityTest extends TestCase
         unset($this->StackEntity->pieces);
         unset($this->StackEntity->dispositions_pieces);
         
-        $this->assertTrue(
-				$this->StackEntity->isEmpty('pieces'), 
-				'piece value is gone');
-        $this->assertTrue(
-				$this->StackEntity->isEmpty('dispositions_pieces'), 
-				'piece value is gone');
-        
         $this->StackEntity->set([
 			'pieces' => $pieces, 
 			'dispositions_pieces' => $dp, 
@@ -425,31 +412,37 @@ class StackEntityTest extends TestCase
         $this->assertInstanceOf(
 				'\App\Model\Lib\Layer', 
 				$this->StackEntity->get('pieces'), 
-				'layer object was made');
+				'set()ing a layer type column with and array of '
+				. 'entities did not produce a Layer object.');
         $this->assertInstanceOf(
 				'\App\Model\Lib\Layer', 
 				$this->StackEntity->get('dispositions_pieces'), 
-				'layer object was made');
+				'set()ing a layer type column with and array of '
+				. 'entities did not produce a Layer object.');
         $this->assertTrue(
 				is_array($this->StackEntity->get('something')),
-				'array was set');
-        
-        //do the same process to multiple values and use the guard feature
-        //to test the [prop=>val, prop=>val] argument syntax
-//        $pieces = $this->StackEntity->load('pieces', 'all');
-//        $dp = $this->StackEntity->load('dispositions_pieces', 'all');
-//        unset($this->StackEntity->pieces);
-//        unset($this->StackEntity->dispositions_pieces);
-//        
-//        $this->assertTrue($this->StackEntity->isEmpty('pieces'), 'piece value is gone');
-//        $this->assertTrue($this->StackEntity->isEmpty('dispositions_pieces'), 'piece value is gone');
-//        
-//        $this->StackEntity->set(['pieces' => $pieces, 'dispositions_pieces' => $dp, 'something' => ['array']]);
-//        
-//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('pieces'), 'layer object was made');
-//        $this->assertInstanceOf('\App\Model\Lib\Layer', $this->StackEntity->get('dispositions_pieces'), 'layer object was made');
-//        $this->assertTrue(is_array($this->StackEntity->get('something')), 'array was set');
+				'set()ing an arbitrary column to an array did '
+				. 'not give the entity\'s property an array value');
     }
+	
+	public function testSetLayerColumnToEmptyArray() {
+        unset($this->StackEntity->pieces);
+        $this->StackEntity->set('pieces', []);
+		
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->get('pieces'), 
+				'set()ing a layer type column with an emptynarray '
+				. 'did not produce a Layer object.');
+	}
+	
+	public function testMethodOnEmptyLayer() {
+        unset($this->StackEntity->pieces);
+        $this->StackEntity->set('pieces', []);
+		
+		$this->assertTrue(is_array($this->StackEntity->IDs('pieces')));
+		$this->assertTrue(empty($this->StackEntity->IDs('pieces')));
+	}
 
 // </editor-fold>
     

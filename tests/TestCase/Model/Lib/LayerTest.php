@@ -77,13 +77,19 @@ class LayerTest extends TestCase
         $record = $this->pieceRecords[0];
         
         $layer = new Layer([], 'edition');
-        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer, 
+				'Creation with an empty array does not produce a '
+				. 'Layer object');
         
         $layer = new Layer([$record], 'edition');
-        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer, 
+				'Creation with records in an array, plus a matching '
+				. 'entity name does not produce a Layer object.');
         
         $layer = new Layer([$record]);
-        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer, 
+				'Creation with an array of records does not '
+				. 'produce a Layer object');
     }
     
 
