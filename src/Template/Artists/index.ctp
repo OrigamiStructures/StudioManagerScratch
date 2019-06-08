@@ -1,13 +1,8 @@
 <h1>Issues to address</h1>
-<p>Why does an empty property get an array? The code seems to 
- indicate it should get an empty Layer (and that would 
- be more convenient). StackEntity::private function makeLayerObject( )
- on line 395 does the actual creation in combination with 
- Layer::construct()</p>
-<p>Do we actually need dispositions in this stack? Or can that be gathered 
+<p>- Do we actually need dispositions in this stack? Or can that be gathered 
  on a dedicated API request without a listing here? The only reason 
  to list here would be for a select list.</p>
-<p>Artwork actually SHOULD be in the stack. But it isn't right now because 
+<p>- Artwork actually SHOULD be in the stack. But it isn't right now because 
  of the need to transition artwork linking. It is currently linked to the 
  user_id, but with the new Artist/Manifest system, I think it needs to 
  be linked to the Member that has the Manifest.</p>
@@ -18,30 +13,21 @@ foreach($artists->load() as $artist) :
 	$manifest = $artist->manifest->element(0);
 	$dataOwner = $artist->data_owner->element(0);
 	$otherManagerCount = $artist->managers->count() - 1;
-	
-	/**
-	 * @todo Why does an empty property get an array? The code seems to 
-	 *		indicate it should get an empty Layer (and that would 
-	 *		be more convenient). StackEntity::private function makeLayerObject( )
-	 *		on line 395 does the actual creation in combination with 
-	 *		Layer::construct()
-	 */
-	$dispositionIDs = is_object($artist->dispositions) 
-			? $artist->dispositions->IDs() : [];
+	$dispositionIDs = $artist->IDs('dispositions');
 ?>
 
-	<?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
+<?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
 	
 <?php if ($manifest->self()) : ?>
 		
-	<?= $this->Html->para('', "You are the creator/owner of this aritst's "
-				. "data and have identified $otherManagerCount "
-				. "other managers for the data. View those details [here/make link]"); ?>
+<?= $this->Html->para('', "You are the creator/owner of this aritst's "
+			. "data and have identified $otherManagerCount "
+			. "other managers for the data. View those details [here/make link]"); ?>
 
 <?php else: ?>
 		
-	<?= $this->Html->para('', 'To request changes in your access to this '
-			. 'artist, contact ' . $dataOwner->username() ); ?>
+<?= $this->Html->para('', 'To request changes in your access to this '
+		. 'artist, contact ' . $dataOwner->username() ); ?>
 
 <?php endif; ?>
 	
@@ -64,8 +50,5 @@ foreach($artists->load() as $artist) :
 </ul>
 
 <?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
-	
-<!--	osd($artist->contacts(), 'Contacts');
-	osd($artist->addresses(), 'Addresses');-->
 		
 <?php endforeach; ?>
