@@ -425,6 +425,13 @@ class StackEntityTest extends TestCase
 				. 'not give the entity\'s property an array value');
     }
 	
+	/**
+	 * Using this two-argument form of StackEntity->set() works fine 
+	 * but the marshalling system for stackEntities uses a different 
+	 * variaiton, one arg = ['pieces' => []] and this variant 
+	 * caused problems when the value of the node was an empty array.
+	 * That's why the tests were passing though the code was failing.
+	 */
 	public function testSetLayerColumnToEmptyArray() {
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', []);
@@ -433,9 +440,37 @@ class StackEntityTest extends TestCase
 				'\App\Model\Lib\Layer', 
 				$this->StackEntity->get('pieces'), 
 				'set()ing a layer type column with an emptynarray '
-				. 'did not produce a Layer object.');
+				. 'did not produce a Layer object when using ->get($property)');
+
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->pieces, 
+				'set()ing a layer type column with an emptynarray '
+				. 'did not produce a Layer object when using ->$property');
+
 	}
-	
+
+	/**
+	 * This test uses the alternate ->set([$key => []]) variant
+	 */
+	public function testSetLayerColumnToEmptyArrayAlt() {
+        unset($this->StackEntity->pieces);
+        $this->StackEntity->set(['pieces' => []]);
+		
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->get('pieces'), 
+				'set([])ing a layer type column with an emptynarray '
+				. 'did not produce a Layer object when using ->get($property)');
+
+        $this->assertInstanceOf(
+				'\App\Model\Lib\Layer', 
+				$this->StackEntity->pieces, 
+				'set([])ing a layer type column with an emptynarray '
+				. 'did not produce a Layer object when using ->$property');
+
+	}
+
 	public function testMethodOnEmptyLayer() {
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', []);
