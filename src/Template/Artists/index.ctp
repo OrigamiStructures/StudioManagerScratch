@@ -2,10 +2,13 @@
 <p>- Do we actually need dispositions in this stack? Or can that be gathered 
  on a dedicated API request without a listing here? The only reason 
  to list here would be for a select list.</p>
-<p>- Artwork actually SHOULD be in the stack. But it isn't right now because 
- of the need to transition artwork linking. It is currently linked to the 
- user_id, but with the new Artist/Manifest system, I think it needs to 
- be linked to the Member that has the Manifest.</p>
+<p>- I've done a first-approximation inclusion of Artworks by adding an 
+ artist_id link to 'artworks' (which actually is a link to member_id and 
+should probably be renamed). </p>
+<p>&nbsp;&nbsp;
+	The role of a linking list like artworks is to speed up user access to 
+	 the data they want. Would we want the choice-grain at this level to go 
+	 all the way to Editions?</p>
 <?php
 //osd($artists);
 //die;
