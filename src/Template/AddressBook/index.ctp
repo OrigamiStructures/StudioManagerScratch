@@ -8,16 +8,19 @@
 //    ->setLayer('identity')
 //    ->setAccessNodeObject('value', 'id')
 //    ->loadValueList());
+$IDs = $results->IDs();
+osd($IDs);
 $resultIds = $results
     ->find()
     ->setLayer('identity')
     ->setAccessNodeObject('value', 'id')
     ->loadValueList();
 
-foreach ($resultIds as $resultId) {
-    $rolodexCardEntity = $results->element($resultId);
+foreach ($IDs as $ID) {
+    if($ID == 75){continue;}
+    $rolodexCardEntity = $results->element($ID);
     osd($rolodexCardEntity->rootDisplayValue());
 }
-osd($results->find()->setLayer('identity')->specifyFilter('last_name', 'Drake')->load());
+//osd($results->find()->setLayer('identity')->specifyFilter('last_name', 'Drake')->load());
 //osd($results);
 ?>
