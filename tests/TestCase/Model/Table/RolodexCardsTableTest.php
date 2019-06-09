@@ -199,7 +199,7 @@ class RolodexCardsTableTest extends TestCase
         $this->assertCount(2, $person->memberships->load(),
             'The person card doesn\'t have a two Membership entities');
         
-        $this->assertCount(0, $group->memberships,
+        $this->assertCount(0, $group->memberships->load(),
             'The group card has some Membership entities when it shouldn\'t');
         
     }

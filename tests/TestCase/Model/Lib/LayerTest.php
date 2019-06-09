@@ -77,13 +77,19 @@ class LayerTest extends TestCase
         $record = $this->pieceRecords[0];
         
         $layer = new Layer([], 'edition');
-        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer, 
+				'Creation with an empty array does not produce a '
+				. 'Layer object');
         
         $layer = new Layer([$record], 'edition');
-        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer, 
+				'Creation with records in an array, plus a matching '
+				. 'entity name does not produce a Layer object.');
         
         $layer = new Layer([$record]);
-        $this->assertInstanceOf('App\Model\Lib\Layer', $layer);
+        $this->assertInstanceOf('App\Model\Lib\Layer', $layer, 
+				'Creation with an array of records does not '
+				. 'produce a Layer object');
     }
     
 
@@ -248,15 +254,10 @@ class LayerTest extends TestCase
 		$id_int_965_arg = $layer->accessArgs()
 				->setIdIndex(965);
         $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_int_965_arg));
-		$id_string_965_arg = $layer->accessArgs()
-				->setIdIndex('965');
-		$this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_string_965_arg));
+		
 		$id_3_bad_arg = $layer->accessArgs()
 				->setIdIndex(3);
         $this->assertTrue(is_array($layer->load($id_3_bad_arg)));
- 		$bad_index_arg = $layer->accessArgs()
-				->setIdIndex('something wrong');
-        $this->assertTrue(is_array($layer->load($bad_index_arg)));
     }
     
     public function testloadUsingPropertyValue() {
@@ -612,6 +613,14 @@ class LayerTest extends TestCase
 		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
 	}
 	
+	public function testLoadKeyValueListWithArguments() {
+		$layer = new Layer($this->pieceRecords);
+		$actual = $layer->find()
+				->setLayer('piece')
+				->loadKeyValueList('format_id', 'id');
+		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
+	}
+	
     public function testLoadKeyValueListMethodForKey() {
 		$layer = new Layer($this->pieceRecords);
 		$actual = $layer->find()
@@ -640,5 +649,12 @@ class LayerTest extends TestCase
 				->setAccessNodeObject('value', 'id')
 				->loadValueList();
 		$this->assertArraySubset([1006, 1007, 1008], $editionIDs);
+	}
+	
+	public function testLoadValueListWithAgument() {
+		$list = layer($this->fivePieces)
+				->find()
+				->loadValueList('quantity');
+		$this->assertArraySubset([1,1,1,1,1], $list);
 	}
 }

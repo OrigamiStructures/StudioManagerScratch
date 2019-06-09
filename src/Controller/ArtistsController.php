@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * Artists Controller
@@ -20,11 +21,14 @@ class ArtistsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Members', 'MemberUsers']
-        ];
-        $artists = $this->paginate($this->Artists);
-
+//        $this->paginate = [
+//            'contain' => ['Members', 'MemberUsers']
+//        ];
+//        $artists = $this->paginate($this->Artists);
+		$ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
+		$artists = $ArtistCards->find('stacksFor', 
+			['seed' => 'manifest', 'ids' => [1,2,3,4,5]]);
+		
         $this->set(compact('artists'));
     }
 

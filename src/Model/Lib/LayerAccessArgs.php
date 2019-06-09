@@ -26,6 +26,9 @@ use App\Model\Lib\ValueSourceRegistry;
  * page : which page of found data to return
  * limit : how many elements per page
  * 
+ * properties found in PaginationComponent
+ * limit, maxLimit, sortWhiteList, finder, sort, direction, page, order
+ * 
  * Data filtering 
  * ------------------------------------------
  * TRUE allows the entity into the set, FALSE excludes it 
@@ -145,11 +148,20 @@ protected $_registry;
         return $this->data()->loadDistinct($this, $sourcePoint);
     }
 	
-	public function loadKeyValueList() {
+	public function loadKeyValueList($key = NULL, $value = NULL) {
+		if (!is_null($key)) {
+			$this->setAccessNodeObject('key', $key);
+		}
+		if (!is_null($value)) {
+			$this->setAccessNodeObject('value', $value);
+		}
 		return $this->data()->loadKeyValueList($this);
 	}
 	
-	public function loadValueList() {
+	public function loadValueList($valueName = NULL) {
+		if (!is_null($valueName)) {
+			$this->setAccessNodeObject('value', $valueName);
+		}
 		return $this->data()->loadValueList($this);
 	}
     

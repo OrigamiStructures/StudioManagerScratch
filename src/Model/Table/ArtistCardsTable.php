@@ -7,6 +7,11 @@ use App\Model\Table\PersonCardsTable;
  * CakePHP ArtistCardsTable
  * 
  * @todo When is this enstantiated? Note below:
+ * There is more speculation below, but it seems obvious at this 
+ * moment that these are made when a manager needs to work with 
+ * or for their artist. Or when a registered user needs to 
+ * act as themselves as an artist.
+ * 
  * The name of this card implies it will only be made if the Identity 
  * also appears as the member_id of an Artist record. There is no code 
  * in the distillers or marshaller to guarantee this fact.
@@ -23,16 +28,24 @@ class ArtistCardsTable extends PersonCardsTable {
 		
 	public function initialize(array $config) {
 		parent::initialize($config);
-	    $this->addLayerTable(['Manifests']);
-		$this->addStackSchema(['manifest', 'managers']);
+	    $this->addLayerTable(['Manifests', 'Artworks']);
+		$this->addStackSchema(['manifest', 'managers', 'artworks']);
 		$this->addSeedPoint([
 					'manifest', 'manifests',
+					'artwork', 'artworks',
 					'manager', 'managers'
 				]);
 	}
 	
 	protected function distillFromManifest($ids) {
 		$IDs = $this->Manifests->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids])
+				->toArray();
+		return array_unique($IDs);
+	}
+	
+	protected function distillFromArtwork($ids) {
+		$IDs = $this->Artworks->find('list', ['valueField' => 'artist_id'])
 				->where(['id IN' => $ids])
 				->toArray();
 		return array_unique($IDs);
@@ -50,6 +63,15 @@ class ArtistCardsTable extends PersonCardsTable {
 //				->where(['manager_id IN' => $ids])
 				->toArray();
 		return array_unique($IDs);
+	}
+	
+	protected function marshalArtworks($ids, $stack) {
+		if ($stack->count('identity')) {
+			$artworks = $this->Artworks->find('all')
+					->where(['artist_id' => $stack->rootId()]);
+			$stack->set(['artworks' => $artworks->toArray()]);
+		}		
+		return $stack;
 	}
 	
 	protected function marshalManifest($id, $stack) {

@@ -28,8 +28,25 @@ trait LayerAccessTrait {
         return new LayerAccessArgs();
 	}
     
-    public function find() {
+	/**
+	 * Make an object to set up filtering and access to content
+	 * 
+	 * Returns a LayerAccessArgs object that allows chained calls 
+	 * for object querying. Once all the parameters for the access 
+	 * are spec'd, use one of the objects 'load' varients to 
+	 * return the desired data
+	 * 
+	 * Passing a $layer value will run the setLayer( ) method 
+	 * on the returned Args object
+	 * 
+	 * @param string $layer 
+	 * @return LayerAccessArgs
+	 */
+    public function find($layer = NULL) {
         $args = new LayerAccessArgs($this);
+		if (!is_null($layer)) {
+			$args->setLayer($layer);
+		}
         return $args;
     }
 		

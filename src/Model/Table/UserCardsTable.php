@@ -53,6 +53,12 @@ class UserCardsTable extends ArtistCardsTable {
 		return array_unique($IDs);
 	}
 	
+	/**
+	 * @todo Jason is currently modeling this as AddressBook
+	 *		Should we change this name from Rolodex?
+	 * 
+	 * @param type $ids
+	 */
 	protected function distillFromRolodex($ids) {
 		
 	}
@@ -61,10 +67,26 @@ class UserCardsTable extends ArtistCardsTable {
 		
 	}
 	
+	/**
+	 * @todo possibly this only needs to exist on the ArtistCard?
+	 *		Because the User would need to indicate that they wanted 
+	 *		to do work as/with a specific Artist before we became 
+	 *		interested in what resources they could access.
+	 * 
+	 * @param type $id
+	 * @param type $stack
+	 */
 	protected function marshalPermissions($id, $stack) {
 		
 	}
 	
+	/**
+	 * @todo Jason is currently modeling this as AddressBook
+	 *		Should we change this name from Rolodex?
+	 * 
+	 * @param type $id
+	 * @param type $stack
+	 */
 	protected function marshalRolodex($id, $stack) {
 		
 	}
