@@ -17,6 +17,11 @@ should probably be renamed). </p>
  made and the stack flagged for editing. Is this a kind of data management service 
  we'd want to provide? Or a time-of-create/edit check could be done as an alternative. 
  Preventative vs corrective strategies.</p>
+<p>
+    I see the usage of dispositions as a small block of n past dispos and n future dispos,
+    organized by date, that are a part of a standard data packet. They should always include
+    a 'more...' link so get more or to get to detail.
+</p>
 <?php
 //osd($artists);
 //die;
