@@ -36,7 +36,7 @@ class RolodexCard extends StackEntity {
 	}
 	
 	public function isGroup() {
-		return TRUE;
+	    return $this->rootElement()->isGroup();
 	}
 	
 	public function isArtist() {
