@@ -1,26 +1,23 @@
-<?php
-//osd($results->count());
-//foreach ($results->find()->setLayer('identity')->specifyFilter('last_name', 'Drake')->load() as $index => $identity) {
-//    osd($identity);
-//}
-//osd($results
-//    ->find()
-//    ->setLayer('identity')
-//    ->setAccessNodeObject('value', 'id')
-//    ->loadValueList());
-$IDs = $results->IDs();
-osd($IDs);
-$resultIds = $results
-    ->find()
-    ->setLayer('identity')
-    ->setAccessNodeObject('value', 'id')
-    ->loadValueList();
+<?php foreach ($results->load() as $entity) {
+    if($entity->isGroup()){
+        echo $this->Html->tag('h2', 'SKIPPED GROUP');
+        continue;
+    }
+    echo $this->Html->tag('h3', $entity->rootDisplayValue());?>
 
-foreach ($IDs as $ID) {
-    if($ID == 75){continue;}
-    $rolodexCardEntity = $results->element($ID);
-    osd($rolodexCardEntity->rootDisplayValue());
-}
-//osd($results->find()->setLayer('identity')->specifyFilter('last_name', 'Drake')->load());
-//osd($results);
-?>
+	<li>Contacts
+		<ul>
+			<?php foreach ($entity->contacts() as $contact) : ?>
+			<li><?= $contact ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</li>
+	<li>Addresses
+		<ul>
+			<?php foreach ($entity->addresses() as $address) : ?>
+			<li><?= $address ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</li>
+
+<?php } ?>

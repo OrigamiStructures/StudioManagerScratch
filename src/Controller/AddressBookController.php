@@ -8,9 +8,11 @@ class AddressBookController extends AppController
 {
     public function index()
     {
-        $RolodexCards = $this->getTableLocator()->get('RolodexCards');
-        $ids = $RolodexCards->Identities->find('list')->toArray();
-        $results = $RolodexCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+        $PersonCards = $this->getTableLocator()->get('PersonCards');
+        $ids = $PersonCards->Identities->find('list')
+            ->order(['last_name'])
+            ->toArray();
+        $results = $PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
         $this->set('results', $results);
     }
 }
