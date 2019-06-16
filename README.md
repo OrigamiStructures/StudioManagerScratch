@@ -40,4 +40,5 @@ change the database to stud_m_v1
 - Permissions should specify if the manager can create/edit the available records (*delete? request delete?)
 - All Manager edits should be logged and available for review by the PrimeUser
 - Permissions will enable use of the records in Dispositions on behalf of the PrimeUser
-
+### Managers
+- A registered user must be able to contact another registered user to request Management assignment
