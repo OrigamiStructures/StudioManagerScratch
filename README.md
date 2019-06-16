@@ -25,6 +25,16 @@ change the database to stud_m_v1
 - Allow the the creation of catagorizing labels to organize the Rolodex file
 - Allow People and Institutions to be members of any number of Categories
 - Allow any Person or Institution to participate in Dispostion Events (*add details below*)
-- Allow any Person to be designated as an Artist by the Registered user that created the Person Record
 - *What are the deletion rules when an institution is removed?*
+#### Artist Contacts
+- Allow any Person to be designated as an Artist by the Registered user that created the Person Record
+### Registered Users
+- Allow other registered users (Managers) to be identitfied in the Rolodex file of a registered user (PrimeUser)
+- Allow the PrimeUser to give management right to any Artist in their Rolodex file
+- Allow the PrimeUser to revoke management rights at any time
+- Allow the PrimeUser to specify any any subset of Artworks or Editions as the managed works available to an Manager (Permissions)
+- Allow the PrimeUser to specify any subset of People and Institutions as avalable to the Manager (Permissions)
+- Permissions should specify if the manager can create/edit the available records (*delete? request delete?)
+- All Manager edits should be logged and available for review by the PrimeUser
+- Permissions will enable use of the records in Dispositions on behalf of the PrimeUser
 
