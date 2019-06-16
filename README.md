@@ -16,6 +16,7 @@ change the database to stud_m_v1
 - Keep documentary descriptions and photos to explain and identify specific works or specific pieces in an edition.
 ### Contacts
 *Consider Issue #138 while working on this*
+*Unresolved Issue #139 limits how complete any UX solution can be at this time*
 
 - Maintain a Rolodex file of People for the registered users
   - Allow multiple addresses for each Person
