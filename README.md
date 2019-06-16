@@ -28,7 +28,8 @@ change the database to stud_m_v1
 - *What are the deletion rules when an institution is removed?*
 #### Artist Contacts
 - Allow any Person to be designated as an Artist by the Registered user that created the Person Record
-### Registered Users
+#### Registered Users
+- In addition to thier Official User record, the registered user has one PersonCard that carries all their address, contact and membership data.
 - Allow other registered users (Managers) to be identitfied in the Rolodex file of a registered user (PrimeUser)
 - Allow the PrimeUser to give management right to any Artist in their Rolodex file
 - Allow the PrimeUser to revoke management rights at any time
