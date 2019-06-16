@@ -15,6 +15,8 @@ change the database to stud_m_v1
 - Track groups of pieces if an edition is not numbered.
 - Keep documentary descriptions and photos to explain and identify specific works or specific pieces in an edition.
 ### Contacts
+*Consider Issue #138 while working on this*
+
 - Maintain a Rolodex file of People for the registered users
   - Allow multiple addresses for each Person
   - Allow multiple contacts (email, phone, etc) for each Person
