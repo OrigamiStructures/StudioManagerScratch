@@ -5,6 +5,7 @@ use BadMethodCallException;
 use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
 use App\Lib\Traits\ErrorRegistryTrait;
+use App\Model\Lib\ValueSourceRegistry;
 
 /**
  * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
@@ -24,6 +25,9 @@ use App\Lib\Traits\ErrorRegistryTrait;
  * ------------------------------------------
  * page : which page of found data to return
  * limit : how many elements per page
+ * 
+ * properties found in PaginationComponent
+ * limit, maxLimit, sortWhiteList, finder, sort, direction, page, order
  * 
  * Data filtering 
  * ------------------------------------------
@@ -47,6 +51,8 @@ class LayerAccessArgs {
 use ErrorRegistryTrait;
 
 protected $data;
+
+protected $_registry;
 
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 	
@@ -98,10 +104,11 @@ protected $data;
 	
 // <editor-fold defaultstate="collapsed" desc="VALUE-SOURCE PROPERTIES">
 
-	private $_key_source = FALSE;
-	private $_value_source = FALSE;
-	public $KeySource;
-	public $ValueSource;
+	private $source_node = [
+		'value' => FALSE,
+		'key' => FALSE,
+		'filter' => FALSE
+	];
 
 	// </editor-fold>
 	
@@ -114,6 +121,7 @@ protected $data;
 // </editor-fold>
 
 	public function __construct($data = FALSE) {
+		$this->_registry = new ValueSourceRegistry();
         if($data) {
             $this->data = $data;
         }
@@ -124,6 +132,9 @@ protected $data;
         return $this->data;
     }
 	
+	public function registry() {
+		return $this->_registry;
+	}
     
     public function load($asArray = LAYERACC_ARRAY) {
 		$result = $this->data()->load($this);
@@ -137,11 +148,20 @@ protected $data;
         return $this->data()->loadDistinct($this, $sourcePoint);
     }
 	
-	public function loadKeyValueList() {
+	public function loadKeyValueList($key = NULL, $value = NULL) {
+		if (!is_null($key)) {
+			$this->setAccessNodeObject('key', $key);
+		}
+		if (!is_null($value)) {
+			$this->setAccessNodeObject('value', $value);
+		}
 		return $this->data()->loadKeyValueList($this);
 	}
 	
-	public function loadValueList() {
+	public function loadValueList($valueName = NULL) {
+		if (!is_null($valueName)) {
+			$this->setAccessNodeObject('value', $valueName);
+		}
 		return $this->data()->loadValueList($this);
 	}
     
@@ -157,89 +177,80 @@ protected $data;
 		return $this;
 	}
 	
-	public function setEntity($param) {
-		$this->setLayer($param);
+	public function accessNodeObject($name) {
+		return $this->registry()->get($name);
+	}
+	
+	public function setAccessNodeObject($objectName, $nodeName) {
+		if (
+				$this->hasAccessNodeName($objectName) 
+				&& $this->source_node[$objectName] != $nodeName) 
+		{
+			$this->registerError("Can't change `{$objectName}` object's "
+				. "source node name after it's been set.");
+		} else {
+			$this->source_node[$objectName] = $nodeName;
+			$this->setupValueObjects($objectName);
+		}
+		return $this;
+
 	}
 	
 	/**
+	 * Make a ValueSource object or defer the tas for later
 	 * 
-	 * @return ValueSource
-	 */
-	public function sourceObject() {
-		// make this default the value if its not set
-		return $this->ValueSource;
-	}
+	 * 'layer'
+	 *		if the Value and Key objects haven't been made yet but 
+	 *		the source node is know for either, we can now make 
+	 *		that object since the layer is now known
+	 * 'value'
+	 *		set the layer if we can
+	 *		if the ValueObject isn't yet constructued but the layer is 
+	 *		known, make the object since the source node is now known
+	 * 'key'
+	 *		set the layer if we can
+	 *		if the KeyObject isn't yet constructued but the layer is 
+	 *		known, make the object since the key node is now known
 
-	/**
 	 * 
-	 * @return ValueSource
+	 * @param type $origin
 	 */
-	public function keyObject() {
-		// make this default the value if its not set
-		return $this->KeySource;
-	}
-
-	public function setValueSource($source) {
-		if ($this->hasValueSource() && $this->valueOf('valueSource') != $source) {
-			$this->registerError('Can\'t change `valueSource` after it\'s been set.');
-		} else {
-			$this->_value_source = $source;
-			$this->setupValueObjects('value');
-		}
-		return $this;
-	}
-
-	public function setKeySource($source) {
-		if ($this->hasKeySource() && $this->valueOf('keySource') != $source) {
-			$this->registerError('Can\'t change `keySource` after it\'s been set.');
-		} else {
-			$this->_key_source = $source;
-			$this->setupValueObjects('key');
-		}
-		return $this;
-	}
-	
 	private function setupValueObjects($origin) {
 		switch ($origin) {
 			case 'layer':
-				if (!$this->hasValueObject() && $this->hasValueSource()) {
-					$this->buildValueObject();
-				}
-				if (!$this->hasKeyObject() && $this->hasKeySource()) {
-					$this->buildKeyObject();
-				}
-				break;
-			case 'value':
-                  $this->evaluateLayer();
-				if (!$this->hasValueObject() && $this->hasLayer()) {
-					$this->buildValueObject();
-				}
-				break;
-			case 'key':
-                  $this->evaluateLayer();
-				if (!$this->hasKeyObject() && $this->hasLayer()) {
-					$this->buildKeyObject();
-				}
+				$this->registerSourceNodes();
 				break;
 			default:
-				$message = 'setupValueObjects called with unknown origin';
-				$this->registerError($message);
+                $this->evaluateLayer();
+				if (!$this->hasAccessNodeObject($origin) && $this->hasLayer()) {
+					$this->buildAccessObject($origin);
+				}
 				break;
 		}
 	}
     
+	private function registerSourceNodes() {
+		foreach (array_keys($this->source_node) as $name) {
+			if (!$this->hasAccessNodeObject($name) && $this->hasAccessNodeName($name)) {
+				$this->buildAccessObject($name);
+			}
+		}
+	}
+	
     private function evaluateLayer() {
         if (!$this->hasLayer() && is_a($this->data(), 'App\Model\Lib\Layer')) {
             $this->setLayer($this->data()->layerName());
         }
     }
 	
-	private function buildKeyObject() {
-		$this->KeySource = new ValueSource($this->valueOf('layer'), $this->valueOf('keySource'));
-	}
-	
-	private function buildValueObject() {
-		$this->ValueSource = new ValueSource($this->valueOf('layer'), $this->valueOf('valueSource'));
+	private function buildAccessObject($name) {
+		$result = $this->registry()->load(
+				$name, 
+				[
+					'entity' => $this->valueOf('layer'),
+					'node' => $this->source_node[$name]
+				]
+			);
 	}
 
 // </editor-fold>
@@ -251,21 +262,12 @@ protected $data;
 	}
 
 
-	public function hasKeySource() {
-		return $this->_key_source !== FALSE;
-	}
-
-
-	public function hasValueSource() {
-		return $this->_value_source !== FALSE;
+	public function hasAccessNodeName($name) {
+		return $this->source_node[$name] !== FALSE;
 	}
 	
-	public function hasValueObject() {
-		return isset($this->ValueSource);
-	}
-	
-	public function hasKeyObject() {
-		return isset($this->KeySource);
+	public function hasAccessNodeObject($name) {
+		return !is_null($this->registry()->get($name));
 	}
 
 	/**
@@ -276,7 +278,7 @@ protected $data;
 	 * @return boolean
 	 */
 	public function isFilter() {
-		return $this->valueOf('value_source') && $this->valueOf('filter_value_isset');
+		return $this->source_node['filter'] && $this->valueOf('filter_value_isset');
 	}
 
 // </editor-fold>
@@ -360,7 +362,7 @@ protected $data;
 	 */
 	public function specifyFilter($value_source, $filter_value, $filter_operator = FALSE) {
 		$this->setFilterOperator($filter_operator);
-		$this->setValueSource($value_source);
+		$this->setAccessNodeObject('filter', $value_source);
 		$this->filterValue($filter_value);
 		return $this;
 	}

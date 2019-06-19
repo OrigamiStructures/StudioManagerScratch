@@ -31,6 +31,7 @@ class Manifest extends Entity
      */
     protected $_accessible = [
         'member_id' => true,
+		'member_user_id' => true,
         'user_id' => true,
         'manager_id' => true,
         'publish_manager' => true,
@@ -50,6 +51,6 @@ class Manifest extends Entity
 	 * @return boolean
 	 */
 	public function self() {
-		return $this->member_user_id === $this->user_id;
+		return $this->manager_id === $this->user_id;
 	}
 }

@@ -346,7 +346,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	}
 	
 	public function filter($property, $value) {
-		;
+		debug('strike');
 	}
 	
 // </editor-fold>
@@ -383,7 +383,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
                     return $value === 'layer';
             }));
             foreach ($typeMap as $p => $unused) {
-                if (Hash::check($property, $p)
+                if (key_exists($p, $property)
                     && !($property[$p] instanceof Layer)) {
                         $property[$p] = $this->makeLayerObject($p, $property[$p]);
                 }

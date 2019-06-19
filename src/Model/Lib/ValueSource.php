@@ -101,10 +101,16 @@ class ValueSource {
 	 * @return mixed
 	 */
 	public function value(Entity $entity) {
-		if (!$this->registeredEntity($entity) || !$this->isValid()) {
+		if (!$this->isValid()) {
+			$ambiguous = $this->_isMethod && $this->_isProperty ? 'TRUE' : "FALSE";
+			$method = $this->_isMethod ? 'TRUE' : "FALSE";
+			$property = $this->_isProperty ? 'TRUE' : "FALSE";
 			$this->registerError('If ' . get_class($entity) . 
 					' is a generic entity, you\'ll have to bake the model '
-					. 'and entity to use it, even if they are left empty.');
+					. 'and entity to use it, even if they are left empty.'
+					. "Ambiguous: $ambiguous, Method: $method, "
+					. "Property: $property, Entity: $this->_name, "
+					. "SourceNode: $this->_source");
 			return FALSE;
 		}
 		if ($this->_isMethod) {
@@ -114,20 +120,6 @@ class ValueSource {
 		}
 	}
 	
-	/**
-	 * Verify the value() call recieved the entity we built on
-	 * 
-	 * @param Entity $entity
-	 * @return boolean
-	 */
-	protected function registeredEntity($entity) {
-		if (get_class($entity) !== $this->_name) {
-			// log an error somewhere
-			return FALSE;
-		}
-		return TRUE;
-	}
-
 	/**
 	 * Verify and return an entity object
 	 * 

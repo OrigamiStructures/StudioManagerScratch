@@ -1,55 +1,67 @@
+<h1>Issues to address</h1>
+<p>- Do we actually need dispositions in this stack? Or can that be gathered 
+ on a dedicated API request without a listing here? The only reason 
+ to list here would be for a select list.</p>
+<p>- I've done a first-approximation inclusion of Artworks by adding an 
+ artist_id link to 'artworks' (which actually is a link to member_id and 
+should probably be renamed). </p>
+<p>&nbsp;&nbsp;
+	The role of a linking list like artworks is to speed up user access to 
+	 the data they want. Would we want the choice-grain at this level to go 
+	 all the way to Editions?</p>
+<p>&nbsp;&nbsp;
+	I think that's probably not necessary since it adds complexity that only 
+	benefits the subset of users that are heavy edition creators; a minority.</p>
+<p>- Duplicate addresses and contacts may be a problem (as they are in this case). 
+ When a relevant stack is created (rather than loaded from cache) a check could be 
+ made and the stack flagged for editing. Is this a kind of data management service 
+ we'd want to provide? Or a time-of-create/edit check could be done as an alternative. 
+ Preventative vs corrective strategies.</p>
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Artist[]|\Cake\Collection\CollectionInterface $artists
- */
+//osd($artists);
+//die;
+foreach($artists->load() as $artist) :
+	$manifest = $artist->manifest->element(0);
+	$dataOwner = $artist->data_owner->element(0);
+	$otherManagerCount = $artist->managers->count() - 1;
+	$dispositionIDs = $artist->IDs('dispositions');
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Artist'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="artists index large-9 medium-8 columns content">
-    <h3><?= __('Artists') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('member_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('user_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('member_user_id') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($artists as $artist): ?>
-            <tr>
-                <td><?= $this->Number->format($artist->id) ?></td>
-                <td><?= $artist->has('member') ? $this->Html->link($artist->member->name(), ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
-                <td><?= h($artist->user_id) ?></td>
-                <td><?= $this->Number->format($artist->member_user_id) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $artist->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $artist->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $artist->id], ['confirm' => __('Are you sure you want to delete # {0}?', $artist->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
-</div>
+
+<?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
+	
+<?php if ($manifest->self()) : ?>
+		
+<?= $this->Html->para('', "You are the creator/owner of this aritst's "
+			. "data and have identified $otherManagerCount "
+			. "other managers for the data. View those details [here/make link]"); ?>
+
+<?php else: ?>
+		
+<?= $this->Html->para('', 'To request changes in your access to this '
+		. 'artist, contact ' . $dataOwner->username() ); ?>
+
+<?php endif; ?>
+	
+<ul>
+	<li>Contacts
+		<ul>
+			<?php foreach ($artist->contacts() as $contact) : ?>
+			<li><?= $contact ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</li>
+	<li>
+		Addresses
+		<ul>
+			<?php foreach ($artist->addresses() as $address) : ?>
+			<li><?= $address ?></li>
+			<?php endforeach; ?>
+		</ul>
+	</li>
+</ul>
+
+<?php osd($artist->artworks->find()->loadValueList('identityLabel')); ?>
+
+<?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
+		
+<?php endforeach; ?>

@@ -107,6 +107,24 @@ class StackSetTest extends TestCase {
         $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
             'The access object created by find() did not contain the expected data');
 	}
+	
+	/**
+	 * Test find method with provided layer argument
+	 *
+	 * @return void
+	 */
+	public function testFindWithLayer() {
+        $arg = $this->StackEntities->element(1)->find('layerChoice');
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
+            'find() did not create a LayerAccessArgs object');
+		
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
+            'The access object created by find() did not contain the expected data');
+		
+		$this->assertTrue($arg->valueOf('layer') === 'layerChoice', 
+			'The access object created with the \'layer\' option '
+			. 'did not have a layer set');
+	}
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATON">
 
@@ -123,7 +141,7 @@ class StackSetTest extends TestCase {
         
         $formats = $this->StackEntities->find()
             ->setLayer('formats')
-            ->setIdIndex(5)
+            ->setIdIndex(1)
             ->load();
         
         $format = array_shift($formats);
@@ -133,7 +151,7 @@ class StackSetTest extends TestCase {
 
         $formats = $this->StackEntities->find()
             ->setLayer('formats')
-            ->setIdIndex(8)
+            ->setIdIndex(2)
             ->load();
         
         $format = array_shift($formats);
@@ -146,9 +164,11 @@ class StackSetTest extends TestCase {
         
         $pieces = $this->StackEntities->find()
             ->setLayer('pieces')
-            ->setValueSource('quantity')
-            ->filterValue(140)
+			->specifyFilter('quantity', 140)
+//            ->setAccessNodeObject('filter', 'quantity')
+//            ->filterValue(140)
             ->load();
+//		debug($pieces);
         $piece = array_shift($pieces);
         $this->assertEquals(140, $piece->quantity,
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
@@ -226,7 +246,7 @@ class StackSetTest extends TestCase {
 				$this->StackEntities
 				->find()
 				->setLayer('editions')
-				->setValueSource('type')
+				->setAccessNodeObject('value', 'type')
 				->loadDistinct(),
 				'Distinct did not return the expected set of edition types '
 				. 'from a set of stack entities');
@@ -271,6 +291,30 @@ class StackSetTest extends TestCase {
 				->find()
 				->setLayer('editions')
 				->load());
+	}
+	
+	/**
+	 * Tests two streamlined calls
+	 * 
+	 * both the `find( )` and `loadValueList( )` variants that 
+	 * accept arguments to eliminate the `set` calls are used here
+	 */
+	public function testFindAndLoadValueListWithArguments() {
+		$list = $this->StackEntities
+				->find('formats')
+				->loadValueList('edition_id');
+		$this->assertArraySubset([5,8,6,20], $list,
+				'either find( ) with a layer argument or loadValueList( )'
+				. 'with a node-name argument didn\'t return the expected list');
+	}
+	
+	public function testFindKeyValueListWithArguements() {
+		$list = $this->StackEntities
+				->find('formats')
+				->loadKeyValueList('edition_id', 'edition_id');
+		$this->assertArraySubset([5=>5,8=>8,6=>6,20=>20], $list,
+				'either find( ) with a layer argument or loadKeyValueList( )'
+				. 'with arguments didn\'t return the expected list');
 	}
 
 // </editor-fold>

@@ -10,11 +10,6 @@ use Cake\TestSuite\Fixture\TestFixture;
 class PiecesFixture extends TestFixture
 {
 
-	
-	// fivePieces AT LINE 12233
-	
-	
-	
     /**
      * Fields
      *
@@ -26,13 +21,13 @@ class PiecesFixture extends TestFixture
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'user_id' => ['type' => 'uuid', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
-        'number' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'NULL if un-numbered, or the piece number', 'precision' => null, 'autoIncrement' => null],
-        'quantity' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => '1', 'comment' => 'qty of un-numbered pieces. 1 if piece is numbered', 'precision' => null, 'autoIncrement' => null],
+        'number' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'quantity' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => '1', 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'made' => ['type' => 'boolean', 'length' => null, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null],
-        'edition_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'must always have a value', 'precision' => null, 'autoIncrement' => null],
-        'format_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => 'a value here means \'assigned\'. may be null', 'precision' => null, 'autoIncrement' => null],
-        'disposition_count' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => 'number of dispositions linked', 'precision' => null, 'autoIncrement' => null],
-        'collected' => ['type' => 'integer', 'length' => 1, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => 'counter cache boolean', 'precision' => null, 'autoIncrement' => null],
+        'edition_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'format_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'disposition_count' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'collected' => ['type' => 'boolean', 'length' => null, 'null' => true, 'default' => '0', 'comment' => 'counter cache boolean', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -54,5475 +49,5475 @@ class PiecesFixture extends TestFixture
             [
                 'id' => 20,
                 'created' => '2016-03-08 02:16:39',
-                'modified' => '2016-03-10 18:57:34',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 5,
-                'format_id' => 5,
+                'format_id' => 1,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 21,
                 'created' => '2016-03-08 02:17:15',
-                'modified' => '2018-05-05 04:53:19',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 22,
                 'created' => '2016-03-08 02:17:17',
-                'modified' => '2016-10-04 20:46:55',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 23,
                 'created' => '2016-03-08 02:17:19',
-                'modified' => '2016-10-04 20:49:23',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 24,
                 'created' => '2016-03-08 02:17:22',
-                'modified' => '2016-10-04 20:51:00',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 25,
                 'created' => '2016-03-08 02:17:24',
-                'modified' => '2016-10-04 20:52:17',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 26,
                 'created' => '2016-03-08 02:17:26',
-                'modified' => '2016-10-04 20:53:40',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 27,
                 'created' => '2016-03-08 02:17:27',
-                'modified' => '2016-10-04 21:03:01',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 28,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 29,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 30,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 31,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 32,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 33,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 34,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 35,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 36,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 37,
                 'created' => '2016-03-08 02:18:03',
-                'modified' => '2016-03-08 02:18:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 7,
-                'format_id' => 7,
+                'format_id' => 5,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 38,
                 'created' => '2016-03-08 02:18:19',
-                'modified' => '2016-03-08 02:27:40',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 140,
                 'made' => false,
                 'edition_id' => 8,
-                'format_id' => 8,
+                'format_id' => 2,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 40,
                 'created' => '2016-03-08 02:18:19',
-                'modified' => '2016-10-21 14:54:28',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
-                'quantity' => 7,
+                'quantity' => 6,
                 'made' => false,
                 'edition_id' => 8,
-                'format_id' => 8,
+                'format_id' => 2,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 41,
                 'created' => '2016-03-09 21:24:24',
-                'modified' => '2016-09-20 23:02:22',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 42,
                 'created' => '2016-03-09 21:24:25',
-                'modified' => '2016-09-20 23:15:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 43,
                 'created' => '2016-03-09 21:24:28',
-                'modified' => '2016-09-20 23:30:51',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 44,
                 'created' => '2016-03-09 21:24:31',
-                'modified' => '2016-09-20 23:48:05',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 45,
                 'created' => '2016-03-09 21:24:33',
-                'modified' => '2016-09-21 03:08:51',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 46,
                 'created' => '2016-03-09 21:24:35',
-                'modified' => '2016-09-21 03:24:48',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 47,
                 'created' => '2016-03-09 21:24:37',
-                'modified' => '2016-09-21 03:27:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 48,
                 'created' => '2016-03-09 21:24:40',
-                'modified' => '2016-09-21 03:31:50',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 49,
                 'created' => '2016-03-09 21:24:42',
-                'modified' => '2016-09-21 03:38:04',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 50,
                 'created' => '2016-03-09 21:24:45',
-                'modified' => '2016-03-10 18:57:45',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 51,
                 'created' => '2016-03-09 21:24:47',
-                'modified' => '2016-09-21 03:42:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 52,
                 'created' => '2016-03-09 21:24:50',
-                'modified' => '2016-09-21 03:48:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 53,
                 'created' => '2016-03-09 21:24:53',
-                'modified' => '2016-09-21 03:54:30',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 54,
                 'created' => '2016-03-09 21:24:56',
-                'modified' => '2016-09-21 03:59:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 55,
                 'created' => '2016-03-09 21:24:58',
-                'modified' => '2016-09-21 04:04:58',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 56,
                 'created' => '2016-03-09 21:25:00',
-                'modified' => '2016-09-21 04:09:20',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 57,
                 'created' => '2016-03-09 21:25:01',
-                'modified' => '2016-09-21 04:14:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 58,
                 'created' => '2016-03-09 21:25:03',
-                'modified' => '2016-09-21 04:38:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 59,
                 'created' => '2016-03-09 21:25:05',
-                'modified' => '2016-09-21 04:43:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 60,
                 'created' => '2016-03-09 21:25:07',
-                'modified' => '2016-10-10 22:27:38',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 2,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 61,
                 'created' => '2016-03-09 21:25:10',
-                'modified' => '2016-09-21 04:51:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 62,
                 'created' => '2016-03-09 21:25:12',
-                'modified' => '2016-10-05 16:43:05',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 63,
                 'created' => '2016-03-09 21:25:14',
-                'modified' => '2016-09-22 01:58:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 64,
                 'created' => '2016-03-09 21:25:16',
-                'modified' => '2016-03-09 21:25:16',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 65,
                 'created' => '2016-03-09 21:25:18',
-                'modified' => '2016-09-22 02:01:52',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 66,
                 'created' => '2016-03-09 21:25:21',
-                'modified' => '2016-10-06 17:38:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 67,
                 'created' => '2016-03-09 21:25:24',
-                'modified' => '2016-03-09 21:25:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 68,
                 'created' => '2016-03-09 21:25:27',
-                'modified' => '2016-10-07 00:10:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 69,
                 'created' => '2016-03-09 21:25:30',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 70,
                 'created' => '2016-03-09 21:25:32',
-                'modified' => '2016-03-09 21:25:32',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 71,
                 'created' => '2016-03-09 21:25:33',
-                'modified' => '2016-10-07 00:10:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 72,
                 'created' => '2016-03-09 21:25:35',
-                'modified' => '2016-10-07 00:10:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 73,
                 'created' => '2016-03-09 21:25:37',
-                'modified' => '2016-03-09 21:25:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 74,
                 'created' => '2016-03-09 21:25:40',
-                'modified' => '2016-03-09 21:25:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 75,
                 'created' => '2016-03-09 21:25:44',
-                'modified' => '2016-03-09 21:25:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 76,
                 'created' => '2016-03-09 21:25:46',
-                'modified' => '2016-03-09 21:25:46',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 77,
                 'created' => '2016-03-09 21:25:49',
-                'modified' => '2016-03-09 21:25:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 78,
                 'created' => '2016-03-09 21:25:51',
-                'modified' => '2016-03-09 21:25:51',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 79,
                 'created' => '2016-03-09 21:25:54',
-                'modified' => '2016-03-09 21:25:54',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 80,
                 'created' => '2016-03-09 21:25:57',
-                'modified' => '2016-10-10 22:27:38',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 81,
                 'created' => '2016-03-09 21:25:59',
-                'modified' => '2016-03-09 21:25:59',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 82,
                 'created' => '2016-03-09 21:26:02',
-                'modified' => '2016-03-09 21:26:02',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 83,
                 'created' => '2016-03-09 21:26:04',
-                'modified' => '2016-09-22 02:15:08',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 84,
                 'created' => '2016-03-09 21:26:06',
-                'modified' => '2016-03-09 21:26:06',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 85,
                 'created' => '2016-03-09 21:26:08',
-                'modified' => '2016-10-10 18:19:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 86,
                 'created' => '2016-03-09 21:26:10',
-                'modified' => '2016-03-09 21:26:10',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 87,
                 'created' => '2016-03-09 21:26:15',
-                'modified' => '2016-03-09 21:26:15',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 88,
                 'created' => '2016-03-09 21:26:18',
-                'modified' => '2016-03-09 21:26:18',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 89,
                 'created' => '2016-03-09 21:26:20',
-                'modified' => '2016-03-09 21:26:20',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 90,
                 'created' => '2016-03-09 21:26:23',
-                'modified' => '2016-03-09 21:26:23',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 91,
                 'created' => '2016-03-09 22:27:42',
-                'modified' => '2016-09-20 23:02:20',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 92,
                 'created' => '2016-03-09 22:27:42',
-                'modified' => '2016-09-20 23:15:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 93,
                 'created' => '2016-03-09 22:27:42',
-                'modified' => '2016-10-05 17:22:09',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 94,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-20 23:48:07',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 95,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:05:52',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 96,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-07 00:10:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 97,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:27:34',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 98,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:31:48',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 99,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:38:06',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 100,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 16:43:07',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 101,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:42:34',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 102,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:49:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 103,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:54:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 104,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 03:59:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 105,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 04:04:55',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 106,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 04:09:22',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 107,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 04:14:33',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 108,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 04:38:15',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 109,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-10 18:27:32',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 2,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 110,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-07 00:10:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 111,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-21 04:51:51',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 112,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 17:22:07',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 113,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 114,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 17:22:15',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 115,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-09-22 02:03:47',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 116,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-06 17:38:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 2,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 117,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 17:22:17',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 118,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 17:22:21',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 119,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 17:22:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 120,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-05 16:59:50',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 121,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-10-07 00:10:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 122,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-10 19:12:23',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 123,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 124,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 125,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 126,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 127,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 128,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 129,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 130,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 131,
                 'created' => '2016-03-09 22:27:43',
-                'modified' => '2016-03-09 22:27:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 132,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 133,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-09-22 02:15:10',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 134,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 135,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-10-10 18:19:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 136,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 137,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 138,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 139,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 140,
                 'created' => '2016-03-09 22:27:44',
-                'modified' => '2016-03-09 22:27:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 141,
                 'created' => '2016-03-10 17:43:02',
-                'modified' => '2016-03-10 17:43:02',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 51,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 142,
                 'created' => '2016-03-10 17:43:03',
-                'modified' => '2016-03-10 17:43:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 52,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 143,
                 'created' => '2016-03-10 17:43:05',
-                'modified' => '2016-03-10 17:43:05',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 53,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 144,
                 'created' => '2016-03-10 17:43:07',
-                'modified' => '2016-03-10 17:43:07',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 54,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 145,
                 'created' => '2016-03-10 17:43:09',
-                'modified' => '2016-03-10 17:43:09',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 55,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 146,
                 'created' => '2016-03-10 17:43:11',
-                'modified' => '2016-03-10 17:43:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 56,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 147,
                 'created' => '2016-03-10 17:43:13',
-                'modified' => '2016-03-10 17:43:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 57,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 148,
                 'created' => '2016-03-10 17:43:15',
-                'modified' => '2016-03-10 17:43:15',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 58,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 149,
                 'created' => '2016-03-10 17:43:17',
-                'modified' => '2016-03-10 17:43:17',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 59,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 150,
                 'created' => '2016-03-10 17:43:19',
-                'modified' => '2016-03-10 17:43:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 60,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 151,
                 'created' => '2016-03-10 17:43:21',
-                'modified' => '2016-03-10 17:43:21',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 61,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 152,
                 'created' => '2016-03-10 17:43:22',
-                'modified' => '2016-03-10 17:43:22',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 62,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 153,
                 'created' => '2016-03-10 17:43:24',
-                'modified' => '2016-03-10 17:43:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 63,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 154,
                 'created' => '2016-03-10 17:43:26',
-                'modified' => '2016-03-10 17:43:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 64,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 155,
                 'created' => '2016-03-10 17:43:28',
-                'modified' => '2016-03-10 17:43:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 65,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 156,
                 'created' => '2016-03-10 17:43:30',
-                'modified' => '2016-03-10 17:43:30',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 66,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 157,
                 'created' => '2016-03-10 17:43:32',
-                'modified' => '2016-03-10 17:43:32',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 67,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 158,
                 'created' => '2016-03-10 17:43:34',
-                'modified' => '2016-03-10 17:43:34',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 68,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 159,
                 'created' => '2016-03-10 17:43:36',
-                'modified' => '2016-03-10 17:43:36',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 69,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 160,
                 'created' => '2016-03-10 17:43:38',
-                'modified' => '2016-03-10 17:43:38',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 70,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 161,
                 'created' => '2016-03-10 17:43:40',
-                'modified' => '2016-09-22 02:12:05',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 71,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 162,
                 'created' => '2016-03-10 17:43:42',
-                'modified' => '2016-03-10 17:43:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 72,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 163,
                 'created' => '2016-03-10 17:43:45',
-                'modified' => '2016-03-10 17:43:45',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 73,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 164,
                 'created' => '2016-03-10 17:43:47',
-                'modified' => '2016-03-10 17:43:47',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 74,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 165,
                 'created' => '2016-03-10 17:43:49',
-                'modified' => '2016-03-10 17:43:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 75,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 166,
                 'created' => '2016-03-10 17:43:51',
-                'modified' => '2016-03-10 17:43:51',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 76,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 167,
                 'created' => '2016-03-10 17:43:53',
-                'modified' => '2016-03-10 17:43:53',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 77,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 168,
                 'created' => '2016-03-10 17:43:55',
-                'modified' => '2016-03-10 17:43:55',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 78,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 169,
                 'created' => '2016-03-10 17:43:56',
-                'modified' => '2016-03-10 17:43:56',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 79,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 170,
                 'created' => '2016-03-10 17:43:58',
-                'modified' => '2016-03-10 17:43:58',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 80,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 171,
                 'created' => '2016-03-10 17:44:00',
-                'modified' => '2016-03-10 17:44:00',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 81,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 172,
                 'created' => '2016-03-10 17:44:02',
-                'modified' => '2016-03-10 17:44:02',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 82,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 173,
                 'created' => '2016-03-10 17:44:04',
-                'modified' => '2016-03-10 17:44:04',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 83,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 174,
                 'created' => '2016-03-10 17:44:06',
-                'modified' => '2016-03-10 17:44:06',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 84,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 175,
                 'created' => '2016-03-10 17:44:08',
-                'modified' => '2016-03-10 17:44:08',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 85,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 176,
                 'created' => '2016-03-10 17:44:10',
-                'modified' => '2016-03-10 17:44:10',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 86,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 177,
                 'created' => '2016-03-10 17:44:11',
-                'modified' => '2016-03-10 17:44:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 87,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 178,
                 'created' => '2016-03-10 17:44:13',
-                'modified' => '2016-03-10 17:44:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 88,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 179,
                 'created' => '2016-03-10 17:44:15',
-                'modified' => '2016-03-10 17:44:15',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 89,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 180,
                 'created' => '2016-03-10 17:44:17',
-                'modified' => '2016-03-10 17:44:17',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 90,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 181,
                 'created' => '2016-03-10 17:44:19',
-                'modified' => '2016-03-10 17:44:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 91,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 182,
                 'created' => '2016-03-10 17:44:21',
-                'modified' => '2016-03-10 17:44:21',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 92,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 183,
                 'created' => '2016-03-10 17:44:23',
-                'modified' => '2016-03-10 17:44:23',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 93,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 184,
                 'created' => '2016-03-10 17:44:25',
-                'modified' => '2016-03-10 17:44:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 94,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 185,
                 'created' => '2016-03-10 17:44:27',
-                'modified' => '2016-03-10 17:44:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 95,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 186,
                 'created' => '2016-03-10 17:44:29',
-                'modified' => '2016-03-10 17:44:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 96,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 187,
                 'created' => '2016-03-10 17:44:33',
-                'modified' => '2016-03-10 17:44:33',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 97,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 188,
                 'created' => '2016-03-10 17:44:35',
-                'modified' => '2016-03-10 17:44:35',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 98,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 189,
                 'created' => '2016-03-10 17:44:37',
-                'modified' => '2016-03-10 17:44:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 99,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 190,
                 'created' => '2016-03-10 17:44:39',
-                'modified' => '2016-03-10 17:44:39',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 100,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 10,
-                'format_id' => 11,
+                'format_id' => 6,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 191,
                 'created' => '2016-03-10 18:59:12',
-                'modified' => '2016-03-10 18:59:12',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 51,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 192,
                 'created' => '2016-03-10 18:59:12',
-                'modified' => '2016-03-10 18:59:12',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 52,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 193,
                 'created' => '2016-03-10 18:59:12',
-                'modified' => '2016-03-10 18:59:12',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 53,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 194,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 54,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 195,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 55,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 196,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 56,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 197,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 57,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 198,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 58,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 199,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 59,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 200,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 60,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 201,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 61,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 202,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 62,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 203,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 63,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 204,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 64,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 205,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 65,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 206,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 66,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 207,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 67,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 208,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 68,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 209,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 69,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 210,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 70,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 211,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-09-22 02:12:07',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 71,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 212,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 72,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 213,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 73,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 214,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 74,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 215,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 75,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 216,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 76,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 217,
                 'created' => '2016-03-10 18:59:13',
-                'modified' => '2016-03-10 18:59:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 77,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 218,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 78,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 219,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 79,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 220,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 80,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 221,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 81,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 222,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 82,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 223,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 83,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 224,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 84,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 225,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 85,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 226,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 86,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 227,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 87,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 228,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-09-22 02:18:50',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 88,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 229,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 89,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 230,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 90,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 231,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 91,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 232,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 92,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 233,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 93,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 234,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 94,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 235,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 95,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 236,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 96,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 237,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-03-10 18:59:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 97,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 238,
                 'created' => '2016-03-10 18:59:14',
-                'modified' => '2016-10-05 17:22:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 98,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 239,
                 'created' => '2016-03-10 18:59:15',
-                'modified' => '2016-10-05 17:22:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 99,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 240,
                 'created' => '2016-03-10 18:59:15',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 100,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 11,
-                'format_id' => 12,
+                'format_id' => 9,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 241,
                 'created' => '2016-03-10 19:00:23',
-                'modified' => '2016-10-06 16:22:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 242,
                 'created' => '2016-03-10 19:00:23',
-                'modified' => '2016-10-06 15:38:56',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 243,
                 'created' => '2016-03-10 19:00:23',
-                'modified' => '2016-09-20 23:41:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 244,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:45:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 2,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 245,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:19:56',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 246,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-10 22:27:38',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 247,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-05 16:43:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 248,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:48:09',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 249,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:33:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 250,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-05 17:22:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 251,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 14:36:30',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 252,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 253,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:15:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 254,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-05 17:22:05',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 255,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:26:23',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 256,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 05:07:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 2,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 257,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 258,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-10 18:20:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 259,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-10 18:27:32',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 260,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 261,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:30:39',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 262,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 263,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 264,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 16:36:50',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 265,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 17:33:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 266,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-06 17:38:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 267,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 268,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 269,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 270,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 271,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-10 18:37:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 3,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 272,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-10-10 18:39:48',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 3,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 273,
                 'created' => '2016-03-10 19:00:24',
-                'modified' => '2016-03-10 19:00:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 274,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 275,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 276,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 277,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 278,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 279,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 280,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 281,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 282,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 283,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-10-06 14:33:22',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 284,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 285,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-10-10 18:19:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 286,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 287,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 288,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 289,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 290,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 291,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 51,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 292,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 52,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 293,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 53,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 294,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 54,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 295,
                 'created' => '2016-03-10 19:00:25',
-                'modified' => '2016-03-10 19:00:25',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 55,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 296,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 56,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 297,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 57,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 298,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 58,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 299,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 59,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 300,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 60,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 301,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 61,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 302,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 62,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 303,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 63,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 304,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 64,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 305,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 65,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 306,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 66,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 307,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 67,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 308,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 68,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 309,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 69,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 310,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 70,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 311,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-10-06 14:30:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 71,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 312,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 72,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 313,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 73,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 314,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 74,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 315,
                 'created' => '2016-03-10 19:00:26',
-                'modified' => '2016-03-10 19:00:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 75,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 316,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 76,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 317,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 77,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 318,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 78,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 319,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 79,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 320,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 80,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 321,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 81,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 322,
                 'created' => '2016-03-10 19:00:27',
-                'modified' => '2016-03-10 19:00:27',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 82,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 323,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 83,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 324,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 84,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 325,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 85,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 326,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 86,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 327,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 87,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 328,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 88,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 329,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 89,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 330,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 90,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 331,
                 'created' => '2016-03-10 19:00:28',
-                'modified' => '2016-03-10 19:00:28',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 91,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 332,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 92,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 333,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 93,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 334,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 94,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 335,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 95,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 336,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 96,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 337,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 97,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 338,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 98,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 339,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2016-03-10 19:00:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 99,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 340,
                 'created' => '2016-03-10 19:00:29',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 100,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 12,
-                'format_id' => 13,
+                'format_id' => 12,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 341,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:22:24',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 342,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 15:38:56',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 343,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 344,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:45:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 345,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:19:56',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 346,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-10 22:27:38',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 347,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 348,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:48:09',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 349,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:33:26',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 350,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 351,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 14:36:30',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 352,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 353,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:15:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 354,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 355,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:26:23',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 356,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 05:07:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 357,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 358,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-10 18:20:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 359,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-10 18:27:32',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 360,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 361,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:30:39',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 362,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 363,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-03-10 19:01:40',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 364,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 16:36:50',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 365,
                 'created' => '2016-03-10 19:01:40',
-                'modified' => '2016-10-06 17:34:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 366,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-10-06 17:38:37',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 367,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 368,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 369,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 370,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 371,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-10-10 18:37:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 3,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 372,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-10-10 18:39:47',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 3,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 373,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 374,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 375,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-10-09 02:02:31',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 376,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 377,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 378,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 379,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 380,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 381,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 382,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 383,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-10-06 14:33:22',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 384,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 385,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-10-10 18:19:13',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 386,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 387,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 388,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 389,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 390,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 391,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 51,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 392,
                 'created' => '2016-03-10 19:01:41',
-                'modified' => '2016-03-10 19:01:41',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 52,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 393,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 53,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 394,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 54,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 395,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 55,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 396,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 56,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 397,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 57,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 398,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 58,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 399,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 59,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 400,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 60,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 401,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 61,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 402,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 62,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 403,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 63,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 404,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 64,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 405,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 65,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 406,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 66,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 407,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 67,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 408,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 68,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 409,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 69,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 410,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 70,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 411,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-10-06 14:30:37',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 71,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 412,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 72,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 413,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 73,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 414,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 74,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 415,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 75,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 416,
                 'created' => '2016-03-10 19:01:42',
-                'modified' => '2016-03-10 19:01:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 76,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 417,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 77,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 418,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 78,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 419,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 79,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 420,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 80,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 421,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 81,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 422,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 82,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 423,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 83,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 424,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 84,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 425,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 85,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 426,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 86,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 427,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 87,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 428,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 88,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 429,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 89,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 430,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 90,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 431,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 91,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 432,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 92,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 433,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 93,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 434,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 94,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 435,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 95,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 436,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 96,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 437,
                 'created' => '2016-03-10 19:01:43',
-                'modified' => '2016-03-10 19:01:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 97,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 438,
                 'created' => '2016-03-10 19:01:44',
-                'modified' => '2016-10-05 17:22:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 98,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 439,
                 'created' => '2016-03-10 19:01:44',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 99,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 440,
                 'created' => '2016-03-10 19:01:44',
-                'modified' => '2016-10-05 16:43:09',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 100,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 13,
-                'format_id' => 14,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 441,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-10 22:35:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 218,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 442,
@@ -5533,9 +5528,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 257,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 443,
@@ -5546,9 +5541,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 161,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 444,
@@ -5559,9 +5554,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 224,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 445,
@@ -5572,9 +5567,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 15,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 446,
@@ -5585,9 +5580,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 14,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 447,
@@ -5598,1036 +5593,1036 @@ class PiecesFixture extends TestFixture
                 'quantity' => 10,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 448,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-03-10 19:12:23',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 15,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 449,
                 'created' => '2016-06-02 15:19:21',
-                'modified' => '2016-06-02 15:19:21',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 450,
                 'created' => '2016-06-02 15:19:23',
-                'modified' => '2016-06-02 15:19:23',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 451,
                 'created' => '2016-06-02 15:19:25',
-                'modified' => '2016-06-02 15:19:25',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 452,
                 'created' => '2016-06-02 15:19:27',
-                'modified' => '2016-06-02 15:19:27',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 453,
                 'created' => '2016-06-02 15:19:29',
-                'modified' => '2016-06-02 15:19:29',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 454,
                 'created' => '2016-06-02 15:19:31',
-                'modified' => '2016-06-02 15:19:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 455,
                 'created' => '2016-06-02 15:19:33',
-                'modified' => '2016-06-02 15:19:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 456,
                 'created' => '2016-06-02 15:19:35',
-                'modified' => '2016-06-02 15:19:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 457,
                 'created' => '2016-06-02 15:19:36',
-                'modified' => '2016-06-02 15:19:36',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 458,
                 'created' => '2016-06-02 15:19:38',
-                'modified' => '2016-06-02 15:19:38',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 459,
                 'created' => '2016-06-02 15:19:40',
-                'modified' => '2016-06-02 15:19:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 460,
                 'created' => '2016-06-02 15:19:42',
-                'modified' => '2016-06-02 15:19:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 461,
                 'created' => '2016-06-02 15:19:44',
-                'modified' => '2016-06-02 15:19:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 462,
                 'created' => '2016-06-02 15:19:46',
-                'modified' => '2016-06-02 15:19:46',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 463,
                 'created' => '2016-06-02 15:19:48',
-                'modified' => '2016-06-02 15:29:54',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 464,
                 'created' => '2016-06-02 15:19:50',
-                'modified' => '2016-06-02 15:19:50',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 465,
                 'created' => '2016-06-02 15:19:51',
-                'modified' => '2016-06-02 15:19:51',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 466,
                 'created' => '2016-06-02 15:19:53',
-                'modified' => '2016-06-02 15:19:53',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 467,
                 'created' => '2016-06-02 15:19:55',
-                'modified' => '2016-06-02 15:19:55',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 468,
                 'created' => '2016-06-02 15:19:57',
-                'modified' => '2016-06-02 15:19:57',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 469,
                 'created' => '2016-06-02 15:19:59',
-                'modified' => '2016-06-02 15:19:59',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 470,
                 'created' => '2016-06-02 15:20:01',
-                'modified' => '2016-06-02 15:20:01',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 471,
                 'created' => '2016-06-02 15:20:03',
-                'modified' => '2016-06-02 15:20:03',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 472,
                 'created' => '2016-06-02 15:20:04',
-                'modified' => '2016-06-02 15:20:04',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 473,
                 'created' => '2016-06-02 15:20:06',
-                'modified' => '2016-06-02 15:20:06',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 474,
                 'created' => '2016-06-02 15:20:08',
-                'modified' => '2016-06-02 15:20:08',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 475,
                 'created' => '2016-06-02 15:20:10',
-                'modified' => '2016-06-02 15:20:10',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 476,
                 'created' => '2016-06-02 15:20:12',
-                'modified' => '2016-06-02 15:20:12',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 477,
                 'created' => '2016-06-02 15:20:15',
-                'modified' => '2016-06-02 15:20:15',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 478,
                 'created' => '2016-06-02 15:20:16',
-                'modified' => '2016-06-02 15:20:16',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 479,
                 'created' => '2016-06-02 15:20:18',
-                'modified' => '2016-06-02 15:20:18',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 480,
                 'created' => '2016-06-02 15:20:20',
-                'modified' => '2016-06-02 15:20:20',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 481,
                 'created' => '2016-06-02 15:20:22',
-                'modified' => '2016-06-02 15:20:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 482,
                 'created' => '2016-06-02 15:20:24',
-                'modified' => '2016-06-02 15:20:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 483,
                 'created' => '2016-06-02 15:20:26',
-                'modified' => '2016-06-02 15:20:26',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 484,
                 'created' => '2016-06-02 15:20:28',
-                'modified' => '2016-06-02 15:20:28',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 485,
                 'created' => '2016-06-02 15:20:30',
-                'modified' => '2016-06-02 15:20:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 486,
                 'created' => '2016-06-02 15:20:31',
-                'modified' => '2016-06-02 15:20:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 487,
                 'created' => '2016-06-02 15:20:33',
-                'modified' => '2016-06-02 15:20:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 488,
                 'created' => '2016-06-02 15:20:35',
-                'modified' => '2016-06-02 15:20:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 489,
                 'created' => '2016-06-02 15:20:37',
-                'modified' => '2016-06-02 15:20:37',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 490,
                 'created' => '2016-06-02 15:20:39',
-                'modified' => '2016-06-02 15:20:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 491,
                 'created' => '2016-06-02 15:20:41',
-                'modified' => '2016-06-02 15:20:41',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 492,
                 'created' => '2016-06-02 15:20:43',
-                'modified' => '2016-06-02 15:20:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 493,
                 'created' => '2016-06-02 15:20:45',
-                'modified' => '2016-06-02 15:20:45',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 494,
                 'created' => '2016-06-02 15:20:46',
-                'modified' => '2016-06-02 15:20:46',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 495,
                 'created' => '2016-06-02 15:20:48',
-                'modified' => '2016-06-02 15:20:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 496,
                 'created' => '2016-06-02 15:20:50',
-                'modified' => '2016-06-02 15:20:50',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 497,
                 'created' => '2016-06-02 15:20:52',
-                'modified' => '2016-06-02 15:20:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 498,
                 'created' => '2016-06-02 15:20:54',
-                'modified' => '2016-06-02 15:20:54',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 18,
-                'format_id' => 19,
+                'format_id' => 18,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 500,
                 'created' => '2016-08-19 20:56:53',
-                'modified' => '2016-10-05 03:03:29',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 501,
                 'created' => '2016-08-19 20:56:55',
-                'modified' => '2016-10-04 21:03:04',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 502,
                 'created' => '2016-08-19 20:56:57',
-                'modified' => '2016-10-04 21:03:06',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 503,
                 'created' => '2016-08-19 20:56:59',
-                'modified' => '2016-10-04 21:03:09',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 504,
                 'created' => '2016-08-19 20:57:01',
-                'modified' => '2016-10-04 21:03:11',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 505,
                 'created' => '2016-08-19 20:57:03',
-                'modified' => '2016-10-04 21:03:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 506,
                 'created' => '2016-08-19 20:57:05',
-                'modified' => '2016-10-04 21:03:16',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 507,
                 'created' => '2016-08-19 20:57:07',
-                'modified' => '2016-10-04 21:03:19',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 6,
-                'format_id' => 6,
+                'format_id' => 3,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 508,
                 'created' => '2016-08-19 20:59:30',
-                'modified' => '2016-08-19 20:59:30',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 20,
-                'format_id' => 21,
+                'format_id' => 4,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 509,
                 'created' => '2016-03-08 02:18:19',
-                'modified' => '2016-03-10 18:57:23',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 8,
-                'format_id' => 8,
+                'format_id' => 2,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 510,
                 'created' => '2016-08-28 01:02:45',
-                'modified' => '2016-08-30 21:29:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 511,
                 'created' => '2016-08-28 01:02:47',
-                'modified' => '2016-08-30 21:34:56',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 512,
                 'created' => '2016-08-28 01:02:49',
-                'modified' => '2016-08-30 21:38:23',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 513,
                 'created' => '2016-08-28 01:02:50',
-                'modified' => '2016-08-30 21:40:09',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 514,
                 'created' => '2016-08-28 01:02:52',
-                'modified' => '2016-08-30 21:43:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 515,
                 'created' => '2016-08-28 01:02:55',
-                'modified' => '2016-08-30 21:45:37',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 516,
                 'created' => '2016-08-28 01:02:57',
-                'modified' => '2016-09-26 03:57:34',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 517,
                 'created' => '2016-08-28 01:02:59',
-                'modified' => '2016-10-04 20:25:21',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 518,
                 'created' => '2016-08-28 01:03:01',
-                'modified' => '2016-08-28 01:03:01',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 519,
                 'created' => '2016-08-28 01:03:03',
-                'modified' => '2016-08-28 01:03:03',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 520,
                 'created' => '2016-08-28 01:03:04',
-                'modified' => '2016-08-28 01:03:04',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 521,
                 'created' => '2016-08-28 01:03:06',
-                'modified' => '2016-08-28 01:03:06',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 522,
                 'created' => '2016-08-28 01:03:08',
-                'modified' => '2016-08-28 01:03:08',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 523,
                 'created' => '2016-08-28 01:03:10',
-                'modified' => '2016-08-28 01:03:10',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 524,
                 'created' => '2016-08-28 01:03:12',
-                'modified' => '2016-08-28 01:03:12',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 21,
-                'format_id' => 22,
+                'format_id' => 19,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 525,
                 'created' => '2016-09-29 03:55:03',
-                'modified' => '2016-09-29 04:07:03',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 22,
-                'format_id' => 23,
+                'format_id' => 20,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 526,
                 'created' => '2016-09-29 03:55:05',
-                'modified' => '2016-09-29 03:59:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 22,
-                'format_id' => 23,
+                'format_id' => 20,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 527,
                 'created' => '2016-09-29 03:55:08',
-                'modified' => '2016-09-29 03:55:08',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 22,
-                'format_id' => 23,
+                'format_id' => 20,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 528,
@@ -6640,7 +6635,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 529,
@@ -6653,7 +6648,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 530,
@@ -6666,7 +6661,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 531,
@@ -6679,7 +6674,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 532,
@@ -6692,7 +6687,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 533,
@@ -6705,7 +6700,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 534,
@@ -6718,7 +6713,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 535,
@@ -6731,7 +6726,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 536,
@@ -6744,7 +6739,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 537,
@@ -6757,7 +6752,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 538,
@@ -6770,7 +6765,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 539,
@@ -6783,7 +6778,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 540,
@@ -6796,7 +6791,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 541,
@@ -6809,7 +6804,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 542,
@@ -6822,7 +6817,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 543,
@@ -6835,7 +6830,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 544,
@@ -6848,7 +6843,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 545,
@@ -6861,7 +6856,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 546,
@@ -6874,7 +6869,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 547,
@@ -6887,7 +6882,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 548,
@@ -6900,7 +6895,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 549,
@@ -6913,7 +6908,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 550,
@@ -6926,7 +6921,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 551,
@@ -6939,7 +6934,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 552,
@@ -6952,7 +6947,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 553,
@@ -6965,7 +6960,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 554,
@@ -6978,7 +6973,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 555,
@@ -6991,7 +6986,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 556,
@@ -7004,7 +6999,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 557,
@@ -7017,7 +7012,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 558,
@@ -7030,7 +7025,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 559,
@@ -7043,7 +7038,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 560,
@@ -7056,7 +7051,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 561,
@@ -7069,7 +7064,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 562,
@@ -7082,7 +7077,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 563,
@@ -7095,7 +7090,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 564,
@@ -7108,7 +7103,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 565,
@@ -7121,7 +7116,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 566,
@@ -7134,7 +7129,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 567,
@@ -7147,7 +7142,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 568,
@@ -7160,7 +7155,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 569,
@@ -7173,7 +7168,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 570,
@@ -7186,7 +7181,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 571,
@@ -7199,7 +7194,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 572,
@@ -7212,7 +7207,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 573,
@@ -7225,7 +7220,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 574,
@@ -7238,7 +7233,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 575,
@@ -7251,7 +7246,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 576,
@@ -7264,7 +7259,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 577,
@@ -7277,7 +7272,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 578,
@@ -7290,7 +7285,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 579,
@@ -7303,7 +7298,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 580,
@@ -7316,7 +7311,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 581,
@@ -7329,7 +7324,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 582,
@@ -7342,7 +7337,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 583,
@@ -7355,7 +7350,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 584,
@@ -7368,7 +7363,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 585,
@@ -7381,7 +7376,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 586,
@@ -7394,7 +7389,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 587,
@@ -7407,7 +7402,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 588,
@@ -7420,7 +7415,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 589,
@@ -7433,7 +7428,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 590,
@@ -7446,7 +7441,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 591,
@@ -7459,7 +7454,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 592,
@@ -7472,7 +7467,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 593,
@@ -7485,7 +7480,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 594,
@@ -7498,7 +7493,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 595,
@@ -7511,7 +7506,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 596,
@@ -7524,7 +7519,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 597,
@@ -7537,7 +7532,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 598,
@@ -7550,7 +7545,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 599,
@@ -7563,7 +7558,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 600,
@@ -7576,7 +7571,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 601,
@@ -7589,7 +7584,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 602,
@@ -7602,7 +7597,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 603,
@@ -7615,7 +7610,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 604,
@@ -7628,7 +7623,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 605,
@@ -7641,7 +7636,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 606,
@@ -7654,7 +7649,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 607,
@@ -7667,7 +7662,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 608,
@@ -7680,7 +7675,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 609,
@@ -7693,7 +7688,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 610,
@@ -7706,7 +7701,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 611,
@@ -7719,7 +7714,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 612,
@@ -7732,7 +7727,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 613,
@@ -7745,7 +7740,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 614,
@@ -7758,7 +7753,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 615,
@@ -7771,7 +7766,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 616,
@@ -7784,7 +7779,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 617,
@@ -7797,7 +7792,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 618,
@@ -7810,7 +7805,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 619,
@@ -7823,7 +7818,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 620,
@@ -7836,7 +7831,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 621,
@@ -7849,7 +7844,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 622,
@@ -7862,7 +7857,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 623,
@@ -7875,7 +7870,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 624,
@@ -7888,7 +7883,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 625,
@@ -7901,7 +7896,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 626,
@@ -7914,7 +7909,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 627,
@@ -7927,2607 +7922,2607 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 23,
                 'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 628,
                 'created' => '2016-10-05 16:29:52',
-                'modified' => '2016-10-07 05:16:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 629,
                 'created' => '2016-10-05 16:29:54',
-                'modified' => '2016-10-07 05:17:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 630,
                 'created' => '2016-10-05 16:29:55',
-                'modified' => '2016-10-05 16:29:55',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 631,
                 'created' => '2016-10-05 16:29:57',
-                'modified' => '2016-10-10 21:39:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 632,
                 'created' => '2016-10-05 16:29:59',
-                'modified' => '2016-10-07 05:44:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 633,
                 'created' => '2016-10-05 16:30:01',
-                'modified' => '2016-10-10 22:27:38',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 634,
                 'created' => '2016-10-05 16:30:03',
-                'modified' => '2016-10-10 21:39:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 635,
                 'created' => '2016-10-05 16:30:05',
-                'modified' => '2016-10-07 05:47:47',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 636,
                 'created' => '2016-10-05 16:30:07',
-                'modified' => '2016-10-07 05:37:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 637,
                 'created' => '2016-10-05 16:30:09',
-                'modified' => '2016-10-10 21:39:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 638,
                 'created' => '2016-10-05 16:30:11',
-                'modified' => '2016-10-07 05:35:26',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 639,
                 'created' => '2016-10-05 16:30:12',
-                'modified' => '2016-10-10 21:36:20',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 640,
                 'created' => '2016-10-05 16:30:14',
-                'modified' => '2016-10-07 05:51:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 641,
                 'created' => '2016-10-05 16:30:16',
-                'modified' => '2016-10-10 21:39:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 642,
                 'created' => '2016-10-05 16:30:18',
-                'modified' => '2016-10-07 05:53:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 643,
                 'created' => '2016-10-05 16:30:20',
-                'modified' => '2016-10-07 05:55:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 644,
                 'created' => '2016-10-05 16:30:22',
-                'modified' => '2016-10-07 05:58:50',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 645,
                 'created' => '2016-10-05 16:30:24',
-                'modified' => '2016-10-10 18:21:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 646,
                 'created' => '2016-10-05 16:30:26',
-                'modified' => '2016-10-10 18:27:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 647,
                 'created' => '2016-10-05 16:30:27',
-                'modified' => '2016-10-10 21:39:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 648,
                 'created' => '2016-10-05 16:30:29',
-                'modified' => '2016-10-07 06:00:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 649,
                 'created' => '2016-10-05 16:30:31',
-                'modified' => '2016-10-05 16:30:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 650,
                 'created' => '2016-10-05 16:30:33',
-                'modified' => '2016-10-05 16:30:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 651,
                 'created' => '2016-10-05 16:30:35',
-                'modified' => '2016-10-05 16:30:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 652,
                 'created' => '2016-10-05 16:30:37',
-                'modified' => '2016-10-07 06:03:15',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 653,
                 'created' => '2016-10-05 16:30:39',
-                'modified' => '2016-10-05 16:30:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 654,
                 'created' => '2016-10-05 16:30:41',
-                'modified' => '2016-10-05 16:30:41',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 655,
                 'created' => '2016-10-05 16:30:42',
-                'modified' => '2016-10-05 16:30:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 656,
                 'created' => '2016-10-05 16:30:44',
-                'modified' => '2016-10-05 16:30:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 657,
                 'created' => '2016-10-05 16:30:47',
-                'modified' => '2016-10-05 16:30:47',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 658,
                 'created' => '2016-10-05 16:30:49',
-                'modified' => '2016-10-10 18:37:19',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 659,
                 'created' => '2016-10-05 16:30:51',
-                'modified' => '2016-10-10 18:39:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 660,
                 'created' => '2016-10-05 16:30:53',
-                'modified' => '2016-10-09 02:15:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 661,
                 'created' => '2016-10-05 16:30:55',
-                'modified' => '2016-10-05 16:30:55',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 662,
                 'created' => '2016-10-05 16:30:57',
-                'modified' => '2016-10-05 16:30:57',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 663,
                 'created' => '2016-10-05 16:30:59',
-                'modified' => '2016-10-05 16:30:59',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 664,
                 'created' => '2016-10-05 16:31:01',
-                'modified' => '2016-10-05 16:31:01',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 665,
                 'created' => '2016-10-05 16:31:04',
-                'modified' => '2016-10-05 16:31:04',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 666,
                 'created' => '2016-10-05 16:31:05',
-                'modified' => '2016-10-05 16:31:05',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 667,
                 'created' => '2016-10-05 16:31:07',
-                'modified' => '2016-10-05 16:31:07',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 668,
                 'created' => '2016-10-05 16:31:09',
-                'modified' => '2016-10-05 16:31:09',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 669,
                 'created' => '2016-10-05 16:31:11',
-                'modified' => '2016-10-05 16:31:11',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 670,
                 'created' => '2016-10-05 16:31:13',
-                'modified' => '2016-10-07 05:33:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 671,
                 'created' => '2016-10-05 16:31:15',
-                'modified' => '2016-10-05 16:31:15',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 672,
                 'created' => '2016-10-05 16:31:17',
-                'modified' => '2016-10-10 18:19:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 673,
                 'created' => '2016-10-05 16:31:19',
-                'modified' => '2016-10-05 16:31:19',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 674,
                 'created' => '2016-10-05 16:31:21',
-                'modified' => '2016-10-05 16:31:21',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 675,
                 'created' => '2016-10-05 16:31:22',
-                'modified' => '2016-10-05 16:31:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 676,
                 'created' => '2016-10-05 16:31:24',
-                'modified' => '2016-10-05 16:31:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 677,
                 'created' => '2016-10-05 16:31:26',
-                'modified' => '2016-10-05 16:31:26',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 678,
                 'created' => '2016-10-05 16:31:28',
-                'modified' => '2016-10-05 16:31:28',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 51,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 679,
                 'created' => '2016-10-05 16:31:30',
-                'modified' => '2016-10-05 16:31:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 52,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 680,
                 'created' => '2016-10-05 16:31:32',
-                'modified' => '2016-10-05 16:31:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 53,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 681,
                 'created' => '2016-10-05 16:31:34',
-                'modified' => '2016-10-05 16:31:34',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 54,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 682,
                 'created' => '2016-10-05 16:31:36',
-                'modified' => '2016-10-05 16:31:36',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 55,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 683,
                 'created' => '2016-10-05 16:31:38',
-                'modified' => '2016-10-05 16:31:38',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 56,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 684,
                 'created' => '2016-10-05 16:31:40',
-                'modified' => '2016-10-05 16:31:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 57,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 685,
                 'created' => '2016-10-05 16:31:42',
-                'modified' => '2016-10-05 16:31:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 58,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 686,
                 'created' => '2016-10-05 16:31:43',
-                'modified' => '2016-10-05 16:31:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 59,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 687,
                 'created' => '2016-10-05 16:31:45',
-                'modified' => '2016-10-05 16:31:45',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 60,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 688,
                 'created' => '2016-10-05 16:31:47',
-                'modified' => '2016-10-05 16:31:47',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 61,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 689,
                 'created' => '2016-10-05 16:31:49',
-                'modified' => '2016-10-05 16:31:49',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 62,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 690,
                 'created' => '2016-10-05 16:31:51',
-                'modified' => '2016-10-05 16:31:51',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 63,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 691,
                 'created' => '2016-10-05 16:31:53',
-                'modified' => '2016-10-05 16:31:53',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 64,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 692,
                 'created' => '2016-10-05 16:31:55',
-                'modified' => '2016-10-05 16:31:55',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 65,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 693,
                 'created' => '2016-10-05 16:31:57',
-                'modified' => '2016-10-05 16:31:57',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 66,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 694,
                 'created' => '2016-10-05 16:31:59',
-                'modified' => '2016-10-05 16:31:59',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 67,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 695,
                 'created' => '2016-10-05 16:32:01',
-                'modified' => '2016-10-05 16:32:01',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 68,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 696,
                 'created' => '2016-10-05 16:32:03',
-                'modified' => '2016-10-05 16:32:03',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 69,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 697,
                 'created' => '2016-10-05 16:32:04',
-                'modified' => '2016-10-05 16:32:04',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 70,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 698,
                 'created' => '2016-10-05 16:32:06',
-                'modified' => '2016-10-07 05:31:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 71,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 699,
                 'created' => '2016-10-05 16:32:08',
-                'modified' => '2016-10-05 16:32:08',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 72,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 700,
                 'created' => '2016-10-05 16:32:10',
-                'modified' => '2016-10-05 16:32:10',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 73,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 701,
                 'created' => '2016-10-05 16:32:12',
-                'modified' => '2016-10-05 16:32:12',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 74,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 702,
                 'created' => '2016-10-05 16:32:14',
-                'modified' => '2016-10-05 16:32:14',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 75,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 703,
                 'created' => '2016-10-05 16:32:16',
-                'modified' => '2016-10-05 16:32:16',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 76,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 704,
                 'created' => '2016-10-05 16:32:18',
-                'modified' => '2016-10-05 16:32:18',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 77,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 705,
                 'created' => '2016-10-05 16:32:20',
-                'modified' => '2016-10-05 16:32:20',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 78,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 706,
                 'created' => '2016-10-05 16:32:22',
-                'modified' => '2016-10-05 16:32:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 79,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 707,
                 'created' => '2016-10-05 16:32:24',
-                'modified' => '2016-10-05 16:32:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 80,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 708,
                 'created' => '2016-10-05 16:32:25',
-                'modified' => '2016-10-05 16:32:25',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 81,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 709,
                 'created' => '2016-10-05 16:32:27',
-                'modified' => '2016-10-05 16:32:27',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 82,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 710,
                 'created' => '2016-10-05 16:32:29',
-                'modified' => '2016-10-05 16:32:29',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 83,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 711,
                 'created' => '2016-10-05 16:32:31',
-                'modified' => '2016-10-05 16:32:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 84,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 712,
                 'created' => '2016-10-05 16:32:33',
-                'modified' => '2016-10-05 16:32:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 85,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 713,
                 'created' => '2016-10-05 16:32:35',
-                'modified' => '2016-10-05 16:32:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 86,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 714,
                 'created' => '2016-10-05 16:32:37',
-                'modified' => '2016-10-05 16:32:37',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 87,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 715,
                 'created' => '2016-10-05 16:32:39',
-                'modified' => '2016-10-05 16:32:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 88,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 716,
                 'created' => '2016-10-05 16:32:41',
-                'modified' => '2016-10-05 16:32:41',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 89,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 717,
                 'created' => '2016-10-05 16:32:43',
-                'modified' => '2016-10-05 16:32:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 90,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 718,
                 'created' => '2016-10-05 16:32:45',
-                'modified' => '2016-10-05 16:32:45',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 91,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 719,
                 'created' => '2016-10-05 16:32:47',
-                'modified' => '2016-10-05 16:32:47',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 92,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 720,
                 'created' => '2016-10-05 16:32:48',
-                'modified' => '2016-10-05 16:32:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 93,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 721,
                 'created' => '2016-10-05 16:32:50',
-                'modified' => '2016-10-05 16:32:50',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 94,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 722,
                 'created' => '2016-10-05 16:32:52',
-                'modified' => '2016-10-05 16:32:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 95,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 723,
                 'created' => '2016-10-05 16:32:54',
-                'modified' => '2016-10-05 16:32:54',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 96,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 724,
                 'created' => '2016-10-05 16:32:56',
-                'modified' => '2016-10-05 16:32:56',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 97,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 725,
                 'created' => '2016-10-05 16:32:58',
-                'modified' => '2016-10-05 16:32:58',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 98,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 726,
                 'created' => '2016-10-05 16:33:00',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 99,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 727,
                 'created' => '2016-10-05 16:33:02',
-                'modified' => '2016-10-05 16:43:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 100,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 24,
-                'format_id' => 25,
+                'format_id' => 21,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 728,
                 'created' => '2016-10-05 16:38:52',
-                'modified' => '2016-10-07 05:16:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 729,
                 'created' => '2016-10-05 16:38:54',
-                'modified' => '2016-10-07 05:17:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 730,
                 'created' => '2016-10-05 16:38:56',
-                'modified' => '2016-10-07 06:05:16',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 731,
                 'created' => '2016-10-05 16:38:58',
-                'modified' => '2016-10-10 21:39:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 732,
                 'created' => '2016-10-05 16:39:00',
-                'modified' => '2016-10-07 05:44:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 733,
                 'created' => '2016-10-05 16:39:02',
-                'modified' => '2016-10-10 22:27:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 734,
                 'created' => '2016-10-05 16:39:04',
-                'modified' => '2016-10-10 21:39:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 735,
                 'created' => '2016-10-05 16:39:05',
-                'modified' => '2016-10-07 05:47:47',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 736,
                 'created' => '2016-10-05 16:39:07',
-                'modified' => '2016-10-07 05:37:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 737,
                 'created' => '2016-10-05 16:39:09',
-                'modified' => '2016-10-10 21:39:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 738,
                 'created' => '2016-10-05 16:39:11',
-                'modified' => '2016-10-07 05:35:26',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 739,
                 'created' => '2016-10-05 16:39:13',
-                'modified' => '2016-10-10 21:36:20',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 740,
                 'created' => '2016-10-05 16:39:15',
-                'modified' => '2016-10-07 05:51:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 741,
                 'created' => '2016-10-05 16:39:17',
-                'modified' => '2016-10-10 21:39:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 742,
                 'created' => '2016-10-05 16:39:18',
-                'modified' => '2016-10-07 05:53:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 743,
                 'created' => '2016-10-05 16:39:20',
-                'modified' => '2016-10-07 05:55:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 744,
                 'created' => '2016-10-05 16:39:22',
-                'modified' => '2016-10-07 05:58:50',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 745,
                 'created' => '2016-10-05 16:39:24',
-                'modified' => '2016-10-10 18:21:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 746,
                 'created' => '2016-10-05 16:39:26',
-                'modified' => '2016-10-10 18:27:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 747,
                 'created' => '2016-10-05 16:39:28',
-                'modified' => '2016-10-10 21:39:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 748,
                 'created' => '2016-10-05 16:39:30',
-                'modified' => '2016-10-07 06:00:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 749,
                 'created' => '2016-10-05 16:39:31',
-                'modified' => '2016-10-05 16:39:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 750,
                 'created' => '2016-10-05 16:39:33',
-                'modified' => '2016-10-05 16:39:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 751,
                 'created' => '2016-10-05 16:39:35',
-                'modified' => '2016-10-05 16:39:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 752,
                 'created' => '2016-10-05 16:39:37',
-                'modified' => '2016-10-07 06:03:54',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 753,
                 'created' => '2016-10-05 16:39:39',
-                'modified' => '2016-10-05 16:39:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 754,
                 'created' => '2016-10-05 16:39:41',
-                'modified' => '2016-10-05 16:39:41',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 755,
                 'created' => '2016-10-05 16:39:43',
-                'modified' => '2016-10-05 16:39:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 756,
                 'created' => '2016-10-05 16:39:44',
-                'modified' => '2016-10-05 16:39:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 757,
                 'created' => '2016-10-05 16:39:46',
-                'modified' => '2016-10-05 16:39:46',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 758,
                 'created' => '2016-10-05 16:39:48',
-                'modified' => '2016-10-10 18:37:19',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 759,
                 'created' => '2016-10-05 16:39:50',
-                'modified' => '2016-10-10 18:39:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 760,
                 'created' => '2016-10-05 16:39:52',
-                'modified' => '2016-10-09 02:15:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 761,
                 'created' => '2016-10-05 16:39:54',
-                'modified' => '2016-10-05 16:39:54',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 762,
                 'created' => '2016-10-05 16:39:56',
-                'modified' => '2016-10-05 16:39:56',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 763,
                 'created' => '2016-10-05 16:39:58',
-                'modified' => '2016-10-05 16:39:58',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 764,
                 'created' => '2016-10-05 16:40:00',
-                'modified' => '2016-10-05 16:40:00',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 765,
                 'created' => '2016-10-05 16:40:01',
-                'modified' => '2016-10-05 16:40:01',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 766,
                 'created' => '2016-10-05 16:40:03',
-                'modified' => '2016-10-05 16:40:03',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 767,
                 'created' => '2016-10-05 16:40:05',
-                'modified' => '2016-10-05 16:40:05',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 768,
                 'created' => '2016-10-05 16:40:07',
-                'modified' => '2016-10-05 16:40:07',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 769,
                 'created' => '2016-10-05 16:40:09',
-                'modified' => '2016-10-05 16:40:09',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 770,
                 'created' => '2016-10-05 16:40:11',
-                'modified' => '2016-10-07 05:33:23',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 771,
                 'created' => '2016-10-05 16:40:13',
-                'modified' => '2016-10-05 16:40:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 772,
                 'created' => '2016-10-05 16:40:14',
-                'modified' => '2016-10-10 18:19:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 773,
                 'created' => '2016-10-05 16:40:16',
-                'modified' => '2016-10-05 16:40:16',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 774,
                 'created' => '2016-10-05 16:40:18',
-                'modified' => '2016-10-05 16:40:18',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 775,
                 'created' => '2016-10-05 16:40:20',
-                'modified' => '2016-10-05 16:40:20',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 776,
                 'created' => '2016-10-05 16:40:22',
-                'modified' => '2016-10-05 16:40:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 777,
                 'created' => '2016-10-05 16:40:24',
-                'modified' => '2016-10-05 16:40:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 778,
                 'created' => '2016-10-05 16:40:26',
-                'modified' => '2016-10-05 16:40:26',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 51,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 779,
                 'created' => '2016-10-05 16:40:28',
-                'modified' => '2016-10-05 16:40:28',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 52,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 780,
                 'created' => '2016-10-05 16:40:30',
-                'modified' => '2016-10-05 16:40:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 53,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 781,
                 'created' => '2016-10-05 16:40:31',
-                'modified' => '2016-10-05 16:40:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 54,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 782,
                 'created' => '2016-10-05 16:40:33',
-                'modified' => '2016-10-05 16:40:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 55,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 783,
                 'created' => '2016-10-05 16:40:35',
-                'modified' => '2016-10-05 16:40:35',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 56,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 784,
                 'created' => '2016-10-05 16:40:37',
-                'modified' => '2016-10-05 16:40:37',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 57,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 785,
                 'created' => '2016-10-05 16:40:39',
-                'modified' => '2016-10-05 16:40:39',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 58,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 786,
                 'created' => '2016-10-05 16:40:41',
-                'modified' => '2016-10-05 16:40:41',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 59,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 787,
                 'created' => '2016-10-05 16:40:43',
-                'modified' => '2016-10-05 16:40:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 60,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 788,
                 'created' => '2016-10-05 16:40:45',
-                'modified' => '2016-10-05 16:40:45',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 61,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 789,
                 'created' => '2016-10-05 16:40:46',
-                'modified' => '2016-10-05 16:40:46',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 62,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 790,
                 'created' => '2016-10-05 16:40:48',
-                'modified' => '2016-10-05 16:40:48',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 63,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 791,
                 'created' => '2016-10-05 16:40:50',
-                'modified' => '2016-10-05 16:40:50',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 64,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 792,
                 'created' => '2016-10-05 16:40:52',
-                'modified' => '2016-10-05 16:40:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 65,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 793,
                 'created' => '2016-10-05 16:40:54',
-                'modified' => '2016-10-05 16:40:54',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 66,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 794,
                 'created' => '2016-10-05 16:40:56',
-                'modified' => '2016-10-05 16:40:56',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 67,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 795,
                 'created' => '2016-10-05 16:40:58',
-                'modified' => '2016-10-05 16:40:58',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 68,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 796,
                 'created' => '2016-10-05 16:41:00',
-                'modified' => '2016-10-05 16:41:00',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 69,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 797,
                 'created' => '2016-10-05 16:41:02',
-                'modified' => '2016-10-05 16:41:02',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 70,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 798,
                 'created' => '2016-10-05 16:41:04',
-                'modified' => '2016-10-07 05:31:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 71,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 799,
                 'created' => '2016-10-05 16:41:05',
-                'modified' => '2016-10-05 16:41:05',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 72,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 800,
                 'created' => '2016-10-05 16:41:07',
-                'modified' => '2016-10-05 16:41:07',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 73,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 801,
                 'created' => '2016-10-05 16:41:09',
-                'modified' => '2016-10-05 16:41:09',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 74,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 802,
                 'created' => '2016-10-05 16:41:11',
-                'modified' => '2016-10-05 16:41:11',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 75,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 803,
                 'created' => '2016-10-05 16:41:13',
-                'modified' => '2016-10-05 16:41:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 76,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 804,
                 'created' => '2016-10-05 16:41:15',
-                'modified' => '2016-10-05 16:41:15',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 77,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 805,
                 'created' => '2016-10-05 16:41:17',
-                'modified' => '2016-10-05 16:41:17',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 78,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 806,
                 'created' => '2016-10-05 16:41:19',
-                'modified' => '2016-10-05 16:41:19',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 79,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 807,
                 'created' => '2016-10-05 16:41:21',
-                'modified' => '2016-10-05 16:41:21',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 80,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 808,
                 'created' => '2016-10-05 16:41:22',
-                'modified' => '2016-10-05 16:41:22',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 81,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 809,
                 'created' => '2016-10-05 16:41:24',
-                'modified' => '2016-10-05 16:41:24',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 82,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 810,
                 'created' => '2016-10-05 16:41:26',
-                'modified' => '2016-10-05 16:41:26',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 83,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 811,
                 'created' => '2016-10-05 16:41:28',
-                'modified' => '2016-10-05 16:41:28',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 84,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 812,
                 'created' => '2016-10-05 16:41:30',
-                'modified' => '2016-10-05 16:41:30',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 85,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 813,
                 'created' => '2016-10-05 16:41:32',
-                'modified' => '2016-10-05 16:41:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 86,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 814,
                 'created' => '2016-10-05 16:41:34',
-                'modified' => '2016-10-05 16:41:34',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 87,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 815,
                 'created' => '2016-10-05 16:41:36',
-                'modified' => '2016-10-05 16:41:36',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 88,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 816,
                 'created' => '2016-10-05 16:41:38',
-                'modified' => '2016-10-05 16:41:38',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 89,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 817,
                 'created' => '2016-10-05 16:41:40',
-                'modified' => '2016-10-05 16:41:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 90,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 818,
                 'created' => '2016-10-05 16:41:42',
-                'modified' => '2016-10-05 16:41:42',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 91,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 819,
                 'created' => '2016-10-05 16:41:43',
-                'modified' => '2016-10-05 16:41:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 92,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 820,
                 'created' => '2016-10-05 16:41:45',
-                'modified' => '2016-10-05 16:41:45',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 93,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 821,
                 'created' => '2016-10-05 16:41:47',
-                'modified' => '2016-10-05 16:41:47',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 94,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 822,
                 'created' => '2016-10-05 16:41:49',
-                'modified' => '2016-10-05 16:41:49',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 95,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 823,
                 'created' => '2016-10-05 16:41:51',
-                'modified' => '2016-10-05 16:41:51',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 96,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 824,
                 'created' => '2016-10-05 16:41:53',
-                'modified' => '2016-10-05 16:41:53',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 97,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 825,
                 'created' => '2016-10-05 16:41:55',
-                'modified' => '2016-10-05 16:41:55',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 98,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 826,
                 'created' => '2016-10-05 16:41:57',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 99,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 827,
                 'created' => '2016-10-05 16:41:59',
-                'modified' => '2016-10-05 16:43:15',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 100,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 25,
-                'format_id' => 26,
+                'format_id' => 24,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 828,
@@ -10538,22 +10533,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 106,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 829,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-12 18:04:17',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 22,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 830,
@@ -10564,9 +10559,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 241,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 831,
@@ -10577,9 +10572,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 42,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 832,
@@ -10590,9 +10585,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 18,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 833,
@@ -10603,9 +10598,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 12,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 834,
@@ -10616,9 +10611,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 239,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 835,
@@ -10629,919 +10624,919 @@ class PiecesFixture extends TestFixture
                 'quantity' => 42,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 836,
                 'created' => '2016-10-05 19:49:43',
-                'modified' => '2016-10-05 21:03:14',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 129,
                 'made' => false,
                 'edition_id' => 28,
-                'format_id' => 29,
+                'format_id' => 8,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 837,
                 'created' => '2016-10-05 19:55:28',
-                'modified' => '2016-10-05 21:04:29',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 375,
                 'made' => false,
                 'edition_id' => 29,
-                'format_id' => 30,
+                'format_id' => 11,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 838,
                 'created' => '2016-10-05 19:56:59',
-                'modified' => '2016-10-05 21:03:49',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 364,
                 'made' => false,
                 'edition_id' => 30,
-                'format_id' => 31,
+                'format_id' => 17,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 839,
                 'created' => '2016-10-05 20:16:55',
-                'modified' => '2016-10-05 21:05:08',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 375,
                 'made' => false,
                 'edition_id' => 31,
-                'format_id' => 32,
+                'format_id' => 14,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 840,
                 'created' => '2016-10-05 20:19:44',
-                'modified' => '2016-10-05 21:05:46',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 375,
                 'made' => false,
                 'edition_id' => 32,
-                'format_id' => 33,
+                'format_id' => 23,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 841,
                 'created' => '2016-10-05 20:20:56',
-                'modified' => '2016-10-05 21:06:18',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 375,
                 'made' => false,
                 'edition_id' => 33,
-                'format_id' => 34,
+                'format_id' => 26,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 842,
                 'created' => '2016-10-05 19:49:43',
-                'modified' => '2016-10-05 20:27:01',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 28,
-                'format_id' => 29,
+                'format_id' => 8,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 843,
                 'created' => '2016-10-05 19:55:28',
-                'modified' => '2016-10-05 20:27:03',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 29,
-                'format_id' => 30,
+                'format_id' => 11,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 844,
                 'created' => '2016-10-05 19:56:59',
-                'modified' => '2016-10-05 20:27:05',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 30,
-                'format_id' => 31,
+                'format_id' => 17,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 845,
                 'created' => '2016-10-05 20:16:55',
-                'modified' => '2016-10-05 20:27:07',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 31,
-                'format_id' => 32,
+                'format_id' => 14,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 846,
                 'created' => '2016-10-05 20:19:44',
-                'modified' => '2016-10-05 20:27:09',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 32,
-                'format_id' => 33,
+                'format_id' => 23,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 847,
                 'created' => '2016-10-05 20:20:56',
-                'modified' => '2016-10-05 20:27:11',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 33,
-                'format_id' => 34,
+                'format_id' => 26,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 848,
                 'created' => '2016-10-05 19:49:43',
-                'modified' => '2016-10-14 18:56:49',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 245,
                 'made' => false,
                 'edition_id' => 28,
-                'format_id' => 29,
+                'format_id' => 8,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 849,
                 'created' => '2016-10-05 19:56:59',
-                'modified' => '2016-10-14 18:57:11',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 10,
                 'made' => false,
                 'edition_id' => 30,
-                'format_id' => 31,
+                'format_id' => 17,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 850,
                 'created' => '2016-10-05 19:55:28',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 24,
                 'made' => false,
                 'edition_id' => 29,
-                'format_id' => 30,
+                'format_id' => 11,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 851,
                 'created' => '2016-10-05 20:16:55',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 24,
                 'made' => false,
                 'edition_id' => 31,
-                'format_id' => 32,
+                'format_id' => 14,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 852,
                 'created' => '2016-10-05 20:19:44',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 23,
                 'made' => false,
                 'edition_id' => 32,
-                'format_id' => 33,
+                'format_id' => 23,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 853,
                 'created' => '2016-10-05 20:20:56',
-                'modified' => '2018-05-01 04:10:44',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 24,
                 'made' => false,
                 'edition_id' => 33,
-                'format_id' => 34,
+                'format_id' => 26,
                 'disposition_count' => 2,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 854,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 855,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 856,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 857,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 858,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 859,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 6,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 860,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 7,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 861,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 8,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 862,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 9,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 863,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 864,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 11,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 865,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 12,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 866,
                 'created' => '2016-10-06 14:43:31',
-                'modified' => '2016-10-06 14:43:31',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 13,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 867,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 14,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 868,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 15,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 869,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 870,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 871,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 872,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 873,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 874,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 21,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 875,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 22,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 876,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 23,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 877,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 24,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 878,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 25,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 879,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 26,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 880,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 27,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 881,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 28,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 882,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 29,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 883,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 30,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 884,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 31,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 885,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 32,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 886,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 33,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 887,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 34,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 888,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 35,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 889,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 36,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 890,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 37,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 891,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 38,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 892,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 39,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 893,
                 'created' => '2016-10-06 14:43:32',
-                'modified' => '2016-10-06 14:43:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 40,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 894,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 41,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 895,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 42,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 896,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 43,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 897,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 44,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 898,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 45,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 899,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 46,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 900,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 47,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 901,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 48,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 902,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 49,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 903,
                 'created' => '2016-10-06 14:43:33',
-                'modified' => '2016-10-06 14:43:33',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 50,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 34,
-                'format_id' => 35,
+                'format_id' => 27,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 904,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-06 16:55:55',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 905,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-06 16:57:21',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 906,
@@ -11552,9 +11547,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 2,
-                'collected' => 2
+                'collected' => true
             ],
             [
                 'id' => 907,
@@ -11565,9 +11560,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 908,
@@ -11578,22 +11573,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 909,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-06 17:00:51',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 910,
@@ -11604,35 +11599,35 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 911,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-06 17:04:41',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 912,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-06 17:10:20',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 913,
@@ -11643,22 +11638,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 914,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-07 00:10:12',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 25,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 915,
@@ -11669,9 +11664,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 27,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 916,
@@ -11682,9 +11677,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 5,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 917,
@@ -11695,9 +11690,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 918,
@@ -11708,9 +11703,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 919,
@@ -11721,9 +11716,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 920,
@@ -11734,9 +11729,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 921,
@@ -11747,9 +11742,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 922,
@@ -11760,9 +11755,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 923,
@@ -11773,9 +11768,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 924,
@@ -11786,9 +11781,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 925,
@@ -11799,9 +11794,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 926,
@@ -11812,22 +11807,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 927,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-09 02:26:16',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 928,
@@ -11838,9 +11833,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 929,
@@ -11851,9 +11846,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 930,
@@ -11864,9 +11859,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 931,
@@ -11877,22 +11872,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 932,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-09 02:31:32',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 933,
@@ -11903,9 +11898,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 934,
@@ -11916,9 +11911,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 1
+                'collected' => true
             ],
             [
                 'id' => 935,
@@ -11929,9 +11924,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 936,
@@ -11942,22 +11937,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 937,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-10 22:36:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 938,
@@ -11968,9 +11963,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 939,
@@ -11981,9 +11976,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 940,
@@ -11994,9 +11989,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 943,
@@ -12007,9 +12002,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 10,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 944,
@@ -12020,9 +12015,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 11,
                 'made' => false,
                 'edition_id' => 16,
-                'format_id' => 17,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 945,
@@ -12033,22 +12028,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 11,
                 'made' => false,
                 'edition_id' => 15,
-                'format_id' => 16,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 946,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2018-05-01 04:10:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 947,
@@ -12059,9 +12054,9 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 948,
@@ -12072,35 +12067,35 @@ class PiecesFixture extends TestFixture
                 'quantity' => 11,
                 'made' => false,
                 'edition_id' => 27,
-                'format_id' => 28,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 949,
                 'created' => '2016-10-05 19:49:43',
-                'modified' => '2018-05-01 04:10:43',
+                'modified' => '2019-05-22 16:00:01',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 25,
                 'made' => false,
                 'edition_id' => 28,
-                'format_id' => 29,
+                'format_id' => 8,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 950,
                 'created' => '2016-10-05 19:56:59',
-                'modified' => '2018-05-01 04:10:43',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 25,
                 'made' => false,
                 'edition_id' => 30,
-                'format_id' => 31,
+                'format_id' => 17,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 951,
@@ -12111,22 +12106,22 @@ class PiecesFixture extends TestFixture
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 17,
-                'format_id' => 18,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 952,
                 'created' => '2016-03-10 19:03:10',
-                'modified' => '2016-10-17 19:51:13',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 10,
                 'made' => false,
                 'edition_id' => 14,
-                'format_id' => 15,
+                'format_id' => 16,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 953,
@@ -12137,35 +12132,35 @@ class PiecesFixture extends TestFixture
                 'quantity' => 10,
                 'made' => false,
                 'edition_id' => 26,
-                'format_id' => 27,
+                'format_id' => 15,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 954,
                 'created' => '2016-10-05 20:19:44',
-                'modified' => '2016-10-17 19:51:14',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 32,
-                'format_id' => 33,
+                'format_id' => 23,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 955,
                 'created' => '2016-03-08 02:18:19',
-                'modified' => '2016-10-21 14:55:16',
+                'modified' => '2019-05-22 16:00:00',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => null,
                 'quantity' => 2,
                 'made' => false,
                 'edition_id' => 8,
-                'format_id' => 8,
-                'disposition_count' => 1,
-                'collected' => 1
+                'format_id' => 2,
+                'disposition_count' => 0,
+                'collected' => false
             ],
             [
                 'id' => 956,
@@ -12178,7 +12173,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 957,
@@ -12191,7 +12186,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 958,
@@ -12204,7 +12199,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 959,
@@ -12217,12 +12212,12 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 960,
-                'created' => '2018-10-27 16:18:47',
-                'modified' => '2018-10-27 16:18:47',
+                'created' => '2018-04-08 22:18:29',
+                'modified' => '2018-05-14 16:12:56',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 10,
                 'quantity' => 1,
@@ -12230,75 +12225,73 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
-			// START OF fivePieces
             [
                 'id' => 961,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-05-15 00:03:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 36,
+                'format_id' => 28,
                 'disposition_count' => 1,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 962,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-05-14 23:49:07',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 5,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 36,
+                'format_id' => 28,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 963,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-05-14 16:12:56',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 36,
+                'format_id' => 28,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 964,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-05-14 16:12:56',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 4,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 36,
+                'format_id' => 28,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 965,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-05-15 00:03:40',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 36,
+                'format_id' => 28,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
-			// end of fivePieces
             [
                 'id' => 966,
                 'created' => '2018-04-08 02:29:18',
@@ -12310,7 +12303,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 967,
@@ -12323,7 +12316,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 968,
@@ -12336,7 +12329,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 969,
@@ -12349,7 +12342,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 970,
@@ -12362,72 +12355,72 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 971,
-                'created' => '2018-10-27 16:18:47',
-                'modified' => '2018-10-27 16:18:47',
+                'created' => '2018-04-08 22:18:29',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 16,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 37,
+                'format_id' => 29,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 972,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-04-07 13:57:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 17,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 37,
+                'format_id' => 29,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 973,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-04-07 13:57:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 18,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 37,
+                'format_id' => 29,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 974,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-04-07 13:57:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 19,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 37,
+                'format_id' => 29,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 975,
                 'created' => '2018-04-06 03:04:48',
-                'modified' => '2018-04-07 13:57:52',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 20,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 35,
-                'format_id' => 37,
+                'format_id' => 29,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 976,
@@ -12440,7 +12433,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 977,
@@ -12453,7 +12446,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 978,
@@ -12466,7 +12459,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 979,
@@ -12479,7 +12472,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 980,
@@ -12492,7 +12485,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 981,
@@ -12505,7 +12498,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 982,
@@ -12518,7 +12511,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 983,
@@ -12531,7 +12524,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 984,
@@ -12544,7 +12537,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 985,
@@ -12557,7 +12550,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 986,
@@ -12570,7 +12563,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 987,
@@ -12583,7 +12576,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 988,
@@ -12596,7 +12589,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 989,
@@ -12609,7 +12602,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 990,
@@ -12622,7 +12615,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 991,
@@ -12635,7 +12628,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 992,
@@ -12648,7 +12641,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 993,
@@ -12661,7 +12654,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 994,
@@ -12674,7 +12667,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 995,
@@ -12687,7 +12680,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 996,
@@ -12700,7 +12693,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 997,
@@ -12713,7 +12706,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 998,
@@ -12726,7 +12719,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 999,
@@ -12739,7 +12732,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1000,
@@ -12752,7 +12745,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1001,
@@ -12765,7 +12758,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1002,
@@ -12778,7 +12771,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1003,
@@ -12791,7 +12784,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1004,
@@ -12804,7 +12797,7 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1005,
@@ -12817,46 +12810,46 @@ class PiecesFixture extends TestFixture
                 'edition_id' => 35,
                 'format_id' => null,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1006,
                 'created' => '2018-04-30 15:46:06',
-                'modified' => '2018-04-30 15:46:06',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 1,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 36,
-                'format_id' => 38,
+                'format_id' => 30,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1007,
                 'created' => '2018-04-30 15:46:06',
-                'modified' => '2018-04-30 15:46:06',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 2,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 36,
-                'format_id' => 38,
+                'format_id' => 30,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
             [
                 'id' => 1008,
                 'created' => '2018-04-30 15:46:06',
-                'modified' => '2018-04-30 15:46:06',
+                'modified' => '2019-05-22 16:00:02',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'number' => 3,
                 'quantity' => 1,
                 'made' => false,
                 'edition_id' => 36,
-                'format_id' => 38,
+                'format_id' => 30,
                 'disposition_count' => 0,
-                'collected' => 0
+                'collected' => false
             ],
         ];
         parent::init();

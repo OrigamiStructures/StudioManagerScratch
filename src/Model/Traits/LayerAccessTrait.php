@@ -28,8 +28,25 @@ trait LayerAccessTrait {
         return new LayerAccessArgs();
 	}
     
-    public function find() {
+	/**
+	 * Make an object to set up filtering and access to content
+	 * 
+	 * Returns a LayerAccessArgs object that allows chained calls 
+	 * for object querying. Once all the parameters for the access 
+	 * are spec'd, use one of the objects 'load' varients to 
+	 * return the desired data
+	 * 
+	 * Passing a $layer value will run the setLayer( ) method 
+	 * on the returned Args object
+	 * 
+	 * @param string $layer 
+	 * @return LayerAccessArgs
+	 */
+    public function find($layer = NULL) {
         $args = new LayerAccessArgs($this);
+		if (!is_null($layer)) {
+			$args->setLayer($layer);
+		}
         return $args;
     }
 		
@@ -78,7 +95,7 @@ trait LayerAccessTrait {
 //	
 	public function loadDistinct($argObj, $sourcePoint = null){
 		if (is_null($sourcePoint)) {
-			$ValueSource = $argObj->ValueSource;
+			$ValueSource = $argObj->accessNodeObject('value');
 		} else {
 			$ValueSource = new ValueSource(
 					$argObj->valueOf('layer'), 
@@ -97,8 +114,8 @@ trait LayerAccessTrait {
 	 */
 	public function loadKeyValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
-		$KeySource = $args->keyObject();
-		$ValueSource = $args->sourceObject();
+		$KeySource = $args->accessNodeObject('key');
+		$ValueSource = $args->accessNodeObject('value');
 		return $this->keyValueList($KeySource, $ValueSource, $data);
 	}
 	
@@ -110,7 +127,7 @@ trait LayerAccessTrait {
 	 */
 	public function loadValueList(LayerAccessArgs $args){
 		$data = $this->load($args);
-		$ValueSource = $args->sourceObject();
+		$ValueSource = $args->accessNodeObject('value');
 		return $this->valueList($ValueSource, $data);
 	}
 	

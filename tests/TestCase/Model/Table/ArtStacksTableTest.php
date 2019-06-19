@@ -159,47 +159,49 @@ class ArtStacksTableTest extends TestCase
     
     public function stackSeedLayerVariantProvider() {
         return [
-        // george art13 ed21 fmt22 - 15 pieces 510-524 - 8 disp-id (12-15,48,51)
+        // george art13 ed21 fmt19 - 15 pieces 510-524 - 8 disp-id (12-15,48,51)
             'disposition for George' => [
                 ['seed' => 'disposition', 'ids' => [12,14,48]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'dispositions for George' => [
                 ['seed' => 'dispositions', 'ids' => [12,14,48]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
-        // george art13 ed21 fmt22 - 15 pieces 510-524 - 8 pc-id 8 disp-id (12-15,48,51)
+        // george art13 ed21 fmt19 - 15 pieces 510-524 - 8 pc-id 8 disp-id (12-15,48,51)
             'piece for George' => [
                 ['seed' => 'piece', 'ids' => [510,520]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'pieces for George' => [
                 ['seed' => 'pieces', 'ids' => [510]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
+			//This is the Format from the editions pool, not the snapshot 
             'format for George' => [
-                ['seed' => 'format', 'ids' => [22]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                ['seed' => 'format', 'ids' => [9]],
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
+			//This is the Format from the editions pool, not the snapshot 
             'formats for George' => [
-                ['seed' => 'formats', 'ids' => [22]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                ['seed' => 'formats', 'ids' => [9]],
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'edition for George' => [
                 ['seed' => 'edition', 'ids' => [21]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'editions for George' => [
                 ['seed' => 'editions', 'ids' => [21]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'artwork for George' => [
                 ['seed' => 'artwork', 'ids' => [13]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
             'artworks for George' => [
                 ['seed' => 'artworks', 'ids' => [13]],
-                13, 21, 22, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
+                13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
         ];
     }
