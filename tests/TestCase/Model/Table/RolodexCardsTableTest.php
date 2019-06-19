@@ -93,35 +93,6 @@ class RolodexCardsTableTest extends TestCase
         
     }
 
-    /**
-     * Test bad addLayerTable
-     *
-     * @expectedException App\Exception\UnknownTableException
-     */
-    public function testAddLayerTableWithBadTable()
-    {
-        $this->RolodexCards->addLayerTable(['badName']);
-    }
-
-    /**
-     * Test bad addStackSchema
-     *
-     * @expectedException App\Exception\MissingMarshallerException
-     */
-    public function testAddStackSchemaWithBadFunctionName()
-    {
-        $this->RolodexCards->addStackSchema(['badName']);
-    }
-
-    /**
-     * Test bad addSeedPoint
-     *
-     * @expectedException App\Exception\MissingDistillerMethodException
-     */
-    public function testAddSeedPoingWiothBadSeed()
-    {
-        $this->RolodexCards->addSeedPoint(['badName']);
-    }
 
 	public function testLayer() {
 		$stackTable = new TestStack(); //defined at bottom of this page
