@@ -34,7 +34,12 @@ change the database to stud_m_v1
 #### Registered Users
 - In addition to thier Official User record, the registered user has one PersonCard that carries all their address, contact and membership data.
 - Allow other registered users (Managers) to be identitfied in the Rolodex file of a registered user (PrimeUser)
-- Allow the PrimeUser to give management right to any Artist in their Rolodex file
+- Allow the PrimeUser to Managers to any Artist in their Rolodex file
+   - Each Manager/Artist pair the PrimeUser makes must be unique. The same Manager can never be assigned to the same Artist twice
+- Only PersonCards that are designated as Artists (self managed Person/Artists) can be assigned to a manager. If the Person is not yet an Artist and the User tries to Assign a manager, the Person will be converted to an Artist and the User will gain the require Management responsibilities automatically in the background
+- Self managed Artists are full Permission by default
+- Users should be able to limit their Management responsibilities (Permissions) but they must always be able to also see all Artworks.
+   - Filter in some circumstances? Show all but make some non-functional in some circumstances?
 - Allow the PrimeUser to revoke management rights at any time
 - Allow the PrimeUser to specify any any subset of Artworks or Editions as the managed works available to an Manager (Permissions)
 - Allow the PrimeUser to specify any subset of People and Institutions as avalable to the Manager (Permissions)
