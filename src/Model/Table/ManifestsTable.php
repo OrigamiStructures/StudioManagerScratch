@@ -8,7 +8,7 @@ use Cake\Validation\Validator;
 use App\Model\Behavior\IntegerQueryBehavior;
 
 /**
- * Artists Model
+ * Manifests Model
  *
  * @property \App\Model\Table\MembersTable|\Cake\ORM\Association\BelongsTo $Members
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
@@ -97,21 +97,10 @@ class ManifestsTable extends AppTable{
      * @param array $options see IntegerQueryBehavior
      * @return Query
      */
-    public function findArtists($query, $options) {
+    public function findManifests($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
     
-    /**
-     * Find members
-     * 
-     * @param Query $query
-     * @param array $options see IntegerQueryBehavior
-     * @return Query
-     */
-    public function findInMembers($query, $options) {
-        return $this->integer($query, 'member_id', $options['values']);
-    }
-	
 	/**
 	 * Find a manager's artist manifests (or those for several managers)
 	 * 
@@ -165,7 +154,7 @@ class ManifestsTable extends AppTable{
 	 * @param type $query
 	 * @param type $options
 	 */
-	public function findManifestsFor($query, $options) {
+	public function findForArtists($query, $options) {
 		if (array_key_exists('ids', $options)) {
 			$condition = ['Manifests.member_id IN' => $options['ids']];
 		} elseif (array_key_exists('id', $options)) {
