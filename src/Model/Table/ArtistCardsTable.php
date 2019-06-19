@@ -45,7 +45,7 @@ class ArtistCardsTable extends PersonCardsTable {
 	}
 	
 	protected function distillFromArtwork($ids) {
-		$IDs = $this->Artworks->find('list', ['valueField' => 'artist_id'])
+		$IDs = $this->Artworks->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids])
 				->toArray();
 		return array_unique($IDs);
@@ -68,7 +68,7 @@ class ArtistCardsTable extends PersonCardsTable {
 	protected function marshalArtworks($ids, $stack) {
 		if ($stack->count('identity')) {
 			$artworks = $this->Artworks->find('all')
-					->where(['artist_id' => $stack->rootId()]);
+					->where(['member_id' => $stack->rootId()]);
 			$stack->set(['artworks' => $artworks->toArray()]);
 		}		
 		return $stack;
