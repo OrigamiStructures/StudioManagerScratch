@@ -32,7 +32,7 @@ class RolodexCard extends StackEntity {
 	 * @return boolean
 	 */
 	public function isMember() {
-		return is_a($this->memberships, '\App\Model\Lib\Layer');
+		return $this->memberships->count() > 0;
 	}
 	
 	public function isGroup() {

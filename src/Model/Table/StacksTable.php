@@ -395,10 +395,12 @@ class StacksTable extends AppTable
      * @throws UnknownTableException
      * @param array $addedTables
      */
-	public function addLayerTable(array $addedTables)
+	protected function addLayerTable(array $addedTables)
     {
         foreach ($addedTables as $index => $addedTable) {
-            if(is_a(TableRegistry::getTableLocator()->get($addedTable), 'App\Model\Table\AppTable')){
+            if(is_a(
+					TableRegistry::getTableLocator()->get($addedTable), 
+					'App\Model\Table\AppTable')){
                 $this->layerTables[] = $addedTable;
             } else {
                 throw new UnknownTableException("StacksTable initialization discovered
@@ -408,7 +410,12 @@ class StacksTable extends AppTable
         $this->layerTables = array_unique($this->layerTables);
 	}
 
-    public function addStackSchema(array $addedSchemaNames)
+	/**
+	 * 
+	 * @param array $addedSchemaNames
+	 * @throws MissingMarshallerException
+	 */
+    protected function addStackSchema(array $addedSchemaNames)
     {
         foreach ($addedSchemaNames as $schemaName) {
             $methodName = $this->marshalMethodName($schemaName);
@@ -424,7 +431,7 @@ class StacksTable extends AppTable
         }
     }
 
-    public function addSeedPoint(array $seedPoints)
+    protected function addSeedPoint(array $seedPoints)
     {
         foreach ($seedPoints as $index => $seedPoint) {
             $methodName = $this->distillMethodName($seedPoint);
