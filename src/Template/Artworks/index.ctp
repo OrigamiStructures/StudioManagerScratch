@@ -1,6 +1,6 @@
-<?php foreach ($results->find('artwork')->load() as $entity) {
-//    echo $this->Html->tag('h3', $entity->rootDisplayValue());
-    osd($entity);
+<?php foreach ($results->load() as $artwork) {
+    echo $this->Html->tag('h3', $artwork->rootDisplayValue());
+//    osd($entity);
     ?>
 
     <li>Editions
