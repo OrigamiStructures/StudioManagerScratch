@@ -22,7 +22,8 @@ bin/cake bake.bake test table CategoryCardsTable
 bin/cake bake.bake test table OrganizationCardsTable
 bin/cake bake.bake test table PersonCardsTable
 bin/cake bake.bake test table MembershipsTable
-bin/cake bake.bake test table ArtistManifestsTable
+bin/cake bake.bake test table ManifestsTable
+bin/cake bake.bake test table ManifestStacksTable
 
 ## BAKING ENTITY TESTS
 ====================================================================
@@ -31,6 +32,7 @@ bin/cake bake.bake test entity RolodexCard
 bin/cake bake.bake test entity CategoryCard
 bin/cake bake.bake test entity OrganizationCard
 bin/cake bake.bake test entity PersonCard
+bin/cake bake.bake test entity ManifestStack
 
 ## BAKING CUSTOM FOLDER TESTS
 ====================================================================
@@ -63,6 +65,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/PersonCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/PermissionsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestsTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestStacksTableTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
@@ -72,6 +75,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
 # entity
+vendor/bin/phpunit test tests/TestCase/Model/Entity/ManifestStackTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/AddressTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/ContactTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Entity/DataOwnerTest.php
