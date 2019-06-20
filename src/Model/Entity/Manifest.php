@@ -51,6 +51,19 @@ class Manifest extends Entity
 	 * @return boolean
 	 */
 	public function self() {
-		return $this->manager_id === $this->user_id;
+		return $this->manager_id === $this->supervisor_id;
 	}
+	
+	public function supervisorId() {
+		return $this->supervisor_id;
+	}
+	
+	public function managerId() {
+		return $this->manager_id;
+	}
+	
+	public function artistId() {
+		return $this->member_id;
+	}
+	
 }
