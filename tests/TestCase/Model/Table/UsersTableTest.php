@@ -12,6 +12,13 @@ class UsersTableTest extends TestCase
 {
 
     /**
+     * Test subject
+     *
+     * @var \App\Model\Table\UsersTable
+     */
+    public $UsersTable;
+
+    /**
      * Fixtures
      *
      * @var array
@@ -19,14 +26,17 @@ class UsersTableTest extends TestCase
     public $fixtures = [
         'app.users',
         'app.members',
-        'app.dispositions',
-        'app.locations',
-        'app.pieces',
-        'app.editions',
         'app.artworks',
+        'app.dispositions',
+        'app.editions',
         'app.formats',
         'app.groups',
-        'app.groups_members'
+        'app.groups_members',
+        'app.images',
+        'app.locations',
+        'app.pieces',
+        'app.series',
+        'app.subscriptions'
     ];
 
     /**
@@ -37,8 +47,8 @@ class UsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Users') ? [] : ['className' => 'App\Model\Table\UsersTable'];
-        $this->Users = TableRegistry::get('Users', $config);
+        $config = TableRegistry::getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
+        $this->UsersTable = TableRegistry::getTableLocator()->get('Users', $config);
     }
 
     /**
@@ -48,7 +58,7 @@ class UsersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Users);
+        unset($this->UsersTable);
 
         parent::tearDown();
     }

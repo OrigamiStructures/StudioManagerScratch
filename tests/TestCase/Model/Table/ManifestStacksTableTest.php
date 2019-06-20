@@ -26,7 +26,15 @@ class ManifestStacksTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.manifests'
+        'app.manifests',
+        'app.identities',
+        'app.data_owners',
+        'app.members',
+        'app.contacts',
+		'app.addresses',
+		'app.dispositions',
+		'app.users',
+		'app.groups_members'
     ];
 
     /**

@@ -24,6 +24,7 @@ bin/cake bake.bake test table PersonCardsTable
 bin/cake bake.bake test table MembershipsTable
 bin/cake bake.bake test table ManifestsTable
 bin/cake bake.bake test table ManifestStacksTable
+bin/cake bake.bake test table UsersTable
 
 ## BAKING ENTITY TESTS
 ====================================================================
@@ -137,6 +138,8 @@ bin/cake bake fixture --records --count 985 --table formats Formats
 bin/cake bake fixture --records --count 985 --table editions Editions
 bin/cake bake fixture --records --count 985 --table artworks Artworks
 bin/cake bake fixture --records --count 20 --table permissions Permissions
+bin/cake bake fixture --records --count 20 --table users Users
+bin/cake bake fixture --records --count 20 --table manifests Manifests
 
 ## Help for bake fixture
 ====================================================================
