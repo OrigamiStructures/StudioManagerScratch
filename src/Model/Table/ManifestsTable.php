@@ -134,9 +134,9 @@ class ManifestsTable extends AppTable{
 	 */
 	public function findIssuedBy($query, $options) {
 		if (array_key_exists('ids', $options)) {
-			$condition = ['Manifests.user_id IN' => $options['ids']];
+			$condition = ['Manifests.supervisor_id IN' => $options['ids']];
 		} elseif (array_key_exists('id', $options)) {
-			$condition = ['Manifests.user_id IN' => $options['ids']];
+			$condition = ['Manifests.supervisor_id IN' => $options['ids']];
 		} else {
 			$msg = 'You must include \'ids\'=>[x,y] or '
 					. '\'id\'=>x in your options array.';

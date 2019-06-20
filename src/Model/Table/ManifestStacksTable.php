@@ -105,7 +105,7 @@ class ManifestStacksTable extends StacksTable {
 	protected function distillFromSupervisor(array $ids) {
 		$manifests = $this->Manifests
 				->find('issuedBy', ['ids' => $ids])
-				->select(['id', 'user_id'])
+				->select(['id', 'supervisor_id'])
 			;
 		$IDs = (new Layer($manifests))->IDs();
 		return $IDs;
