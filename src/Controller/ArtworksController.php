@@ -147,7 +147,10 @@ class ArtworksController extends ArtStackController
         $Artworks = $this->getTableLocator()->get('ArtStacks');
         $ids = $Artworks->find('list')
             ->toArray();
-        $results = $Artworks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $ids]);
+//        osd($ids);
+//        osd();die;
+        $realIds = array_keys($ids);
+        $results = $Artworks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $realIds]);
         $this->set('results', $results);
     }
 

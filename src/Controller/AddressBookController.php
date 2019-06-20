@@ -12,6 +12,7 @@ class AddressBookController extends AppController
         $ids = $PersonCards->Identities->find('list')
             ->order(['last_name'])
             ->toArray();
+        osd($ids);die;
         $results = $PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
         $this->set('results', $results);
     }
