@@ -211,6 +211,9 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * 
 	 * If no args are given, return $this in an array indexed by the primary id
 	 * 
+	 * If a string if given, it's assumed to be a layer name and we'll try 
+	 *  to use it to fetch that layer
+	 * 
 	 * If a layer is registered in $argObj, it should be a layer of this stack. 
 	 *	If its not, an empty array is returned. 
 	 * 
@@ -225,6 +228,11 @@ class StackEntity extends Entity implements LayerAccessInterface {
 		
 		if (is_null($argObj)) {
 			return [$this->rootID() => $this];
+		}
+		
+		if (is_string($argObj)) {
+			$argObj = (new LayerAccessArgs())
+					->setLayer($argObj);
 		}
 		
         $layer = $this->getLayer($argObj);

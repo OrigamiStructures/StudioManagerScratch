@@ -120,14 +120,27 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testLoad() {
+    public function testLoadWithNoArg() {
 		
-		$this->assertCount(1, $this->StackEntity->load());
-		$this->assertArrayHasKey(4, $this->StackEntity->load());
+		$this->assertCount(1, $this->StackEntity->load(), 
+				'simple load( ) did not return array with one element');
+		$this->assertArrayHasKey(4, $this->StackEntity->load(), 
+				'simple load( ) did not return expected key for element');
+	}
+	
+	public function testLoadWithStringArg() {
+		$this->assertCount(2, $this->StackEntity->load('formats'), 
+				'string naming layer did not return expected quantity of data');
+		$this->assertCount(0, $this->StackEntity->load('unkown'), 
+				'string naming unknown layer did not return empty array');
+	}
+	
+	public function testLoadWithArgObj() {
 		
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
 		
-		$this->assertCount(2, $this->StackEntity->load($formats_arg));
+		$this->assertCount(2, $this->StackEntity->load($formats_arg), 
+				'argObj naming layer did not return expected quantity of data');
 		
         $pieces = $this->StackEntity
 				->find('pieces')
