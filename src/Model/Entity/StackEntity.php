@@ -210,27 +210,39 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * Load data from the StackEntity context
 	 * 
 	 * If no args are given, return $this in an array indexed by the primary id
-	 * If a layer is named, it should be a property of this stack. If its 
-	 *	not a valid Layer type property, an empty array is returned. 
-	 * Given a valid property/layer the  query is delegated to that named layer. 
+	 * 
+	 * If a string if given, it's assumed to be a layer name and we'll try 
+	 *  to use it to fetch that layer
+	 * 
+	 * If a layer is registered in $argObj, it should be a layer of this stack. 
+	 *	If its not, an empty array is returned. 
+	 * 
+	 * Given a valid layer in $argObj, the  query is delegated to that named layer. 
 	 *	The layer will do all required filtering and pagination. StackEntity 
 	 *	will return that result
 	 * 
-	 * @param LayerAccessArgs $argObj
+	 * @param mixed $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	public function load($argObj = null) {
 		
 		if (is_null($argObj)) {
 			return [$this->rootID() => $this];
 		}
 		
-        $property = $this->getValidPropery($argObj);
-        if (!$property) {
+		if (is_string($argObj)) {
+			$argObj = (new LayerAccessArgs())
+					->setLayer($argObj);
+		}
+		
+		$this->verifyInstanceArgObj($argObj);
+		
+        $layer = $this->getLayer($argObj);
+        if (!$layer) {
             return [];
         }
 
-		return $property->load($argObj);
+		return $layer->load($argObj);
 		
 	}
 	
@@ -244,7 +256,7 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 * @param LayerAccessArgs $argObj
 	 * @return boolean|Layer Layer object if valid, FALSE otherwise
 	 */
-	private function getValidPropery($argObj) {
+	private function getLayer($argObj) {
 		$property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
 		if($property && is_a($property, '\App\Model\Lib\Layer')) {
 			return $property;

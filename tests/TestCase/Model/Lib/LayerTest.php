@@ -248,18 +248,36 @@ class LayerTest extends TestCase
 		$this->assertArrayHasKey(961, $layer->load());
 	}
     
-    public function testLoadUsingId() {
-        $layer = new Layer($this->fivePieces);
-
-		$id_int_965_arg = $layer->accessArgs()
-				->setIdIndex(965);
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_int_965_arg));
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingWrongObject() {
+		$layer = new Layer($this->fivePieces);
+		$arg = new \stdClass();
+		$layer->load($arg, 'layer=>load() with wrong kind of object did '
+				. 'not throw expected exception');
+	}
+	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingString() {
+		$layer = new Layer($this->fivePieces);
+		$arg = 'someString';
+		$layer->load($arg, 'layer=>load() with a string did '
+				. 'not throw expected exception');
+	}
 		
-		$id_3_bad_arg = $layer->accessArgs()
-				->setIdIndex(3);
-        $this->assertTrue(is_array($layer->load($id_3_bad_arg)));
-    }
-    
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingArray() {
+		$layer = new Layer($this->fivePieces);
+		$arg = [1,2];
+		$layer->load($arg, 'layer=>load() with an array did '
+				. 'not throw expected exception');
+	}
+	
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         

@@ -288,4 +288,13 @@ trait LayerAccessTrait {
 		return $data;
 	}
 	
+	protected function verifyInstanceArgObj($argObj) {
+		if ($argObj instanceof \App\Model\Lib\LayerAccessArgs) {
+			return TRUE;
+		} else {
+			$msg = 'An instance of \App\Model\Lib\LayerAccessArgs was expected';
+			throw new \BadMethodCallException($msg);
+		}
+	}
+	
 }
