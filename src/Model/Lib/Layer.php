@@ -188,6 +188,8 @@ class Layer implements LayerAccessInterface {
 			return $this->_data;
 		}
 		
+		$this->verifyInstanceArgObj($argObj);
+		
 		if ($argObj->isFilter()) {
 			$result = $this->filter($argObj);
 		} else {

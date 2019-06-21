@@ -248,6 +248,36 @@ class LayerTest extends TestCase
 		$this->assertArrayHasKey(961, $layer->load());
 	}
     
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingWrongObject() {
+		$layer = new Layer($this->fivePieces);
+		$arg = new \stdClass();
+		$layer->load($arg, 'layer=>load() with wrong kind of object did '
+				. 'not throw expected exception');
+	}
+	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingString() {
+		$layer = new Layer($this->fivePieces);
+		$arg = 'someString';
+		$layer->load($arg, 'layer=>load() with a string did '
+				. 'not throw expected exception');
+	}
+		
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingArray() {
+		$layer = new Layer($this->fivePieces);
+		$arg = [1,2];
+		$layer->load($arg, 'layer=>load() with an array did '
+				. 'not throw expected exception');
+	}
+	
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         
