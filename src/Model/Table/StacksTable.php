@@ -199,6 +199,29 @@ class StacksTable extends AppTable
     }
 	
 	/**
+	 * From mixed seed types, distill to a root ID set
+	 * 
+	 * <code>
+	 * $seed = [
+	 *		'identity' => [2,7],
+	 *		'data_owner' => ['1234-2345-5432-999999'],
+	 *		'addresses' => [12]
+	 * ]
+	 * </code>
+	 * will return an array of the root IDs for the seeds.
+	 * 
+	 * @param array $seeds 
+	 */
+	public function processSeeds($seeds) {
+		$IDs = [];
+		foreach ($seeds as $seed => $ids) {
+			$new = $this->{$this->distillMethodName($seed)}($ids);
+			$IDs = array_merge($IDs, $new);
+		}
+		return $this->stacksFromRoot(array_unique($IDs));
+	}
+	
+	/**
 	 * Get the method name for distilling a given seed into stack IDs
 	 * 
 	 * @param string $seed

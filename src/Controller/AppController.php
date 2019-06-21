@@ -136,11 +136,11 @@ class AppController extends Controller
 	 * @param mixed $value
 	 * @return object
 	 */
-    public function set($name, $value = null) {
-		$result = parent::set($name, $value);
-		$this->SystemState->storeVars($result->viewVars);
-		return $result;
-	}
+//    public function set($name, $value = null) {
+//		$result = parent::set($name, $value);
+//		$this->SystemState->storeVars($result->viewVars);
+//		return $result;
+//	}
 	
 	public function testMe() {
 		
