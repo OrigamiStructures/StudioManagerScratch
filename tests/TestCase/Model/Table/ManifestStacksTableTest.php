@@ -27,6 +27,7 @@ class ManifestStacksTableTest extends TestCase
      */
     public $fixtures = [
         'app.manifests',
+		// to support PersonCard inclusion in object
         'app.identities',
         'app.data_owners',
         'app.members',
@@ -34,7 +35,9 @@ class ManifestStacksTableTest extends TestCase
 		'app.addresses',
 		'app.dispositions',
 		'app.users',
-		'app.groups_members'
+		'app.groups_members',
+		// end person card stuff
+		'app.permissions'
     ];
 
     /**
