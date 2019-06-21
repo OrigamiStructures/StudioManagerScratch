@@ -55,11 +55,7 @@ class StackEntityTest extends TestCase
         $artID = 4; //jabberwocky
         $stacks = $this->ArtStacks
 				->find('stacksFor', ['seed' => 'artworks', 'ids' => [$artID]]);
-        $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
-        
-        $this->StackEntity->arrayProp = ['a','b','c'];
-        $this->StackEntity->stringProp = 'This is a string property';
-        $this->StackEntity->numProp = 498;
+		$this->StackEntity = $stacks->element(0, LAYERACC_INDEX);
                 
         //art 4, ed 5 Unique qty 1, ed 8 Open Edition qty 150
         //fmt 5 desc Watercolor 6 x 15", fmt 8 desc Digital output with cloth-covered card stock covers
