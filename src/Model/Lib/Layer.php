@@ -180,10 +180,10 @@ class Layer implements LayerAccessInterface {
 	 * If a filter is set, the data is filtered, then paginated and returned
 	 * Otherwise, the full set is paginated and returned
 	 * 
-	 * @param LayerAccessArgs $argObj
+	 * @param mixed $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	public function load($argObj = null) {
 		if(is_null($argObj)) {
 			return $this->_data;
 		}

@@ -56,10 +56,10 @@ class StackSet implements LayerAccessInterface {
 	 * in turn. Filtering and pagination will be done, and the accumulated 
 	 * result will be returned
 	 * 
-	 * @param LayerAccessArgs $argObj
+	 * @param mixed $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	public function load($argObj = null) {
 		
 		if (is_null($argObj)) {
 			return $this->_data;

@@ -216,10 +216,10 @@ class StackEntity extends Entity implements LayerAccessInterface {
 	 *	The layer will do all required filtering and pagination. StackEntity 
 	 *	will return that result
 	 * 
-	 * @param LayerAccessArgs $argObj
+	 * @param mixed $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	public function load($argObj = null) {
 		
 		if (is_null($argObj)) {
 			return [$this->rootID() => $this];
