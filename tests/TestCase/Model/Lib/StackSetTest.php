@@ -159,6 +159,24 @@ class StackSetTest extends TestCase {
 				. 'empty array');
 	}
     
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingWrongObject() {
+		$arg = new \stdClass();
+		$this->StackEntities->load($arg, '$this->StackEntities->load() with wrong kind '
+				. 'of object did not throw expected exception');
+	}
+		
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingArray() {
+		$arg = [1,2];
+		$this->StackEntities->load($arg, '$this->StackEntities->load() with an'
+				. ' array did not throw expected exception');
+	}
+	
 	public function testLoadWithStringLayerName() {
         $pieces = $this->StackEntities->load('pieces');
         $this->assertEquals(21, count($pieces),
