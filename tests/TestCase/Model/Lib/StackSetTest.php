@@ -151,6 +151,20 @@ class StackSetTest extends TestCase {
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
 				. 'did not return an entity with an expected property value.');
     }
+	
+	public function testLoadWithBadStringLayerName() {
+        $pieces = $this->StackEntities->load('unknown');
+        $this->assertEquals(0, count($pieces),
+				'direct load(\'badName\') did not return the expected '
+				. 'empty array');
+	}
+    
+	public function testLoadWithStringLayerName() {
+        $pieces = $this->StackEntities->load('pieces');
+        $this->assertEquals(21, count($pieces),
+				'direct load(\'layerName\') did not return the expected '
+				. 'number of entities');
+	}
     
     public function testLoadAllOfLayer() {
         

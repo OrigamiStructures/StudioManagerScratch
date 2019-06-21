@@ -65,6 +65,11 @@ class StackSet implements LayerAccessInterface {
 			return $this->_data;
 		}
 		
+		if (is_string($argObj)) {
+			$argObj = (new LayerAccessArgs())
+					->setLayer($argObj);
+		}
+		
 		if (!$argObj->hasLayer()) {
 			return $this->paginate($this->_data, $argObj);
 		} else {
