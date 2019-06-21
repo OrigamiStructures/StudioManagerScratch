@@ -41,7 +41,11 @@ interface LayerAccessInterface {
 	public function linkedTo($layer, $id);
 	
 	/* Done */
-	public function load(LayerAccessArgs $argObj = null);
+	/**
+	 * 
+	 * @param string|LayerAccessArg $argObj
+	 */
+	public function load($argObj = null);
 	
 //	function filter($property, $value);
 	

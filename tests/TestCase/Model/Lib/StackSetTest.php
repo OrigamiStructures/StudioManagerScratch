@@ -137,29 +137,6 @@ class StackSetTest extends TestCase {
             'load() didn\'t have an expected key (an item ID)');
     }
 
-    public function testLoadIndexItemFromLayer() {
-        
-        $formats = $this->StackEntities->find()
-            ->setLayer('formats')
-            ->setIdIndex(1)
-            ->load();
-        
-        $format = array_shift($formats);
-        $this->assertEquals('Watercolor 6 x 15"', $format->description,
-				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
-				. 'did not return an entity with an expected property value.');
-
-        $formats = $this->StackEntities->find()
-            ->setLayer('formats')
-            ->setIdIndex(2)
-            ->load();
-        
-        $format = array_shift($formats);
-        $this->assertStringStartsWith('Digital output', $format->description,
-				'loading a valid format by array value ...->load(\'formats\', 8)... '
-				. 'did not return an entity with an expected property value.');
-    }
-
     public function testLoadHandFiltering() {
         
         $pieces = $this->StackEntities->find()
@@ -174,6 +151,38 @@ class StackSetTest extends TestCase {
 				'loading a valid format by property/value test ...->load(\'pieces\', [\'quantity\', 140])... '
 				. 'did not return an entity with an expected property value.');
     }
+	
+	public function testLoadWithBadStringLayerName() {
+        $pieces = $this->StackEntities->load('unknown');
+        $this->assertEquals(0, count($pieces),
+				'direct load(\'badName\') did not return the expected '
+				. 'empty array');
+	}
+    
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingWrongObject() {
+		$arg = new \stdClass();
+		$this->StackEntities->load($arg, '$this->StackEntities->load() with wrong kind '
+				. 'of object did not throw expected exception');
+	}
+		
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingArray() {
+		$arg = [1,2];
+		$this->StackEntities->load($arg, '$this->StackEntities->load() with an'
+				. ' array did not throw expected exception');
+	}
+	
+	public function testLoadWithStringLayerName() {
+        $pieces = $this->StackEntities->load('pieces');
+        $this->assertEquals(21, count($pieces),
+				'direct load(\'layerName\') did not return the expected '
+				. 'number of entities');
+	}
     
     public function testLoadAllOfLayer() {
         
