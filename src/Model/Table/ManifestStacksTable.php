@@ -29,8 +29,8 @@ class ManifestStacksTable extends StacksTable {
 	 */
 	public function initialize(array $config) {
         $this->setTable('manifests');
-        $this->addLayerTable(['Manifests', 'PersonCards']);
-        $this->addStackSchema(['manifest']);
+        $this->addLayerTable(['Manifests', 'PersonCards', 'Permissions']);
+        $this->addStackSchema(['manifest', 'permissions']);
         $this->addSeedPoint([
             'manifest',
             'manifests',
@@ -39,7 +39,9 @@ class ManifestStacksTable extends StacksTable {
             'manager',
             'managers',
             'supervisor',
-            'supervisors'
+            'supervisors',
+			'permission',
+			'permissions'
         ]);
 		parent::initialize($config);
 	}
@@ -80,7 +82,9 @@ class ManifestStacksTable extends StacksTable {
 		return $IDs;
 	}
 	
-	
+	protected function distillFromPermission($ids) {
+		
+	}
 	/**
 	 * Derive the Manifest ids relevant to these Managers
 	 * 
@@ -123,6 +127,10 @@ class ManifestStacksTable extends StacksTable {
 			$stack->set(['manifest' => $manifest->toArray()]);
 			$stack = $this->composeNameCards($stack);
 			return $stack;
+	}
+	
+	protected function marshalPermissions($id, $stack) {
+		return $stack;
 	}
 	
 	protected function composeNameCards($stack) {
