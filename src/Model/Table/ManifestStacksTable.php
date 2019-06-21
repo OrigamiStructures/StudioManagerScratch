@@ -125,7 +125,7 @@ class ManifestStacksTable extends StacksTable {
 	protected function marshalManifest($id, $stack) {
 			$manifest = $this->Manifests->find('manifests', ['values' => [$id]]);
 			$stack->set(['manifest' => $manifest->toArray()]);
-			$stack = $this->composeNameCards($stack);
+			$stack = $this->marshalNameCards($stack);
 			return $stack;
 	}
 	
@@ -133,25 +133,17 @@ class ManifestStacksTable extends StacksTable {
 		return $stack;
 	}
 	
-	protected function composeNameCards($stack) {
+	protected function marshalNameCards($stack) {
 		$manifest = $stack->manifest->element(0, LAYERACC_INDEX);
-		
-		$card = $this->getPersonCard('supervisor', $manifest->supervisorId());
-		$stack->supervisorCard = $card;
-		
-		$card = $this->getPersonCard('manager', $manifest->managerId());
-		$stack->managerCard = $card;
-		
-		$card = $this->getPersonCard('identity', $manifest->artistId());
-		$stack->artistCard = $card;
-		
+		$people = $this->PersonCards->processSeeds(
+				[
+					'supervisor' => [$manifest->supervisorId()],
+					'manager' => [$manifest->managerId()],
+					'identity' => [$manifest->artistId()]
+				]
+			);
+		$stack->people = $people;
 		return $stack;
-	}
-	
-	private function getPersonCard($seed, $id) {
-		$personSet = $this->PersonCards
-				->find('stacksFor', ['seed' => $seed, 'ids' => [$id]]);
-		return $personSet->element(0, LAYERACC_INDEX);
 	}
 	
 }
