@@ -9,4 +9,16 @@ use App\Model\Entity\StackEntity;
  */
 class ManifestStack extends StackEntity {
 	
+	public function supervisorCard() {
+		$this->rootElement()->supervisorId();
+	}
+	
+	public function managerCard() {
+		$this->rootElement()->managerId();
+	}
+	
+	public function artistCard() {
+		$this->rootElement()->artistId();
+	}
+	
 }
