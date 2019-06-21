@@ -135,6 +135,24 @@ class StackEntityTest extends TestCase
 				'string naming unknown layer did not return empty array');
 	}
 	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingWrongObject() {
+		$arg = new \stdClass();
+		$this->StackEntity->load($arg, '$this->StackEntity->load() with wrong kind '
+				. 'of object did not throw expected exception');
+	}
+		
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingArray() {
+		$arg = [1,2];
+		$this->StackEntity->load($arg, '$this->StackEntity->load() with an'
+				. ' array did not throw expected exception');
+	}
+	
 	public function testLoadWithArgObj() {
 		
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');

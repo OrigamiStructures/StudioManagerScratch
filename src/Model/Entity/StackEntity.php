@@ -235,6 +235,8 @@ class StackEntity extends Entity implements LayerAccessInterface {
 					->setLayer($argObj);
 		}
 		
+		$this->verifyInstanceArgObj($argObj);
+		
         $layer = $this->getLayer($argObj);
         if (!$layer) {
             return [];
