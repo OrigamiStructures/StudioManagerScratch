@@ -248,18 +248,6 @@ class LayerTest extends TestCase
 		$this->assertArrayHasKey(961, $layer->load());
 	}
     
-    public function testLoadUsingId() {
-        $layer = new Layer($this->fivePieces);
-
-		$id_int_965_arg = $layer->accessArgs()
-				->setIdIndex(965);
-        $this->assertInstanceOf('App\Model\Entity\Piece', $layer->load($id_int_965_arg));
-		
-		$id_3_bad_arg = $layer->accessArgs()
-				->setIdIndex(3);
-        $this->assertTrue(is_array($layer->load($id_3_bad_arg)));
-    }
-    
     public function testloadUsingPropertyValue() {
         $layer = new Layer($this->fivePieces);
         

@@ -187,18 +187,8 @@ class Layer implements LayerAccessInterface {
 		if(is_null($argObj)) {
 			return $this->_data;
 		}
-
-		if ($argObj->valueOf('idIndex')) {
-			$id = $argObj->valueOf('idIndex');
-            if (!$this->hasId($id)) {
-                return [];
-            }
-            return $this->_data[$id];
-		}
 		
 		if ($argObj->isFilter()) {
-//			$result = $this->filter($argObj->valueOf('value_source'), $argObj->valueOf('filter_value'));
-//			$result = $this->filter($this->vsSwap($argObj), $argObj->valueOf('filter_value'));
 			$result = $this->filter($argObj);
 		} else {
 			$result = $this->_data;

@@ -132,13 +132,6 @@ class StackEntityTest extends TestCase
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
 		
 		$this->assertCount(2, $this->StackEntity->load($formats_arg));
-        $format = $this->StackEntity
-				->find('formats')
-				->setIdIndex(1)
-				->load();
-        $this->assertEquals('Watercolor 6 x 15"', $format->description,
-				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
-				. 'did not return an entity with an expected property value.');
 		
         $pieces = $this->StackEntity
 				->find('pieces')

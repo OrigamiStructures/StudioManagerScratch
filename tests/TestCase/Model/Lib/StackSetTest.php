@@ -137,29 +137,6 @@ class StackSetTest extends TestCase {
             'load() didn\'t have an expected key (an item ID)');
     }
 
-    public function testLoadIndexItemFromLayer() {
-        
-        $formats = $this->StackEntities->find()
-            ->setLayer('formats')
-            ->setIdIndex(1)
-            ->load();
-        
-        $format = array_shift($formats);
-        $this->assertEquals('Watercolor 6 x 15"', $format->description,
-				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
-				. 'did not return an entity with an expected property value.');
-
-        $formats = $this->StackEntities->find()
-            ->setLayer('formats')
-            ->setIdIndex(2)
-            ->load();
-        
-        $format = array_shift($formats);
-        $this->assertStringStartsWith('Digital output', $format->description,
-				'loading a valid format by array value ...->load(\'formats\', 8)... '
-				. 'did not return an entity with an expected property value.');
-    }
-
     public function testLoadHandFiltering() {
         
         $pieces = $this->StackEntities->find()

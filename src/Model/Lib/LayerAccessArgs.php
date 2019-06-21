@@ -77,20 +77,6 @@ protected $_registry;
 
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="ID-INDEX PROPERTY">
-
-	/**
-	 * The name of a specific property in the layer entities
-	 * 
-	 * Used for query in combination with (match? conditions?) 
-	 * or for distinct(), keyedList() or other single value return?
-	 *
-	 * @var string
-	 */
-	private $_id_index = FALSE; 
-
-// </editor-fold>
-
 // <editor-fold defaultstate="collapsed" desc="LAYER PROPERTY">
 
 	/**
@@ -320,21 +306,6 @@ protected $_registry;
 	
 // <editor-fold defaultstate="collapsed" desc="ID-INDEX ARGUMENT">
 	
-	/**
-	 * Set the index to lookup a stored node in a layer or stack set
-	 * 
-	 * These nodes are stored in an array indexed by the id or the 
-	 * stored entity or, in the case of a stack, the id of the 
-	 * primary entity. 
-	 * 
-	 * @param string $param
-	 * @return \App\Model\Lib\LayerAccessArgs
-	 */
-	public function setIdIndex($param) {
-		$this->_id_index = $param;
-		return $this;
-	}
-
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="VALUE RETRIEVAL -- PROPOSED --">
