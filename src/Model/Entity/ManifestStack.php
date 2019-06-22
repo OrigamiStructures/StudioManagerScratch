@@ -10,15 +10,30 @@ use App\Model\Entity\StackEntity;
 class ManifestStack extends StackEntity {
 	
 	public function supervisorCard() {
-		$this->rootElement()->supervisorId();
+		$id = $this->rootElement()->supervisorId();
+		$card = $this->people
+				->find('identity')
+				->specifyFilter('supervisor_id', $id)
+				->loadStacks();
+		return array_pop($card);
 	}
 	
 	public function managerCard() {
-		$this->rootElement()->managerId();
+		$id = $this->rootElement()->managerId();
+		$card = $this->people
+				->find('identity')
+				->specifyFilter('manager_id', $id)
+				->loadStacks();
+		return array_pop($card);
 	}
 	
 	public function artistCard() {
-		$this->rootElement()->artistId();
+		$id = $this->rootElement()->artistId();
+		$card = $this->people
+				->find('identity')
+				->specifyFilter('id', $id)
+				->loadStacks();
+		return array_pop($card);
 	}
 	
 }
