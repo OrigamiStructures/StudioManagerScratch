@@ -23,14 +23,14 @@ class ArtistsController extends AppController
     {
 		$ManifestsTable = TableRegistry::getTableLocator()->get('ManifestStacks');
 		$manifests = $ManifestsTable->find('stacksFor', 
-			['seed' => 'manifest', 'ids' => [1,2,3,4,5]]);
+			['seed' => 'manifest', 'ids' => [2,3]]);
 		
 		foreach($manifests->load() as $manifestStack) {
-			$manifestStack->supervisorCard();
-			$manifestStack->managerCard();
-			$manifestStack->artistCard();
+			
+			osd($manifestStack->supervisorCard()->name(), 'SUPERVISOR');
+			osd($manifestStack->managerCard()->name(), 'MANAGER');
+			osd($manifestStack->artistCard()->name(), 'ARTIST');
 		}
-		die;
 //        $this->paginate = [
 //            'contain' => ['Members', 'MemberUsers']
 //        ];
