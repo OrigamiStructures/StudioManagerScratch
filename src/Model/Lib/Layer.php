@@ -500,7 +500,8 @@ class Layer implements LayerAccessInterface {
             }
             if (!isset($entity->id)) {
                 $message = "StackLayer expects to find \$entity->id. This "
-                    . "property was missing on array element $key.";
+                    . "property was missing on array element $key. Did you "
+						. "forget to name a layer when doing loadStack?";
                 throw new BadClassConfigurationException($message);
             }
             $this->_data[$entity->id] = $entity;
