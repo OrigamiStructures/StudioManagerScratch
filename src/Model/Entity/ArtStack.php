@@ -61,6 +61,9 @@ class ArtStack extends StackEntity {
 	}
 	
 	public function isFlat() {
-		return $this->editions->count() === 1 && $this->pieces->count() === 1;
+		return $this->editions->count() === 1 
+				&& $this->editions
+					->element(0, LAYERACC_INDEX)
+					->type === EDITION_UNIQUE;
 	}
 }
