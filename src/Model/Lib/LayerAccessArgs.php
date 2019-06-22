@@ -125,9 +125,9 @@ protected $_registry;
     public function load($asArray = LAYERACC_ARRAY) {
 		$result = $this->data()->load($this);
 		if (!$asArray) {
-			$result = layer($result); 
+//			$result = layer($result); 
 //			$result = layer($result, $this->valueOf('layer')); 
-//			$result = new Layer($result, $this->valueOf('layer')); 
+			$result = new Layer($result, $this->valueOf('layer')); 
 		}
 		return $result;
 	}

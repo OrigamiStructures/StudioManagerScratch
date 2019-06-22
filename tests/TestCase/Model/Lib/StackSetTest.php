@@ -121,6 +121,13 @@ class StackSetTest extends TestCase {
 				->loadStacks();
 		$this->assertCount(2, $result, 'loadStack on unfiltered data did not '
 				. 'return the expected number of stacks');
+		
+		$result = $this->StackEntities->find('pieces')
+				->specifyFilter('edition_id', 999)
+				->loadStacks();
+		$this->assertCount(0, $result, 'loadStack on filtered data did not '
+				. 'return the expected number of stacks');
+		
 	}
 	
 	/**
