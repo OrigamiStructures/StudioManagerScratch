@@ -66,9 +66,6 @@ class StackSetTest extends TestCase {
 		$this->StackEntities = $this->ArtStacks->find('stacksFor',
 				['seed' => 'artworks', 'ids' => $artIDs]);
 //        $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
-//        $this->StackEntity->arrayProp = ['a','b','c'];
-//        $this->StackEntity->stringProp = 'This is a string property';
-//        $this->StackEntity->numProp = 498;
 		//art 4, ed 5 Unique qty 1, ed 8 Open Edition qty 150
 		//fmt 5 desc Watercolor 6 x 15", fmt 8 desc Digital output with cloth-covered card stock covers
 		//pc 20 nm null qty 1, pc 38,40,509,955 qty 140,7,1,2
@@ -101,11 +98,36 @@ class StackSetTest extends TestCase {
 	 * @return void
 	 */
 	public function testFind() {
-        $arg = $this->StackEntities->element(1)->find();
+		
+        $arg = $this->StackEntities->find();
+        $this->assertTrue(is_a($arg, 'App\Model\Lib\StackSetAccessArgs'),
+            'find() did not create a StackSetAccessArgs object');
+		
         $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
             'find() did not create a LayerAccessArgs object');
-        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
+		
+        $this->assertTrue(is_a($arg->data(), 'App\Model\Lib\StackSet'),
             'The access object created by find() did not contain the expected data');
+	}
+	
+	public function testLoadStack() {
+		$result = $this->StackEntities->find('pieces')
+				->specifyFilter('edition_id', 8)
+				->loadStacks();
+		$this->assertCount(1, $result, 'loadStack on filtered data did not '
+				. 'return the expected number of stacks');
+		
+		$result = $this->StackEntities->find('pieces')
+				->loadStacks();
+		$this->assertCount(2, $result, 'loadStack on unfiltered data did not '
+				. 'return the expected number of stacks');
+		
+		$result = $this->StackEntities->find('pieces')
+				->specifyFilter('edition_id', 999)
+				->loadStacks();
+		$this->assertCount(0, $result, 'loadStack on filtered data did not '
+				. 'return the expected number of stacks');
+		
 	}
 	
 	/**
