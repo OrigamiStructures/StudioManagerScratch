@@ -127,6 +127,7 @@ protected $_registry;
 		if (!$asArray) {
 			$result = layer($result); 
 //			$result = layer($result, $this->valueOf('layer')); 
+//			$result = new Layer($result, $this->valueOf('layer')); 
 		}
 		return $result;
 	}
