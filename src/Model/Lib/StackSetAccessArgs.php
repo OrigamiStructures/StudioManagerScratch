@@ -10,8 +10,6 @@ use App\Model\Lib\Layer;
  */
 class StackSetAccessArgs extends LayerAccessArgs {
 	
-	
-	
 	public function loadStacks() {
 		
 		$layerName = $this->valueOf('layer');
