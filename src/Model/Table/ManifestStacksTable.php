@@ -141,6 +141,9 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackEntity
 	 */
 	protected function marshalPermissions($id, $stack) {
+		if(!$this->permissionsRequired($stack)) {
+			return $stack;
+		}
 		$permissions = $this->Permissions
 				->find('all')
 				->where(['manifest_id' => $id]);
@@ -148,7 +151,19 @@ class ManifestStacksTable extends StacksTable {
 		return $stack;
 	}
 	
+	private function permissionsRequired($stack) {
+		$management_token = $this->session->read('Auth.User.management_token');
+		return $stack->manifest()->supervisorId() === $management_token
+				|| $stack->manifest()->managerId() === $management_token;
+	}
+	
 	protected function marshalNameCards($stack) {
+		
+		$stack->manifest
+				->find('permissions')
+				->specifyFilter('layer', 'contact')
+				->load();
+		
 		$manifest = $stack->manifest->element(0, LAYERACC_INDEX);
 		$people = $this->PersonCards->processSeeds(
 				[
