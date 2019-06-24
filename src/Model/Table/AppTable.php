@@ -3,7 +3,7 @@ namespace App\Model\Table;
 
 use App\Lib\SystemState;
 use Cake\ORM\Table;
-
+use Cake\Http\Session;
 
 /**
  * Description of AppTable
@@ -11,14 +11,15 @@ use Cake\ORM\Table;
  * @author dondrake
  */
 class AppTable extends Table {
-	
+		
 	public $SystemState;
 	
-    public function __construct(array $config = []){
-        if (!empty($config['SystemState'])) {
-            $this->SystemState = $config['SystemState'];
-		}
+	protected $session;
+
+
+	public function __construct(array $config = []){
+		$this->session = new Session();
 		parent::__construct($config);
-	}
+	}	
 	
 }
