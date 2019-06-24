@@ -129,7 +129,22 @@ class ManifestStacksTable extends StacksTable {
 			return $stack;
 	}
 	
+	/**
+	 * Marshal the permissions for the manifest
+	 * 
+	 * @todo BUSINESS LOGIC REQUIRED
+	 *		If the current user is not this manifest's supervisor or 
+	 *		manager, the permissions should be left empty
+	 * 
+	 * @param string $id
+	 * @param StackEntity $stack
+	 * @return StackEntity
+	 */
 	protected function marshalPermissions($id, $stack) {
+		$permissions = $this->Permissions
+				->find('all')
+				->where(['manifest_id' => $id]);
+		$stack->set(['permissions' => $permissions->toArray()]);
 		return $stack;
 	}
 	
