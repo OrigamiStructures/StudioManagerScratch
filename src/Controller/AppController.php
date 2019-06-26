@@ -46,7 +46,6 @@ class AppController extends Controller
 		
 		$this->SystemState = new SystemState($request);
 		$this->set('SystemState', $this->SystemState);
-		TableRegistry::locator(new CSTableLocator($this->SystemState));
 		
 		parent::__construct($request, $response, $name, $eventManager, $components);
         $this->eventManager()->on($this->SystemState);
@@ -94,6 +93,28 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
+
+		$this->overrideTableLocator();
+	}
+	
+	/**
+	 * Pass critical User data to all tables
+	 * 
+	 * This data will allow tables to determine supervisor, manager, 
+	 * and artist ids for data access control. Tables will also 
+	 * use this data to discover permissions which allow data 
+	 * sharing between supervisors and managers.
+	 * 
+	 * @todo remove SystemState from the application
+	 * @todo create an object to encapsulate currentUser
+	 */
+	private function overrideTableLocator() {
+		TableRegistry::locator(new CSTableLocator(
+				[
+					'SystemState' => $this->SystemState,
+					'currentUser' => $this->Auth->user()
+				]
+			));
 	}
 	
 	public function mapStates() {
