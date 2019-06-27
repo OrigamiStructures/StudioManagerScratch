@@ -69,4 +69,14 @@ class ArtStackTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    /**
+     * Test isFlat method
+     *
+     * @return void
+     */
+    public function testIsFlat()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 }

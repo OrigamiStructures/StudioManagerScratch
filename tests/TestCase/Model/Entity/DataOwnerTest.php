@@ -39,7 +39,7 @@ class DataOwnerTest extends TestCase
         parent::setUp();
         $this->DataOwners = $this->getTableLocator()->get('DataOwners');
         $this->DataOwner = $this->DataOwners->find('hook')->toArray();
-//		pr($this->DataOwner);
+//		debug($this->DataOwner);
     }
 
     /**
@@ -74,7 +74,7 @@ class DataOwnerTest extends TestCase
      */
     public function testUsername()
     {
-        $this->assertTrue($this->DataOwner[1]->username() === 'gaildrake',
+        $this->assertTrue($this->DataOwner[1]->username() === 'leonardo',
 				'Failed to detect a matching username');
         $this->assertFalse($this->DataOwner[1]->username() === 'random data',
 				'Incorrectly matched a non-matching username');

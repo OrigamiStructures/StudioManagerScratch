@@ -59,4 +59,11 @@ class ArtStack extends StackEntity {
 	public function description() {
 		return $this->rootElement()->description;
 	}
+	
+	public function isFlat() {
+		return $this->editions->count() === 1 
+				&& $this->editions
+					->element(0, LAYERACC_INDEX)
+					->type === EDITION_UNIQUE;
+	}
 }

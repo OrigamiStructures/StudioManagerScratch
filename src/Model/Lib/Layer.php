@@ -180,25 +180,17 @@ class Layer implements LayerAccessInterface {
 	 * If a filter is set, the data is filtered, then paginated and returned
 	 * Otherwise, the full set is paginated and returned
 	 * 
-	 * @param LayerAccessArgs $argObj
+	 * @param mixed $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	public function load($argObj = null) {
 		if(is_null($argObj)) {
 			return $this->_data;
 		}
-
-		if ($argObj->valueOf('idIndex')) {
-			$id = $argObj->valueOf('idIndex');
-            if (!$this->hasId($id)) {
-                return [];
-            }
-            return $this->_data[$id];
-		}
+		
+		$this->verifyInstanceArgObj($argObj);
 		
 		if ($argObj->isFilter()) {
-//			$result = $this->filter($argObj->valueOf('value_source'), $argObj->valueOf('filter_value'));
-//			$result = $this->filter($this->vsSwap($argObj), $argObj->valueOf('filter_value'));
 			$result = $this->filter($argObj);
 		} else {
 			$result = $this->_data;
@@ -508,7 +500,8 @@ class Layer implements LayerAccessInterface {
             }
             if (!isset($entity->id)) {
                 $message = "StackLayer expects to find \$entity->id. This "
-                    . "property was missing on array element $key.";
+                    . "property was missing on array element $key. Did you "
+						. "forget to name a layer when doing loadStack?";
                 throw new BadClassConfigurationException($message);
             }
             $this->_data[$entity->id] = $entity;

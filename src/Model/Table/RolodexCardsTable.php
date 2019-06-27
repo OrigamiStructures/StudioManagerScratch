@@ -36,7 +36,7 @@ class RolodexCardsTable extends StacksTable {
 	public function initialize(array $config) {
         $this->setTable('members');
 		$this->_initializeAssociations();
-        $this->addLayerTable(['Identities', 'GroupsMembers']);
+        $this->addLayerTable(['Identities', 'GroupsMembers', 'Users']);
         $this->addStackSchema(['identity', 'data_owner', 'memberships']);
         $this->addSeedPoint([
             'identity',
@@ -44,7 +44,11 @@ class RolodexCardsTable extends StacksTable {
             'data_owner',
             'data_owners',
             'membership',
-            'memberships'
+            'memberships',
+			'manager',
+			'managers',
+			'supervisor',
+			'supervisors'
         ]);
 		parent::initialize($config);
 	}
@@ -115,6 +119,24 @@ class RolodexCardsTable extends StacksTable {
 					return $accum;
 				}, []);
 		return $IDs;
+	}
+	
+	protected function distillFromManager($ids) {
+		$records = $this->Users
+				->find('all')
+				->select(['id', 'management_token', 'member_id'])
+				->where(['management_token IN' => $ids]);
+		$IDs = collection($records)
+				->reduce(function($accum, $entity, $index){
+					$accum[] = $entity->member_id;
+					return $accum;
+				}, []);
+		return $IDs;
+	}
+	
+	protected function distillFromSupervisor($ids) {
+		$result = $this->distillFromManager($ids);
+		return $result;
 	}
 		
 	protected function marshalIdentity($id, $stack) {

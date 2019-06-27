@@ -55,11 +55,7 @@ class StackEntityTest extends TestCase
         $artID = 4; //jabberwocky
         $stacks = $this->ArtStacks
 				->find('stacksFor', ['seed' => 'artworks', 'ids' => [$artID]]);
-        $this->StackEntity = $stacks->ownerOf('artwork', $artID, 'first');
-        
-        $this->StackEntity->arrayProp = ['a','b','c'];
-        $this->StackEntity->stringProp = 'This is a string property';
-        $this->StackEntity->numProp = 498;
+		$this->StackEntity = $stacks->element(0, LAYERACC_INDEX);
                 
         //art 4, ed 5 Unique qty 1, ed 8 Open Edition qty 150
         //fmt 5 desc Watercolor 6 x 15", fmt 8 desc Digital output with cloth-covered card stock covers
@@ -124,21 +120,45 @@ class StackEntityTest extends TestCase
      *
      * @return void
      */
-    public function testLoad() {
+    public function testLoadWithNoArg() {
 		
-		$this->assertCount(1, $this->StackEntity->load());
-		$this->assertArrayHasKey(4, $this->StackEntity->load());
+		$this->assertCount(1, $this->StackEntity->load(), 
+				'simple load( ) did not return array with one element');
+		$this->assertArrayHasKey(4, $this->StackEntity->load(), 
+				'simple load( ) did not return expected key for element');
+	}
+	
+	public function testLoadWithStringArg() {
+		$this->assertCount(2, $this->StackEntity->load('formats'), 
+				'string naming layer did not return expected quantity of data');
+		$this->assertCount(0, $this->StackEntity->load('unkown'), 
+				'string naming unknown layer did not return empty array');
+	}
+	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingWrongObject() {
+		$arg = new \stdClass();
+		$this->StackEntity->load($arg, '$this->StackEntity->load() with wrong kind '
+				. 'of object did not throw expected exception');
+	}
+		
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testLoadUsingArray() {
+		$arg = [1,2];
+		$this->StackEntity->load($arg, '$this->StackEntity->load() with an'
+				. ' array did not throw expected exception');
+	}
+	
+	public function testLoadWithArgObj() {
 		
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
 		
-		$this->assertCount(2, $this->StackEntity->load($formats_arg));
-        $format = $this->StackEntity
-				->find('formats')
-				->setIdIndex(1)
-				->load();
-        $this->assertEquals('Watercolor 6 x 15"', $format->description,
-				'loading a valid format by exposed id ...->load(\'formats\', 5)... '
-				. 'did not return an entity with an expected property value.');
+		$this->assertCount(2, $this->StackEntity->load($formats_arg), 
+				'argObj naming layer did not return expected quantity of data');
 		
         $pieces = $this->StackEntity
 				->find('pieces')

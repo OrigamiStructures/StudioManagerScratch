@@ -4,7 +4,7 @@ namespace App\Model\Lib;
 use App\Model\Entity\StackEntity;
 use App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
-use App\Model\Lib\LayerAccessArgs;
+use App\Model\Lib\StackSetAccessArgs;
 
 /**
  * StackSet
@@ -47,6 +47,14 @@ class StackSet implements LayerAccessInterface {
 		return $this->_data;
 	}
 	
+    public function find($layer = NULL) {
+        $args = new StackSetAccessArgs($this);
+		if (!is_null($layer)) {
+			$args->setLayer($layer);
+		}
+        return $args;
+    }
+		
 	/**
 	 * Perform data load from StackSet context
 	 * 
@@ -56,14 +64,21 @@ class StackSet implements LayerAccessInterface {
 	 * in turn. Filtering and pagination will be done, and the accumulated 
 	 * result will be returned
 	 * 
-	 * @param LayerAccessArgs $argObj
+	 * @param mixed $argObj
 	 * @return array
 	 */
-	public function load(LayerAccessArgs $argObj = null) {
+	public function load($argObj = null) {
 		
 		if (is_null($argObj)) {
 			return $this->_data;
 		}
+		
+		if (is_string($argObj)) {
+			$argObj = (new LayerAccessArgs())
+					->setLayer($argObj);
+		}
+		
+		$this->verifyInstanceArgObj($argObj);
 		
 		if (!$argObj->hasLayer()) {
 			return $this->paginate($this->_data, $argObj);
