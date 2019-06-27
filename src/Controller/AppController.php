@@ -21,6 +21,8 @@ use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
+use Cake\Controller\Component\PaginatorComponent;
+use App\Model\Lib\StackPaginator;
 
 /**
  * Application Controller
@@ -93,6 +95,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
+		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
 
 		$this->overrideTableLocator();
 	}
