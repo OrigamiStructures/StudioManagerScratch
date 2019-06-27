@@ -3,7 +3,9 @@
         echo $this->Html->tag('h2', 'SKIPPED GROUP');
         continue;
     }
-    echo $this->Html->tag('h3', $entity->rootDisplayValue());?>
+    echo $this->Html->tag('h3', $entity->rootDisplayValue());
+//    osd($entity);
+    ?>
 
 	<li>Contacts
 		<ul>
@@ -12,12 +14,19 @@
 			<?php endforeach; ?>
 		</ul>
 	</li>
-	<li>Addresses
-		<ul>
-			<?php foreach ($entity->addresses() as $address) : ?>
-			<li><?= $address ?></li>
-			<?php endforeach; ?>
-		</ul>
-	</li>
+    <li>Addresses
+        <ul>
+            <?php foreach ($entity->addresses() as $address) : ?>
+                <li><?= $address ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </li>
+    <li>Memberships
+        <ul>
+            <?php foreach ($entity->memberships() as $membership) : ?>
+                <li><?= $membership ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </li>
 
 <?php } ?>
