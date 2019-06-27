@@ -152,7 +152,7 @@ class ManifestStacksTable extends StacksTable {
 	}
 	
 	private function permissionsRequired($stack) {
-		$management_token = $this->currentUser['management_token'];
+		$management_token = $this->currentUser()->managerId();
 		return $stack->manifest()->supervisorId() === $management_token
 				|| $stack->manifest()->managerId() === $management_token;
 	}
