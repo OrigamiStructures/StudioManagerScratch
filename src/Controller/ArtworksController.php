@@ -31,7 +31,7 @@ class ArtworksController extends ArtStackController
 	 *
 	 * @return void
 	     */
-	public function index()     {
+	public function indexOld()     {
 		$this->paginate = [
 			'contain' => ['Users', 'Images'],
 		];
@@ -141,6 +141,18 @@ class ArtworksController extends ArtStackController
 	}
 
 // </editor-fold>
+
+    public function index()
+    {
+        $Artworks = $this->getTableLocator()->get('ArtStacks');
+        $ids = $Artworks->find('list')
+            ->toArray();
+//        osd($ids);
+//        osd();die;
+        $realIds = array_keys($ids);
+        $results = $Artworks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $realIds]);
+        $this->set('results', $results);
+    }
 
     /**
      * Delete method
