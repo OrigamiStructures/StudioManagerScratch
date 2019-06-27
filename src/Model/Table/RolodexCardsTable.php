@@ -22,6 +22,8 @@ class RolodexCardsTable extends StacksTable {
 	 */
 	protected $rootName = 'identity';
 	
+	protected $rootTable = 'Identities';
+	
 	/**
 	 * {@inheritdoc}
 	 */
