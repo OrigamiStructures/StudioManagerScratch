@@ -29,8 +29,10 @@ class StacksTable extends AppTable
 	 * The tip-of-the-iceberg layer for this data stack
 	 */
 	protected $rootName = NULL;
+	
+	protected $rootTable = NULL;
 
-    /**
+	/**
      *
      * @var array
      */
@@ -126,6 +128,10 @@ class StacksTable extends AppTable
 		return $this->rootName;
 	}
 	
+	public function rootTable() {
+		return $this->{$this->rootTable};
+	}
+	
 	/**
 	 * Lazy load the required tables
 	 * 
@@ -198,6 +204,13 @@ class StacksTable extends AppTable
 		return $this->stacksFromRoot($IDs);
     }
 	
+	public function distill($seed, $ids) {
+		return [
+			'Table' => $this->rootTable(),
+			'IDs' => $this->{$this->distillMethodName($seed)}($ids)
+			];
+	}
+	
 	/**
 	 * From mixed seed types, distill to a root ID set
 	 * 
@@ -251,7 +264,7 @@ class StacksTable extends AppTable
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    protected function stacksFromRoot($ids) {
+    public function stacksFromRoot($ids) {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
