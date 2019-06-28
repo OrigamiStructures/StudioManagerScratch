@@ -144,7 +144,7 @@ class ArtworksController extends ArtStackController
 
     public function index()
     {
-        $Artworks = $this->getTableLocator()->get('ArtStacks');
+        $Artworks = TableRegistry::getTableLocator()->get('ArtStacks');
         $ids = $Artworks->find('list')
             ->toArray();
 //        osd($ids);

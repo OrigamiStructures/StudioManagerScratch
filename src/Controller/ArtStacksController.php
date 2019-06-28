@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\Cache\Cache;
 use App\Model\Lib\Layer;
 use App\Model\Table\ArtworksTable as ArtStacks;
+use Cake\ORM\TableRegistry;
 
 /**
  * ArtStacks Controller
@@ -18,7 +19,7 @@ class ArtStacksController extends AppController
     
     public function initialize() {
         parent::initialize();
-        $this->ArtStacks = $this->getTableLocator()->get('ArtStacks');
+        $this->ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
     }
     
     public function testMe() {

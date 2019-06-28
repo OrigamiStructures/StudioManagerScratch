@@ -4,6 +4,7 @@ namespace App\Controller;
 use CakeDC\Users\Controller\AppController;
 use App\Model\Lib\Layer;
 use App\Lib\Range;
+use Cake\ORM\TableRegistry;
 
 /**
  * CakePHP AdministratorController
@@ -12,7 +13,7 @@ use App\Lib\Range;
 class AdministratorController extends AppController {
 	
 	public function index() {
-		$Users = $this->getTableLocator()->get('Users');
+		$Users = TableRegistry::getTableLocator()->get('Users');
 		$users = $Users->find('list', ['valueField' => 'username']);
 		$this->set(compact('users'));
 	}
@@ -22,10 +23,10 @@ class AdministratorController extends AppController {
 			$this->redirect('administrator');
 		}
 		$user_id = $this->request->data('users');
-		$Artwork = $this->getTableLocator()->get('Artworks');
-		$Edition = $this->getTableLocator()->get('Editions');
-		$Format = $this->getTableLocator()->get('EditionsFormats');
-		$Piece = $this->getTableLocator()->get('Pieces');
+		$Artwork = TableRegistry::getTableLocator()->get('Artworks');
+		$Edition = TableRegistry::getTableLocator()->get('Editions');
+		$Format = TableRegistry::getTableLocator()->get('EditionsFormats');
+		$Piece = TableRegistry::getTableLocator()->get('Pieces');
 		$condition = ['user_id' => $user_id];
 		
 		$artworks = new Layer(

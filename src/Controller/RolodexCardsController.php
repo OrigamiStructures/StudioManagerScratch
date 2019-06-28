@@ -1,12 +1,7 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Controller;
+
+use Cake\ORM\TableRegistry;
 
 /**
  * CakePHP RolodexCardsController
@@ -15,7 +10,7 @@ namespace App\Controller;
 class RolodexCardsController extends AppController {
 	
 	public function index() {
-		$ArtistManifests = $this->getTableLocator()->get('ArtistManifests');
+		$ArtistManifests = TableRegistry::getTableLocator()->get('ArtistManifests');
 		$stacks = $ArtistManifests->find('stacksFor', ['seed' => 'identity', 'ids' => [1]]);
 		osd($stacks);
 
@@ -26,7 +21,7 @@ class RolodexCardsController extends AppController {
 	}
 	
 	public function groups() {
-		$CategoryCards = $this->getTableLocator()->get('OrganizationCards');
+		$CategoryCards = TableRegistry::getTableLocator()->get('OrganizationCards');
 		$ids = $CategoryCards
 				->Identities->find('list')
 				->where(['member_type' => 'Institution'])
