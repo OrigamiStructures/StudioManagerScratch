@@ -20,4 +20,13 @@ class OrganizationCardsTable extends CategoryCardsTable {
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
 	}
+
+	protected function marshalIdentity($id, $stack) {
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id, 'member_type' => 'Institution']);
+			$stack->set(['identity' => $identity->toArray()]);
+			return $stack;
+	}
+	
 }

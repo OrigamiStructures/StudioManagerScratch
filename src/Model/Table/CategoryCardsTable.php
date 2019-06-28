@@ -35,6 +35,14 @@ class CategoryCardsTable extends RolodexCardsTable
 		return $this->Identities->find('list', ['valueField' => 'id'])
 				->where(['id IN' => $IDs, 'member_type' => 'Group']);
 	}
+
+	protected function marshalIdentity($id, $stack) {
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id, 'member_type' => 'Category']);
+			$stack->set(['identity' => $identity->toArray()]);
+			return $stack;
+	}
 	
 	protected function marshalMembers($id, $stack) {
 		if ($stack->count('identity')) {
