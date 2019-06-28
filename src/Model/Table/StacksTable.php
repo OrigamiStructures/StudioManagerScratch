@@ -13,6 +13,7 @@ use App\Exception\MissingDistillerMethodException;
 use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
+use Cake\Core\Configure;
 
 /**
  * StacksTable Model
@@ -289,7 +290,7 @@ class StacksTable extends AppTable
      * @return mixed The cached data, or FALSE
 	 */
 	protected function readCache($id) {
-		if (\Cake\Core\Configure::read('stackCache')) {
+		if (Configure::read('stackCache')) {
 			return Cache::read($this->cacheKey($id), $this->cacheName());
 		} else {
 			return FALSE;
@@ -304,7 +305,7 @@ class StacksTable extends AppTable
      * @return bool True on successful cached, false on failure
 	 */
 	protected function writeCache($id, $stack) {
-		if (\Cake\Core\Configure::read('stackCache')) {
+		if (Configure::read('stackCache')) {
 			return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
 		} else {
 			return FALSE;
