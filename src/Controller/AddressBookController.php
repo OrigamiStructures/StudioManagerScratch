@@ -24,7 +24,11 @@ class AddressBookController extends AppController
         //)
         ->toArray();
         osd($ids);
-//        $results = $this->paginate($PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]));
+//        $results = 
+////				$this->paginate(
+//						$PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids])
+////				)
+//				;
         $results = $this->paginate($PersonCards, ['seed' => 'identity', 'ids' => $ids]);
         $this->set('results', $results);
     }
