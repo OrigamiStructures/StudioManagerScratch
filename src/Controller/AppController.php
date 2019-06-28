@@ -23,6 +23,7 @@ use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
 use Cake\Controller\Component\PaginatorComponent;
 use App\Model\Lib\StackPaginator;
+use App\Model\Lib\CurrentUser;
 
 /**
  * Application Controller
@@ -42,6 +43,10 @@ class AppController extends Controller
 	 */
 	public $SystemState;
 	
+	protected $currentUser;
+	
+	protected $contextUser;
+
 	public function __construct(\Cake\Network\Request $request = null,
 			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
 			$components = null) {
@@ -90,8 +95,8 @@ class AppController extends Controller
      */
     public function initialize()
     {
-//        parent::initialize(); // parent is empty
-
+        parent::initialize();
+		
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
@@ -115,11 +120,19 @@ class AppController extends Controller
 		TableRegistry::locator(new CSTableLocator(
 				[
 					'SystemState' => $this->SystemState,
-					'currentUser' => $this->Auth->user()
-				]
+					'currentUser' => $this->currentUser()
+				] 
 			));
 	}
 	
+	public function currentUser() {
+		if (!isset($this->currentUser)) {
+			$this->currentUser = new CurrentUser($this->Auth->user());
+		}
+		return $this->currentUser;
+	}
+
+
 	public function mapStates() {
 		$this->set('result', $this->SystemState->inventoryActions());
 		$this->set('map', $this->SystemState->map());

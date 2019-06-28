@@ -12,7 +12,7 @@ use App\Model\Lib\CurrentUser;
  * @author dondrake
  */
 class AppTable extends Table {
-		
+	
 	public $SystemState;
 	
 	protected $currentUser;
@@ -24,12 +24,12 @@ class AppTable extends Table {
             $this->SystemState = $config['SystemState'];
 		}
         if (!empty($config['currentUser'])) {
-            $this->currentUser = new CurrentUser($config['currentUser']);
+            $this->currentUser = $config['currentUser'];
 		}
         if (!empty($config['contextUser'])) {
-            $this->contextUser = new CurrentUser($config['contextUser']);
+            $this->contextUser = $config['contextUser'];
 		} else {
-            $this->contextUser = new CurrentUser($config['currentUser']);
+            $this->contextUser = $config['currentUser'];
 		}
 		parent::__construct($config);
 	}
