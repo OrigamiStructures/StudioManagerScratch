@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use Cake\ORM\TableRegistry;
+
 class AddressBookController extends AppController
 {
     public $paginate = [
@@ -15,7 +17,7 @@ class AddressBookController extends AppController
 
     public function index()
     {
-        $PersonCards = $this->getTableLocator()->get('PersonCards');
+        $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         $ids = //$this->paginate(
             $PersonCards->Identities->find('list')
             ->order(['last_name'])
