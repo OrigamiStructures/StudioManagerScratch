@@ -16,6 +16,8 @@ class ManifestStacksTable extends StacksTable {
 	 */
 	protected $rootName = 'manifest';
 	
+	protected $rootTable = 'Manifests';
+
 	/**
 	 * {@inheritdoc}
 	 */
