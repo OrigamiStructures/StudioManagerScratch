@@ -2,6 +2,8 @@
 namespace App\Model\Lib;
 
 use App\Exception\BadClassConfigurationException;
+use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 
 /**
  * Description of CurrentUser
@@ -34,6 +36,7 @@ class CurrentUser {
 	 * @var array
 	 */
 	protected $data;
+	protected $Person;
 		
 	public function __construct($data, $options = []) {
 		
@@ -44,6 +47,10 @@ class CurrentUser {
 		}
 		
 		$this->data = $data;
+		$PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+		$this->Person = $PersonCards
+            ->find('stacksFor', ['seed' => 'identity', 'ids' => [$this->memberId()]])
+            ->element(0,LAYERACC_INDEX);
 	}
 
 	public function managerId() {
@@ -56,6 +63,16 @@ class CurrentUser {
 	
 	public function userId() {
 		return $this->data['id'];
+	}
+
+    public function username()
+    {
+        return $Person->name();
+	}
+
+    protected function memberId()
+    {
+        return $this->data['member_id'];
 	}
 	
 //	public function __debugInfo() {
