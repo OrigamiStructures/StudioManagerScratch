@@ -44,5 +44,10 @@ class ManifestStack extends StackEntity {
     {
         return $this->rootElement()->supervisorId() == $this->rootElement()->managerId();
 	}
-	
+
+    public function accessSummary()
+    {
+        return ($this->permissions->count() > 0) ? "Limited Access" : "Full Access";
+	}
+
 }
