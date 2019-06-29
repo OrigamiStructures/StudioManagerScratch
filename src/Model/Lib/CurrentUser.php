@@ -67,7 +67,7 @@ class CurrentUser {
 
     public function username()
     {
-        return $Person->name();
+        return $this->Person->name();
 	}
 
     protected function memberId()
