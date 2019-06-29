@@ -194,7 +194,7 @@ class SystemState implements EventListenerInterface {
 	 */
 	public function artistId($id = NULL) {
         osd(
-            'SystemState::artistId() is depricated. A new method is in development.'
+            'SystemState::artistId() is deprecated. A new method is in development.'
         , 'DEPRECATED');
 		if (is_null($id)) {
 			return $this->request->session()->read('Auth.User.artist_id');

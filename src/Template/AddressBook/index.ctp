@@ -5,8 +5,8 @@
     }
     echo $this->Html->tag('h3', $entity->rootDisplayValue());
     echo $this->Html->tag('h2', $entity->IDs());
-    echo $this->Html->link
-    osd($entity);
+    echo $this->Html->link;
+//    osd($entity);
     ?>
 
 	<li>Contacts

@@ -9,6 +9,7 @@ use Cake\Utility\Hash;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use App\Model\Traits\ManagementTrait;
 
 
 /**
@@ -17,10 +18,14 @@ use Cake\Core\Configure;
  */
 class RolodexCardsTable extends StacksTable {
 	
+	use ManagementTrait;
+	
 	/**
 	 * {@inheritdoc}
 	 */
 	protected $rootName = 'identity';
+	
+	protected $rootTable = 'Identities';
 	
 	/**
 	 * {@inheritdoc}

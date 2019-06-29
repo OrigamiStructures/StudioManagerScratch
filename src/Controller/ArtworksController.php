@@ -22,7 +22,7 @@ class ArtworksController extends ArtStackController
     public function initialize() {
         parent::initialize();
         $this->loadComponent('ArtworkStack');
-//      $this->loadComponent('Layers');
+//		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
     }
 	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
@@ -144,13 +144,11 @@ class ArtworksController extends ArtStackController
 
     public function index()
     {
-        $Artworks = $this->getTableLocator()->get('ArtStacks');
-        $ids = $Artworks->find('list')
+        $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
+        $ids = $ArtStacks->find('list')
             ->toArray();
-//        osd($ids);
-//        osd();die;
         $realIds = array_keys($ids);
-        $results = $Artworks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $realIds]);
+        $results = $ArtStacks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $realIds]);
         $this->set('results', $results);
     }
 

@@ -13,6 +13,7 @@ use App\Exception\MissingDistillerMethodException;
 use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
+use Cake\Core\Configure;
 
 /**
  * StacksTable Model
@@ -29,8 +30,10 @@ class StacksTable extends AppTable
 	 * The tip-of-the-iceberg layer for this data stack
 	 */
 	protected $rootName = NULL;
+	
+	protected $rootTable = NULL;
 
-    /**
+	/**
      *
      * @var array
      */
@@ -126,6 +129,10 @@ class StacksTable extends AppTable
 		return $this->rootName;
 	}
 	
+	public function rootTable() {
+		return $this->{$this->rootTable};
+	}
+	
 	/**
 	 * Lazy load the required tables
 	 * 
@@ -198,6 +205,13 @@ class StacksTable extends AppTable
 		return $this->stacksFromRoot($IDs);
     }
 	
+	public function distill($seed, $ids) {
+		return [
+			'Table' => $this->rootTable(),
+			'IDs' => $this->{$this->distillMethodName($seed)}($ids)
+			];
+	}
+	
 	/**
 	 * From mixed seed types, distill to a root ID set
 	 * 
@@ -251,7 +265,7 @@ class StacksTable extends AppTable
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    protected function stacksFromRoot($ids) {
+    public function stacksFromRoot($ids) {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
@@ -276,7 +290,7 @@ class StacksTable extends AppTable
      * @return mixed The cached data, or FALSE
 	 */
 	protected function readCache($id) {
-		if (\Cake\Core\Configure::read('stackCache')) {
+		if (Configure::read('stackCache')) {
 			return Cache::read($this->cacheKey($id), $this->cacheName());
 		} else {
 			return FALSE;
@@ -291,7 +305,7 @@ class StacksTable extends AppTable
      * @return bool True on successful cached, false on failure
 	 */
 	protected function writeCache($id, $stack) {
-		if (\Cake\Core\Configure::read('stackCache')) {
+		if (Configure::read('stackCache')) {
 			return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
 		} else {
 			return FALSE;

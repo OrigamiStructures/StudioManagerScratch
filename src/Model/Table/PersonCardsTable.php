@@ -43,17 +43,12 @@ class PersonCardsTable extends RolodexCardsTable {
 		return $stack;
 	}
 
-//	public function initialize(array $config) {
-//		parent::initialize($config);
-//		$this->$stackSchema += [
-//			['name' => 'artist',			'specs' =>['type' => 'layer']],
-//			['name' => 'managers',			'specs' =>['type' => 'layer']],
-//			['name' => 'managed_artists',	'specs' =>['type' => 'layer']],
-//		];
-//		$this->seedPoints = array_merge($this->seedPoints, [
-//			'artist', 
-//			'managers', 
-//			'managed_artists']);
-//	}
+	protected function marshalIdentity($id, $stack) {
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id, 'member_type' => 'Person']);
+			$stack->set(['identity' => $identity->toArray()]);
+			return $stack;
+	}
 	
 }
