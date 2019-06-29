@@ -113,6 +113,10 @@ class AppController extends Controller
 	 * use this data to discover permissions which allow data 
 	 * sharing between supervisors and managers.
 	 * 
+	 * The factory override is beacuse the default table for 
+	 * controllers follow a slightly different path to construction 
+	 * and they will bybass the new locator.
+	 * 
 	 * @todo remove SystemState from the application
 	 * @todo create an object to encapsulate currentUser
 	 */
@@ -123,6 +127,17 @@ class AppController extends Controller
 					'currentUser' => $this->currentUser()
 				] 
 			));
+		$this->modelFactory('Table', [$this, 'tableFactoryOverride']);
+	}
+	
+	/**
+	 * Fix the fact that default tables didn't use the right locator class
+	 * 
+	 * @param type $modelClass
+	 * @return type
+	 */
+	public function tableFactoryOverride($modelClass) {
+		return TableRegistry::getTableLocator()->get($modelClass);
 	}
 	
 	public function currentUser() {

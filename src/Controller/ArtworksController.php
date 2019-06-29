@@ -22,7 +22,7 @@ class ArtworksController extends ArtStackController
     public function initialize() {
         parent::initialize();
         $this->loadComponent('ArtworkStack');
-		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
+//		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
     }
 	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
