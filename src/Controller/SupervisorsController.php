@@ -12,7 +12,9 @@ class SupervisorsController extends AppController
     {
         $currentUser = $this->currentUser();
         $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
-        $supervisorManifests = $ManifestStacks->find('stacksFor', ['seed' => 'supervisor', 'ids' => [$currentUser->supervisorId()]]);
+        $supervisorManifests = 
+				$ManifestStacks
+				->find('supervisorManifests', ['source' => 'currentUser']);
         $managerManifests = $ManifestStacks->find('stacksFor', ['seed' => 'manager', 'ids' => [$currentUser->managerId()]]);
         $this->set(compact(['supervisorManifests','managerManifests','currentUser']));
     }
