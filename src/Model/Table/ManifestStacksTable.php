@@ -191,6 +191,11 @@ class ManifestStacksTable extends StacksTable {
 	 * sample call
 	 * $ManifestStacks->find('supervisorManifests', ['source' => 'currentUser');
 	 * 
+	 * @todo Could anyone except a Superuser use the 'ids' option?
+	 *		Depending on what our api callpoints allow and how they call 
+	 *		methods like this we may need to do currentUser()->isSuperuser() 
+	 *		checks to cut off crazy access
+	 * 
 	 * @param type $query
 	 * @param type $options
 	 * @return type
