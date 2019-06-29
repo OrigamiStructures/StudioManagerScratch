@@ -24,12 +24,12 @@ class AppTable extends Table {
             $this->SystemState = $config['SystemState'];
 		}
         if (!empty($config['currentUser'])) {
-            $this->currentUser = $config['currentUser'];
+            $this->currentUser = $this->setCurrentUser($config['currentUser']);
 		}
         if (!empty($config['contextUser'])) {
-            $this->contextUser = $config['contextUser'];
-		} else {
-            $this->contextUser = $config['currentUser'];
+            $this->contextUser = $this->setContextUser($config['contextUser']);
+		} elseif (!empty($config['currentUser']))  {
+            $this->contextUser = $this->setCurrentUser($config['currentUser']);
 		}
 		parent::__construct($config);
 	}
@@ -46,6 +46,14 @@ class AppTable extends Table {
 	 */
 	public function contextUser() {
 		return $this->contextUser;
+	}
+	
+	public function setCurrentUser($userData) {
+		$this->currentUser = $userData;
+	}
+	
+	public function setContextUser($userData) {
+		$this->contextUser = $userData;
 	}
 	
 }
