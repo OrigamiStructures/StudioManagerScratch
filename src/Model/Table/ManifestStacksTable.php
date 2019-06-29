@@ -180,4 +180,36 @@ class ManifestStacksTable extends StacksTable {
 		return $stack;
 	}
 	
+	/**
+	 * Get the supervisors manifests
+	 * 
+	 * Options allowed
+	 * ['source' => 'currentUser']
+	 * ['source' => 'contextuser']
+	 * ['ids' => [1, 6, 9]
+	 * 
+	 * sample call
+	 * $ManifestStacks->find('supervisorManifests', ['source' => 'currentUser');
+	 * 
+	 * @param type $query
+	 * @param type $options
+	 * @return type
+	 */
+	public function findSupervisorManifests($query, $options) {
+		if (
+				key_exists('source', $options) 
+				&& (in_array($options['source'], ['currentUser', 'contextUser']))
+		) {
+			//$ids = get id from the named object
+			$ids = [$this->{$options['source']}->supervisorId()];
+		} elseif (key_exists('ids', $options)) {
+			//$ids = get ids from array
+			$ids = $options['ids'];
+		} else {
+			// throw an exception
+		}
+		// do the query with the discoved id/ids
+		// and return the stackset
+		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => $ids]);
+	}
 }
