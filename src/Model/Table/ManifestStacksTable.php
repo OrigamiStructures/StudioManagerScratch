@@ -97,6 +97,7 @@ class ManifestStacksTable extends StacksTable {
 		$manifests = $this->Manifests
 				->find('managedBy', ['ids' => $ids])
 				->select(['id', 'manager_id'])
+                ->toArray()
 			;
 		$IDs = (new Layer($manifests))->IDs();
 		return $IDs;
@@ -112,6 +113,7 @@ class ManifestStacksTable extends StacksTable {
 		$manifests = $this->Manifests
 				->find('issuedBy', ['ids' => $ids])
 				->select(['id', 'supervisor_id'])
+                ->toArray()
 			;
 		$IDs = (new Layer($manifests))->IDs();
 		return $IDs;
