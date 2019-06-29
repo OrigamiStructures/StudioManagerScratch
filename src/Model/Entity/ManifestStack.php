@@ -39,5 +39,10 @@ class ManifestStack extends StackEntity {
 				->loadStacks();
 		return array_pop($card);
 	}
+
+    public function selfAssigned()
+    {
+        return $this->rootElement()->supervisorId() == $this->rootElement()->managerId();
+	}
 	
 }
