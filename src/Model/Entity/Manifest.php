@@ -50,7 +50,7 @@ class Manifest extends Entity
 	 * 
 	 * @return boolean
 	 */
-	public function self() {
+	public function selfAssigned() {
 		return $this->manager_id === $this->supervisor_id;
 	}
 	

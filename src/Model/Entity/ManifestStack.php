@@ -42,7 +42,7 @@ class ManifestStack extends StackEntity {
 
     public function selfAssigned()
     {
-        return $this->rootElement()->supervisorId() == $this->rootElement()->managerId();
+        return $this->rootElement()->selfAssigned();
 	}
 
     public function accessSummary()

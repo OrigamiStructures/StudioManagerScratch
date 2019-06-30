@@ -17,6 +17,12 @@ class SupervisorsController extends AppController
 				->find('supervisorManifests', ['source' => 'currentUser']);
         $managerManifests = $ManifestStacks->find('stacksFor', ['seed' => 'manager', 'ids' => [$currentUser->managerId()]]);
         $this->set(compact(['supervisorManifests','managerManifests','currentUser']));
+		
+		$filter = $supervisorManifests
+				->find('manifest')
+				->specifyFilter('selfAssigned', FALSE)
+				->loadStacks();
+	osd($filter);
     }
 
 }
