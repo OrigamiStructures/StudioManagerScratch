@@ -22,7 +22,6 @@ class SupervisorsController extends AppController
 				->find('manifest')
 				->specifyFilter('selfAssigned', FALSE)
 				->loadStacks();
-	osd($filter);
     }
 
 }
