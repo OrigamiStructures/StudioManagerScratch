@@ -5,7 +5,12 @@ osd($currentUser->username());
 $assignedToForeign = $supervisorManifests
     ->find('manifest')
     ->specifyFilter('selfAssigned', FALSE)
-    ->loadStacks()
+    ->loadStacks();
+		
+$outputPattern = 'Artist: %s '
+		. '<span style="font-weight: normal; font-size: smaller;">'
+		. '(Manager: %s has %s)'
+		. '</span>';
 
 ?>
     <h1>Supervisor Manifests</h1>
@@ -15,9 +20,13 @@ foreach ($assignedToForeign as $supervisorManifest) :
 	$artistName = $supervisorManifest->artistCard()->rootDisplayValue();
     $managerName = $supervisorManifest->managerCard()->rootDisplayValue();
     $access = $supervisorManifest->accessSummary();
+	
 ?>
 
-    <?= $this->Html->tag('h3', "Artist: $artistName (Manager: $managerName has $access)"); ?>
+    <?= $this->Html->tag(
+			'h3', 
+			sprintf($outputPattern, $artistName, $managerName, $access),
+			['escape' => FALSE]); ?>
 
 <?php endforeach; ?>
 
@@ -31,7 +40,10 @@ foreach ($assignedToForeign as $supervisorManifest) :
     $access = $managerManifest->accessSummary();
 ?>
 
-    <?= $this->Html->tag('h3', "Aritist: $artistName (Manager: $managerName has $access)" ); ?>
+    <?= $this->Html->tag(
+			'h3', 
+			sprintf($outputPattern, $artistName, $managerName, $access),
+			['escape' => FALSE]); ?>
 
 <?php endforeach; ?>
 
