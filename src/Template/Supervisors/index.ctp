@@ -7,12 +7,14 @@ $assignedToForeign = $supervisorManifests
     ->specifyFilter('selfAssigned', FALSE)
     ->loadStacks();
 		
-$outputPattern = 'Artist: %s '
+$outputPattern = '<em style="font-weight: normal;">Artist:</em> %s '
 		. '<span style="font-weight: normal; font-size: smaller;">'
-		. '(Manager: %s has %s)'
+		. '(<em>Manager:</em> %s has %s)'
 		. '</span>';
 
 ?>
+	<p>This stuff might be good in a table too. All this formatting 
+		I played with hasn't done much to improve things</p>
     <h1>Supervisor Manifests</h1>
 
 <?php ;
