@@ -24,4 +24,14 @@ class SupervisorsController extends AppController
 				->loadStacks();
     }
 
+	public function manager() {
+		osd($this->request->data,'Gather the manifests for this manager');die;
+		$this->redirect('/supervisors/index');
+	}
+
+	public function artist() {
+		osd($this->request->data, 'Gather the manifests for this artist');die;
+		$this->redirect('/supervisors/index');
+	}
+	
 }

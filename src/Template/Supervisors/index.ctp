@@ -61,14 +61,44 @@ foreach ($assignedToForeign as $supervisorManifest) : ?>
 	}, []);
 	
 ?>
-		
+	<?= $this->Form->create(null, ['action' => '/manager']); ?>
 	<p>Edit assignments to a manager</p>
-	<?= $this->Form->select('assignments', $assignments, ['empty' => 'Choose a manager']); ?>
+	<?= $this->Form->select(
+			'assignments', 
+			$assignments, 
+			['empty' => 'Choose a manager']
+		); ?>
+	<?= $this->Form->button('Submit'); ?>
+	<?= $this->Form->end(); ?>
+	
+	<?= $this->Form->create(null, ['action' => '/artist']); ?>
 	<p>Edit management agreements for an artist</p>
-	<?= $this->Form->select('ownedArtists', $ownedArtists, ['empty' => 'Choose an artist']); ?>
+	<?= $this->Form->select(
+			'owned_artists', 
+			$ownedArtists, 
+			['empty' => 'Choose an artist']
+		); ?>
+	<?= $this->Form->button('Submit'); ?>
+	<?= $this->Form->end(); ?>
+	
+	<?= $this->Form->create(); ?>
 	<p>Manage your artists (link to some index page)</p>
+	<?= $this->Form->input(
+			'manager_id', 
+	['type' => 'hidden', 'value' => $currentUser->managerId()]); ?>
+	<?= $this->Form->button('Submit'); ?>
+	<?= $this->Form->end(); ?>
+	
+	<?= $this->Form->create(); ?>
 	<p>Manage an artist</p>
-	<?= $this->Form->select('allArtists', $allArtists, ['empty' => 'Choose an artist']); ?>
+	<?= $this->Form->select(
+			'all_artists', 
+			$allArtists, 
+			['empty' => 'Choose an artist']
+		); ?>
+	<?= $this->Form->button('Submit'); ?>
+	<?= $this->Form->end(); ?>
+	
 	
 
 <?php  
