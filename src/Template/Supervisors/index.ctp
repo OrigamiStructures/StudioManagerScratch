@@ -35,6 +35,40 @@ foreach ($assignedToForeign as $supervisorManifest) : ?>
 
 <?php endforeach; ?>
 	
+<?php
+	
+//	osd($managers);
+	$collection = collection($supervisorManifests->load());
+	
+	$assignments = $collection->reduce(function($accum, $entity) {
+		$accum[$entity->rootElement()->manager_id] =
+			$entity->managerCard()->name();
+		return $accum;
+	}, []);
+	
+	$ownedArtists = $collection->reduce(function($accum, $entity) {
+		$accum[$entity->rootElement()->member_id] =
+			$entity->artistCard()->name();
+		return $accum;
+	}, []);
+	
+	$collection = collection($managerManifests->load());
+	
+	$allArtists = $collection->reduce(function($accum, $entity) {
+		$accum[$entity->rootElement()->member_id] =
+			$entity->artistCard()->name();
+		return $accum;
+	}, []);
+	
+?>
+		
+	<p>Edit assignments to a manager</p>
+	<?= $this->Form->select('assignments', $assignments, ['empty' => 'Choose a manager']); ?>
+	<p>Edit management agreements for an artist</p>
+	<?= $this->Form->select('ownedArtists', $ownedArtists, ['empty' => 'Choose an artist']); ?>
+	<p>Manage your artists (link to some index page)</p>
+	<p>Manage an artist</p>
+	<?= $this->Form->select('allArtists', $allArtists, ['empty' => 'Choose an artist']); ?>
 	
 
 <?php  
