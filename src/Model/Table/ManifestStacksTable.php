@@ -49,17 +49,6 @@ class ManifestStacksTable extends StacksTable {
 	}
 	
 	/**
-	 * By id or array of IDs
-	 * 
-	 * @param \App\Model\Table\Query $query
-	 * @param array $options
-	 * @return array
-	 */
-	public function findManifests(Query $query, $options) {
-        return $this->Manifests->findManifests($query, $options);
-	}
-		
-	/**
 	 * Derive the Manifest ids relevant to these manifest ids
 	 * 
 	 * @param array $ids Manifest ids
