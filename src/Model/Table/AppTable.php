@@ -49,11 +49,11 @@ class AppTable extends Table {
 	}
 	
 	public function setCurrentUser($userData) {
-		$this->currentUser = new CurrentUser($userData);
+		$this->currentUser = $userData;
 	}
 	
 	public function setContextUser($userData) {
-		$this->contextUser = new CurrentUser($userData);
+		$this->contextUser = $userData;
 	}
 	
 }
