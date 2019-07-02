@@ -102,4 +102,14 @@ class ManifestStacksTableTest extends TestCase
 		$this->assertCount(5, $manifests->load(), 'find with id array option did '
 				. 'not return expected number of results');
     }
+	
+	public function testFindSupervisorManifestWithCurrentUser() {
+        $options = ['source' => 'currentUser'];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		
+		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
+				'find with id array option did not return StackSet');
+		$this->assertCount(3, $manifests->load(), 'find with id array option did '
+				. 'not return expected number of results');
+	}
 }
