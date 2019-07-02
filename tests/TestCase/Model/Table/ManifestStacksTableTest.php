@@ -67,8 +67,8 @@ class ManifestStacksTableTest extends TestCase
         $config = TableRegistry::getTableLocator()
 				->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
         $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
-		$this->ManifestStacksTable->setCurrentUser($this->user);
-		$this->ManifestStacksTable->setContextUser($this->user);
+		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user));
+		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user));
 		$this->ManifestStacks = $this->ManifestStacksTable
 				->find('stacksFor', ['seed' => 'manifests', 'ids' => [1,2,3,4,5]]);
     }
