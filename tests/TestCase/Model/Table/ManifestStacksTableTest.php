@@ -98,8 +98,8 @@ class ManifestStacksTableTest extends TestCase
 		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
-				'find with id array option did not return StackSet');
-		$this->assertCount(5, $manifests->load(), 'find with id array option did '
+				'find with currentUser option did not return StackSet');
+		$this->assertCount(5, $manifests->load(), 'find with currentUser option did '
 				. 'not return expected number of results');
     }
 	
@@ -112,4 +112,23 @@ class ManifestStacksTableTest extends TestCase
 		$this->assertCount(3, $manifests->load(), 'find with id array option did '
 				. 'not return expected number of results');
 	}
+	
+	public function testFindSupervisorManifestWithContextUser() {
+        $options = ['source' => 'contextUser'];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		
+		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
+				'find with contextUser option did not return StackSet');
+		$this->assertCount(3, $manifests->load(), 'find with contextUser option did '
+				. 'not return expected number of results');
+	}
+	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testFindSupervisorManifestWithBadArgs() {
+        $options = ['bad' => 'key'];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+	}
+	
 }
