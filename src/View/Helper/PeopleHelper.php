@@ -8,17 +8,27 @@ use Cake\View\Helper;
 
 class PeopleHelper extends Helper
 {
+	
+	public $helpers = ['Html'];
 
+	protected $manifestSummaryFormat = 
+		'<em style="font-weight: normal;">Artist:</em> %s '
+        . '<span style="font-weight: normal; font-size: smaller;">'
+        . '(<em>Manager:</em> %s has %s)'
+        . '</span>';
 
-    /**
-     * This should move to a helper
+	/**
+     * Give a ManifestStackEntity output a summary line describing it
+	 * 
+	 * $format recieves $artistName, $managerName, $access
+	 * 'access' says 'Full Access' or 'Limited Access'
      *
-     * @param type $manifest
-     * @param type $helper
-     * @param type $outputPattern
+     * @param ManifestStack $manifest
+     * @param string $format Alternate sprintf format
      * @return type
      */
-    function manifestSummary($manifest, $helper, $outputPattern) {
+    function manifestSummary($manifest, $format = null) {
+		$format = is_null($format) ? $this->manifestSummaryFormat : $format;
 
         $artistName = $manifest->artistCard()->rootDisplayValue();
         $managerName = $manifest->selfAssigned()
@@ -26,9 +36,9 @@ class PeopleHelper extends Helper
             : $manifest->managerCard()->rootDisplayValue();
         $access = $manifest->accessSummary();
 
-        return $helper->tag(
+        return $this->Html->tag(
             'h3',
-            sprintf($outputPattern, $artistName, $managerName, $access),
+            sprintf($format, $artistName, $managerName, $access),
             ['escape' => FALSE]);
     }
 }

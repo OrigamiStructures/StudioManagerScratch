@@ -17,14 +17,9 @@
 
 <?php
 
-    $outputPattern = '<em style="font-weight: normal;">Artist:</em> %s '
-        . '<span style="font-weight: normal; font-size: smaller;">'
-        . '(<em>Manager:</em> %s has %s)'
-        . '</span>';
-
     foreach ($assignedToForeign as $supervisorManifest) : ?>
 
-    <?= $this->People->manifestSummary($supervisorManifest, $this->Html, $outputPattern); ?>
+    <?= $this->People->manifestSummary($supervisorManifest); ?>
 
 <?php endforeach; ?>
 
@@ -32,7 +27,7 @@
 
 <?php foreach ($managerManifests->load() as $managerManifest) : ?>
 
-    <?= $this->People->manifestSummary($managerManifest, $this->Html, $outputPattern); ?>
+    <?= $this->People->manifestSummary($managerManifest); ?>
 
 <?php endforeach; ?>
 	
