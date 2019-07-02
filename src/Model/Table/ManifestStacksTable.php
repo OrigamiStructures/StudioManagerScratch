@@ -49,17 +49,6 @@ class ManifestStacksTable extends StacksTable {
 	}
 	
 	/**
-	 * By id or array of IDs
-	 * 
-	 * @param \App\Model\Table\Query $query
-	 * @param array $options
-	 * @return array
-	 */
-	public function findManifests(Query $query, $options) {
-        return $this->Manifests->findManifests($query, $options);
-	}
-		
-	/**
 	 * Derive the Manifest ids relevant to these manifest ids
 	 * 
 	 * @param array $ids Manifest ids
@@ -196,25 +185,25 @@ class ManifestStacksTable extends StacksTable {
 	 *		methods like this we may need to do currentUser()->isSuperuser() 
 	 *		checks to cut off crazy access
 	 * 
-	 * @param type $query
-	 * @param type $options
-	 * @return type
+	 * @param Query $query
+	 * @param array $options
+	 * @return StackSet
+	 * @throws \BadMethodCallException
 	 */
 	public function findSupervisorManifests($query, $options) {
 		if (
 				key_exists('source', $options) 
 				&& (in_array($options['source'], ['currentUser', 'contextUser']))
 		) {
-			//$ids = get id from the named object
 			$ids = [$this->{$options['source']}->supervisorId()];
 		} elseif (key_exists('ids', $options)) {
-			//$ids = get ids from array
 			$ids = $options['ids'];
 		} else {
-			// throw an exception
+			$msg = 'Allowed $options keys: "source" or "ids". "source" values: '
+					. '"currentUser" or "contextUser". "ids" value must '
+					. 'be an array of ids.';
+			throw new \BadMethodCallException($msg);
 		}
-		// do the query with the discoved id/ids
-		// and return the stackset
 		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => $ids]);
 	}
 }
