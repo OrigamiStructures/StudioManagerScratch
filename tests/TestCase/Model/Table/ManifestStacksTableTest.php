@@ -42,18 +42,33 @@ class ManifestStacksTableTest extends TestCase
     ];
 
 	protected $user = 	  [
-	 	'id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-	 	'management_token' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-	 	'username' => 'don',
-	 	'email' => 'ddrake@dreamingmind.com',
-	 	'first_name' => 'Don',
-	 	'last_name' => 'Drake',
-	 	'active' => true,
-	 	'is_superuser' => false,
-	 	'role' => 'user',
-	 	'artist_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-	 	'member_id' => 1
-	  ];
+		[
+			'id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'management_token' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'username' => 'don',
+			'email' => 'ddrake@dreamingmind.com',
+			'first_name' => 'Don',
+			'last_name' => 'Drake',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_id' => 1			
+		],
+		[
+			'id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'management_token' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'username' => 'leonardo',
+			'email' => 'horseman@dreamingmind.com',
+			'first_name' => 'Luis',
+			'last_name' => 'Delgado',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'member_id' => 75			
+		],
+	];
 
 
     /**
@@ -66,8 +81,8 @@ class ManifestStacksTableTest extends TestCase
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
         $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
-		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user));
-		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user));
+		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
+		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));
 		$this->ManifestStacks = $this->ManifestStacksTable
 				->find('stacksFor', ['seed' => 'manifests', 'ids' => [1,2,3,4,5]]);
     }
@@ -119,7 +134,7 @@ class ManifestStacksTableTest extends TestCase
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
 				'find with contextUser option did not return StackSet');
-		$this->assertCount(3, $manifests->load(), 'find with contextUser option did '
+		$this->assertCount(2, $manifests->load(), 'find with contextUser option did '
 				. 'not return expected number of results');
 	}
 	
