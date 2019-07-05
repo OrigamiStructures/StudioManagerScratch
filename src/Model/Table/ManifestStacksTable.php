@@ -116,7 +116,9 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackEntity
 	 */
 	protected function marshalManifest($id, $stack) {
-			$manifest = $this->Manifests->find('manifests', ['values' => [$id]]);
+			$manifest = $this->Manifests->find('manifests', ['values' => [$id]])
+					->where(['user_id' => $this->currentUser()->userId()])
+					;
 			$stack->set(['manifest' => $manifest->toArray()]);
 			$stack = $this->marshalNameCards($stack);
 			return $stack;
