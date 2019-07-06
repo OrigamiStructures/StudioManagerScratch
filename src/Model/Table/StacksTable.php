@@ -213,6 +213,25 @@ class StacksTable extends AppTable
 	}
 	
 	/**
+	 * Add any local-stack appropriate conditions to the query
+	 * 
+	 * Override in each concrete StackTable class to suit the situation. 
+	 * For example PersonCardsTable adds: where(['member_type' => 'Person']) 
+	 * and many other places might add: where(['user_id' => $userId])
+	 * 
+	 * I imagine a situation where superusers would need to change the 
+	 * 'normal' behavior, so while most uses won't carry $options, 
+	 * the signature allows it for fine-tuning the stack results
+	 * 
+	 * @param Query $query
+	 * @param array $options Allow special data injection just in case
+	 * @return Query
+	 */
+	protected function localConditions($query, $options = []) {
+		return $query;
+	}
+
+	/**
 	 * From mixed seed types, distill to a root ID set
 	 * 
 	 * <code>
