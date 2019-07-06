@@ -12,21 +12,27 @@ class SupervisorsController extends AppController
     {
         $currentUser = $this->currentUser();
         $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
+		
         $supervisorManifests = 
 				$ManifestStacks
 				->find('supervisorManifests', ['source' => 'currentUser']);
-        $managerManifests = $ManifestStacks->find('stacksFor', ['seed' => 'manager', 'ids' => [$currentUser->managerId()]]);
-        $this->set(compact(['supervisorManifests','managerManifests','currentUser']));
 		
-		$filter = $supervisorManifests
-				->find('manifest')
-				->specifyFilter('selfAssigned', FALSE)
-				->loadStacks();
+        $managerManifests = 
+				$ManifestStacks
+				->find('managerManifests', ['source' => 'currentUser']);
+		
+        $this->set(compact(['supervisorManifests','managerManifests','currentUser']));
     }
 
 	public function manager() {
-		osd($this->request->data,'Gather the manifests for this manager');die;
-		$this->redirect('/supervisors/index');
+        $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
+		osd($this->request->data('assignments'));//die;
+		$managerManifests =
+				$ManifestStacks
+				->find('managerManifests', ['ids' => [$this->request->data('assignments')]]);
+        $this->set(compact(['managerManifests']));
+//		osd($this->request->data,'Gather the manifests for this manager');die;
+//		$this->redirect('/supervisors/index');
 	}
 
 	public function artist() {
