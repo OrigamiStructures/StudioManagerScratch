@@ -55,6 +55,11 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromManifest(array $ids) {
+		$query = $this->Manifests
+				->find('all')
+				->where(['id IN' => $ids])
+			;
+        $manifests = $this->localConditions($query)->toArray();
 		return $ids;
 	}
 	
@@ -65,10 +70,11 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromArtist(array $ids) {
-		$manifests = $this->Manifests
+		$query = $this->Manifests
 				->find('forArtist', ['member_id' => $ids])
 				->select(['id', 'member_id'])
 			;
+        $manifests = $this->localConditions($query)->toArray();
 		$IDs = (new Layer($manifests))->IDs();
 		return $IDs;
 	}
@@ -83,11 +89,11 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromManager(array $ids) {
-		$manifests = $this->Manifests
+		$query = $this->Manifests
 				->find('managedBy', ['ids' => $ids])
 				->select(['id', 'manager_id'])
-                ->toArray()
 			;
+        $manifests = $this->localConditions($query)->toArray();
 		$IDs = (new Layer($manifests))->IDs();
 		return $IDs;
 	}
@@ -99,13 +105,28 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromSupervisor(array $ids) {
-		$manifests = $this->Manifests
+		$query = $this->Manifests
 				->find('issuedBy', ['ids' => $ids])
 				->select(['id', 'supervisor_id'])
-                ->toArray()
 			;
+        $manifests = $this->localConditions($query)->toArray();
 		$IDs = (new Layer($manifests))->IDs();
 		return $IDs;
+	}
+	
+	/**
+	 * Inject appropriate boundary conditions for this user/context
+	 * 
+	 * I think this may grow a little more complex than this example. 
+	 * Controller/action context may be a consideration but we won't have 
+	 * that information here. The `contextUser` object may be our 
+	 * tool to communicate situational knowledge.
+	 * 
+	 * @param Query $query
+	 * @param array $options none supported at this time
+	 */
+	protected function localConditions($query, $options = []) {
+		return $query->where([['user_id' => $this->currentUser()->userId()]]);
 	}
 	
 	/**
@@ -116,9 +137,7 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackEntity
 	 */
 	protected function marshalManifest($id, $stack) {
-			$manifest = $this->Manifests->find('manifests', ['values' => [$id]])
-					->where(['user_id' => $this->currentUser()->userId()])
-					;
+			$manifest = $this->Manifests->find('manifests', ['values' => [$id]]);
 			$stack->set(['manifest' => $manifest->toArray()]);
 			$stack = $this->marshalNameCards($stack);
 			return $stack;
