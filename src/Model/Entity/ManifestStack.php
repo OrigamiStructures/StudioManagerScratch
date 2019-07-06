@@ -47,7 +47,9 @@ class ManifestStack extends StackEntity {
 
     public function accessSummary()
     {
-        return ($this->permissions->count() > 0) ? "Limited Access" : "Full Access";
+        return (!isset($this->permissions) || $this->permissions->count() == 0) 
+		? "Full Access" 
+		: "Limited Access";
 	}
 
 }
