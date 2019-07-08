@@ -197,9 +197,6 @@ class StacksTable extends AppTable
         if (empty($ids)) {
             return new StackSet();
         }
-
-//		$IDs = $this->{$this->distillMethodName($seed)}($ids);
-//		return $this->stacksFromRoot($IDs);
 		
 		$IDs = $this->{$this->distillMethodName($seed)}($ids);
 		return $this->stacksFromRoot($IDs);
@@ -210,6 +207,34 @@ class StacksTable extends AppTable
 			'Table' => $this->rootTable(),
 			'IDs' => $this->{$this->distillMethodName($seed)}($ids)
 			];
+	}
+	
+	/**
+	 * Distill a set of seed ids down to root layer ids for the stack
+	 * 
+	 * Discovering the root layer ids from a set of seed ids is usually 
+	 * pretty simple, but there are a few higher level tweaks that need 
+	 * to be done to the query. 
+	 * 
+	 * StackTable families have special, local, permissions filters they 
+	 * need to do. This alows record sharing for some data types in some 
+	 * managment situations. 
+	 * 
+	 * And all stacks need to respond to pagination. The root level 
+	 * set for the stack is the one that is paginated. So half way through 
+	 * the stack creation process (which is running at this point) the 
+	 * paginator must do its job.
+	 * 
+	 * @param string $seed
+	 * @param array $ids
+	 * @return array Root entity id set for the stack
+	 */
+	protected function distillation($seed, $ids) {
+		$query = $this->{$this->distillMethodName($seed)}($ids);
+		$query = $this->localConditions($query);
+		$query = $paginator($query, $params, $settings);
+		$IDs = (new Layer($query->toArray()))->IDs();
+		return $IDs;
 	}
 	
 	/**
