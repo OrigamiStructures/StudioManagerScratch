@@ -98,7 +98,7 @@ class RolodexCardsTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromIdentity($ids) {
-		return $ids;
+		return $this->Identities->find('all')->where(['id IN' => $ids]);
 	}
 	
 	protected function distillFromMembership($ids) {
