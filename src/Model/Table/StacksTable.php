@@ -201,7 +201,6 @@ class StacksTable extends AppTable
         }
 		
 		$IDs = $this->distillation($seed, $ids, $paginator);
-//		$IDs = $this->{$this->distillMethodName($seed)}($ids);
 		return $this->stacksFromRoot($IDs);
     }
 	

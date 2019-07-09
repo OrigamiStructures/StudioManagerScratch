@@ -51,4 +51,8 @@ class PersonCardsTable extends RolodexCardsTable {
 			return $stack;
 	}
 	
+	protected function localConditions($query) {
+		return $query->where(['member_type' => 'Person']);
+	}
+	
 }

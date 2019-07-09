@@ -28,7 +28,6 @@ class AddressBookController extends AppController
 		};
 		
         $results = $this->paginate($stackCall);
-		osd($results);//die;
         $this->set('results', $results);
     }
 
