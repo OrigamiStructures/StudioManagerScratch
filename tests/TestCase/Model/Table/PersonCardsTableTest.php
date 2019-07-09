@@ -57,9 +57,9 @@ class PersonCardsTableTest extends TestCase
 				'stacksFor', 
 				['seed' => 'contacts', 'ids' => [1,5]]
 			);
-		foreach($this->ContactsProduct->load() as $Stack) {
-//			debug($Stack->dispositions);
-		}
+//		foreach($this->ContactsProduct->load() as $Stack) {
+////			debug($Stack->dispositions);
+//		}
 		//members 1 dondrake, 2 gaildrake
 		//
 		$this->AddressesProduct = $this->PersonCardsTable->find(
@@ -236,7 +236,7 @@ class PersonCardsTableTest extends TestCase
 	public function testAddressesProduct() {
 		$this->assertTrue($this->AddressesProduct->count() === 2, 
 				'AddressesProduct does not contain 2 entities.');
-		$this->assertArraySubset([2,1],$this->AddressesProduct->IDs(),
+		$this->assertArraySubset([1,2],$this->AddressesProduct->IDs(),
 				'AddressesProduct does not contain the 2 specific expected entities.');
 		$this->assertTrue(
 				count($this->AddressesProduct->find()->setLayer('contacts')->load())

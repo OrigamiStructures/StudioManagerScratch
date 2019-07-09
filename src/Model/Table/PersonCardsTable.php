@@ -28,9 +28,8 @@ class PersonCardsTable extends RolodexCardsTable {
 	
 	protected function distillFromImage($ids) {
 		$IDs = $this->Identities->find('list', ['valueField' => 'id'])
-				->where(['image_id IN' => $ids])
-				->toArray();
-		return array_unique($IDs);
+				->where(['image_id IN' => $ids]);
+		return $this->distillFromIdentity($IDs);
 	}
 	
 	protected function marshalImage($id, $stack) {
@@ -51,7 +50,7 @@ class PersonCardsTable extends RolodexCardsTable {
 			return $stack;
 	}
 	
-	protected function localConditions($query) {
+	protected function localConditions($query, $options = []) {
 		return $query->where(['member_type' => 'Person']);
 	}
 	
