@@ -204,13 +204,6 @@ class StacksTable extends AppTable
 		return $this->stacksFromRoot($IDs);
     }
 	
-	public function distill($seed, $ids) {
-		return [
-			'Table' => $this->rootTable(),
-			'IDs' => $this->{$this->distillMethodName($seed)}($ids)
-			];
-	}
-	
 	/**
 	 * Distill a set of seed ids down to root layer ids for the stack
 	 * 
