@@ -14,6 +14,7 @@ use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
 use Cake\Core\Configure;
+use App\Model\Lib\Layer;
 
 /**
  * StacksTable Model
@@ -192,13 +193,15 @@ class StacksTable extends AppTable
 	 */
 	public function findStacksFor($query, $options) {
         
+		$paginator = FALSE;
         $this->validateArguments($options);
-        extract($options); //$seed, $ids
+        extract($options); //$seed, $ids, $paginator
         if (empty($ids)) {
             return new StackSet();
         }
 		
-		$IDs = $this->{$this->distillMethodName($seed)}($ids);
+		$IDs = $this->distillation($seed, $ids, $paginator);
+//		$IDs = $this->{$this->distillMethodName($seed)}($ids);
 		return $this->stacksFromRoot($IDs);
     }
 	
@@ -229,10 +232,12 @@ class StacksTable extends AppTable
 	 * @param array $ids
 	 * @return array Root entity id set for the stack
 	 */
-	protected function distillation($seed, $ids) {
+	protected function distillation($seed, $ids, $paginator = FALSE) {
 		$query = $this->{$this->distillMethodName($seed)}($ids);
 		$query = $this->localConditions($query);
-		$query = $paginator($query, $params, $settings);
+		if ($paginator !== FALSE) {
+			$query = $paginator($query/*, $params, $settings*/);
+		}
 		$IDs = (new Layer($query->toArray()))->IDs();
 		return $IDs;
 	}
@@ -323,7 +328,7 @@ class StacksTable extends AppTable
 			$this->stacks->insert($id, $stack);
 			$this->writeCache($id, $stack);
 		}
-		return $this->stacks;
+ 		return $this->stacks;
 	}
 	
 	/**
@@ -405,7 +410,8 @@ class StacksTable extends AppTable
         if ($msg) {
             throw new \BadMethodCallException($msg);
         }
-        return;
+		$options += ['paginator' => FALSE];
+        return $options;
     }
 
 // </editor-fold>
