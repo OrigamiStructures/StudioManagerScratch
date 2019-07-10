@@ -55,12 +55,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromManifest(array $ids) {
-		$query = $this->Manifests
+		return $this->Manifests
 				->find('all')
 				->where(['id IN' => $ids])
 			;
-        $manifests = $this->localConditions($query)->toArray();
-		return $ids;
 	}
 	
 	/**
@@ -70,13 +68,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromArtist(array $ids) {
-		$query = $this->Manifests
-				->find('forArtist', ['member_id' => $ids])
+		return $this->Manifests
+				->find('forArtists', ['member_id' => $ids])
 				->select(['id', 'member_id'])
 			;
-        $manifests = $this->localConditions($query)->toArray();
-		$IDs = (new Layer($manifests))->IDs();
-		return $IDs;
 	}
 	
 	protected function distillFromPermission($ids) {
@@ -89,13 +84,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromManager(array $ids) {
-		$query = $this->Manifests
+		return $this->Manifests
 				->find('managedBy', ['ids' => $ids])
 				->select(['id', 'manager_id'])
 			;
-        $manifests = $this->localConditions($query)->toArray();
-		$IDs = (new Layer($manifests))->IDs();
-		return $IDs;
 	}
 	
 	/**
@@ -105,13 +97,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromSupervisor(array $ids) {
-		$query = $this->Manifests
+		return $this->Manifests
 				->find('issuedBy', ['ids' => $ids])
 				->select(['id', 'supervisor_id'])
 			;
-        $manifests = $this->localConditions($query)->toArray();
-		$IDs = (new Layer($manifests))->IDs();
-		return $IDs;
 	}
 	
 	/**
@@ -126,7 +115,7 @@ class ManifestStacksTable extends StacksTable {
 	 * @param array $options none supported at this time
 	 */
 	protected function localConditions($query, $options = []) {
-		return $query->where([['user_id' => $this->currentUser()->userId()]]);
+		return $query->where(['user_id' => $this->currentUser()->userId()]);
 	}
 	
 	/**
@@ -242,7 +231,6 @@ class ManifestStacksTable extends StacksTable {
 					. 'be an array of ids.';
 			throw new \BadMethodCallException($msg);
 		}
-		osd($ids);
 		return $this->find('stacksFor', ['seed' => 'manager', 'ids' => $ids]);
 	}
 	
