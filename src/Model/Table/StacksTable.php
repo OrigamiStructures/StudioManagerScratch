@@ -270,7 +270,7 @@ class StacksTable extends AppTable
 	public function processSeeds($seeds) {
 		$IDs = [];
 		foreach ($seeds as $seed => $ids) {
-			$new = $this->{$this->distillMethodName($seed)}($ids);
+			$new = $this->distillation($seed, $ids);
 			$IDs = array_merge($IDs, $new);
 		}
 		return $this->stacksFromRoot(array_unique($IDs));
