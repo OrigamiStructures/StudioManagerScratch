@@ -45,7 +45,7 @@ class PersonCardsTable extends RolodexCardsTable {
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
-                ->where(['id' => $id, 'member_type' => 'Person']);
+                ->where(['id' => $id]);
 			$stack->set(['identity' => $identity->toArray()]);
 			return $stack;
 	}
