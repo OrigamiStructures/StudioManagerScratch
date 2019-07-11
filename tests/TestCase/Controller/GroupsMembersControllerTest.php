@@ -28,7 +28,7 @@ class GroupsMembersControllerTest extends IntegrationTestCase
         'app.pieces',
         'app.dispositions',
         'app.locations',
-        'app.groups'
+//        'app.groups'
     ];
 
     /**

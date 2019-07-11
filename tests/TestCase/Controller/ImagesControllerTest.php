@@ -27,7 +27,7 @@ class ImagesControllerTest extends IntegrationTestCase
         'app.series',
         'app.formats',
         'app.subscriptions',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 

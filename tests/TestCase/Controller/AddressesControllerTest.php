@@ -42,7 +42,6 @@ class AddressesControllerTest extends IntegrationTestCase
     {
 //        $addresses = new AddressesFixture();
         $addresses = $this->getTableLocator()->get('Addresses');
-        print_r($addresses->find('all')->toArray());
     }
 
     /**

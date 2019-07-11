@@ -16,10 +16,10 @@ class ArtistsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.artists',
+//        'app.artists',
         'app.members',
-        'app.users',
-        'app.member_users'
+//        'app.users',
+//        'app.member_users'
     ];
 
     /**
