@@ -24,7 +24,7 @@ class AddressesControllerTest extends IntegrationTestCase
         'app.dispositions',
         'app.locations',
         'app.pieces',
-        'app.groups',
+//        'app.groups',
         'app.groups_members',
         'app.artworks',
         'app.editions',
