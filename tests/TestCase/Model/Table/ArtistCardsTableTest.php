@@ -36,6 +36,7 @@ class ArtistCardsTableTest extends TestCase
 		'app.addresses',
 		'app.dispositions',
 		'app.users',
+		'app.images',
 		'app.groups_members',
 		'app.manifests',
 		'app.artworks'
@@ -174,8 +175,8 @@ class ArtistCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->ManifestsProduct->find()->setLayer('image')->load())
-				=== 1,
-				'The combined count of images was not 1 (1 + 0).'
+				=== 0,
+				'The combined count of images was not 0 (0 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ManifestsProduct->find()->setLayer('dispositions')->load())
@@ -213,8 +214,8 @@ class ArtistCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('image')->load())
-				=== 2,
-				'The combined count of images was not 2 (1 + 1 + 0).'
+				=== 0,
+				'The combined count of images was not 0 (0 + 0 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('dispositions')->load())
@@ -229,7 +230,7 @@ class ArtistCardsTableTest extends TestCase
 		$this->assertTrue(
 				count($this->ManagersProduct->find()->setLayer('managers')->load())
 				=== 5,
-				'The combined count of dispositions was not 4 (1 + 2 + 2).'
+				'The combined count of managers was not 4 (1 + 2 + 2).'
 				. 'load() needs to be changed. String keys are overlapping '
 				. 'and preventing a full count of linked records'
 			);
