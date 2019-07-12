@@ -80,7 +80,7 @@ class MembersFixture extends TestFixture
                 'image_id' => null,
                 'first_name' => '',
                 'last_name' => 'Drake Family',
-                'member_type' => 'Group',
+                'member_type' => 'Category',
                 'active' => true,
                 'disposition_count' => null,
                 'collector' => null
@@ -132,7 +132,7 @@ class MembersFixture extends TestFixture
                 'image_id' => null,
                 'first_name' => 'random text',
                 'last_name' => 'Collectors',
-                'member_type' => 'Group',
+                'member_type' => 'Category',
                 'active' => true,
                 'disposition_count' => 0,
                 'collector' => 0
