@@ -22,6 +22,12 @@
 		<testsuite name="controller">
 			<directory>./tests/TestCase/Controller</directory>
 		</testsuite>
+		<testsuite name="component">
+			<directory>./tests/TestCase/Controller/Component</directory>
+		</testsuite>
+		<testsuite name="model">
+			<directory>./tests/TestCase/Model</directory>
+		</testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
 

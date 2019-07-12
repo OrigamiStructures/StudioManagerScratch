@@ -24,7 +24,7 @@ class EditionsTableTest extends TestCase
         'app.locations',
         'app.pieces',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members',
         'app.artworks'
     ];

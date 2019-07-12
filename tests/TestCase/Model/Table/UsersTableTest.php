@@ -30,7 +30,7 @@ class UsersTableTest extends TestCase
         'app.dispositions',
         'app.editions',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members',
         'app.images',
         'app.locations',
