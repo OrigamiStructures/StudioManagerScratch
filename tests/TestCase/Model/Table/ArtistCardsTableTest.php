@@ -186,7 +186,7 @@ class ArtistCardsTableTest extends TestCase
 		$this->assertTrue(
 				count($this->ManifestsProduct->find()->setLayer('manifest')->load())
 				=== 3,
-				'The combined count of manifest was not 3 (1 + 2).'
+				'The combined count of manifest was not 4 (2 + 2).'
 			);
 		$this->assertTrue(
 				count($this->ManifestsProduct->find()->setLayer('managers')->load())
