@@ -49,7 +49,7 @@ class MembershipTest extends TestCase
         $this->Membership = $this
             ->Memberships
             ->find('hook')
-//            ->where(['type IN' => ['Institution', 'Organization', 'Group']])
+//            ->where(['type IN' => ['Institution', 'Organization', 'Category']])
             ->toArray();
     }
 
@@ -108,7 +108,7 @@ class MembershipTest extends TestCase
      */
     public function testTypePassthrough()
     {
-        $this->assertEquals('Group', $this->Membership[6]->type(),
+        $this->assertEquals('Category', $this->Membership[6]->type(),
             'A Passthrough method (type) into Members etity failed.');
     }
 }

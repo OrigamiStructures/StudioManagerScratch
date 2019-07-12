@@ -223,8 +223,8 @@ class PersonCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->ContactsProduct->find()->setLayer('image')->load())
-				=== 2,
-				'The combined count of images was not 2 (1 + 1).'
+				=== 0,
+				'The combined count of images was not 0 (0 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ContactsProduct->find()->setLayer('dispositions')->load())
@@ -250,8 +250,8 @@ class PersonCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->AddressesProduct->find()->setLayer('image')->load())
-				=== 2,
-				'The combined count of images was not 2 (1 + 1).'
+				=== 0,
+				'The combined count of images was not 0 (0 + 0).'
 			);
 		$this->assertTrue(
 				count($this->AddressesProduct->find()->setLayer('dispositions')->load())
@@ -277,8 +277,8 @@ class PersonCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->ImageProduct->find()->setLayer('image')->load())
-				=== 2,
-				'The combined count of images was not 2 (1 + 1).'
+				=== 0,
+				'The combined count of images was not 0 (0 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ImageProduct->find()->setLayer('dispositions')->load())
@@ -304,8 +304,8 @@ class PersonCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->DispositionsProduct->find()->setLayer('image')->load())
-				=== 2,
-				'The combined count of images was not 2 (1 + 1).'
+				=== 0,
+				'The combined count of images was not 0 (0 + 0).'
 			);
 		$this->assertTrue(
 				count($this->DispositionsProduct->find()->setLayer('dispositions')->load())
