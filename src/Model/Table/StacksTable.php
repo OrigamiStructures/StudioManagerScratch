@@ -230,7 +230,7 @@ class StacksTable extends AppTable
 		if ($paginator !== FALSE) {
 			$query = $paginator($query/*, $params, $settings*/);
 		}
-		$IDs = (new Layer($query->toArray()))->IDs();
+		$IDs = (new Layer($query->toArray(), $this->rootName()))->IDs();
 		return $IDs;
 	}
 	
