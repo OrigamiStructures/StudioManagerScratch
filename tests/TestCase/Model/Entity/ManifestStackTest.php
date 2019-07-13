@@ -35,6 +35,7 @@ class ManifestStackTest extends TestCase
         'app.data_owners',
         'app.members',
         'app.contacts',
+        'app.images',
 		'app.addresses',
 		'app.dispositions',
 		'app.users',

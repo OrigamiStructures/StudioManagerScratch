@@ -185,13 +185,13 @@ class ArtistCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->ManifestsProduct->find()->setLayer('manifest')->load())
-				=== 3,
+				=== 4,
 				'The combined count of manifest was not 4 (2 + 2).'
 			);
 		$this->assertTrue(
 				count($this->ManifestsProduct->find()->setLayer('managers')->load())
-				=== 3,
-				'The combined count of managers was not 3 (1 + 2).'
+				=== 4,
+				'The combined count of managers was not 4 (2 + 2).'
 				. 'load() needs to be changed. String keys are overlapping '
 				. 'and preventing a full count of linked records'
 			);
