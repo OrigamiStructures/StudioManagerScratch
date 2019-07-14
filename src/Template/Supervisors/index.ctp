@@ -58,7 +58,7 @@
 	
 ?>
 	<?= $this->Form->create(null, ['action' => '/manager']); ?>
-	<p>Edit assignments to a manager</p>
+	<p>Supervise manager (edit the artists assigned to a manager and the permissions for each of those artists)</p>
 	<?= $this->Form->select(
 			'assignments', 
 			$assignments, 
@@ -68,7 +68,7 @@
 	<?= $this->Form->end(); ?>
 	
 	<?= $this->Form->create(null, ['action' => '/artist']); ?>
-	<p>Edit management agreements for an artist</p>
+	<p>Supervise artist (edit the managers assigned to an artist, and the permissions for each of those managers)</p>
 	<?= $this->Form->select(
 			'owned_artists', 
 			$ownedArtists, 
