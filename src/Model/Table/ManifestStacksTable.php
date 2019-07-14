@@ -55,7 +55,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromManifest(array $ids) {
-		return $ids;
+		return $this->Manifests
+				->find('all')
+				->where(['id IN' => $ids])
+			;
 	}
 	
 	/**
@@ -65,12 +68,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromArtist(array $ids) {
-		$manifests = $this->Manifests
-				->find('forArtist', ['member_id' => $ids])
+		return $this->Manifests
+				->find('forArtists', ['member_id' => $ids])
 				->select(['id', 'member_id'])
 			;
-		$IDs = (new Layer($manifests))->IDs();
-		return $IDs;
 	}
 	
 	protected function distillFromPermission($ids) {
@@ -83,13 +84,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromManager(array $ids) {
-		$manifests = $this->Manifests
+		return $this->Manifests
 				->find('managedBy', ['ids' => $ids])
 				->select(['id', 'manager_id'])
-                ->toArray()
 			;
-		$IDs = (new Layer($manifests))->IDs();
-		return $IDs;
 	}
 	
 	/**
@@ -99,13 +97,25 @@ class ManifestStacksTable extends StacksTable {
 	 * @return array manifest ids
 	 */
 	protected function distillFromSupervisor(array $ids) {
-		$manifests = $this->Manifests
+		return $this->Manifests
 				->find('issuedBy', ['ids' => $ids])
 				->select(['id', 'supervisor_id'])
-                ->toArray()
 			;
-		$IDs = (new Layer($manifests))->IDs();
-		return $IDs;
+	}
+	
+	/**
+	 * Inject appropriate boundary conditions for this user/context
+	 * 
+	 * I think this may grow a little more complex than this example. 
+	 * Controller/action context may be a consideration but we won't have 
+	 * that information here. The `contextUser` object may be our 
+	 * tool to communicate situational knowledge.
+	 * 
+	 * @param Query $query
+	 * @param array $options none supported at this time
+	 */
+	protected function localConditions($query, $options = []) {
+		return $query->where(['user_id' => $this->currentUser()->userId()]);
 	}
 	
 	/**
@@ -157,7 +167,7 @@ class ManifestStacksTable extends StacksTable {
 				->specifyFilter('layer', 'contact')
 				->load();
 		
-		$manifest = $stack->manifest->element(0, LAYERACC_INDEX);
+		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
 					'supervisor' => [$manifest->supervisorId()],
@@ -206,4 +216,22 @@ class ManifestStacksTable extends StacksTable {
 		}
 		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => $ids]);
 	}
+	
+	public function findManagerManifests($query, $options) {
+		if (
+				key_exists('source', $options) 
+				&& (in_array($options['source'], ['currentUser', 'contextUser']))
+		) {
+			$ids = [$this->{$options['source']}->managerId()];
+		} elseif (key_exists('ids', $options)) {
+			$ids = $options['ids'];
+		} else {
+			$msg = 'Allowed $options keys: "source" or "ids". "source" values: '
+					. '"currentUser" or "contextUser". "ids" value must '
+					. 'be an array of ids.';
+			throw new \BadMethodCallException($msg);
+		}
+		return $this->find('stacksFor', ['seed' => 'manager', 'ids' => $ids]);
+	}
+	
 }

@@ -27,7 +27,7 @@ class PiecesControllerTest extends IntegrationTestCase
         'app.subscriptions',
         'app.dispositions',
         'app.locations',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 

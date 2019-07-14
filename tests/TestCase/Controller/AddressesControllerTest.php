@@ -24,7 +24,7 @@ class AddressesControllerTest extends IntegrationTestCase
         'app.dispositions',
         'app.locations',
         'app.pieces',
-        'app.groups',
+//        'app.groups',
         'app.groups_members',
         'app.artworks',
         'app.editions',
@@ -42,7 +42,6 @@ class AddressesControllerTest extends IntegrationTestCase
     {
 //        $addresses = new AddressesFixture();
         $addresses = $this->getTableLocator()->get('Addresses');
-        print_r($addresses->find('all')->toArray());
     }
 
     /**

@@ -18,7 +18,7 @@ trait ReceiverTableTrait {
 		$IDs = $this->Dispositions->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids])
 				->toArray();
-		return array_unique($IDs);
+		return $this->distillFromIdentity($IDs);
 	}
 	
 	public function marshalDispositions($id, $stack) {

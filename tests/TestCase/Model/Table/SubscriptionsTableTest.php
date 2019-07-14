@@ -26,7 +26,7 @@ class SubscriptionsTableTest extends TestCase
         'app.editions',
         'app.artworks',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 

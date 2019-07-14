@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\Lib\RequestUtility;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
-use App\Controller\ArtStackController;
+use App\Controller\AppController;
 use App\Model\Lib\Layer;
 
 /**
@@ -12,7 +12,7 @@ use App\Model\Lib\Layer;
  *
  * @property \App\Model\Table\ArtworksTable $Artworks
  */
-class ArtworksController extends ArtStackController
+class ArtworksController extends AppController
 {
 	
     use ArtReviewTrait;

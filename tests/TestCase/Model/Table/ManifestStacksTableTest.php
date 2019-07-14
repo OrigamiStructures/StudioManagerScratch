@@ -114,7 +114,7 @@ class ManifestStacksTableTest extends TestCase
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
 				'find with currentUser option did not return StackSet');
-		$this->assertCount(5, $manifests->load(), 'find with currentUser option did '
+		$this->assertCount(3, $manifests->load(), 'find with currentUser option did '
 				. 'not return expected number of results');
     }
 	
@@ -134,7 +134,7 @@ class ManifestStacksTableTest extends TestCase
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
 				'find with contextUser option did not return StackSet');
-		$this->assertCount(2, $manifests->load(), 'find with contextUser option did '
+		$this->assertCount(0, $manifests->load(), 'find with contextUser option did '
 				. 'not return expected number of results');
 	}
 	

@@ -35,6 +35,7 @@ class ManifestStackTest extends TestCase
         'app.data_owners',
         'app.members',
         'app.contacts',
+        'app.images',
 		'app.addresses',
 		'app.dispositions',
 		'app.users',
@@ -139,8 +140,7 @@ class ManifestStackTest extends TestCase
     public function testSupervisorCard()
     {
 		$result = $this->selfManage->supervisorCard();
-		debug($result);
-//        $this->assertTrue($result instanceof \App\Model\Entity\PersonCard);
+        $this->assertTrue($result instanceof \App\Model\Entity\PersonCard);
     }
 
     /**

@@ -119,7 +119,6 @@ class ArtStacksTableTest extends TestCase
     {
         $stacks = $this->ArtStacks->find('stacksFor', $args);
         $this->assertEquals($count, $stacks->count());  
-//        $this->assertEquals($count, count($stacks));  
     }
     
     public function noneFoundProvider() {

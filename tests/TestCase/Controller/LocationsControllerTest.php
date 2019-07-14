@@ -27,7 +27,7 @@ class LocationsControllerTest extends IntegrationTestCase
         'app.subscriptions',
         'app.pieces',
         'app.dispositions',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 

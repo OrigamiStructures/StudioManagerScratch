@@ -86,7 +86,8 @@ class StackSet implements LayerAccessInterface {
 			$result = [];
 			foreach ($this->_data as $stack) {
 				$found = $stack->load($argObj);
-				$result = array_merge($result, (is_array($found) ? $found : [$found]));
+				$result = array_merge($result, (is_array($found) ? array_values($found) : [$found]));
+//				debug($result);
 			}
 		}
 		

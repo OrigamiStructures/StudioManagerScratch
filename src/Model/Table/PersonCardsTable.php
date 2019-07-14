@@ -27,10 +27,9 @@ class PersonCardsTable extends RolodexCardsTable {
 	}
 	
 	protected function distillFromImage($ids) {
-		$IDs = $this->Identities->find('list', ['valueField' => 'id'])
-				->where(['image_id IN' => $ids])
-				->toArray();
-		return array_unique($IDs);
+		$query = $this->Identities->find('list', ['valueField' => 'id'])
+				->where(['image_id IN' => $ids]);
+		return $this->distillFromIdentity($query->toArray());
 	}
 	
 	protected function marshalImage($id, $stack) {
@@ -46,9 +45,13 @@ class PersonCardsTable extends RolodexCardsTable {
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
-                ->where(['id' => $id, 'member_type' => 'Person']);
+                ->where(['id' => $id]);
 			$stack->set(['identity' => $identity->toArray()]);
 			return $stack;
+	}
+	
+	protected function localConditions($query, $options = []) {
+		return $query->where(['member_type' => 'Person']);
 	}
 	
 }

@@ -27,8 +27,11 @@ class CategoryCardsTable extends RolodexCardsTable
 			$accum[] = $entity->group_id;
 			return $accum;
 		}, []);
-
-		return $this->groupsOnly($IDs);
+		return $this->distillFromIdentity($IDs);
+	}
+	
+	protected function localConditions($query, $options = []) {
+		return $query->where(['member_type' => 'Category']);
 	}
 	
 	private function groupsOnly($IDs) {

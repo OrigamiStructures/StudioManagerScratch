@@ -9,7 +9,6 @@ use Cake\Collection\Collection;
 use App\Form\AssignmentForm;
 use Cake\View\Form\FormContext;
 use App\Lib\Traits\ArtReviewTrait;
-use App\Controller\ArtStackController;
 use App\Controller\Component\LayersComponent;
 
 /**
@@ -17,7 +16,7 @@ use App\Controller\Component\LayersComponent;
  *
  * @property \App\Model\Table\EditionsTable $Editions
  */
-class EditionsController extends ArtStackController {
+class EditionsController extends AppController {
 
     use ArtReviewTrait;
 

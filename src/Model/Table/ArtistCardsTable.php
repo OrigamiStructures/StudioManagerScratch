@@ -38,17 +38,16 @@ class ArtistCardsTable extends PersonCardsTable {
 	}
 	
 	protected function distillFromManifest($ids) {
-		$IDs = $this->Manifests->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids])
-				->toArray();
-		return array_unique($IDs);
+		$query = $this->Manifests->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids]);
+		return $this->distillFromIdentity($query->toArray());
+//		return array_unique($IDs);
 	}
 	
 	protected function distillFromArtwork($ids) {
-		$IDs = $this->Artworks->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids])
-				->toArray();
-		return array_unique($IDs);
+		$query = $this->Artworks->find('list', ['valueField' => 'member_id'])
+				->where(['id IN' => $ids]);
+		return $this->distillFromIdentity($query->toArray());
 	}
 	
 	/**
@@ -58,11 +57,9 @@ class ArtistCardsTable extends PersonCardsTable {
 	 * @return array
 	 */
 	protected function distillFromManager($ids) {
-		$IDs = $this->Manifests->find('list', ['valueField' => 'member_id'])
-				->find('managedBy', ['ids' => $ids])
-//				->where(['manager_id IN' => $ids])
-				->toArray();
-		return array_unique($IDs);
+		$query = $this->Manifests->find('list', ['valueField' => 'member_id'])
+				->find('managedBy', ['ids' => $ids]);
+		return $this->distillFromIdentity($query->toArray());
 	}
 	
 	protected function marshalArtworks($ids, $stack) {

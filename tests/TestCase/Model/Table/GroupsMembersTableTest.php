@@ -26,7 +26,7 @@ class GroupsMembersTableTest extends TestCase
         'app.editions',
         'app.artworks',
         'app.formats',
-        'app.groups'
+//        'app.groups'
     ];
 
     /**

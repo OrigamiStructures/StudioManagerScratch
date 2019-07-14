@@ -113,7 +113,7 @@ class MemberTest extends TestCase
 
     public function testNameLabeledGroup()
     {
-        $this->assertTrue($this->Member[6]->name(LABELED) === 'Group: Collectors');
+        $this->assertTrue($this->Member[6]->name(LABELED) === 'Category: Collectors');
     }
 
     /**
