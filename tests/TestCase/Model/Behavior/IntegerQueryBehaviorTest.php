@@ -14,6 +14,16 @@ use App\Test\TestCase\Model\Behavior\SampleTable;
 class IntegerQueryBehaviorTest extends TestCase
 {
 
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
+	public $fixtures = [
+//        'app.art_stacks',
+		'app.pieces'
+	];
+
     /**
      * Test subject
      *

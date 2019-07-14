@@ -16,9 +16,6 @@
         <testsuite name="App Test Suite">
             <directory>./tests/TestCase</directory>
         </testsuite>
-		<testsuite name="model">
-			<directory>./tests/TestCase/Model/Table</directory>
-		</testsuite>
 		<testsuite name="controller">
 			<directory>./tests/TestCase/Controller</directory>
 		</testsuite>
