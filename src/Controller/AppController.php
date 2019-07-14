@@ -133,6 +133,9 @@ class AppController extends Controller
 	/**
 	 * Fix the fact that default tables didn't use the right locator class
 	 * 
+	 * @todo An issue exists (github) $thisAuthuser doesn't exist in the
+	 *		not isset case?
+	 * 
 	 * @param type $modelClass
 	 * @return type
 	 */
