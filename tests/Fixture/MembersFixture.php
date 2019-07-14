@@ -28,6 +28,9 @@ class MembersFixture extends TestFixture
         'active' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '1', 'comment' => '', 'precision' => null],
         'disposition_count' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'collector' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'is_artist' => ['type' => 'boolean', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
+        'supervisor_id' => ['type' => 'uuid', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
+        'manager_id' => ['type' => 'uuid', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -51,26 +54,32 @@ class MembersFixture extends TestFixture
                 'created' => '2016-03-08 01:20:42',
                 'modified' => '2016-03-08 01:20:42',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-                'image_id' => '9',
+                'image_id' => 9,
                 'first_name' => 'Don',
                 'last_name' => 'Drake',
                 'member_type' => 'Person',
                 'active' => true,
                 'disposition_count' => 12,
-                'collector' => 1
+                'collector' => 1,
+                'is_artist' => true,
+                'supervisor_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'manager_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2'
             ],
             [
                 'id' => 2,
                 'created' => '2016-03-08 01:20:58',
                 'modified' => '2016-03-08 01:20:58',
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-                'image_id' => '10',
+                'image_id' => null,
                 'first_name' => 'Gail',
                 'last_name' => 'Drake',
                 'member_type' => 'Person',
                 'active' => true,
                 'disposition_count' => 1,
-                'collector' => 0
+                'collector' => 0,
+                'is_artist' => true,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 3,
@@ -83,7 +92,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Category',
                 'active' => true,
                 'disposition_count' => null,
-                'collector' => null
+                'collector' => null,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 4,
@@ -96,7 +108,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Institution',
                 'active' => true,
                 'disposition_count' => 0,
-                'collector' => 0
+                'collector' => 0,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 5,
@@ -109,7 +124,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Institution',
                 'active' => true,
                 'disposition_count' => 0,
-                'collector' => 0
+                'collector' => 0,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 6,
@@ -122,7 +140,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Institution',
                 'active' => true,
                 'disposition_count' => null,
-                'collector' => null
+                'collector' => null,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 7,
@@ -135,7 +156,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Category',
                 'active' => true,
                 'disposition_count' => 0,
-                'collector' => 0
+                'collector' => 0,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 8,
@@ -148,7 +172,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Person',
                 'active' => true,
                 'disposition_count' => 4,
-                'collector' => 1
+                'collector' => 1,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 9,
@@ -161,7 +188,10 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Person',
                 'active' => false,
                 'disposition_count' => 2,
-                'collector' => 2
+                'collector' => 2,
+                'is_artist' => null,
+                'supervisor_id' => null,
+                'manager_id' => null
             ],
             [
                 'id' => 75,
@@ -174,7 +204,11 @@ class MembersFixture extends TestFixture
                 'member_type' => 'Person',
                 'active' => false,
                 'disposition_count' => 0,
-                'collector' => 0
+                'collector' => 0,
+                'is_artist' => true,
+                'supervisor_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'manager_id' => '708cfc57-1162-4c5b-9092-42c25da131a9'
+
             ],
         ];
         parent::init();
