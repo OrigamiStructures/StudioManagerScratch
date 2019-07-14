@@ -15,6 +15,8 @@ class ArtistManifestsTable extends StacksTable {
 	 */
 	protected $rootName = 'identity';
 	
+	protected $rootTable = 'Identities';
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -44,10 +46,13 @@ class ArtistManifestsTable extends StacksTable {
 		parent::initialize($config);
 	}
 	
+	protected function distillFromIdentity($ids) {
+		return $this->Identities->find('all')->where(['id IN' => $ids]);
+	}
+	
 	protected function distillFromManager($ids) {
-		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
+		return $this->Manifests->find('list', ['fieldValue' => 'member_id'])
 				->find('managedBy', ['ids' => $ids]);
-		return array_unique($IDs);
 	}
 	
 	protected function distillFromDataOwner($ids) {
@@ -60,10 +65,6 @@ class ArtistManifestsTable extends StacksTable {
 		$IDs = $this->Manifests->find('list', ['fieldValue' => 'member_id'])
 				->where(['id IN' => $ids]);
 		return array_unique($IDs);
-	}
-	
-	protected function distillFromIdentity($ids) {
-		return array_unique($ids);
 	}
 	
 	protected function distillFromPermission($ids) {

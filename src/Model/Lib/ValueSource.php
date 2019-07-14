@@ -114,10 +114,11 @@ class ValueSource {
 			return FALSE;
 		}
 		if ($this->_isMethod) {
-			return $entity->{$this->_source}();
+			$result = $entity->{$this->_source}();
 		} else {
-			return $entity->{$this->_source};
+			$result = $entity->{$this->_source};
 		}
+		return $result;
 	}
 	
 	/**

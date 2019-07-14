@@ -8,6 +8,7 @@ use App\Model\Lib\StackSet;
 use App\Model\Entity\ArtStack;
 use App\Cache\ArtStackCacheTools as cacheTools;
 use App\SiteMetrics\CollectTimerMetrics;
+use Cake\ORM\TableRegistry;
 
 /**
  * ArtStacks Model
@@ -27,6 +28,8 @@ class ArtStacksTable extends StacksTable
 	 * {@inheritdoc}
 	 */
 	protected $rootName = 'artwork';
+	
+	protected $rootTable = 'Artworks';
 
 	/**
      * Initialize method
@@ -58,7 +61,10 @@ class ArtStacksTable extends StacksTable
 	 * @return StackSet
 	     */
 	protected function distillFromArtwork($ids) {
-		return $ids;
+		return $this->Artworks
+				->find('all')
+				->where(['id IN' => $ids])
+			;
 	}
 
 	/**
@@ -68,18 +74,14 @@ class ArtStacksTable extends StacksTable
 	 * @return StackSet
 	 */
 	protected function distillFromEdition($ids) {
-		$editions = new Layer($this
-            ->_loadLayer('edition', $ids)
-            ->select(['id', 'artwork_id'])
-            ->toArray(), 
-            'editions' // this is the second Layer arg
-		);
-        if ($editions->count()) {
-            $result = $editions->distinct('artwork_id');
-        } else {
-            $result = [];
-        }
-		return $result;
+		$query = $this->Editions->find('list', ['valueField' => 'artwork_id'])
+				->where(['id IN' => $ids])
+				;
+		if ($query->count() !== 0) {
+			return $this->distillFromArtwork($query->toArray());
+		} else {
+			return $query;
+		}
 	}
 
 	/**
@@ -89,25 +91,13 @@ class ArtStacksTable extends StacksTable
 	 * @return StackSet
 	 */
 	protected function distillFromFormat($ids) {
-		$formats = new Layer($this
-            ->_loadLayer('formats', $ids)
-            ->select(['id', 'edition_id'])
-            ->toArray(), 
-            'formats' // this is the second Layer arg
-		);
-        if ($formats->count()) {
-            $editions = new Layer($this
-                    ->_loadLayer('edition', $formats->distinct('edition_id'))
-                    ->select(['id', 'artwork_id'])
-                    ->toArray()
-            );
-        }
-        if (isset($editions) && $editions->count()) {
-            $result = $editions->distinct('artwork_id');
-        } else {
-            $result = [];
-        }
-		return $result;
+		$query = $this->EditionsFormats->find('list', ['valueField' => 'edition_id'])
+				->where(['format_id IN' => $ids]);
+		if ($query->count() !== 0) {
+			return $this->distillFromEdition($query->toArray());
+		} else {
+			return $query;
+		}
 	}
 
 	/**
@@ -118,25 +108,13 @@ class ArtStacksTable extends StacksTable
 	 */
 
 	protected function distillFromPiece($ids) {
-		$pieces = new Layer($this
-            ->_loadLayer('pieces', $ids)
-            ->select(['id', 'edition_id'])
-            ->toArray(), 
-            'pieces' // this is the second Layer arg
-		);
-        if ($pieces->count()) {
-            $editions = new Layer($this
-                ->_loadLayer('edition', $pieces->distinct('edition_id'))
-                ->select(['id', 'artwork_id'])
-                ->toArray()
-            );
-        }
-        if (isset($editions) && $editions->count()) {
-            $result = $editions->distinct('artwork_id');
-        } else {
-            $result = [];
-        }
-		return $result;
+		$query = $this->Pieces->find('list', ['valueField' => 'edition_id'])
+				->where(['id IN' => $ids]);
+		if ($query->count() !== 0) {
+			return $this->distillFromEdition($query->toArray());
+		} else {
+			return $query;
+		}
 	}
 
 	/**
@@ -147,32 +125,14 @@ class ArtStacksTable extends StacksTable
 	 */
 
 	protected function distillFromDisposition($ids) {
-		$joins = $this->
-				_distillFromJoinTable('DispositionsPieces', 'disposition_id', $ids);
-        if ($joins->count()) {
-            $dispositionPieces = $this->
-                dispositions_pieces = new Layer($joins->toArray());
-        }
-        if (isset($dispositionPieces) && $dispositionPieces->count()) {
-            $pieces = new Layer($this
-                ->_loadLayer('pieces', $dispositionPieces->distinct('piece_id'))
-                ->select(['id', 'edition_id'])
-                ->toArray()
-            );
-        }  
-        if (isset($pieces) && $pieces->count()) {
-            $editions = new Layer($this
-                ->_loadLayer('edition', $pieces->distinct('edition_id'))
-                ->select(['id', 'artwork_id'])
-                ->toArray()
-            );
-        }     
-        if (isset($editions) && $editions->count()) {
-            $result = $editions->distinct('artwork_id');
-        } else {
-            $result = [];
-        }
-		return $result;
+		$DispositionsPieces = TableRegistry::getTableLocator()->get('DispositionsPieces');
+		$query = $DispositionsPieces->find('list', ['valueField' => 'piece_id'])
+				->where(['disposition_id IN' => $ids]);
+		if ($query->count() !== 0) {
+			return $this->distillFromPiece($query->toArray());
+		} else {
+			return $query;
+		}
 	}
 
 	/**
@@ -183,12 +143,10 @@ class ArtStacksTable extends StacksTable
 	 */
 
 	protected function distillFromSeries($ids) {
-		$editions = new Layer($this
-            ->Editions->find('inSeries', $ids)
+		return $this->Editions->find('inSeries', $ids)
             ->select(['id', 'artwork_id', 'series_id'])
-            ->toArray(), 'series'
-		);
-		return $editions->distinct('artwork_id');
+        ;
+//		return $editions->distinct('artwork_id');
 	}
 
 // </editor-fold>

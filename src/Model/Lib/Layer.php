@@ -219,37 +219,37 @@ class Layer implements LayerAccessInterface {
 	 * @param string $operator A comparison operator
 	 * @return array
 	 */
-    public function xfilter($value_source, $test_value = null, $operator = null) {
-		
-		// SHUNT TO NEW FILTER
-		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
-			return $this->newFilter($value_source);
-		}
-			
-		if	(	!$this->has($value_source) && 
-				!method_exists($this->entityClass('namespaced'), $value_source)) 
-		{
-            return [];
-        }
-		if(is_null($operator)) {
-			$operator = is_array($test_value) ? 'in_array' : '==';
-		}
-
-		$comparison = $this->selectComparison($operator);
-		
-        $set = collection($this->_data);
-        $results = $set->filter(function ($entity, $key) 
-				use ($value_source, $test_value, $comparison) {
-				if(in_array($value_source, $entity->visibleProperties())) {
-					$actual = $entity->$value_source;
-				} else {
-					$actual = $entity->$value_source();
-				}
-				return $comparison($actual, $test_value);
-            })->toArray(); 
-        return $results;
-    }
-	
+//    public function xfilter($value_source, $test_value = null, $operator = null) {
+//		
+//		// SHUNT TO NEW FILTER
+//		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
+//			return $this->newFilter($value_source);
+//		}
+//			
+//		if	(	!$this->has($value_source) && 
+//				!method_exists($this->entityClass('namespaced'), $value_source)) 
+//		{
+//            return [];
+//        }
+//		if(is_null($operator)) {
+//			$operator = is_array($test_value) ? 'in_array' : '==';
+//		}
+//
+//		$comparison = $this->selectComparison($operator);
+//		
+//        $set = collection($this->_data);
+//        $results = $set->filter(function ($entity, $key) 
+//				use ($value_source, $test_value, $comparison) {
+//				if(in_array($value_source, $entity->visibleProperties())) {
+//					$actual = $entity->$value_source;
+//				} else {
+//					$actual = $entity->$value_source();
+//				}
+//				return $comparison($actual, $test_value);
+//            })->toArray(); 
+//        return $results;
+//    }
+//	
 	protected function normalizeArgs($params) {
 		
 		if (is_a($params[0], '\App\Model\Lib\LayerAccessArgs')) {

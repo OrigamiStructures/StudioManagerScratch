@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 define('FIRST_LAST', 'FL');
 define('LAST_FIRST', 'LF');
 define('LABELED', 'LFL');
+define('GROUP', 'Category');
 
 /**
  * Member Entity.
@@ -182,4 +183,8 @@ class Member extends Entity
 	public function type() {
 		return $this->member_type;
 	}
+
+	public function isGroup() {
+	    return $this->type() === GROUP;
+    }
 }

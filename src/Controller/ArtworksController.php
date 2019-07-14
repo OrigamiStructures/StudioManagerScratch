@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\Lib\RequestUtility;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
-use App\Controller\ArtStackController;
+use App\Controller\AppController;
 use App\Model\Lib\Layer;
 
 /**
@@ -12,7 +12,7 @@ use App\Model\Lib\Layer;
  *
  * @property \App\Model\Table\ArtworksTable $Artworks
  */
-class ArtworksController extends ArtStackController
+class ArtworksController extends AppController
 {
 	
     use ArtReviewTrait;
@@ -22,7 +22,7 @@ class ArtworksController extends ArtStackController
     public function initialize() {
         parent::initialize();
         $this->loadComponent('ArtworkStack');
-//      $this->loadComponent('Layers');
+//		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
     }
 	
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
@@ -31,7 +31,7 @@ class ArtworksController extends ArtStackController
 	 *
 	 * @return void
 	     */
-	public function index()     {
+	public function indexOld()     {
 		$this->paginate = [
 			'contain' => ['Users', 'Images'],
 		];
@@ -141,6 +141,16 @@ class ArtworksController extends ArtStackController
 	}
 
 // </editor-fold>
+
+    public function index()
+    {
+        $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
+        $ids = $ArtStacks->find('list')
+            ->toArray();
+        $realIds = array_keys($ids);
+        $results = $ArtStacks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $realIds]);
+        $this->set('results', $results);
+    }
 
     /**
      * Delete method

@@ -27,10 +27,9 @@ class PersonCardsTable extends RolodexCardsTable {
 	}
 	
 	protected function distillFromImage($ids) {
-		$IDs = $this->Identities->find('list', ['valueField' => 'id'])
-				->where(['image_id IN' => $ids])
-				->toArray();
-		return array_unique($IDs);
+		$query = $this->Identities->find('list', ['valueField' => 'id'])
+				->where(['image_id IN' => $ids]);
+		return $this->distillFromIdentity($query->toArray());
 	}
 	
 	protected function marshalImage($id, $stack) {
@@ -43,17 +42,16 @@ class PersonCardsTable extends RolodexCardsTable {
 		return $stack;
 	}
 
-//	public function initialize(array $config) {
-//		parent::initialize($config);
-//		$this->$stackSchema += [
-//			['name' => 'artist',			'specs' =>['type' => 'layer']],
-//			['name' => 'managers',			'specs' =>['type' => 'layer']],
-//			['name' => 'managed_artists',	'specs' =>['type' => 'layer']],
-//		];
-//		$this->seedPoints = array_merge($this->seedPoints, [
-//			'artist', 
-//			'managers', 
-//			'managed_artists']);
-//	}
+	protected function marshalIdentity($id, $stack) {
+			$identity = $this->Identities
+                ->find('all')
+                ->where(['id' => $id]);
+			$stack->set(['identity' => $identity->toArray()]);
+			return $stack;
+	}
+	
+	protected function localConditions($query, $options = []) {
+		return $query->where(['member_type' => 'Person']);
+	}
 	
 }

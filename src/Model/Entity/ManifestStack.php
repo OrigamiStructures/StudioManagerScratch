@@ -9,6 +9,10 @@ use App\Model\Entity\StackEntity;
  */
 class ManifestStack extends StackEntity {
 	
+	public function manifest() {
+		return $this->manifest->element(0, LAYERACC_INDEX);
+	}
+	
 	public function supervisorCard() {
 		$id = $this->rootElement()->supervisorId();
 		$card = $this->people
@@ -35,5 +39,17 @@ class ManifestStack extends StackEntity {
 				->loadStacks();
 		return array_pop($card);
 	}
-	
+
+    public function selfAssigned()
+    {
+        return $this->rootElement()->selfAssigned();
+	}
+
+    public function accessSummary()
+    {
+        return (!isset($this->permissions) || $this->permissions->count() == 0) 
+		? "Full Access" 
+		: "Limited Access";
+	}
+
 }

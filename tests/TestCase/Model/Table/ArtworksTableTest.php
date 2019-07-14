@@ -25,7 +25,7 @@ class ArtworksTableTest extends TestCase
         'app.pieces',
         'app.editions',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 

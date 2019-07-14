@@ -13,6 +13,8 @@ use App\Exception\MissingDistillerMethodException;
 use App\Exception\MissingStackTableRootException;
 use Cake\Cache\Cache;
 use Cake\Utility\Hash;
+use Cake\Core\Configure;
+use App\Model\Lib\Layer;
 
 /**
  * StacksTable Model
@@ -29,8 +31,10 @@ class StacksTable extends AppTable
 	 * The tip-of-the-iceberg layer for this data stack
 	 */
 	protected $rootName = NULL;
+	
+	protected $rootTable = NULL;
 
-    /**
+	/**
      *
      * @var array
      */
@@ -126,6 +130,10 @@ class StacksTable extends AppTable
 		return $this->rootName;
 	}
 	
+	public function rootTable() {
+		return $this->{$this->rootTable};
+	}
+	
 	/**
 	 * Lazy load the required tables
 	 * 
@@ -185,19 +193,66 @@ class StacksTable extends AppTable
 	 */
 	public function findStacksFor($query, $options) {
         
+		$paginator = FALSE;
         $this->validateArguments($options);
-        extract($options); //$seed, $ids
+        extract($options); //$seed, $ids, $paginator
         if (empty($ids)) {
             return new StackSet();
         }
-
-//		$IDs = $this->{$this->distillMethodName($seed)}($ids);
-//		return $this->stacksFromRoot($IDs);
 		
-		$IDs = $this->{$this->distillMethodName($seed)}($ids);
+		$IDs = $this->distillation($seed, $ids, $paginator);
 		return $this->stacksFromRoot($IDs);
     }
 	
+	/**
+	 * Distill a set of seed ids down to root layer ids for the stack
+	 * 
+	 * Discovering the root layer ids from a set of seed ids is usually 
+	 * pretty simple, but there are a few higher level tweaks that need 
+	 * to be done to the query. 
+	 * 
+	 * StackTable families have special, local, permissions filters they 
+	 * need to do. This alows record sharing for some data types in some 
+	 * managment situations. 
+	 * 
+	 * And all stacks need to respond to pagination. The root level 
+	 * set for the stack is the one that is paginated. So half way through 
+	 * the stack creation process (which is running at this point) the 
+	 * paginator must do its job.
+	 * 
+	 * @param string $seed
+	 * @param array $ids
+	 * @return array Root entity id set for the stack
+	 */
+	protected function distillation($seed, $ids, $paginator = FALSE) {
+		$query = $this->{$this->distillMethodName($seed)}($ids);
+		$query = $this->localConditions($query);
+		if ($paginator !== FALSE) {
+			$query = $paginator($query/*, $params, $settings*/);
+		}
+		$IDs = (new Layer($query->toArray(), $this->rootName()))->IDs();
+		return $IDs;
+	}
+	
+	/**
+	 * Add any local-stack appropriate conditions to the query
+	 * 
+	 * Override in each concrete StackTable class to suit the situation. 
+	 * For example PersonCardsTable adds: where(['member_type' => 'Person']) 
+	 * and many other places might add: where(['user_id' => $userId])
+	 * 
+	 * I imagine a situation where superusers would need to change the 
+	 * 'normal' behavior, so while most uses won't carry $options, 
+	 * the signature allows it for fine-tuning the stack results
+	 * 
+	 * @param Query $query
+	 * @param array $options Allow special data injection just in case
+	 * @return Query
+	 */
+	protected function localConditions($query, $options = []) {
+		return $query;
+	}
+
 	/**
 	 * From mixed seed types, distill to a root ID set
 	 * 
@@ -215,7 +270,7 @@ class StacksTable extends AppTable
 	public function processSeeds($seeds) {
 		$IDs = [];
 		foreach ($seeds as $seed => $ids) {
-			$new = $this->{$this->distillMethodName($seed)}($ids);
+			$new = $this->distillation($seed, $ids);
 			$IDs = array_merge($IDs, $new);
 		}
 		return $this->stacksFromRoot(array_unique($IDs));
@@ -251,7 +306,7 @@ class StacksTable extends AppTable
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
-    protected function stacksFromRoot($ids) {
+    public function stacksFromRoot($ids) {
 		$this->stacks = new StackSet();
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
@@ -265,7 +320,7 @@ class StacksTable extends AppTable
 			$this->stacks->insert($id, $stack);
 			$this->writeCache($id, $stack);
 		}
-		return $this->stacks;
+ 		return $this->stacks;
 	}
 	
 	/**
@@ -276,7 +331,7 @@ class StacksTable extends AppTable
      * @return mixed The cached data, or FALSE
 	 */
 	protected function readCache($id) {
-		if (\Cake\Core\Configure::read('stackCache')) {
+		if (Configure::read('stackCache')) {
 			return Cache::read($this->cacheKey($id), $this->cacheName());
 		} else {
 			return FALSE;
@@ -291,7 +346,7 @@ class StacksTable extends AppTable
      * @return bool True on successful cached, false on failure
 	 */
 	protected function writeCache($id, $stack) {
-		if (\Cake\Core\Configure::read('stackCache')) {
+		if (Configure::read('stackCache')) {
 			return Cache::write($this->cacheKey($id), $stack, $this->cacheName());
 		} else {
 			return FALSE;
@@ -347,7 +402,8 @@ class StacksTable extends AppTable
         if ($msg) {
             throw new \BadMethodCallException($msg);
         }
-        return;
+		$options += ['paginator' => FALSE];
+        return $options;
     }
 
 // </editor-fold>

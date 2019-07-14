@@ -6,26 +6,23 @@ use Cake\TestSuite\TestCase;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\Table;
 use Cake\ORM\Query;
+use App\Test\TestCase\Model\Behavior\SampleTable;
 
-/**
- * Used for testing counter cache with custom finder
- */
-class SampleTable extends Table
-{
-    public function initialize(array $config) {
-        parent::initialize($config);
-        $this->table('pieces');
-    }
-    public function findNumber(Query $query, array $options)
-    {
-        return $this->integer($query, 'number', $options['values']);
-    }
-}
 /**
  * App\Model\Behavior\IntegerQueryBehavior Test Case
  */
 class IntegerQueryBehaviorTest extends TestCase
 {
+
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
+	public $fixtures = [
+//        'app.art_stacks',
+		'app.pieces'
+	];
 
     /**
      * Test subject

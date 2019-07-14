@@ -21,6 +21,9 @@ use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
+use Cake\Controller\Component\PaginatorComponent;
+use App\Model\Lib\StackPaginator;
+use App\Model\Lib\CurrentUser;
 
 /**
  * Application Controller
@@ -40,13 +43,16 @@ class AppController extends Controller
 	 */
 	public $SystemState;
 	
+	protected $currentUser;
+	
+	protected $contextUser;
+
 	public function __construct(\Cake\Network\Request $request = null,
 			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
 			$components = null) {
 		
 		$this->SystemState = new SystemState($request);
 		$this->set('SystemState', $this->SystemState);
-		TableRegistry::locator(new CSTableLocator($this->SystemState));
 		
 		parent::__construct($request, $response, $name, $eventManager, $components);
         $this->eventManager()->on($this->SystemState);
@@ -89,13 +95,59 @@ class AppController extends Controller
      */
     public function initialize()
     {
-//        parent::initialize(); // parent is empty
-
+        parent::initialize();
+		
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
+		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
+
+		$this->overrideTableLocator();
 	}
 	
+	/**
+	 * Pass critical User data to all tables
+	 * 
+	 * This data will allow tables to determine supervisor, manager, 
+	 * and artist ids for data access control. Tables will also 
+	 * use this data to discover permissions which allow data 
+	 * sharing between supervisors and managers.
+	 * 
+	 * The factory override is beacuse the default table for 
+	 * controllers follow a slightly different path to construction 
+	 * and they will bybass the new locator.
+	 * 
+	 * @todo remove SystemState from the application
+	 * @todo create an object to encapsulate currentUser
+	 */
+	private function overrideTableLocator() {
+		TableRegistry::locator(new CSTableLocator(
+				[
+					'SystemState' => $this->SystemState,
+					'currentUser' => $this->currentUser()
+				] 
+			));
+		$this->modelFactory('Table', [$this, 'tableFactoryOverride']);
+	}
+	
+	/**
+	 * Fix the fact that default tables didn't use the right locator class
+	 * 
+	 * @param type $modelClass
+	 * @return type
+	 */
+	public function tableFactoryOverride($modelClass) {
+		return TableRegistry::getTableLocator()->get($modelClass);
+	}
+	
+	public function currentUser() {
+		if (!isset($this->currentUser)) {
+			$this->currentUser = new CurrentUser($this->Auth->user());
+		}
+		return $this->currentUser;
+	}
+
+
 	public function mapStates() {
 		$this->set('result', $this->SystemState->inventoryActions());
 		$this->set('map', $this->SystemState->map());

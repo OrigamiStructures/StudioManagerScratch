@@ -171,7 +171,7 @@ class PiecesTable extends AppTable {
      * @param boolean $primary
      */
     public function beforeFind($event, $query, $options, $primary) {
-        $this->includeArtistIdCondition($query); // trait handles this
+//        $this->includeArtistIdCondition($query); // trait handles this
     }
 
 // </editor-fold>

@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\ManifestStacksTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use App\Model\Lib\CurrentUser;
 
 /**
  * App\Model\Table\ManifestStacksTable Test Case
@@ -17,7 +18,7 @@ class ManifestStacksTableTest extends TestCase
      * @var \App\Model\Table\ManifestStacksTable
      */
     public $ManifestStacksTable;
-	
+
 	public $ManifestStacks;
 
     /**
@@ -40,6 +41,36 @@ class ManifestStacksTableTest extends TestCase
 		'app.permissions'
     ];
 
+	protected $user = 	  [
+		[
+			'id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'management_token' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'username' => 'don',
+			'email' => 'ddrake@dreamingmind.com',
+			'first_name' => 'Don',
+			'last_name' => 'Drake',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_id' => 1			
+		],
+		[
+			'id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'management_token' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'username' => 'leonardo',
+			'email' => 'horseman@dreamingmind.com',
+			'first_name' => 'Luis',
+			'last_name' => 'Delgado',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'member_id' => 75			
+		],
+	];
+
+
     /**
      * setUp method
      *
@@ -48,9 +79,10 @@ class ManifestStacksTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()
-				->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
+        $config = TableRegistry::getTableLocator()->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
         $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
+		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
+		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));
 		$this->ManifestStacks = $this->ManifestStacksTable
 				->find('stacksFor', ['seed' => 'manifests', 'ids' => [1,2,3,4,5]]);
     }
@@ -68,23 +100,50 @@ class ManifestStacksTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test findSupervisorManifests method
      *
      * @return void
      */
-    public function testInitialize()
+    public function testFindSupervisorManifestsWithIds()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $options = ['ids' => [
+			'708cfc57-1162-4c5b-9092-42c25da131a9', 
+			'f22f9b46-345f-4c6f-9637-060ceacb21b2'
+		]];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		
+		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
+				'find with currentUser option did not return StackSet');
+		$this->assertCount(3, $manifests->load(), 'find with currentUser option did '
+				. 'not return expected number of results');
     }
-
-    /**
-     * Test findManifests method
-     *
-     * @return void
-     */
-    public function testFindManifests()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
+	
+	public function testFindSupervisorManifestWithCurrentUser() {
+        $options = ['source' => 'currentUser'];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		
+		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
+				'find with id array option did not return StackSet');
+		$this->assertCount(3, $manifests->load(), 'find with id array option did '
+				. 'not return expected number of results');
+	}
+	
+	public function testFindSupervisorManifestWithContextUser() {
+        $options = ['source' => 'contextUser'];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		
+		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
+				'find with contextUser option did not return StackSet');
+		$this->assertCount(0, $manifests->load(), 'find with contextUser option did '
+				. 'not return expected number of results');
+	}
+	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testFindSupervisorManifestWithBadArgs() {
+        $options = ['bad' => 'key'];
+		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+	}
+	
 }

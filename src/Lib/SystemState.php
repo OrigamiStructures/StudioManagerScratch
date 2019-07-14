@@ -126,10 +126,10 @@ class SystemState implements EventListenerInterface {
 	 * from the cache so it will be available.
 	 */
 	protected function _standingDisposition() {
-		if (!($this->_standing_disposition) && !is_null($this->artistId())) {
-			$this->_standing_disposition = Cache::read($this->artistId(), 'dispo');
-		}
-		return $this->_standing_disposition;
+//		if (!($this->_standing_disposition) && !is_null($this->artistId())) {
+//			$this->_standing_disposition = Cache::read($this->artistId(), 'dispo');
+//		}
+//		return $this->_standing_disposition;
 	}
 
 	/**
@@ -193,6 +193,9 @@ class SystemState implements EventListenerInterface {
 	 * @return string
 	 */
 	public function artistId($id = NULL) {
+        osd(
+            'SystemState::artistId() is deprecated. A new method is in development.'
+        , 'DEPRECATED');
 		if (is_null($id)) {
 			return $this->request->session()->read('Auth.User.artist_id');
 		}
