@@ -141,7 +141,7 @@ class AppController extends Controller
 	}
 	
 	public function currentUser() {
-		if (!isset($this->currentUser)) {
+		if (!isset($this->currentUser) && !is_null($this->Auth->user())) {
 			$this->currentUser = new CurrentUser($this->Auth->user());
 		}
 		return $this->currentUser;
