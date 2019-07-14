@@ -36,6 +36,7 @@ class PersonCardsTableTest extends TestCase
         'app.data_owners',
         'app.members',
         'app.contacts',
+		'app.images',
 		'app.addresses',
 		'app.dispositions',
 		'app.users',
@@ -261,19 +262,19 @@ class PersonCardsTableTest extends TestCase
 	}
 
 	public function testImageProduct() {
-		$this->assertTrue($this->ImageProduct->count() === 2, 
-				'ImageProduct does not contain 2 entities.');
-		$this->assertArraySubset([1,2],$this->ImageProduct->IDs(),
+		$this->assertTrue($this->ImageProduct->count() === 1, 
+				'ImageProduct does not contain 1 entities.');
+		$this->assertArraySubset([1],$this->ImageProduct->IDs(),
 				'ImageProduct does not contain the 2 specific expected entities.');
 		$this->assertTrue(
 				count($this->ImageProduct->find()->setLayer('contacts')->load())
-				=== 5,
-				'The combined count of contacts was not 5 (4 + 1).'
+				=== 4,
+				'The combined count of contacts was not 4 (4 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ImageProduct->find()->setLayer('addresses')->load())
-				=== 3,
-				'The combined count of addresses was not 3 (2 + 1).'
+				=== 2,
+				'The combined count of addresses was not 2 (2 + 0).'
 			);
 		$this->assertTrue(
 				count($this->ImageProduct->find()->setLayer('image')->load())
@@ -282,8 +283,8 @@ class PersonCardsTableTest extends TestCase
 			);
 		$this->assertTrue(
 				count($this->ImageProduct->find()->setLayer('dispositions')->load())
-				=== 4,
-				'The combined count of dispositions was not 4 (3 + 1).'
+				=== 3,
+				'The combined count of dispositions was not 3 (3 + 0).'
 			);
 	}
 
