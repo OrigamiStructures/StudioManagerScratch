@@ -55,7 +55,13 @@
 			$entity->artistCard()->name();
 		return $accum;
 	}, []);
-	
+
+	$allNonArtistList =
+        $myPersonCards
+            ->find('identity')
+            ->specifyFilter('is_artist', 1, '!=')
+            ->loadKeyValueList('id', 'name');
+	osd($allNonArtistList);die;
 ?>
 	<?= $this->Form->create(null, ['action' => '/manager']); ?>
 	<p>Supervise manager (edit the artists assigned to a manager and the permissions for each of those artists)</p>
@@ -94,5 +100,17 @@
 		); ?>
 	<?= $this->Form->button('Submit'); ?>
 	<?= $this->Form->end(); ?>
+
+	<?= $this->Form->create(); ?>
+	<p>Create an artist</p>
+	<?= $this->Form->select(
+			'From',
+			$allArtists,
+			['empty' => 'New']
+		); ?>
+	<?= $this->Form->button('Submit'); ?>
+	<?= $this->Form->end(); ?>
+
+
 
 

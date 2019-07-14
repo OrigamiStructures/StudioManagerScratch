@@ -1,8 +1,15 @@
 <?php
-osd($managerManifests->count());
-//debug($managerManifests->load());//die;
+// <editor-fold defaultstate="collapsed" desc="VARIABLE SETUP">
+    $baseManifest = $managerManifests->shift();
+    $managerCard = $baseManifest->managerCard();
+// </editor-fold>
+?>
+
+<?php
+echo $this->Html->link(['controller' => 'supervisors', 'action' => 'index']);
+echo $this->Element('Common/LocationBanner', ['label' => "Supervise Manager {$managerCard->name()}"]);
+echo $baseManifest->selfAssigned() ? "Self-Assigned" : "Assigned By Other";
 foreach ($managerManifests->load() as $manifest) {
-//	debug(get_class($manifest));
-	echo $this->People->manifestSummary($manifest); 
+	echo $this->People->manifestSummary($manifest);
 
 }

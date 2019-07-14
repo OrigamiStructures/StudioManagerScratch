@@ -12,6 +12,7 @@ class SupervisorsController extends AppController
     {
         $currentUser = $this->currentUser();
         $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
+        $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 		
         $supervisorManifests = 
 				$ManifestStacks
@@ -20,8 +21,13 @@ class SupervisorsController extends AppController
         $managerManifests = 
 				$ManifestStacks
 				->find('managerManifests', ['source' => 'currentUser']);
+
+        $myPersonCards =
+                $PersonCards
+                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->currentUser()->userId()]]);
+
 		
-        $this->set(compact(['supervisorManifests','managerManifests','currentUser']));
+        $this->set(compact(['supervisorManifests','managerManifests','currentUser', 'myPersonCards']));
     }
 
 	public function manager() {
@@ -38,6 +44,22 @@ class SupervisorsController extends AppController
 	public function artist() {
 		osd($this->request->data, 'Gather the manifests for this artist');die;
 		$this->redirect('/supervisors/index');
+	}
+
+    public function createArtist()
+    {
+        if (is_null($this->request->data('artistId')))
+        {
+            //setup some information
+            //render create page in AddressBook
+
+        }
+        else
+            {
+                $artistId = $this->request->data('artistId');
+            $this->createArtistManifest($artistId);
+        }
+
 	}
 	
 }
