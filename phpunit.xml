@@ -13,8 +13,8 @@
 
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
-        <testsuite name="App Test Suite">
-            <directory>./tests/TestCase</directory>
+        <testsuite name="app">
+            <directory>./tests/TestCase/</directory>
         </testsuite>
 		<testsuite name="controller">
 			<directory>./tests/TestCase/Controller</directory>
@@ -24,6 +24,12 @@
 		</testsuite>
 		<testsuite name="model">
 			<directory>./tests/TestCase/Model</directory>
+		</testsuite>
+		<testsuite name="lib">
+			<directory>./tests/TestCase/Lib</directory>
+		</testsuite>
+		<testsuite name="view">
+			<directory>./tests/TestCase/View</directory>
 		</testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
