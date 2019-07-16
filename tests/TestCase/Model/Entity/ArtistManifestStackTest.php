@@ -1,8 +1,8 @@
 <?php
 namespace App\Test\TestCase\Model\Entity;
 
-use App\Model\Entity\ManifestStack;
-use App\Model\Table\ManifestStacksTable;
+use App\Model\Entity\ArtistManifestStack;
+use App\Model\Table\ArtistManifestStacksTable;
 use Cake\TestSuite\TestCase;
 use App\Model\Lib\CurrentUser;
 use Cake\ORM\TableRegistry;
@@ -10,12 +10,12 @@ use Cake\ORM\TableRegistry;
 /**
  * App\Model\Entity\ManifestStack Test Case
  */
-class ManifestStackTest extends TestCase
+class ArtistManifestStackTest extends TestCase
 {
 
-    public $ManifestStacksTable;
+    public $AtristManifestStacksTable;
 
-	public $ManifestStacks;
+	public $ArtistManifestStacks;
 
 	public $selfManage;
 	
@@ -73,13 +73,6 @@ class ManifestStackTest extends TestCase
 		],
 	];
 
-	/**
-     * Test subject
-     *
-     * @var \App\Model\Entity\ManifestStack
-     */
-    public $ManifestStack;
-
     /**
      * setUp method
      *
@@ -90,18 +83,18 @@ class ManifestStackTest extends TestCase
         parent::setUp();
 		$supervisor = $this->createMock(\App\Model\Entity\PersonCard::class);
         $config = TableRegistry::getTableLocator()
-				->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
-        $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
-		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
-		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));
-		$this->ManifestStacks = $this->ManifestStacksTable
+				->exists('ManifestStacks') ? [] : ['className' => ArtistManifestStacksTable::class];
+        $this->AtristManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
+		$this->AtristManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
+		$this->AtristManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));
+		$this->ArtistManifestStacks = $this->AtristManifestStacksTable
 				->find('stacksFor', ['seed' => 'manifests', 'ids' => [1,2,3]]);
 		//Supervisor manages self/artist
-		$this->selfManage = $this->ManifestStacks->element(1, LAYERACC_ID);
+		$this->selfManage = $this->ArtistManifestStacks->element(1, LAYERACC_ID);
 		//Supervisor/manager manages another artist
-		$this->otherManage = $this->ManifestStacks->element(2, LAYERACC_ID);
+		$this->otherManage = $this->ArtistManifestStacks->element(2, LAYERACC_ID);
 		//Foreign manager manages Supervisor's artist
-		$this->foreignManage = $this->ManifestStacks->element(3, LAYERACC_ID);
+		$this->foreignManage = $this->ArtistManifestStacks->element(3, LAYERACC_ID);
 //		debug($this->otherManage);
     }
 
@@ -112,8 +105,8 @@ class ManifestStackTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->ManifestStacks);
-		unset($this->ManifestStacksTable);
+        unset($this->ArtistManifestStacks);
+		unset($this->AtristManifestStacksTable);
 		unset($this->selfManage);
 		unset($this->otherManage);
 		unset($this->foreignManage);

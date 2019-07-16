@@ -9,7 +9,7 @@ use App\Model\Lib\Layer;
  *
  * @author dondrake
  */
-class ManifestStacksTable extends StacksTable {
+class ManagerManifestStacksTable extends StacksTable {
 	
 	/**
 	 * {@inheritdoc}
@@ -115,10 +115,7 @@ class ManifestStacksTable extends StacksTable {
 	 * @param array $options none supported at this time
 	 */
 	protected function localConditions($query, $options = []) {
-		return $query->where([
-			'user_id' => $this->currentUser()->userId(),
-			'member_id IS NOT NULL'
-			]);
+		return $query->where(['user_id' => $this->currentUser()->userId()]);
 	}
 	
 	/**

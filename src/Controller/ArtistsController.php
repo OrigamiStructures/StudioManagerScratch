@@ -21,7 +21,7 @@ class ArtistsController extends AppController
      */
     public function index()
     {
-		$ManifestsTable = TableRegistry::getTableLocator()->get('ManifestStacks');
+		$ManifestsTable = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
 		$manifests = $ManifestsTable->find('stacksFor', 
 			['seed' => 'manifest', 'ids' => [1,2,3]]);
 		
