@@ -1,8 +1,10 @@
+<p>DelegatedManagement</p>
+<p>OwnedManagement</p>
 <?php
 
     $this->loadHelper('People');
     //osd($manifests);
-    osd($currentUser->username());
+//    osd($currentUser->username());
 
     $assignedToForeign = $supervisorManifests
         ->find('manifest')
@@ -10,24 +12,28 @@
         ->loadStacks();
 		
 ?>
-	<p>This stuff might be good in a table too. All this formatting 
-		I played with hasn't done much to improve things</p>
+	<h1>Add an artist</h1>
+	<p>tools here</p>
+	<h1>Recruit a new delegate</h1>
+	<p>tools here</p>
+
 	
-    <h1>Supervisor Manifests</h1>
+	<h1>Change a Management Agreement</h1>
+	
+    <h2>Delegated Management</h2>
 
 <?php
 
     foreach ($assignedToForeign as $supervisorManifest) : ?>
 
-    <?= $this->People->manifestSummary($supervisorManifest); ?>
+    <?= "<p>{$this->People->manifestSummary($supervisorManifest)}</p>"; ?>
 
 <?php endforeach; ?>
-
-    <h1>Manager Manifests</h1>
+    <h2>Owned Management</h2>
 
 <?php foreach ($managerManifests->load() as $managerManifest) : ?>
 
-    <?= $this->People->manifestSummary($managerManifest); ?>
+    <?= "<p>{$this->People->manifestSummary($managerManifest)}</p>"; ?>
 
 <?php endforeach; ?>
 	
@@ -61,7 +67,7 @@
             ->find('identity')
             ->specifyFilter('is_artist', 1, '!=')
             ->loadKeyValueList('id', 'name');
-	osd($allNonArtistList);die;
+	osd($allNonArtistList);//die;
 ?>
 	<?= $this->Form->create(null, ['action' => '/manager']); ?>
 	<p>Supervise manager (edit the artists assigned to a manager and the permissions for each of those artists)</p>
