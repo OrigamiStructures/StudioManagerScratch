@@ -10,7 +10,7 @@ use Cake\ORM\TableRegistry;
 /**
  * App\Model\Entity\ManifestStack Test Case
  */
-class ManifestStackTest extends TestCase
+class ArtistManifestStackTest extends TestCase
 {
 
     public $ManifestStacksTable;
