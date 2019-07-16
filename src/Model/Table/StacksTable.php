@@ -307,7 +307,7 @@ class StacksTable extends AppTable
 	 * @return StackSet
 	 */
     public function stacksFromRoot($ids) {
-		$this->stacks = new StackSet();
+		$this->stacks = $this->stackSet();
         foreach ($ids as $id) {
 			$stack = $this->readCache($id);
 			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
@@ -377,6 +377,27 @@ class StacksTable extends AppTable
 			$stack = $this->{$this->marshalMethodName($layer)}($id, $stack);
 		}
 		return $stack;
+	}
+	
+	/**
+	 * Get a new StackSet class instance based on naming conventions
+	 * 
+	 * ArtStackTable - ArtStack (entity) - ArtStackSet
+	 * 
+	 * @todo There is no way to override the StackSet class 
+	 *		in the case of conventions-breaking usage
+	 * 
+	 * @return StackSet
+	 */
+	protected function stackSet() {
+		$alias = $this->getAlias();
+		$className = "\App\Model\Lib\\{$alias}Set";
+		if (class_exists($className)) {
+			$result = new $className();
+		} else {
+			$result = new StackSet;
+		}
+		return $result;
 	}
 	
 // <editor-fold defaultstate="collapsed" desc="finder args validation">
