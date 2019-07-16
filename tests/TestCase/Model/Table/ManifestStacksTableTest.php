@@ -1,7 +1,7 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ManifestStacksTable;
+use App\Model\Table\ArtistManifestStacksTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use App\Model\Lib\CurrentUser;
@@ -15,7 +15,7 @@ class ManifestStacksTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ManifestStacksTable
+     * @var \App\Model\Table\ArtistManifestStacksTable
      */
     public $ManifestStacksTable;
 
@@ -79,7 +79,7 @@ class ManifestStacksTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
+        $config = TableRegistry::getTableLocator()->exists('ManifestStacks') ? [] : ['className' => ArtistManifestStacksTable::class];
         $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
 		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
 		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));

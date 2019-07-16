@@ -2,7 +2,7 @@
 namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\ManifestStack;
-use App\Model\Table\ManifestStacksTable;
+use App\Model\Table\ArtistManifestStacksTable;
 use Cake\TestSuite\TestCase;
 use App\Model\Lib\CurrentUser;
 use Cake\ORM\TableRegistry;
@@ -90,7 +90,7 @@ class ManifestStackTest extends TestCase
         parent::setUp();
 		$supervisor = $this->createMock(\App\Model\Entity\PersonCard::class);
         $config = TableRegistry::getTableLocator()
-				->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
+				->exists('ManifestStacks') ? [] : ['className' => ArtistManifestStacksTable::class];
         $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
 		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
 		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));

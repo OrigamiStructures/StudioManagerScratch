@@ -9,7 +9,7 @@ use App\Model\Lib\Layer;
  *
  * @author dondrake
  */
-class ManifestStacksTable extends StacksTable {
+class ArtistManifestStacksTable extends StacksTable {
 	
 	/**
 	 * {@inheritdoc}
