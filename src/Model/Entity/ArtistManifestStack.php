@@ -7,7 +7,7 @@ use App\Model\Entity\StackEntity;
  * CakePHP ManifestStackEntity
  * @author dondrake
  */
-class ManifestStack extends StackEntity {
+class ArtistManifestStack extends StackEntity {
 	
 	public function manifest() {
 		return $this->manifest->element(0, LAYERACC_INDEX);

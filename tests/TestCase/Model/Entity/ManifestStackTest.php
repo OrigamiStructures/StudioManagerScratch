@@ -1,7 +1,7 @@
 <?php
 namespace App\Test\TestCase\Model\Entity;
 
-use App\Model\Entity\ManifestStack;
+use App\Model\Entity\ArtistManifestStack;
 use App\Model\Table\ArtistManifestStacksTable;
 use Cake\TestSuite\TestCase;
 use App\Model\Lib\CurrentUser;
@@ -76,7 +76,7 @@ class ManifestStackTest extends TestCase
 	/**
      * Test subject
      *
-     * @var \App\Model\Entity\ManifestStack
+     * @var \App\Model\Entity\ArtistManifestStack
      */
     public $ManifestStack;
 
