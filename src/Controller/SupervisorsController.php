@@ -11,7 +11,7 @@ class SupervisorsController extends AppController
     public function index()
     {
         $currentUser = $this->currentUser();
-        $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
+        $ManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 		
         $supervisorManifests = 
@@ -31,7 +31,7 @@ class SupervisorsController extends AppController
     }
 
 	public function manager() {
-        $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
+        $ManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
 		osd($this->request->data('assignments'));//die;
 		$managerManifests =
 				$ManifestStacks
