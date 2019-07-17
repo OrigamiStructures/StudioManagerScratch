@@ -149,6 +149,13 @@ class AppController extends Controller
 		}
 		return $this->currentUser;
 	}
+	
+	public function contextUser() {
+		if (!isset($this->contextUser)) {
+			$this->contextUser = $this->currentUser();
+		}
+		return $this->contextUser;
+	}
 
 
 	public function mapStates() {

@@ -1,12 +1,25 @@
 <?php
 namespace App\Model\Lib;
 
-use App\Model\Lib\StackSet;
+use App\Model\Lib\ManagerManifestStacksSet;
+
 /**
- * Description of ManifestStacksSet
+ * Description of ManagementManifestSet
  *
  * @author dondrake
  */
-class ArtistManifestStacksSet extends StackSet {
-	//put your code here
+class ArtistManifestStacksSet extends ManagerManifestStacksSet{
+	
+	public function ownedAritists($supervisor_id) {
+		
+	}
+	
+	public function delegatedArtists($supervisor_id) {
+		
+	}
+	
+	public function recievedArtists($supervisor_id) {
+		
+	}
+	
 }

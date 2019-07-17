@@ -1,16 +1,9 @@
-<p>DelegatedManagement</p>
-<p>OwnedManagement</p>
 <?php
 
     $this->loadHelper('People');
-    //osd($manifests);
-//    osd($currentUser->username());
 
-    $assignedToForeign = $managerManifests
-        ->find('manifest')
-        ->specifyFilter('selfAssigned', FALSE)
-        ->loadStacks();
-		
+	$delegatedManagement = $managerManifests
+			->delegatedManagement($contextUser->supervisorId());
 ?>
 	<h1>Add an artist</h1>
 	<p>tools here</p>
@@ -24,16 +17,16 @@
 
 <?php
 
-    foreach ($assignedToForeign as $supervisorManifest) : ?>
+    foreach ($delegatedManagement as $manifest) : ?>
 
-	<?= "<p>{$supervisorManifest->managerCard()->name()}</p>"; ?>
+	<?= "<p>{$manifest->managerCard()->name()}</p>"; ?>
 
 <?php endforeach; ?>
     <h2>Owned Management</h2>
 
-<?php foreach ($artistManifests->load() as $managerManifest) : ?>
+<?php foreach ($managementAgreements->load() as $agrement) : ?>
 
-    <?= "<p>{$this->People->artistManifestSummary($managerManifest)}</p>"; ?>
+    <?= "<p>{$this->People->artistManifestSummary($agrement)}</p>"; ?>
 
 <?php endforeach; ?>
 	

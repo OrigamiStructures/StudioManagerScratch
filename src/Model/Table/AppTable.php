@@ -19,6 +19,13 @@ class AppTable extends Table {
 	
 	protected $contextUser;
 
+	/**
+	 * An override TableLocator injects config values
+	 * 
+	 * The override is done in AppController
+	 * 
+	 * @param array $config
+	 */
 	public function __construct(array $config = []){
         if (!empty($config['SystemState'])) {
             $this->SystemState = $config['SystemState'];
