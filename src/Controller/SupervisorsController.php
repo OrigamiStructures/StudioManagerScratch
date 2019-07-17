@@ -10,7 +10,7 @@ class SupervisorsController extends AppController
 {
     public function index()
     {
-        $currentUser = $this->currentUser();
+        $contextUser = $this->contextUser();
         $ManagerManifestStacks = TableRegistry::getTableLocator()->get('ManagerManifestStacks');
         $ArtistManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
@@ -19,16 +19,16 @@ class SupervisorsController extends AppController
 				$ManagerManifestStacks
 				->find('supervisorManifests', ['source' => 'currentUser']);
 		
-        $artistManifests = 
+        $managementAgreements = 
 				$ArtistManifestStacks
 				->find('supervisorManifests', ['source' => 'currentUser']);
 
         $myPersonCards =
                 $PersonCards
-                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->currentUser()->userId()]]);
+                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->contextUser()->userId()]]);
 
 		
-        $this->set(compact(['artistManifests','managerManifests','currentUser', 'myPersonCards']));
+        $this->set(compact(['managementAgreements','managerManifests','contextUser', 'myPersonCards']));
     }
 
 	public function manager() {
@@ -43,7 +43,7 @@ class SupervisorsController extends AppController
 	}
 
 	public function artist() {
-		osd($this->request->data, 'Gather the manifests for this artist');die;
+		osd($this->request->data, 'Gather the manifests for this artist');//die;
 		$this->redirect('/supervisors/index');
 	}
 
