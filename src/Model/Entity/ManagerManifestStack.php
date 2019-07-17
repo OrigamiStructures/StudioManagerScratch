@@ -7,7 +7,7 @@ use App\Model\Entity\StackEntity;
  * CakePHP ManifestStackEntity
  * @author dondrake
  */
-class ManifestStack extends StackEntity {
+class ManagerManifestStack extends StackEntity {
 	
 	public function manifest() {
 		return $this->manifest->element(0, LAYERACC_INDEX);
@@ -31,15 +31,6 @@ class ManifestStack extends StackEntity {
 		return array_pop($card);
 	}
 	
-	public function artistCard() {
-		$id = $this->rootElement()->artistId();
-		$card = $this->people
-				->find('identity')
-				->specifyFilter('id', $id)
-				->loadStacks();
-		return array_pop($card);
-	}
-
     public function selfAssigned()
     {
         return $this->rootElement()->selfAssigned();

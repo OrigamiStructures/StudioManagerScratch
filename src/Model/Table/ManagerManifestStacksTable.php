@@ -5,11 +5,13 @@ use App\Model\Table\StacksTable;
 use App\Model\Lib\Layer;
 
 /**
- * Description of ManifestStacksTable
+ * Description of ManagerManifestStacksTable
+ * 
+ * Get the ManagerManifests
  *
  * @author dondrake
  */
-class ManifestStacksTable extends StacksTable {
+class ManagerManifestStacksTable extends StacksTable {
 	
 	/**
 	 * {@inheritdoc}
@@ -31,13 +33,11 @@ class ManifestStacksTable extends StacksTable {
 	 */
 	public function initialize(array $config) {
         $this->setTable('manifests');
-        $this->addLayerTable(['Manifests', 'PersonCards', 'Permissions']);
+        $this->addLayerTable(['Manifests', 'PersonCards', 'Permissions', 'Members']);
         $this->addStackSchema(['manifest', 'permissions']);
         $this->addSeedPoint([
             'manifest',
             'manifests',
-            'artist',
-            'artists',
             'manager',
             'managers',
             'supervisor',
@@ -60,20 +60,7 @@ class ManifestStacksTable extends StacksTable {
 				->where(['id IN' => $ids])
 			;
 	}
-	
-	/**
-	 * Derive the Manifest ids relevant to these Artists (Members)
-	 * 
-	 * @param array $ids Artist ids (member_id)
-	 * @return array manifest ids
-	 */
-	protected function distillFromArtist(array $ids) {
-		return $this->Manifests
-				->find('forArtists', ['member_id' => $ids])
-				->select(['id', 'member_id'])
-			;
-	}
-	
+		
 	protected function distillFromPermission($ids) {
 		
 	}
@@ -115,7 +102,10 @@ class ManifestStacksTable extends StacksTable {
 	 * @param array $options none supported at this time
 	 */
 	protected function localConditions($query, $options = []) {
-		return $query->where(['user_id' => $this->currentUser()->userId()]);
+		return $query->where([
+			'user_id' => $this->currentUser()->userId(),
+			'member_id IS NULL'
+				]);
 	}
 	
 	/**
@@ -162,17 +152,16 @@ class ManifestStacksTable extends StacksTable {
 	
 	protected function marshalNameCards($stack) {
 		
-		$stack->manifest
-				->find('permissions')
-				->specifyFilter('layer', 'contact')
-				->load();
+//		$stack->manifest
+//				->find('permissions')
+//				->specifyFilter('layer', 'contact')
+//				->load();
 		
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
 					'supervisor' => [$manifest->supervisorId()],
 					'manager' => [$manifest->managerId()],
-					'identity' => [$manifest->artistId()]
 				]
 			);
 		$stack->people = $people;

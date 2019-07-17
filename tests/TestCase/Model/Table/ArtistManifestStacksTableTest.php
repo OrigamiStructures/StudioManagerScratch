@@ -1,7 +1,7 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ManifestStacksTable;
+use App\Model\Table\ArtistManifestStacksTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use App\Model\Lib\CurrentUser;
@@ -15,11 +15,11 @@ class ManifestStacksTableTest extends TestCase
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ManifestStacksTable
+     * @var \App\Model\Table\ArtistManifestStacksTable
      */
-    public $ManifestStacksTable;
+    public $ArtistManifestStacksTable;
 
-	public $ManifestStacks;
+	public $ArtistManifestStacks;
 
     /**
      * Fixtures
@@ -79,11 +79,11 @@ class ManifestStacksTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('ManifestStacks') ? [] : ['className' => ManifestStacksTable::class];
-        $this->ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
-		$this->ManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
-		$this->ManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));
-		$this->ManifestStacks = $this->ManifestStacksTable
+        $config = TableRegistry::getTableLocator()->exists('ManifestStacks') ? [] : ['className' => ArtistManifestStacksTable::class];
+        $this->ArtistManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks', $config);
+		$this->ArtistManifestStacksTable->setCurrentUser(new CurrentUser($this->user[0]));
+		$this->ArtistManifestStacksTable->setContextUser(new CurrentUser($this->user[1]));
+		$this->ArtistManifestStacks = $this->ArtistManifestStacksTable
 				->find('stacksFor', ['seed' => 'manifests', 'ids' => [1,2,3,4,5]]);
     }
 
@@ -94,7 +94,7 @@ class ManifestStacksTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->ManifestStacksTable);
+        unset($this->ArtistManifestStacksTable);
 
         parent::tearDown();
     }
@@ -110,7 +110,7 @@ class ManifestStacksTableTest extends TestCase
 			'708cfc57-1162-4c5b-9092-42c25da131a9', 
 			'f22f9b46-345f-4c6f-9637-060ceacb21b2'
 		]];
-		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		$manifests = $this->ArtistManifestStacksTable->find('supervisorManifests', $options);
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
 				'find with currentUser option did not return StackSet');
@@ -120,7 +120,7 @@ class ManifestStacksTableTest extends TestCase
 	
 	public function testFindSupervisorManifestWithCurrentUser() {
         $options = ['source' => 'currentUser'];
-		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		$manifests = $this->ArtistManifestStacksTable->find('supervisorManifests', $options);
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
 				'find with id array option did not return StackSet');
@@ -130,7 +130,7 @@ class ManifestStacksTableTest extends TestCase
 	
 	public function testFindSupervisorManifestWithContextUser() {
         $options = ['source' => 'contextUser'];
-		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		$manifests = $this->ArtistManifestStacksTable->find('supervisorManifests', $options);
 		
 		$this->assertTrue($manifests instanceof \App\Model\Lib\StackSet, 
 				'find with contextUser option did not return StackSet');
@@ -143,7 +143,7 @@ class ManifestStacksTableTest extends TestCase
 	 */
 	public function testFindSupervisorManifestWithBadArgs() {
         $options = ['bad' => 'key'];
-		$manifests = $this->ManifestStacksTable->find('supervisorManifests', $options);
+		$manifests = $this->ArtistManifestStacksTable->find('supervisorManifests', $options);
 	}
 	
 }

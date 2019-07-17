@@ -38,6 +38,10 @@ class StackSet implements LayerAccessInterface {
 		}
 	}
 	
+	public function shift() {
+		return $this->element(0, LAYERACC_INDEX);
+	}
+	
 	/**
 	 * Return all the entities in an array
 	 * 

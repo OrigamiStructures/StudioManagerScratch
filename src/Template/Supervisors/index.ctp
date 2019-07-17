@@ -1,98 +1,42 @@
+<p>DelegatedManagement</p>
+<p>OwnedManagement</p>
 <?php
 
     $this->loadHelper('People');
     //osd($manifests);
-    osd($currentUser->username());
+//    osd($currentUser->username());
 
-    $assignedToForeign = $supervisorManifests
+    $assignedToForeign = $managerManifests
         ->find('manifest')
         ->specifyFilter('selfAssigned', FALSE)
         ->loadStacks();
 		
 ?>
-	<p>This stuff might be good in a table too. All this formatting 
-		I played with hasn't done much to improve things</p>
+	<h1>Add an artist</h1>
+	<p>tools here</p>
+	<h1>Recruit a new delegate</h1>
+	<p>tools here</p>
+
 	
-    <h1>Supervisor Manifests</h1>
+	<h1>Change a Management Agreement</h1>
+	
+    <h2>Delegated Management</h2>
 
 <?php
 
     foreach ($assignedToForeign as $supervisorManifest) : ?>
 
-    <?= $this->People->manifestSummary($supervisorManifest); ?>
+	<?= "<p>{$supervisorManifest->managerCard()->name()}</p>"; ?>
 
 <?php endforeach; ?>
+    <h2>Owned Management</h2>
 
-    <h1>Manager Manifests</h1>
+<?php foreach ($artistManifests->load() as $managerManifest) : ?>
 
-<?php foreach ($managerManifests->load() as $managerManifest) : ?>
-
-    <?= $this->People->manifestSummary($managerManifest); ?>
+    <?= "<p>{$this->People->artistManifestSummary($managerManifest)}</p>"; ?>
 
 <?php endforeach; ?>
 	
 <?php
 	
-//	osd($managers);
-	$collection = collection($supervisorManifests->load());
-	
-	$assignments = $collection->reduce(function($accum, $entity) {
-		$accum[$entity->rootElement()->manager_id] =
-			$entity->managerCard()->name();
-		return $accum;
-	}, []);
-	
-	$ownedArtists = $collection->reduce(function($accum, $entity) {
-		$accum[$entity->rootElement()->member_id] =
-			$entity->artistCard()->name();
-		return $accum;
-	}, []);
-	
-	$collection = collection($managerManifests->load());
-	
-	$allArtists = $collection->reduce(function($accum, $entity) {
-		$accum[$entity->rootElement()->member_id] =
-			$entity->artistCard()->name();
-		return $accum;
-	}, []);
-	
-?>
-	<?= $this->Form->create(null, ['action' => '/manager']); ?>
-	<p>Edit assignments to a manager</p>
-	<?= $this->Form->select(
-			'assignments', 
-			$assignments, 
-			['empty' => 'Choose a manager']
-		); ?>
-	<?= $this->Form->button('Submit'); ?>
-	<?= $this->Form->end(); ?>
-	
-	<?= $this->Form->create(null, ['action' => '/artist']); ?>
-	<p>Edit management agreements for an artist</p>
-	<?= $this->Form->select(
-			'owned_artists', 
-			$ownedArtists, 
-			['empty' => 'Choose an artist']
-		); ?>
-	<?= $this->Form->button('Submit'); ?>
-	<?= $this->Form->end(); ?>
-	
-	<?= $this->Form->create(); ?>
-	<p>Manage your artists (link to some index page)</p>
-	<?= $this->Form->input(
-			'manager_id', 
-	['type' => 'hidden', 'value' => $currentUser->managerId()]); ?>
-	<?= $this->Form->button('Submit'); ?>
-	<?= $this->Form->end(); ?>
-	
-	<?= $this->Form->create(); ?>
-	<p>Manage an artist</p>
-	<?= $this->Form->select(
-			'all_artists', 
-			$allArtists, 
-			['empty' => 'Choose an artist']
-		); ?>
-	<?= $this->Form->button('Submit'); ?>
-	<?= $this->Form->end(); ?>
-
 

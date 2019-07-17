@@ -37,7 +37,7 @@ trait ManagementTrait {
 	}
 
 	protected function ManifestTable() {
-		return TableRegistry::getTableLocator()->get('ManifestStacks');
+		return TableRegistry::getTableLocator()->get('ArtistManifestStacks');
 	}
 	
 	protected function manifests($seed, $id) {

@@ -18,7 +18,7 @@ class PeopleHelper extends Helper
         . '</span>';
 
 	/**
-     * Give a ManifestStackEntity output a summary line describing it
+     * Give a AritstManifestStackEntity output a summary line describing it
 	 * 
 	 * $format recieves $artistName, $managerName, $access
 	 * 'access' says 'Full Access' or 'Limited Access'
@@ -27,7 +27,7 @@ class PeopleHelper extends Helper
      * @param string $format Alternate sprintf format
      * @return type
      */
-    function manifestSummary($manifest, $format = null) {
+    function artistManifestSummary($manifest, $format = null) {
 		$format = is_null($format) ? $this->manifestSummaryFormat : $format;
 
         $artistName = $manifest->artistCard()->rootDisplayValue();
