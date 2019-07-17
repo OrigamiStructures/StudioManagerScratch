@@ -45,6 +45,10 @@ class MenusTable extends AppTable{
 		]];
 	protected $disposition = ['Work Status' => [
 			'Review' => '/dispositions/index',
+			'test-artworks' => '/artworks/test_me',
+			'test-supervision' => '/supervisors',
+			'test-addressbook' => '/addressbook',
+			'test-rolodex' => '/rolodexcards'
         ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',
