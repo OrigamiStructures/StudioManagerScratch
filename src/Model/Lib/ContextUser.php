@@ -4,6 +4,7 @@ namespace App\Model\Lib;
 use Cake\ORM\TableRegistry;
 use Cake\Http\Session;
 use Cake\Http\Exception\BadRequestException;
+use App\Model\Lib\CurrentUser;
 
 /**
  * Description of ContextUser
@@ -50,17 +51,11 @@ class ContextUser {
 	 * 
 	 * @throws BadRequestException
 	 */
-	private function __construct() {
+	private function __construct($options = null) {
 		// session injection was added to allow testing (self::setSession() )
-		if (is_null(self::$Session)) {
-			self::$Session = new Session();
-		}		
-		$this->user = self::$Session->read('Auth.User.id');
-		if (is_null($this->user)) {
-			$message = 'The user is not logged in';
-			throw new BadRequestException($message);
-		}
-		$contextUser = self::$Session->read("$this->user.ContextUser");
+		$this->setSession($options);
+		$this->setCurrentUser($options);
+		$contextUser = self::$Session->read($this->cacheKey());
 		if (!is_null($contextUser)) {
 			foreach(array_keys($contextUser) as $key) {
 				$this->$key = $contextUser[$key];
@@ -70,15 +65,15 @@ class ContextUser {
 		}
 		self::$instance = $this;
 	}
-	
+		
 	/**
 	 * Access point for this Singleton
 	 * 
 	 * @return ContextUser
 	 */
-	static public function instance() {
+	static public function instance($options = null) {
 		if (is_null(self::$instance)) {
-			self::$instance = new ContextUser();
+			self::$instance = new ContextUser($options);
 		}
 		return self::$instance;
 	}
@@ -147,11 +142,11 @@ class ContextUser {
 	 */
 	public function clear($actor = NULL) {
 		if (is_null($actor)) {
-			self::$Session->delete("$this->user.ContextUser");
+			self::$Session->delete($this->cacheKey());
 			$this->actorId = $this->defaultValues;
 			$this->actorCard = $this->defaultValues;
 			self::$instance = NULL;
-			self::instance();
+//			self::instance();
 		} else {
 			$validActor = $this->validateActor($actor);
 			$this->actorId[$validActor] = NULL;
@@ -170,8 +165,24 @@ class ContextUser {
 	 * 
 	 * @param type $session
 	 */
-	static public function setSession($session) {
-		self::$Session = $session;
+	private function setSession($options) {
+		if (isset($options['session'])) {
+			self::$Session = $options['session'];
+		} else {
+			self::$Session = new Session();
+		}
+	}
+	private function setCurrentUser($options) {
+		if (isset($options['currentUser'])) {
+			$this->user = $options['currentUser'];
+		} else {
+			$currentUser = self::$Session->read('Auth.User');
+			if (is_null($currentUser)) {
+				$message = 'The user is not logged in';
+				throw new BadRequestException($message);
+			}
+			$this->user = new CurrentUser($currentUser);
+		}
 	}
 
 
@@ -192,6 +203,10 @@ class ContextUser {
 	
 // <editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
 	
+	private function cacheKey() {
+		return "{$this->user->userId()}.ContextUser";
+	}
+	
 	/**
 	 * Store the current property values in the Session
 	 * 
@@ -206,7 +221,7 @@ class ContextUser {
 			'actorCard' => $this->actorCard,
 		];
 		try {
-			self::$Session->write("$this->user.ContextUser", $data);
+			self::$Session->write($this->cacheKey(), $data);
 		} catch (Exception $exc) {
 			$message = "Couldn't write ContextUser to Session. " . $exc->getMessage();
 			throw $exc;
@@ -326,7 +341,10 @@ class ContextUser {
 					: 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
 		}
 		return [
-			'user' => $this->user,
+			'user' => 
+					is_object($this->user) 
+					? "CurrentUser object: {$this->user->username()} {$this->user->userId()}" 
+					: 'Not set',
 			'actorId' => $this->actorId,
 			'actorCard' => $actorCard,
 			'Session' => is_object(self::$Session) ? 'Session object' : 'Not set',
