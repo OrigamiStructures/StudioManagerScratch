@@ -5,12 +5,17 @@ namespace App\Controller;
 
 
 use Cake\ORM\TableRegistry;
+use App\Model\Lib\ContextUser;
 
 class SupervisorsController extends AppController
 {
     public function index()
     {
         $contextUser = $this->contextUser();
+		$s = new \Cake\Http\Session();
+		$s->delete('f22f9b46-345f-4c6f-9637-060ceacb21b2');
+		debug(ContextUser::instance());
+		
         $ManagerManifestStacks = TableRegistry::getTableLocator()->get('ManagerManifestStacks');
         $ArtistManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
