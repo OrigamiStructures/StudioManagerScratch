@@ -343,7 +343,7 @@ class ContextUser {
 		return [
 			'user' => 
 					is_object($this->user) 
-					? "CurrentUser object: {$this->user->username()} {$this->user->userId()}" 
+					? "CurrentUser object: {$this->user->name()} {$this->user->userId()}" 
 					: 'Not set',
 			'actorId' => $this->actorId,
 			'actorCard' => $actorCard,

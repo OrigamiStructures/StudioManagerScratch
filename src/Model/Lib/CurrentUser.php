@@ -36,7 +36,13 @@ class CurrentUser {
 	 * @var array
 	 */
 	protected $data;
-	protected $Person;
+	
+	/**
+	 * Lazy loaded PersonCard for the registered user
+	 *
+	 * @var PersonCard
+	 */
+	protected $Person = NULL;
 		
 	public function __construct($data, $options = []) {
 		
@@ -45,12 +51,7 @@ class CurrentUser {
 					. 'must include the data to construct it.';
 			throw new BadClassConfigurationException($msg);
 		}
-		
 		$this->data = $data;
-		$PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
-		$this->Person = $PersonCards
-            ->find('stacksFor', ['seed' => 'identity', 'ids' => [$this->memberId()]])
-            ->element(0,LAYERACC_INDEX);
 	}
 
 	public function managerId() {
@@ -65,8 +66,21 @@ class CurrentUser {
 		return $this->data['id'];
 	}
 
-    public function username()
+	/**
+	 * Get the name from the stored PersonCard
+	 * 
+	 * This lazy loads the card
+	 * 
+	 * @return string
+	 */
+    public function name()
     {
+		if (is_null($this->Person)) {
+			$PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+			$this->Person = $PersonCards
+				->find('stacksFor', ['seed' => 'identity', 'ids' => [$this->memberId()]])
+				->element(0,LAYERACC_INDEX);
+		}
         return $this->Person->name();
 	}
 
