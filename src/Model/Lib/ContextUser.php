@@ -33,7 +33,7 @@ class ContextUser {
 	
 	protected $user;
 	
-	protected $Session = NULL;
+	static protected $Session = NULL;
 	
 	protected $PersonCardsTable = NULL;
 	
@@ -51,13 +51,16 @@ class ContextUser {
 	 * @throws BadRequestException
 	 */
 	private function __construct() {
-		$this->Session = new Session();
-		$this->user = $this->Session->read('Auth.User.id');
+		// session injection was added to allow testing (self::setSession() )
+		if (is_null(self::$Session)) {
+			self::$Session = new Session();
+		}		
+		$this->user = self::$Session->read('Auth.User.id');
 		if (is_null($this->user)) {
 			$message = 'The user is not logged in';
 			throw new BadRequestException($message);
 		}
-		$contextUser = $this->Session->read("$this->user.ContextUser");
+		$contextUser = self::$Session->read("$this->user.ContextUser");
 		if (!is_null($contextUser)) {
 			foreach(array_keys($contextUser) as $key) {
 				$this->$key = $contextUser[$key];
@@ -144,7 +147,7 @@ class ContextUser {
 	 */
 	public function clear($actor = NULL) {
 		if (is_null($actor)) {
-			$this->Session->delete("$this->user.ContextUser");
+			self::$Session->delete("$this->user.ContextUser");
 			$this->actorId = $this->defaultValues;
 			$this->actorCard = $this->defaultValues;
 			self::$instance = NULL;
@@ -155,6 +158,30 @@ class ContextUser {
 			$this->actorCard[$validActor] = NULL;
 			$this->persist();
 		}
+	}
+	
+	/**
+	 * This was added to allow testing
+	 * 
+	 * Mocks and testing sessions didn't work. Had to inject objects.
+	 * 
+	 * @param type $session
+	 */
+	static public function setSession($session) {
+		self::$Session = $session;
+	}
+	
+	/**
+	 * This was added to allow testing
+	 * 
+	 * It will completely reset the object, destroying its Singleton nature
+	 */
+	public function tearDown() {
+		$this->actorId = $this->defaultValues;
+		$this->actorCard = $this->defaultValues;
+		self::$instance = NULL;
+		self::$Session = NULL;
+		$this->PersonCardsTable = NULL;
 	}
 	
 	
@@ -174,7 +201,7 @@ class ContextUser {
 			'actorCard' => $this->actorCard,
 		];
 		try {
-			$this->Session->write("$this->user.ContextUser", $data);
+			self::$Session->write("$this->user.ContextUser", $data);
 		} catch (Exception $exc) {
 			$message = "Couldn't write ContextUser to Session. " . $exc->getMessage();
 			throw $exc;
@@ -297,7 +324,7 @@ class ContextUser {
 			'user' => $this->user,
 			'actorId' => $this->actorId,
 			'actorCard' => $actorCard,
-			'Session' => is_object($this->Session) ? 'Session object' : 'Not set',
+			'Session' => is_object(self::$Session) ? 'Session object' : 'Not set',
 			'PersonCardsTable' =>
 					is_object($this->PersonCardsTable) 
 					? 'PersonCardsTable object' 
