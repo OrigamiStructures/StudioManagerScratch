@@ -160,21 +160,25 @@ class ContextUser {
 		}
 	}
 	
+// <editor-fold defaultstate="collapsed" desc="AIDS TO TESTING THIS SINGLETON">
+
 	/**
-	 * This was added to allow testing
+	 * Send in an alternative Persistence object
 	 * 
-	 * Mocks and testing sessions didn't work. Had to inject objects.
+	 * Mocks and testing sessions didn't work. Had to inject objects. 
+	 * But now a replacement for Session could be used if need be.
 	 * 
 	 * @param type $session
 	 */
 	static public function setSession($session) {
 		self::$Session = $session;
 	}
-	
+
+
 	/**
-	 * This was added to allow testing
+	 * Return the object to uninitialized, non-singleton state
 	 * 
-	 * It will completely reset the object, destroying its Singleton nature
+	 * This was added to allow testing but might have other uses
 	 */
 	public function tearDown() {
 		$this->actorId = $this->defaultValues;
@@ -183,7 +187,8 @@ class ContextUser {
 		self::$Session = NULL;
 		$this->PersonCardsTable = NULL;
 	}
-	
+
+	// </editor-fold>
 	
 // <editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
 	
