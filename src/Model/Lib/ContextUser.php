@@ -216,8 +216,8 @@ class ContextUser {
 	 */
 	private function validateActor($actor) {
 		$validActor = strtolower($actor);
-		if (!in_array($actor, array_keys($this->actorId))) {
-			$this->badActor($actor);
+		if (!in_array($validActor, array_keys($this->actorId))) {
+			$this->badActor($validActor);
 		}
 		return $validActor;
 	}
@@ -231,7 +231,7 @@ class ContextUser {
 	private function badActor($actor) {
 		$message = "$actor is not a valid actor focus point. "
 				. "Choose actor, manager, or supervisor";
-		throw new Exception($message);
+		throw new \BadMethodCallException($message);
 	}
 
 	/**
@@ -317,7 +317,7 @@ class ContextUser {
 		foreach (array_keys($this->defaultValues) as $key) {
 			$actorCard[$key] = 
 					is_null($this->actorCard[$key]) 
-					? 'NULL' 
+					? NULL 
 					: 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
 		}
 		return [
