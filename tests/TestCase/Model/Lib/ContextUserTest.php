@@ -77,6 +77,148 @@ class ContextUserTest extends TestCase
 	}
 	
 	public function testInstanceFromPersistedVersion() {
+        $ContextUser = $this->starter();
+		
+        $this->assertTrue(get_class($ContextUser) === 'App\Model\Lib\ContextUser', 
+				'::instance() without prior session data did not return a '
+				. 'ContextUser object instance');
+		
+		$this->assertTrue($ContextUser === $ContextUser::instance(), 
+				'The context user does not store a reference to itself');
+				
+		$this->assertTrue($ContextUser->getId('artist') === 'a-id',
+				'an actorId value did not migrate from the session into '
+				. 'the live object');
+				
+		$this->assertTrue(is_object($ContextUser->getCard('supervisor')),
+				'an supervisor card did not migrate from the session into '
+				. 'the live object');
+		
+		$ContextUser->tearDown();
+
+	}
+    /**
+     * Test has method
+     *
+     * @return void
+     */
+    public function testHas()
+    {
+        $ContextUser = $this->starter();
+		
+		$this->assertTrue($ContextUser->has('artist'));
+		$this->assertFalse($ContextUser->has('MANAGER'));
+		
+		$ContextUser->tearDown();
+    }
+
+    /**
+     * Test set method
+     *
+     * @return void
+     */
+    public function testSet()
+    {
+        $ContextUser = $this->starter();
+		
+		$this->assertFalse($ContextUser->has('MANAGER'));
+		$ContextUser->set('manager', 1);
+		$this->assertTrue($ContextUser->has('MANAGER'));
+		
+		$ContextUser->tearDown();
+    }
+
+    /**
+     * Test getId method
+     *
+     * @return void
+     */
+    public function testGetId()
+    {
+        $ContextUser = $this->starter();
+		
+		$this->assertTrue($ContextUser->getId('artist') === 'a-id');
+		
+		$ContextUser->tearDown();
+    }
+
+    /**
+     * Test getCard method
+     *
+     * @return void
+     */
+    public function testGetCard()
+    {
+        $ContextUser = $this->starter();
+		
+		$this->assertTrue(is_object($ContextUser->getCard('supervisor')));
+		
+		$ContextUser->tearDown();
+    }
+
+    /**
+     * Test clear method
+     *
+     * @return void
+     */
+    public function testClearWithNoArgs()
+    {
+		$obj = new \App\Model\Entity\Member();
+		
+		$stored = [
+			'user' => 'handle',
+			'actorId' => [
+				'artist' => 'a-id',
+				'manager' => NULL,
+				'supervisor' => 's-id'
+			],
+			'actorCard' => [
+				'artist' => NULL,
+				'manager' => NULL,
+				'supervisor' => $obj
+			]
+		];
+		
+		$session = $this->createMock(\Cake\Http\Session::class);
+		$session->method('read')
+             ->will($this->onConsecutiveCalls('handle', $stored, 'handle'));
+		$session->method('delete')
+             ->will($this->returnValue(TRUE));
+
+		ContextUser::setSession($session);
+		$ContextUser = ContextUser::instance();
+		
+		$ContextUser->clear();
+		
+		$this->assertFalse($ContextUser->has('artist'));
+		$this->assertFalse($ContextUser->has('supervisor'));
+		
+		$ContextUser->tearDown();
+    }
+	
+	public function testClearWithArg() {
+        $ContextUser = $this->starter();
+		
+		$this->assertTrue(is_object($ContextUser->getCard('supervisor')));
+		$ContextUser->clear('SuperVisor');
+		$this->assertTrue(is_null($ContextUser->getCard('supervisor')));
+		$this->assertFalse($ContextUser->has('supervisor'));
+		
+		$ContextUser->tearDown();
+	}
+	
+	/**
+	 * @expectedException \BadMethodCallException
+	 */
+	public function testInvalidActory() {
+        $ContextUser = $this->starter();
+		
+		$ContextUser->has('badActor');
+		
+		$ContextUser->tearDown();
+	}
+
+	public function starter() {
 		$obj = new \App\Model\Entity\Member();
 		
 		$stored = [
@@ -98,83 +240,6 @@ class ContextUserTest extends TestCase
              ->will($this->onConsecutiveCalls('handle', $stored));
 
 		ContextUser::setSession($session);
-		$ContextUser = ContextUser::instance();
-		
-        $this->assertTrue(get_class($ContextUser) === 'App\Model\Lib\ContextUser', 
-				'::instance() without prior session data did not return a '
-				. 'ContextUser object instance');
-		
-		$this->assertTrue($ContextUser === $ContextUser::instance(), 
-				'The context user does not store a reference to itself');
-				
-		$this->assertTrue($ContextUser->getId('artist') === 'a-id',
-				'an actorId value did not migrate from the session into '
-				. 'the live object');
-				
-		$this->assertTrue($ContextUser->getCard('supervisor') == $obj,
-				'an supervisor card did not migrate from the session into '
-				. 'the live object');
-		
-		$ContextUser->tearDown();
-
+		return ContextUser::instance();
 	}
-    /**
-     * Test has method
-     *
-     * @return void
-     */
-    public function testHas()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test set method
-     *
-     * @return void
-     */
-    public function testSet()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test getId method
-     *
-     * @return void
-     */
-    public function testGetId()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test getCard method
-     *
-     * @return void
-     */
-    public function testGetCard()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test clear method
-     *
-     * @return void
-     */
-    public function testClear()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test __debugInfo method
-     *
-     * @return void
-     */
-    public function testDebugInfo()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
 }
