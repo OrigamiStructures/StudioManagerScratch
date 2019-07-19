@@ -71,7 +71,7 @@ class ContextUser {
 	/**
 	 * Access point for this Singleton
 	 * 
-	 * @return type
+	 * @return ContextUser
 	 */
 	static public function instance() {
 		if (is_null(self::$instance)) {
@@ -112,7 +112,7 @@ class ContextUser {
 	 * Get the stored actor id or NULL if not set
 	 * 
 	 * @param type $actor
-	 * @return int|string|NULL
+	 * @return int|string|null
 	 */
 	public function getId($actor) {
 		$validActor = $this->validateActor($actor);
@@ -126,7 +126,7 @@ class ContextUser {
 	 * this request for further data is made
 	 * 
 	 * @param string $actor
-	 * @return PersonCard|NULL
+	 * @return PersonCard|null
 	 */
 	public function getCard($actor) {
 		$validActor = $this->validateActor($actor);
@@ -168,9 +168,11 @@ class ContextUser {
 	 * @throws \App\Model\Lib\Exception
 	 */
 	private function persist() {
-		osd($this);
-		$data = $this->__debugInfo();
-		unset($data['Session'], $data['PersonCardsTable'], $data['instance']);
+		$data = [
+			'user' => $this->user,
+			'actorId' => $this->actorId,
+			'actorCard' => $this->actorCard,
+		];
 		try {
 			$this->Session->write("$this->user.ContextUser", $data);
 		} catch (Exception $exc) {
@@ -231,8 +233,7 @@ class ContextUser {
 	private function PersonCardsTable() {
 		if (is_null($this->PersonCardsTable)) {
 			$this->PersonCardsTable = 
-				 TableRegistry::getTableLocator()->get('PersonCardsTable');
-			osd(get_class($this->PersonCardsTable));die;
+				 TableRegistry::getTableLocator()->get('PersonCards');
 		}
 		return $this->PersonCardsTable;
 	}
@@ -244,7 +245,7 @@ class ContextUser {
 		$set = $this->PersonCardsTable()
 				->find('stacksFor',
 				[
-			'seed' => 'id',
+			'seed' => 'identity',
 
 			'ids' => [$this->actorId['artist']]
 		]);
@@ -282,24 +283,29 @@ class ContextUser {
 	}
 
 	/**
-	 * Also used by persist( ) to make the session storage array
-	 * 
 	 * @return array
 	 */
 	public function __debugInfo() {
+		$actorCard = [];
+		foreach (array_keys($this->defaultValues) as $key) {
+			$actorCard[$key] = 
+					is_null($this->actorCard[$key]) 
+					? 'NULL' 
+					: 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
+		}
 		return [
 			'user' => $this->user,
 			'actorId' => $this->actorId,
-			'actorCard' => $this->actorCard,
+			'actorCard' => $actorCard,
 			'Session' => is_object($this->Session) ? 'Session object' : 'Not set',
 			'PersonCardsTable' =>
-
-			is_object($this->PersonCardsTable) 
-			? 'PersonCardsTable object' 
-			: 'Not set',
+					is_object($this->PersonCardsTable) 
+					? 'PersonCardsTable object' 
+					: 'Not set',
 			'instance' =>
-
-			is_null(self::$instance) ? 'instance is clear' : 'instance is populated'
+					is_null(self::$instance) 
+					? 'instance is clear' 
+					: 'instance is populated'
 		];
 	}
 
