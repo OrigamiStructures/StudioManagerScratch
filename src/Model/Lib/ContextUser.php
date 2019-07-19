@@ -52,9 +52,11 @@ class ContextUser {
 	 * @throws BadRequestException
 	 */
 	private function __construct($options = null) {
-		// session injection was added to allow testing (self::setSession() )
+		// session injection was added to allow testing
 		$this->setSession($options);
+		// currentUser injection was added to allow testing
 		$this->setCurrentUser($options);
+		
 		$contextUser = self::$Session->read($this->cacheKey());
 		if (!is_null($contextUser)) {
 			foreach(array_keys($contextUser) as $key) {
@@ -172,6 +174,7 @@ class ContextUser {
 			self::$Session = new Session();
 		}
 	}
+	
 	private function setCurrentUser($options) {
 		if (isset($options['currentUser'])) {
 			$this->user = $options['currentUser'];
