@@ -89,6 +89,13 @@ class CurrentUser {
         return $this->data['member_id'];
 	}
 	
+	public function isSuperuser() {
+		return $this->data['is_superuser'] === TRUE;
+	}
+	
+	public function isActive() {
+		return $this->data['active'] === TRUE;
+	}
 //	public function __debugInfo() {
 //		return ['data' => $this->data];
 //	}
