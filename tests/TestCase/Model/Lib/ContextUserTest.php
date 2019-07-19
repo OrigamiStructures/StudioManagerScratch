@@ -18,9 +18,54 @@ class ContextUserTest extends TestCase
      */
     public $ContextUser;
 	
+	public $CurrentUser;
+	
+	public $Session;
+	
+	public $options;
+	
+	public $AuthUser;
+	
 	public function setUp() {
-		$session = $this->createMock(\Cake\Http\Session::class);
-		$this->ContextUser = ContextUser::setSession($session);
+		/**
+		 * The first Session::read gets Auth.User
+		 */
+		$this->AuthUser = [
+			'id' => 'testId',
+			'management_token' => 'testToken',
+			'username' => 'testName',
+			'email' => 'testEmail',
+			'first_name' => 'firstname',
+			'last_name' => 'lastname',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => 'testArtistId',
+			'member_id' => 'testMemberId'
+		];
+		/**
+		 * Mock Session rather than use the real thing. 
+		 * Configuration of the mock happens in the specific tests 
+		 * so different call results can be modeled
+		 */
+		$this->Session = $this->createMock(\Cake\Http\Session::class);
+		/**
+		 * Normally a CurrentUser object is built. But  we will mock it also. 
+		 * This object is part of the persisted ContextUser data. 
+		 */
+		$this->CurrentUser = $this->createMock(\App\Model\Lib\CurrentUser::class);
+		$this->CurrentUser
+				->method('userId')
+				->will(
+						$this->onConsecutiveCalls('testId','testId','testId','testId','testId')
+					);
+		
+		/**
+		 * To inject these mocked objects I had to make instance( ) accept an 
+		 * argument. There is no validation of the passed args, so if this 
+		 * pathway comes into general use...
+		 */
+		$this->options = ['session' => $this->Session, 'currentUser' => $this->CurrentUser];
 	}
 	
 	public function tearDown() {
@@ -40,8 +85,9 @@ class ContextUserTest extends TestCase
 
 	public function testInstanceWithNoPersistedVersion() 
     {
+		// What we expect to see in __debugInfo at the end
 		$structure = [
-			'user' => 'test',
+			'user' => 'CurrentUser object:  testId',
 			'actorId' => [
 				'artist' => null,
 				'manager' => null,
@@ -57,13 +103,12 @@ class ContextUserTest extends TestCase
 			'instance' => 'instance is populated'
 		];
 		
-		$session = $this->createMock(\Cake\Http\Session::class);
-		$session->method('read')
-             ->will($this->onConsecutiveCalls('test', NULL));
+		// configure the Session mock for 'No Previously Stored Context'
+		$this->Session->method('read')
+             ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
 
-		ContextUser::setSession($session);
-		$ContextUser = ContextUser::instance();
-		
+		$ContextUser = ContextUser::instance($this->options);
+				
         $this->assertTrue(get_class($ContextUser) === 'App\Model\Lib\ContextUser', 
 				'::instance() without prior session data did not return a '
 				. 'ContextUser object instance');
@@ -163,30 +208,7 @@ class ContextUserTest extends TestCase
      */
     public function testClearWithNoArgs()
     {
-		$obj = new \App\Model\Entity\Member();
-		
-		$stored = [
-			'user' => 'handle',
-			'actorId' => [
-				'artist' => 'a-id',
-				'manager' => NULL,
-				'supervisor' => 's-id'
-			],
-			'actorCard' => [
-				'artist' => NULL,
-				'manager' => NULL,
-				'supervisor' => $obj
-			]
-		];
-		
-		$session = $this->createMock(\Cake\Http\Session::class);
-		$session->method('read')
-             ->will($this->onConsecutiveCalls('handle', $stored, 'handle'));
-		$session->method('delete')
-             ->will($this->returnValue(TRUE));
-
-		ContextUser::setSession($session);
-		$ContextUser = ContextUser::instance();
+        $ContextUser = $this->starter();
 		
 		$ContextUser->clear();
 		
@@ -219,10 +241,17 @@ class ContextUserTest extends TestCase
 	}
 
 	public function starter() {
+		
+		/**
+		 * A placeholder for PersonCards
+		 */
 		$obj = new \App\Model\Entity\Member();
 		
+		/**
+		 * The ContextUser data persisted in the session
+		 */
 		$stored = [
-			'user' => 'handle',
+			'user' => $this->CurrentUser,
 			'actorId' => [
 				'artist' => 'a-id',
 				'manager' => NULL,
@@ -235,11 +264,16 @@ class ContextUserTest extends TestCase
 			]
 		];
 		
-		$session = $this->createMock(\Cake\Http\Session::class);
-		$session->method('read')
-             ->will($this->onConsecutiveCalls('handle', $stored));
+		/**
+		 * Configure the Session return data
+		 */
+		$this->Session->method('read') ->will($this->onConsecutiveCalls(
+					 $this->AuthUser, $stored, /*only used by clear() */$this->AuthUser)
+				);
+		// Only used by clear()
+		$this->Session->method('delete')
+					 ->will($this->returnValue(TRUE));
 
-		ContextUser::setSession($session);
-		return ContextUser::instance();
+		return ContextUser::instance(['session' => $this->Session]);
 	}
 }
