@@ -47,18 +47,19 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 	 */
 	protected function localConditions($query, $options = []) {
 		return $query->where([
-			'user_id' => $this->currentUser()->userId(),
+            'user_id' => $this->contextUser()->getId('supervisor'),
 			'member_id IS NOT NULL'
 			]);
 	}
 	
 	protected function marshalNameCards($stack) {
 		
-		$stack->manifest
-				->find('permissions')
-				->specifyFilter('layer', 'contact')
-				->load();
-		
+//		$stack->manifest
+//				->find('permissions')
+//				->specifyFilter('layer', 'contact')
+//				->load();
+
+		osd($stack);//die;
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[

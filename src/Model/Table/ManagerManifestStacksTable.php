@@ -1,8 +1,10 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Lib\StackSet;
 use App\Model\Table\StacksTable;
 use App\Model\Lib\Layer;
+use Cake\ORM\Query;
 
 /**
  * Description of ManagerManifestStacksTable
@@ -20,6 +22,11 @@ class ManagerManifestStacksTable extends StacksTable {
 	
 	protected $rootTable = 'Manifests';
 
+//    /**
+//     * @var \App\Model\Table\ManifestsTable
+//     */
+//	public $Manifests;
+//
 	/**
 	 * {@inheritdoc}
 	 */
@@ -52,7 +59,7 @@ class ManagerManifestStacksTable extends StacksTable {
 	 * Derive the Manifest ids relevant to these manifest ids
 	 * 
 	 * @param array $ids Manifest ids
-	 * @return StackSet
+	 * @return Query
 	     */
 	protected function distillFromManifest(array $ids) {
 		return $this->Manifests
@@ -68,7 +75,7 @@ class ManagerManifestStacksTable extends StacksTable {
 	 * Derive the Manifest ids relevant to these Managers
 	 * 
 	 * @param array $ids Manager ids
-	 * @return array manifest ids
+	 * @return Query
 	 */
 	protected function distillFromManager(array $ids) {
 		return $this->Manifests
@@ -81,9 +88,10 @@ class ManagerManifestStacksTable extends StacksTable {
 	 * Derive the Manifest ids relevant to these Supervisors
 	 * 
 	 * @param array $ids Supervisor ids
-	 * @return array manifest ids
+	 * @return Query
 	 */
 	protected function distillFromSupervisor(array $ids) {
+//	    osd($this->Manifests);die;
 		return $this->Manifests
 				->find('issuedBy', ['ids' => $ids])
 				->select(['id', 'supervisor_id'])
@@ -100,10 +108,11 @@ class ManagerManifestStacksTable extends StacksTable {
 	 * 
 	 * @param Query $query
 	 * @param array $options none supported at this time
+     * @return Query
 	 */
 	protected function localConditions($query, $options = []) {
 		return $query->where([
-			'user_id' => $this->currentUser()->userId(),
+			'user_id' => $this->contextUser()->getId('supervisor'),
 			'member_id IS NULL'
 				]);
 	}
@@ -118,6 +127,7 @@ class ManagerManifestStacksTable extends StacksTable {
 	protected function marshalManifest($id, $stack) {
 			$manifest = $this->Manifests->find('manifests', ['values' => [$id]]);
 			$stack->set(['manifest' => $manifest->toArray()]);
+//			osd($manifest->toArray());die;
 			$stack = $this->marshalNameCards($stack);
 			return $stack;
 	}
@@ -190,20 +200,25 @@ class ManagerManifestStacksTable extends StacksTable {
 	 * @throws \BadMethodCallException
 	 */
 	public function findSupervisorManifests($query, $options) {
-		if (
-				key_exists('source', $options) 
-				&& (in_array($options['source'], ['currentUser', 'contextUser']))
-		) {
-			$ids = [$this->{$options['source']}->supervisorId()];
-		} elseif (key_exists('ids', $options)) {
-			$ids = $options['ids'];
-		} else {
-			$msg = 'Allowed $options keys: "source" or "ids". "source" values: '
-					. '"currentUser" or "contextUser". "ids" value must '
-					. 'be an array of ids.';
-			throw new \BadMethodCallException($msg);
-		}
-		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => $ids]);
+//	    osd($query);
+//	    osd($options);die;
+//		if (
+//				key_exists('source', $options)
+//				&& (in_array($options['source'], ['currentUser', 'contextUser']))
+//		) {
+//			$ids = [$this->{$options['source']}->supervisorId()];
+//		} elseif (key_exists('ids', $options)) {
+//			$ids = $options['ids'];
+//		} else {
+//			$msg = 'Allowed $options keys: "source" or "ids". "source" values: '
+//					. '"currentUser" or "contextUser". "ids" value must '
+//					. 'be an array of ids.';
+//			throw new \BadMethodCallException($msg);
+//		}
+
+		$ids = $this->contextUser()->getId('supervisor');
+
+		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => [$ids]]);
 	}
 	
 	public function findManagerManifests($query, $options) {

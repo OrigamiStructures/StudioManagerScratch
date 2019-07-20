@@ -195,6 +195,7 @@ class StacksTable extends AppTable
         
 		$paginator = FALSE;
         $this->validateArguments($options);
+        debug($options);
         extract($options); //$seed, $ids, $paginator
         if (empty($ids)) {
             return new StackSet();

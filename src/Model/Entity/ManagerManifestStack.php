@@ -20,6 +20,7 @@ class ManagerManifestStack extends StackEntity {
     protected $manifest;
 	
 	public function manifest() {
+//	    return $this->manifest->element(0, LAYERACC_INDEX);
 		return $this->manifest->shift();
 	}
 	

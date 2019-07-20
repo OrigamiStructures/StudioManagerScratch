@@ -20,17 +20,14 @@ class SupervisorsController extends AppController
         $ArtistManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 		
-        $managerManifests = 
-				$ManagerManifestStacks
-				->find('supervisorManifests', ['source' => 'currentUser']);
+        $managerManifests = $ManagerManifestStacks->find('supervisorManifests');
 		
-        $managementAgreements = 
-				$ArtistManifestStacks
-				->find('supervisorManifests', ['source' => 'currentUser']);
+        $managementAgreements = $ArtistManifestStacks->find('supervisorManifests');
 
         $myPersonCards =
                 $PersonCards
-                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->contextUser()->userId()]]);
+                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$contextUser->getId('supervisor')]]);
+//                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->contextUser()->userId()]]);
 
 		
         $this->set(compact(['managementAgreements','managerManifests','contextUser', 'myPersonCards']));

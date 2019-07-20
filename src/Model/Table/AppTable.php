@@ -49,7 +49,7 @@ class AppTable extends Table {
 
     /**
      * Get / make contextUser object
-     * 
+     *
      * @return ContextUser
      */
     public function contextUser() {

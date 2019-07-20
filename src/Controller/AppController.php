@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Model\Lib\ContextUser;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use App\Lib\SystemState;
@@ -149,10 +150,13 @@ class AppController extends Controller
 		}
 		return $this->currentUser;
 	}
-	
+
+    /**
+     * @return ContextUser
+     */
 	public function contextUser() {
 		if (!isset($this->contextUser)) {
-			$this->contextUser = $this->currentUser();
+			$this->contextUser = ContextUser::instance();
 		}
 		return $this->contextUser;
 	}

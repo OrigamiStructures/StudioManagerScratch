@@ -81,8 +81,18 @@ trait LayerAccessTrait {
 		}
 			return $result;
 	}
-    
-	/**
+
+    /**
+     * Convenience wrapper to return the first element
+     *
+     * @return Entity
+     */
+	public function shift() {
+        return $this->element(0, LAYERACC_INDEX);
+    }
+
+
+    /**
 	 * Get the IDs of all the primary entities in the stored stack entities
 	 * 
 	 * @return array
