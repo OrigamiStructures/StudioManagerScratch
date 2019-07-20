@@ -8,6 +8,11 @@ use App\Model\Entity\StackEntity;
  * @author dondrake
  */
 class ManagerManifestStack extends StackEntity {
+
+    /**
+     * @var \App\Model\Lib\StackSet
+     */
+    protected $people;
 	
 	public function manifest() {
 		return $this->manifest->shift();
