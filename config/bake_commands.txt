@@ -39,6 +39,7 @@ bin/cake bake.bake test entity ManifestStack
 ====================================================================
 bin/cake bake.bake test ModLib StackSet
 bin/cake bake.bake test ModLib ContextUser
+bin/cake bake.bake test ModLib CurrentUser
 
 ## TESTING
 ====================================================================
@@ -76,6 +77,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ContextUserTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/CurrentUserTest.php
 # behaviors
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php
