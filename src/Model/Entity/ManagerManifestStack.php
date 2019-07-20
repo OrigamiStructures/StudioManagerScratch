@@ -10,7 +10,7 @@ use App\Model\Entity\StackEntity;
 class ManagerManifestStack extends StackEntity {
 	
 	public function manifest() {
-		return $this->manifest->element(0, LAYERACC_INDEX);
+		return $this->manifest->shift();
 	}
 	
 	public function supervisorCard() {
