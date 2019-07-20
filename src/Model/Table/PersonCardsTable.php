@@ -8,7 +8,22 @@ use App\Model\Traits\ContactableTableTrait;
 use App\Model\Traits\ReceiverTableTrait;
 
 /**
- * CakePHP PersonCardsTable
+ * PersonCardsTable
+ * 
+ * Create PersCards, a variety of stack entity. 
+ * Enforce that only member records of member_type === Person are included. 
+ * All possible distillers for this class
+ *   identity (root)
+ *   data_owner
+ *   manager
+ *   membership
+ *   supervisor
+ *   image
+ *   addresses
+ *   contact
+ * All possible distillers for this classdisposition
+ * 
+ * 
  * @author dondrake
  */
 class PersonCardsTable extends RolodexCardsTable {
