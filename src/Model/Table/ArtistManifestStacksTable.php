@@ -43,6 +43,7 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 	 * 
 	 * @param Query $query
 	 * @param array $options none supported at this time
+     * @return Query $query
 	 */
 	protected function localConditions($query, $options = []) {
 		return $query->where([
