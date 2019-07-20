@@ -54,10 +54,20 @@ class CurrentUser {
 		$this->data = $data;
 	}
 
+	/**
+	 * Registered user's manager token
+	 * 
+	 * @return string
+	 */
 	public function managerId() {
 		return $this->data['management_token'];
 	}
 	
+	/**
+	 * Registered user's supervisor token
+	 * 
+	 * @return string
+	 */
 	public function supervisorId() {
 		return $this->data['management_token'];
 	}
@@ -84,15 +94,30 @@ class CurrentUser {
         return $this->Person->name();
 	}
 
+	/**
+	 * member_id for the registered user
+	 * 
+	 * @return string
+	 */
     protected function memberId()
     {
         return $this->data['member_id'];
 	}
 	
+	/**
+	 * Is the registered user a superuser?
+	 * 
+	 * @return boolean
+	 */
 	public function isSuperuser() {
 		return $this->data['is_superuser'] === TRUE;
 	}
 	
+	/**
+	 * Is the logged-in registered user's account active?
+	 * 
+	 * @return string
+	 */
 	public function isActive() {
 		return $this->data['active'] === TRUE;
 	}
