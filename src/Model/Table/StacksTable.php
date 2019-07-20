@@ -265,7 +265,8 @@ class StacksTable extends AppTable
 	 * </code>
 	 * will return an array of the root IDs for the seeds.
 	 * 
-	 * @param array $seeds 
+	 * @param array $seeds
+     * @return StackSet
 	 */
 	public function processSeeds($seeds) {
 		$IDs = [];
