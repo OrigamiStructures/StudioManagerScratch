@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Lib\SystemState;
+use App\Model\Lib\ContextUser;
 use Cake\ORM\Table;
 use Cake\Http\Session;
 use App\Model\Lib\CurrentUser;
@@ -16,7 +17,10 @@ class AppTable extends Table {
 	public $SystemState;
 	
 	protected $currentUser;
-	
+
+    /**
+     * @var ContextUser
+     */
 	protected $contextUser;
 
 	/**
@@ -33,11 +37,6 @@ class AppTable extends Table {
         if (!empty($config['currentUser'])) {
             $this->currentUser = $this->setCurrentUser($config['currentUser']);
 		}
-        if (!empty($config['contextUser'])) {
-            $this->contextUser = $this->setContextUser($config['contextUser']);
-		} elseif (!empty($config['currentUser']))  {
-            $this->contextUser = $this->setCurrentUser($config['currentUser']);
-		}
 		parent::__construct($config);
 	}
 	
@@ -47,13 +46,18 @@ class AppTable extends Table {
 	public function currentUser() {
 		return $this->currentUser;
 	}
-	
-	/**
-	 * Get/make the currentUser object for the table
-	 */
-	public function contextUser() {
-		return $this->contextUser;
-	}
+
+    /**
+     * Get / make contextUser object
+     * 
+     * @return ContextUser
+     */
+    public function contextUser() {
+        if (!isset($this->contextUser)) {
+            $this->contextUser = ContextUser::instance();
+        }
+        return $this->contextUser;
+    }
 	
 	public function setCurrentUser($userData) {
 		$this->currentUser = $userData;
