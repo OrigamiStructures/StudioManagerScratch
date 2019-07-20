@@ -63,6 +63,7 @@ class ContextUser {
 				$this->$key = $contextUser[$key];
 			}
 		} else {
+			$this->set('supervisor', $this->user->supervisorId());
 			$this->persist();
 		}
 		self::$instance = $this;
