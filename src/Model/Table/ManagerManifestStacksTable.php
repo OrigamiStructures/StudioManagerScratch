@@ -155,7 +155,7 @@ class ManagerManifestStacksTable extends StacksTable {
 	}
 	
 	private function permissionsRequired($stack) {
-		$management_token = $this->currentUser()->managerId();
+		$management_token = $this->contextUser()->getId('manager');
 		return $stack->manifest()->supervisorId() === $management_token
 				|| $stack->manifest()->managerId() === $management_token;
 	}
@@ -222,19 +222,7 @@ class ManagerManifestStacksTable extends StacksTable {
 	}
 	
 	public function findManagerManifests($query, $options) {
-		if (
-				key_exists('source', $options) 
-				&& (in_array($options['source'], ['currentUser', 'contextUser']))
-		) {
-			$ids = [$this->{$options['source']}->managerId()];
-		} elseif (key_exists('ids', $options)) {
-			$ids = $options['ids'];
-		} else {
-			$msg = 'Allowed $options keys: "source" or "ids". "source" values: '
-					. '"currentUser" or "contextUser". "ids" value must '
-					. 'be an array of ids.';
-			throw new \BadMethodCallException($msg);
-		}
+		$ids = $this->contextUser()->getId('manager');
 		return $this->find('stacksFor', ['seed' => 'manager', 'ids' => $ids]);
 	}
 	

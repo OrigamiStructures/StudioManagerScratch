@@ -3,7 +3,7 @@
     $this->loadHelper('People');
 
 	$delegatedManagement = $managerManifests
-			->delegatedManagement($contextUser->supervisorId());
+			->delegatedManagement($contextUser->getId('supervisor'));
 ?>
 	<h1>Add an artist</h1>
 	<p>tools here</p>
