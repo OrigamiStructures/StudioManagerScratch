@@ -6,6 +6,7 @@ use App\Model\Table\RolodexCardsTable;
 use Cake\ORM\Table;
 use App\Model\Traits\ContactableTableTrait;
 use App\Model\Traits\ReceiverTableTrait;
+use App\Model\Lib\PersonCardRegistry;
 
 /**
  * PersonCardsTable
@@ -28,9 +29,10 @@ use App\Model\Traits\ReceiverTableTrait;
  */
 class PersonCardsTable extends RolodexCardsTable {
 	
-	
 	use ContactableTableTrait;
 	use ReceiverTableTrait;
+	
+	protected $registry;
 	
 	public function initialize(array $config) {
 		parent::initialize($config);
@@ -39,6 +41,7 @@ class PersonCardsTable extends RolodexCardsTable {
 		$this->addLayerTable(['Images']);
         $this->addStackSchema(['image']);
 		$this->addSeedPoint(['image', 'images']);
+		$this->registry = new PersonCardRegistry();
 	}
 	
 	protected function distillFromImage($ids) {
