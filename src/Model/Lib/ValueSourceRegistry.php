@@ -4,14 +4,13 @@ namespace App\Model\Lib;
 use Cake\Core\ObjectRegistry;
 use App\Exception\MissingClassException;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of ValueSourceRegistry
+ * ValueSourceRegistry
+ * 
+ * Provides registry services for LayerAccessArs. LAA keeps several 
+ * ValueSourceObject and may eventually require more. This registry 
+ * simplifies management of the various VSOs and will allow for 
+ * future expansion with minimal code change.
  *
  * @author dondrake
  */
