@@ -51,7 +51,17 @@ class StacksTable extends AppTable
      * @var array
      */
     protected $seedPoints = [];
-
+	
+	/**
+	 * A registry object if one is used
+	 * 
+	 * Some StackTables may store their entities in a registry so 
+	 * references to a single copy can be used during a Request/Response 
+	 * cycle. Others may not require this feature.
+	 *
+	 * @var mixed
+	 */
+	protected $registry = FALSE;
 
     /**
      * Initialize method
@@ -167,6 +177,15 @@ class StacksTable extends AppTable
         }
         return $schema;
     }
+	
+	/**
+	 * Get the StackEntity registry if one is used
+	 * 
+	 * @return ObjectRegistry|False
+	 */
+	public function registry() {
+		return $this->registry;
+	}
 	
 	/**
 	 * The primary access point to get a concrete stack
@@ -299,7 +318,7 @@ class StacksTable extends AppTable
 	}
 	
 	/**
-	 * Read the stacks from cache or assemble and cache them
+	 * Read the stacks from registry, cache or assemble and cache them
 	 * 
 	 * This is the destination for all the distillFor variants. 
 	 * It calls all the individual marshaller methods for 
@@ -311,9 +330,9 @@ class StacksTable extends AppTable
     public function stacksFromRoot($ids) {
 		$this->stacks = $this->stackSet();
         foreach ($ids as $id) {
-			$stack = $this->readCache($id);
+			$stack = $this->persistedCopy($id);
 			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
-				$stack = $this->newVersionMarshalStack($id);
+				$stack = $this->register($id, $this->newVersionMarshalStack($id));
 			}
 			
 			if ($stack->isEmpty()) { continue; }
@@ -323,6 +342,43 @@ class StacksTable extends AppTable
 			$this->writeCache($id, $stack);
 		}
  		return $this->stacks;
+	}
+	
+	/**
+	 * Avoid marshalling a stack if we already have a copy of it
+	 * 
+	 * A registry may be available for the stack. This will allow references 
+	 * to be passed out if the stack is used in more than one place during 
+	 * a single Request/Response cycle.
+	 * 
+	 * A cache is used to keep the assembled stack avaialable 
+	 * between requests.
+	 * 
+	 * @param string $id
+	 */
+	protected function persistedCopy($id) {
+		$registry = $this->registry();
+		if ($registry && $registry->has($id)) {
+			return $registry->get($id);
+		}
+		return $this->readCache($id);
+	}
+	
+	/**
+	 * Store an assemble stack to aviod reassembling it later
+	 * 
+	 * A registry may not be in use. In that case the stack is returned 
+	 * rather than a reference to a single, managed instance
+	 * 
+	 * @param string $id
+	 * @param StackEntity $stack or a reference to one
+	 */
+	protected function register($id, $stack) {
+		if ($this->registry()) {
+			$this->registry()->load();
+			return $this->registry()->get($id);
+		}
+		return $stack;
 	}
 	
 	/**

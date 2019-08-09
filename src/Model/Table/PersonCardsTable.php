@@ -32,8 +32,6 @@ class PersonCardsTable extends RolodexCardsTable {
 	use ContactableTableTrait;
 	use ReceiverTableTrait;
 	
-	protected $registry;
-	
 	public function initialize(array $config) {
 		parent::initialize($config);
 		$this->initializeContactableCard();
