@@ -49,6 +49,7 @@ bin/cake bake.bake test ModLib CurrentUser
 --------------------------------------------------------------------
 cd /Library/WebServer/Documents/StudioManagerScratch
 
+#### RUNNING TEST SUITES (XML)
 vendor/bin/phpunit --testsuite app (controller model view lib)
 
 vendor/bin/phpunit test tests/TestCase/Lib/FGCurlTest.php
