@@ -395,7 +395,7 @@ class StacksTable extends AppTable
 	 */
 	protected function writeRegistry($id, $stack) {
 		if ($this->registry()) {
-			$this->registry()->load($id);
+			$this->registry()->load($id, $stack);
 			return $this->registry()->get($id);
 		}
 		return $stack;
