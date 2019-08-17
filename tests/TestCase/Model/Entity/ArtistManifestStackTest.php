@@ -1,87 +1,87 @@
 <?php
-//namespace App\Test\TestCase\Model\Entity;
-//
-//use App\Model\Entity\ArtistManifestStack;
-//use App\Model\Table\ArtistManifestStacksTable;
-//use Cake\TestSuite\TestCase;
-//use App\Model\Lib\CurrentUser;
-//use Cake\ORM\TableRegistry;
-//use App\Model\Lib\ContextUser;
-//
-///**
-// * App\Model\Entity\ManifestStack Test Case
-// */
-//class ArtistManifestStackTest extends TestCase
-//{
-//
-//    public $AtristManifestStacksTable;
-//
-//	public $ArtistManifestStacks;
-//
-//	public $selfManage;
-//	
-//	public $otherManage;
-//	
-//	public $foreignManage;
-//	
-//	/**
-//     * Fixtures
-//     *
-//     * @var array
-//     */
-//    public $fixtures = [
-//        'app.manifests',
-//		// to support PersonCard inclusion in object
-//        'app.identities',
-//        'app.data_owners',
-//        'app.members',
-//        'app.contacts',
-//        'app.images',
-//		'app.addresses',
-//		'app.dispositions',
-//		'app.users',
-//		'app.groups_members',
-//		// end person card stuff
-//		'app.permissions'
-//    ];
-//
-//	protected $user = 	  [
-//		[
-//			'id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-//			'management_token' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-//			'username' => 'don',
-//			'email' => 'ddrake@dreamingmind.com',
-//			'first_name' => 'Don',
-//			'last_name' => 'Drake',
-//			'active' => true,
-//			'is_superuser' => false,
-//			'role' => 'user',
-//			'artist_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-//			'member_id' => 1			
-//		],
-//		[
-//			'id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
-//			'management_token' => '708cfc57-1162-4c5b-9092-42c25da131a9',
-//			'username' => 'leonardo',
-//			'email' => 'horseman@dreamingmind.com',
-//			'first_name' => 'Luis',
-//			'last_name' => 'Delgado',
-//			'active' => true,
-//			'is_superuser' => false,
-//			'role' => 'user',
-//			'artist_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
-//			'member_id' => 75			
-//		],
-//	];
-//
-//    /**
-//     * setUp method
-//     *
-//     * @return void
-//     */
-//    public function setUp()
-//    {
-//        parent::setUp();
+namespace App\Test\TestCase\Model\Entity;
+
+use App\Model\Entity\ArtistManifestStack;
+use App\Model\Table\ArtistManifestStacksTable;
+use Cake\TestSuite\TestCase;
+use App\Model\Lib\CurrentUser;
+use Cake\ORM\TableRegistry;
+use App\Model\Lib\ContextUser;
+
+/**
+ * App\Model\Entity\ManifestStack Test Case
+ */
+class ArtistManifestStackTest extends TestCase
+{
+
+    public $AtristManifestStacksTable;
+
+	public $ArtistManifestStacks;
+
+	public $selfManage;
+	
+	public $otherManage;
+	
+	public $foreignManage;
+	
+	/**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.manifests',
+		// to support PersonCard inclusion in object
+        'app.identities',
+        'app.data_owners',
+        'app.members',
+        'app.contacts',
+        'app.images',
+		'app.addresses',
+		'app.dispositions',
+		'app.users',
+		'app.groups_members',
+		// end person card stuff
+		'app.permissions'
+    ];
+
+	protected $user = 	  [
+		[
+			'id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'management_token' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'username' => 'don',
+			'email' => 'ddrake@dreamingmind.com',
+			'first_name' => 'Don',
+			'last_name' => 'Drake',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_id' => 1			
+		],
+		[
+			'id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'management_token' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'username' => 'leonardo',
+			'email' => 'horseman@dreamingmind.com',
+			'first_name' => 'Luis',
+			'last_name' => 'Delgado',
+			'active' => true,
+			'is_superuser' => false,
+			'role' => 'user',
+			'artist_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'member_id' => 75			
+		],
+	];
+
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
 //		$supervisor = $this->createMock(\App\Model\Entity\PersonCard::class);
 //        $config = TableRegistry::getTableLocator()
 //				->exists('ManifestStacks') ? [] : ['className' => ArtistManifestStacksTable::class];
@@ -105,8 +105,8 @@
 //		$this->Session = $this->createMock(\Cake\Http\Session::class);
 //		$this->Session->method('read')->will($this->onConsecutiveCalls($this->user[1], NULL));
 //		return ContextUser::instance(['session' => $this->Session]);
-//	}
-//
+	}
+
 //    /**
 //     * tearDown method
 //     *
@@ -123,16 +123,17 @@
 //        parent::tearDown();
 //    }
 //
-//    /**
-//     * Test manifest method
-//     *
-//     * @return void
-//     */
-//    public function testManifest()
-//    {
+    /**
+     * Test manifest method
+     *
+     * @return void
+     */
+    public function testManifest()
+    {
+		$this->markTestIncomplete();
 //        $this->assertTrue($this->selfManage->manifest() instanceof \App\Model\Entity\Manifest,
 //				'manifest() didn\'t return a ManifestEntity');
-//    }
+    }
 //
 //    /**
 //     * Test supervisorCard method
@@ -184,4 +185,4 @@
 //    {
 //        $this->markTestIncomplete('Not implemented yet.');
 //    }
-//}
+}
