@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\StackEntity;
+use App\Model\Lib\StackRegistry;
 use Cake\ORM\Query;
 use App\Model\Table\AppTable;
 use Cake\ORM\TableRegistry;
@@ -184,6 +186,9 @@ class StacksTable extends AppTable
 	 * @return ObjectRegistry|False
 	 */
 	public function registry() {
+	    if(!$this->registry){
+	        $this->registry = new StackRegistry();
+        }
 		return $this->registry;
 	}
 	
@@ -330,9 +335,22 @@ class StacksTable extends AppTable
     public function stacksFromRoot($ids) {
 		$this->stacks = $this->stackSet();
         foreach ($ids as $id) {
-			$stack = $this->persistedCopy($id);
+            if($this->stacks->element($id, LAYERACC_ID)){
+                continue;
+            }
+            $stack = $this->readRegistry($id);
+            if($stack === FALSE) {
+                $stack = $this->readCache($id);
+            }
+            if($stack === FALSE) {
+                $stack = $this->newVersionMarshalStack($id);
+            }
+
+
+
+			$stack = $this->readRegistry($id);
 			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
-				$stack = $this->register($id, $this->newVersionMarshalStack($id));
+				$stack = $this->writeRegistry($id, $this->newVersionMarshalStack($id));
 			}
 			
 			if ($stack->isEmpty()) { continue; }
@@ -355,13 +373,14 @@ class StacksTable extends AppTable
 	 * between requests.
 	 * 
 	 * @param string $id
+     * @return StackEntity | FALSE
 	 */
-	protected function persistedCopy($id) {
+	protected function readRegistry($id) {
 		$registry = $this->registry();
 		if ($registry && $registry->has($id)) {
 			return $registry->get($id);
 		}
-		return $this->readCache($id);
+		return FALSE;
 	}
 	
 	/**
@@ -372,8 +391,9 @@ class StacksTable extends AppTable
 	 * 
 	 * @param string $id
 	 * @param StackEntity $stack or a reference to one
+     * @return StackEntity
 	 */
-	protected function register($id, $stack) {
+	protected function writeRegistry($id, $stack) {
 		if ($this->registry()) {
 			$this->registry()->load();
 			return $this->registry()->get($id);
@@ -385,15 +405,13 @@ class StacksTable extends AppTable
 	 * Read cache to see if the ID'd stack is present
 	 * 
      * @param string $id Stack id will generate the cache data key
-     * @param string $config name of the configuration to use
      * @return mixed The cached data, or FALSE
 	 */
 	protected function readCache($id) {
 		if (Configure::read('stackCache')) {
 			return Cache::read($this->cacheKey($id), $this->cacheName());
-		} else {
-			return FALSE;
 		}
+		return FALSE;
 	}
 	
 	/**
