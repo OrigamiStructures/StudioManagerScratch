@@ -219,7 +219,7 @@ class StacksTable extends AppTable
         
 		$paginator = FALSE;
         $this->validateArguments($options);
-        debug($options);
+//        debug($options);
         extract($options); //$seed, $ids, $paginator
         if (empty($ids)) {
             return new StackSet();
@@ -395,7 +395,7 @@ class StacksTable extends AppTable
 	 */
 	protected function writeRegistry($id, $stack) {
 		if ($this->registry()) {
-			$this->registry()->load();
+			$this->registry()->load($id);
 			return $this->registry()->get($id);
 		}
 		return $stack;
