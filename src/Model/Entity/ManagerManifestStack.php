@@ -9,16 +9,6 @@ use App\Model\Entity\StackEntity;
  */
 class ManagerManifestStack extends StackEntity {
 
-    /**
-     * @var \App\Model\Lib\StackSet
-     */
-    protected $people;
-
-    /**
-     * @var \App\Model\Lib\Layer
-     */
-    protected $manifest;
-	
 	public function manifest() {
 //	    return $this->manifest->element(0, LAYERACC_INDEX);
 		return $this->manifest->shift();
