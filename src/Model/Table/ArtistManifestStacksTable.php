@@ -59,7 +59,6 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 //				->specifyFilter('layer', 'contact')
 //				->load();
 
-		osd($stack);//die;
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
