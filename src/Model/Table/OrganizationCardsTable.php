@@ -20,6 +20,10 @@ class OrganizationCardsTable extends CategoryCardsTable {
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
 	}
+	
+	protected function localConditions($query, $options = []) {
+		return $query->where(['member_type' => 'Institution']);
+	}
 
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
