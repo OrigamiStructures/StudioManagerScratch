@@ -48,7 +48,8 @@ class MenusTable extends AppTable{
 			'test-artworks' => '/artworks/test_me',
 			'test-supervision' => '/supervisors',
 			'test-addressbook' => '/addressbook',
-			'test-rolodex' => '/rolodexcards'
+			'test-rolodex' => '/rolodexcards',
+			'test-rolodex-institutions' => '/rolodexcards/groups'
         ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',
