@@ -9,9 +9,10 @@ use Cake\ORM\TableRegistry;
  */
 class RolodexCardsController extends AppController {
 	
+	public $name = 'RolodexCards';
+	
 	public function initialize() {
 		parent::initialize();
-		$this->RolodexCards = TableRegistry::getTableLocator()->get('RolodexCards');
 	}
 	
 	public function index() {
