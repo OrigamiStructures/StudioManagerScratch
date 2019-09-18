@@ -30,7 +30,7 @@ class RolodexCardsController extends AppController {
 				->Identities->find('list')
 //				->where(['member_type' => 'Institution'])
 				->toArray();
-		$instutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-		$this->set('instutionCards', $instutionCards);
+		$institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+		$this->set('institutionCards', $institutionCards);
 	}
 }
