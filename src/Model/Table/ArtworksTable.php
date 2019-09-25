@@ -22,7 +22,7 @@ use App\Model\Behavior\IntegerQueryBehavior;
 class ArtworksTable extends AppTable
 {
     use ArtistIdConditionTrait;
-	
+
 // <editor-fold defaultstate="collapsed" desc="Core methods">
 
     /**
@@ -41,9 +41,9 @@ class ArtworksTable extends AppTable
 
 // <editor-fold defaultstate="collapsed" desc="Initialization methods">
     protected function _initializeProperties() {
-        $this->table('artworks');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('artworks');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
     }
 
         protected function _initializeBehaviors() {
@@ -74,11 +74,11 @@ class ArtworksTable extends AppTable
     public function validationDefault(Validator $validator)     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
-        $validator->allowEmpty('title');
+        $validator->allowEmptyString('title');
 
-        $validator->allowEmpty('description');
+        $validator->allowEmptyString('description');
 
         return $validator;
     }
@@ -99,7 +99,7 @@ class ArtworksTable extends AppTable
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Lifecycle methods">
-    
+
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
         $this->initImages($data);
         $this->initIDs($data); // add in user_ids
@@ -108,7 +108,7 @@ class ArtworksTable extends AppTable
 
     /**
      * beforeFind event
-     * 
+     *
      * @param Event $event
      * @param Query $query
      * @param ArrayObject $options
@@ -118,12 +118,12 @@ class ArtworksTable extends AppTable
 //        $this->includeArtistIdCondition($query); // trait handles this
     }
 
-    
+
 // </editor-fold>
 
     /**
      * Get the current select list
-     * 
+     *
      * @param Query $query
      * @param string $artist_id
      * @return query result object
@@ -133,12 +133,12 @@ class ArtworksTable extends AppTable
     }
 
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
-    
+
     /**
      * Find artworks by id
-     * 
+     *
      * @todo is this where the stack cache storage/retrieval will be done?
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -146,10 +146,10 @@ class ArtworksTable extends AppTable
     public function findArtworks($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find artworks with a title matching or containing a string
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -157,10 +157,10 @@ class ArtworksTable extends AppTable
     public function findTitle($query, $options = []) {
         return $this->string($query, 'title', $options[$value]);
     }
-    
+
     /**
      * Find artworks with a description matching or containing a string
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -168,10 +168,10 @@ class ArtworksTable extends AppTable
     public function findDescription($query, $options = []) {
         return $this->string($query, 'title', $options[$value]);
     }
-    
+
     /**
      * Find artworks linked to an image (or set of images)
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -179,10 +179,10 @@ class ArtworksTable extends AppTable
     public function findHasImage($query, $options) {
         return $this->integer($query, 'image_id', $options['values']);
     }
-    
+
     /**
      * Find formats with a number or range of Transferred pieces
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -193,7 +193,7 @@ class ArtworksTable extends AppTable
 
     /**
      * @todo no known use
-     * 
+     *
      * @param Query $query
      * @param type $options
      * @return Query
