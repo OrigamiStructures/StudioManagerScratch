@@ -7,7 +7,7 @@ git pull
 
 ## Apigen documentation
 ====================================================================
-cd/Library/WebServer/Documents/StudioManagerScratch
+cd /Library/WebServer/Documents/StudioManagerScratch
 
 /Applications/Apigen/apigen.phar generate --source /Library/WebServer/Documents/StudioManagerScratch/src --destination /Users/dondrake/Dropbox/projx_Origami_StudioManager/apigenDocs --title StudioManagerScratch --charset UTF-8 --todo  --template-theme=bootstrap
 
