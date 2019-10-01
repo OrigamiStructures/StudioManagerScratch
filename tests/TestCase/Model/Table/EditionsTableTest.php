@@ -38,7 +38,7 @@ class EditionsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Editions') ? [] : ['className' => 'App\Model\Table\EditionsTable'];
-        $this->Editions = TableRegistry::get('Editions', $config);
+        $this->Editions = TableRegistry::getTableLocator()->get('Editions', $config);
     }
 
     /**

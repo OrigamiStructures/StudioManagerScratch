@@ -53,7 +53,7 @@ class DispositionsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Dispositions') ? [] : ['className' => 'App\Model\Table\DispositionsTable'];
-        $this->Dispositions = TableRegistry::get('Dispositions', $config);
+        $this->Dispositions = TableRegistry::getTableLocator()->get('Dispositions', $config);
     }
 
     /**

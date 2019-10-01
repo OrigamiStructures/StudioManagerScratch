@@ -15,7 +15,7 @@ class FormatsController extends AppController
 {
 
 	use ArtReviewTrait;
-	
+
 	public $components = ['ArtworkStack', 'Layers'];
 
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD">
@@ -120,13 +120,13 @@ class FormatsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
-	
+
 	/**
 	 * Show detailed view of a single Format
-	 * 
-	 * Provides Artwork and Edition summaries, full explanation of 
+	 *
+	 * Provides Artwork and Edition summaries, full explanation of
 	 * the Format, and full Piece display with basic information
-	 * 
+	 *
 	 * Driven by artwork, edition, format IDs in URL query
 	 */
 	public function review() {
@@ -135,15 +135,15 @@ class FormatsController extends AppController
 		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
-	
+
 	/**
 	 * Refine that data for a single Format
-	 * 
+	 *
 	 * The artwork and edition will show as 'reference' info on the page.
-	 * 
+	 *
 	 */
 	public function refine() {
-		$this->Artworks = TableRegistry::get('Artworks');
+		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
@@ -153,7 +153,7 @@ class FormatsController extends AppController
 			$deletions = []; // CAN THIS BE RIGHT? WHAT ARE DELETIONS?
 			if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->redirect([
-					'controller' => 'artworks', 
+					'controller' => 'artworks',
 					'action' => 'review',
 					'?' => [
 						'artwork' => $this->SystemState->queryArg('artwork'),
@@ -164,24 +164,24 @@ class FormatsController extends AppController
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
             }
         }
-		
+
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('elements', $this->Layers->setElements());
 		$this->render('/Artworks/review');
 	}
-	
+
 	/**
 	 * Create an new Format
-	 * 
+	 *
 	 * The artwork and edition will be shown as reference info on the page
-	 * 
+	 *
 	 * SAVE HAS NOT BEEN WRITTEN
-	 * 
+	 *
 	 */
 	public function create() {
 //		osd($this->request->data, 'trd');
-		$this->Artworks = TableRegistry::get('Artworks');
+		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
@@ -190,7 +190,7 @@ class FormatsController extends AppController
 //			osd($artwork, 'artwork for format submit');die;
 			if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
                 $this->redirect([
-					'controller' => 'editions', 
+					'controller' => 'editions',
 					'action' => 'review',
 					'?' => [
 						'artwork' => $this->SystemState->queryArg('artwork'),
@@ -200,13 +200,13 @@ class FormatsController extends AppController
                 $this->Flash->error(__('The format could not be saved. Please, try again.'));
             }
         }
-		
+
 		$this->set('artwork', $artwork);
 		$this->ArtworkStack->layerChoiceLists();
 		$this->set('elements', $this->Layers->setElements());
-		$this->render('/Artworks/review');		
+		$this->render('/Artworks/review');
 	}
-	
+
 	public function testMe() {
 		$conditions = [11, 12, 13, 14, 25, 26];
 		$contain = ['Pieces' => ['Dispositions'], 'Editions' => ['Artworks']];
@@ -216,5 +216,5 @@ class FormatsController extends AppController
 		$this->set('formats', $formats);
 //		osd($formats->toArray());
 	}
-	
+
 }

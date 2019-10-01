@@ -15,29 +15,29 @@ use App\Model\Lib\Providers;
 
 /**
  * ArtworkStackComponent provides a unified interface for the three layers, Artwork, Edition, and Format
- * 
- * The creation and refinement of Artworks is a process that may effect 1, 2 or 3 
- * the layers. So, depending on context, we may be in any of 3 controllers. 
- * This component provides the basic services that allow them all to behave 
- * in the same way. Queries are always performed from the top of the stack 
- * even if we are working on a Format. Saves are always done from the top also. 
+ *
+ * The creation and refinement of Artworks is a process that may effect 1, 2 or 3
+ * the layers. So, depending on context, we may be in any of 3 controllers.
+ * This component provides the basic services that allow them all to behave
+ * in the same way. Queries are always performed from the top of the stack
+ * even if we are working on a Format. Saves are always done from the top also.
  * All the views and elements are designed to cascade through all the layers.
- * 
- * Refinement of editions that involves quantity changes trigger the application 
- * of a special rule set to manage piece records. This task is passed off to 
+ *
+ * Refinement of editions that involves quantity changes trigger the application
+ * of a special rule set to manage piece records. This task is passed off to
  * a separate component.
- * 
- * @todo Exceptions in this or calling code should clear the art stack cache, probably 
+ *
+ * @todo Exceptions in this or calling code should clear the art stack cache, probably
  *			a special Exception class should be written that takes care of the cache.
- * 
+ *
  * @author dondrake
  */
 class ArtworkStackComponent extends Component {
-	
+
 	public $components = ['Paginator'];
 
 	public $SystemState;
-	
+
 	public $full_containment = [
 		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
 			'Series', 'Pieces' => ['Dispositions'], /*'Formats.Users',*/ 'Formats' => [
@@ -49,8 +49,8 @@ class ArtworkStackComponent extends Component {
 	private $required_tables = [
 		'Artworks', 'Editions', 'Images', 'Formats', 'Pieces', 'Series', 'Subscriptions', 'Menus'
 	];
-		
-    public function initialize(array $config) 
+
+    public function initialize(array $config)
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
@@ -58,35 +58,35 @@ class ArtworkStackComponent extends Component {
 
 	/**
 	 * Get a named Table instance
-	 * 
+	 *
 	 * Lazy load Tables in the Artwork Stack
-	 * 
+	 *
 	 * @param string $name
 	 * @return Table
 	 */
 	public function __get($name) {
 		parent::__get($name);
-		// 
+		//
 		if (!empty($this->$name)) {
 			return $this->$name;
 		} else if (in_array($name, $this->required_tables)) {
-			$this->$name = TableRegistry::get($name);
+			$this->$name = TableRegistry::getTableLocator()->get($name);
 			return $this->$name;
 		}
 	}
-	
+
 	/**
 	 * Wrap both refinement save and deletions in a single transaction
-	 * 
-	 * Creation is a simple Table->save() but refinement may involve deletion 
+	 *
+	 * Creation is a simple Table->save() but refinement may involve deletion
 	 * of piece records. This method provides refinement for all layers of the stack.
-	 * 
+	 *
 	 * @param Entity $artwork
 	 * @param array $deletions
 	 * @return boolean
 	 */
 	public function refinementTransaction($artwork, $deletions) {
-		$ArtworkTable = TableRegistry::get('Artworks');
+		$ArtworkTable = TableRegistry::getTableLocator()->get('Artworks');
 		Cache::delete("get_default_artworks[_{$artwork->id}_]", 'artwork');//die;
 //		osd($artwork);die;
 		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
@@ -103,7 +103,7 @@ class ArtworkStackComponent extends Component {
 
 	/**
 	 * Call from anywhere in the ArtworkStack to get the proper result
-	 * 
+	 *
 	 * @return Entity
 	 */
 	public function stackQuery() {
@@ -120,10 +120,10 @@ class ArtworkStackComponent extends Component {
 //			osd($artworks->toArray());die;
 			return $artworks->toArray();
 		} else {
-			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION 
+			// SPECIAL HANDLING NEEDED FOR PEICE SELECTION
 			// BASED ON ONGOING DISPOSITION CREATION ?????
-			// 
-			// There may be more keys known than just the 'artwork', but that's 
+			//
+			// There may be more keys known than just the 'artwork', but that's
 			// all we need for the query.
 //			$artwork = $this->Artworks->find()
 //					->contain($this->full_containment)
@@ -156,14 +156,14 @@ class ArtworkStackComponent extends Component {
 			return [$artwork];
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @throws \BadMethodCallException
 	 */
 	public function focusedStack() {
 		$query_arg = $this->SystemState->queryArg();
-		if (!key_exists('artwork', $query_arg) || 
+		if (!key_exists('artwork', $query_arg) ||
 				!key_exists('edition', $query_arg)) {
 			throw new \BadMethodCallException('focusedStack() requires both \'artwork\' '
 					. 'and \'edition\' IDs in the url query. One or both are missing');
@@ -171,7 +171,7 @@ class ArtworkStackComponent extends Component {
 		$artwork = $this->stackQuery();
 		$providers = [];
 		$pieces = [];
-		$providers['edition'] = 
+		$providers['edition'] =
 				$artwork[0]->editions[
 					$artwork[0]->indexOfEdition($this->SystemState->queryArg('edition'))
 				];
@@ -180,39 +180,39 @@ class ArtworkStackComponent extends Component {
 			if ($index === 'edition') {
 				$provider->unassigned = $provider->pieces;
 			} else {
-				$provider->fluid = $provider->pieces; 
+				$provider->fluid = $provider->pieces;
 			}
 			$pieces = array_merge($pieces, $provider->pieces);
 		}
 //		osd($providers);die;
 		return [
-			'providers' => new Providers($providers), 
+			'providers' => new Providers($providers),
 			'pieces' => $pieces,
 			'artwork' => $artwork[0],
 			];
 	}
-	
+
 	public function allocatePieces($artwork) {
 		$this->PieceAllocation = $this->controller->loadComponent('PieceAllocation', ['artwork' => $artwork]);
 		$this->PieceAllocation->allocate();
 	}
-	
+
 	/**
 	 * Check and handle edition->quantity change during refine() requests
-	 * 
-	 * Both artworks and editions refine() methods may see changes to 
-	 * the edition size. The is the method that detects if quantity 
-	 * was edited. All edition types pass through this check. The 
-	 * handling will be parsed out to specialized code in the 
+	 *
+	 * Both artworks and editions refine() methods may see changes to
+	 * the edition size. The is the method that detects if quantity
+	 * was edited. All edition types pass through this check. The
+	 * handling will be parsed out to specialized code in the
 	 * PieceAllocationComponent if there was an edit of this value.
-	 * 
+	 *
 	 * @param entity $artwork The full artwork stack
 	 * @param integer $edition_id ID of the edition that was up for editing
 	 */
 	public function refinePieces($artwork, $edition_id) {
 		$edition = $artwork->returnEdition($edition_id);
 		$quantity_tuple = !$edition->dirty('quantity') ?
-				FALSE : 
+				FALSE :
 				[
 					'original' => $edition->getOriginal('quantity'),
 					'refinement' => $edition->quantity,
@@ -225,17 +225,17 @@ class ArtworkStackComponent extends Component {
 //		osd($quantity_tuple, 'after call');//die;
 		return []; // deletions required
 	}
-	
-	
+
+
 	/**
 	 * Use URL query arguments to filter the Entity
-	 * 
-	 * 'review' views target specifics memebers of the an Artwork stack. The 
-	 * URL arguments indicate which Edition and possibly which Format the 
-	 * artist wants to see. The query gets everything because that is also the 
+	 *
+	 * 'review' views target specifics memebers of the an Artwork stack. The
+	 * URL arguments indicate which Edition and possibly which Format the
+	 * artist wants to see. The query gets everything because that is also the
 	 * source of data for the menus. This process reduces the Entity stack
 	 * so the view will only have the required information.
-	 * 
+	 *
 	 * @param Entity $artwork
 	 * @return Entity
 	 */
@@ -244,17 +244,17 @@ class ArtworkStackComponent extends Component {
 			$edition_id = $this->SystemState->queryArg('edition');
 			$format_id = $this->SystemState->urlArgIsKnown('format') ? $this->SystemState->queryArg('format') : FALSE;
 			$editions = new Collection($artwork->editions);
-			
+
 			$edition_result = $editions->filter(function($edition) use ($edition_id, $format_id) {
 				if ($edition->id == $edition_id) {
 					if ($format_id) {
 						$formats = new Collection($edition->formats);
-						
+
 						$format_result = $formats->filter(function($format) use ($format_id) {
 							return $format->id == $format_id;
 						});
 						$edition->formats = $format_result->toArray();
-					}					
+					}
 					return TRUE;
 				}
 				return FALSE;
@@ -263,14 +263,14 @@ class ArtworkStackComponent extends Component {
 		}
 		return $artwork;
 	}
-	
+
 	/**
 	 * Prepare the entity for 'creation' of some layer
-	 * 
-	 * stackQuery pulls the whole, known artwork stack and passes it here if 
-	 * there is a Create request. In this case, we must insert empty Entities 
-	 * on the appropriate layers. These are deduced by Controller context. 
-	 * 
+	 *
+	 * stackQuery pulls the whole, known artwork stack and passes it here if
+	 * there is a Create request. In this case, we must insert empty Entities
+	 * on the appropriate layers. These are deduced by Controller context.
+	 *
 	 * @param Entity $artwork
 	 * @return Entity
 	 */
@@ -290,12 +290,12 @@ class ArtworkStackComponent extends Component {
 
 	/**
 	 * Prepare appropriate choice lists for all artwork stack tables
-	 * 
-	 * NEEDS TO BE 'STATE' AWARE TO GENERATE PROPERLY FILTERED AND 
+	 *
+	 * NEEDS TO BE 'STATE' AWARE TO GENERATE PROPERLY FILTERED AND
 	 * CONSTRUCTED LISTS FOR 'CREATION' VS 'SELECTION' PROCESSES
 	 * These are processes that assemble choice-list arrays
 	 * for form construction
-	 * 
+	 *
 	 * @return array
 	 */
 	public function layerChoiceLists() {
@@ -326,22 +326,22 @@ class ArtworkStackComponent extends Component {
 			$series = ['n' => 'New Series'] + $series;
 			$subscriptions = $this->Subscriptions->find('choiceList',
 							['artist_id' => $artist_id])->toArray();
-		}		
+		}
 //		$this->controller->set(compact('artworks', 'editions', 'types', 'formats', 'series', 'subscriptions'));
 		$this->controller->set(compact('types', 'formats', 'series', 'subscriptions'));
 //		osd((time()+  microtime()) - $mili, 'do queries');
 //		return [$artworks, $editions, $formats, $series, $subscriptions];
 		return [$formats, $series, $subscriptions];
 	}
-	
+
 	/**
 	 * Make an entity to support Artwork stack layer creation
-	 * 
-	 * Creation may happen at any level and in those cases the upstream 
-	 * IDs (or other data) may be required. For later 'patching' and 
+	 *
+	 * Creation may happen at any level and in those cases the upstream
+	 * IDs (or other data) may be required. For later 'patching' and
 	 * proper linking of new records, this allows any layer data to be
 	 * passed in.
-	 * 
+	 *
 	 * @param array $data
 	 * @return \App\Model\Entity\Artwork
 	 */
@@ -349,16 +349,16 @@ class ArtworkStackComponent extends Component {
 //		$image = new \App\Model\Entity\Image([]);
 		$format_data = isset($data['format']) ? $data['format'] : [];
 		$format = new \App\Model\Entity\Format($format_data);
-		
-		$edition_data = (isset($data['edition']) ? $data['edition'] : []) + 
+
+		$edition_data = (isset($data['edition']) ? $data['edition'] : []) +
 			['formats' => [$format]];
 		$edition = new \App\Model\Entity\Edition($edition_data);
-		
-		$artwork_data = (isset($data['artwork']) ? $data['artwork'] : []) + 
+
+		$artwork_data = (isset($data['artwork']) ? $data['artwork'] : []) +
 			['editions' => [$edition], /*'image'=> $image*/];
 		$artwork = new \App\Model\Entity\Artwork($artwork_data);
-		
-		return $artwork; 
+
+		return $artwork;
 	}
-	
+
 }

@@ -39,7 +39,7 @@ class ImagesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Images') ? [] : ['className' => 'App\Model\Table\ImagesTable'];
-        $this->Images = TableRegistry::get('Images', $config);
+        $this->Images = TableRegistry::getTableLocator()->get('Images', $config);
     }
 
     /**

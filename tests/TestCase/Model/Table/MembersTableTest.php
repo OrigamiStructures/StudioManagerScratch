@@ -38,7 +38,7 @@ class MembersTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Members') ? [] : ['className' => 'App\Model\Table\MembersTable'];
-        $this->Members = TableRegistry::get('Members', $config);
+        $this->Members = TableRegistry::getTableLocator()->get('Members', $config);
     }
 
     /**

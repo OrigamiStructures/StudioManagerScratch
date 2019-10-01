@@ -29,7 +29,7 @@ class DesignsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Designs') ? [] : ['className' => 'App\Model\Table\DesignsTable'];
-        $this->Designs = TableRegistry::get('Designs', $config);
+        $this->Designs = TableRegistry::getTableLocator()->get('Designs', $config);
     }
 
     /**

@@ -39,7 +39,7 @@ class SeriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Series') ? [] : ['className' => 'App\Model\Table\SeriesTable'];
-        $this->Series = TableRegistry::get('Series', $config);
+        $this->Series = TableRegistry::getTableLocator()->get('Series', $config);
     }
 
     /**

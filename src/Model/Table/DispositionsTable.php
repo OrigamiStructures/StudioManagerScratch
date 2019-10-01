@@ -35,7 +35,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * Map specific disposition labels to their underlying types
-     * 
+     *
      * @var array
      */
     protected $_map = [
@@ -58,7 +58,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * The list of valid types
-     * 
+     *
      * @var array
      */
     protected $_disposition_type = [
@@ -134,12 +134,12 @@ class DispositionsTable extends AppTable {
             'secondary_input' => 'second_end_date']);
         $this->addBehavior('CounterCache', [
             /**
-             * Disposition count > 0 prevents Pieces from being assigned to 
-             * new Formats. At some point we could have a second disp_count 
-             * that didn't prevent this. These would be pieces in some 
-             * internal process disposition that didn't lock determine 
+             * Disposition count > 0 prevents Pieces from being assigned to
+             * new Formats. At some point we could have a second disp_count
+             * that didn't prevent this. These would be pieces in some
+             * internal process disposition that didn't lock determine
              * their physical nature (some planning or working stage?)
-             * In this case we could just do a smart disposition_count 
+             * In this case we could just do a smart disposition_count
              * instead of doing two count fields.
              */
             'Pieces' => [
@@ -223,7 +223,7 @@ class DispositionsTable extends AppTable {
     }
 
 // </editor-fold>
-    
+
     public function map($label) {
         if (isset($this->_map[$label])) {
             return $this->_map[$label];
@@ -234,15 +234,15 @@ class DispositionsTable extends AppTable {
 
     /**
      * Add piece (and edition) links to the query
-     * 
-     * This allows the dispositions to gain context. The edition_id will 
+     *
+     * This allows the dispositions to gain context. The edition_id will
      * provide a datum to make a cache key to find the stack data.
-     * 
-     * @todo This brings in two levels of linked entities, a lot of extra freight. 
-     *      setting up a map/reduce process to flatten the data might be better, 
-     *      but in that case, the disposition entity should gain new methods 
+     *
+     * @todo This brings in two levels of linked entities, a lot of extra freight.
+     *      setting up a map/reduce process to flatten the data might be better,
+     *      but in that case, the disposition entity should gain new methods
      *      to cope with the new data. Issue #110 discusses this.
-     * 
+     *
      * @param Query $query
      * @return Query
      */
@@ -257,7 +257,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * Is the label a Rights type of disposition
-     * 
+     *
      * @param string $label
      * @return boolean
      */
@@ -267,7 +267,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * Callable for 'label' validator rule
-     * 
+     *
      * @param array $value
      * @param array $context
      * @return boolean
@@ -278,7 +278,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * Callable for `end_date`, `start_date` validator rule
-     * 
+     *
      * @param array $data
      * @param array $context
      * @return boolean
@@ -288,7 +288,7 @@ class DispositionsTable extends AppTable {
         if (!isset($data['start_date'])) {
             return FALSE;
         } elseif (is_object($data['start_date'])) {
-            // already took care of this stuff at 'create' 
+            // already took care of this stuff at 'create'
             return TRUE;
         }
 
@@ -304,7 +304,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * Callable to support MembersTable counter cache behavior
-     * 
+     *
      * @param Event $event
      * @param Entity $entity
      * @param Table $table
@@ -325,16 +325,16 @@ class DispositionsTable extends AppTable {
 
     /**
      * afterSave
-     * 
-     * Set counter cache fields on pieces. Because of the  HABTM 
-     * association, CounterCache doesn't handle pieces so I put this in 
+     *
+     * Set counter cache fields on pieces. Because of the  HABTM
+     * association, CounterCache doesn't handle pieces so I put this in
      * to take care of those counts
-     * 
+     *
      * @param Event $event
      * @param Entity $entity
      */
     public function afterSave(Event $event, $entity) {
-        $table = TableRegistry::get('Pieces');
+        $table = TableRegistry::getTableLocator()->get('Pieces');
         foreach ($entity->pieces as $piece) {
             $status_events = $this->DispositionsPieces
                 ->find()
@@ -353,11 +353,11 @@ class DispositionsTable extends AppTable {
 
     /**
      * afterDelete
-     * 
-     * Do counter cache reductions for pieces. Because of the HABTM 
-     * association, CounterCache doesn't handle pieces so I put this in to 
+     *
+     * Do counter cache reductions for pieces. Because of the HABTM
+     * association, CounterCache doesn't handle pieces so I put this in to
      * take care of those counts
-     * 
+     *
      * @param Event $event
      * @param type $entity
      */
@@ -367,7 +367,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * beforeFind event
-     * 
+     *
      * @param Event $event
      * @param Query $query
      * @param ArrayObject $options
@@ -379,7 +379,7 @@ class DispositionsTable extends AppTable {
 
     /**
      * Lookup and set the disposition type
-     * 
+     *
      * @param Event $event
      * @param ArrayObject $data
      * @param ArrayObject $options
@@ -396,21 +396,21 @@ class DispositionsTable extends AppTable {
 
     /**
      * DYNAMIC FINDERS
-     * 
+     *
      * dynamic finders for all the major fields
      * type, label, name, first/last name, address 1-3, city, state, zip, country
-     * 
-     * I'm not sure what role these play. Will there be a single call point 
-     * that auto works off available parameters (to support real-time user 
+     *
+     * I'm not sure what role these play. Will there be a single call point
+     * that auto works off available parameters (to support real-time user
      * input) or are these always hand-written in methods?
      */
     /**
      * CUSTOM FINDER METHODS
      */
-    
+
     /**
      * Find disposition by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -418,10 +418,10 @@ class DispositionsTable extends AppTable {
     public function findDispositions($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find members
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -429,10 +429,10 @@ class DispositionsTable extends AppTable {
     public function findMembers(Query $query, $options) {
         return $query->integer($query, 'member_id', $options['values']);
     }
-    
+
     /**
      * Find addresses
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -443,9 +443,9 @@ class DispositionsTable extends AppTable {
 
     /**
      * Find the most rescent dispositions
-     * 
+     *
      * @todo This depends on the most recently created disp being the current one
-     * 		I'm not sure if this is true. Won't there be future (to do) dispos? 
+     * 		I'm not sure if this is true. Won't there be future (to do) dispos?
      * 		Or might there be a way to edit dispos that might change order?
      * 		I'm pretty sure this method is wrong.
      * @param Query $query
@@ -459,20 +459,20 @@ class DispositionsTable extends AppTable {
 
     /**
      * Participate in general site search feature
-     * 
+     *
      * @todo Method to be determined
-     * 
+     *
      * @param Query $query
      * @param array $options
      */
     public function findSearch(Query $query, $options) {
-        
+
     }
 
 // <editor-fold defaultstate="collapsed" desc="Tentative Set of Loan specific queries">
 
     /**
-     * 
+     *
      * @todo Could get a param check for a user provided date
      * @param Query $query
      * @param type $options
@@ -483,9 +483,9 @@ class DispositionsTable extends AppTable {
     }
 
     /**
-     * 
+     *
      * @todo Is this for open or closed? Both? Sorted by complete then?
-     * 
+     *
      * @param Query $query
      * @param type $options
      * @return type
@@ -496,12 +496,12 @@ class DispositionsTable extends AppTable {
 
     /**
      * Find loans that are out
-     * 
-     * These are loans that are started and not yet ended and loans that 
-     * are started and ended but not yet complete, even if there is a 
-     * subsiquent loan started. In this later case, there will be multiple 
+     *
+     * These are loans that are started and not yet ended and loans that
+     * are started and ended but not yet complete, even if there is a
+     * subsiquent loan started. In this later case, there will be multiple
      * loans show up for the same piece(s).
-     * 
+     *
      * @param Query $query
      * @param array $options
      * @return Query
@@ -598,18 +598,18 @@ class DispositionsTable extends AppTable {
 
 // <editor-fold defaultstate="collapsed" desc="'Schema List' generating methods">
     /**
-     * These methods return arrays that can be used by FormHelper select-type 
-     * input widgits. These are schema-introspection lists rather than 
+     * These methods return arrays that can be used by FormHelper select-type
+     * input widgits. These are schema-introspection lists rather than
      * user data lists and can be used to create UX toos and features.
      */
 
     /**
      * Return a list of (almost) all the custom finders
-     * 
-     * This can be used to make a drop-list for the user to pick from. 
+     *
+     * This can be used to make a drop-list for the user to pick from.
      * A multi-select could allow user defined complex finds we didn't think of.
-     * ['PastLoans' => 'PastLoans', 'Open' => 'Open', ... ] 
-     * 
+     * ['PastLoans' => 'PastLoans', 'Open' => 'Open', ... ]
+     *
      * @todo This will probably be useful for other Tables and could be in a Trait
      * @return array
      */
@@ -634,7 +634,7 @@ class DispositionsTable extends AppTable {
      * 		labelName1 => labelName1,
      * 		... ]
      * ]
-     * 
+     *
      * @return array
      */
     public function labels() {
@@ -643,9 +643,9 @@ class DispositionsTable extends AppTable {
 
     /**
      * Return a list of valid disposition types
-     * 
+     *
      * [ typeName1 => typeName2, typeName2 => typeName2 ]
-     * 
+     *
      * @return array
      */
     public function types() {

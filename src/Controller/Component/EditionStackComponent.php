@@ -13,34 +13,34 @@ use App\Lib\EditionTypeMap;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
- * 
- * Managing Pieces within Editions and their Formats requires complex data 
- * objects and collections. This component localizes these processes and provides 
- * tools required by the three controllers as they collaborate to maintain 
- * edition content. The actual movement of Pieces across the Edition/Format 
+ *
+ * Managing Pieces within Editions and their Formats requires complex data
+ * objects and collections. This component localizes these processes and provides
+ * tools required by the three controllers as they collaborate to maintain
+ * edition content. The actual movement of Pieces across the Edition/Format
  * layers is passed of to a separate component.
- * 
- * @todo Exception in this or calling code should clear the edition stack cache, probably 
+ *
+ * @todo Exception in this or calling code should clear the edition stack cache, probably
  *			a special Exception class should be written that takes care of the cache.
- * 
+ *
  * @todo This Component seems to mingle PieceTable tasks and AssignmentForm services
- * The logic of having much of this code in this component is suspect. Many parts 
- * could be in the PieceTable class. The stackQuery() data could be extracted by 
- * and returned from ArtworkStack::stackQuery(); either as optional return data or 
- * through a separate method in that class. And even that Component might be 
- * better as a Model class.  
- * 
+ * The logic of having much of this code in this component is suspect. Many parts
+ * could be in the PieceTable class. The stackQuery() data could be extracted by
+ * and returned from ArtworkStack::stackQuery(); either as optional return data or
+ * through a separate method in that class. And even that Component might be
+ * better as a Model class.
+ *
  * @author dondrake
  */
 class EditionStackComponent extends Component {
-	
+
 	use EditionStackCache;
-	
+
 	protected $pieces_to_save ;
 	protected $pieces_to_delete;
 
 
-	public function initialize(array $config) 
+	public function initialize(array $config)
 	{
 		$this->controller = $this->_registry->getController();
 		$this->SystemState = $this->controller->SystemState;
@@ -48,15 +48,15 @@ class EditionStackComponent extends Component {
 
 	/**
 	 * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
-	 * 
-	 * The Edition carries its Artwork record for some upstream context. 
-	 * The Edition and its Formats are returned as siblings, each with its Pieces. 
-	 * The Pieces are categorized as appropriate to that layer. 
-	 * The AssignemntTrait on the Edition and Piece entities unify piece access. 
+	 *
+	 * The Edition carries its Artwork record for some upstream context.
+	 * The Edition and its Formats are returned as siblings, each with its Pieces.
+	 * The Pieces are categorized as appropriate to that layer.
+	 * The AssignemntTrait on the Edition and Piece entities unify piece access.
 	 * <pre>
 	 * // providers array
 	 * ['edition' => EditionEntity {
-	 *			..., 
+	 *			...,
 	 *			'unassigned' -> PiecesEntity {},
 	 *      },
 	 *  0 => FormatEntity {
@@ -69,35 +69,35 @@ class EditionStackComponent extends Component {
 	 *			'fluid' -> PiecesEntity {},
 	 *      },
 	 * ]
-	 * 
+	 *
 	 * // pieces array
 	 * [0 => PieceEntity {},
 	 * ...
 	 * 0+n => PieceEntity {},
 	 * ]
 	 * </pre>
-	 * 
+	 *
 	 * @todo make providers an object?
-	 * This would allow it to contain its own ownerTitle hash map. This map 
-	 * allows piece->key() to lookup its assigned owner's display title. 
-	 * Currently, redundant code in the elements build the hash. A helper 
-	 * solution has to return the table as a variable or save it as a property. 
-	 * but it has difficulty knowing if the property is for the current 
-	 * version of $providers. 
-	 * 
+	 * This would allow it to contain its own ownerTitle hash map. This map
+	 * allows piece->key() to lookup its assigned owner's display title.
+	 * Currently, redundant code in the elements build the hash. A helper
+	 * solution has to return the table as a variable or save it as a property.
+	 * but it has difficulty knowing if the property is for the current
+	 * version of $providers.
+	 *
 	 * @return tuple 'providers, pieces'
 	 */
 	public function stackQuery() {
 	$stack = $this->readCache($this->SystemState->queryArg('edition'));
 	if ($stack === FALSE) {
-		$Pieces = TableRegistry::get('Pieces');
-		$Formats = TableRegistry::get('Formats');
-		$Editions = TableRegistry::get('Editions');
-		
-		$edition_condition = $this->SystemState->buildConditions(['edition' => 'Editions.id'], 'Editions');	
+		$Pieces = TableRegistry::getTableLocator()->get('Pieces');
+		$Formats = TableRegistry::getTableLocator()->get('Formats');
+		$Editions = TableRegistry::getTableLocator()->get('Editions');
+
+		$edition_condition = $this->SystemState->buildConditions(['edition' => 'Editions.id'], 'Editions');
 		$format_condition = $this->SystemState->buildConditions(['edition'], 'Formats');
 		$piece_condition = $this->SystemState->buildConditions(['edition'], 'Pieces');
-		
+
 		$edition = $Editions->find()
 				->where($edition_condition)
 				->contain('Artworks')
@@ -105,7 +105,7 @@ class EditionStackComponent extends Component {
 		$artwork = $edition->artwork;
 		$unassigned = $Pieces->find('unassigned', $piece_condition);
 		$edition->unassigned = $unassigned->toArray();
-		
+
 		$formats = $Formats->find()->where($format_condition);
 		$formats = $formats->each(function($format) use($piece_condition, $Pieces) {
 			$conditions = $piece_condition + ['format_id' => $format->id];
@@ -115,37 +115,37 @@ class EditionStackComponent extends Component {
 		$providers = ['edition' => $edition] + $formats->toArray();
 		$artwork->editions = [$edition];
 		$artwork->editions[0]->formats = $formats;
-		
+
 		// this may need ->order() later for piece-table reporting of open editions
 		$pieces = $Pieces->find()
 				->where($piece_condition)
 				->contain('Dispositions')
-				->order('Pieces.number'); 
+				->order('Pieces.number');
 		$stack = [
-			'providers' => new Providers($providers), 
+			'providers' => new Providers($providers),
 			'pieces' => ($pieces->toArray()),
 			'artwork' => $artwork,
 			];
 		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
 		}
-		
+
 		return $stack;
-				
+
 	}
-	
+
 	/**
 	 * Move the indicated pieces to to indicated destination
-	 * 
-	 * All request inputs were valid and logical we now have the  properties for the edit 
+	 *
+	 * All request inputs were valid and logical we now have the  properties for the edit
 	 * <pre>
-	 *	- the set source piece entities ($assignment->source_pieces) 
-	 *  - an idetifier for the destination ($assignment->destination) 
+	 *	- the set source piece entities ($assignment->source_pieces)
+	 *  - an idetifier for the destination ($assignment->destination)
 	 *  - if edition is OPEN
-	 *		- the number of pieces to move ($assignment->source_quantity) 
+	 *		- the number of pieces to move ($assignment->source_quantity)
 	 *  - if edition is LIMITED
-	 *		- the list of piece number to move ($assignment->$source_numbers) 
+	 *		- the list of piece number to move ($assignment->$source_numbers)
 	 * </pre>
-	 * 
+	 *
 	 * @param Form $assignment The Form that gathered and validated the request
 	 * @param array $providers The oringal list of Edition/Formats and their pieces
 	 */
@@ -157,7 +157,7 @@ class EditionStackComponent extends Component {
 		} else {
 			$patch = ['format_id' => NULL];
 		}
-		
+
 		if (EditionTypeMap::isNumbered($edition->type)) {
 			$this->_prepareNumberedPieces($assignment, $patch);
 		} else {
@@ -166,9 +166,9 @@ class EditionStackComponent extends Component {
 		// perform transactional save/delete
 		return $this->reassignmentTransaction();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param Form $assignment The Form that gathered and validated the request
 	 * @param array $providers The oringal list of Edition/Formats and their pieces
 	 * @param array $patch
@@ -176,32 +176,32 @@ class EditionStackComponent extends Component {
 	 */
 	protected function _prepareNumberedPieces(\App\Form\AssignmentForm $assignment, $patch) {
 		// filter the source by the request
-		$Pieces = TableRegistry::get('Pieces');
+		$Pieces = TableRegistry::getTableLocator()->get('Pieces');
 		$source = new Collection($assignment->source_pieces);
-		
+
 		$to_move = $source->filter(function($value) use($assignment) {
 			return in_array($value->number, $assignment->request_numbers);
 		});
-		
+
 		$this->pieces_to_save = $to_move->map(function($value) use($patch, $Pieces) {
 			return $Pieces->patchEntity($value, $patch);
 		})->toArray();
-		
-		// if a move was from a Format to the Edition, the Formats counter cache will 
+
+		// if a move was from a Format to the Edition, the Formats counter cache will
 		// fail. Move one piece from each format that has one to correct them.
 		if (stristr($assignment->destination, 'Edition')) {
 			$this->_getFormatTriggerPieces($assignment);
 		}
-		
+
 		return $this->pieces_to_save;
 
 	}
-	
-// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
+
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63
 // and issue 24
 	// try to elimate with an event triggered by controller after save
 	public function _getFormatTriggerPieces(\App\Form\AssignmentForm $assignment) {
-		$Pieces = TableRegistry::get('Pieces');
+		$Pieces = TableRegistry::getTableLocator()->get('Pieces');
 		$update_trigger_value = [
 			'created' => new \DateTime('now')
 		];
@@ -214,16 +214,16 @@ class EditionStackComponent extends Component {
 				}
 				return $accumulator;
 			}, []);
-			
+
 		$this->pieces_to_save = $this->pieces_to_save + $trigger_pieces;
 	}
-	
+
 	/**
 	 * Move a quantity of OpenEdition pieces from source(s) to a destination
-	 * 
-	 * During reassignment multiple sources might be indicated. They will have 
+	 *
+	 * During reassignment multiple sources might be indicated. They will have
 	 * avaialble quantity drawn unitl the move request is satisfied
-	 * 
+	 *
 	 * @param FormObject $assignment
 	 * @param array $patch
 	 * @param integer $edition_id
@@ -231,7 +231,7 @@ class EditionStackComponent extends Component {
 	 * @throws \Cake\Network\Exception\BadRequestException
 	 */
 	protected function _prepareOpenPieces($assignment, $patch, $edition_id) {
-		
+
 		$this->pieces_to_save = $pieces = $assignment->source_pieces;
 		$change = $assignment->request_quantity;
 
@@ -258,15 +258,15 @@ class EditionStackComponent extends Component {
 				unset($this->pieces_to_save[$index -1]); // this line was added to the lifted code
 //				osd(['pq'=>$piece->quantity, 'c'=>$change],'quantity <= $change');
 			}
-			
+
 		} while ($change > 0 && $index < $limit);
-		
+
 		if ($change > 0) {
 			throw new \Cake\Network\Exception\BadRequestException(
 				'There were not enough undisposed Pieces to move all the requested pieces'); // this message was changed from the lifted code
 		}
 		// END OF LIFTED CODE
-		
+
 		//make the new enitity
 		if(is_null($assignment->destination_piece)) {
 			$piece_entity = new Piece([
@@ -279,30 +279,30 @@ class EditionStackComponent extends Component {
 			$patch['quantity'] = $piece_entity->quantity + $assignment->request_quantity;
 		}
 
-		$PieceTable = TableRegistry::get('Pieces') ;
+		$PieceTable = TableRegistry::getTableLocator()->get('Pieces') ;
 		$this->pieces_to_save[] = $PieceTable->patchEntity($piece_entity, $patch);
 		$this->pieces_to_delete = $deletions;
 
 		return $this->pieces_to_save;
 
 	}
-	
+
 	protected function searchExistingPiece($assignment) {
-		
+
 	}
 
 		/**
 	 * Wrap both refinement save and deletions in a single transaction
-	 * 
-	 * Creation is a simple Table->save() but refinement may involve deletion 
+	 *
+	 * Creation is a simple Table->save() but refinement may involve deletion
 	 * of piece records. This method provides refinement for all layers of the stack.
-	 * 
+	 *
 	 * @param Entity $artwork
 	 * @param array $deletions
 	 * @return boolean
 	 */
 	public function reassignmentTransaction() {
-		$PiecesTable = TableRegistry::get('Pieces');
+		$PiecesTable = TableRegistry::getTableLocator()->get('Pieces');
 		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
 		$result = $PiecesTable->connection()->transactional(function () use ($PiecesTable) {
 			$result = TRUE;
@@ -323,5 +323,5 @@ class EditionStackComponent extends Component {
 	}
 
 
-	
+
 }
