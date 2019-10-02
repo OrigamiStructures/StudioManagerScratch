@@ -47,7 +47,7 @@ class DesignsController extends AppController
     {
         $design = $this->Designs->newEntity();
         if ($this->request->is('post')) {
-            $design = $this->Designs->patchEntity($design, $this->request->data);
+            $design = $this->Designs->patchEntity($design, $this->request->getData());
             if ($this->Designs->save($design)) {
                 $this->Flash->success(__('The design has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -72,7 +72,7 @@ class DesignsController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $design = $this->Designs->patchEntity($design, $this->request->data);
+            $design = $this->Designs->patchEntity($design, $this->request->getData());
             if ($this->Designs->save($design)) {
                 $this->Flash->success(__('The design has been saved.'));
                 return $this->redirect(['action' => 'index']);

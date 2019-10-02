@@ -56,7 +56,7 @@ class FormatsController extends AppController
 	public function add()     {
 		$format = $this->Formats->newEntity();
 		if ($this->request->is('post')) {
-			$format = $this->Formats->patchEntity($format, $this->request->data);
+			$format = $this->Formats->patchEntity($format, $this->request->getData());
 			if ($this->Formats->save($format)) {
 				$this->Flash->success(__('The format has been saved.'));
 				return $this->redirect(['action' => 'index']);
@@ -84,7 +84,7 @@ class FormatsController extends AppController
 			'contain' => []
 		]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
-			$format = $this->Formats->patchEntity($format, $this->request->data);
+			$format = $this->Formats->patchEntity($format, $this->request->getData());
 			if ($this->Formats->save($format)) {
 				$this->Flash->success(__('The format has been saved.'));
 				return $this->redirect(['action' => 'index']);
@@ -146,7 +146,7 @@ class FormatsController extends AppController
 		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
 				'associated' => ['Editions.Formats.Images']
 			]);
 //			osd($artwork);die;
@@ -184,7 +184,7 @@ class FormatsController extends AppController
 		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
 		$artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
 				'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
 			]);
 //			osd($artwork, 'artwork for format submit');die;

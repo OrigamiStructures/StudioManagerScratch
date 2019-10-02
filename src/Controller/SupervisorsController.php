@@ -12,13 +12,13 @@ class SupervisorsController extends AppController
     public function index()
     {
         $contextUser = $this->contextUser();
-		
+
         $ManagerManifestStacks = TableRegistry::getTableLocator()->get('ManagerManifestStacks');
         $ArtistManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
-		
+
         $managerManifests = $ManagerManifestStacks->find('supervisorManifests');
-		
+
         $managementAgreements = $ArtistManifestStacks->find('supervisorManifests');
 
         $myPersonCards =
@@ -26,7 +26,7 @@ class SupervisorsController extends AppController
                 ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$contextUser->getId('supervisor')]]);
 //                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->contextUser()->userId()]]);
 
-		
+
         $this->set(compact(['managementAgreements','managerManifests','contextUser', 'myPersonCards']));
     }
 
@@ -35,20 +35,20 @@ class SupervisorsController extends AppController
 		osd($this->request->data('assignments'));//die;
 		$managerManifests =
 				$ManifestStacks
-				->find('managerManifests', ['ids' => [$this->request->data('assignments')]]);
+				->find('managerManifests', ['ids' => [$this->request->getData('assignments')]]);
         $this->set(compact(['managerManifests']));
 //		osd($this->request->data,'Gather the manifests for this manager');die;
 //		$this->redirect('/supervisors/index');
 	}
 
 	public function artist() {
-		osd($this->request->data, 'Gather the manifests for this artist');//die;
+		osd($this->request->getData(), 'Gather the manifests for this artist');//die;
 		$this->redirect('/supervisors/index');
 	}
 
     public function createArtist()
     {
-        if (is_null($this->request->data('artistId')))
+        if (is_null($this->request->getData('artistId')))
         {
             //setup some information
             //render create page in AddressBook
@@ -56,10 +56,10 @@ class SupervisorsController extends AppController
         }
         else
             {
-                $artistId = $this->request->data('artistId');
+                $artistId = $this->request->getData('artistId');
             $this->createArtistManifest($artistId);
         }
 
 	}
-	
+
 }

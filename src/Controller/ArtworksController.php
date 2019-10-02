@@ -72,7 +72,7 @@ class ArtworksController extends AppController
 			$Editions = TableRegistry::getTableLocator()->get('Editions');
 			$Formats = TableRegistry::getTableLocator()->get('Formats');
 			$Pieces = TableRegistry::getTableLocator()->get('Pieces');
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->getData());
 			if ($this->Artworks->save($artwork)) {
 
 
@@ -106,7 +106,7 @@ class ArtworksController extends AppController
 				$this->Flash->error(__('The artwork could not be saved. Please, try again.'));
 			}
 		}
-		$this->request->data('user_id', '1');
+		$this->request = $this->request->withData('user_id', '1');
 		$users = $this->Artworks->Users->find('list', ['limit' => 200]);
 		$images = $this->Artworks->Images->find('list', ['limit' => 200]);
 		$this->set(compact('artwork', 'users', 'images'));
@@ -126,7 +126,7 @@ class ArtworksController extends AppController
 			'contain' => []
 		]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->getData());
 			if ($this->Artworks->save($artwork)) {
 				$this->Flash->success(__('The artwork has been saved.'));
 				return $this->redirect(['action' => 'index']);
@@ -220,15 +220,15 @@ class ArtworksController extends AppController
         $artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
     //      osd($this->request->data);die;
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                 'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
         ]);
 
         // if there is 1 edition, the quantity input could have been present
         if ($artwork->edition_count === 1) {
-            $index = array_keys($this->request->data['editions'])[0];
+            $index = array_keys($this->request->getData('editions.0'));
             $deletions = $this->ArtworkStack->refinePieces($artwork,
-            $this->request->data['editions'][$index]['id']);
+                $this->request->getData("editions.$index.id"));
         } else {
             $deletions = [];
         }
@@ -260,7 +260,7 @@ class ArtworksController extends AppController
     public function create() {
 		$artwork = $this->ArtworkStack->creationStack();
         if ($this->request->is('post') || $this->request->is('put')) {
-                $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+                $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                     'associated' => [
                         'Images', 'Editions',
                         'Editions.Pieces', 'Editions.Formats',
@@ -290,7 +290,7 @@ class ArtworksController extends AppController
      * the normal create method and form simpler.
      */
     public function createUnique() {
-        $this->request->data += ['user_id' => $this->SystemState->artistId()];
+        $this->request = $this->request->withData('user_id', $this->SystemState->artistId());
         $artwork = $this->create();
         $this->set('elements', $this->LayerElement->setElements());
         $this->render('review');
@@ -341,12 +341,12 @@ class ArtworksController extends AppController
 //		osd($reqs->_provider_checklist, 'providers checklist');
 //		die;
 
-        $queries = $this->request->data('method');
+        $queries = $this->request->getData('method');
         $result = [];
         $anscestors = [];
         $disp = TableRegistry::getTableLocator()->get('Dispositions');
         $methods = $disp->customFinders();
-        $options = $this->request->data;
+        $options = $this->request->getData();
 
         if (count($queries) > 0) {
             $index = 0;

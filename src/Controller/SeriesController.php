@@ -50,7 +50,7 @@ class SeriesController extends AppController
     {
         $series = $this->Series->newEntity();
         if ($this->request->is('post')) {
-            $series = $this->Series->patchEntity($series, $this->request->data);
+            $series = $this->Series->patchEntity($series, $this->request->getData());
             if ($this->Series->save($series)) {
                 $this->Flash->success(__('The series has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -76,7 +76,7 @@ class SeriesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $series = $this->Series->patchEntity($series, $this->request->data);
+            $series = $this->Series->patchEntity($series, $this->request->getData());
             if ($this->Series->save($series)) {
                 $this->Flash->success(__('The series has been saved.'));
                 return $this->redirect(['action' => 'index']);

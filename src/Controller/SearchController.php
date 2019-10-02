@@ -26,8 +26,8 @@ class SearchController extends AppController
     {
 //		$this->SystemState->referer($this->referer());
 
-		if (!is_null($this->request->data('search'))) {
-			$query_string = $this->request->data('search');
+        $query_string = $this->request->getData('search');
+		if (!is_null($query_string)) {
 			$Artworks = TableRegistry::getTableLocator()->get('Artworks');
 			$Members = TableRegistry::getTableLocator()->get('Members');
 

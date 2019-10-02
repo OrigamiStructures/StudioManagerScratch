@@ -50,7 +50,7 @@ class SubscriptionsController extends AppController
     {
         $subscription = $this->Subscriptions->newEntity();
         if ($this->request->is('post')) {
-            $subscription = $this->Subscriptions->patchEntity($subscription, $this->request->data);
+            $subscription = $this->Subscriptions->patchEntity($subscription, $this->request->getData());
             if ($this->Subscriptions->save($subscription)) {
                 $this->Flash->success(__('The subscription has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -76,7 +76,7 @@ class SubscriptionsController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $subscription = $this->Subscriptions->patchEntity($subscription, $this->request->data);
+            $subscription = $this->Subscriptions->patchEntity($subscription, $this->request->getData());
             if ($this->Subscriptions->save($subscription)) {
                 $this->Flash->success(__('The subscription has been saved.'));
                 return $this->redirect(['action' => 'index']);

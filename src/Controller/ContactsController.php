@@ -50,7 +50,7 @@ class ContactsController extends AppController
     {
         $contact = $this->Contacts->newEntity();
         if ($this->request->is('post')) {
-            $contact = $this->Contacts->patchEntity($contact, $this->request->data);
+            $contact = $this->Contacts->patchEntity($contact, $this->request->getData());
             if ($this->Contacts->save($contact)) {
                 $this->Flash->success(__('The contact has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -77,7 +77,7 @@ class ContactsController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $contact = $this->Contacts->patchEntity($contact, $this->request->data);
+            $contact = $this->Contacts->patchEntity($contact, $this->request->getData());
             if ($this->Contacts->save($contact)) {
                 $this->Flash->success(__('The contact has been saved.'));
                 return $this->redirect(['action' => 'index']);

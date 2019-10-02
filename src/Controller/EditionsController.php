@@ -66,7 +66,7 @@ class EditionsController extends AppController {
     public function add() {
         $edition = $this->Editions->newEntity();
         if ($this->request->is('post')) {
-            $edition = $this->Editions->patchEntity($edition, $this->request->data);
+            $edition = $this->Editions->patchEntity($edition, $this->request->getData());
             if ($this->Editions->save($edition)) {
                 $this->Flash->success(__('The edition has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -93,7 +93,7 @@ class EditionsController extends AppController {
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $edition = $this->Editions->patchEntity($edition, $this->request->data);
+            $edition = $this->Editions->patchEntity($edition, $this->request->getData());
             if ($this->Editions->save($edition)) {
                 $this->Flash->success(__('The edition has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -163,12 +163,12 @@ class EditionsController extends AppController {
         if ($this->request->is('post') || $this->request->is('put')) {
 //			$this->ArtworkStack->addRefinementRules();
 
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                 'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
             ]);
-            $index = array_keys($this->request->data['editions'])[0];
+            $index = array_keys($this->request->getData('editions'))[0];
             $deletions = $this->ArtworkStack->refinePieces($artwork,
-                $this->request->data['editions'][$index]['id']);
+                $this->request->getData('editions.$index.id'));
 
             if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));
@@ -198,7 +198,7 @@ class EditionsController extends AppController {
 
         $artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                 'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
             ]);
             $this->ArtworkStack->allocatePieces($artwork);
@@ -236,10 +236,10 @@ class EditionsController extends AppController {
         extract($data); // providers, pieces, artwork
 
         $assignment = new AssignmentForm($data['providers']);
-        $assign = new FormContext($this->request, $this->request->data);
+        $assign = new FormContext($this->request, $this->request->getData());
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($assignment->execute($this->request->data)) {
+            if ($assignment->execute($this->request->getData())) {
                 if ($this->EditionStack->reassignPieces($assignment, $providers->providers)) {
                     $this->Flash->error(__('The reassignments were completed.'));
 // https://github.com/OrigamiStructures/StudioManagerScratch/issues/63

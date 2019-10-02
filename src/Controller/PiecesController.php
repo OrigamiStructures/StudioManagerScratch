@@ -21,16 +21,16 @@ use App\Model\Lib\Providers;
  */
 class PiecesController extends AppController
 {
-	
+
 	public $components = ['ArtworkStack', 'Layers'];
-	
+
 	/**
 	 * Before filter
-	 * 
-	 * Renumbering will take at least two page visits, but we want to 
-	 * eventually return to the referring page. We'll remember that here 
+	 *
+	 * Renumbering will take at least two page visits, but we want to
+	 * eventually return to the referring page. We'll remember that here
 	 * for latter recall.
-	 * 
+	 *
 	 * @param \Cake\Event\Event $event
 	 */
 	public function beforeFilter(\Cake\Event\Event $event) {
@@ -86,7 +86,7 @@ class PiecesController extends AppController
 	public function add()     {
 		$piece = $this->Pieces->newEntity();
 		if ($this->request->is('post')) {
-			$piece = $this->Pieces->patchEntity($piece, $this->request->data);
+			$piece = $this->Pieces->patchEntity($piece, $this->request->getData());
 			if ($this->Pieces->save($piece)) {
 				$this->Flash->success(__('The piece has been saved.'));
 				return $this->redirect(['action' => 'index']);
@@ -113,7 +113,7 @@ class PiecesController extends AppController
 			'contain' => []
 		]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
-			$piece = $this->Pieces->patchEntity($piece, $this->request->data);
+			$piece = $this->Pieces->patchEntity($piece, $this->request->getData());
 			if ($this->Pieces->save($piece)) {
 				$this->Flash->success(__('The piece has been saved.'));
 				$artwork_id = $this->Pieces->Editions->get($piece->edition_id, [
@@ -152,16 +152,16 @@ class PiecesController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
-	
+
 // </editor-fold>
-	
+
  	public function review() {
 
 	}
-	
+
 	/**
 	 * Renumber pieces in a Limited Edition
-	 * 
+	 *
 	 * The URL query has all the relevant IDs
 	 * beforeFilter memorized the refering page for eventual return
 	 * _renumer cache has evolving request data (up to 90 minutes old)
@@ -174,9 +174,10 @@ class PiecesController extends AppController
 		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
 			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
-		}	
+		}
 		/* allow cacellation of renumbering process */
-		if (isset($this->request->data['cancel'])) {
+        $cancel = $this->request->getData('cancel');
+		if (isset($cancel) {
 			$this->_clear_renumber_caches($cache_prefix);
 			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 		}
@@ -188,18 +189,19 @@ class PiecesController extends AppController
 				// don't know why this second test is necessary
 				!isset($this->request->data['cancel'])*/) {
 			/*
-			 * If it is a post, there are two possibile TRDs because 
-			 * the page can have up to two different forms. 
-			 * 1. The standard request-renumbing form could have been 
+			 * If it is a post, there are two possibile TRDs because
+			 * the page can have up to two different forms.
+			 * 1. The standard request-renumbing form could have been
 			 *		submitted or resubmitted
-			 * 2. An approval-of-changes form could have been submitted 
+			 * 2. An approval-of-changes form could have been submitted
 			 *		after being shown a summary of the changes proposed
 			 * A third form and TRD supports the Cancel feature (above)
 			 */
-			if (isset($this->request->data['do_move'])) {
+			$doMove = $this->request->getData('do_move');
+			if (isset($doMove)) {
 				/*
-				 * user confirmed accuracy of summary 
-				 * retreive the cached change requests, 
+				 * user confirmed accuracy of summary
+				 * retreive the cached change requests,
 				 * assemble entities, and try to save them
 				 */
 				$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
@@ -216,7 +218,7 @@ class PiecesController extends AppController
 				foreach ($pieces as $piece) {
 					if ($change = $messagePackage->request($piece->number)) {
 						$renumbered_pieces[] = new Piece([
-							'id' => $piece->id, 
+							'id' => $piece->id,
 							'number' => $change->new]
 						);
 					}
@@ -243,28 +245,29 @@ class PiecesController extends AppController
 					$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 				} else {
 					/*
-					 * attempted save failed. Restore the request form data 
+					 * attempted save failed. Restore the request form data
 					 * which was in a different <Form> that didn't post
 					 */
-					$this->request->data['number'] = 
+					$this->request->data['number'] =
 						Cache::read($cache_prefix . '.request_data','renumber');
 					$this->Flash->set('The save was unsuccessful');
 				}
 			} else {
-				/*
-				 *  user made renumbering request, now needs to confirm accuracy of summary
-				 */
-				$pieces = is_array($pieces) ? $pieces : $pieces->toArray();
-				$this->_renumber($this->request->data['number'], $pieces);
-			}
+                /*
+                 *  user made renumbering request, now needs to confirm accuracy of summary
+                 */
+                $pieces = is_array($pieces) ? $pieces : $pieces->toArray();
+                $this->_renumber($this->request->getData('number'), $pieces);
+            }
 		}
 		/* this is common fall-through code for all modes of request */
-		if (!isset($this->request->data['number']) && 
+        $number = $this->request->getData('number')
+		if (!isset($number) &&
 				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
 			/*
-			 * if the user is going through the approval process, they can be 
-			 * headed back to the page with form data that doesn't include 
-			 * the renumber requests. We saved that data so the form can stay 
+			 * if the user is going through the approval process, they can be
+			 * headed back to the page with form data that doesn't include
+			 * the renumber requests. We saved that data so the form can stay
 			 * populated throughout the process.
 			 */
 			$this->request->data['number'] = $request_data;
@@ -273,16 +276,16 @@ class PiecesController extends AppController
 		 * Not sure how to autoald and the class is needed
 		 * for when the cached object arrives
 		 */
-		new RenumberMessaging([]); 
+		new RenumberMessaging([]);
 		$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
 		/*
-		 * At this point we have one of three situations, 
+		 * At this point we have one of three situations,
 		 * in all cases $messagePackage has a value.
 		 * 1. $messagePackage is False, a brand new request form will render
-		 * 2. $messagePackage summary is truthy, a confirmation section will render 
+		 * 2. $messagePackage summary is truthy, a confirmation section will render
 		 * 2. An error message says the change could not be saved
 		 *      and the confirmation section renders again
-		 * 
+		 *
 		 * $artwork is the standard stackQuery
 		 * $providers is ['edition' => EditionEntity, 'format' => [FormatEntity, ...]
 		 * $pieces is [PieceEntity, ...] for every piece in the Edition, assigned or not
@@ -292,22 +295,22 @@ class PiecesController extends AppController
 		$this->set('elements', $this->Layers->setElements());
 		$this->set(compact(['providers', 'pieces', 'messagePackage', 'elements']));
 	}
-	
+
 	/**
 	 * Prepare a summary of the request piece renumbering pattern
-	 * 
-	 * After the user requests piece renumbering, we'll smooth out 
-	 * the request and make a simple, human readible summary 
+	 *
+	 * After the user requests piece renumbering, we'll smooth out
+	 * the request and make a simple, human readible summary
 	 * of changes and errors for approval or rejection. Cache the messages
-	 * 
-	 * Finally, the request data is in a different <Form> from the 
-	 * approval. We'll have to cache that form's data so the inputs 
-	 * can stay properly populated as the while we show the summaries 
+	 *
+	 * Finally, the request data is in a different <Form> from the
+	 * approval. We'll have to cache that form's data so the inputs
+	 * can stay properly populated as the while we show the summaries
 	 * and wait for approval or re-submission of changes
-     * 
-     * @todo Don't pass $post_data directly to db... is this validated 
+     *
+     * @todo Don't pass $post_data directly to db... is this validated
      *      or destined for a save use?
-	 * 
+	 *
 	 * @param array $post_data the user's renumbering requests
 	 * @param array $pieces array of all piece entities ordered by number
 	 */
@@ -320,47 +323,47 @@ class PiecesController extends AppController
 					$requests->insert(new RenumberRequest($old, $new));
 				}
 			};
-						
+
 		if ($requests->heap()->count() === 0) {
 			$this->_clear_renumber_caches($cache_prefix);
-			return; 
+			return;
 		}
-		
+
 		/*
 		 * Everything goes into a cache. Will expire in 90 min.
-		 * 
-		 * post data is needed in case the user approves a save 
-		 * but the save fails. The approval comes in on a form 
-		 * that doesn't have this data, so it would have 
+		 *
+		 * post data is needed in case the user approves a save
+		 * but the save fails. The approval comes in on a form
+		 * that doesn't have this data, so it would have
 		 * been lost except for this cach
 		 */
 		Cache::writeMany([
 			$cache_prefix . '.messagePackage' => $requests->messagePackage(), // variable?
 			$cache_prefix . '.request_data' => $post_data],'renumber');
 	}
-	
+
 	/**
 	 * Clear all renumbering caches for an edition
-	 * 
+	 *
 	 * Only works in contexts where there is an 'edition' id query arg
 	 */
 	protected function _clear_renumber_caches() {
 		$cache_prefix = $this->_renumber_cache_prefix();
 		Cache::deleteMany([
-			$cache_prefix . '.messagePackage', 
+			$cache_prefix . '.messagePackage',
 			$cache_prefix . '.request_data',
 			],
 		'renumber');
 	}
-	
+
 	/**
 	 * Centralized generator for the renumbering cach prefix
-	 * 
+	 *
 	 * Only works in contexts where there is an 'edition' id query arg
 	 * @return string
 	 */
 	protected function _renumber_cache_prefix() {
-		return $this->SystemState->artistId() . '-' . 
+		return $this->SystemState->artistId() . '-' .
 					$this->SystemState->queryArg('edition');
 	}
 }

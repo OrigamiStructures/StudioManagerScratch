@@ -50,7 +50,7 @@ class AddressesController extends AppController
     {
         $address = $this->Addresses->newEntity();
         if ($this->request->is('post')) {
-            $address = $this->Addresses->patchEntity($address, $this->request->data);
+            $address = $this->Addresses->patchEntity($address, $this->request->getData());
             if ($this->Addresses->save($address)) {
                 $this->Flash->success(__('The address has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -77,7 +77,7 @@ class AddressesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $address = $this->Addresses->patchEntity($address, $this->request->data);
+            $address = $this->Addresses->patchEntity($address, $this->request->getData());
             if ($this->Addresses->save($address)) {
                 $this->Flash->success(__('The address has been saved.'));
                 return $this->redirect(['action' => 'index']);

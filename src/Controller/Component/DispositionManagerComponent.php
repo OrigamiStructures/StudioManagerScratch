@@ -288,9 +288,9 @@ class DispositionManagerComponent extends Component {
 		// if this is an OPEN edition and the to_move is < piece->quantity
 		// we need to segment off the move pieces and merge them into the dispo
 		// Inequality can only exist WHEN edition is open
-		if (isset($this->request->data['to_move']) && $this->request->data['to_move'] < $piece->quantity) {
+		if (!is_null($this->request->data['to_move']) && $this->request->data['to_move'] < $piece->quantity) {
 
-			$quantity = $this->request->data['to_move'];
+			$quantity = $this->request->getData('to_move');
 			// The source piece is stored with information about its source
 			// piece so they can be merged back if the dispo is discarded
 			// or the pieces are removed from the dispo
@@ -341,28 +341,29 @@ class DispositionManagerComponent extends Component {
 	 * @param type $format_id
 	 */
 	private function _reassign($piece, $format_id) {
+	    $request = $this->getController()->getRequest();
 		// get the expected data environment
 		$data = $this->EditionStack->stackQuery();
 		extract($data); // providers, pieces
 		$assignment = new AssignmentForm($providers);
 
 		// hand create the POST data
-		$this->request->data['destinations_for_pieces'] = "App\Model\Entity\Format\\$format_id";
+		$request->data['destinations_for_pieces'] = "App\Model\Entity\Format\\$format_id";
 		foreach($providers as $key => $provider) {
 			// allowing the destination to be a source doesn't work right.
 			// and editions are never dispo destinations
 			if ($provider->id != $format_id && $key !== 'edition') {
 				$count = $key === 'edition' ? 0 : $key + 1;
-				$this->request->data["source_for_pieces_$count"] = get_class($provider) . '\\' . $provider->id;
+				$request->data["source_for_pieces_$count"] = get_class($provider) . '\\' . $provider->id;
 			}
 		}
-		if (!$this->request->is('post')) {
-			$this->request->data['to_move'] = $piece->number;
+		if (!$request->is('post')) {
+			$request->data['to_move'] = $piece->number;
 		}
-		$this->request->data['to_move'] = (string)  $this->request->data['to_move'];
+		$request->data['to_move'] = (string)  $request->data['to_move'];
 
 		// make the call to do the reassignment
-		if ($assignment->execute($this->request->data)) {
+		if ($assignment->execute($request->data)) {
 			if($this->EditionStack->reassignPieces($assignment, $providers)) {
 				return TRUE;
 			} else {
