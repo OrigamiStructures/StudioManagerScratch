@@ -37,9 +37,9 @@ class ContactsTable extends AppTable
 
 
     protected function _initializeProperties() {
-        $this->table('contacts');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('contacts');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
     }
 

@@ -113,9 +113,9 @@ class DispositionsTable extends AppTable {
 // <editor-fold defaultstate="collapsed" desc="Initializers">
 
     protected function _initializeProperties() {
-        $this->table('dispositions');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('dispositions');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
     }
 
     protected function _initializeBehaviors() {

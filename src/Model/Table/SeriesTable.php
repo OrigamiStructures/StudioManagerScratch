@@ -28,9 +28,9 @@ class SeriesTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('series');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('series');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');

@@ -84,7 +84,7 @@ class PiecesTable extends AppTable {
          * @todo This rem'd step seem unnecessary or suspect
          */
 //        $this->table('pieces');
-        $this->displayField('displayTitle');
+        $this->setDisplayField('displayTitle');
     }
 
 // </editor-fold>

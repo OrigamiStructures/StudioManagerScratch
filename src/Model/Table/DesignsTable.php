@@ -24,9 +24,9 @@ class DesignsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('designs');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('designs');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 

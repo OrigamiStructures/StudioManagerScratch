@@ -31,9 +31,9 @@ class AddressesTable extends AppTable
     public function initialize(array $config)     {
         parent::initialize($config);
 
-        $this->table('addresses');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('addresses');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->_initializeBehaviors();
 

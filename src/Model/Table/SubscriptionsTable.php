@@ -26,9 +26,9 @@ class SubscriptionsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('subscriptions');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('subscriptions');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
