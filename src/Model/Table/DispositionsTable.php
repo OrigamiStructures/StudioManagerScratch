@@ -123,13 +123,13 @@ class DispositionsTable extends AppTable {
         $this->addBehavior('StartDateQuery', [
             'className' => 'DateQuery',
             'field' => 'start_date',
-            'model' => $this->alias(),
+            'model' => $this->getAlias(),
             'primary_input' => 'first_start_date',
             'secondary_input' => 'second_start_date']);
         $this->addBehavior('EndDateQuery', [
             'className' => 'DateQuery',
             'field' => 'end_date',
-            'model' => $this->alias(),
+            'model' => $this->getAlias(),
             'primary_input' => 'first_end_date',
             'secondary_input' => 'second_end_date']);
         $this->addBehavior('CounterCache', [

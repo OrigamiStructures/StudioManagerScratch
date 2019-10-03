@@ -68,9 +68,9 @@ class DispositionsPiecesTable extends AppTable
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->boolean('complete')
-            ->allowEmpty('complete');
+//        $validator
+//            ->boolean('complete')
+//            ->allowEmpty('complete');
 
         return $validator;
     }

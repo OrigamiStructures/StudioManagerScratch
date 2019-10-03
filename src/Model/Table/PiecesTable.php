@@ -595,7 +595,7 @@ class PiecesTable extends AppTable {
      * @return boolean Did the transaction succeed?
      */
     public function persistAll($pieces = [], $deletions = []) {
-        return $this->connection()->transactional(function() use ($pieces, $deletions) {
+        return $this->getConnection()->transactional(function() use ($pieces, $deletions) {
                 $result = TRUE;
                 foreach ($pieces as $piece) {
                     $result = $result && $this->save($piece);
