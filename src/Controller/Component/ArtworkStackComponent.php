@@ -89,7 +89,7 @@ class ArtworkStackComponent extends Component {
 		$ArtworkTable = TableRegistry::getTableLocator()->get('Artworks');
 		Cache::delete("get_default_artworks[_{$artwork->id}_]", 'artwork');//die;
 //		osd($artwork);die;
-		$result = $ArtworkTable->connection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
+		$result = $ArtworkTable->getConnection()->transactional(function () use ($ArtworkTable, $artwork, $deletions) {
 			$result = $ArtworkTable->save($artwork, ['atomic' => false]);
 			if (is_array($deletions)) {
 				foreach ($deletions as $piece) {

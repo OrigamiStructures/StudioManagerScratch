@@ -224,7 +224,7 @@ class PiecesController extends AppController
 					}
 				}
 				$pieceTable = $this->Pieces; //'use' won't accept property... ?
-				$result = $pieceTable->connection()->transactional(
+				$result = $pieceTable->getConnection()->transactional(
 						function () use ($pieceTable, $renumbered_pieces) {
 							$result = TRUE;
 							foreach ($renumbered_pieces as $entity) {
@@ -248,8 +248,8 @@ class PiecesController extends AppController
 					 * attempted save failed. Restore the request form data
 					 * which was in a different <Form> that didn't post
 					 */
-					$this->request->data['number'] =
-						Cache::read($cache_prefix . '.request_data','renumber');
+					$this->request = $this->request->withData(
+					    'number', Cache::read($cache_prefix . '.request_data','renumber'));
 					$this->Flash->set('The save was unsuccessful');
 				}
 			} else {
@@ -270,7 +270,7 @@ class PiecesController extends AppController
 			 * the renumber requests. We saved that data so the form can stay
 			 * populated throughout the process.
 			 */
-			$this->request->data['number'] = $request_data;
+			$this->request = $this->request->withData('number', $request_data);
 		}
 		/**
 		 * Not sure how to autoald and the class is needed

@@ -38,6 +38,10 @@ class AppView extends View
     {
 		$this->loadHelper('DropDown');
         $this->loadHelper('Html');
+        /*
+         * This breaks if I modernize it. And SystemState is being removed.
+         * So, don't bother with the deprecation fix
+         */
         if (isset($this->viewVars['SystemState'])) {
             $this->SystemState = $this->viewVars['SystemState'];
         }

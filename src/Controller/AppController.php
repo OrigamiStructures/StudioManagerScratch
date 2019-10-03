@@ -56,8 +56,12 @@ class AppController extends Controller
 		$this->set('SystemState', $this->SystemState);
 
 		parent::__construct($request, $response, $name, $eventManager, $components);
+		/*
+		 * I'm not sure what this should be in modern usage.
+		 * And SystemState is going away.
+		 * So don't bother fixing this deprecation
+		 */
         $this->eventManager()->on($this->SystemState);
-//		$this->SystemState->afterLogin(new Event('thing'));
 	}
 
 //	public function beforeFilter(Event $event) {

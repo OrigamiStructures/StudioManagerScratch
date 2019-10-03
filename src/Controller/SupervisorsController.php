@@ -32,7 +32,7 @@ class SupervisorsController extends AppController
 
 	public function manager() {
         $ManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
-		osd($this->request->data('assignments'));//die;
+		osd($this->request->getData('assignments'));//die;
 		$managerManifests =
 				$ManifestStacks
 				->find('managerManifests', ['ids' => [$this->request->getData('assignments')]]);
