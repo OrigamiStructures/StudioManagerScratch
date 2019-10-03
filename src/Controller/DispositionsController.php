@@ -334,8 +334,8 @@ class DispositionsController extends AppController
 			]);
 
 		$entity = $this->Dispositions->newEntity($data);
-		$entity->dirty('member', FALSE);
-		$entity->dirty('addresses', FALSE);
+		$entity->setDirty('member', FALSE);
+		$entity->setDirty('addresses', FALSE);
 		$entity = $this->Dispositions->patchEntity($entity, $member_data, ['validate' => FALSE]);
 		$entity = $this->Dispositions->patchEntity($entity, $address_data, ['validate' => FALSE]);
 
