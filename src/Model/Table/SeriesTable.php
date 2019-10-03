@@ -40,7 +40,7 @@ class SeriesTable extends AppTable
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id'
 			]);
-//		}		
+//		}
         $this->hasMany('Editions', [
             'foreignKey' => 'series_id'
         ]);
@@ -59,10 +59,10 @@ class SeriesTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('title');
+            ->allowEmptyString('title');
 
         $validator
-            ->allowEmpty('description');
+            ->allowEmptyString('description');
 
         return $validator;
     }
@@ -79,6 +79,6 @@ class SeriesTable extends AppTable
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
-	
-	
+
+
 }

@@ -39,9 +39,9 @@ class PiecesTable extends AppTable {
         $this->_initializeBehaviors();
         $this->_initializeAssociations();
     }
-    
+
 // <editor-fold defaultstate="collapsed" desc="Initialization details">
-    
+
     protected function _initializeAssociations() {
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -62,7 +62,7 @@ class PiecesTable extends AppTable {
             'joinTable' => 'dispositions_pieces'
         ]);
     }
-    
+
     protected function _initializeBehaviors() {
         $this->addBehavior('Timestamp');
         $this->addBehavior('IntegerQuery');
@@ -78,7 +78,7 @@ class PiecesTable extends AppTable {
             ],
         ]);
     }
-    
+
     protected function _initializeProperties() {
         /**
          * @todo This rem'd step seem unnecessary or suspect
@@ -100,17 +100,17 @@ class PiecesTable extends AppTable {
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->add('number', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('number');
-
-        $validator
-            ->add('quantity', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('quantity');
-
-        $validator
-            ->add('made', 'valid', ['rule' => 'boolean'])
-            ->allowEmpty('made');
+//        $validator
+//            ->add('number', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('number');
+//
+//        $validator
+//            ->add('quantity', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('quantity');
+//
+//        $validator
+//            ->add('made', 'valid', ['rule' => 'boolean'])
+//            ->allowEmpty('made');
 
         return $validator;
     }
@@ -118,8 +118,8 @@ class PiecesTable extends AppTable {
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
-     * 
-     * @todo The format_id, edition_id rule is probably breaking the save() 
+     *
+     * @todo The format_id, edition_id rule is probably breaking the save()
      *          since format_id is not required in a piece
      *
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
@@ -137,7 +137,7 @@ class PiecesTable extends AppTable {
 // <editor-fold defaultstate="collapsed" desc="Event Handlers">
 
     /**
-     * @todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 and issue 24 
+     * @todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 and issue 24
      */
     public function implementedEvents() {
 //        return [
@@ -147,7 +147,7 @@ class PiecesTable extends AppTable {
 
     /**
      * After save, clear any effected edition stackQuery cache
-     * 
+     *
      * @param type $event
      * @param type $entity
      * @param type $options
@@ -164,7 +164,7 @@ class PiecesTable extends AppTable {
 
     /**
      * beforeFind event
-     * 
+     *
      * @param Event $event
      * @param Query $query
      * @param ArrayObject $options
@@ -180,7 +180,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Callable for Format counter-cache behavior
-     * 
+     *
      * @param Event $event
      * @param Entity $entity
      * @param Table $table
@@ -194,7 +194,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Callable for Edition counter-cache behavior
-     * 
+     *
      * @param Event $event
      * @param Entity $entity
      * @param Table $table
@@ -213,7 +213,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Callable for Format counter-cache behavior
-     * 
+     *
      * @param Event $event
      * @param Entity $entity
      * @param Table $table
@@ -228,9 +228,9 @@ class PiecesTable extends AppTable {
 
     /**
      * Callable for Edition counter-cache behavior
-     * 
+     *
      * @todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
-     *      Currently fixed by EditionStackComponent::_getFormatTriggerPieces(). Really? 
+     *      Currently fixed by EditionStackComponent::_getFormatTriggerPieces(). Really?
      * @param Event $event
      * @param Entity $entity
      * @param Table $table
@@ -250,7 +250,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -258,10 +258,10 @@ class PiecesTable extends AppTable {
     public function findPieces($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find pieces by number or range of numbers
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -269,10 +269,10 @@ class PiecesTable extends AppTable {
 //    public function findNumber(Query $query, $options) {
 //        return $this->integer($query, 'number', $options);
 //    }
-    
+
     /**
      * Find pieces by disposition count or range of counts
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -283,7 +283,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces by quantity or range of quantities
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -294,7 +294,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces assigned to a format or formats
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -302,10 +302,10 @@ class PiecesTable extends AppTable {
     public function findAssignedTo($query, $options) {
         return $this->integer($query, 'format_id', $options['values']);
     }
-    
+
     /**
      * Alias for find('assignedTo')
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -316,7 +316,7 @@ class PiecesTable extends AppTable {
 
    /**
      * Find pieces in an edition regardless of format assignment
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -327,7 +327,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces that have dispositions
-     * 
+     *
      * @param Query $query
      * @param array $options None needed
      * @return Query
@@ -338,7 +338,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces with no dispositions
-     * 
+     *
      * @param Query $query
      * @param array $options None needed
      * @return Query
@@ -356,7 +356,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces with a format_id
-     * 
+     *
      * @param Query $query
      * @param array $options None needed
      * @return Query
@@ -367,7 +367,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces that are collected (any Transfer dispo)
-     * 
+     *
      * @param Query $query
      * @param array $options None needed
      * @return Query
@@ -378,7 +378,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces that are not collected (any Transfer dispo)
-     * 
+     *
      * @param Query $query
      * @param array $options None needed
      * @return Query
@@ -389,7 +389,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces by number
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -400,7 +400,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces that are not collected (any Transfer dispo)
-     * 
+     *
      * @param Query $query
      * @param array $options None needed
      * @return Query
@@ -411,13 +411,13 @@ class PiecesTable extends AppTable {
 
     /**
      * Find pieces that can gain Dispositions in this circmstance
-     * 
+     *
      * I'm not sure if an edition id would ever be sent.
-     * 
+     *
      * When a format_id is sent canDispose() finds:
      * 		- The already-disposed but still disposable pieces on the format
-     * 		- The fluid pieces in the edition 
-     * 
+     * 		- The fluid pieces in the edition
+     *
      * @param Query $query
      * @param type $options
      * @return type
@@ -444,9 +444,9 @@ class PiecesTable extends AppTable {
 
     /**
      * Get the number of the highest numbered piece in an edition
-     * 
+     *
      * THE ARGUMENTS ARE NOT IDEAL FOR THIS CALL
-     * 
+     *
      * @param array $options conditions to find the edition
      * @return integer
      */
@@ -461,13 +461,13 @@ class PiecesTable extends AppTable {
 
     /**
      * Make the specified number of new Piece arrays (for TRD use)
-     * 
-     * When new Editions are being created, new Pieces will be needed to fill 
-     * out the Artwork stack. This method makes the array nodes that, when 
-     * inserted into the form data, will generate the proper Piece records. 
-     * You can create and x-to-y record rand by passing a $start value. 
-     * Control the record data by passing $default array. 
-     * 
+     *
+     * When new Editions are being created, new Pieces will be needed to fill
+     * out the Artwork stack. This method makes the array nodes that, when
+     * inserted into the form data, will generate the proper Piece records.
+     * You can create and x-to-y record rand by passing a $start value.
+     * Control the record data by passing $default array.
+     *
      * @param boolean $numbered Numbered or un-numbered pieces (limited or open editions)
      * @param integer $count How many pieces are needed
      * @param array $default [column => value] to control what data the pieces have
@@ -501,12 +501,12 @@ class PiecesTable extends AppTable {
 
     /**
      * Split the IDd piece so the new piece has $quantity
-     * 
+     *
      * Only has an effect on Open Edition pieces with $quantity > 1
      * Get one or both pieces back with the third argument
      * PIECE_SPLIT_RETURN_NEW
      * PIECE_SPLIT_RETURN_BOTH
-     * 
+     *
      * @param integer $piece_id
      * @param integer $quantity
      * @param string $return
@@ -540,14 +540,14 @@ class PiecesTable extends AppTable {
 
     /**
      * Merge OpenEdition pieces back to source pieces on dispo destruction
-     * 
-     * splitPiece() divides an Open Edition piece for attachment of some quantity 
-     * to a disposition. This is the other side of the process. For when a piece 
+     *
+     * splitPiece() divides an Open Edition piece for attachment of some quantity
+     * to a disposition. This is the other side of the process. For when a piece
      * is removed from the disposition or the dispo os discarded.
-     * 
-     * The pieces have been given a source_piece property that tells who spawned 
-     * them. If that property is missing then there is no merge to be done. 
-     * 
+     *
+     * The pieces have been given a source_piece property that tells who spawned
+     * them. If that property is missing then there is no merge to be done.
+     *
      * @param array $pieces array of entities
      * @return boolean did the process succeed
      */
@@ -570,7 +570,7 @@ class PiecesTable extends AppTable {
                 $source->increase($piece->quantity);
                 $source_set[$source->id] = $source;
             } else {
-                // this will restablish the source in case there are other 
+                // this will restablish the source in case there are other
                 // pieces that need to merge to it also.
                 $source = clone $piece;
                 $source->isNew(TRUE);
@@ -589,7 +589,7 @@ class PiecesTable extends AppTable {
 
     /**
      * Create/Update pieces and or delete pieces
-     * 
+     *
      * @param array $pieces The entities to be saved or created
      * @param array $deletions The entities to be deleted
      * @return boolean Did the transaction succeed?

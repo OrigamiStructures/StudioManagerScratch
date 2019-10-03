@@ -73,10 +73,10 @@ class ContactsTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('label');
+            ->allowEmptyString('label');
 
         $validator
-            ->allowEmpty('data');
+            ->allowEmptyString('data');
 
         return $validator;
     }
@@ -101,10 +101,10 @@ class ContactsTable extends AppTable
 
     /**
      * Implemented beforeMarshal event
-     * 
-     * @todo An artist manager may have multiple artists and if they are 
+     *
+     * @todo An artist manager may have multiple artists and if they are
      *      operating under that mode, this will make a bad record
-     * 
+     *
      * @param Event $event
      * @param ArrayObject $data
      * @param ArrayObject $options
@@ -117,7 +117,7 @@ class ContactsTable extends AppTable
 
     /**
      * Make the specified number of new Contact arrays (for TRD use)
-     * 
+     *
      * @param integer $count How many contacts are needed
      * @param array $default [column => value] to control what data the pieces have
      * @param integer $start The index (and number) of the first of the ($count) pieces
@@ -132,12 +132,12 @@ class ContactsTable extends AppTable
 
         return array_fill($start, $count, $columns);
     }
-    
+
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
-    
+
     /**
      * Find contacts by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -145,10 +145,10 @@ class ContactsTable extends AppTable
     public function findContacts($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find members
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -156,10 +156,10 @@ class ContactsTable extends AppTable
     public function findInMembers($query, $options) {
         return $this->integer($query, 'member_id', $options['values']);
     }
-    
+
     /**
      * Find the 'kind' label for contacts
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -167,10 +167,10 @@ class ContactsTable extends AppTable
     public function findKind(Query $query, $options) {
         return $this->string($query, 'label', $options['value']);
     }
-    
+
     /**
      * Find specific contact address (phone, email, url, etc)
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -180,5 +180,5 @@ class ContactsTable extends AppTable
     }
 
 // </editor-fold>
-	
+
 }

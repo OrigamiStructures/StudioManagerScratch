@@ -67,9 +67,9 @@ class PermissionsTable extends AppTable
             ->requirePresence('layer_name', 'create')
             ->notEmpty('layer_name');
 
-        $validator
-            ->integer('edit')
-            ->allowEmpty('edit');
+//        $validator
+//            ->integer('edit')
+//            ->allowEmpty('edit');
 
         return $validator;
     }

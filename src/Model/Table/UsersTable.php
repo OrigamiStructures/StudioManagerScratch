@@ -97,10 +97,10 @@ class UsersTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('username');
+            ->allowEmptyString('username');
 
         $validator
-            ->allowEmpty('password');
+            ->allowEmptyString('password');
 
         return $validator;
     }

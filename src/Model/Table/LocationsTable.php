@@ -58,7 +58,7 @@ class LocationsTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         return $validator;
     }

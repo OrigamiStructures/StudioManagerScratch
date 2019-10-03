@@ -45,7 +45,7 @@ class DesignsTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('content');
+            ->allowEmptyString('content');
 
         return $validator;
     }

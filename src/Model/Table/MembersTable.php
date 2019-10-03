@@ -24,9 +24,9 @@ use App\Model\Behavior\StringQueryBehavior;
 class MembersTable extends AppTable
 {
     private $_person_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities']];
-    
+
     private $_complete_containment = ['Addresses', 'Contacts', 'Groups' => ['GroupIdentities'], 'ProxyGroups' => ['Members']];
-	
+
 // <editor-fold defaultstate="collapsed" desc="Core">
 
     /**
@@ -86,7 +86,7 @@ class MembersTable extends AppTable
 			'foreignKey' => 'member_id',
 			'dependent' => TRUE,
 		]);
-        $this->belongsToMany('Memberships', 
+        $this->belongsToMany('Memberships',
 			['joinTable' => 'groups_members',
             'foreignKey' => 'member_id',
             'targetForeignKey' => 'group_id',]);
@@ -116,7 +116,7 @@ class MembersTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         return $validator;
     }
@@ -154,7 +154,7 @@ class MembersTable extends AppTable
 
     /**
      * Implemented beforeMarshal event
-     * 
+     *
      * @param \App\Model\Table\Event $event
      * @param \App\Model\Table\ArrayObject $data
      * @param \App\Model\Table\ArrayObject $options
@@ -168,7 +168,7 @@ class MembersTable extends AppTable
 
     /**
      * Setup the group element for User, Category and Institution
-     * 
+     *
      * @param ArrayObject $data
      */
     private function bmSetupGroup(ArrayObject $data) {
@@ -187,7 +187,7 @@ class MembersTable extends AppTable
 
     /**
      * Setup the last_name as a sorting name for Categories and Institutions
-     * 
+     *
      * @param ArrayObject $data
      */
     private function bmSetupSort(ArrayObject $data) {
@@ -208,10 +208,10 @@ class MembersTable extends AppTable
 
     /**
      * Custom finder for the member review action
-     * 
+     *
      * Returns either a list of members or a specific member based upon the existance
      * of the member query argument
-     * 
+     *
      * @param Query $query
      * @param array $options
      * @return Query
@@ -226,7 +226,7 @@ class MembersTable extends AppTable
 
     /**
      * Custom finder for the memberList
-     * 
+     *
      * @param Query $query
      * @param array $options
      * @return Query
@@ -242,7 +242,7 @@ class MembersTable extends AppTable
 
     /**
      * Custom finder to setup containment based upon member type
-     * 
+     *
      * @param Query $query
      * @param array $options
      * @return Query
@@ -277,14 +277,14 @@ class MembersTable extends AppTable
                       ->orWhere(['last_name LIKE' => "%{$options[0]}%"]);
             return $query->toArray();
     }
-	
+
 // </editor-fold>
-    
+
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
-    
+
     /**
      * Find members by id
-     * 
+     *
      * @param Query $query
      * @param array $options Pass args on $options['values'] = [ ]
      * @return Query
@@ -292,10 +292,10 @@ class MembersTable extends AppTable
     public function findMembers(Query $query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find images by id
-     * 
+     *
      * @param Query $query
      * @param array $options Pass args on $options['values'] = [ ]
      * @return Query
@@ -303,12 +303,12 @@ class MembersTable extends AppTable
     public function findhasImages(Query $query, $options) {
         return $this->integer($query, 'image_id', $options['values']);
     }
-    
+
     /**
      * Find collector by quantity collected
-     * 
-     * Members counts how many pieces a member has collected. 
-     * 
+     *
+     * Members counts how many pieces a member has collected.
+     *
      * @param Query $query
      * @param array $options Pass args on $options['values'] = [ ]
      * @return Query
@@ -316,10 +316,10 @@ class MembersTable extends AppTable
     public function findCollectors(Query $query, $options) {
         return $this->integer($query, 'collector', $options['values']);
     }
-    
+
     /**
      * Find disposition count
-     * 
+     *
      * @param Query $query
      * @param array $options Pass args on $options['values'] = [ ]
      * @return Query
@@ -327,10 +327,10 @@ class MembersTable extends AppTable
     public function findDispositionCounts(Query $query, $options) {
         return $this->integer($query, 'disposition_count', $options['values']);
     }
-    
+
     /**
      * Find member types
-     * 
+     *
      * @param Query $query
      * @param array $options Pass args on $options['value'] = 'string-arg'
      * @return Query
@@ -338,10 +338,10 @@ class MembersTable extends AppTable
     public function findType(Query $query, $options) {
         return $this->string($query, 'member_type', $options['value']);
     }
-    
+
     /**
      * Find active group records
-     * 
+     *
      * @param Query $query
      * @param array $options None required (or used)
      * @return Query
@@ -350,10 +350,10 @@ class MembersTable extends AppTable
         return $this->string->findType($query, 'member_type NOT', 'Person')
             ->findByActive(1);
     }
-   
+
     /**
      * Find inactive group records
-     * 
+     *
      * @param Query $query
      * @param array $options None required (or used)
      * @return Query
@@ -362,10 +362,10 @@ class MembersTable extends AppTable
         return $this->string->findType($query, 'member_type NOT', 'Person')
             ->findByActive(0);
     }
-   
+
     /**
      * Find active people records
-     * 
+     *
      * @param Query $query
      * @param array $options None required (or used)
      * @return Query
@@ -374,10 +374,10 @@ class MembersTable extends AppTable
         return $this->string->findType($query, 'member_type', 'Person')
             ->findByActive(1);
     }
-   
+
     /**
      * Find inactive people records
-     * 
+     *
      * @param Query $query
      * @param array $options None required (or used)
      * @return Query
@@ -386,13 +386,13 @@ class MembersTable extends AppTable
         return $this->string->findType($query, 'member_type', 'Person')
             ->findByActive(0);
     }
-   
+
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Dynamic finders">
-    
+
     /**
-     * I'm leaving first_name, last_name, and active 
+     * I'm leaving first_name, last_name, and active
      * for dynamic finders to handle
      */
 
@@ -400,9 +400,9 @@ class MembersTable extends AppTable
 
     /**
      * Modify the provided string and return it as a properly sortable name
-     * 
+     *
      * for example, drop leading 'The ' bits.
-     * 
+     *
      * @param string $name
      * @return string
      */
@@ -412,11 +412,11 @@ class MembersTable extends AppTable
 
     /**
      * Complete the member entity for creation and editing
-     * 
+     *
      * When an entity is built for member creation, or an entity found for editing. Make sure
      * it has at least one address and two contact records for easy editing of the complete
      * package.
-     * 
+     *
      * @param Entity $entity
      * @param string $type the member type
      * @return Entity
@@ -454,12 +454,12 @@ class MembersTable extends AppTable
         $entity = $this->patchEntity($entity, $dme);
         return $entity;
     }
-	
+
 	public function findHook(Query $query, array $options) {
-		
+
 		$result = $query
             ->where(['active' => 1]);
 		return $result;
 	}
-	
+
 }

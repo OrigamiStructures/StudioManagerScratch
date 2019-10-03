@@ -21,7 +21,7 @@ use Proffer\Lib\ProfferPath;
  */
 class ImagesTable extends AppTable
 {
-	
+
 	protected $_new_image = FALSE;
 
 	/**
@@ -94,37 +94,37 @@ class ImagesTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('image');
+            ->allowEmptyString('image');
 
         $validator
-            ->allowEmpty('image_dir');
+            ->allowEmptyString('image_dir');
 
         $validator
-            ->allowEmpty('mimetype');
+            ->allowEmptyString('mimetype');
 
         $validator
-            ->allowEmpty('filesize');
+            ->allowEmptyString('filesize');
+
+//        $validator
+//            ->add('width', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('width');
+//
+//        $validator
+//            ->add('height', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('height');
 
         $validator
-            ->add('width', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('width');
+            ->allowEmptyString('title');
+
+//        $validator
+//            ->allowEmpty('date');
 
         $validator
-            ->add('height', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('height');
+            ->allowEmptyString('alt');
 
-        $validator
-            ->allowEmpty('title');
-
-        $validator
-            ->allowEmpty('date');
-
-        $validator
-            ->allowEmpty('alt');
-
-        $validator
-            ->add('upload', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('upload');
+//        $validator
+//            ->add('upload', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('upload');
 
         return $validator;
     }
@@ -141,10 +141,10 @@ class ImagesTable extends AppTable
 //        $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
-	
+
 	/**
 	 * If an override image is being uploaded, remember it's name for afterSave processing
-	 * 
+	 *
 	 * @param Event $event
 	 * @param type $entity
 	 * @param ArrayObject $options
@@ -161,10 +161,10 @@ class ImagesTable extends AppTable
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Delete previous image if an override image was uploaded
-	 * 
+	 *
 	 * @param Event $event
 	 * @param type $entity
 	 * @param ArrayObject $options
@@ -176,7 +176,7 @@ class ImagesTable extends AppTable
 			$path = new ProfferPath($this, $entity, 'image_file', $settings);
 			$folder = $path->getFolder();
 			$base_image = $folder . $this->_new_image;
-			
+
 			$collection = new \Cake\Collection\Collection(glob($folder . "*"));
 			$collection->each(function($value) use ($base_image) {
 				if (!stristr($value, $this->_new_image) || $value === $base_image) {
