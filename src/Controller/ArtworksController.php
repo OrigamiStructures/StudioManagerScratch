@@ -248,7 +248,7 @@ class ArtworksController extends AppController
     }
 
     public function upload() {
-        $this->viewBuilder()->layout('ajax');
+        $this->viewBuilder()->setLayout('ajax');
 //      osd($this->request->data);die;
     }
 
@@ -350,9 +350,9 @@ class ArtworksController extends AppController
 
         if (count($queries) > 0) {
             $index = 0;
-            $result = $disp->find($this->request->data['method'][$index++], $options);
+            $result = $disp->find($this->request->getData('method.' . $index++), $options);
             while ($index < count($queries)) {
-            $result = $result->find($this->request->data['method'][$index++], $options);
+            $result = $result->find($this->request->getData('method.' . $index++), $options);
             }
         }
         if (is_object($result)) {
@@ -472,7 +472,7 @@ class ArtworksController extends AppController
 						$join->id);
 			} else {
 				$this->Flash->error("Failed f-$format->range_flag e-$format->edition_id");
-				osd($join->errors());
+				osd($join->getErrors());
 			}
 		}
 	}

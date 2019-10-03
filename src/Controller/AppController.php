@@ -122,7 +122,7 @@ class AppController extends Controller
 	 * @todo create an object to encapsulate currentUser
 	 */
 	private function overrideTableLocator() {
-		TableRegistry::locator(new CSTableLocator(
+		TableRegistry::setTableLocator(new CSTableLocator(
 				[
 					'SystemState' => $this->SystemState,
 					'currentUser' => $this->currentUser()
@@ -186,8 +186,8 @@ class AppController extends Controller
 //			$this->set('standing_disposition', FALSE);
 //		}
 
-        if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+        if (!array_key_exists('_serialize', $this->viewBuilder()->getVars()) &&
+            in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
         }
