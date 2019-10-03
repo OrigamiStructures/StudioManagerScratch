@@ -69,7 +69,7 @@ class EditionsFormatsTable extends AppTable
     {
         $validator
             ->nonNegativeInteger('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
 //        $validator
 //            ->integer('assigned_piece_count')

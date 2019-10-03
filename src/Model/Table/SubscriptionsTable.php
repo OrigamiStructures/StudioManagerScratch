@@ -50,12 +50,8 @@ class SubscriptionsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmptyString('title');
-
-        $validator
+            ->allowEmptyString('id', 'create')
+            ->allowEmptyString('title')
             ->allowEmptyString('description');
 
 //        $validator

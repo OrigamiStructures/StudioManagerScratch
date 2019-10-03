@@ -61,7 +61,7 @@ class AddressesTable extends AppTable
     public function validationDefault(Validator $validator)     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->allowEmptyString('address1')

@@ -70,12 +70,8 @@ class ContactsTable extends AppTable
     public function validationDefault(Validator $validator)     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmptyString('label');
-
-        $validator
+            ->allowEmptyString('id', 'create')
+            ->allowEmptyString('label')
             ->allowEmptyString('data');
 
         return $validator;

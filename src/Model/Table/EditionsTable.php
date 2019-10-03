@@ -109,7 +109,7 @@ class EditionsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->allowEmptyString('title');
@@ -162,7 +162,7 @@ class EditionsTable extends AppTable
 	 * @return query result object
 	 */
 	public function findChoiceList(Query $query, $options) {
-		$this->displayField('display_title');
+		$this->getDisplayField('display_title');
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
 

@@ -98,7 +98,7 @@ class PiecesTable extends AppTable {
     public function validationDefault(Validator $validator) {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
 //        $validator
 //            ->add('number', 'valid', ['rule' => 'numeric'])

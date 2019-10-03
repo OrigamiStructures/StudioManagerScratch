@@ -187,7 +187,7 @@ class DispositionsTable extends AppTable {
     public function validationDefault(Validator $validator) {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create')
+            ->allowEmptyString('id', 'create')
             ->requirePresence('start_date');
         $validator
             ->add('label', 'valid_label',
@@ -195,7 +195,7 @@ class DispositionsTable extends AppTable {
                     'rule' => [$this, 'validLabel'],
                     'message' => 'The disposition must be chosen from the provided list',
             ])
-            ->notEmpty('label');
+            ->allowEmptyString('label', FALSE);
         $validator
             ->add('end_date', 'end_of_loan',
                 [

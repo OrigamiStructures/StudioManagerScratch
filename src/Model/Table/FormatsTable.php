@@ -91,12 +91,8 @@ class FormatsTable extends AppTable {
     public function validationDefault(Validator $validator) {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmptyString('title');
-
-        $validator
+            ->allowEmptyString('id', 'create')
+            ->allowEmptyString('title')
             ->allowEmptyString('description');
 
 //        $validator
