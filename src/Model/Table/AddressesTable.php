@@ -51,7 +51,7 @@ class AddressesTable extends AppTable
         $this->addBehavior('IntegerQuery');
         $this->addBehavior('StringQuery');
     }
-	
+
     /**
      * Default validation rules.
      *
@@ -64,25 +64,13 @@ class AddressesTable extends AppTable
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('address1');
-
-        $validator
-            ->allowEmpty('address2');
-
-        $validator
-            ->allowEmpty('address3');
-
-        $validator
-            ->allowEmpty('city');
-
-        $validator
-            ->allowEmpty('state');
-
-        $validator
-            ->allowEmpty('zip');
-
-        $validator
-            ->allowEmpty('country');
+            ->allowEmptyString('address1')
+            ->allowEmptyString('address2')
+            ->allowEmptyString('address3')
+            ->allowEmptyString('city')
+            ->allowEmptyString('state')
+            ->allowEmptyString('zip')
+            ->allowEmptyString('country');
 
         return $validator;
     }
@@ -106,7 +94,7 @@ class AddressesTable extends AppTable
 
     /**
      * Implemented beforeMarshal event
-     * 
+     *
      * @param \App\Model\Table\Event $event
      * @param \App\Model\Table\ArrayObject $data
      * @param \App\Model\Table\ArrayObject $options
@@ -119,7 +107,7 @@ class AddressesTable extends AppTable
 
     /**
      * Make the specified number of new Contact arrays (for TRD use)
-     * 
+     *
      * @param integer $count How many contacts are needed
      * @param array $default [column => value] to control what data the pieces have
      * @param integer $start The index (and number) of the first of the ($count) pieces
@@ -134,12 +122,12 @@ class AddressesTable extends AppTable
 
     return array_fill($start, $count, $columns);
     }
-        
+
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
 
     /**
      * Find addresses by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -147,10 +135,10 @@ class AddressesTable extends AppTable
     public function findAddresses($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find members
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -158,10 +146,10 @@ class AddressesTable extends AppTable
     public function findInMembers(Query $query, $options) {
         return $this->integer($query, 'member_id', $options['values']);
     }
-    
+
     /**
      * Find kind of address (label)
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -169,10 +157,10 @@ class AddressesTable extends AppTable
     public function findKind(Query $query, $options) {
         return $this->string($query, 'label', $options['value']);
     }
-    
+
     /**
      * Find zip codes (strings not integers)
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -180,10 +168,10 @@ class AddressesTable extends AppTable
     public function findZipCodes(Query $query, $options) {
         return $this->string($query, 'zip', $options['value']);
     }
-    
+
     /**
      * Find cities
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -191,10 +179,10 @@ class AddressesTable extends AppTable
     public function findCities(Query $query, $options) {
         return $this->string($query, 'city', $options['value']);
     }
-    
+
     /**
      * Find zip codes (strings not integers)
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -202,7 +190,7 @@ class AddressesTable extends AppTable
     public function findStates(Query $query, $options) {
         return $this->string($query, 'state', $options['value']);
     }
-    
+
 // </editor-fold>
-	
+
 }
