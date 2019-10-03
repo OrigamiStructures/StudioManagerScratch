@@ -246,7 +246,8 @@ class MembersController extends AppController
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
-        if(empty($member->errors())){
+        $errors = $member->getErrors();
+        if(empty($errors)){
             $this->SystemState->referer($this->referer());
         }
 //		osd($member);
@@ -270,8 +271,8 @@ class MembersController extends AppController
         $cookie_name = Configure::read('Users.RememberMe.Cookie.name');
         $cookie = $this->Cookie->read($cookie_name);
         osd($cookie, 'the cookie');
-        osd($this->request->session()->read(), 'session before');
-        $this->request->session()->destroy();
-        osd($this->request->session()->read(), 'session after destroy');
+        osd($this->request->getSession()->read(), 'session before');
+        $this->request->getSession()->destroy();
+        osd($this->request->getSession()->read(), 'session after destroy');
     }
 }

@@ -197,20 +197,20 @@ class SystemState implements EventListenerInterface {
             'SystemState::artistId() is deprecated. A new method is in development.'
         , 'DEPRECATED');
 		if (is_null($id)) {
-			return $this->request->session()->read('Auth.User.artist_id');
+			return $this->request->getSession()->read('Auth.User.artist_id');
 		}
 		$target_artist = FALSE;
 		if ($id === 'user') {
-			$target_artist = $this->request->session()->read('Auth.User.id');
+			$target_artist = $this->request->getSession()->read('Auth.User.id');
 		} else {
-			$ta = $this->request->session()->read("Auth.User.artists.$id");
+			$ta = $this->request->getSession()->read("Auth.User.artists.$id");
 			$target_artist = is_null($ta) ? FALSE : $ta;
 		}
 		if ($target_artist) {
-			$this->request->session()->write('Auth.User.artist_id', $target_artist);
+			$this->request->getSession()->write('Auth.User.artist_id', $target_artist);
             $Users = TableRegistry::getTableLocator()->get('Users');
             $user = new User([
-                'id' => $this->request->session()->read('Auth.User.id'),
+                'id' => $this->request->getSession()->read('Auth.User.id'),
                 'artist_id' => $target_artist
                 ]);
             $Users->save($user);
@@ -239,7 +239,7 @@ class SystemState implements EventListenerInterface {
 	 * @return boolean
 	 */
 	public function admin($type = NULL) {
-		$user_role = $this->request->session()->read('Auth.User.role');
+		$user_role = $this->request->getSession()->read('Auth.User.role');
 		if (is_null($type)) {
 			return in_array($user_role, $this->_admin_roles);
 		} elseif (in_array($type, $this->_admin_roles)) {
@@ -271,7 +271,7 @@ class SystemState implements EventListenerInterface {
 			$value = $name->id;
 			$name = $this::stripNamespace($name);
 		}
-		$result = $this->request->query($name);
+		$result = $this->request->getQuery($name);
 		if (!is_null($result)) {
 			return $result == $value;
 		}
@@ -413,18 +413,18 @@ CLASS;
      * @return string
      */
     public function referer($referer = NULL) {
-        $session_referer = $this->request->session()->read('referer');
+        $session_referer = $this->request->getSession()->read('referer');
         if(is_null($referer)){
             $r = (!is_null($session_referer)) ? $session_referer : $this->request->referer();
         } elseif ($referer === SYSTEM_VOID_REFERER) {
             $r = $this->request->referer();
-            $this->request->session()->delete('referer');
+            $this->request->getSession()->delete('referer');
         } elseif ($referer === SYSTEM_CONSUME_REFERER) {
             $r =  (!is_null($session_referer)) ? $session_referer : $this->request->referer();
-            $this->request->session()->delete('referer');
+            $this->request->getSession()->delete('referer');
         } else {
             $r = $referer;
-            $this->request->session()->write('referer', $referer);
+            $this->request->getSession()->write('referer', $referer);
         }
         return $r;
     }

@@ -308,7 +308,7 @@ class ArtworksController extends AppController
      * or it may all be handled by another method.
      */
     public function validateQuantities($id) {
-	$this->request->query = ['artwork' => $id];
+        $this->request = $this->request->withQueryParams(['artwork' => $id]);
 //      $element_management = [
 //          'artwork' => 'full',
 //          'edition' => 'many',
