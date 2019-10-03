@@ -304,7 +304,7 @@ class EditionStackComponent extends Component {
 	public function reassignmentTransaction() {
 		$PiecesTable = TableRegistry::getTableLocator()->get('Pieces');
 		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
-		$result = $PiecesTable->connection()->transactional(function () use ($PiecesTable) {
+		$result = $PiecesTable->getConnection()->transactional(function () use ($PiecesTable) {
 			$result = TRUE;
 			if (is_array($this->pieces_to_save)) {
 				foreach ($this->pieces_to_save as $piece) {

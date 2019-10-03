@@ -257,7 +257,7 @@ class EditionsController extends AppController {
                 }
             } else {
                 // have use correct input errors
-                $errors = $assignment->errors();
+                $errors = $assignment->getErrors();
             }
         }
         $this->set(compact(array_keys($data)));
