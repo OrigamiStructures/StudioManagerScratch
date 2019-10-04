@@ -285,7 +285,7 @@ class EditionedHelper extends EditionHelper {
 		}
 
 		$output = $policy_statement .
-			 $form->input("editions.$edition_index.quantity", [
+			 $form->control("editions.$edition_index.quantity", [
 				'default' => $default,
 				'label' => $label
 			]);

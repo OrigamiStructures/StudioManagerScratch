@@ -386,7 +386,7 @@ class DispositionManagerComponent extends Component {
 
 		} else {
 			// have use correct input errors
-			$errors= $assignment->errors();
+			$errors = $assignment->getErrors();
 		}
 		$this->errors = $errors;
 		return FALSE;

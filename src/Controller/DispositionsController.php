@@ -174,11 +174,15 @@ class DispositionsController extends AppController
 
 		if ($this->request->is('post')) {
 
+		    /*
+		     * I'm not sure how to replace the entire request data array in the new codebase.
+		     * withData() only seems to set one value. And I'm not sure if withBody() is the right alternative.
+		     */
 			$this->request->data = $this->completeRule($this->request->getData());
 
 			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->getData());
 			$this->DispositionManager->write();
-			$errors = $disposition->errors();
+			$errors = $disposition->getErrors();
 //			$this->Dispositions->checkRules($disposition);
 			if (empty($errors)) {
 				$this->autoRender = FALSE;
