@@ -36,7 +36,10 @@ class AppTable extends Table {
 		}
         if (!empty($config['currentUser'])) {
             $this->setCurrentUser($config['currentUser']);
-		}
+        }
+        if (!empty($config['contextUser'])) {
+            $this->setContextUser($config['contextUser']);
+        }
 		parent::__construct($config);
 	}
 

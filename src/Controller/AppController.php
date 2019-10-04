@@ -129,7 +129,8 @@ class AppController extends Controller
 		TableRegistry::setTableLocator(new CSTableLocator(
 				[
 					'SystemState' => $this->SystemState,
-					'currentUser' => $this->currentUser()
+					'currentUser' => $this->currentUser(),
+                    'contextUser' => $this->contextUser()
 				]
 			));
 		$this->modelFactory('Table', [$this, 'tableFactoryOverride']);
