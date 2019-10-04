@@ -9,15 +9,15 @@ use Cake\ORM\Entity;
  * @author dondrake
  */
 class DataOwner extends Entity {
-	
+
 	public function id() {
 		return $this->id;
 	}
-	
+
 	public function username() {
 		return $this->username;
 	}
-	
+
 	public function ownerOf($param) {
 		switch ($param) {
 			case is_string($param):
@@ -33,10 +33,12 @@ class DataOwner extends Entity {
 				if (isset($param['user_id'])) {
 					return $this->id() === $param['user_id'];
 				}
+                return FALSE;
+                break;
 			default:
 				return FALSE;
 				break;
 		}
 	}
-	
+
 }

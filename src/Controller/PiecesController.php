@@ -177,7 +177,7 @@ class PiecesController extends AppController
 		}
 		/* allow cacellation of renumbering process */
         $cancel = $this->request->getData('cancel');
-		if (isset($cancel) {
+		if (isset($cancel)) {
 			$this->_clear_renumber_caches($cache_prefix);
 			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 		}
@@ -261,7 +261,7 @@ class PiecesController extends AppController
             }
 		}
 		/* this is common fall-through code for all modes of request */
-        $number = $this->request->getData('number')
+        $number = $this->request->getData('number');
 		if (!isset($number) &&
 				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
 			/*

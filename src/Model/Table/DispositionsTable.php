@@ -17,16 +17,6 @@ use App\Model\Behavior\DateQueryBehavior;
 use App\Model\Behavior\IntegerQueryBehavior;
 use App\Model\Lib\ArtistIdConditionTrait;
 
-/**
- * Dispositions Model
- *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Members
- * @property \Cake\ORM\Association\BelongsTo $Addresses
- * @property \Cake\ORM\Association\BelongsTo $Dispositions
- * @property \Cake\ORM\Association\HasMany $Dispositions
- * @property \Cake\ORM\Association\BelongsToMany $Pieces
- */
 class DispositionsTable extends AppTable {
 
     use ArtistIdConditionTrait;

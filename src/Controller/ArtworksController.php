@@ -4,13 +4,14 @@ namespace App\Controller;
 use App\Lib\RequestUtility;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
-use App\Controller\AppController;
 use App\Model\Lib\Layer;
+use App\Model\Table\ArtworksTable;
+use \Cake\Network\Exception\NotFoundException;
 
 /**
  * Artworks Controller
  *
- * @property \App\Model\Table\ArtworksTable $Artworks
+ * @property ArtworksTable $Artworks
  */
 class ArtworksController extends AppController
 {
@@ -18,6 +19,9 @@ class ArtworksController extends AppController
     use ArtReviewTrait;
 
     public $components = ['ArtworkStack', 'Layers'];
+
+    public $ArtworkStack;
+    public $Layers;
 
     public function initialize() {
         parent::initialize();
@@ -44,7 +48,7 @@ class ArtworksController extends AppController
 	 *
 	 * @param string|null $id Artwork id.
 	 * @return void
-	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
+	 * @throws NotFoundException When record not found.
 	     */
 	public function view($id = null)     {
 		$artwork = $this->Artworks->get($id,
@@ -345,6 +349,7 @@ class ArtworksController extends AppController
         $result = [];
         $anscestors = [];
         $disp = TableRegistry::getTableLocator()->get('Dispositions');
+        osd(get_class(TableRegistry::getTableLocator()));
         $methods = $disp->customFinders();
         $options = $this->request->getData();
 
