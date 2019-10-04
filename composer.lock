@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e5bb0d99896b95fbea03c786f3dad10",
+    "content-hash": "83d9414842fd7c952aa1cd320cb4fc94",
     "packages": [
         {
             "name": "aura/intl",
@@ -120,16 +120,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.7.9",
+            "version": "3.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "1e89aa0399ce4c0f9af764e3b61aa24826278feb"
+                "reference": "a2ff473a20f467458680b6841a3fdb190eef113d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/1e89aa0399ce4c0f9af764e3b61aa24826278feb",
-                "reference": "1e89aa0399ce4c0f9af764e3b61aa24826278feb",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/a2ff473a20f467458680b6841a3fdb190eef113d",
+                "reference": "a2ff473a20f467458680b6841a3fdb190eef113d",
                 "shasum": ""
             },
             "require": {
@@ -205,7 +205,7 @@
                 "rapid-development",
                 "validation"
             ],
-            "time": "2019-06-20T01:33:59+00:00"
+            "time": "2019-09-14T01:34:26+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -1495,20 +1495,20 @@
         },
         {
             "name": "cakephp/bake",
-            "version": "1.10.1",
+            "version": "1.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "b1fa1d2d4f3a6b74c69ab24c90c880dcc1f8751c"
+                "reference": "8598c3326541a16aa7b003ce322c44a34f90ad85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/b1fa1d2d4f3a6b74c69ab24c90c880dcc1f8751c",
-                "reference": "b1fa1d2d4f3a6b74c69ab24c90c880dcc1f8751c",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/8598c3326541a16aa7b003ce322c44a34f90ad85",
+                "reference": "8598c3326541a16aa7b003ce322c44a34f90ad85",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "~3.7.0",
+                "cakephp/cakephp": "^3.8.0",
                 "cakephp/plugin-installer": "^1.0",
                 "php": ">=5.6.0",
                 "wyrihaximus/twig-view": "^4.3.7"
@@ -1539,7 +1539,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2019-07-01T21:34:33+00:00"
+            "time": "2019-07-30T02:08:16+00:00"
         },
         {
             "name": "cakephp/debug_kit",
@@ -2507,22 +2507,22 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.8.1",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "1927e75f4ed19131ec9bcc3b002e07fb1173ee76"
+                "reference": "f6811d96d97bdf400077a0cc100ae56aa32b9203"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/1927e75f4ed19131ec9bcc3b002e07fb1173ee76",
-                "reference": "1927e75f4ed19131ec9bcc3b002e07fb1173ee76",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/f6811d96d97bdf400077a0cc100ae56aa32b9203",
+                "reference": "f6811d96d97bdf400077a0cc100ae56aa32b9203",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
+                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0|^5.0",
                 "sebastian/comparator": "^1.1|^2.0|^3.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
@@ -2566,7 +2566,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2019-06-13T12:50:23+00:00"
+            "time": "2019-10-03T11:07:50+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
