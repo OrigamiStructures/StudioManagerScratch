@@ -13,9 +13,9 @@ use App\Model\Lib\CurrentUser;
  * @author dondrake
  */
 class AppTable extends Table {
-	
+
 	public $SystemState;
-	
+
 	protected $currentUser;
 
     /**
@@ -25,9 +25,9 @@ class AppTable extends Table {
 
 	/**
 	 * An override TableLocator injects config values
-	 * 
+	 *
 	 * The override is done in AppController
-	 * 
+	 *
 	 * @param array $config
 	 */
 	public function __construct(array $config = []){
@@ -35,11 +35,11 @@ class AppTable extends Table {
             $this->SystemState = $config['SystemState'];
 		}
         if (!empty($config['currentUser'])) {
-            $this->currentUser = $this->setCurrentUser($config['currentUser']);
+            $this->setCurrentUser($config['currentUser']);
 		}
 		parent::__construct($config);
 	}
-	
+
 	/**
 	 * Get/make the currentUser object for the table
 	 */
@@ -58,13 +58,13 @@ class AppTable extends Table {
         }
         return $this->contextUser;
     }
-	
+
 	public function setCurrentUser($userData) {
 		$this->currentUser = $userData;
 	}
-	
+
 	public function setContextUser($userData) {
 		$this->contextUser = $userData;
 	}
-	
+
 }
