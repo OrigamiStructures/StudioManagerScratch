@@ -129,8 +129,8 @@ class AppController extends Controller
 		TableRegistry::setTableLocator(new CSTableLocator(
 				[
 					'SystemState' => $this->SystemState,
-					'currentUser' => $this->currentUser(),
-                    'contextUser' => $this->contextUser()
+					'CurrentUser' => $this->currentUser(),
+                    'ContextUser' => $this->contextUser()
 				]
 			));
 		$this->modelFactory('Table', [$this, 'tableFactoryOverride']);
@@ -140,7 +140,7 @@ class AppController extends Controller
 	 * Fix the fact that default tables didn't use the right locator class
 	 *
 	 * @todo An issue exists (github) $thisAuthuser doesn't exist in the
-	 *		not isset case?
+	 *      not isset case?
 	 *
 	 * @param type $modelClass
 	 * @return type

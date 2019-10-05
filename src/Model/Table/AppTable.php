@@ -14,14 +14,34 @@ use App\Model\Lib\CurrentUser;
  */
 class AppTable extends Table {
 
-	public $SystemState;
+    /**
+     * List of valid keys for Table::__construct()
+     *
+     * @var array
+     */
+    protected $standardConfigKeys = [
+        'table',
+        'alias',
+        'connection',
+        'entityClass',
+        'schema',
+        'eventManager',
+        'behaviors',
+        'associations',
+        'validator',
+        // additional keys that are automatic
+        'className',
+        'registryAlias'
+    ];
 
-	protected $currentUser;
+    protected $providedConfigKeys;
+
+    protected $CurrentUser;
 
     /**
      * @var ContextUser
      */
-	protected $contextUser;
+	protected $ContextUser;
 
 	/**
 	 * An override TableLocator injects config values
@@ -30,44 +50,60 @@ class AppTable extends Table {
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config = []){
-        if (!empty($config['SystemState'])) {
-            $this->SystemState = $config['SystemState'];
-		}
-        if (!empty($config['currentUser'])) {
-            $this->setCurrentUser($config['currentUser']);
+	public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        $this->providedConfigKeys = array_keys($config);
+        foreach ($this->customConfigKeys() as $key) {
+            $this->$key = $config[$key];
         }
-        if (!empty($config['contextUser'])) {
-            $this->setContextUser($config['contextUser']);
-        }
-		parent::__construct($config);
+    }
+
+    protected function customConfigKeys()
+    {
+        return array_diff($this->providedConfigKeys, $this->standardConfigKeys);
 	}
 
 	/**
 	 * Get/make the currentUser object for the table
 	 */
 	public function currentUser() {
-		return $this->currentUser;
+		return $this->CurrentUser;
 	}
 
     /**
-     * Get / make contextUser object
+     * Get contextUser object
      *
      * @return ContextUser
      */
     public function contextUser() {
-        if (!isset($this->contextUser)) {
-            $this->contextUser = ContextUser::instance();
-        }
-        return $this->contextUser;
+        return $this->ContextUser;
     }
 
-	public function setCurrentUser($userData) {
-		$this->currentUser = $userData;
+    /**
+     * Directly inject a CurrentUser object
+     *
+     * @param CurrentUser $userData
+     */
+	public function setCurrentUser($currentUser) {
+		$this->CurrentUser = $currentUser;
 	}
 
-	public function setContextUser($userData) {
-		$this->contextUser = $userData;
+    /**
+     * Directly inject a ContextUser object
+     * @param ContextUser $userData
+     */
+	public function setContextUser($contextUser) {
+		$this->ContextUser = $contextUser;
+	}
+
+    public function __debugInfo()
+    {
+        $debug = parent::__debugInfo();
+        $debug['CurrentUser'] = $this->currentUser();
+        $debug['ContextUser'] = $this->contextUser();
+
+        return $debug;
 	}
 
 }
