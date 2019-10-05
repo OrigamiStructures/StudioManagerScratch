@@ -5,6 +5,7 @@ use App\Model\Table\CSTableLocator;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use App\Model\Table\MenusTable;
+use Cake\ORM\Locator\TableLocator;
 
 /**
  * App\Model\Table\CSTableLocator Test Case
@@ -76,6 +77,20 @@ class CSTableLocatorTest extends TestCase
         $this->assertEmpty(
             $this->CSTableLocatorNoConfig->getInjections(),
             'The config has content though no values were provided');
+    }
+
+    /**
+     * Test parent::__construct method
+     *
+     * AppTable has some changes to accommodate the override factory.
+     * I need to make sure it still works in native mode
+     */
+    public function testConstructFromParent()
+    {
+        $TableLocator = new TableLocator();
+        $table = $TableLocator->get('Menus');
+        $this->assertTrue(get_class($table) === 'App\Model\Table\MenusTable',
+            'parent version of get() didn\'t construct a table as expected');
     }
 
     /**
