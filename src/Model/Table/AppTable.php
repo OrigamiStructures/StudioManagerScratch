@@ -17,9 +17,11 @@ class AppTable extends Table {
     /**
      * List of valid keys for Table::__construct()
      *
+     * Documentation for the Table super-class provided this list of values.
+     *
      * @var array
      */
-    protected $standardConfigKeys = [
+    private $standardConfigKeys = [
         'table',
         'alias',
         'connection',
@@ -29,13 +31,24 @@ class AppTable extends Table {
         'behaviors',
         'associations',
         'validator',
-        // additional keys that are automatic
+        // additional keys that are automatic (revealed by tests)
         'className',
         'registryAlias'
     ];
 
-    protected $providedConfigKeys;
+    /**
+     * Keys sent in config beyond the ::standardConfigKeys set
+     *
+     * Used in testing, this will allow detection of changes to the Core Table behavior.
+     * These are the names of config properties sent by the override Table factory, CSTableLocator
+     *
+     * @var array
+     */
+    private $injectedProperties;
 
+    /**
+     * @var CurrentUser
+     */
     protected $CurrentUser;
 
     /**
@@ -44,28 +57,52 @@ class AppTable extends Table {
 	protected $ContextUser;
 
 	/**
-	 * An override TableLocator injects config values
+	 * Construct a Table
 	 *
-	 * The override is done in AppController
+	 * An override Table factory allows for injection of properties beyond those
+     * supported by Cake's core Table super-class. Once the Table is built, any
+     * additional config values sent by the new factory will be moved onto properties
+     * of this Table.
+     *
+     * The factory override is put in place by AppController and the basic set of
+     * additional config values is set at that time. The replacement factory
+     * allows changes and overrides of its configured values (App\Model\CSTableLocator)
 	 *
 	 * @param array $config
 	 */
 	public function __construct(array $config = [])
     {
         parent::__construct($config);
-        $this->providedConfigKeys = array_keys($config);
-        foreach ($this->customConfigKeys() as $key) {
+
+        foreach ($this->customConfigKeys(array_keys($config)) as $key) {
             $this->$key = $config[$key];
         }
     }
 
-    protected function customConfigKeys()
+    /**
+     * Discover (and record) any additional config keys
+     *
+     * @param $providedKeys
+     * @return array
+     */
+    private function customConfigKeys($providedKeys)
     {
-        return array_diff($this->providedConfigKeys, $this->standardConfigKeys);
+        $this->injectedProperties = array_diff($providedKeys, $this->standardConfigKeys);
+        return $this->injectedProperties();
+	}
+
+    /**
+     * Return the calculated list of config keys beyond the standard Cake set
+     *
+     * @return array
+     */
+    public function injectedProperties()
+    {
+        return $this->injectedProperties;
 	}
 
 	/**
-	 * Get/make the currentUser object for the table
+	 * Get the currentUser object for the table
 	 */
 	public function currentUser() {
 		return $this->CurrentUser;
@@ -102,6 +139,7 @@ class AppTable extends Table {
         $debug = parent::__debugInfo();
         $debug['CurrentUser'] = $this->currentUser();
         $debug['ContextUser'] = $this->contextUser();
+        $debug['SystemState'] = isset($this->SystemState) ? 'Present' : 'Not Present';
 
         return $debug;
 	}

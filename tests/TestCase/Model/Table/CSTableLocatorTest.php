@@ -80,12 +80,12 @@ class CSTableLocatorTest extends TestCase
     }
 
     /**
-     * Test parent::__construct method
+     * Test parent::get method
      *
      * AppTable has some changes to accommodate the override factory.
      * I need to make sure it still works in native mode
      */
-    public function testConstructFromParent()
+    public function testConstructTableFromParentGet()
     {
         $TableLocator = new TableLocator();
         $table = $TableLocator->get('Menus');
@@ -107,7 +107,15 @@ class CSTableLocatorTest extends TestCase
             'property did not populate from stored config value');
         $this->assertTrue($table->currentUser() === 'current user object',
             'property did not populate from stored config value');
-    }
+
+        $expected = array_values($table->injectedProperties());
+        $actual = array_values($this->CSTableLocatorWithConfig->getInjectionKeys());
+        $this->assertEquals($expected, $actual,
+            'Unexpected properties added to the Table. Did the valid set of Table::__construct() ' .
+           'keys change during a Cake upgrade? The list must match AppTable::standardConfigKeys');
+
+
+   }
 
     /**
      * Test get method when locator doesn't have stored config values
