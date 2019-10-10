@@ -125,7 +125,7 @@ class AppController extends Controller
 	private function overrideTableLocator() {
 		TableRegistry::setTableLocator(new CSTableLocator(
 				[
-					'SystemState' => $this->SystemState,
+//					'SystemState' => $this->SystemState,
 					'CurrentUser' => $this->currentUser(),
                     'ContextUser' => $this->contextUser()
 				]
