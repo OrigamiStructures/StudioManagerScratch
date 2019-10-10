@@ -139,7 +139,7 @@ class FormatsTable extends AppTable {
     public function afterSave($event, $entity, $options) {
         if (!isset($entity->edition_id)) {
             $query = $this->find()
-                    ->where(['id' => $entity->id, 'user_id' => $this->SystemState->artistId()])
+                    ->where(['id' => $entity->id, 'user_id' => $this->contextUser()->artistId()])
                     ->select(['edition_id'])->toArray();
             $entity->edition_id = $query[0]->edition_id;
         }

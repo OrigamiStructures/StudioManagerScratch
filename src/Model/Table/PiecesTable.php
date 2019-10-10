@@ -478,7 +478,7 @@ class PiecesTable extends AppTable {
         $count += $start;
         $columns = $default + [
             'id' => NULL,
-            'user_id' => $this->SystemState->artistId(),
+            'user_id' => $this->contextUser()->artistId(),
             'number' => '',
         ];
 

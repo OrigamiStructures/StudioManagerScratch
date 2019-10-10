@@ -219,7 +219,7 @@ class EditionsTable extends AppTable
 	public function minimumSize($edition) {
 		if (is_int($edition)) {
 			$edition = $this->get($edition, ['conditions' => [
-				'user_id' => $this->SystemState->artistId(),
+				'user_id' => $this->contextUser()->artistId(),
 			]]);
 		}
 

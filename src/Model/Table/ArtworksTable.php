@@ -207,7 +207,7 @@ class ArtworksTable extends AppTable
     public function findSearch(Query $query, $options) {
         $query->where([
                 'Artworks.title LIKE' => "%{$options[0]}%",
-                'Artworks.user_id' => $this->SystemState->artistId()
+                'Artworks.user_id' => $this->contextUser()->artistId()
             ])
             // CONTAINMENT IS FROM THE COMPONENT.
             // ABSTRACT THIS

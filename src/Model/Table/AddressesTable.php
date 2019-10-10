@@ -100,7 +100,7 @@ class AddressesTable extends AppTable
      * @param \App\Model\Table\ArrayObject $options
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
-        $data['user_id'] = $this->SystemState->artistId();
+        $data['user_id'] = $this->contextUser()->artistId();
     }
 
 // </editor-fold>
@@ -116,7 +116,7 @@ class AddressesTable extends AppTable
     public function spawn($count, $default = [], $start = 0) {
             $columns = $default + [
                     'id' => NULL,
-                    'user_id' => $this->SystemState->artistId(),
+                    'user_id' => $this->contextUser()->artistId(),
         'label' => 'New'
             ];
 
