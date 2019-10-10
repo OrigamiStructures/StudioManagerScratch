@@ -14,4 +14,9 @@ class PersonCard extends RolodexCard{
 	
 	use ContactableTrait, ReceiverTrait;
 
+    public function registeredUserId()
+    {
+        return $this->Identity->registeredUserId();
+	}
+
 }

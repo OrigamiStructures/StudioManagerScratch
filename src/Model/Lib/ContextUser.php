@@ -333,6 +333,11 @@ class ContextUser {
 		$this->actorCard['manager'] = $set->shift();
 	}
 
+    public function artistId()
+    {
+        return getCard('artist')->registeredUserId();
+	}
+
 	/**
 	 * @return array
 	 */
@@ -345,9 +350,9 @@ class ContextUser {
 					: 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
 		}
 		return [
-			'user' => 
-					is_object($this->user) 
-					? "CurrentUser object: {$this->user->name()} {$this->user->userId()}" 
+			'user' =>
+					is_object($this->user)
+					? "CurrentUser object: {$this->user->getName()} {$this->user->userId()}"
 					: 'Not set',
 			'actorId' => $this->actorId,
 			'actorCard' => $actorCard,
