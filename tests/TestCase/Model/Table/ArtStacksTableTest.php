@@ -30,6 +30,7 @@ class ArtStacksTableTest extends TestCase
         'app.editions',
         'app.formats',
         'app.pieces',
+        'app.series',
         'app.dispositions_pieces'
     ];
 
