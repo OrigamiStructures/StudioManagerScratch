@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Model\Lib;
 
 use App\Model\Lib\Layer;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\ORM\Locator\TableLocator;
 use App\Exception\BadClassConfigurationException;
@@ -42,7 +43,7 @@ class LayerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Pieces = $this->getTableLocator()->get('Pieces');
+        $this->Pieces = TableRegistry::getTableLocator()->get('Pieces');
         $this->pieceRecords = $this->Pieces->find('all')->toArray();
         $this->Artworks = $this->getTableLocator()->get('Artworks');
         $this->artRecord = $this->Artworks->find('all')->toArray();
