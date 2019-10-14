@@ -111,25 +111,23 @@ class AppController extends Controller
 	}
 
 	/**
-	 * Pass critical User data to all tables
+	 * Install a new TableLocator that can inject dependencies
 	 *
-	 * This data will allow tables to determine supervisor, manager,
-	 * and artist ids for data access control. Tables will also
-	 * use this data to discover permissions which allow data
-	 * sharing between supervisors and managers.
-	 *
-	 * The factory override is beacuse the default table for
-	 * controllers follow a slightly different path to construction
-	 * and they will bybass the new locator.
+     * The standard locator limits the config values you can pass.
+     * This locator can be configured with values that will be injected
+     * into every Table.
+     *
+     * The new locator allows override and modifications of its
+     * stored config injections even after this construction/installation.
 	 *
 	 * @todo remove SystemState from the application
-	 * @todo create an object to encapsulate currentUser
 	 */
 	private function overrideTableLocator() {
 		TableRegistry::setTableLocator(new CSTableLocator(
 				[
-					'SystemState' => $this->SystemState,
-					'currentUser' => $this->currentUser()
+//					'SystemState' => $this->SystemState,
+					'CurrentUser' => $this->currentUser(),
+                    'ContextUser' => $this->contextUser()
 				]
 			));
 		$this->modelFactory('Table', [$this, 'tableFactoryOverride']);
@@ -139,13 +137,13 @@ class AppController extends Controller
 	 * Fix the fact that default tables didn't use the right locator class
 	 *
 	 * @todo An issue exists (github) $thisAuthuser doesn't exist in the
-	 *		not isset case?
+	 *      not isset case?
 	 *
 	 * @param type $modelClass
 	 * @return type
 	 */
-	public function tableFactoryOverride($modelClass) {
-		return TableRegistry::getTableLocator()->get($modelClass);
+	public function tableFactoryOverride($modelClass, $options = []) {
+		return TableRegistry::getTableLocator()->get($modelClass, $options);
 	}
 
 	public function currentUser() {

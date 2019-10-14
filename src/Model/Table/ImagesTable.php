@@ -156,7 +156,7 @@ class ImagesTable extends AppTable
 			$this->_new_image = $entity->image_file;
 		}
 		if ($entity->isNew()) {
-			$entity->user_id = $this->SystemState->artistId();
+			$entity->user_id = $this->contextUser()->artistId();
 			$entity->dirty('user_id');
 		}
 		return true;

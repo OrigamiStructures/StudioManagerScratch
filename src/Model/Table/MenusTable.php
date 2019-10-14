@@ -112,7 +112,7 @@ class MenusTable extends AppTable{
 	 * Set up the admin menus for the current circumstance
 	 */
 	protected function admin() {
-		if (!$this->SystemState->admin()) {
+		if (!$this->currentUser()->admin()) {
 			unset($this->menu['Admin']);
 		} else {
 			// all admins have 'artist spoofing' capabilities
@@ -125,7 +125,7 @@ class MenusTable extends AppTable{
 					'Act as...' => [], //$User->artists(),
 				];
 		}
-		if ($this->SystemState->admin(ADMIN_SYSTEM)){
+		if ($this->currentUser()->admin(ADMIN_SYSTEM)){
 			$this->menu['Admin']['Logs'] = [];
 			$this->menu['Admin']['Remap States'] = '/artworks/map_states';
 		}

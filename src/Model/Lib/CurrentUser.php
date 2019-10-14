@@ -2,8 +2,9 @@
 namespace App\Model\Lib;
 
 use App\Exception\BadClassConfigurationException;
-use Cake\ORM\Table;
+use App\Model\Table\PersonCardsTable;
 use Cake\ORM\TableRegistry;
+use App\Model\Entity\PersonCard;
 
 /**
  * Description of CurrentUser
@@ -36,20 +37,31 @@ class CurrentUser {
 	 * @var array
 	 */
 	protected $data;
-	
+
+    /**
+     * Array of types of 'admin' access
+     *
+     * Methods that test for a kind of admin access need to insure only
+     * valid admin roles are considered for testing. If the value in question
+     * is not in this array, just ignore it altogether. (see $this->admin() )
+     *
+     * @var array
+     */
+    protected $_admin_roles = [ADMIN_SYSTEM, ADMIN_ARTIST];
+
 	/**
 	 * Lazy loaded PersonCard for the registered user
 	 *
 	 * @var PersonCard
 	 */
 	protected $Person = NULL;
-		
-	public function __construct($data, $options = []) {
-		
+
+	public function __construct($data) {
+
 		if (is_null($data)) {
 			$message = 'The first request for the CurrentUser object '
 					. 'must include the data to construct it.';
-			throw new BadClassConfigurationException($msg);
+			throw new BadClassConfigurationException($message);
 		}
 		$this->data = $data;
 	}
@@ -83,7 +95,7 @@ class CurrentUser {
 	 * 
 	 * @return string
 	 */
-    public function name()
+    public function getName()
     {
 		if (is_null($this->Person)) {
 			$PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
@@ -132,5 +144,30 @@ class CurrentUser {
 //	public function user() {
 //		return $this->data;
 //	}
-	
+
+    public function userRole()
+    {
+        return $this->data['role'];
+    }
+
+    /**
+     * Determine the degree (if any) of admin access
+     *
+     * @param string $type
+     * @return boolean
+     */
+    public function admin($type = NULL) {
+        if (is_null($type)) {
+            return in_array($this->userRole(), $this->_admin_roles);
+        } elseif (in_array($type, $this->_admin_roles)) {
+            return strtolower($type) === $this->userRole();
+        }
+        return false;
+        // Very tentative implementation plan:
+        //
+        // needs to sent TRUE if user is and 'artist' admin, meaning
+        // they need to act as an artist other than themselves. And needs
+        // to return TRUE for both 'system' and 'artist' for developers
+    }
+
 }

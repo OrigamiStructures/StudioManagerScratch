@@ -73,6 +73,7 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/PermissionsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestStacksTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/CSTableLocatorTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php

@@ -135,7 +135,7 @@ class MembersTable extends AppTable
 
 
     public function deleteRule($entity, $options) {
-        return $entity->user_id === $this->SystemState->artistId();
+        return $entity->user_id === $this->contextUser()->artistId();
     }
 
 
@@ -160,7 +160,7 @@ class MembersTable extends AppTable
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
         $this->bmSetupGroup($data);
         $this->bmSetupSort($data);
-        $data['user_id'] = $this->SystemState->artistId();
+        $data['user_id'] = $this->contextUser()->artistId();
     }
 
 
@@ -175,7 +175,7 @@ class MembersTable extends AppTable
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_INSTITUTION:
                 $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
-                $data['group']['user_id'] = $this->SystemState->artistId();
+                $data['group']['user_id'] = $this->contextUser()->artistId();
                 break;
             case MEMBER_TYPE_PERSON:
                 break;
@@ -232,7 +232,7 @@ class MembersTable extends AppTable
     public function findMemberList(Query $query, array $options) {
         $query->where([
             'Members.active' => 1,
-            'Members.user_id' => $this->SystemState->artistId()
+            'Members.user_id' => $this->contextUser()->artistId()
         ]);
         return $query;
     }
@@ -425,18 +425,18 @@ class MembersTable extends AppTable
             'first_name' => NULL,
             'contacts' => [
                 [
-                    'user_id' => $this->SystemState->artistId(),
+                    'user_id' => $this->contextUser()->artistId(),
                     'label' => 'email',
                     'primary' => 1
                 ],
                 [
-                    'user_id' => $this->SystemState->artistId(),
+                    'user_id' => $this->contextUser()->artistId(),
                     'label' => 'phone'
                 ]
             ],
             'addresses' => [
                 [
-                    'user_id' => $this->SystemState->artistId(),
+                    'user_id' => $this->contextUser()->artistId(),
                     'label' => 'main',
                     'primary' => 1
                 ]
@@ -444,7 +444,7 @@ class MembersTable extends AppTable
         ];
         if(in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION]) && $this->SystemState->is(MEMBER_CREATE)){
             $proxy_group = [
-                'user_id' => $this->SystemState->artistId()
+                'user_id' => $this->contextUser()->artistId()
             ];
             $proxy_group_entity = new \Cake\ORM\Entity($proxy_group);
             $entity->set('proxy_group', $proxy_group_entity);
