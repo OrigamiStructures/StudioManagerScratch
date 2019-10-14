@@ -403,12 +403,12 @@ class Layer implements LayerAccessInterface {
      *
      * @param string $layer The simple name of the associate (eg: artwork, format)
      * @param string $id The foreign key value to match
-     * @return null|array
+     * @return array
      */
     public function linkedTo($foreign, $foreign_id, $linked = null) {
         $foreign_key = $this->_modelKey($foreign);
         if (!$this->has($foreign_key)) {
-            return NULL;
+            return [];
         }
         return $this->filter($foreign_key, $foreign_id);
     }

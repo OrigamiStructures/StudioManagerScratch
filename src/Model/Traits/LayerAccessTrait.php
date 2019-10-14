@@ -286,7 +286,7 @@ trait LayerAccessTrait {
 	 */
 	public function paginate($data, LayerAccessArgs $argObj) {
 		if ($argObj->valueOf('limit') === 1 && !empty($data)) {
-			return array_shift($data);
+			return [array_shift($data)];
 		}
 		if ($argObj->valueOf('limit') < 1) {
 			return $data;
