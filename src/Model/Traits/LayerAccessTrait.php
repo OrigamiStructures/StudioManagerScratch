@@ -20,26 +20,26 @@ define('LAYERACC_WRAP', FALSE);
  * @author dondrake
  */
 trait LayerAccessTrait {
-    
+
     protected $primary;
 
 
     public function accessArgs() {
         return new LayerAccessArgs();
 	}
-    
+
 	/**
 	 * Make an object to set up filtering and access to content
-	 * 
-	 * Returns a LayerAccessArgs object that allows chained calls 
-	 * for object querying. Once all the parameters for the access 
-	 * are spec'd, use one of the objects 'load' varients to 
+	 *
+	 * Returns a LayerAccessArgs object that allows chained calls
+	 * for object querying. Once all the parameters for the access
+	 * are spec'd, use one of the objects 'load' varients to
 	 * return the desired data
-	 * 
-	 * Passing a $layer value will run the setLayer( ) method 
+	 *
+	 * Passing a $layer value will run the setLayer( ) method
 	 * on the returned Args object
-	 * 
-	 * @param string $layer 
+	 *
+	 * @param string $layer
 	 * @return LayerAccessArgs
 	 */
     public function find($layer = NULL) {
@@ -49,17 +49,17 @@ trait LayerAccessTrait {
 		}
         return $args;
     }
-		
+
 	public function layer(array $entities) {
 		return new Layer($entities);
 	}
-	
+
 	/**
 	 * Return the n-th stored element or element(ID)
-	 * 
-	 * Data is stored in id-indexed arrays, but this method will let you 
+	 *
+	 * Data is stored in id-indexed arrays, but this method will let you
 	 * pluck the id's or n-th item out
-	 * 
+	 *
 	 * @param int $number Array index 0 through n or Id of element
 	 * @param boolean $byIndex LAYERACC_INDEX or LAYERACC_ID
 	 * @return Entity
@@ -94,31 +94,31 @@ trait LayerAccessTrait {
 
     /**
 	 * Get the IDs of all the primary entities in the stored stack entities
-	 * 
+	 *
 	 * @return array
 	 */
 	public function IDs() {
 		return array_keys($this->_data);
 	}
-	
+
 //	public function all($property);
-//	
+//
 	public function loadDistinct($argObj, $sourcePoint = null){
 		if (is_null($sourcePoint)) {
 			$ValueSource = $argObj->accessNodeObject('value');
 		} else {
 			$ValueSource = new ValueSource(
-					$argObj->valueOf('layer'), 
+					$argObj->valueOf('layer'),
 					$sourcePoint
 				);
 		}
 		$result = $this->load($argObj);
 		return $this->distinct($ValueSource, $result);
 	}
-	
+
 	/**
 	 * Full feature load(), results reduced to key=>value arrry
-	 * 
+	 *
 	 * @param LayerAccessArgs $args
 	 * @return array
 	 */
@@ -128,10 +128,10 @@ trait LayerAccessTrait {
 		$ValueSource = $args->accessNodeObject('value');
 		return $this->keyValueList($KeySource, $ValueSource, $data);
 	}
-	
+
 	/**
 	 * Full feature load(), results reduced to value array
-	 * 
+	 *
 	 * @param LayerAccessArgs $args
 	 * @return array
 	 */
@@ -140,17 +140,17 @@ trait LayerAccessTrait {
 		$ValueSource = $args->accessNodeObject('value');
 		return $this->valueList($ValueSource, $data);
 	}
-	
+
 	/**
 	 * Reduce an array of entities to a key=>value array
-	 * 
-	 * The keys and values may be from properties or from methods on the 
-	 * entity. If from a method, that method can have no arguemnts. 
-	 * 
+	 *
+	 * The keys and values may be from properties or from methods on the
+	 * entity. If from a method, that method can have no arguemnts.
+	 *
 	 * @param string|KeySource $keySource Name of (or ValueSource defining) a property or method
 	 * @param string|ValueSource $valueSource Name of (or ValueSource defining) a property or method
 	 * @param array $data Array of entities
-	 * @return array 
+	 * @return array
 	 */
 	public function keyValueList($keySource, $valueSource, $data = null) {
 		$rawData = $this->insureData($data);
@@ -170,13 +170,13 @@ trait LayerAccessTrait {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Reduce an array of entities to a value array
-	 * 
-	 * The values may be from a property or from a method on the 
-	 * entity. If from a method, that method can have no arguemnts. 
-	 * 
+	 *
+	 * The values may be from a property or from a method on the
+	 * entity. If from a method, that method can have no arguemnts.
+	 *
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
 	 * @param array $data Array of entities (required except for Layer calls)
 	 * @return array Array containing the unique values found
@@ -200,13 +200,13 @@ trait LayerAccessTrait {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Get unique values from a set of entities
-	 * 
-	 * The values may be from a property or from a method on the 
-	 * entity. If from a method, that method can have no arguemnts. 
-	 * 
+	 *
+	 * The values may be from a property or from a method on the
+	 * entity. If from a method, that method can have no arguemnts.
+	 *
 	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
 	 * @param array $data Array of entities (required except for Layer calls)
 	 * @return array Array containing the unique values found
@@ -215,17 +215,17 @@ trait LayerAccessTrait {
 		$rawData = $this->insureData($data);
 		return array_unique($this->valueList($sourcePoint, $rawData));
 	}
-	
+
 	/**
 	 * Insure some array is passed for methods where the arg is optional
-	 * 
-	 * Methods that can act on an array allow that arg to be optional 
-	 * when it is the last arg so that it doesn't have to be passed 
-	 * explicitly in a Layer. But the StackSet and StackEntity require 
-	 * it be passed. This insures that when passed, it is used; when 
-	 * not passed in a Layer, the layer data is used; and when it 
+	 *
+	 * Methods that can act on an array allow that arg to be optional
+	 * when it is the last arg so that it doesn't have to be passed
+	 * explicitly in a Layer. But the StackSet and StackEntity require
+	 * it be passed. This insures that when passed, it is used; when
+	 * not passed in a Layer, the layer data is used; and when it
 	 * can't be known, an empty array is used (silent error state)
-	 * 
+	 *
 	 * @param null|array $data
 	 * @return array
 	 */
@@ -239,10 +239,10 @@ trait LayerAccessTrait {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Create the ValueSource object for distinct()
-	 * 
+	 *
 	 * @param mixed $sourcePoint
 	 * @param array $data
 	 * @return boolean|ValueSource
@@ -257,19 +257,19 @@ trait LayerAccessTrait {
 		$entity = array_pop($data);
 		return new ValueSource($entity, $sourcePoint);
 	}
-	
+
 	public function filter($argObj) {
-		
+
 	}
 
-//	
+//
 	public function linkedTo($foreign, $foreign_id, $linked = null){
-		
+
 	}
-	
+
 	/**
 	 * Full feature load() with pagination at the end
-	 * 
+	 *
 	 * @param LayerAccessArgs $argObj
 	 * @return array
 	 */
@@ -279,7 +279,7 @@ trait LayerAccessTrait {
 	}
 	/**
 	 * Paginate provided array
-	 * 
+	 *
 	 * @param array $data
 	 * @param LayerAccessArgs $argObj
 	 * @return array
@@ -297,7 +297,7 @@ trait LayerAccessTrait {
 		}
 		return $data;
 	}
-	
+
 	protected function verifyInstanceArgObj($argObj) {
 		if ($argObj instanceof \App\Model\Lib\LayerAccessArgs) {
 			return TRUE;
@@ -306,5 +306,5 @@ trait LayerAccessTrait {
 			throw new \BadMethodCallException($msg);
 		}
 	}
-	
+
 }
