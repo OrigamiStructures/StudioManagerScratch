@@ -8,6 +8,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
 use Cake\Console\ConsoleOptionParser;
+use function Couchbase\passthruDecoder;
 
 class TesterCommand extends Command
 {
@@ -101,6 +102,7 @@ class TesterCommand extends Command
         if (is_null($this->method) && $this->inspect) {
             $this->doInspection();
             $io->helper('Table')->output($this->dirs);
+//            $io->out(implode("\n", $this->files));
             $io->helper('Table')->output($this->files);
             $io->helper('Table')->output($this->tests);
         /*
@@ -115,6 +117,9 @@ class TesterCommand extends Command
           */
         } elseif (!is_null($this->file)) {
             $this->commands[] = $this->getCommand($this->dir, $this->file);
+        /*
+         * Run the files in a directory
+         */
         } else {
             $this->readDirectory();
             $fileList = $this->files;
@@ -122,18 +127,29 @@ class TesterCommand extends Command
             foreach ($fileList as $file) {
                 $this->commands[] = $this->getCommand('', $file[0]);
             }
-            var_dump($this->commands);
-            $io->out('Got to run a whole suite');
         }
+        /*
+         * Process any commands that were compiled
+         */
         if (!$this->inspect) {
             foreach ($this->commands as $command) {
-                $io->out($command);
-                $io->out(exec($command));
+                $io->quiet($command);
+                $result = exec($command);
+                $this->render($result, $io);
+                $io->verbose(shell_exec($command));
             }
         }
-//        $io->out('thinking');
-//        $io->out(passthru('vendor/bin/phpunit test tests/TestCase/Model/Table/ArtStacksTableTest.php'));
     }
+
+    public function render($result, $io)
+    {
+        if (stristr($result, 'Failure') || stristr($result, 'Error')) {
+            $io->error($result);
+        } else {
+            $io->success($result);
+        }
+    }
+
 
     public function getCommand($dir, $file = null, $test = null) {
         $testFile = str_replace(' ', '', 'tests/TestCase/' . $dir . $file . '.php');
