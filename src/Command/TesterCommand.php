@@ -12,7 +12,9 @@ use function Couchbase\passthruDecoder;
 
 class TesterCommand extends Command
 {
-    protected $IO;
+    private $io;
+
+    private $args;
 
     /**
      * @var string default path to tests
@@ -27,7 +29,7 @@ class TesterCommand extends Command
     /**
      * @var string user's requested directory
      */
-    protected $requestDir;
+//    protected $requestDir;
 
     /**
      * @var string user's requested test file
@@ -95,7 +97,8 @@ class TesterCommand extends Command
 
     public function execute(Arguments $args, ConsoleIo $io)
     {
-        $this->IO = $io;
+        $this->io = $io;
+        $this->args = $args;
         $this->populateArgs($args);
 
         /*
@@ -106,19 +109,19 @@ class TesterCommand extends Command
             $this->renderList($this->dirs);
             $this->renderList($this->files);
             $this->renderList($this->tests);
-            $this->IO->out("\n");
+            $this->io->out("\n");
         /*
          * If a method is mentioned, we run it no matter what user wants on inspection
          */
         } elseif (!is_null($this->requestMethod)) {
             $this->inspect = false;
-            $this->commands[] = $this->getCommand($this->requestDir, $this->requestFile, $this->requestMethod);
-            $this->IO->out('Got to run one test method');
+            $this->commands[] = $this->getCommand($this->getPathArg(), $this->requestFile, $this->requestMethod);
+            $this->io->out('Got to run one test method');
         /*
          * If a file is mentioned, run its tests
           */
         } elseif (!is_null($this->requestFile)) {
-            $this->commands[] = $this->getCommand($this->requestDir, $this->requestFile);
+            $this->commands[] = $this->getCommand($this->getPathArg(), $this->requestFile);
         /*
          * Run the files in a directory
          */
@@ -158,14 +161,14 @@ class TesterCommand extends Command
                 return substr($methodName, 0, 4) === 'test';
             });
             foreach ($tests->toArray() as $test) {
-                array_push($this->tests, "$this->requestDir $this->requestFile $test");
+                array_push($this->tests, "$this->getPathArg() $this->requestFile $test");
             }
         }
     }
 
     public function fileClassName()
     {
-        return str_replace('/', '\\','/App/Test/TestCase/' . $this->requestDir . $this->requestFile);
+        return str_replace('/', '\\','/App/Test/TestCase/' . $this->getPathArg() . $this->requestFile);
     }
     /**
      * Set the directory and file lists for display
@@ -175,7 +178,7 @@ class TesterCommand extends Command
      */
     public function readDirectory($path = null)
     {
-        $path = $path ?? $this->requestDir;
+        $path = $path ?? $this->getPathArg();
         $Folder = new Folder($this->getRequestPath());
         $content = $Folder->read();
         foreach ($content[0] as $dir) {
@@ -211,14 +214,14 @@ class TesterCommand extends Command
      */
     protected function setRequestPath()
     {
-        $this->requestPath = $this->root_path . $this->requestDir;
+        $this->requestPath = $this->root_path . $this->getPathArg();
     }
 
     public function populateArgs(Arguments $args)
     {
-        $d = trim($args->getArgument('dir'), DS);
-        $this->requestDir =  !empty($d) ? $d . DS : null;
-        $f = str_replace('.php', '', $args->getArgument('file'));
+//        $d = trim($args->getArgument('dir'), DS);
+//        $this->requestDir =  !empty($d) ? $d . DS : null;
+//        $f = str_replace('.php', '', $args->getArgument('file'));
         $this->requestFile = !empty($f) ? $f : null;
         $this->requestMethod = $args->getArgument('method');
         $this->inspect = $args->getOption('inspect');
@@ -226,29 +229,43 @@ class TesterCommand extends Command
         $this->setRequestPath();
     }
 
+    /**
+     * get a path argument for tester (arg 1)
+     *
+     * These relative paths are always manipulated to have a trailing DS.
+     *
+     * @param string|null $path
+     * @return string|null
+     */
+    protected function getPathArg($path = null) {
+        $path = $path ?? $this->args->getArgument('dir');
+        $trimmedPath = trim($path, DS);
+        return !empty($trimmedPath) ? $trimmedPath . DS : null;
+    }
+
     //<editor-fold desc="RENDERING">
 
     public function renderList($list)
     {
-        $this->IO->info("\n##" . array_shift($list) . '##');
-        $this->IO->out(implode("\n", $list));
+        $this->io->info("\n##" . array_shift($list) . '##');
+        $this->io->out(implode("\n", $list));
     }
 
     public function renderTest($result)
     {
         if (stristr($result, 'Failure') || stristr($result, 'Error')) {
-            $this->IO->error($result);
+            $this->io->error($result);
         } else {
-            $this->IO->success($result);
+            $this->io->success($result);
         }
     }
     public function renderTests()
     {
         foreach ($this->commands as $command) {
-            $this->IO->quiet($command);
+            $this->io->quiet($command);
             $result = exec($command);
             $this->renderTest($result);
-            $this->IO->verbose(shell_exec($command));
+            $this->io->verbose(shell_exec($command));
         }
     }
 
