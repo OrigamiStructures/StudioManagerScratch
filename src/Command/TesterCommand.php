@@ -19,17 +19,12 @@ class TesterCommand extends Command
     /**
      * @var string default path to tests
      */
-    protected $root_path = TESTS . DS . 'TestCase' . DS;
+    protected $root_path = TESTS . 'TestCase' . DS;
 
     /**
      * @var string full path to user requested directory
      */
     protected $requestPath;
-
-    /**
-     * @var string user's requested directory
-     */
-//    protected $requestDir;
 
     /**
      * @var string user's requested test file
@@ -132,6 +127,7 @@ class TesterCommand extends Command
             foreach ($fileList as $file) {
                 $this->commands[] = $this->getCommand('', $file);
             }
+            var_dump($this->commands);
         }
         /*
          * Process any commands that were compiled
@@ -161,7 +157,7 @@ class TesterCommand extends Command
                 return substr($methodName, 0, 4) === 'test';
             });
             foreach ($tests->toArray() as $test) {
-                array_push($this->tests, "$this->getPathArg() $this->requestFile $test");
+                array_push($this->tests, "{$this->getPathArg()} $this->requestFile $test");
             }
         }
     }
@@ -179,15 +175,15 @@ class TesterCommand extends Command
     public function readDirectory($path = null)
     {
         $path = $path ?? $this->getPathArg();
-        $Folder = new Folder($this->getRequestPath());
+        var_dump($this->getFullPath($path));
+        $Folder = new Folder($this->getFullPath($path));
         $content = $Folder->read();
         foreach ($content[0] as $dir) {
             $nextDir = $path . $dir . DS;
             array_push($this->dirs, $nextDir);
-//            if ($this->recursive) {
-//                var_dump($nextDir);
-//                $this->readDirectory($nextDir);
-//            }
+            if ($this->recursive) {
+                $this->readDirectory($nextDir);
+            }
         }
         foreach ($content[1] as $file) {
             array_push(
@@ -197,37 +193,16 @@ class TesterCommand extends Command
         }
     }
 
-    /**
-     * Returns the current full path
-     * The requested path or the default root pat
-     *
-     * @return string
-     */
-    public function getRequestPath()
-    {
-        return $this->requestPath ?? $this->root_path;
-    }
-
-    /**
-     * Set the full path to the requested directory
-     * path always end with DS character
-     */
-    protected function setRequestPath()
-    {
-        $this->requestPath = $this->root_path . $this->getPathArg();
-    }
-
     public function populateArgs(Arguments $args)
     {
-//        $d = trim($args->getArgument('dir'), DS);
-//        $this->requestDir =  !empty($d) ? $d . DS : null;
-//        $f = str_replace('.php', '', $args->getArgument('file'));
+        $f = str_replace('.php', '', $args->getArgument('file'));
         $this->requestFile = !empty($f) ? $f : null;
         $this->requestMethod = $args->getArgument('method');
         $this->inspect = $args->getOption('inspect');
         $this->recursive = $args->getOption('recursive');
-        $this->setRequestPath();
     }
+
+    //<editor-fold desc="PATH GENERATION">
 
     /**
      * get a path argument for tester (arg 1)
@@ -242,6 +217,19 @@ class TesterCommand extends Command
         $trimmedPath = trim($path, DS);
         return !empty($trimmedPath) ? $trimmedPath . DS : null;
     }
+
+    /**
+     * Returns the current full path
+     * The requested path or the default root pat
+     *
+     * @return null|string a path argument
+     */
+    public function getFullPath($path = null)
+    {
+        return $this->root_path . $this->getPathArg($path);
+    }
+
+    //</editor-fold>
 
     //<editor-fold desc="RENDERING">
 
