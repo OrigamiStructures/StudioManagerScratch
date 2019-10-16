@@ -107,7 +107,7 @@ class CurrentUserTest extends TestCase
 
 		TableRegistry::setTableLocator($this->TableLocator);
 
-        $this->assertTrue($this->CurrentUser->name() === 'TestName');
+        $this->assertTrue($this->CurrentUser->getName() === 'TestName');
 
 		// Gotta get a real locator back in the Registry
 		TableRegistry::setTableLocator(new TableLocator());
