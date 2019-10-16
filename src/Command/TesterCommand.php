@@ -69,6 +69,11 @@ class TesterCommand extends Command
      */
     protected function buildOptionParser(ConsoleOptionParser $parser)
     {
+        $desc = <<<DESC
+----------------------------------------------
+Run a test suite, test file, or a single test.
+----------------------------------------------
+DESC;
         $parser
         ->addArguments([
             'dir' => ['help' => 'A directory of tests to run or examine'],
@@ -85,7 +90,7 @@ class TesterCommand extends Command
             'short' => 'r',
             'boolean' => true
             ])
-        ->setDescription("Run a test suite, test file, or a single test.");
+        ->setDescription($desc);
 
         return $parser;
     }
@@ -127,7 +132,6 @@ class TesterCommand extends Command
             foreach ($fileList as $file) {
                 $this->commands[] = $this->getCommand('', $file);
             }
-            var_dump($this->commands);
         }
         /*
          * Process any commands that were compiled
@@ -175,7 +179,6 @@ class TesterCommand extends Command
     public function readDirectory($path = null)
     {
         $path = $path ?? $this->getPathArg();
-        var_dump($this->getFullPath($path));
         $Folder = new Folder($this->getFullPath($path));
         $content = $Folder->read();
         foreach ($content[0] as $dir) {
@@ -243,18 +246,26 @@ class TesterCommand extends Command
     {
         if (stristr($result, 'Failure') || stristr($result, 'Error')) {
             $this->io->error($result);
+            return false;
         } else {
             $this->io->success($result);
+            return true;
         }
     }
     public function renderTests()
     {
+        $errors = ['Tests with errors and failures'];
+        $this->io->out("\n");
         foreach ($this->commands as $command) {
             $this->io->quiet($command);
             $result = exec($command);
-            $this->renderTest($result);
+            if (!$this->renderTest($result)) {
+                $errors[] = $command;
+            }
             $this->io->verbose(shell_exec($command));
         }
+        $this->renderList($errors);
+        $this->io->out("\n");
     }
 
     //</editor-fold>
