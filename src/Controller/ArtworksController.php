@@ -353,7 +353,7 @@ class ArtworksController extends AppController
         $methods = $disp->customFinders();
         $options = $this->request->getData();
 
-        if (count($queries) > 0) {
+        if (count($queries ?? []) > 0) {
             $index = 0;
             $result = $disp->find($this->request->getData('method.' . $index++), $options);
             while ($index < count($queries)) {
