@@ -21,16 +21,16 @@ class CurrentUserTest extends TestCase
      * @var \App\Model\Lib\CurrentUser
      */
     public $CurrentUser;
-	
+
 	public $PersonCard = null;
-	
+
 	public $PersonCardTable = null;
-	
+
 	public $TableLocator;
 
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->CurrentUser = new CurrentUser(	[
 				'id' => 'testId',
 				'management_token' => 'testToken',
@@ -46,7 +46,7 @@ class CurrentUserTest extends TestCase
 			]
 		);
 	}
-	
+
 	public function tearDown() {
 		unset($this->CurrentUser);
 		unset($this->PersonCardTable);
@@ -96,19 +96,19 @@ class CurrentUserTest extends TestCase
 				->will($this->returnValue('TestName'));
 		$this->PersonCard->method('element')
 				->will($this->returnValue($this->PersonCard));
-		
+
 		$this->PersonCardTable = $this->createMock(\Cake\ORM\Table::class);
 		$this->PersonCardTable->method('find')
 				->will($this->returnValue($this->PersonCard));
-		
+
 		$this->TableLocator = $this->createMock(TableLocator::class);
 		$this->TableLocator->method('get')
 				->will($this->returnValue($this->PersonCardTable));
-		
+
 		TableRegistry::setTableLocator($this->TableLocator);
-		
+
         $this->assertTrue($this->CurrentUser->name() === 'TestName');
-		
+
 		// Gotta get a real locator back in the Registry
 		TableRegistry::setTableLocator(new TableLocator());
     }
@@ -152,7 +152,7 @@ class CurrentUserTest extends TestCase
 		);
         $this->assertTrue($CurrentUser->isActive());
     }
-	
+
     public function testIsNotActive()
     {
 		$CurrentUser = new CurrentUser(	[
