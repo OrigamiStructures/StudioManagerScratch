@@ -196,13 +196,14 @@ Type::build('timestamp')
  * Custom Inflector rules, can be set to correctly pluralize or singularize
  * table, model, controller names or whatever other string is passed to the
  * inflection functions.
- *
- * Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
- * Inflector::rules('irregular', ['red' => 'redlings']);
- * Inflector::rules('uninflected', ['dontinflectme']);
- * Inflector::rules('transliteration', ['/å/' => 'aa']);
  */
+//Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
+//Inflector::rules('irregular', ['red' => 'redlings']);
+//Inflector::rules('uninflected', ['dontinflectme']);
+//Inflector::rules('transliteration', ['/å/' => 'aa']);
 
+
+//<editor-fold desc="OLD BOOTSTRAP STUFF FOR REVIEW rem'd items were live">
 /**
  * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
  * Uncomment one of the lines below, as you need. make sure you read the documentation on Plugin to use more
@@ -213,35 +214,36 @@ Type::build('timestamp')
  *
  */
 
-Plugin::load('Migrations');
-Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
-Plugin::load('Proffer');
+//Plugin::load('Migrations');
+//Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
+//Plugin::load('Proffer');
 
 // Only try to load DebugKit in development mode
 // Debug Kit should not be installed on a production system
-if (Configure::read('debug')) {
-	Configure::write('DebugKit.forceEnable', true);
-	Plugin::load('DebugKit', ['bootstrap' => true]);
-	Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
-}
+//if (Configure::read('debug')) {
+//	Configure::write('DebugKit.forceEnable', true);
+//	Plugin::load('DebugKit', ['bootstrap' => true]);
+//	Plugin::load('OSDebug', ['bootstrap' => true, 'routes' => true]);
+//}
 
 /**
  * Connect middleware/dispatcher filters.
  */
-DispatcherFactory::add('Asset');
-DispatcherFactory::add('Routing');
-DispatcherFactory::add('ControllerFactory');
+//DispatcherFactory::add('Asset');
+//DispatcherFactory::add('Routing');
+//DispatcherFactory::add('ControllerFactory');
 
 /**
  * Enable default locale format parsing.
  * This is needed for matching the auto-localized string output of Time() class when parsing dates.
  */
-Type::build('date')->useLocaleParser();
-Type::build('datetime')->useLocaleParser();
+//Type::build('date')->useLocaleParser();
+//Type::build('datetime')->useLocaleParser();
 
-Configure::write('Users.config', ['users']);
+//Configure::write('Users.config', ['users']);
 
-Type::map('layer', 'App\Database\Type\LayerType');
+//Type::map('layer', 'App\Database\Type\LayerType');
+//</editor-fold>
 
 /**
  * Constants
