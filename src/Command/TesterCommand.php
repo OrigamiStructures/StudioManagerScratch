@@ -22,11 +22,6 @@ class TesterCommand extends Command
     protected $root_path = TESTS . 'TestCase' . DS;
 
     /**
-     * @var string full path to user requested directory
-     */
-    protected $requestPath;
-
-    /**
      * @var string user's requested test file
      */
     protected $requestFile;
@@ -63,6 +58,10 @@ class TesterCommand extends Command
 
     protected $commands = [];
 
+    protected $errors = ['Tests with failures and errors'];
+
+    protected $warnings = ['Tests that did not run due to errors'];
+
     /**
      * @param ConsoleOptionParser $parser
      * @return ConsoleOptionParser
@@ -70,6 +69,7 @@ class TesterCommand extends Command
     protected function buildOptionParser(ConsoleOptionParser $parser)
     {
         $desc = <<<DESC
+
 ----------------------------------------------
 Run a test suite, test file, or a single test.
 ----------------------------------------------
@@ -189,10 +189,12 @@ DESC;
             }
         }
         foreach ($content[1] as $file) {
-            array_push(
-                $this->files,
-               $path . ' ' . str_replace('.php', '', $file)
-            );
+            if (substr($file, -8, 4) === 'Test') {
+                array_push(
+                    $this->files,
+                    $path . ' ' . str_replace('.php', '', $file)
+                );
+            }
         }
     }
 
@@ -242,11 +244,14 @@ DESC;
         $this->io->out(implode("\n", $list));
     }
 
-    public function renderTest($result)
+    public function renderTest($result, $command)
     {
         if (stristr($result, 'Failure') || stristr($result, 'Error')) {
             $this->io->error($result);
-            return false;
+            $this->errors[] = $command;
+        } elseif (stristr($result, 'Class \'test\' could not be found in')) {
+            $this->io->warning($result);
+            $this->warnings[] = $command;
         } else {
             $this->io->success($result);
             return true;
@@ -259,12 +264,11 @@ DESC;
         foreach ($this->commands as $command) {
             $this->io->quiet($command);
             $result = exec($command);
-            if (!$this->renderTest($result)) {
-                $errors[] = $command;
-            }
+            $this->renderTest($result, $command);
             $this->io->verbose(shell_exec($command));
         }
-        $this->renderList($errors);
+        $this->renderList($this->errors);
+        $this->renderList($this->warnings);
         $this->io->out("\n");
     }
 
