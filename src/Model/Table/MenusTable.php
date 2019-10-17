@@ -143,14 +143,14 @@ class MenusTable extends AppTable{
 	 * @return array
 	 */
 	protected function addArtworks() {
-		if (is_null($this->SystemState->menu_artworks)) {
-			if (is_null($this->SystemState->menu_artwork)) {
+//		if (is_null($this->SystemState->menu_artworks)) {
+//			if (is_null($this->SystemState->menu_artwork)) {
 					return;
-			}
-			$artworks = [$this->SystemState->menu_artwork];
-		} else {
-			$artworks = $this->SystemState->menu_artworks;
-		}
+//			}
+//			$artworks = [$this->SystemState->menu_artwork];
+//		} else {
+//			$artworks = $this->SystemState->menu_artworks;
+//		}
 		$combined = (new Collection($artworks))->combine(
 			function($artworks) { return $artworks->title; },
 			function($artworks) { return "/artworks/refine?artwork={$artworks->id}"; }
@@ -174,10 +174,10 @@ class MenusTable extends AppTable{
 	protected function addEditions(){
 
 		// NEW RULE - not everything allows create
-		
-		if (is_null($this->SystemState->menu_artwork)) {
+
+//		if (is_null($this->SystemState->menu_artwork)) {
 			return;
-		}
+//		}
 		$editions = $this->SystemState->menu_artwork->editions;
 
 		$refine = (new Collection($editions))->combine(
@@ -205,10 +205,10 @@ class MenusTable extends AppTable{
 	protected function addFormats() {
 
 		// NEW RULE - not everything allows create
-		
-		if (is_null($this->SystemState->menu_artwork)) {
+
+//		if (is_null($this->SystemState->menu_artwork)) {
 			return;
-		}
+//		}
 		$editions = $this->SystemState->menu_artwork->editions;
 		$many_editions = count($editions) > 1;
 
