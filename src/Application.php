@@ -49,7 +49,11 @@ class Application extends BaseApplication
             $this->addPlugin(\DebugKit\Plugin::class);
         }
 
-        // Load more plugins here
+        // Load a plugin with a vendor namespace by 'short name'
+        $this->addPlugin('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
+        $this->addPlugin('OSDebug', ['routes' => true, 'bootstrap' => true]);
+        Configure::write('Users.config', ['users']);
+
     }
 
     /**

@@ -64,32 +64,6 @@ class AppController extends Controller
         $this->eventManager()->on($this->SystemState);
 	}
 
-//	public function beforeFilter(Event $event) {
-//		parent::beforeFilter($event);
-//		\Cake\Routing\Router::parseNamedParams($this->request);
-//	}
-//
-//	public function afterFilter(Event $event) {
-//		parent::afterFilter($event);
-//	}
-
-//    public function implementedEvents()
-//    {
-//		$events = [
-////            'Users.Component.UsersAuth.afterLogin' => 'loginListener',
-//        ];
-//		return array_merge(parent::implementedEvents(), $events);
-//    }
-
-	/**
-	 * Controller actions to perform on login
-	 *
-	 * @param type $event
-	 */
-//	public function loginListener($event) {
-//
-//	}
-
     /**
      * Initialization hook method.
      *
