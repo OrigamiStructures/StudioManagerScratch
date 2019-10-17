@@ -94,10 +94,10 @@ $config = [
             'CakeDC/Users.RememberMe',
             'Form',
         ],
-        'authorize' => [
-            'CakeDC/Users.Superuser',
-            'CakeDC/Users.SimpleRbac',
-        ],
+//        'authorize' => [
+//            'CakeDC/Users.Superuser',
+//            'CakeDC/Users.SimpleRbac',
+//        ],
     ],
 //default Opauth configuration, you'll need to provide the strategy keys
     'Opauth' => [
