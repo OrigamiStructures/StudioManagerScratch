@@ -12,7 +12,7 @@ use App\Model\Lib\CurrentUser;
  * @author dondrake
  */
 class ContextUser {
-		
+
 	protected $defaultValues = [
 		'artist' => NULL,
 		'manager' => NULL,
@@ -25,30 +25,30 @@ class ContextUser {
 		'manager' => NULL,
 		'supervisor' => NULL
 	];
-	
+
 	protected $actorCard = [
 		'artist' => NULL,
 		'manager' => NULL,
 		'supervisor' => NULL
 	];
-	
+
 	protected $user;
-	
+
 	static protected $Session = NULL;
-	
+
 	protected $PersonCardsTable = NULL;
-	
+
 	static private $instance = NULL;
-	
+
 	/**
 	 * Construction of the Singleton instance
-	 * 
-	 * The session-persisted version of ContextUser is only and 
-	 * array of data. Those values, if present, are copied into 
-	 * this object and the stored copy of ContextUser (self::$instance) 
-	 * is made to be a reference to this object that holds it 
+	 *
+	 * The session-persisted version of ContextUser is only and
+	 * array of data. Those values, if present, are copied into
+	 * this object and the stored copy of ContextUser (self::$instance)
+	 * is made to be a reference to this object that holds it
 	 * (a self-reference in other words)
-	 * 
+	 *
 	 * @throws BadRequestException
 	 */
 	private function __construct($options = null) {
@@ -56,7 +56,7 @@ class ContextUser {
 		$this->setSession($options);
 		// currentUser injection was added to allow testing
 		$this->setCurrentUser($options);
-		
+
 		$contextUser = self::$Session->read($this->cacheKey());
 		if (!is_null($contextUser)) {
 			foreach(array_keys($contextUser) as $key) {
@@ -68,10 +68,10 @@ class ContextUser {
 		}
 		self::$instance = $this;
 	}
-		
+
 	/**
 	 * Access point for this Singleton
-	 * 
+	 *
 	 * @return ContextUser
 	 */
 	static public function instance($options = null) {
@@ -83,7 +83,7 @@ class ContextUser {
 
 	/**
 	 * Has this actor been defined?
-	 * 
+	 *
 	 * @param string $actor
 	 * @return boolean
 	 */
@@ -91,12 +91,12 @@ class ContextUser {
 		$validActor = $this->validateActor($actor);
 		return !is_null($this->actorId[$validActor]);
 	}
-	
+
 	/**
 	 * Identitfy one of the actors
-	 * 
+	 *
 	 * This sets the id. The PersonCard will be lazy loaded
-	 * 
+	 *
 	 * @param string $actor
 	 * @param string|int $id
 	 * @return boolean
@@ -108,10 +108,10 @@ class ContextUser {
 		$this->persist();
 		return TRUE;
 	}
-	
+
 	/**
 	 * Get the stored actor id or NULL if not set
-	 * 
+	 *
 	 * @param type $actor
 	 * @return int|string|null
 	 */
@@ -119,13 +119,13 @@ class ContextUser {
 		$validActor = $this->validateActor($actor);
 		return $this->actorId[$validActor];
 	}
-	
+
 	/**
 	 * Get the actor's PersonCard or NULL if not set
-	 * 
-	 * The card is lazy loaded. Only the id is set and stored until 
+	 *
+	 * The card is lazy loaded. Only the id is set and stored until
 	 * this request for further data is made
-	 * 
+	 *
 	 * @param string $actor
 	 * @return PersonCard|null
 	 */
@@ -136,10 +136,10 @@ class ContextUser {
 		}
 		return $this->actorCard[$validActor];
 	}
-	
+
 	/**
 	 * Clear on actor or all values
-	 * 
+	 *
 	 * @param type $actor
 	 * @return void
 	 */
@@ -157,15 +157,15 @@ class ContextUser {
 			$this->persist();
 		}
 	}
-	
+
 // <editor-fold defaultstate="collapsed" desc="AIDS TO TESTING THIS SINGLETON">
 
 	/**
 	 * Send in an alternative Persistence object
-	 * 
-	 * Mocks and testing sessions didn't work. Had to inject objects. 
+	 *
+	 * Mocks and testing sessions didn't work. Had to inject objects.
 	 * But now a replacement for Session could be used if need be.
-	 * 
+	 *
 	 * @param type $session
 	 */
 	private function setSession($options) {
@@ -175,15 +175,16 @@ class ContextUser {
 			self::$Session = new Session();
 		}
 	}
-	
+
 	private function setCurrentUser($options) {
 		if (isset($options['currentUser'])) {
 			$this->user = $options['currentUser'];
 		} else {
 			$currentUser = self::$Session->read('Auth.User');
 			if (is_null($currentUser)) {
-				$message = 'The user is not logged in';
-				throw new BadRequestException($message);
+                $message = 'The user is not logged in';
+//                $this->Flash->set($message);
+//				throw new BadRequestException($message);
 			}
 			$this->user = new CurrentUser($currentUser);
 		}
@@ -192,7 +193,7 @@ class ContextUser {
 
 	/**
 	 * Return the object to uninitialized, non-singleton state
-	 * 
+	 *
 	 * This was added to allow testing but might have other uses
 	 */
 	public function tearDown() {
@@ -204,18 +205,18 @@ class ContextUser {
 	}
 
 	// </editor-fold>
-	
+
 // <editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
-	
+
 	private function cacheKey() {
 		return "{$this->user->userId()}.ContextUser";
 	}
-	
+
 	/**
 	 * Store the current property values in the Session
-	 * 
+	 *
 	 * The relevant properties are stored as an array
-	 * 
+	 *
 	 * @throws \App\Model\Lib\Exception
 	 */
 	private function persist() {
@@ -234,7 +235,7 @@ class ContextUser {
 
 	/**
 	 * Convert the string to lower case and verify it is a known value
-	 * 
+	 *
 	 * @param type $actor
 	 * @return string The validated string in lower case
 	 */
@@ -248,7 +249,7 @@ class ContextUser {
 
 	/**
 	 * Common Exception point when an invalid actor is referenced
-	 * 
+	 *
 	 * @param string $actor
 	 * @throws Exception
 	 */
@@ -260,9 +261,9 @@ class ContextUser {
 
 	/**
 	 * get the PersonCard or load it and return it
-	 * 
+	 *
 	 * You won't get here unless the corresponding actor id is set
-	 * 
+	 *
 	 * @param string $validActor
 	 * @return PersonCard
 	 */
@@ -278,12 +279,12 @@ class ContextUser {
 
 	/**
 	 * get or create a Table instance
-	 * 
+	 *
 	 * @return PersoCardsTable
 	 */
 	private function PersonCardsTable() {
 		if (is_null($this->PersonCardsTable)) {
-			$this->PersonCardsTable = 
+			$this->PersonCardsTable =
 				 TableRegistry::getTableLocator()->get('PersonCards');
 		}
 		return $this->PersonCardsTable;
@@ -344,9 +345,9 @@ class ContextUser {
 	public function __debugInfo() {
 		$actorCard = [];
 		foreach (array_keys($this->defaultValues) as $key) {
-			$actorCard[$key] = 
-					is_null($this->actorCard[$key]) 
-					? NULL 
+			$actorCard[$key] =
+					is_null($this->actorCard[$key])
+					? NULL
 					: 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
 		}
 		return [
@@ -358,16 +359,16 @@ class ContextUser {
 			'actorCard' => $actorCard,
 			'Session' => is_object(self::$Session) ? 'Session object' : 'Not set',
 			'PersonCardsTable' =>
-					is_object($this->PersonCardsTable) 
-					? 'PersonCardsTable object' 
+					is_object($this->PersonCardsTable)
+					? 'PersonCardsTable object'
 					: 'Not set',
 			'instance' =>
-					is_null(self::$instance) 
-					? 'instance is clear' 
+					is_null(self::$instance)
+					? 'instance is clear'
 					: 'instance is populated'
 		];
 	}
 
 	// </editor-fold>
-	
+
 }
