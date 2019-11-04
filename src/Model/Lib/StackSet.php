@@ -38,6 +38,10 @@ class StackSet implements LayerAccessInterface {
 		}
 	}
 	
+	public function shift() {
+		return $this->element(0, LAYERACC_INDEX);
+	}
+	
 	/**
 	 * Return all the entities in an array
 	 * 
@@ -46,8 +50,18 @@ class StackSet implements LayerAccessInterface {
 	public function all() {
 		return $this->_data;
 	}
-	
-    public function find($layer = NULL) {
+
+    /**
+     * StackSet level fluent query
+     *
+     * Returns layer access arg (LAA) object allowing LAA fluent queries.
+     * Usage must be terminated by one of the load method variants.
+     * Will aggregate data from entire Set, and will include duplicates.
+     *
+     * @param null $layer
+     * @return \App\Model\Lib\StackSetAccessArgs\
+     */
+	public function find($layer = NULL) {
         $args = new StackSetAccessArgs($this);
 		if (!is_null($layer)) {
 			$args->setLayer($layer);
@@ -86,7 +100,8 @@ class StackSet implements LayerAccessInterface {
 			$result = [];
 			foreach ($this->_data as $stack) {
 				$found = $stack->load($argObj);
-				$result = array_merge($result, (is_array($found) ? $found : [$found]));
+				$result = array_merge($result, (is_array($found) ? array_values($found) : [$found]));
+//				debug($result);
 			}
 		}
 		

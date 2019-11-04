@@ -13,16 +13,16 @@ class FamilyBehavior extends Behavior {
 
     /**
      * Find the records that have a specific parent, return as a list
-     * 
-     * Given an id and the name portion of a link column which in 
-     * combination describe a parent record, return a key => value list of 
+     *
+     * Given an id and the name portion of a link column which in
+     * combination describe a parent record, return a key => value list of
      * all records in this table that are linked to the identified parent.
-     * 
+     *
      * @todo Unused as of 8/22/18
-     * 
+     *
      * @todo The $options arg in the signature feels clunky.
-     * 
-     * 
+     *
+     *
      * @param Query $query
      * @param array $options ['id' => $id, 'index_name' => $index_name, ... ''=>'']
      * @return array
@@ -32,8 +32,8 @@ class FamilyBehavior extends Behavior {
         $options += [
             'id' => FALSE,
             'index_name' => FALSE,
-            'keyField' => $this->_table->primaryKey(),
-            'valueField' => $this->_table->displayField(),
+            'keyField' => $this->_table->getPrimaryKey(),
+            'valueField' => $this->_table->getDisplayField(),
             'group' => FALSE];
         if (!($options['id'] && $options['index_name'] && $artist_id)) {
             throw new \BadFunctionCallException('id and index_id required');
@@ -54,11 +54,11 @@ class FamilyBehavior extends Behavior {
 
     /**
      * Find the records that have a specific parent, return the records
-     * 
-     * Given and id and the name portion of a link column which in 
-     * combination describe a parent record, return the entities for 
+     *
+     * Given and id and the name portion of a link column which in
+     * combination describe a parent record, return the entities for
      * all records in this table that are linked to the identified parent.
-     * 
+     *
      * @param Query $query
      * @param array $options
      * @return array

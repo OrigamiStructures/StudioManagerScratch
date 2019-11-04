@@ -37,9 +37,9 @@ class ContactsTable extends AppTable
 
 
     protected function _initializeProperties() {
-        $this->table('contacts');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('contacts');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
     }
 
@@ -70,13 +70,9 @@ class ContactsTable extends AppTable
     public function validationDefault(Validator $validator)     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmpty('label');
-
-        $validator
-            ->allowEmpty('data');
+            ->allowEmptyString('id', 'create')
+            ->allowEmptyString('label')
+            ->allowEmptyString('data');
 
         return $validator;
     }
@@ -101,23 +97,23 @@ class ContactsTable extends AppTable
 
     /**
      * Implemented beforeMarshal event
-     * 
-     * @todo An artist manager may have multiple artists and if they are 
+     *
+     * @todo An artist manager may have multiple artists and if they are
      *      operating under that mode, this will make a bad record
-     * 
+     *
      * @param Event $event
      * @param ArrayObject $data
      * @param ArrayObject $options
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
-        $data['user_id'] = $this->SystemState->artistId();
+        $data['user_id'] = $this->contextUser()->artistId();
     }
 
 // </editor-fold>
 
     /**
      * Make the specified number of new Contact arrays (for TRD use)
-     * 
+     *
      * @param integer $count How many contacts are needed
      * @param array $default [column => value] to control what data the pieces have
      * @param integer $start The index (and number) of the first of the ($count) pieces
@@ -126,18 +122,18 @@ class ContactsTable extends AppTable
     public function spawn($count, $default = [], $start = 0) {
         $columns = $default + [
             'id' => NULL,
-            'user_id' => $this->SystemState->artistId(),
+            'user_id' => $this->contextUser()->artistId(),
             'label' => 'New'
         ];
 
         return array_fill($start, $count, $columns);
     }
-    
+
 // <editor-fold defaultstate="collapsed" desc="Custom Finders">
-    
+
     /**
      * Find contacts by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -145,10 +141,10 @@ class ContactsTable extends AppTable
     public function findContacts($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find members
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -156,10 +152,10 @@ class ContactsTable extends AppTable
     public function findInMembers($query, $options) {
         return $this->integer($query, 'member_id', $options['values']);
     }
-    
+
     /**
      * Find the 'kind' label for contacts
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -167,10 +163,10 @@ class ContactsTable extends AppTable
     public function findKind(Query $query, $options) {
         return $this->string($query, 'label', $options['value']);
     }
-    
+
     /**
      * Find specific contact address (phone, email, url, etc)
-     * 
+     *
      * @param Query $query
      * @param array $options see StringQueryBehavior
      * @return Query
@@ -180,5 +176,5 @@ class ContactsTable extends AppTable
     }
 
 // </editor-fold>
-	
+
 }

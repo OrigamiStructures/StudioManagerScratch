@@ -187,4 +187,9 @@ class Member extends Entity
 	public function isGroup() {
 	    return $this->type() === GROUP;
     }
+
+    public function registeredUserId()
+    {
+        $this->user_id;
+    }
 }

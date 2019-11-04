@@ -12,21 +12,21 @@ use Cake\Cache\Cache;
  */
 class DispositionsController extends AppController
 {
-	
+
 	public $DispositionManager;
-	
+
 	/**
 	 * Manage redirects for disposition activities
-	 * 
-	 * All visits to this controller will eventually return to the original 
-	 * page. Even if the artist is locked here for several calls, the original 
+	 *
+	 * All visits to this controller will eventually return to the original
+	 * page. Even if the artist is locked here for several calls, the original
 	 * page will be remembered and eventually they will be returned there.
-	 * 
+	 *
 	 * @param \Cake\Event\Event $event
 	 */
 	public function beforeFilter(\Cake\Event\Event $event) {
 		parent::beforeFilter($event);
-		
+
 		if (!stristr($this->request->referer(), DS . 'dispositions' . DS)) {
 			$this->SystemState->referer($this->request->referer());
 		}
@@ -80,7 +80,7 @@ class DispositionsController extends AppController
     {
         $disposition = $this->Dispositions->newEntity();
         if ($this->request->is('post')) {
-            $disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+            $disposition = $this->Dispositions->patchEntity($disposition, $this->request->getData());
             if ($this->Dispositions->save($disposition)) {
                 $this->Flash->success(__('The disposition has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -108,7 +108,7 @@ class DispositionsController extends AppController
             'contain' => ['Pieces']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+            $disposition = $this->Dispositions->patchEntity($disposition, $this->request->getData());
             if ($this->Dispositions->save($disposition)) {
                 $this->Flash->success(__('The disposition has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -124,7 +124,7 @@ class DispositionsController extends AppController
     }
 
 // </editor-fold>
-	
+
     /**
      * Delete method
      *
@@ -143,7 +143,7 @@ class DispositionsController extends AppController
 		$result = $this->Dispositions->connection()->transactional(function () use ($disposition) {
 			$result = TRUE;
 			$result = $result && $this->Dispositions->delete($disposition);
-			
+
 			return $result;
 		});
         if ($result) {
@@ -153,19 +153,19 @@ class DispositionsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
-	
+
 	/**
 	 * Create a new disposition
-	 * 
-	 * Disposition types MIGHT filter pieces to an appropriate subset (maybe even 
-	 * members could be filtered). The filters COULD run both ways. But for now 
+	 *
+	 * Disposition types MIGHT filter pieces to an appropriate subset (maybe even
+	 * members could be filtered). The filters COULD run both ways. But for now
 	 * this doesn't look viable.
-	 * 
-	 * Any combination of member_id, piece_id or disposition->type 
-	 * may be known on entry. Additionally, artwork_id, edition_id and 
-	 * format_id will be sent if known. These extra three  may not be needed 
+	 *
+	 * Any combination of member_id, piece_id or disposition->type
+	 * may be known on entry. Additionally, artwork_id, edition_id and
+	 * format_id will be sent if known. These extra three  may not be needed
 	 * for create so this should be re-evaluated.
-	 * 
+	 *
 	 */
 	public function create() {
 		$errors = [];
@@ -173,15 +173,18 @@ class DispositionsController extends AppController
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
 
 		if ($this->request->is('post')) {
-			
-			$this->request->data = $this->completeRule($this->request->data);
 
-			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->data);
+		    /*
+		     * I'm not sure how to replace the entire request data array in the new codebase.
+		     * withData() only seems to set one value. And I'm not sure if withBody() is the right alternative.
+		     */
+			$this->request->data = $this->completeRule($this->request->getData());
+
+			$disposition = $this->Dispositions->patchEntity($disposition, $this->request->getData());
 			$this->DispositionManager->write();
-			$errors = $disposition->errors();
+			$errors = $disposition->getErrors();
 //			$this->Dispositions->checkRules($disposition);
-			if (empty($disposition->errors())) {
-
+			if (empty($errors)) {
 				$this->autoRender = FALSE;
 				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 			}
@@ -189,11 +192,11 @@ class DispositionsController extends AppController
 		$labels = $this->Dispositions->labels();
 		$this->set(compact('disposition', 'labels', 'errors'));
 	}
-	
+
 	/**
 	 * Refine an evolving or existing Disposition
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public function refine() {
 		$disposition_id = $this->SystemState->queryArg('disposition');
@@ -204,11 +207,11 @@ class DispositionsController extends AppController
 		} else {
 			$disposition = $this->Dispositions->get($disposition_id, [
 				'contain' => ['Pieces' => [
-					'Editions' => ['Artworks', 'Pieces'], 
+					'Editions' => ['Artworks', 'Pieces'],
 					'Formats' => [
 						'Editions' => ['Artworks', 'Pieces']]
-					], 
-					'Members', 
+					],
+					'Members',
 					'Addresses',
 					'Dispositions']
 			]);
@@ -216,43 +219,43 @@ class DispositionsController extends AppController
 			$this->DispositionManager->write($disposition);
 		}
 		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
-		
+
 		$this->autoRender = false;
 		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 	}
-	
+
 	/**
 	 * Refine an existing Disposition
 	 */
 	protected function _refine() {
-		
+
 	}
 
 		/**
 	 * Dump the evolving disposition without saving it
-	 * 
-	 * Since some piece assignment changes are made during the disposition 
-	 * creation process to keep the choices accurate in the display as the 
-	 * artist proceeds, some changes will need to be 'unmade' but others 
-	 * will remain because the original state will be lost (and only 
+	 *
+	 * Since some piece assignment changes are made during the disposition
+	 * creation process to keep the choices accurate in the display as the
+	 * artist proceeds, some changes will need to be 'unmade' but others
+	 * will remain because the original state will be lost (and only
 	 * of slight interest).
-	 * 
-	 * Open edition piece configuration will be restored to 'one record for 
+	 *
+	 * Open edition piece configuration will be restored to 'one record for
 	 * pieces at each state'.
-	 * 
+	 *
 	 * Piece assignment will remain in any newly assigned condition.
 	 */
 	public function discard() {
 		$this->DispositionManager->discard();
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 	}
-	
+
 	/**
 	 * Retain only the indicated address among many
-	 * 
-	 * There are several circumstances where several addresses could 
-	 * be possibilities for the dispo. They many show as links and clicking 
+	 *
+	 * There are several circumstances where several addresses could
+	 * be possibilities for the dispo. They many show as links and clicking
 	 * on one will come here to make that the final choice.
 	 */
 	public function chooseAddress() {
@@ -265,23 +268,23 @@ class DispositionsController extends AppController
 		$this->DispositionManager->disposition->addresses = $choice->toArray();
 		$this->DispositionManager->write();
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 	}
-	
+
 	/**
 	 * Remove piece from the disposition
-	 * 
+	 *
 	 * @param type $element
 	 */
 	public function remove() {
 		$this->DispositionManager->remove();
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 	}
-	
+
 	/**
 	 * Automatically set the 'complete' value if dates force the issue
-	 * 
+	 *
 	 * @param array $data
 	 * @return array
 	 */
@@ -301,23 +304,23 @@ class DispositionsController extends AppController
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Save the fully defined dispositon
-	 * 
-	 * The disposition at this point is fully an object so that the construction 
+	 *
+	 * The disposition at this point is fully an object so that the construction
 	 * process could be managed efficiently. This save process converts the parts
-	 * into arrays and patches them into a new entity that will be properly 
-	 * constructed for the save. Member and Address data, previously separate 
-	 * entities, will now be column data on the disposition. This data will 
-	 * stand as the member/address snapshot. The disposition also links to the 
+	 * into arrays and patches them into a new entity that will be properly
+	 * constructed for the save. Member and Address data, previously separate
+	 * entities, will now be column data on the disposition. This data will
+	 * stand as the member/address snapshot. The disposition also links to the
 	 * Member so that record can have an ongoing history of all activity.
 	 */
 	public function save() {
 		$disposition = $this->DispositionManager->get();
 		$address = array_pop($disposition->addresses)->toArray();
 		unset($disposition->addresses);
-		
+
 		$data = [
 			'user_id' => $this->SystemState->artistId(),
 			'member_id' => $disposition->member->id,
@@ -325,7 +328,7 @@ class DispositionsController extends AppController
 			] + $disposition->toArray();
 		$member_data = array_intersect_key($data['member'], ['first_name' => NULL, 'last_name' => NULL]);
 		$address_data = array_intersect_key($address, [
-			'address1' => NULL, 
+			'address1' => NULL,
 			'address2' => NULL,
 			'address3' => NULL,
 			'city' => NULL,
@@ -333,10 +336,10 @@ class DispositionsController extends AppController
 			'zip' => NULL,
 			'country' => NULL,
 			]);
-		
+
 		$entity = $this->Dispositions->newEntity($data);
-		$entity->dirty('member', FALSE);
-		$entity->dirty('addresses', FALSE);
+		$entity->setDirty('member', FALSE);
+		$entity->setDirty('addresses', FALSE);
 		$entity = $this->Dispositions->patchEntity($entity, $member_data, ['validate' => FALSE]);
 		$entity = $this->Dispositions->patchEntity($entity, $address_data, ['validate' => FALSE]);
 
@@ -349,9 +352,9 @@ class DispositionsController extends AppController
 		} else {
 			$this->Flash->error('The disposition could not be saved. Please try again.');
 		}
-		
+
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));			
+		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
 	}
-	
+
 }

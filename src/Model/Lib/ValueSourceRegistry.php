@@ -4,27 +4,52 @@ namespace App\Model\Lib;
 use Cake\Core\ObjectRegistry;
 use App\Exception\MissingClassException;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of ValueSourceRegistry
+ * ValueSourceRegistry
+ * 
+ * Provides registry services for LayerAccessArs. LAA keeps several 
+ * ValueSourceObject and may eventually require more. This registry 
+ * simplifies management of the various VSOs and will allow for 
+ * future expansion with minimal code change.
  *
  * @author dondrake
  */
 class ValueSourceRegistry extends ObjectRegistry {
 	
+	/**
+	 * A deep process of ValueSourceRegistry::load( )
+	 * 
+	 * And load( ) is a deep process of LayerAccessArgs::buildAccessObject( )
+	 * 
+	 * @param string $class The product of _resolveClassName($class)
+	 * @param string $alias The name to file this object under
+	 * @param array $config Guraranteed by LayerAccessArgs::buildAccessObject( )
+	 * @return \App\Model\Lib\class
+	 */
 	protected function _create($class, $alias, $config) {
 		return new $class($config['entity'], $config['node']);
 	}
 
+	/**
+	 * $class is forced to 'ValueSource' for this class
+	 * 
+	 * load( ) in concert with parent::load( ) 
+	 * leads to this method and forces $class = 'ValueSource'
+	 * 
+	 * @param string $class Always 'ValueSource'
+	 * @return string
+	 */
 	protected function _resolveClassName($class) {
 		return "\\App\\Model\\Lib\\$class";
 	}
 
+	/**
+	 * Exception handling
+	 * 
+	 * @param string $class
+	 * @param string $plugin
+	 * @throws MissingClassException
+	 */
 	protected function _throwMissingClassError($class, $plugin) {
 		$msg = [];
 		$msg[] = "The class $class ";
@@ -34,7 +59,19 @@ class ValueSourceRegistry extends ObjectRegistry {
 		throw new MissingClassException(implode('', $msg));
 	}
 	
-	 public function load($objectName, $config = []) {
+    /**
+     * Loads/constructs an object instance.
+	 * 
+	 * A process supporting LayerAccessArgs::buildAccessObject( ) 
+	 * which guarantees $config keys that are eventually 
+	 * expected by ValueSourceRegistry::create( ) (called by parent::load( ))
+	 * 
+	 * @param string $objectName The storage key
+	 * @param array $config Caller guarantees content
+     * @return mixed 
+     * @throws \Exception If the class cannot be found.
+	 */
+	public function load($objectName, $config = []) {
 		 $config['className'] = 'ValueSource';
 		 return parent::load($objectName, $config);
 	 }

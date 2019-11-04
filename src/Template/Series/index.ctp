@@ -22,17 +22,17 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($series as $series): ?>
+            <?php foreach ($series as $occurrence): ?>
             <tr>
-                <td><?= $this->Number->format($series->id) ?></td>
-                <td><?= h($series->created) ?></td>
-                <td><?= h($series->modified) ?></td>
-                <td><?= $series->has('user') ? $this->Html->link($series->user->id, ['controller' => 'Users', 'action' => 'view', $series->user->id]) : '' ?></td>
-                <td><?= h($series->title) ?></td>
+                <td><?= $this->Number->format($occurrence->id) ?></td>
+                <td><?= h($occurrence->created) ?></td>
+                <td><?= h($occurrence->modified) ?></td>
+                <td><?= $occurrence->has('user') ? $this->Html->link($occurrence->user->id, ['controller' => 'Users', 'action' => 'view', $occurrence->user->id]) : '' ?></td>
+                <td><?= h($occurrence->title) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $series->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $series->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $series->id], ['confirm' => __('Are you sure you want to delete # {0}?', $series->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $occurrence->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $occurrence->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $occurrence->id], ['confirm' => __('Are you sure you want to delete # {0}?', $occurrence->id)]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

@@ -50,7 +50,7 @@ class GroupsMembersController extends AppController
     {
         $groupsMember = $this->GroupsMembers->newEntity();
         if ($this->request->is('post')) {
-            $groupsMember = $this->GroupsMembers->patchEntity($groupsMember, $this->request->data);
+            $groupsMember = $this->GroupsMembers->patchEntity($groupsMember, $this->request->getData());
             if ($this->GroupsMembers->save($groupsMember)) {
                 $this->Flash->success(__('The groups member has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -78,7 +78,7 @@ class GroupsMembersController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $groupsMember = $this->GroupsMembers->patchEntity($groupsMember, $this->request->data);
+            $groupsMember = $this->GroupsMembers->patchEntity($groupsMember, $this->request->getData());
             if ($this->GroupsMembers->save($groupsMember)) {
                 $this->Flash->success(__('The groups member has been saved.'));
                 return $this->redirect(['action' => 'index']);

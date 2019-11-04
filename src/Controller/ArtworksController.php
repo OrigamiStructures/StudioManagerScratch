@@ -4,27 +4,31 @@ namespace App\Controller;
 use App\Lib\RequestUtility;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
-use App\Controller\ArtStackController;
 use App\Model\Lib\Layer;
+use App\Model\Table\ArtworksTable;
+use \Cake\Network\Exception\NotFoundException;
 
 /**
  * Artworks Controller
  *
- * @property \App\Model\Table\ArtworksTable $Artworks
+ * @property ArtworksTable $Artworks
  */
-class ArtworksController extends ArtStackController
+class ArtworksController extends AppController
 {
-	
+
     use ArtReviewTrait;
 
     public $components = ['ArtworkStack', 'Layers'];
+
+    public $ArtworkStack;
+    public $Layers;
 
     public function initialize() {
         parent::initialize();
         $this->loadComponent('ArtworkStack');
 //		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
     }
-	
+
 // <editor-fold defaultstate="collapsed" desc="STANDARD CRUD METHODS">
 	/**
 	 * Index method
@@ -44,7 +48,7 @@ class ArtworksController extends ArtStackController
 	 *
 	 * @param string|null $id Artwork id.
 	 * @return void
-	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
+	 * @throws NotFoundException When record not found.
 	     */
 	public function view($id = null)     {
 		$artwork = $this->Artworks->get($id,
@@ -69,10 +73,10 @@ class ArtworksController extends ArtStackController
 	public function add()     {
 		$artwork = $this->Artworks->newEntity();
 		if ($this->request->is('post')) {
-			$Editions = TableRegistry::get('Editions');
-			$Formats = TableRegistry::get('Formats');
-			$Pieces = TableRegistry::get('Pieces');
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data);
+			$Editions = TableRegistry::getTableLocator()->get('Editions');
+			$Formats = TableRegistry::getTableLocator()->get('Formats');
+			$Pieces = TableRegistry::getTableLocator()->get('Pieces');
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->getData());
 			if ($this->Artworks->save($artwork)) {
 
 
@@ -106,7 +110,7 @@ class ArtworksController extends ArtStackController
 				$this->Flash->error(__('The artwork could not be saved. Please, try again.'));
 			}
 		}
-		$this->request->data('user_id', '1');
+		$this->request = $this->request->withData('user_id', '1');
 		$users = $this->Artworks->Users->find('list', ['limit' => 200]);
 		$images = $this->Artworks->Images->find('list', ['limit' => 200]);
 		$this->set(compact('artwork', 'users', 'images'));
@@ -126,7 +130,7 @@ class ArtworksController extends ArtStackController
 			'contain' => []
 		]);
 		if ($this->request->is(['patch', 'post', 'put'])) {
-			$artwork = $this->Artworks->patchEntity($artwork, $this->request->data);
+			$artwork = $this->Artworks->patchEntity($artwork, $this->request->getData());
 			if ($this->Artworks->save($artwork)) {
 				$this->Flash->success(__('The artwork has been saved.'));
 				return $this->redirect(['action' => 'index']);
@@ -170,20 +174,20 @@ class ArtworksController extends ArtStackController
         }
         return $this->redirect(['action' => 'index']);
     }
-	
+
     /**
      * Display one or a page of Artworks
-     * 
-     * Single record vs multiple record will be chosen based on whether the 
-     * URL query value 'artwork' is set. If it is, we know the specific 
+     *
+     * Single record vs multiple record will be chosen based on whether the
+     * URL query value 'artwork' is set. If it is, we know the specific
      * Artwork to display. If not, we'll get a page of them (the current page).
-     * 
-     * Also, if the Artwork is flat (has only one edition with only one 
-     * format) then the URL query is beefed up with the proper id data 
-     * and FormatController->review() is called instead. 
-     * 
-     * Later, some accomodation for Search sets must be made. That may be  
-     * redirected through here for rendering once the records are found 
+     *
+     * Also, if the Artwork is flat (has only one edition with only one
+     * format) then the URL query is beefed up with the proper id data
+     * and FormatController->review() is called instead.
+     *
+     * Later, some accomodation for Search sets must be made. That may be
+     * redirected through here for rendering once the records are found
      * or it may all be handled by another method.
      */
     public function review() {
@@ -193,7 +197,7 @@ class ArtworksController extends ArtStackController
 			// load the one stack
 			// redirect based on the entities report of flatness
 //            $this->_try_flatness_redirect(
-//            RequestUtility::queryArg('artwork', $this->request), 
+//            RequestUtility::queryArg('artwork', $this->request),
 //            RequestUtility::queryArg('edition', $this->request));
         } else {
 			$records = $this->Artworks
@@ -202,7 +206,7 @@ class ArtworksController extends ArtStackController
 					->toArray();
 			$ids = (new Layer($records))->IDs();
 		}
-		$result = $ArtStacks->find('stacksFor', 
+		$result = $ArtStacks->find('stacksFor',
 			['seed' => 'artwork', 'ids' => $ids]);
 //		osd($result);die;
 
@@ -210,25 +214,25 @@ class ArtworksController extends ArtStackController
         $this->set('elements', $this->Layers->setElements());
         $this->render('review');
     }
-	
+
     /**
      * Edit the Artwork layer and deeper layers if the work is 'flat'
-     * 
+     *
      * A 'flat' artwork would have one Edition possibly with one Format
      */
     public function refine() {
         $artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
     //      osd($this->request->data);die;
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                 'associated' => ['Images', 'Editions', 'Editions.Formats', 'Editions.Formats.Images']
         ]);
 
         // if there is 1 edition, the quantity input could have been present
         if ($artwork->edition_count === 1) {
-            $index = array_keys($this->request->data['editions'])[0];
-            $deletions = $this->ArtworkStack->refinePieces($artwork, 
-            $this->request->data['editions'][$index]['id']);
+            $index = array_keys($this->request->getData('editions.0'));
+            $deletions = $this->ArtworkStack->refinePieces($artwork,
+                $this->request->getData("editions.$index.id"));
         } else {
             $deletions = [];
         }
@@ -248,29 +252,29 @@ class ArtworksController extends ArtStackController
     }
 
     public function upload() {
-        $this->viewBuilder()->layout('ajax');
+        $this->viewBuilder()->setLayout('ajax');
 //      osd($this->request->data);die;
     }
-	
+
     /**
      * Creates artwork records in element based state
-     * 
+     *
      * @return void Redirects on successful add, renders view otherwise.
      */
     public function create() {
-		$artwork = $this->ArtworkStack->creationStack(); 
+		$artwork = $this->ArtworkStack->creationStack();
         if ($this->request->is('post') || $this->request->is('put')) {
-                $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+                $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                     'associated' => [
-                        'Images', 'Editions', 
-                        'Editions.Pieces', 'Editions.Formats', 
+                        'Images', 'Editions',
+                        'Editions.Pieces', 'Editions.Formats',
                         'Editions.Formats.Images', 'Editions.Formats.Pieces'
                     ]
                 ]);
                 $this->ArtworkStack->allocatePieces($artwork);
                 if ($this->ArtworkStack->refinementTransaction($artwork, [])) {
                     $this->redirect(['action' => 'review', '?' => ['artwork' => $artwork->id]]);
-                
+
             } else {
                $this->Flash->error(__('The artwork could not be saved. Please, try again.'));
             }
@@ -282,15 +286,15 @@ class ArtworksController extends ArtStackController
         $this->set('_serialize', ['artwork']);
         $this->render('review');
     }
-	
+
     /**
      * Simplify to UX for making unique artwork
-     * 
-     * arrive here with a postLink and TRD that makes 
-     * the normal create method and form simpler. 
+     *
+     * arrive here with a postLink and TRD that makes
+     * the normal create method and form simpler.
      */
     public function createUnique() {
-        $this->request->data += ['user_id' => $this->SystemState->artistId()];
+        $this->request = $this->request->withData('user_id', $this->SystemState->artistId());
         $artwork = $this->create();
         $this->set('elements', $this->LayerElement->setElements());
         $this->render('review');
@@ -298,17 +302,17 @@ class ArtworksController extends ArtStackController
 
     /**
      * Display one or a page of Artworks
-     * 
-     * Single record vs multiple record will be chosen based on whether the 
-     * URL query value 'artwork' is set. If it is, we know the specific 
-     * Artwork to display. If not, we'll get a page of them (the current page). 
-     * 
-     * Later, some accomodation for Search sets must be made. That may be  
-     * redirected through here for rendering once the records are found 
+     *
+     * Single record vs multiple record will be chosen based on whether the
+     * URL query value 'artwork' is set. If it is, we know the specific
+     * Artwork to display. If not, we'll get a page of them (the current page).
+     *
+     * Later, some accomodation for Search sets must be made. That may be
+     * redirected through here for rendering once the records are found
      * or it may all be handled by another method.
      */
     public function validateQuantities($id) {
-	$this->request->query = ['artwork' => $id];
+        $this->request = $this->request->withQueryParams(['artwork' => $id]);
 //      $element_management = [
 //          'artwork' => 'full',
 //          'edition' => 'many',
@@ -320,7 +324,7 @@ class ArtworksController extends ArtStackController
     }
 
     public function testMe() {
-		
+
 //		$intNumberSet = [1,2,3,4,5];
 //		$symNumberSet = ['A','B','C','D','E'];
 //        $reqs = new \App\Lib\RenumberRequests($symNumberSet);
@@ -341,31 +345,32 @@ class ArtworksController extends ArtStackController
 //		osd($reqs->_provider_checklist, 'providers checklist');
 //		die;
 
-        $queries = $this->request->data('method');
+        $queries = $this->request->getData('method');
         $result = [];
         $anscestors = [];
-        $disp = TableRegistry::get('Dispositions');
+        $disp = TableRegistry::getTableLocator()->get('Dispositions');
+        osd(get_class(TableRegistry::getTableLocator()));
         $methods = $disp->customFinders();
-        $options = $this->request->data;
-        
-        if (count($queries) > 0) {
+        $options = $this->request->getData();
+
+        if (count($queries ?? []) > 0) {
             $index = 0;
-            $result = $disp->find($this->request->data['method'][$index++], $options);
+            $result = $disp->find($this->request->getData('method.' . $index++), $options);
             while ($index < count($queries)) {
-            $result = $result->find($this->request->data['method'][$index++], $options);
+            $result = $result->find($this->request->getData('method.' . $index++), $options);
             }
         }
         if (is_object($result)) {
 //            $result = $disp->containAncestry($result);
             $dispositions = $result->toArray();
             $activity = new Layer($dispositions);
-            
+
             $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
-            $stacks = $ArtStacks->find('stacksFor', 
+            $stacks = $ArtStacks->find('stacksFor',
                 ['seed' => 'disposition', 'ids' => $activity->IDs()]);
-			
+
 			osd(count($stacks->all()));
-            
+
 //            $sorted = [];
 //            foreach ($dispositions as $disposition) {
 //                    $sorted[$disposition->id] = $disposition;
@@ -424,7 +429,7 @@ class ArtworksController extends ArtStackController
         $artwork->editions = $editions;
         return $artwork;
     }
-	
+
 	public function editionMigration() {
 		$this->relinkedPieces = [];
 		$ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
@@ -433,7 +438,7 @@ class ArtworksController extends ArtStackController
 				->select(['id'])
 				->toArray();
 		$ids = (new Layer($records))->IDs();
-		$result = $ArtStacks->find('stacksFor', 
+		$result = $ArtStacks->find('stacksFor',
 			['seed' => 'artwork', 'ids' => $ids]);
 
 		foreach ($result->load() as $artwork) {
@@ -442,7 +447,7 @@ class ArtworksController extends ArtStackController
 		$this->saveRelinkedPieces();
         $this->set('artworks', $result);
 	}
-	
+
 	private function writeFormatJoin($artwork) {
 		$EditionsFormats = TableRegistry::getTableLocator()->get('EditionsFormats');
 		foreach ($artwork->formats->load() as $format) {
@@ -460,7 +465,7 @@ class ArtworksController extends ArtStackController
 				'collected_piece_count' => $format->collected_piece_count,
 			]
 		);
-		
+
 			if ($EditionsFormats->save($join)) {
 				$this->Flash->success("Saved f-$format->range_flag e-$format->edition_id");
 				$this->relinkPieces(
@@ -472,11 +477,11 @@ class ArtworksController extends ArtStackController
 						$join->id);
 			} else {
 				$this->Flash->error("Failed f-$format->range_flag e-$format->edition_id");
-				osd($join->errors());
+				osd($join->getErrors());
 			}
 		}
 	}
-	
+
 	private function saveRelinkedPieces() {
 		$PieceTable = TableRegistry::getTableLocator()->get('Pieces');
 		$PieceTable->removeBehavior('CounterCache');
@@ -491,7 +496,7 @@ class ArtworksController extends ArtStackController
 //		$theSave = $PieceTable->saveMany($this->relinkedPieces);
 //		osd($theSave, 'result of saved pieces');
 	}
-	
+
 	private function relinkPieces($pieces, $newFormatId) {
 		foreach ($pieces as $piece) {
 			$this->relinkedPieces[] = new \App\Model\Entity\Piece ([
@@ -502,7 +507,7 @@ class ArtworksController extends ArtStackController
 //		$job_lot = collection($pieces);
 //		$result = $job_lot->reduce(
 //				function ($accum, $piece) use ($newFormatId) {
-//					return $accum[] = 
+//					return $accum[] =
 //							[
 //								'id' => $piece->id,
 //								'format_id' => $newFormatId
@@ -510,6 +515,6 @@ class ArtworksController extends ArtStackController
 //				}, []
 //		);
 //		$this->relinkedPieces = array_merge($this->relinkedPieces, $result);
-	} 
-	
+	}
+
 }

@@ -24,9 +24,9 @@ class DesignsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('designs');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('designs');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -42,10 +42,10 @@ class DesignsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->allowEmpty('content');
+            ->allowEmptyString('content');
 
         return $validator;
     }

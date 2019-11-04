@@ -3,7 +3,7 @@ namespace App\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
-use App\Model\Table\AppTable;
+use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
@@ -17,7 +17,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\DispositionsPiece newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\DispositionsPiece[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\DispositionsPiece|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\DispositionsPiece|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\DispositionsPiece saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\DispositionsPiece patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\DispositionsPiece[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\DispositionsPiece findOrCreate($search, callable $callback = null, $options = [])
@@ -26,7 +26,6 @@ use Cake\Validation\Validator;
  */
 class DispositionsPiecesTable extends AppTable
 {
-
     /**
      * Initialize method
      *
@@ -66,11 +65,11 @@ class DispositionsPiecesTable extends AppTable
     {
         $validator
             ->integer('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
-        $validator
-            ->boolean('complete')
-            ->allowEmpty('complete');
+//        $validator
+//            ->boolean('complete')
+//            ->allowEmpty('complete');
 
         return $validator;
     }

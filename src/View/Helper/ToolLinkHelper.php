@@ -18,24 +18,24 @@ class ToolLinkHelper extends Helper {
 	 * @var array
 	 */
 	protected $_tools = ['review', 'refine', 'remove', ];
-	
+
 	/**
 	 * The query arguments for the link() method
-	 * 
+	 *
 	 * This get built fresh during the Layer validation process.
 	 *
 	 * @var array
 	 */
 	protected $_query = [];
-	
+
 	protected $_urlConfig = [];
 
 	public $helpers = ['Html'];
-	
+
 	/**
-	 * 
+	 *
 	 * @todo add delimeters option?
-	 * 
+	 *
 	 * @param string $layer
 	 * @param array $toolSet
 	 */
@@ -54,14 +54,14 @@ class ToolLinkHelper extends Helper {
         return $this->Html->tag('span', $toolLinks, ['class' => 'inline_nav']);
 		return $toolLinks;
 	}
-	
+
 	/**
 	 * Insure the requested layer is valid and build the $_query array
-	 * 
-	 * The layer must be one of the known layers and all the nodes 
-	 * leading to it (its parent chain) must have been placed in the 
+	 *
+	 * The layer must be one of the known layers and all the nodes
+	 * leading to it (its parent chain) must have been placed in the
 	 * expected variables.
-	 * 
+	 *
 	 * @param string $layer
 	 * @throws BadMethodCallException
 	 */
@@ -74,9 +74,9 @@ class ToolLinkHelper extends Helper {
 		$index = 0;
 		while (!$matched && $index < count($this->_layers)) {
 			$variableName = $this->_layers[$index];
-			if (isset($this->_View->viewVars[$variableName]) &&
-					is_a($this->_View->viewVars[$variableName], ucfirst('App\\Model\\Entity\\'.$variableName))) {
-				$this->_query[$variableName] = $this->_View->viewVars[$variableName]->id;
+			$entity = $this->getView()->get($variableName);
+			if (is_a($entity, ucfirst('App\\Model\\Entity\\'.$variableName))) {
+				$this->_query[$variableName] = $entity->id;
 				$index++;
 				$matched = $layer === $variableName;
 			} else {
@@ -85,10 +85,10 @@ class ToolLinkHelper extends Helper {
 			}
 		}
 	}
-	
+
 	/**
 	 * Insure the requested tools are supported
-	 * 
+	 *
 	 * @param array $toolSet
 	 * @throws BadMethodCallException
 	 */
@@ -99,45 +99,45 @@ class ToolLinkHelper extends Helper {
 			}
 		}
 	}
-	
+
     /**
      * Return the review link based upon provided url array
-     * 
+     *
      * @param array $url
      * @return string
      */
     public function reviewLink($url) {
-        return $this->Html->link($this->icon(ICON_COG, 'medium'), 
+        return $this->Html->link($this->icon(ICON_COG, 'medium'),
 				$url + ['action' => 'review'], ['escape' => FALSE]);
     }
-    
+
     /**
      * Return the refine link based upon provided url array
-     * 
+     *
      * @param array $url
      * @return string
      */
     public function refineLink($url) {
-        return $this->Html->link($this->icon(ICON_REFINE, 'medium'), 
+        return $this->Html->link($this->icon(ICON_REFINE, 'medium'),
 				$url + ['action' => 'refine'], ['escape' => FALSE]);
     }
-    
+
     /**
      * Return the delete link based upon provided url array
-     * 
+     *
      * @param array $url
      * @return string
      */
     public function removeLink($url) {
-        return $this->Html->link($this->icon(ICON_REMOVE, 'medium'), 
+        return $this->Html->link($this->icon(ICON_REMOVE, 'medium'),
 				$url + ['action' => 'remove'], ['escape' => FALSE]);
     }
-    
+
     /**
      * Return Foundation icons with size
-	 * 
-	 * @todo This isn't specific to this helper. A trait? 
-     * 
+	 *
+	 * @todo This isn't specific to this helper. A trait?
+     *
      * @param string $icon
      * @param string $size, 'small', 'medium', or 'large'
      * @return string
@@ -148,5 +148,5 @@ class ToolLinkHelper extends Helper {
         }
         return $this->Html->tag('i','',['class' => "$icon $size"]);
     }
-	
+
 }

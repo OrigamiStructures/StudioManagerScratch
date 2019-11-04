@@ -26,7 +26,7 @@ class SeriesTableTest extends TestCase
         'app.editions',
         'app.artworks',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 
@@ -39,7 +39,7 @@ class SeriesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Series') ? [] : ['className' => 'App\Model\Table\SeriesTable'];
-        $this->Series = TableRegistry::get('Series', $config);
+        $this->Series = TableRegistry::getTableLocator()->get('Series', $config);
     }
 
     /**

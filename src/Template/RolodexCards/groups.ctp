@@ -1,5 +1,5 @@
 <?php
-foreach($categoryCards->all() as $id => $card) {
+foreach($institutionCards->all() as $id => $card) {
 	echo "<h1>{$card->name()}</h1>";
 	
 	$output = collection($card->contacts())

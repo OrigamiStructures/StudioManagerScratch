@@ -22,7 +22,7 @@ trait ContactableTableTrait {
 		$IDs = $this->Addresses->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids])
 				->toArray();
-		return array_unique($IDs);
+		return $this->distillFromIdentity($IDs);
 	}
 	
 	public function marshalAddresses($id, $stack) {
@@ -38,7 +38,7 @@ trait ContactableTableTrait {
 		$IDs = $this->Contacts->find('list', ['valueField' => 'member_id'])
 				->where(['id IN' => $ids])
 				->toArray();
-		return array_unique($IDs);
+		return $this->distillFromIdentity($IDs);
 
 	}
 	

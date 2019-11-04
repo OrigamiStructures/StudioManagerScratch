@@ -19,10 +19,10 @@ class AdministratorController extends AppController {
 	}
 	
 	public function userDataIntegrity() {
-		if(!$this->request->is('post') || !$this->request->data('users')) {
+		if(!$this->request->is('post') || is_null($this->request->getData('users'))) {
 			$this->redirect('administrator');
 		}
-		$user_id = $this->request->data('users');
+		$user_id = $this->request->getData('users');
 		$Artwork = TableRegistry::getTableLocator()->get('Artworks');
 		$Edition = TableRegistry::getTableLocator()->get('Editions');
 		$Format = TableRegistry::getTableLocator()->get('EditionsFormats');

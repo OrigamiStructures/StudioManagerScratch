@@ -37,9 +37,9 @@ class UsersTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('users');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('users');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -94,13 +94,9 @@ class UsersTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmpty('username');
-
-        $validator
-            ->allowEmpty('password');
+            ->allowEmptyString('id', 'create')
+            ->allowEmptyString('username')
+            ->allowEmptyString('password');
 
         return $validator;
     }

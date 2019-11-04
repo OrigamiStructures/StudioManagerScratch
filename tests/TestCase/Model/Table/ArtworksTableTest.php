@@ -25,7 +25,7 @@ class ArtworksTableTest extends TestCase
         'app.pieces',
         'app.editions',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 
@@ -38,7 +38,7 @@ class ArtworksTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Artworks') ? [] : ['className' => 'App\Model\Table\ArtworksTable'];
-        $this->Artworks = TableRegistry::get('Artworks', $config);
+        $this->Artworks = TableRegistry::getTableLocator()->get('Artworks', $config);
     }
 
     /**

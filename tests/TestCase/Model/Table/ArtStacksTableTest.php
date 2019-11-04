@@ -30,6 +30,7 @@ class ArtStacksTableTest extends TestCase
         'app.editions',
         'app.formats',
         'app.pieces',
+        'app.series',
         'app.dispositions_pieces'
     ];
 
@@ -77,7 +78,7 @@ class ArtStacksTableTest extends TestCase
 
     /**
      * Test __get method
-     * 
+     *
      * @dataProvider TableClassesProvider
      *
      * @return void
@@ -86,7 +87,7 @@ class ArtStacksTableTest extends TestCase
     {
         $this->assertInstanceOf($className, $this->ArtStacks->$propertyName);
     }
-    
+
     public function TableClassesProvider() {
        return [
            ['App\Model\Table\ArtworksTable', 'Artworks'],
@@ -105,12 +106,12 @@ class ArtStacksTableTest extends TestCase
     {
         $stacks = $this->ArtStacks->find('stacksFor', ['seed' => 'artwork', 'ids' => []]);
         $this->assertEquals(0, $stacks->count());
-        
+
     }
-    
+
     /**
      * Test findStackFrom method
-     * 
+     *
      * @dataProvider noneFoundProvider
      *
      * @return void
@@ -118,10 +119,9 @@ class ArtStacksTableTest extends TestCase
     public function testFindStackFromOnNoneFound($args, $count)
     {
         $stacks = $this->ArtStacks->find('stacksFor', $args);
-        $this->assertEquals($count, $stacks->count());  
-//        $this->assertEquals($count, count($stacks));  
+        $this->assertEquals($count, $stacks->count());
     }
-    
+
     public function noneFoundProvider() {
         return [
             [['seed' => 'disposition', 'ids' => [6000]], 0],
@@ -136,10 +136,10 @@ class ArtStacksTableTest extends TestCase
             [['seed' => 'artwork', 'ids' => []], 0],
         ];
     }
-    
+
     /**
      * Test findStackFrom method
-     * 
+     *
      * @dataProvider stackSeedLayerVariantProvider
      *
      * @return void
@@ -149,14 +149,14 @@ class ArtStacksTableTest extends TestCase
         $stacks = $this->ArtStacks->find('stacksFor', $args);
         $this->assertEquals(1, $stacks->count());
         $entity = $stacks->ownerOf('artwork', $art)[0];
-        
+
         $this->assertTrue($entity->exists('editions', $ed), "===\nedition is $ed\n===");
         $this->assertTrue($entity->exists('formats', $fo), "===\nformat is $fo\n===");
         $this->assertEquals($p_cnt, $entity->count('pieces'));
         $this->assertEquals($d_cnt, $entity->count('dispositions_pieces'));
 		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
-    
+
     public function stackSeedLayerVariantProvider() {
         return [
         // george art13 ed21 fmt19 - 15 pieces 510-524 - 8 disp-id (12-15,48,51)
@@ -177,12 +177,12 @@ class ArtStacksTableTest extends TestCase
                 ['seed' => 'pieces', 'ids' => [510]],
                 13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
-			//This is the Format from the editions pool, not the snapshot 
+			//This is the Format from the editions pool, not the snapshot
             'format for George' => [
                 ['seed' => 'format', 'ids' => [9]],
                 13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
             ],
-			//This is the Format from the editions pool, not the snapshot 
+			//This is the Format from the editions pool, not the snapshot
             'formats for George' => [
                 ['seed' => 'formats', 'ids' => [9]],
                 13, 21, 19, 15, 8 //art-id, ed-id, form-id, piec-cnt, disp-cnt
@@ -207,10 +207,10 @@ class ArtStacksTableTest extends TestCase
     }
 
     /**
-     * Test findStackFromBadArgs 
-     * 
+     * Test findStackFromBadArgs
+     *
      * @dataProvider badArgsProvider
-     * 
+     *
      * @expectedException BadMethodCallException
      *
      * @return void
@@ -221,27 +221,27 @@ class ArtStacksTableTest extends TestCase
         $this->ArtStacks->find('stacksFor', $args);
 		Cache::clear(FALSE, $this->ArtStacks->cacheName());
     }
-    
+
     public function badArgsProvider() {
         return [
             'unknown layer' => [
-                ['seed' => 'unknown', 'ids' => [4,5,6]], 
+                ['seed' => 'unknown', 'ids' => [4,5,6]],
                 "ArtStacks can't do lookups",
             ],
             'bad layer key' => [
-                ['wrong' => 'pieces', 'ids' => [4,5,6]], 
+                ['wrong' => 'pieces', 'ids' => [4,5,6]],
                 "both 'seed' and 'ids' keys",
             ],
             'bad id key' => [
-                ['seed' => 'pieces', 'wrong' => [4,5,6]], 
+                ['seed' => 'pieces', 'wrong' => [4,5,6]],
                 "both 'seed' and 'ids' keys",
             ],
             'missing key' => [
-                ['ids' => [4,5,6]], 
+                ['ids' => [4,5,6]],
                 "both 'seed' and 'ids' keys",
             ],
             'ids not in array' => [
-                ['seed' => 'pieces', 'ids' => 12], 
+                ['seed' => 'pieces', 'ids' => 12],
                 "provided as an array",
             ],
         ];
@@ -256,13 +256,13 @@ class ArtStacksTableTest extends TestCase
     {
         $stacks = $this->ArtStacks->stacksFromArtworks([3000]);
         $this->assertEquals(0, $stacks->count());
-        
+
         $stacks = $this->ArtStacks->stacksFromArtworks([4,6], 'four and six, missing downstream data');
         $this->assertEquals(2, $stacks->count());
-        
+
 //        $stacks = $this->ArtStacks->stacksFromAtworks([4, 'wrong']);
 //        $this->assertEquals(1, $stacks->count());
-        
+
     }
 
 }

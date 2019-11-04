@@ -16,7 +16,7 @@ class SearchController extends AppController
 //		parent::initialize();
 //		$this->loadComponent('ArtworkStack');
 //	}
-	
+
     /**
      * Index method
      *
@@ -25,19 +25,19 @@ class SearchController extends AppController
     public function index()
     {
 //		$this->SystemState->referer($this->referer());
-		
-		if (!is_null($this->request->data('search'))) {
-			$query_string = $this->request->data('search');
-			$Artworks = TableRegistry::get('Artworks');
-			$Members = TableRegistry::get('Members');
-			
+
+        $query_string = $this->request->getData('search');
+		if (!is_null($query_string)) {
+			$Artworks = TableRegistry::getTableLocator()->get('Artworks');
+			$Members = TableRegistry::getTableLocator()->get('Members');
+
 			$artworks = $Artworks->find('search', [$query_string]);
 //			osd($art);
 //			$edition = '';
 //			$format = '';
 			$members = $Members->find('search', [$query_string]);;
 		}
-		
+
 		$this->set(compact('artworks', 'members'));
 //		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
     }

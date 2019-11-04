@@ -13,24 +13,24 @@ use App\Lib\EditionTypeMap;
 
 /**
  * @todo Has the PieceAssignmentComponent been abandoned as a concept?
- * PieceAssignmentComponent was stubbed to centralize assingment rules. But 
- * this single form currently takes care of it all. Is this ok? Should the 
- * Component become a Lib class? 
- * Superficially, since only the assign() method allows these kinds of edits, 
- * and this Form class oversees all the associated logic, this may be the 
- * correct place to localize the logic. But if later streamlined piece movement 
+ * PieceAssignmentComponent was stubbed to centralize assingment rules. But
+ * this single form currently takes care of it all. Is this ok? Should the
+ * Component become a Lib class?
+ * Superficially, since only the assign() method allows these kinds of edits,
+ * and this Form class oversees all the associated logic, this may be the
+ * correct place to localize the logic. But if later streamlined piece movement
  * is allowed, like through an ajax process, a Lib class may be the right choice.
- * 
+ *
  * @todo Consider custom numbering schemes (see notes in App\Lig\Range)
- * 
- * @todo Lib\Range planning is begining to touch on some validation issues 
- * The ideas of expanded range-syntax support to include new numbering schemes 
+ *
+ * @todo Lib\Range planning is begining to touch on some validation issues
+ * The ideas of expanded range-syntax support to include new numbering schemes
  * and reference to sets of Editions or use of Series will effect this Form.
- * Also, the idea of having a separate class the validates a properly expressed 
- * range against real-world data is breathing new life into the idea of the 
+ * Also, the idea of having a separate class the validates a properly expressed
+ * range against real-world data is breathing new life into the idea of the
  * PieceAssignment component or Lib class.
- * If a class that queries for data based on the range string is also created 
- * it would form the basis of an ajax based piece filtering tool for the UX. 
+ * If a class that queries for data based on the range string is also created
+ * it would form the basis of an ajax based piece filtering tool for the UX.
  * This starts to implicate App\Lib\PieceFilter in the set of involved classes.
  */
 class AssignmentForm extends Form {
@@ -74,8 +74,8 @@ class AssignmentForm extends Form {
 //        osd($validator);
 //		osd('this string ' + 'that string');
         $validator
-            ->notEmpty('to_move', 'You must indicate which pieces should be moved.')
-            ->notEmpty('destinations_for_pieces', 'You must choose a destination for the pieces.')
+            ->allowEmptyString('to_move', FALSE, 'You must indicate which pieces should be moved.')
+            ->allowEmptyString('destinations_for_pieces', FALSE, 'You must choose a destination for the pieces.')
             ->add('destinations_for_pieces', [
                 'same_as_source' => [
                     'rule' => [$this, 'filterSource'],
@@ -124,7 +124,7 @@ class AssignmentForm extends Form {
 
     /**
      * Insure at there is at least one source to draw from
-     * 
+     *
      * @param mixed $value
      * @param array $context
      * @return boolean
@@ -136,13 +136,13 @@ class AssignmentForm extends Form {
 
     /**
      * Insure the range describing numbered pieces to move is valid
-     * 
-     * @todo Shouldn't App\Lib\Range do this? Yes, the method has been 
-     * 		created as a static function on that class but the one use is 
-     * 		as a callable ('rule' => [$this, 'rangePatternValidation']) 
-     * 		earlier in this class so I'll have to be make sure that I can 
+     *
+     * @todo Shouldn't App\Lib\Range do this? Yes, the method has been
+     * 		created as a static function on that class but the one use is
+     * 		as a callable ('rule' => [$this, 'rangePatternValidation'])
+     * 		earlier in this class so I'll have to be make sure that I can
      * 		use the static function as a callable.
-     * 
+     *
      * @param mixed $value
      * @param array $context
      * @return boolean
@@ -156,7 +156,7 @@ class AssignmentForm extends Form {
 
     /**
      * Insure there is a source that isn't the destination
-     * 
+     *
      * @param mixed $value
      * @param array $context
      * @return boolean
@@ -170,7 +170,7 @@ class AssignmentForm extends Form {
 
     /**
      * Insure there are enough pieces to move
-     * 
+     *
      * @param mixed $value
      * @param array $context
      * @return boolean
@@ -187,7 +187,7 @@ class AssignmentForm extends Form {
 
     /**
      * Make sure the source that matches the destination is not included
-     * 
+     *
      * @param array $context
      */
     protected function _removeMatchingSource($context) {
@@ -208,7 +208,7 @@ class AssignmentForm extends Form {
 
     /**
      * Insure there are enough Open Edition pieces to move in the selected sources
-     * 
+     *
      * @param mixed $value
      * @param array $context
      * @return boolean
@@ -235,7 +235,7 @@ class AssignmentForm extends Form {
 
     /**
      * Insure there are enough numbered Edition pieces to move in the selected sources
-     * 
+     *
      * @param mixed $value
      * @param array $context
      * @return boolean
@@ -272,7 +272,7 @@ class AssignmentForm extends Form {
 
     /**
      * Return the trd nodes that are the chosen sources for pieces
-     * 
+     *
      * @param array $context
      * @return Collection
      */
@@ -285,7 +285,7 @@ class AssignmentForm extends Form {
 
     /**
      * Get all the reassignable pieces from the select sources
-     * 
+     *
      * @param array $context
      */
     protected function _sourcePieces($context) {

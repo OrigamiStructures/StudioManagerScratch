@@ -9,11 +9,15 @@ use Cake\ORM\TableRegistry;
  */
 class RolodexCardsController extends AppController {
 	
+	public $name = 'RolodexCards';
+	
+	public function initialize() {
+		parent::initialize();
+	}
+	
 	public function index() {
 		$ArtistManifests = TableRegistry::getTableLocator()->get('ArtistManifests');
 		$stacks = $ArtistManifests->find('stacksFor', ['seed' => 'identity', 'ids' => [1]]);
-		osd($stacks);
-
 		
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
 		$rolodexCards = $this->RolodexCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
@@ -21,13 +25,12 @@ class RolodexCardsController extends AppController {
 	}
 	
 	public function groups() {
-		$CategoryCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-		$ids = $CategoryCards
+		$InstitutionCards = TableRegistry::getTableLocator()->get('OrganizationCards');
+		$ids = $InstitutionCards
 				->Identities->find('list')
-				->where(['member_type' => 'Institution'])
+//				->where(['member_type' => 'Institution'])
 				->toArray();
-		$categoryCards = $CategoryCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-//		osd($categoryCards);die;
-		$this->set('categoryCards', $categoryCards);
+		$institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+		$this->set('institutionCards', $institutionCards);
 	}
 }

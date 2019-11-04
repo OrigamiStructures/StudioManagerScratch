@@ -28,9 +28,9 @@ class SeriesTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('series');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('series');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
@@ -40,7 +40,7 @@ class SeriesTable extends AppTable
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id'
 			]);
-//		}		
+//		}
         $this->hasMany('Editions', [
             'foreignKey' => 'series_id'
         ]);
@@ -56,13 +56,13 @@ class SeriesTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->allowEmpty('title');
+            ->allowEmptyString('title');
 
         $validator
-            ->allowEmpty('description');
+            ->allowEmptyString('description');
 
         return $validator;
     }
@@ -79,6 +79,6 @@ class SeriesTable extends AppTable
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
-	
-	
+
+
 }

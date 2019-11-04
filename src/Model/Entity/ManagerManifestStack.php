@@ -7,10 +7,11 @@ use App\Model\Entity\StackEntity;
  * CakePHP ManifestStackEntity
  * @author dondrake
  */
-class ManifestStack extends StackEntity {
-	
+class ManagerManifestStack extends StackEntity {
+
 	public function manifest() {
-		return $this->manifest->element(0, LAYERACC_INDEX);
+//	    return $this->manifest->element(0, LAYERACC_INDEX);
+		return $this->manifest->shift();
 	}
 	
 	public function supervisorCard() {
@@ -31,13 +32,16 @@ class ManifestStack extends StackEntity {
 		return array_pop($card);
 	}
 	
-	public function artistCard() {
-		$id = $this->rootElement()->artistId();
-		$card = $this->people
-				->find('identity')
-				->specifyFilter('id', $id)
-				->loadStacks();
-		return array_pop($card);
+    public function selfAssigned()
+    {
+        return $this->rootElement()->selfAssigned();
 	}
-	
+
+    public function accessSummary()
+    {
+        return (!isset($this->permissions) || $this->permissions->count() == 0) 
+		? "Full Access" 
+		: "Limited Access";
+	}
+
 }

@@ -24,7 +24,7 @@ class AddressesTableTest extends TestCase
         'app.dispositions',
         'app.locations',
         'app.pieces',
-        'app.groups',
+//        'app.groups',
         'app.groups_members',
         'app.artworks',
         'app.editions',
@@ -42,7 +42,7 @@ class AddressesTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Addresses') ? [] : ['className' => 'App\Model\Table\AddressesTable'];
-        $this->Addresses = TableRegistry::get('Addresses', $config);
+        $this->Addresses = TableRegistry::getTableLocator()->get('Addresses', $config);
     }
 
     /**

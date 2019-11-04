@@ -26,7 +26,7 @@ class GroupsMembersTableTest extends TestCase
         'app.editions',
         'app.artworks',
         'app.formats',
-        'app.groups'
+//        'app.groups'
     ];
 
     /**
@@ -38,7 +38,7 @@ class GroupsMembersTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('GroupsMembers') ? [] : ['className' => 'App\Model\Table\GroupsMembersTable'];
-        $this->GroupsMembers = TableRegistry::get('GroupsMembers', $config);
+        $this->GroupsMembers = TableRegistry::getTableLocator()->get('GroupsMembers', $config);
     }
 
     /**

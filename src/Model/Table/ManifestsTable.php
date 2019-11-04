@@ -38,7 +38,7 @@ class ManifestsTable extends AppTable{
         $this->setTable('manifests');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-		
+
 		$this->_initializeBehaviors();
 
         $this->belongsTo('Members', [
@@ -69,7 +69,7 @@ class ManifestsTable extends AppTable{
     {
         $validator
             ->nonNegativeInteger('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         return $validator;
     }
@@ -89,10 +89,10 @@ class ManifestsTable extends AppTable{
 
         return $rules;
     }
-	
+
     /**
      * Find artists by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -100,13 +100,13 @@ class ManifestsTable extends AppTable{
     public function findManifests($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
 	/**
 	 * Find a manager's artist manifests (or those for several managers)
-	 * 
+	 *
 	 * Manifests::find('managedBy', ['ids' => [x,y])
 	 * Manifests::find('managedBy', ['id' => x])
-	 * 
+	 *
 	 * @param type $query
 	 * @param type $options
 	 */
@@ -122,13 +122,13 @@ class ManifestsTable extends AppTable{
 		}
 		return $query->where($condition);
 	}
-	
+
 	/**
 	 * Find the artist manifests issued by a user (or several users)
-	 * 
+	 *
 	 * Manifests::find('issuedBy', ['ids' => [x,y])
 	 * Manifests::find('issuedBy', ['id' => x])
-	 * 
+	 *
 	 * @param type $query
 	 * @param type $options
 	 */
@@ -144,13 +144,13 @@ class ManifestsTable extends AppTable{
 		}
 		return $query->where($condition);
 	}
-	
+
 	/**
 	 * Find the manifests for a member/artist (or several member/artists)
-	 * 
+	 *
 	 * Manifests::find('manifestFor', ['ids' => [x,y])
 	 * Manifests::find('manifest', ['id' => x])
-	 * 
+	 *
 	 * @param type $query
 	 * @param type $options
 	 */
@@ -166,5 +166,5 @@ class ManifestsTable extends AppTable{
 		}
 		return $query->where($condition);
 	}
-	
+
 }

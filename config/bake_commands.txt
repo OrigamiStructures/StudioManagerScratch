@@ -7,7 +7,7 @@ git pull
 
 ## Apigen documentation
 ====================================================================
-cd/Library/WebServer/Documents/StudioManagerScratch
+cd /Library/WebServer/Documents/StudioManagerScratch
 
 /Applications/Apigen/apigen.phar generate --source /Library/WebServer/Documents/StudioManagerScratch/src --destination /Users/dondrake/Dropbox/projx_Origami_StudioManager/apigenDocs --title StudioManagerScratch --charset UTF-8 --todo  --template-theme=bootstrap
 
@@ -38,6 +38,9 @@ bin/cake bake.bake test entity ManifestStack
 ## BAKING CUSTOM FOLDER TESTS
 ====================================================================
 bin/cake bake.bake test ModLib StackSet
+bin/cake bake.bake test ModLib StackRegistry
+bin/cake bake.bake test ModLib ContextUser
+bin/cake bake.bake test ModLib CurrentUser
 
 ## TESTING
 ====================================================================
@@ -45,6 +48,9 @@ bin/cake bake.bake test ModLib StackSet
 ### App\Lib
 --------------------------------------------------------------------
 cd /Library/WebServer/Documents/StudioManagerScratch
+
+#### RUNNING TEST SUITES (XML)
+vendor/bin/phpunit --testsuite app (controller model view lib)
 
 vendor/bin/phpunit test tests/TestCase/Lib/FGCurlTest.php
 
@@ -67,11 +73,15 @@ vendor/bin/phpunit test tests/TestCase/Model/Table/PermissionsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ArtistCardsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestsTableTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Table/ManifestStacksTableTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Table/CSTableLocatorTest.php
 # Model\Lib
 vendor/bin/phpunit test tests/TestCase/Model/Lib/StackSetTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerAccessArgsTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/ValueSourceTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Lib/LayerTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/ContextUserTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/CurrentUserTest.php
+vendor/bin/phpunit test tests/TestCase/Model/Lib/StackRegistryTest.php
 # behaviors
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/StringQueryBehaviorTest.php
 vendor/bin/phpunit test tests/TestCase/Model/Behavior/IntegerQueryBehaviorTest.php

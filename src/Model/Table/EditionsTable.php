@@ -109,17 +109,17 @@ class EditionsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->allowEmpty('title');
+            ->allowEmptyString('title');
 
         $validator
-            ->allowEmpty('type');
+            ->allowEmptyString('type');
 
-        $validator
-            ->add('quantity', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('quantity');
+//        $validator
+//            ->add('quantity', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('quantity');
 
         return $validator;
     }
@@ -156,16 +156,16 @@ class EditionsTable extends AppTable
     //<editor-fold desc="LegacyCode">
     /**
 	 * Get the current select list
-	 * 
+	 *
 	 * @param Query $query
 	 * @param string $artist_id
 	 * @return query result object
 	 */
 	public function findChoiceList(Query $query, $options) {
-		$this->displayField('display_title');
+		$this->getDisplayField('display_title');
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
-	
+
 	public function choiceList($id, $index_name, $options = []) {
 //		$this->displayField('displayTitle');
 		$options += ['id' => $id, 'index_name' => $index_name, 'valueField' => 'displayTitle'];
@@ -188,7 +188,7 @@ class EditionsTable extends AppTable
 
    /**
      * Find editions in an artwork
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -198,36 +198,36 @@ class EditionsTable extends AppTable
     }
 
     /**
-	 * 
+	 *
 	 * @return array
 	 */
 	public function typeList() {
 		return $this->types;
 	}
-	
+
 	/**
 	 * Get the minimum alowed size for an edition
-	 * 
-	 * Given an edition entity or the ID of an edition, return the piece number 
-	 * which is the highest numbered disposed piece in the edition or, if it's 
-	 * an open edition, the number of disposed pieces in the edition. 
+	 *
+	 * Given an edition entity or the ID of an edition, return the piece number
+	 * which is the highest numbered disposed piece in the edition or, if it's
+	 * an open edition, the number of disposed pieces in the edition.
 	 * This number will represent the minimum size for the edition.
-	 * 
+	 *
 	 * @param integer|Entity $edition
 	 * @return integer The minimum size
 	 */
 	public function minimumSize($edition) {
 		if (is_int($edition)) {
 			$edition = $this->get($edition, ['conditions' => [
-				'user_id' => $this->SystemState->artistId(),
+				'user_id' => $this->contextUser()->artistId(),
 			]]);
 		}
-		
+
 		if (!($edition instanceof Edition)) {
 			throw new \BadMethodCallException('An Edition entity or an ID that '
 					. 'could lead to an Edition entity was required.');
-		}		
-		
+		}
+
 		if (EditionTypeMap::isNumbered($edition->type)) {
 			/**
 			 * Limited editions nip undisposed pieces from the end of the edition
@@ -241,9 +241,9 @@ class EditionsTable extends AppTable
 			 */
 			$minimum = $edition->disposed_piece_count/* > 0 ? $edition->disposed_piece_count : 1 */;
 		}
-		
+
 		return $minimum;
-	
+
 	}
-	
+
 }

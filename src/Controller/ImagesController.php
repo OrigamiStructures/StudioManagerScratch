@@ -50,7 +50,7 @@ class ImagesController extends AppController
     {
         $image = $this->Images->newEntity();
         if ($this->request->is('post')) {
-            $image = $this->Images->patchEntity($image, $this->request->data);
+            $image = $this->Images->patchEntity($image, $this->request->getData());
             if ($this->Images->save($image)) {
                 $this->Flash->success(__('The image has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -76,7 +76,7 @@ class ImagesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $image = $this->Images->patchEntity($image, $this->request->data);
+            $image = $this->Images->patchEntity($image, $this->request->getData());
             if ($this->Images->save($image)) {
                 $this->Flash->success(__('The image has been saved.'));
                 return $this->redirect(['action' => 'index']);

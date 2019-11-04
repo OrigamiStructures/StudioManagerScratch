@@ -69,19 +69,19 @@ class EditionsFormatsTable extends AppTable
     {
         $validator
             ->nonNegativeInteger('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
-        $validator
-            ->integer('assigned_piece_count')
-            ->allowEmpty('assigned_piece_count');
-
-        $validator
-            ->integer('fluid_piece_count')
-            ->allowEmpty('fluid_piece_count');
-
-        $validator
-            ->integer('collected_piece_count')
-            ->allowEmpty('collected_piece_count');
+//        $validator
+//            ->integer('assigned_piece_count')
+//            ->allowEmpty('assigned_piece_count');
+//
+//        $validator
+//            ->integer('fluid_piece_count')
+//            ->allowEmpty('fluid_piece_count');
+//
+//        $validator
+//            ->integer('collected_piece_count')
+//            ->allowEmpty('collected_piece_count');
 
         return $validator;
     }
@@ -101,10 +101,10 @@ class EditionsFormatsTable extends AppTable
 
         return $rules;
     }
-	
+
     /**
      * Find Formats by id
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -112,10 +112,10 @@ class EditionsFormatsTable extends AppTable
     public function findFormats($query, $options) {
         return $this->integer($query, 'id', $options['values']);
     }
-    
+
     /**
      * Find in editions
-     * 
+     *
      * @param Query $query
      * @param array $options see IntegerQueryBehavior
      * @return Query
@@ -123,6 +123,6 @@ class EditionsFormatsTable extends AppTable
     public function findInEditions($query, $options) {
         return $this->integer($query, 'edition_id', $options['values']);
     }
-    
-	
+
+
 }

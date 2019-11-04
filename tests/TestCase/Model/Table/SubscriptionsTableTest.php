@@ -26,7 +26,7 @@ class SubscriptionsTableTest extends TestCase
         'app.editions',
         'app.artworks',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 
@@ -39,7 +39,7 @@ class SubscriptionsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Subscriptions') ? [] : ['className' => 'App\Model\Table\SubscriptionsTable'];
-        $this->Subscriptions = TableRegistry::get('Subscriptions', $config);
+        $this->Subscriptions = TableRegistry::getTableLocator()->get('Subscriptions', $config);
     }
 
     /**

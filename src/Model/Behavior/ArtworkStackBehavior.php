@@ -27,15 +27,15 @@ use ArrayObject;
  * @author jasont
  */
 class ArtworkStackBehavior extends Behavior {
-	
+
 	protected $SystemState;
 	public $Artwork = FALSE;
     public $Edition = FALSE;
     public $Format = FALSE;
     public $Piece = FALSE;
-	
+
 	protected $_created;
-	
+
 	protected $_images_to_delete;
 
 	public $stack_members = [
@@ -46,29 +46,29 @@ class ArtworkStackBehavior extends Behavior {
         'Format', // Piece
         'Piece', //
     ];
-    
+
     public function __construct(\Cake\ORM\Table $table, array $config = array()) {
         parent::__construct($table, $config);
     }
 
 
-	
+
 	public function addToSeries($series_id = NULL, $artwork_id = NULL) {
 		// get the series configuration
 		// insure it doesn't exist on the Artwork
 		// build the components on the Artwork
 		// save
 	}
-	
+
 	/**
 	 * Adjust the Pieces in TRD to match the user's request
-	 * 
+	 *
 	 * Called from beforeMarshal in ArtworksTable
-	 * Create and Refine processes have radically different rules for 
-	 * treatment of Pieces. As do the various Edition types. Here we target 
-	 * the handler for each Edition in the Artwork stack and call that 
+	 * Create and Refine processes have radically different rules for
+	 * treatment of Pieces. As do the various Edition types. Here we target
+	 * the handler for each Edition in the Artwork stack and call that
 	 * handler to set up the save data for the Pieces for the Edition.
-	 * 
+	 *
 	 * @param array $data
 	 * @return array
 	 */
@@ -84,24 +84,24 @@ class ArtworkStackBehavior extends Behavior {
 		$data['editions'] = $editions_with_pieces->toArray();
 		return $data;
 	}
-	
+
 	/**
 	 * Callable: Logic for creation of pieces for new Editions
-	 * 
-	 * Direct creation or refinment of a Format for an existing Edition 
-	 * does not require Piece creation. Those calls are bounced. Later 
+	 *
+	 * Direct creation or refinment of a Format for an existing Edition
+	 * does not require Piece creation. Those calls are bounced. Later
 	 * a better, more comprehensive Piece handling plan will be required.
-	 * 
+	 *
 	 * @param array $edition
 	 * @return array
 	 */
 	public function createPieces($edition) {
 		if ($this->_table->SystemState->controller() !== 'formats') {
-			$this->Pieces = TableRegistry::get('Pieces');
+			$this->Pieces = TableRegistry::getTableLocator()->get('Pieces');
 //			$this->Pieces->SystemState = $this->_table->SystemState;
-			
+
 			// THIS COULD MOVE TO PIECES TABLE
-			
+
 			switch ($edition['type']) {
 				case EDITION_LIMITED:
 				case PORTFOLIO_LIMITED:
@@ -122,16 +122,16 @@ class ArtworkStackBehavior extends Behavior {
 		}
 		return $edition;
 	}
-	
+
 	/**
 	 * Logic for allowed editing of Pieces for Editions
-	 * 
+	 *
 	 * @param array $edition
 	 * @return array
 	 */
 	public function refinePieces($edition) {
 		// nothing can be done here
-		// right now, with data = trd, we don't have enough info 
+		// right now, with data = trd, we don't have enough info
 		// to do quantity-change handling.
 		return $edition;
 	}
@@ -139,11 +139,11 @@ class ArtworkStackBehavior extends Behavior {
 
 	/**
 	 * Adjust the Image nodes on TRD to match the user's intention
-	 * 
-	 * beforeMarshal, the Image nodes need to be normalized for proper save. 
-	 * This isolates the nodes from Artworks stack that have an Image node and 
-	 * passes them into the method that resolve the data. 
-	 * 
+	 *
+	 * beforeMarshal, the Image nodes need to be normalized for proper save.
+	 * This isolates the nodes from Artworks stack that have an Image node and
+	 * passes them into the method that resolve the data.
+	 *
 	 * @param array $data
 	 * @return array
 	 */
@@ -154,14 +154,14 @@ class ArtworkStackBehavior extends Behavior {
 			if (!empty($edition['formats'])) {
 				$formats = new Collection($edition['formats']);
 				$artwork['editions'][$index]['formats'] = $formats->map([$this, 'evaluateImage'])->toArray();
-			}			
+			}
 		}
 		return $artwork;
 	}
-	
+
 	/**
-	 * Resolve the TRD Image data for proper save 
-	 * 
+	 * Resolve the TRD Image data for proper save
+	 *
 	 * @param array $record
 	 * @return array
 	 */
@@ -187,15 +187,15 @@ class ArtworkStackBehavior extends Behavior {
 		}
 		return $record;
 	}
-		
+
 	/**
 	 * Set artist ownership for new records
-	 * 
-	 * All levels except Artwork might be created in multiples at some future 
-	 * point, so to keep the map operating identically at all levels, the 
-	 * array has an artifical zero-th level added before being passed to 
+	 *
+	 * All levels except Artwork might be created in multiples at some future
+	 * point, so to keep the map operating identically at all levels, the
+	 * array has an artifical zero-th level added before being passed to
 	 * the recursive map. On return, the level is removed.
-	 * 
+	 *
 	 * @param array $data
 	 * @return array
 	 */
@@ -204,48 +204,48 @@ class ArtworkStackBehavior extends Behavior {
 		$modified = $artwork->map([$this, 'mapIDs']);
 		return $modified->toArray()[0];
 	}
-	
+
 	/**
 	 * Map a user_id to new records so they link properly
-	 * 
-	 * If a node's id is empty, it is being created. These new records need 
-	 * the current artist_id set (all tables use this value). This data-point 
-	 * is never set in the forms so it always needs to be added. Records that 
-	 * have an ID are considered pre-existing and are passed through 
-	 * untouched. This interation doesn't go key-by-key, it goes 
-	 * model-layer by model-layer 
-	 * 
+	 *
+	 * If a node's id is empty, it is being created. These new records need
+	 * the current artist_id set (all tables use this value). This data-point
+	 * is never set in the forms so it always needs to be added. Records that
+	 * have an ID are considered pre-existing and are passed through
+	 * untouched. This interation doesn't go key-by-key, it goes
+	 * model-layer by model-layer
+	 *
 	 * @param array $record
 	 * @return array
 	 */
 	public function mapIDs($record) {
 //        osd($record);
 //        osd($record['id']);
-		
+
 		// if we're on the top 'artwork' level, recurse into editions level
 		if (isset($record['editions'])) {
 			$record['editions'] = (new Collection($record['editions']))
 					->map([$this, 'mapIDs'])->toArray();
-			
+
 		} elseif (isset($record['formats'])) {
 		// if we're on an edition level, recurse into formats level
 			$record['formats'] = (new Collection($record['formats']))
 					->map([$this, 'mapIDs'])->toArray();
-		
+
 		} elseif (isset($record['image'])) {
 		// if we're on an edition level, recurse into formats level
 			$record['image'] = (new Collection($record['image']))
 					->map([$this, 'mapIDs'])->toArray();
 		} /*elseif (isset($record['image_file'])) {
         //if we're on the uploaded new image
-             return $record;   
+             return $record;
         }*/
-		
+
 		// only change id data for brand new records
 		if (isset($record['id']) && $record['id'] === '') {
 			$record['user_id'] = $this->_table->SystemState->artistId();
 		}
 		return $record;
 	}
-		
+
 }

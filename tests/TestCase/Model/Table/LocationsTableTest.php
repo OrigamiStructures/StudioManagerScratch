@@ -25,7 +25,7 @@ class LocationsTableTest extends TestCase
         'app.editions',
         'app.artworks',
         'app.formats',
-        'app.groups',
+//        'app.groups',
         'app.groups_members'
     ];
 
@@ -38,7 +38,7 @@ class LocationsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Locations') ? [] : ['className' => 'App\Model\Table\LocationsTable'];
-        $this->Locations = TableRegistry::get('Locations', $config);
+        $this->Locations = TableRegistry::getTableLocator()->get('Locations', $config);
     }
 
     /**

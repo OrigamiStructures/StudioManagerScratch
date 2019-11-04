@@ -59,17 +59,17 @@ class PermissionsTable extends AppTable
     {
         $validator
             ->nonNegativeInteger('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->scalar('layer_name')
             ->maxLength('layer_name', 30)
             ->requirePresence('layer_name', 'create')
-            ->notEmpty('layer_name');
+            ->allowEmptyString('layer_name', FALSE);
 
-        $validator
-            ->integer('edit')
-            ->allowEmpty('edit');
+//        $validator
+//            ->integer('edit')
+//            ->allowEmpty('edit');
 
         return $validator;
     }

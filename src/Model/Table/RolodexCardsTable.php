@@ -98,9 +98,15 @@ class RolodexCardsTable extends StacksTable {
 	 * @return StackSet
 	     */
 	protected function distillFromIdentity($ids) {
-		return $ids;
+		return $this->Identities->find('all')->where(['id IN' => $ids]);
 	}
 	
+	/**
+	 * @todo Is there a more direct query that could be built here?
+	 * 
+	 * @param array $ids
+	 * @return Query
+	 */
 	protected function distillFromMembership($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
@@ -110,20 +116,20 @@ class RolodexCardsTable extends StacksTable {
 			$accum[] = $entity->member_id;
 			return $accum;
 		}, []);
-		return $IDs;
+		return $this->distillFromIdentity($IDs);
 	}
 	
+	/**
+	 * @todo Is this a valid seed point? Who/How used?
+	 * 
+	 * @param array $ids
+	 * @return Query
+	 */
 	protected function distillFromDataOwner($ids) {
-		$records = $this->Identities
+		return $this->Identities
 				->find('all')
 				->select(['id', 'user_id'])
 				->where(['user_id IN' => $ids]);
-		$IDs = collection($records)
-				->reduce(function($accum, $entity, $index){
-					$accum[] = $entity->id;
-					return $accum;
-				}, []);
-		return $IDs;
 	}
 	
 	protected function distillFromManager($ids) {
@@ -136,12 +142,11 @@ class RolodexCardsTable extends StacksTable {
 					$accum[] = $entity->member_id;
 					return $accum;
 				}, []);
-		return $IDs;
+		return $this->distillFromIdentity($IDs);
 	}
 	
 	protected function distillFromSupervisor($ids) {
-		$result = $this->distillFromManager($ids);
-		return $result;
+		return $this->distillFromManager($ids);
 	}
 		
 	protected function marshalIdentity($id, $stack) {

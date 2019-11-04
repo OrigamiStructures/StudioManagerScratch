@@ -50,7 +50,7 @@ class LocationsController extends AppController
     {
         $location = $this->Locations->newEntity();
         if ($this->request->is('post')) {
-            $location = $this->Locations->patchEntity($location, $this->request->data);
+            $location = $this->Locations->patchEntity($location, $this->request->getData());
             if ($this->Locations->save($location)) {
                 $this->Flash->success(__('The location has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -77,7 +77,7 @@ class LocationsController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $location = $this->Locations->patchEntity($location, $this->request->data);
+            $location = $this->Locations->patchEntity($location, $this->request->getData());
             if ($this->Locations->save($location)) {
                 $this->Flash->success(__('The location has been saved.'));
                 return $this->redirect(['action' => 'index']);

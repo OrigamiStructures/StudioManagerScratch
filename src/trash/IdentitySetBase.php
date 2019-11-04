@@ -7,24 +7,24 @@ use App\Model\Entity\Traits\MapReduceIndexerTrait;
 
 /**
  * IdentitySetBase
- * 
- * Provide common methods and properties for individual and groups of 
+ *
+ * Provide common methods and properties for individual and groups of
  * IdentitySet objects
  *
  * @author dondrake
  */
 abstract class IdentitySetBase {
-	
+
 	use ConventionsTrait;
 	use MapReduceIndexerTrait;
-		
+
 	/**
 	 * Type of originating entity
 	 *
 	 * @var string
 	 */
 	protected $source_entity_name;
-	
+
 	/**
 	 * Name of the entities referenced by IDs in the list
 	 *
@@ -38,40 +38,40 @@ abstract class IdentitySetBase {
 	 * @var array
 	 */
 	protected $_entities;
-	
+
 	abstract public function count();
-	
+
 	abstract public function has($id);
-	
+
 	abstract public function sourceFor($id);
-	
+
 	abstract public function idList();
 
 
 	/**
 	 * Start and return a new query for them members in these sets
-	 * 
+	 *
 	 * @return Query
 	 */
 	public function query() {
-		$table = TableRegistry::get($this->table());
+		$table = TableRegistry::getTableLocator()->get($this->table());
 		return $table->find('all', ['conditions' => [
 				'id IN ' => $this->idList(),
 			]])->mapReduce([$this, 'indexer'], [$this, 'passThrough']);
 	}
-	
+
 	/**
 	 * Return an array of entities for the members of this single set
-	 * 
+	 *
 	 * @return array
 	 */
 	public function arrayResult() {
 		$this->_entities = $this->query()->toArray();
 		return $this->_entities;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param type $id
 	 * @return type
 	 */
@@ -85,10 +85,10 @@ abstract class IdentitySetBase {
 			return $this->_entities[$id];
 		}
 	}
-	
+
 	/**
 	 * Get the table name for the members in the sets
-	 * 
+	 *
 	 * @return string
 	 */
 	public function table() {
@@ -97,11 +97,11 @@ abstract class IdentitySetBase {
 
 	/**
 	 * Get the entity name for the source entities
-	 * 
+	 *
 	 * @return string
 	 */
 	public function sourceName() {
 		return $this->source_entity_name;
 	}
-	
+
 }

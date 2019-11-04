@@ -16,7 +16,7 @@ class PagesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.pages'
+//        'app.pages'
     ];
 
     /**

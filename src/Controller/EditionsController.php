@@ -9,7 +9,6 @@ use Cake\Collection\Collection;
 use App\Form\AssignmentForm;
 use Cake\View\Form\FormContext;
 use App\Lib\Traits\ArtReviewTrait;
-use App\Controller\ArtStackController;
 use App\Controller\Component\LayersComponent;
 
 /**
@@ -17,7 +16,7 @@ use App\Controller\Component\LayersComponent;
  *
  * @property \App\Model\Table\EditionsTable $Editions
  */
-class EditionsController extends ArtStackController {
+class EditionsController extends AppController {
 
     use ArtReviewTrait;
 
@@ -67,7 +66,7 @@ class EditionsController extends ArtStackController {
     public function add() {
         $edition = $this->Editions->newEntity();
         if ($this->request->is('post')) {
-            $edition = $this->Editions->patchEntity($edition, $this->request->data);
+            $edition = $this->Editions->patchEntity($edition, $this->request->getData());
             if ($this->Editions->save($edition)) {
                 $this->Flash->success(__('The edition has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -94,7 +93,7 @@ class EditionsController extends ArtStackController {
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $edition = $this->Editions->patchEntity($edition, $this->request->data);
+            $edition = $this->Editions->patchEntity($edition, $this->request->getData());
             if ($this->Editions->save($edition)) {
                 $this->Flash->success(__('The edition has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -131,9 +130,9 @@ class EditionsController extends ArtStackController {
 
     /**
      * Display an Edition, its Artwork, and its Format(s)
-     * 
-     * If the edition is found to be flat (only one format) 
-     * the format id is added to the query and rendering 
+     *
+     * If the edition is found to be flat (only one format)
+     * the format id is added to the query and rendering
      * is redirected to FormatController->review()
      */
     public function review() {
@@ -150,26 +149,26 @@ class EditionsController extends ArtStackController {
 
     /**
      * Refine that data for a single Edition
-     * 
-     * The artwork will show as 'reference' info on the page. The fate of 
-     * multiple Formats has not been resolved. The first will show in a 
+     *
+     * The artwork will show as 'reference' info on the page. The fate of
+     * multiple Formats has not been resolved. The first will show in a
      * fieldset for editing but subsiquent Formats are also in the data.
-     * 
+     *
      * THIS ASSUMES 1 EDITION IN THE FORM, ALWAYS THE FIRST
-     * 
+     *
      */
     public function refine() {
-        $this->Artworks = TableRegistry::get('Artworks');
+        $this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
         $artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
 //			$this->ArtworkStack->addRefinementRules();
 
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                 'associated' => ['Editions', 'Editions.Formats', 'Editions.Formats.Images']
             ]);
-            $index = array_keys($this->request->data['editions'])[0];
+            $index = array_keys($this->request->getData('editions'))[0];
             $deletions = $this->ArtworkStack->refinePieces($artwork,
-                $this->request->data['editions'][$index]['id']);
+                $this->request->getData('editions.$index.id'));
 
             if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));
@@ -190,16 +189,16 @@ class EditionsController extends ArtStackController {
 
     /**
      * Create an new Edition and a single Format for it
-     * 
+     *
      * The artwork will be shown as reference info on the page
      */
     public function create() {
 //		osd($this->request->data, 'trd');
-        $this->Artworks = TableRegistry::get('Artworks');
+        $this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
 
         $artwork = $this->ArtworkStack->stackQuery();
         if ($this->request->is('post') || $this->request->is('put')) {
-            $artwork = $this->Artworks->patchEntity($artwork, $this->request->data, [
+            $artwork = $this->Artworks->patchEntity($artwork, $this->request->getData(), [
                 'associated' => ['Editions', 'Editions.Formats', 'Editions.Pieces', 'Editions.Formats.Images']
             ]);
             $this->ArtworkStack->allocatePieces($artwork);
@@ -237,15 +236,15 @@ class EditionsController extends ArtStackController {
         extract($data); // providers, pieces, artwork
 
         $assignment = new AssignmentForm($data['providers']);
-        $assign = new FormContext($this->request, $this->request->data);
+        $assign = new FormContext($this->request, $this->request->getData());
 
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($assignment->execute($this->request->data)) {
+            if ($assignment->execute($this->request->getData())) {
                 if ($this->EditionStack->reassignPieces($assignment, $providers->providers)) {
                     $this->Flash->error(__('The reassignments were completed.'));
-// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
-// and 
-// https://github.com/OrigamiStructures/StudioManagerScratch/issues/24 
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63
+// and
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
                     // on success, try triggering an event that fixes all counter cache values
                     // here are to approches. The second one would need a new listener action
                     // because the one mentioned is tied into Cache behavior and its context
@@ -258,7 +257,7 @@ class EditionsController extends ArtStackController {
                 }
             } else {
                 // have use correct input errors
-                $errors = $assignment->errors();
+                $errors = $assignment->getErrors();
             }
         }
         $this->set(compact(array_keys($data)));
@@ -268,9 +267,9 @@ class EditionsController extends ArtStackController {
         $this->render('/Artworks/review');
     }
 
-// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63 
-// and 
-// https://github.com/OrigamiStructures/StudioManagerScratch/issues/24 
-//		
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/63
+// and
+// https://github.com/OrigamiStructures/StudioManagerScratch/issues/24
+//
 //	}
 }

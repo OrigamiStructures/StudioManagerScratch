@@ -26,9 +26,9 @@ class SubscriptionsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('subscriptions');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('subscriptions');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -50,25 +50,21 @@ class SubscriptionsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create')
+            ->allowEmptyString('title')
+            ->allowEmptyString('description');
 
-        $validator
-            ->allowEmpty('title');
-
-        $validator
-            ->allowEmpty('description');
-
-        $validator
-            ->add('range_flag', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('range_flag');
-
-        $validator
-            ->add('range_start', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('range_start');
-
-        $validator
-            ->add('range_end', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('range_end');
+//        $validator
+//            ->add('range_flag', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('range_flag');
+//
+//        $validator
+//            ->add('range_start', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('range_start');
+//
+//        $validator
+//            ->add('range_end', 'valid', ['rule' => 'numeric'])
+//            ->allowEmpty('range_end');
 
         return $validator;
     }
@@ -85,10 +81,10 @@ class SubscriptionsTable extends AppTable
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
-	
+
 	/**
 	 * Get the current select list
-	 * 
+	 *
 	 * @param Query $query
 	 * @param string $artist_id
 	 * @return query result object
@@ -96,5 +92,5 @@ class SubscriptionsTable extends AppTable
 	public function findChoiceList(Query $query, $options) {
 		return $query->where(['user_id' => $options['artist_id']])->find('list');
 	}
-	
+
 }

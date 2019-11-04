@@ -27,9 +27,9 @@ class LocationsTable extends AppTable
     {
         parent::initialize($config);
 
-        $this->table('locations');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('locations');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -55,10 +55,10 @@ class LocationsTable extends AppTable
     {
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         return $validator;
     }
