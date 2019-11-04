@@ -80,8 +80,9 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
 		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
-
-		$this->overrideTableLocator();
+		if($this->Auth->isAuthorized()){
+            $this->overrideTableLocator();
+        }
 	}
 
 	/**
@@ -152,8 +153,12 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
-		$menu = TableRegistry::getTableLocator()->get('Menus');
-		$this->set('menus', $menu->assemble());
+        $menus = [];
+        if ($this->Auth->isAuthorized()) {
+            $menu = TableRegistry::getTableLocator()->get('Menus');
+            $menus = $menu->assemble();
+        }
+        $this->set('menus', $menus);
 
 //		osd($this->request->session()->read('Auth.User'));die;
 //		if (!is_null($this->request->session()->read('Auth.User')) && !is_null($this->SystemState->artistId())) {
