@@ -80,7 +80,6 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
 		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
-
 		if($this->Auth->isAuthorized()){
             $this->overrideTableLocator();
         }

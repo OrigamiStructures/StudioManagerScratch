@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  */
 
 $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
@@ -17,22 +17,23 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
-    <?= $this->fetch('meta') ?>
-	
+
 	<?= $this->Html->css('artstack-response'); ?>
     <?= $this->Html->css('glyphicon.css') ?>
-<!-- 	
-	<?= $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); ?> 
-	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.js'); ?> 
+<!--
+	<?= $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); ?>
+	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.js'); ?>
 	<?= $this->Html->script('app.js'); ?>
 	<?= $this->Html->script('testing'); ?>
-    <?= $this->fetch('script') ?>
 
 	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
     <?= $this->Html->css('app.css') ?>
     <?= $this->Html->css('prime.css') ?>
-    <?= $this->fetch('css') ?>
 -->
+    <?= $this->fetch('meta') ?>
+    <?= $this->fetch('script') ?>
+    <?= $this->fetch('css') ?>
+
 </head>
 <body>
 	<nav class="top-bar">
@@ -52,10 +53,10 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 		<?= $this->Html->getCrumbList([], 'All Art'); ?>
 	</nav>-->
 	<?= $this->cell('StandingDisposition', [] , ['SystemState' => $SystemState]); ?>
-	<?php // $this->element($this->DispositionTools->panel($standing_disposition) 
-//			? 'Disposition/panel' 
+	<?php // $this->element($this->DispositionTools->panel($standing_disposition)
+//			? 'Disposition/panel'
 //			: 'empty'); ?>
-	
+
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">
         <?= $this->fetch('content') ?>

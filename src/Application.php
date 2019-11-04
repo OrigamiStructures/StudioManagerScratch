@@ -46,12 +46,13 @@ class Application extends BaseApplication
          * Debug Kit should not be installed on a production system
          */
         if (Configure::read('debug')) {
+            Configure::write('DebugKit.forceEnable', true);
             $this->addPlugin(\DebugKit\Plugin::class);
+            $this->addPlugin('OSDebug', ['routes' => true, 'bootstrap' => true]);
         }
 
         // Load a plugin with a vendor namespace by 'short name'
         $this->addPlugin('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
-        $this->addPlugin('OSDebug', ['routes' => true, 'bootstrap' => true]);
         Configure::write('Users.config', ['users']);
 
     }
