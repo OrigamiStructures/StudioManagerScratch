@@ -13,6 +13,33 @@ cd /Library/WebServer/Documents/StudioManagerScratch
 
 /Applications/Apigen/apigen.phar generate --source /Library/WebServer/Documents/StudioManagerScratch/src --destination /Library/WebServer/Documents/OStructures/webroot/apigen --title StudioManagerScratch --charset UTF-8 --todo  --template-theme=bootstrap
 
+## CUSTOM COMMAND LINE TEST RUNNER
+====================================================================
+Dons-MacBook-Pro:StudioManagerScratch dondrake$ bin/cake tester -h
+
+----------------------------------------------
+Run a test suite, test file, or a single test.
+----------------------------------------------
+
+Usage:
+cake tester [-h] [-i] [-q] [-r] [-v] [<dir>] [<file>] [<method>]
+
+Options:
+
+--help, -h       Display this help.
+--inspect, -i    Examine the content of a directory or file
+--quiet, -q      Enable quiet output.
+--recursive, -r  Run tests in subdirectories too
+--verbose, -v    Enable verbose output.
+
+Arguments:
+
+dir     A directory of tests to run or examine
+        (optional)
+file    A test file to run or examine (optional)
+method  A single test to run (optional)
+
+
 ## BAKING TABLE TESTS
 ====================================================================
 bin/cake bake.bake test table ArtStacks
