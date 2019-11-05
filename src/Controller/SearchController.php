@@ -24,7 +24,7 @@ class SearchController extends AppController
      */
     public function index()
     {
-//		$this->SystemState->referer($this->referer());
+//		$this->refererStack($this->referer());
 
         $query_string = $this->request->getData('search');
 		if (!is_null($query_string)) {
@@ -39,7 +39,7 @@ class SearchController extends AppController
 		}
 
 		$this->set(compact('artworks', 'members'));
-//		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+//		$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
     }
 
 }
