@@ -2,7 +2,7 @@
 namespace App\Lib;
 
 use App\Lib\RequestUtility;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 use Cake\Filesystem\Folder;
 //use Cake\Filesystem\File;
 use Cake\Collection\Collection;
@@ -53,7 +53,7 @@ class SystemState implements EventListenerInterface {
 	/**
 	 * Cake Request object
 	 *
-	 * @var Request
+	 * @var ServerRequest
 	 */
 	public $request;
 	public static $rq;
