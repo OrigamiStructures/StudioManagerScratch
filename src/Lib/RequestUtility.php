@@ -1,5 +1,7 @@
 <?php
 namespace App\Lib;
+
+use \Cake\Http\ServerRequest;
 /**
  * Description of UrlQuery
  *
@@ -13,6 +15,7 @@ class RequestUtility {
 	 * These are the variables after the '?' in a URL
 	 *
 	 * @param string $name
+     * @param ServerRequest $request
 	 * @return boolean
 	 */
 	public static function urlArgIsKnown($name, $request) {
@@ -25,6 +28,7 @@ class RequestUtility {
 	 * If it doesn't exist, get array of all args
 	 *
 	 * @param string $name
+     * @param ServerRequest $request
 	 * @return string|array
 	 */
 	public static function queryArg($name = NULL, $request) {
