@@ -294,7 +294,7 @@ class ArtworksController extends AppController
      * the normal create method and form simpler.
      */
     public function createUnique() {
-        $this->request = $this->request->withData('user_id', $this->SystemState->artistId());
+        $this->request = $this->request->withData('user_id', $this->contextUser()->artistId());
         $artwork = $this->create();
         $this->set('elements', $this->LayerElement->setElements());
         $this->render('review');
