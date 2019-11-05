@@ -81,9 +81,11 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
 		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
+        $this->loadComponent('Security');
 		if($this->Auth->isAuthorized()){
             $this->overrideTableLocator();
         }
+		$this->RequestHandler;
 	}
 
 	/**
@@ -175,7 +177,51 @@ class AppController extends Controller
         }
     }
 
-		/**
+    /**
+     * Support logic-based referer to suppliment standard request->referer
+     *
+     * In Controller->_beforeFilter() or a controller action, the
+     * request->referer() can be examined for key values and
+     * conditionally included or excluded in a Session.
+     *
+     * This will allow us to ignore multiple page requests and
+     * return to some originating page.
+     *
+     * Calling with a url arguemnt will store that 'referer' and return it
+     *
+     * Calling with no arguemnt:
+     *	will always return at least the current request->referer but
+     *	will preferentially return the url that was tucked away in Session
+     *
+     * Call with (SYSTEM_VOID_REFERER) will return the request->referer
+     *	and dump the session stored url
+     *
+     * Call with (SYSTEM_CONSUME_REFERER) will return the session
+     *	stored url and delete it also
+     *
+     * @todo Write tests
+     *
+     * @param string $referer
+     * @return string
+     */
+    public function refererStack($referer = NULL) {
+        $session_referer = $this->request->getSession()->read('referer');
+        if(is_null($referer)){
+            $r = $session_referer ?? $this->request->referer();
+        } elseif ($referer === SYSTEM_VOID_REFERER) {
+            $r = $this->request->referer();
+            $this->request->getSession()->delete('referer');
+        } elseif ($referer === SYSTEM_CONSUME_REFERER) {
+            $r =  $session_referer ?? $this->request->referer();
+            $this->request->getSession()->delete('referer');
+        } else {
+            $r = $referer;
+            $this->request->getSession()->write('referer', $referer);
+        }
+        return $r;
+    }
+
+    /**
 	 * Override native ViewVarsTrait::set()
 	 *
 	 * Maintain a copy of all current variables in the SystemState object
