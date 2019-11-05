@@ -37,13 +37,6 @@ use App\Model\Lib\CurrentUser;
 class AppController extends Controller
 {
 
-	/**
-	 * Class providing system state and artist context
-	 *
-	 * @var SystemState
-	 */
-	public $SystemState;
-
 	protected $currentUser;
 
 	protected $contextUser;
@@ -52,17 +45,9 @@ class AppController extends Controller
 			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
 			$components = null) {
 
-//		$this->SystemState = new SystemState($request);
-//		$this->set('SystemState', $this->SystemState);
 		$this->set('SystemState', (new SystemState($request)));
 
 		parent::__construct($request, $response, $name, $eventManager, $components);
-		/*
-		 * I'm not sure what this should be in modern usage.
-		 * And SystemState is going away.
-		 * So don't bother fixing this deprecation
-		 */
-//        $this->eventManager()->on($this->SystemState);
 	}
 
     /**
@@ -97,13 +82,10 @@ class AppController extends Controller
      *
      * The new locator allows override and modifications of its
      * stored config injections even after this construction/installation.
-	 *
-	 * @todo remove SystemState from the application
-	 */
+     */
 	private function overrideTableLocator() {
 		TableRegistry::setTableLocator(new CSTableLocator(
 				[
-//					'SystemState' => $this->SystemState,
 					'CurrentUser' => $this->currentUser(),
                     'ContextUser' => $this->contextUser()
 				]
@@ -141,13 +123,6 @@ class AppController extends Controller
 		return $this->contextUser;
 	}
 
-
-	public function mapStates() {
-		$this->set('result', $this->SystemState->inventoryActions());
-		$this->set('map', $this->SystemState->map());
-		$this->render('/Artworks/mapStates');
-	}
-
     /**
      * Before render callback.
      *
@@ -162,13 +137,6 @@ class AppController extends Controller
             $menus = $menu->assemble();
         }
         $this->set('menus', $menus);
-
-//		osd($this->request->session()->read('Auth.User'));die;
-//		if (!is_null($this->request->session()->read('Auth.User')) && !is_null($this->SystemState->artistId())) {
-//			$this->set('standing_disposition', Cache::read($this->SystemState->artistId(), 'dispo'));
-//		} else {
-//			$this->set('standing_disposition', FALSE);
-//		}
 
         if (!array_key_exists('_serialize', $this->viewBuilder()->getVars()) &&
             in_array($this->response->getType(), ['application/json', 'application/xml'])
@@ -221,21 +189,6 @@ class AppController extends Controller
         return $r;
     }
 
-    /**
-	 * Override native ViewVarsTrait::set()
-	 *
-	 * Maintain a copy of all current variables in the SystemState object
-	 *
-	 * @param mixed $name
-	 * @param mixed $value
-	 * @return object
-	 */
-//    public function set($name, $value = null) {
-//		$result = parent::set($name, $value);
-//		$this->SystemState->storeVars($result->viewVars);
-//		return $result;
-//	}
-
 	public function testMe() {
 
 		$ar = [	1 => ['new' => '', 'old' => 1],
@@ -248,7 +201,7 @@ class AppController extends Controller
 
 		$stuff = [
 			function() {
-				return $this->SystemState->queryArg();
+				return $this->request->getQueryParams();
 			},
 			function($val) {
 				return ucwords($val);
