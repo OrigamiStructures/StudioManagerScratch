@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Collection\Collection;
 use Cake\Cache\Cache;
+use Cake\Utility\Hash;
 
 /**
  * Dispositions Controller
@@ -28,7 +29,7 @@ class DispositionsController extends AppController
 		parent::beforeFilter($event);
 
 		if (!stristr($this->request->referer(), DS . 'dispositions' . DS)) {
-			$this->SystemState->referer($this->request->referer());
+			$this->refererStack($this->request->referer());
 		}
 	}
 
@@ -170,7 +171,7 @@ class DispositionsController extends AppController
 	public function create() {
 		$errors = [];
 		$disposition = $this->DispositionManager->get();
-		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		$this->DispositionManager->merge($disposition, $this->request->getQueryParams());
 
 		if ($this->request->is('post')) {
 
@@ -186,7 +187,7 @@ class DispositionsController extends AppController
 //			$this->Dispositions->checkRules($disposition);
 			if (empty($errors)) {
 				$this->autoRender = FALSE;
-				$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+				$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 			}
 		}
 		$labels = $this->Dispositions->labels();
@@ -199,7 +200,7 @@ class DispositionsController extends AppController
 	 *
 	 */
 	public function refine() {
-		$disposition_id = $this->SystemState->queryArg('disposition');
+	    $disposition_id = Hash::get($this->request->getQueryParams(), 'disposition');
 //		osd($disposition_id);
 		if (is_null($disposition_id)) {
 			$disposition = $this->DispositionManager->get();
@@ -218,10 +219,10 @@ class DispositionsController extends AppController
 			$disposition->addresses = [$disposition->address];
 			$this->DispositionManager->write($disposition);
 		}
-		$this->DispositionManager->merge($disposition, $this->SystemState->queryArg());
+		$this->DispositionManager->merge($disposition, $this->request->getQueryParams());
 
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+		$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 	}
 
 	/**
@@ -248,7 +249,7 @@ class DispositionsController extends AppController
 	public function discard() {
 		$this->DispositionManager->discard();
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+		$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 	}
 
 	/**
@@ -261,14 +262,14 @@ class DispositionsController extends AppController
 	public function chooseAddress() {
 		$disposition = $this->DispositionManager->get();
 		$collection = new Collection($disposition->addresses);
-		$address_id = $this->SystemState->queryArg('address');
+		$address_id = Hash::get($this->request->getQueryParams(), 'address');
 		$choice = $collection->filter(function($address) use($address_id){
 			return $address->id == $address_id;
 		});
 		$this->DispositionManager->disposition->addresses = $choice->toArray();
 		$this->DispositionManager->write();
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+		$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 	}
 
 	/**
@@ -279,7 +280,7 @@ class DispositionsController extends AppController
 	public function remove() {
 		$this->DispositionManager->remove();
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+		$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 	}
 
 	/**
@@ -322,7 +323,7 @@ class DispositionsController extends AppController
 		unset($disposition->addresses);
 
 		$data = [
-			'user_id' => $this->SystemState->artistId(),
+			'user_id' => $this->contextUser()->artistId(),
 			'member_id' => $disposition->member->id,
 			'address_id' => $address['id'],
 			] + $disposition->toArray();
@@ -348,13 +349,13 @@ class DispositionsController extends AppController
 			foreach ($pieces as $piece) {
 				Cache::delete("get_default_artworks[_{$piece->format['edition']['artwork']['id']}_]", 'artwork');
 			}
-			Cache::delete($this->SystemState->artistId(), 'dispo');
+			Cache::delete($this->contextUser()->artistId(), 'dispo');
 		} else {
 			$this->Flash->error('The disposition could not be saved. Please try again.');
 		}
 
 		$this->autoRender = false;
-		$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+		$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 	}
 
 }
