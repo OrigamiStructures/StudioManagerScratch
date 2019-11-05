@@ -10,9 +10,10 @@ use Cake\Utility\Text;
 use App\Lib\RenumberRequest;
 use App\Lib\RenumberRequests;
 use App\Lib\RenumberMessaging;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use App\Controller\Component\LayersComponent;
 use App\Model\Lib\Providers;
+use Cake\Utility\Hash;
 
 /**
  * Pieces Controller
@@ -36,7 +37,7 @@ class PiecesController extends AppController
 	public function beforeFilter(\Cake\Event\Event $event) {
 		parent::beforeFilter($event);
 		if (!stristr($this->request->referer(), DS . 'renumber?')) {
-			$this->SystemState->referer($this->request->referer());
+			$this->refererStack($this->request->referer());
 		}
 	}
 
@@ -47,13 +48,17 @@ class PiecesController extends AppController
 	 * @return void
 	     */
 	public function index() {
+	    $formatId = Hash::get($request->getQueryParams(), 'format', null);
+	    $editionId = Hash::get($request->getQueryParams(), 'edition', null);
+	    $artworkId = Hash::get($request->getQueryParams(), 'artwork', null);
+
 		$conditions = [];
-		if ($this->SystemState->urlArgIsKnown('format')) {
-			$conditions = ['Pieces.format_id' => $this->SystemState->queryArg('format')];
-		} elseif ($this->SystemState->urlArgIsKnown('edition')) {
-			$conditions = ['Pieces.edition_id' => $this->SystemState->queryArg('edition')];
-		} elseif ($this->SystemState->urlArgIsKnown('artwork')) {
-			$conditions = ['Artworks.id' => $this->SystemState->queryArg('artwork')];
+		if (!is_null($formatId)) {
+			$conditions = ['Pieces.format_id' => $formatId];
+		} elseif (!is_null($editionId)) {
+			$conditions = ['Pieces.edition_id' => $editionId];
+		} elseif (!is_null($artworkId)) {
+			$conditions = ['Artworks.id' => $artworkId];
 		}
 		$query = $this->Pieces->find('all')
 				->where($conditions)
@@ -165,6 +170,8 @@ class PiecesController extends AppController
 	 * The URL query has all the relevant IDs
 	 * beforeFilter memorized the refering page for eventual return
 	 * _renumer cache has evolving request data (up to 90 minutes old)
+     *
+     * @todo there is no verification that the user has access to the artwork
 	 */
 	public function renumber() {
 		$cache_prefix = $this->_renumber_cache_prefix();
@@ -173,13 +180,13 @@ class PiecesController extends AppController
 		/* prevent inappropriate entry */
 		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
-			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+			$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 		}
 		/* allow cacellation of renumbering process */
         $cancel = $this->request->getData('cancel');
 		if (isset($cancel)) {
 			$this->_clear_renumber_caches($cache_prefix);
-			$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+			$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 		}
 		/*
 		 * If it's not a post, we'll just render the basic form
@@ -207,7 +214,7 @@ class PiecesController extends AppController
 				$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
 				if ($messagePackage === FALSE) {
 					$this->Flash->error("Your request expired after 90 minutes. Sorry.");
-					$this->redirect($this->SystemState->referer(SYSTEM_VOID_REFERER));
+					$this->redirect($this->refererStack(SYSTEM_VOID_REFERER));
 					/*
 					 * @todo Don't know why the redirect always falls through
 					 *			so, for now this is an exception
@@ -233,16 +240,15 @@ class PiecesController extends AppController
 							return $result;
 						});
 				if ($result) {
-					Cache::delete(
-							"get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]",
-							'artwork');
+				    $artworkId = Hash::get($this->request->getQueryParams(), 'artwork');
+					Cache::delete("get_default_artworks[_{$artworkId}_]",'artwork');
 					$this->Flash->set('The save was successful');
 					/*
 					 * On success we can clear the cached values
 					 * and return to wherever we started
 					 */
 					$this->_clear_renumber_caches($cache_prefix);
-					$this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+					$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
 				} else {
 					/*
 					 * attempted save failed. Restore the request form data
@@ -363,7 +369,7 @@ class PiecesController extends AppController
 	 * @return string
 	 */
 	protected function _renumber_cache_prefix() {
-		return $this->SystemState->artistId() . '-' .
-					$this->SystemState->queryArg('edition');
+	    $editionId = Hash::get($request->getQueryParams(), 'edition', null);
+		return $this->contextUser()->artistId() . '-' . $editionId;
 	}
 }
