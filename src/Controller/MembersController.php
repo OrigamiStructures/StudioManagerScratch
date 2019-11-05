@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Core\Configure;
 use Cake\Controller\Component\CookieComponent;
@@ -122,7 +123,7 @@ class MembersController extends AppController
      */
     public function delete($id = null)     {
         $this->request->allowMethod(['post', 'delete']);
-        $this->SystemState->referer($this->referer());
+        $this->refererStack($this->referer());
         $member = $this->Members->get($id);
         //Update relationships to remove many to many relation records
         $this->Members->hasMany('GroupsMembers', [
@@ -135,7 +136,7 @@ class MembersController extends AppController
         } else {
             $this->Flash->error(__('The member could not be deleted. Please, try again.'));
         }
-        return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+        return $this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
     }
 
 
@@ -210,14 +211,15 @@ class MembersController extends AppController
 	 * or it may all be handled by another method.
 	 */
     public function review() {
-        $this->SystemState->referer($this->referer());
+        $this->refererStack($this->referer());
 		$dispositions = [];
         $query = $this->Members->find('memberReview');
 		$members = $this->paginate($query, ['limit' => 1000]);
+        $memberId = Hash::get($this->request->getQueryParams(), 'member', FALSE);
 
-        if($this->SystemState->urlArgIsKnown('member')){
+        if($memberId){
 			$dispositions = $this->Members->Dispositions->find()
-					->where(['member_id' => $this->SystemState->queryArg('member')])
+					->where(['member_id' => $memberId])
 					->contain(['Pieces']);
 		}
 
@@ -230,9 +232,10 @@ class MembersController extends AppController
      *
      */
     public function refine() {
-        if(!$this->SystemState->urlArgIsKnown('member')){
+        $memberId = Hash::get($this->request->getQueryParams(), 'member', FALSE);
+        if($memberId === FALSE){
             $this->Flash->error(__('You must provide a single member id to edit'));
-            return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+            return $this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
         }
 
         $member = $this->Members->find('memberReview')->toArray()[0];
@@ -241,14 +244,14 @@ class MembersController extends AppController
             $member = $this->Members->patchEntity($member, $this->request->getData());
             if ($this->Members->save($member)) {
                 $this->Flash->success(__('The member has been saved.'));
-                return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+                return $this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
             } else {
                 $this->Flash->error(__('The member could not be saved. Please, try again.'));
             }
         }
         $errors = $member->getErrors();
         if(empty($errors)){
-            $this->SystemState->referer($this->referer());
+            $this->refererStack($this->referer());
         }
 //		osd($member);
         $this->set('member', $member);
