@@ -21,7 +21,7 @@ use App\Lib\EditionTypeMap;
  * correct place to localize the logic. But if later streamlined piece movement
  * is allowed, like through an ajax process, a Lib class may be the right choice.
  *
- * @todo Consider custom numbering schemes (see notes in App\Lig\Range)
+ * @todo Consider custom numbering schemes (see notes in App\Lib\Range)
  *
  * @todo Lib\Range planning is begining to touch on some validation issues
  * The ideas of expanded range-syntax support to include new numbering schemes
