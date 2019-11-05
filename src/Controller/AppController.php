@@ -52,8 +52,9 @@ class AppController extends Controller
 			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
 			$components = null) {
 
-		$this->SystemState = new SystemState($request);
-		$this->set('SystemState', $this->SystemState);
+//		$this->SystemState = new SystemState($request);
+//		$this->set('SystemState', $this->SystemState);
+		$this->set('SystemState', (new SystemState($request)));
 
 		parent::__construct($request, $response, $name, $eventManager, $components);
 		/*
@@ -61,7 +62,7 @@ class AppController extends Controller
 		 * And SystemState is going away.
 		 * So don't bother fixing this deprecation
 		 */
-        $this->eventManager()->on($this->SystemState);
+//        $this->eventManager()->on($this->SystemState);
 	}
 
     /**
