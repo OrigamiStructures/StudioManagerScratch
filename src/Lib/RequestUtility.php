@@ -25,11 +25,11 @@ class RequestUtility {
 	/**
 	 * Return one of the URL query arguements
 	 *
-	 * If it doesn't exist, get array of all args
+	 * If it doesn't exist returns null, get array of all args
 	 *
 	 * @param string $name
      * @param ServerRequest $request
-	 * @return string|array
+	 * @return string|null|array
 	 */
 	public static function queryArg($name = NULL, $request) {
 		if (!is_null($name)) {

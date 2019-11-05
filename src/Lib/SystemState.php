@@ -309,7 +309,7 @@ class SystemState implements EventListenerInterface {
 	 * If it doesn't exist, get array of all args
 	 *
 	 * @param string $name
-	 * @return string|array
+	 * @return string|null|array
 	 */
 	public function queryArg($name = NULL) {
 		osd('depricated SystemState::queryArg()');
