@@ -450,7 +450,7 @@ class DispositionManagerComponent extends Component {
 
 	protected function _setRedirect($arguments) {
 		if (array_key_exists('artwork', $arguments)) {
-			$this->SystemState->referer([
+			$this->controller->refererStack([
 				'controller' => 'artworks',
 				'action' => 'review',
 				'?' => $arguments]);
