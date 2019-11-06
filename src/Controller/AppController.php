@@ -19,6 +19,8 @@ use Cake\Controller\Controller;
 use Cake\Event\Event;
 use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
@@ -39,12 +41,20 @@ class AppController extends Controller
 
 	protected $currentUser;
 
+    /**
+     * @var ContextUser
+     */
 	protected $contextUser;
 
-	public function __construct(\Cake\Network\Request $request = null,
-			\Cake\Network\Response $response = null, $name = null, $eventManager = null,
-			$components = null) {
+	public function __construct(
+	    ServerRequest $request = null,
+        Response $response = null,
+        $name = null, $eventManager =
+        null, $components = null
+    ) {
 
+		$this->SystemState = new SystemState($request);
+		$this->set('SystemState', $this->SystemState);
 		$this->set('SystemState', (new SystemState($request)));
 
 		parent::__construct($request, $response, $name, $eventManager, $components);
