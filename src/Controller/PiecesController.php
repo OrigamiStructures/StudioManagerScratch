@@ -172,11 +172,51 @@ class PiecesController extends AppController
 	 * _renumer cache has evolving request data (up to 90 minutes old)
      *
      * @todo there is no verification that the user has access to the artwork
+     * @todo $providers and $pieces were made by a (now) delete class.
+     *      I think this method is still valuable and so it documents the
+     *      old data structure so it can be repaired.
+     *      Also see EditionsController::assign()
 	 */
 	public function renumber() {
 		$cache_prefix = $this->_renumber_cache_prefix();
+		/*
+		 * EditionStack was an old nested array implementation.
+		 * Below is documentation of the $providers and $pieces structures it
+		 * returned so this method can be fixed to work with flat stacks
+		 */
 		$EditionStack = $this->loadComponent('EditionStack');
 		extract($EditionStack->stackQuery()); // providers, pieces
+        /*
+         * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
+         *
+         * The Edition carries its Artwork record for some upstream context.
+         * The Edition and its Formats are returned as siblings, each with its Pieces.
+         * The Pieces are categorized as appropriate to that layer.
+         * The AssignemntTrait on the Edition and Piece entities unify piece access.
+         * <pre>
+         * // providers array
+         * ['edition' => EditionEntity {
+         *			...,
+         *			'unassigned' -> PiecesEntity {},
+         *      },
+         *  0 => FormatEntity {
+         *			...,
+         *			'fluid' -> PiecesEntity {},
+         *      },
+         *  ...
+         *  0+n => FormatEntity {
+         *			...,
+         *			'fluid' -> PiecesEntity {},
+         *      },
+         * ]
+         *
+         * // pieces array
+         * [0 => PieceEntity {},
+         * ...
+         * 0+n => PieceEntity {},
+         * ]
+         * </pre>
+         *
 		/* prevent inappropriate entry */
 		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
@@ -369,7 +409,7 @@ class PiecesController extends AppController
 	 * @return string
 	 */
 	protected function _renumber_cache_prefix() {
-	    $editionId = Hash::get($request->getQueryParams(), 'edition', null);
+	    $editionId = Hash::get($this->request->getQueryParams(), 'edition', null);
 		return $this->contextUser()->artistId() . '-' . $editionId;
 	}
 }
