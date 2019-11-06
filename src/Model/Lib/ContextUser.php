@@ -336,7 +336,7 @@ class ContextUser {
 
     public function artistId()
     {
-        return getCard('artist')->registeredUserId();
+        return $this->getCard('artist')->registeredUserId();
 	}
 
 	/**
