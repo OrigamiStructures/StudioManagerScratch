@@ -226,6 +226,10 @@ class EditionsController extends AppController {
         $this->render('/Artworks/review');
     }
 
+    /**
+     * @todo Also see PiecesController::renumber() for a similar $providers, $pieces situation
+     * @throws \Exception
+     */
     public function assign() {
         $this->refererStack($this->refererStack());
         $artworkId = Hash::get($this->request->getQueryParams(), 'artwork', FALSE);
@@ -235,8 +239,6 @@ class EditionsController extends AppController {
         }
         $errors = [];
 
-        $EditionStack = $this->loadComponent('EditionStack');
-//		$data = $EditionStack->stackQuery(); // this one has no pieces on the Edition entity
         $data = $this->ArtworkStack->focusedStack();
         extract($data); // providers, pieces, artwork
 
