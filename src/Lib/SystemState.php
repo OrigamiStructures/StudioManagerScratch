@@ -51,7 +51,7 @@ class SystemState implements EventListenerInterface {
 	protected $map;
 
 	/**
-	 * Cake Request object
+	 * Cake ServerRequest object
 	 *
 	 * @var ServerRequest
 	 */
@@ -87,7 +87,7 @@ class SystemState implements EventListenerInterface {
 	 */
 	protected $_admin_roles = [ADMIN_SYSTEM, ADMIN_ARTIST];
 
-	public function __construct(Request $request) {
+	public function __construct(ServerRequest $request) {
 		$this->request = self::$rq = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
