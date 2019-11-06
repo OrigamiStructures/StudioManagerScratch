@@ -10,6 +10,7 @@ use App\Model\Lib\CurrentUser;
  * Description of ContextUser
  *
  * @author dondrake
+ * @link http://localhost/OStructures/article/currentuser-and-contextuser
  */
 class ContextUser {
 
