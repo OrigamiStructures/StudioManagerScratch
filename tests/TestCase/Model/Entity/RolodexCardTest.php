@@ -99,12 +99,12 @@ class RolodexCardTest extends TestCase
      *
      * @return void
      */
-    public function testmembershipElements()
+    public function testGetMemberships()
     {
-        $this->assertCount(2, $this->Person->membershipElements(),
+        $this->assertCount(2, $this->Person->getMemberships(),
             'The person card\'s membershipElements() accessor did not work');
 
-        $this->assertCount(0, $this->Group->membershipElements(),
+        $this->assertCount(0, $this->Group->getMemberships(),
             'The group card\'s membershipElements() accessor did not work');
 
     }
@@ -135,13 +135,11 @@ class RolodexCardTest extends TestCase
      */
     public function testMembershipIDs()
     {
-        debug($this->Person->membershipIDs());
         $this->assertArraySubset(
             [3, 4],
             $this->Person->membershipIDs(),
             'The person card\'s membershipIDs() did not work');
 
-        debug($this->Group->membershipIDs());
         $this->assertArraySubset(
             [],
             $this->Group->membershipIDs(),
