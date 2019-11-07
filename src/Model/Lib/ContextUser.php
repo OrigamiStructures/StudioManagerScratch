@@ -237,7 +237,7 @@ class ContextUser {
 	/**
 	 * Convert the string to lower case and verify it is a known value
 	 *
-	 * @param type $actor
+	 * @param string $actor
 	 * @return string The validated string in lower case
 	 */
 	private function validateActor($actor) {
