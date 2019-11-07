@@ -181,6 +181,7 @@ class PiecesController extends AppController
      *      Also see EditionsController::assign()
 	 */
 	public function renumber() {
+	    $this->contextUser()->set('artist', 1);
         $result = $this->UserContext->required(['artist']);
         osd($result);
 
