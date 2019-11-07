@@ -190,6 +190,6 @@ class Member extends Entity
 
     public function registeredUserId()
     {
-        $this->user_id;
+        return $this->user_id;
     }
 }
