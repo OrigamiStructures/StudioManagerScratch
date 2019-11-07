@@ -278,7 +278,7 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findDispositionCount($query, $options) {
-        return $this->integer($query, 'disposition_count', $options['values']);
+        return $this->integer($query, 'disposition_count', $options);
     }
 
     /**
@@ -344,14 +344,15 @@ class PiecesTable extends AppTable {
      * @return Query
      */
     public function findNotDisposed($query, $options = []) {
-        return $query->find('dispositionCount', [0]);
+        $options['disposition_count'] = 0;
+        return $query->find('dispositionCount', $options);
     }
 
     /**
      * Alias for notDisposed()
      */
     public function findFluid($query, $options = []) {
-        return $this->findNotDisposed($query, $options['values']);
+        return $this->findNotDisposed($query, $options);
     }
 
     /**
@@ -363,6 +364,17 @@ class PiecesTable extends AppTable {
      */
     public function findAssigned($query, $options = []) {
         return $query->where($this->aliasField('format_id') . ' IS NOT NULL');
+    }
+
+    /**
+     * Find pieces without a format_id
+     *
+     * @param Query $query
+     * @param array $options None needed
+     * @return Query
+     */
+    public function findUnassigned($query, $options = []) {
+        return $query->where($this->aliasField('format_id') . ' IS NULL');
     }
 
     /**
