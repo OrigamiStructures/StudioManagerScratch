@@ -1,6 +1,10 @@
 <?php
 namespace App\Controller\Component;
 
+use App\Model\Lib\ContextUser;
+use App\Model\Table\EditionsTable;
+use App\Model\Table\FormatsTable;
+use App\Model\Table\PiecesTable;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
@@ -10,6 +14,7 @@ use Cake\Cache\Cache;
 use App\Lib\Traits\EditionStackCache;
 use App\Model\Lib\Providers;
 use App\Lib\EditionTypeMap;
+use Cake\Utility\Hash;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -88,15 +93,33 @@ class EditionStackComponent extends Component {
 	 * @return tuple 'providers, pieces'
 	 */
 	public function stackQuery() {
-	$stack = $this->readCache($this->SystemState->queryArg('edition'));
-	if ($stack === FALSE) {
+//	$stack = $this->readCache($this->SystemState->queryArg('edition'));
+//	if ($stack === FALSE) {
+	if (TRUE) {
+	    /** @var PiecesTable $Pieces */
+	    /** @var FormatsTable $Formats */
+	    /** @var EditionsTable $Editions */
 		$Pieces = TableRegistry::getTableLocator()->get('Pieces');
 		$Formats = TableRegistry::getTableLocator()->get('Formats');
 		$Editions = TableRegistry::getTableLocator()->get('Editions');
 
-		$edition_condition = $this->SystemState->buildConditions(['edition' => 'Editions.id'], 'Editions');
-		$format_condition = $this->SystemState->buildConditions(['edition'], 'Formats');
-		$piece_condition = $this->SystemState->buildConditions(['edition'], 'Pieces');
+		/** @var ContextUser $contextUser */
+		$contextUser = $this->getController()->contextUser();
+		$userId = $contextUser->artistId();
+        $editionId = Hash::get($this->getController()->request->getQueryParams(), 'edition');
+
+        $edition_condition = [
+            'Editions.id' => $editionId,
+            'Editions.user_id' => $userId
+        ];
+        $format_condition = [
+            'edition_id' => $editionId,
+            'Formats.user_id' => $userId
+        ];
+        $piece_condition = [
+            'edition_id' => $editionId,
+            'Pieces.user_id' => $userId
+        ];
 
 		$edition = $Editions->find()
 				->where($edition_condition)
@@ -104,9 +127,10 @@ class EditionStackComponent extends Component {
 				->toArray()[0];
 		$artwork = $edition->artwork;
 		$unassigned = $Pieces->find('unassigned', $piece_condition);
-		$edition->unassigned = $unassigned->toArray();
+        $edition->unassigned = $unassigned->toArray();
 
 		$formats = $Formats->find()->where($format_condition);
+//		osd($formats->toArray());die;
 		$formats = $formats->each(function($format) use($piece_condition, $Pieces) {
 			$conditions = $piece_condition + ['format_id' => $format->id];
 			$format->fluid = $Pieces->find('fluid', $conditions)->toArray();
