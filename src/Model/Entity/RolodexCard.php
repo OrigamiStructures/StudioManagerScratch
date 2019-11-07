@@ -9,19 +9,7 @@ use App\Model\Entity\StackEntity;
  * @author dondrake
  */
 class RolodexCard extends StackEntity {
-
-    /**
-     * @var Layer
-     */
-    public $identity;
-    /**
-     * @var Layer
-     */
-    public $data_owner;
-    /**
-     * @var Layer
-     */
-    public $memberships;
+	
 	/**
 	 * @todo Let StackTable::marshalStack() set this
 	 * {@inheritdoc}
