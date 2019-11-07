@@ -16,7 +16,10 @@ class PersonCard extends RolodexCard{
 
     public function registeredUserId()
     {
-        return $this->identity->shift()->registeredUserId();
+        /** @var Identity $entity */
+        $entity = $this->identity->shift();
+        return $entity->registeredUserId();
 	}
+
 
 }

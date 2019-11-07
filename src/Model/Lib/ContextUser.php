@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Model\Entity\PersonCard;
 use Cake\ORM\TableRegistry;
 use Cake\Http\Session;
 use Cake\Http\Exception\BadRequestException;
@@ -214,7 +215,9 @@ class ContextUser {
      */
     public function artistId()
     {
-        return $this->getCard('artist')->registeredUserId();
+        /** @var PersonCard $personCard */
+        $personCard = $this->getCard('artist');
+        return $personCard->registeredUserId();
     }
 
     /**
