@@ -22,32 +22,47 @@ class RolodexCard extends StackEntity {
 	 */
 	public $rootDisplaySource = 'name';
 
-	public function name() {
+    /**
+     * @return mixed
+     */
+    public function name() {
 		return $this->rootElement()->name();
 	}
-	
+
 	/**
 	 * Is `memberships` a Layer object (TRUE) or array (FALSE)
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isMember() {
 		return $this->memberships->count() > 0;
 	}
-	
-	public function isGroup() {
+
+    /**
+     * @return mixed
+     */
+    public function isGroup() {
 	    return $this->rootElement()->isGroup();
 	}
-	
-	public function isArtist() {
+
+    /**
+     * @return bool
+     */
+    public function isArtist() {
 		return FALSE;
 	}
-	
-	public function isManager() {
+
+    /**
+     * @return bool
+     */
+    public function isManager() {
 		return FALSE;
 	}
-	
-	public function canParticipate() {
+
+    /**
+     * @return bool
+     */
+    public function canParticipate() {
 		return FALSE;
 	}
 
