@@ -53,10 +53,10 @@ class RolodexCard extends StackEntity {
 
 	/**
 	 * Get the membership elements
-	 * 
+	 *
 	 * Optionally get the entities as a Layer
-	 * 
-	 * @param boolean $asLayer 
+	 *
+	 * @param boolean $asLayer
 	 * @return array|layer
 	 */
 	public function membershipElements($asArray = LAYERACC_ARRAY) {
@@ -67,23 +67,23 @@ class RolodexCard extends StackEntity {
 		}
 		return $this->_resolveReturnStructure($result, $asArray, 'memberships');
 	}
-	
+
 	/**
 	 * Get the IDs of the Groups this card belongs to
-	 * 
+	 *
 	 * @return array
 	 */
 	public function membershipIDs() {
 		return $this->valueList('id', $this->membershipElements());
 	}
-	
+
 	/**
 	 * Get the names of the Groups this card belongs to
-	 * 
+	 *
 	 * @return array
 	 */
 	public function memberships() {
 		return $this->distinct('name', $this->membershipElements());
 	}
-	
+
 }
