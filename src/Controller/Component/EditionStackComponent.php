@@ -93,6 +93,7 @@ class EditionStackComponent extends Component {
 	 * @return tuple 'providers, pieces'
 	 */
 	public function stackQuery() {
+	    $queryParams = $this->getController()->request->getQueryParams();
 //	$stack = $this->readCache($this->SystemState->queryArg('edition'));
 //	if ($stack === FALSE) {
 	if (TRUE) {
@@ -106,7 +107,7 @@ class EditionStackComponent extends Component {
 		/** @var ContextUser $contextUser */
 		$contextUser = $this->getController()->contextUser();
 		$userId = $contextUser->artistId();
-        $editionId = Hash::get($this->getController()->request->getQueryParams(), 'edition');
+        $editionId = Hash::get($queryParams, 'edition');
 
         $edition_condition = [
             'Editions.id' => $editionId,
@@ -150,7 +151,7 @@ class EditionStackComponent extends Component {
 			'pieces' => ($pieces->toArray()),
 			'artwork' => $artwork,
 			];
-		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
+//		$this->writeCache(Hash::get($queryParams, 'edition'), $stack);
 		}
 
 		return $stack;
