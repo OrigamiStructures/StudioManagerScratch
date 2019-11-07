@@ -2,7 +2,7 @@
 namespace App\Lib;
 
 use App\Lib\RequestUtility;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
 use Cake\Filesystem\Folder;
 //use Cake\Filesystem\File;
 use Cake\Collection\Collection;
@@ -51,9 +51,9 @@ class SystemState implements EventListenerInterface {
 	protected $map;
 
 	/**
-	 * Cake Request object
+	 * Cake ServerRequest object
 	 *
-	 * @var Request
+	 * @var ServerRequest
 	 */
 	public $request;
 	public static $rq;
@@ -87,7 +87,7 @@ class SystemState implements EventListenerInterface {
 	 */
 	protected $_admin_roles = [ADMIN_SYSTEM, ADMIN_ARTIST];
 
-	public function __construct(Request $request) {
+	public function __construct(ServerRequest $request) {
 		$this->request = self::$rq = $request;
 		$StateMap = new StateMap();
 		$this->map = $StateMap->map;
@@ -309,7 +309,7 @@ class SystemState implements EventListenerInterface {
 	 * If it doesn't exist, get array of all args
 	 *
 	 * @param string $name
-	 * @return string|array
+	 * @return string|null|array
 	 */
 	public function queryArg($name = NULL) {
 		osd('depricated SystemState::queryArg()');

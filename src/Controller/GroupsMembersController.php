@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Utility\Hash;
 
 /**
  * GroupsMembers Controller
@@ -101,13 +102,17 @@ class GroupsMembersController extends AppController
      */
     public function delete()
     {
-        $this->SystemState->referer($this->referer());
-        $conditions = $this->SystemState->buildConditions(['member', 'group'], FALSE);
+        $this->refererStack($this->referer());
+        $conditions = [
+            'member_id' => Hash::get($this->request->getQueryParams(), 'member'),
+            'group_id' => Hash::get($this->request->getQueryParams(), 'group'),
+        ];
+
         if ($this->GroupsMembers->deleteAll($conditions)) {
             $this->Flash->success(__('The member has been removed from the group.'));
         } else {
             $this->Flash->error(__('The member could not be removed from the group. Please, try again.'));
         }
-        return $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+        return $this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
     }
 }

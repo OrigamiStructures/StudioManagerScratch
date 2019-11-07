@@ -258,6 +258,7 @@ define('MEMBER_TYPE_CATEGORY', 'Category');
 // <editor-fold defaultstate="collapsed" desc="SYSTEM STATES, ARTWORK_REVIEW etc.">
 
 // These are used in Lib/StateMap.php to map Controller actions
+// But that class has been eliminated
 //Member State
 define('MEMBER_CREATE', 1);
 define('MEMBER_REVIEW', 2);

@@ -10,6 +10,7 @@ use App\Model\Lib\CurrentUser;
  * Description of ContextUser
  *
  * @author dondrake
+ * @link http://localhost/OStructures/article/currentuser-and-contextuser
  */
 class ContextUser {
 
@@ -336,7 +337,7 @@ class ContextUser {
 
     public function artistId()
     {
-        return getCard('artist')->registeredUserId();
+        return $this->getCard('artist')->registeredUserId();
 	}
 
 	/**

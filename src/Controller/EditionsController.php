@@ -7,6 +7,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
 use App\Form\AssignmentForm;
+use Cake\Utility\Hash;
 use Cake\View\Form\FormContext;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Controller\Component\LayersComponent;
@@ -136,9 +137,9 @@ class EditionsController extends AppController {
      * is redirected to FormatController->review()
      */
     public function review() {
-        $this->_try_flatness_redirect(
-            $this->SystemState->queryArg('artwork'),
-            $this->SystemState->queryArg('edition'));
+        $artworkId = Hash::get($this->request->getQueryParams(), 'artwork');
+        $editionId = Hash::get($this->request->getQueryParams(), 'edition');
+        $this->_try_flatness_redirect($artworkId, $editionId);
 
         $artwork = $this->ArtworkStack->stackQuery();
 
@@ -172,10 +173,13 @@ class EditionsController extends AppController {
 
             if ($this->ArtworkStack->refinementTransaction($artwork, $deletions)) {
                 $this->Flash->success(__('The edition has been changed.'));
-                $this->redirect(['controller' => 'editions', 'action' => 'review', '?' => [
-                        'artwork' => $this->SystemState->queryArg('artwork'),
-                        'edition' => $this->SystemState->queryArg('edition')
-                ]]);
+                $artworkId = Hash::get($this->request->getQueryParams(), 'artwork');
+                $editionId = Hash::get($this->request->getQueryParams(), 'edition');
+                $this->redirect([
+                    'controller' => 'editions',
+                    'action' => 'review',
+                    '?' => ['artwork' => $artworkId, 'edition' => $editionId]
+                ]);
             } else {
                 $this->Flash->error(__('The edition could not be saved. Please, try again.'));
             }
@@ -208,7 +212,7 @@ class EditionsController extends AppController {
                     'controller' => 'artworks',
                     'action' => 'review',
                     '?' => [
-                        'artwork' => $this->SystemState->queryArg('artwork'),
+                        'artwork' => Hash::get($this->request->getQueryParams(), 'artwork'),
                     ]
                 ]);
             } else {
@@ -222,16 +226,19 @@ class EditionsController extends AppController {
         $this->render('/Artworks/review');
     }
 
+    /**
+     * @todo Also see PiecesController::renumber() for a similar $providers, $pieces situation
+     * @throws \Exception
+     */
     public function assign() {
-        $this->SystemState->referer($this->SystemState->referer());
-        if (!$this->SystemState->urlArgIsKnown('artwork')) {
+        $this->refererStack($this->refererStack());
+        $artworkId = Hash::get($this->request->getQueryParams(), 'artwork', FALSE);
+        if ($artworkId === FALSE) {
             $this->Flash->error(__('No artwork was identified so no piece assignment can be done.'));
-            $this->redirect($this->SystemState->referer());
+            $this->redirect($this->refererStack());
         }
         $errors = [];
 
-        $EditionStack = $this->loadComponent('EditionStack');
-//		$data = $EditionStack->stackQuery(); // this one has no pieces on the Edition entity
         $data = $this->ArtworkStack->focusedStack();
         extract($data); // providers, pieces, artwork
 
@@ -251,7 +258,7 @@ class EditionsController extends AppController {
 //					$this->_refreshFormatCounterCaches($this->request->data);
 //					$this->dispatchEvent('Pieces.fluidFormatPieces');
 //					die;
-                    $this->redirect($this->SystemState->referer(SYSTEM_CONSUME_REFERER));
+                    $this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
                 } else {
                     $this->Flash->error(__('There was a problem reassigning the pieces. Please try again'));
                 }
