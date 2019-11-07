@@ -11,12 +11,12 @@ use App\Model\Traits\ReceiverTrait;
  * @author dondrake
  */
 class PersonCard extends RolodexCard{
-	
+
 	use ContactableTrait, ReceiverTrait;
 
     public function registeredUserId()
     {
-        return $this->Identity->registeredUserId();
+        return $this->identity->shift()->registeredUserId();
 	}
 
 }
