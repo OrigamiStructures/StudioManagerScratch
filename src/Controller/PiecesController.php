@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Controller\Component\UserContextComponent;
 use App\Lib\Range;
 use Cake\Cache\Cache;
 use App\Model\Entity\Piece;
@@ -14,16 +15,18 @@ use Cake\Http\Exception\BadRequestException;
 use App\Controller\Component\LayersComponent;
 use App\Model\Lib\Providers;
 use Cake\Utility\Hash;
+use Twig\Error\RuntimeError;
 
 /**
  * Pieces Controller
  *
  * @property \App\Model\Table\PiecesTable $Pieces
+ * @param UserContextComponent $UserContext
  */
 class PiecesController extends AppController
 {
 
-	public $components = ['ArtworkStack', 'Layers'];
+	public $components = ['ArtworkStack', 'Layers', 'UserContext'];
 
 	/**
 	 * Before filter
@@ -178,6 +181,13 @@ class PiecesController extends AppController
      *      Also see EditionsController::assign()
 	 */
 	public function renumber() {
+        $result = $this->UserContext->required(['artist']);
+        osd($result);
+
+        if ($result !== true) {
+            return $result;
+        }
+
 		$cache_prefix = $this->_renumber_cache_prefix();
 		/*
 		 * EditionStack was an old nested array implementation.
@@ -186,6 +196,12 @@ class PiecesController extends AppController
 		 */
 		$EditionStack = $this->loadComponent('EditionStack');
 		extract($EditionStack->stackQuery()); // providers, pieces
+        /*
+         * These are so I can see to structure and replicate it with the new stacks
+         */
+        osd($providers);
+        osd($pieces);
+        die;
         /*
          * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
          *
