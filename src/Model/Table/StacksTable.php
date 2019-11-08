@@ -216,8 +216,8 @@ class StacksTable extends AppTable
 	 * @throws \BadMethodCallException
 	 */
 	public function findStacksFor($query, $options) {
-        
-		$paginator = FALSE;
+
+		$paginator = 'none';
         $this->validateArguments($options);
 //        debug($options);
         extract($options); //$seed, $ids, $paginator
@@ -247,12 +247,13 @@ class StacksTable extends AppTable
 	 *
 	 * @param string $seed
 	 * @param array $ids
+     * @param string|callable
 	 * @return array Root entity id set for the stack
 	 */
-	protected function distillation($seed, $ids, $paginator = FALSE) {
+	protected function distillation($seed, $ids, $paginator = 'none') {
 		$query = $this->{$this->distillMethodName($seed)}($ids);
 		$query = $this->localConditions($query);
-		if ($paginator !== FALSE) {
+		if ($paginator !== 'none') {
 			$query = $paginator($query/*, $params, $settings*/);
 		}
 		$IDs = (new Layer($query->toArray(), $this->rootName()))->IDs();
