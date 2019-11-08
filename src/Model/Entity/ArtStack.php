@@ -33,10 +33,53 @@ class ArtStack extends StackEntity {
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
+        'artwork' => true,
+        'editions' => true,
+        'formats' => true,
+        'pieces' => true,
+        'series' => true
     ];
-	
-	public function emitEditionStack($id, $fromLayer = 'edition') {
+
+    //<editor-fold desc="ID getters">
+    public function artworkId()
+    {
+        return $this->rootID();
+    }
+    /**
+     * @return array
+     */
+    public function editionIDs()
+    {
+        return $this->IDs('editions');
+    }
+
+    /**
+     * @return array
+     */
+    public function formatIDs()
+    {
+        return $this->IDs('formats');
+    }
+
+    /**
+     * @return array
+     */
+    public function pieceIDs()
+    {
+        return $this->IDs('pieces');
+    }
+
+    /**
+     * @return array
+     */
+    public function seriesIDs()
+    {
+        return $this->IDs('series');
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Object Emitters">
+    public function emitEditionStack($id, $fromLayer = 'edition') {
 		if (!in_array($fromLayer, ['edition', 'format', 'piece'])) {
 			return [];
 		}
