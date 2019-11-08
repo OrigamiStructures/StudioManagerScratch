@@ -43,121 +43,7 @@ class EditionStackComponent extends Component {
 
 	protected $pieces_to_save ;
 	protected $pieces_to_delete;
-
-
-	public function initialize(array $config)
-	{
-		$this->controller = $this->_registry->getController();
-		$this->SystemState = $this->controller->SystemState;
-	}
-
-	/**
-	 * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
-	 *
-	 * The Edition carries its Artwork record for some upstream context.
-	 * The Edition and its Formats are returned as siblings, each with its Pieces.
-	 * The Pieces are categorized as appropriate to that layer.
-	 * The AssignemntTrait on the Edition and Piece entities unify piece access.
-	 * <pre>
-	 * // providers array
-	 * ['edition' => EditionEntity {
-	 *			...,
-	 *			'unassigned' -> PiecesEntity {},
-	 *      },
-	 *  0 => FormatEntity {
-	 *			...,
-	 *			'fluid' -> PiecesEntity {},
-	 *      },
-	 *  ...
-	 *  0+n => FormatEntity {
-	 *			...,
-	 *			'fluid' -> PiecesEntity {},
-	 *      },
-	 * ]
-	 *
-	 * // pieces array
-	 * [0 => PieceEntity {},
-	 * ...
-	 * 0+n => PieceEntity {},
-	 * ]
-	 * </pre>
-	 *
-	 * @todo make providers an object?
-	 * This would allow it to contain its own ownerTitle hash map. This map
-	 * allows piece->key() to lookup its assigned owner's display title.
-	 * Currently, redundant code in the elements build the hash. A helper
-	 * solution has to return the table as a variable or save it as a property.
-	 * but it has difficulty knowing if the property is for the current
-	 * version of $providers.
-	 *
-	 * @return tuple 'providers, pieces'
-	 */
-	public function stackQuery() {
-	    $queryParams = $this->getController()->request->getQueryParams();
-//	$stack = $this->readCache($this->SystemState->queryArg('edition'));
-//	if ($stack === FALSE) {
-	if (TRUE) {
-	    /** @var PiecesTable $Pieces */
-	    /** @var FormatsTable $Formats */
-	    /** @var EditionsTable $Editions */
-		$Pieces = TableRegistry::getTableLocator()->get('Pieces');
-		$Formats = TableRegistry::getTableLocator()->get('Formats');
-		$Editions = TableRegistry::getTableLocator()->get('Editions');
-
-		/** @var ContextUser $contextUser */
-		$contextUser = $this->getController()->contextUser();
-		$userId = $contextUser->artistId();
-        $editionId = Hash::get($queryParams, 'edition');
-
-        $edition_condition = [
-            'Editions.id' => $editionId,
-            'Editions.user_id' => $userId
-        ];
-        $format_condition = [
-            'edition_id' => $editionId,
-            'Formats.user_id' => $userId
-        ];
-        $piece_condition = [
-            'edition_id' => $editionId,
-            'Pieces.user_id' => $userId
-        ];
-
-		$edition = $Editions->find()
-				->where($edition_condition)
-				->contain('Artworks')
-				->toArray()[0];
-		$artwork = $edition->artwork;
-		$unassigned = $Pieces->find('unassigned', $piece_condition);
-        $edition->unassigned = $unassigned->toArray();
-
-		$formats = $Formats->find()->where($format_condition);
-//		osd($formats->toArray());die;
-		$formats = $formats->each(function($format) use($piece_condition, $Pieces) {
-			$conditions = $piece_condition + ['format_id' => $format->id];
-			$format->fluid = $Pieces->find('fluid', $conditions)->toArray();
-		});
-
-		$providers = ['edition' => $edition] + $formats->toArray();
-		$artwork->editions = [$edition];
-		$artwork->editions[0]->formats = $formats;
-
-		// this may need ->order() later for piece-table reporting of open editions
-		$pieces = $Pieces->find()
-				->where($piece_condition)
-				->contain('Dispositions')
-				->order('Pieces.number');
-		$stack = [
-			'providers' => new Providers($providers),
-			'pieces' => ($pieces->toArray()),
-			'artwork' => $artwork,
-			];
-//		$this->writeCache(Hash::get($queryParams, 'edition'), $stack);
-		}
-
-		return $stack;
-
-	}
-
+	
 	/**
 	 * Move the indicated pieces to to indicated destination
 	 *
@@ -309,10 +195,6 @@ class EditionStackComponent extends Component {
 		$this->pieces_to_delete = $deletions;
 
 		return $this->pieces_to_save;
-
-	}
-
-	protected function searchExistingPiece($assignment) {
 
 	}
 
