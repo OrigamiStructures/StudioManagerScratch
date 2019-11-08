@@ -69,7 +69,7 @@ class Providers {
      */
     public function __construct(array $providers) {
         foreach ($providers as $entity) {
-            if (get_class($entity) === 'App\Model\Entity\Format') {
+            if (get_class($entity) === 'App\Model\Entity\EditionsFormat') {
                 $this->_formats[] = $entity;
             } elseif (get_class($entity) === 'App\Model\Entity\Edition') {
                 $this->_edition = $entity;

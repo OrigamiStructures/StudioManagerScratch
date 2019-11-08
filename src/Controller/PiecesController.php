@@ -191,49 +191,19 @@ class PiecesController extends AppController
 
 		$cache_prefix = $this->_renumber_cache_prefix();
 		/*
-		 * EditionStack was an old nested array implementation.
-		 * Below is documentation of the $providers and $pieces structures it
-		 * returned so this method can be fixed to work with flat stacks
+		 * This method is in transition.
+		 * The old EditionStackComponent::stackQuery() is now dead and
+		 * ArtStack has been outfitted with replacement code.
+		 *
+		 * To make this method work, I'll have to figure out what IDs are
+		 * available and use them to get the ArtStack that contains the
+		 * edition of interest.
+		 *
+		 * The prouct of that process will be a StackSet and would be
+		 * send to $artStack (below).
 		 */
-		$EditionStack = $this->loadComponent('EditionStack');
-		extract($EditionStack->stackQuery()); // providers, pieces
-        /*
-         * These are so I can see to structure and replicate it with the new stacks
-         */
-        osd($providers);
-        osd($pieces);
-        die;
-        /*
-         * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
-         *
-         * The Edition carries its Artwork record for some upstream context.
-         * The Edition and its Formats are returned as siblings, each with its Pieces.
-         * The Pieces are categorized as appropriate to that layer.
-         * The AssignemntTrait on the Edition and Piece entities unify piece access.
-         * <pre>
-         * // providers array
-         * ['edition' => EditionEntity {
-         *			...,
-         *			'unassigned' -> PiecesEntity {},
-         *      },
-         *  0 => FormatEntity {
-         *			...,
-         *			'fluid' -> PiecesEntity {},
-         *      },
-         *  ...
-         *  0+n => FormatEntity {
-         *			...,
-         *			'fluid' -> PiecesEntity {},
-         *      },
-         * ]
-         *
-         * // pieces array
-         * [0 => PieceEntity {},
-         * ...
-         * 0+n => PieceEntity {},
-         * ]
-         * </pre>
-         *
+        $artStack = $artworks->shift();
+        extract($artStack->oldEditionStack('13')); // providers, pieces, artwork
 		/* prevent inappropriate entry */
 		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
