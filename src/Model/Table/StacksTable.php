@@ -26,14 +26,14 @@ use App\Model\Lib\Layer;
  */
 class StacksTable extends AppTable
 {
-    
+
     use ConventionsTrait;
-    
+
 	/**
 	 * The tip-of-the-iceberg layer for this data stack
 	 */
 	protected $rootName = NULL;
-	
+
 	protected $rootTable = NULL;
 
 	/**
@@ -41,24 +41,24 @@ class StacksTable extends AppTable
      * @var array
      */
     protected $layerTables = [];
-    
+
     /**
      *
      * @var array
      */
     protected $stackSchema = [];
-    
+
     /**
      *
      * @var array
      */
     protected $seedPoints = [];
-	
+
 	/**
 	 * A registry object if one is used
-	 * 
-	 * Some StackTables may store their entities in a registry so 
-	 * references to a single copy can be used during a Request/Response 
+	 *
+	 * Some StackTables may store their entities in a registry so
+	 * references to a single copy can be used during a Request/Response
 	 * cycle. Others may not require this feature.
 	 *
 	 * @var mixed
@@ -77,17 +77,17 @@ class StacksTable extends AppTable
 		$this->configureStackCache();
 		$this->validateRoot();
     }
-	
+
 	/**
 	 * Insure the stackTable properly identifies the root in the schema
-	 * 
-	 * A stack is `tree` data, but organinzed in layers. The `root` layer 
-	 * must be identified and must be a column type = layer in the schema. 
-	 * 
-	 * This value will be transfered into all the different stackEntity 
-	 * types that the heirarchy can create and will be an important value 
+	 *
+	 * A stack is `tree` data, but organinzed in layers. The `root` layer
+	 * must be identified and must be a column type = layer in the schema.
+	 *
+	 * This value will be transfered into all the different stackEntity
+	 * types that the heirarchy can create and will be an important value
 	 * when working with those entities.
-	 * 
+	 *
 	 * @throws MissingStackTableRootException
 	 */
 	private function validateRoot() {
@@ -101,7 +101,7 @@ class StacksTable extends AppTable
 					. 'and be of type = layer');
 		}
 	}
-	
+
 	/**
 	 * Setup the cache for this concrete stack table
 	 */
@@ -115,22 +115,22 @@ class StacksTable extends AppTable
 				'duration' => '+1 week',
 				'serialize' => true,
 			]);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Generate a cache key
-	 * 
+	 *
 	 * @param string $key An Rolodexwork id
 	 * @return string The key
 	 */
 	public function cacheKey($key) {
 		return $key;
 	}
-	
+
 	/**
 	 * Get the Cache config name for this concrete stack table
-	 * 
+	 *
 	 * @return string
 	 */
 	public function cacheName() {
@@ -141,35 +141,35 @@ class StacksTable extends AppTable
 	public function rootName() {
 		return $this->rootName;
 	}
-	
+
 	public function rootTable() {
 		return $this->{$this->rootTable};
 	}
-	
+
 	/**
 	 * Lazy load the required tables
-	 * 
-	 * I couldn't get Associations to work in cooperation with the schema 
-	 * initialization that sets the custom 'layer' type properties. This is 
-	 * my solution to making the Tables available 
-	 * 
+	 *
+	 * I couldn't get Associations to work in cooperation with the schema
+	 * initialization that sets the custom 'layer' type properties. This is
+	 * my solution to making the Tables available
+	 *
 	 * @param string $property
 	 * @return Table|mixed
 	 */
     public function __get($property) {
-		
+
         if (in_array($property, $this->layerTables)) {
             $this->$property = TableRegistry::getTableLocator()->get($property);
 			return $this->$property;
 		}
     }
-    
+
 	/**
 	 * Add the columns to hold the different layers and set their data type
-	 * 
-	 * This will make the entity properties automatically 
-	 * contain Layer objects. 
-	 * 
+	 *
+	 * This will make the entity properties automatically
+	 * contain Layer objects.
+	 *
 	 * @param TableSchema $schema
 	 * @return TableSchema
 	 */
@@ -179,10 +179,10 @@ class StacksTable extends AppTable
         }
         return $schema;
     }
-	
+
 	/**
 	 * Get the StackEntity registry if one is used
-	 * 
+	 *
 	 * @return ObjectRegistry|False
 	 */
 	public function registry() {
@@ -191,25 +191,25 @@ class StacksTable extends AppTable
         }
 		return $this->registry;
 	}
-	
+
 	/**
 	 * The primary access point to get a concrete stack
-	 * 
-	 * Stacks are meant to provide full context for other detail 
-	 * data sets that have been retrieved for some process. This allows 
-	 * working data queries to be small and focused. Once completed, the 
+	 *
+	 * Stacks are meant to provide full context for other detail
+	 * data sets that have been retrieved for some process. This allows
+	 * working data queries to be small and focused. Once completed, the
 	 * Stack tables back-fill the context.
-	 * 
-	 * $options requires two indexes, 
-	 *		'seed' with a value matching any allowed starting point 
+	 *
+	 * $options requires two indexes,
+	 *		'seed' with a value matching any allowed starting point
 	 *		'ids' containing an array of ids for the named seed
-	 * 
+	 *
 	 * <code>
 	 * $ArtStacks->find('stacksFor',  ['seed' => 'disposition', 'ids' => $ids]);
 	 * $ArtStacks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $ids]);
 	 * $ArtStacks->find('stacksFor',  ['seed' => 'format', 'ids' => $ids]);
 	 * </code>
-	 * 
+	 *
 	 * @param Query $query
 	 * @param array $options
 	 * @return StackSet
@@ -224,27 +224,27 @@ class StacksTable extends AppTable
         if (empty($ids)) {
             return new StackSet();
         }
-		
+
 		$IDs = $this->distillation($seed, $ids, $paginator);
 		return $this->stacksFromRoot($IDs);
     }
-	
+
 	/**
 	 * Distill a set of seed ids down to root layer ids for the stack
-	 * 
-	 * Discovering the root layer ids from a set of seed ids is usually 
-	 * pretty simple, but there are a few higher level tweaks that need 
-	 * to be done to the query. 
-	 * 
-	 * StackTable families have special, local, permissions filters they 
-	 * need to do. This alows record sharing for some data types in some 
-	 * managment situations. 
-	 * 
-	 * And all stacks need to respond to pagination. The root level 
-	 * set for the stack is the one that is paginated. So half way through 
-	 * the stack creation process (which is running at this point) the 
+	 *
+	 * Discovering the root layer ids from a set of seed ids is usually
+	 * pretty simple, but there are a few higher level tweaks that need
+	 * to be done to the query.
+	 *
+	 * StackTable families have special, local, permissions filters they
+	 * need to do. This alows record sharing for some data types in some
+	 * managment situations.
+	 *
+	 * And all stacks need to respond to pagination. The root level
+	 * set for the stack is the one that is paginated. So half way through
+	 * the stack creation process (which is running at this point) the
 	 * paginator must do its job.
-	 * 
+	 *
 	 * @param string $seed
 	 * @param array $ids
 	 * @return array Root entity id set for the stack
@@ -258,18 +258,18 @@ class StacksTable extends AppTable
 		$IDs = (new Layer($query->toArray(), $this->rootName()))->IDs();
 		return $IDs;
 	}
-	
+
 	/**
 	 * Add any local-stack appropriate conditions to the query
-	 * 
-	 * Override in each concrete StackTable class to suit the situation. 
-	 * For example PersonCardsTable adds: where(['member_type' => 'Person']) 
+	 *
+	 * Override in each concrete StackTable class to suit the situation.
+	 * For example PersonCardsTable adds: where(['member_type' => 'Person'])
 	 * and many other places might add: where(['user_id' => $userId])
-	 * 
-	 * I imagine a situation where superusers would need to change the 
-	 * 'normal' behavior, so while most uses won't carry $options, 
+	 *
+	 * I imagine a situation where superusers would need to change the
+	 * 'normal' behavior, so while most uses won't carry $options,
 	 * the signature allows it for fine-tuning the stack results
-	 * 
+	 *
 	 * @param Query $query
 	 * @param array $options Allow special data injection just in case
 	 * @return Query
@@ -280,7 +280,7 @@ class StacksTable extends AppTable
 
 	/**
 	 * From mixed seed types, distill to a root ID set
-	 * 
+	 *
 	 * <code>
 	 * $seed = [
 	 *		'identity' => [2,7],
@@ -289,7 +289,7 @@ class StacksTable extends AppTable
 	 * ]
 	 * </code>
 	 * will return an array of the root IDs for the seeds.
-	 * 
+	 *
 	 * @param array $seeds
      * @return StackSet
 	 */
@@ -301,34 +301,34 @@ class StacksTable extends AppTable
 		}
 		return $this->stacksFromRoot(array_unique($IDs));
 	}
-	
+
 	/**
 	 * Get the method name for distilling a given seed into stack IDs
-	 * 
+	 *
 	 * @param string $seed
 	 * @return string
 	 */
 	protected function distillMethodName($seed) {
 		return 'distillFrom' . $this->_entityName($seed);
 	}
-	
+
 	/**
 	 * Get the method name for marshaling a given layer
-	 * 
+	 *
 	 * @param string $layer
 	 * @return string
 	 */
 	protected function marshalMethodName($layer) {
 		return 'marshal' . $this->_camelize($layer);
 	}
-	
+
 	/**
 	 * Read the stacks from registry, cache or assemble and cache them
-	 * 
-	 * This is the destination for all the distillFor variants. 
-	 * It calls all the individual marshaller methods for 
+	 *
+	 * This is the destination for all the distillFor variants.
+	 * It calls all the individual marshaller methods for
 	 * the current concrete stack table
-	 * 
+	 *
 	 * @param array $ids Member ids
 	 * @return StackSet
 	 */
@@ -352,26 +352,26 @@ class StacksTable extends AppTable
 			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
 				$stack = $this->writeRegistry($id, $this->newVersionMarshalStack($id));
 			}
-			
+
 			if ($stack->isEmpty()) { continue; }
-			
+
 			$stack->clean();
 			$this->stacks->insert($id, $stack);
 			$this->writeCache($id, $stack);
 		}
  		return $this->stacks;
 	}
-	
+
 	/**
 	 * Avoid marshalling a stack if we already have a copy of it
-	 * 
-	 * A registry may be available for the stack. This will allow references 
-	 * to be passed out if the stack is used in more than one place during 
+	 *
+	 * A registry may be available for the stack. This will allow references
+	 * to be passed out if the stack is used in more than one place during
 	 * a single Request/Response cycle.
-	 * 
-	 * A cache is used to keep the assembled stack avaialable 
+	 *
+	 * A cache is used to keep the assembled stack avaialable
 	 * between requests.
-	 * 
+	 *
 	 * @param string $id
      * @return StackEntity | FALSE
 	 */
@@ -382,13 +382,13 @@ class StacksTable extends AppTable
 		}
 		return FALSE;
 	}
-	
+
 	/**
 	 * Store an assemble stack to aviod reassembling it later
-	 * 
-	 * A registry may not be in use. In that case the stack is returned 
+	 *
+	 * A registry may not be in use. In that case the stack is returned
 	 * rather than a reference to a single, managed instance
-	 * 
+	 *
 	 * @param string $id
 	 * @param StackEntity $stack or a reference to one
      * @return StackEntity
@@ -400,10 +400,10 @@ class StacksTable extends AppTable
 		}
 		return $stack;
 	}
-	
+
 	/**
 	 * Read cache to see if the ID'd stack is present
-	 * 
+	 *
      * @param string $id Stack id will generate the cache data key
      * @return mixed The cached data, or FALSE
 	 */
@@ -413,12 +413,12 @@ class StacksTable extends AppTable
 		}
 		return FALSE;
 	}
-	
+
 	/**
 	 * Write a stack to the cache
-	 * 
-     * @param string $id 
-     * @param mixed $stack 
+	 *
+     * @param string $id
+     * @param mixed $stack
      * @return bool True on successful cached, false on failure
 	 */
 	protected function writeCache($id, $stack) {
@@ -428,7 +428,7 @@ class StacksTable extends AppTable
 			return FALSE;
 		}
 	}
-	
+
 	public function layers() {
 		$schema = collection($this->stackSchema);
 		$layerColumns = $schema->filter(function($column, $key) {
@@ -437,10 +437,10 @@ class StacksTable extends AppTable
 //		debug($layerColumns->toArray());
 		return Hash::extract($layerColumns, '{n}.name');
 	}
-	
+
 	/**
 	 * Create, then populate a new StackEntity
-	 * 
+	 *
 	 * @param type $id
 	 * @return type
 	 */
@@ -454,15 +454,15 @@ class StacksTable extends AppTable
 		}
 		return $stack;
 	}
-	
+
 	/**
 	 * Get a new StackSet class instance based on naming conventions
-	 * 
+	 *
 	 * ArtStackTable - ArtStack (entity) - ArtStackSet
-	 * 
-	 * @todo There is no way to override the StackSet class 
+	 *
+	 * @todo There is no way to override the StackSet class
 	 *		in the case of conventions-breaking usage
-	 * 
+	 *
 	 * @return StackSet
 	 */
 	protected function stackSet() {
@@ -475,12 +475,12 @@ class StacksTable extends AppTable
 		}
 		return $result;
 	}
-	
+
 // <editor-fold defaultstate="collapsed" desc="finder args validation">
 
     /**
      * Insure the findStack arguments were correct
-     * 
+     *
      * @return void
      * @throws \BadMethodCallException
      */
@@ -504,47 +504,47 @@ class StacksTable extends AppTable
     }
 
 // </editor-fold>
-	
+
 	/**
 	 * Load members of a table by id
-	 * 
-	 * The table name will be deduced from the $layer. Also, there is the 
-	 * assumption that a custom finder exists in that Table which is in the form 
+	 *
+	 * The table name will be deduced from the $layer. Also, there is the
+	 * assumption that a custom finder exists in that Table which is in the form
 	 * Table::findTable() which can do an single or array id search.
 	 * Custom finders based on IntegerQueryBehavior do the job in this system.
-	 * 
+	 *
 	 * <code>
 	 * $this-_loadLayer('member', $ids);
-	 * 
+	 *
 	 * //will evaluate to
 	 * $this->Members->find('members', ['values' => $ids]);
-	 * 
+	 *
 	 * //and will expect, in the Members Table the custom finder:
 	 * public function findMembers($query, $options) {
 	 *      //must properly handle an array of id values
 	 *      //finders us
 	 * }
 	 * </code>
-	 * 
-	 * @param name $layer The  
+	 *
+	 * @param name $layer The
 	 * @param array $ids
 	 * @return Query A new query on some table
 	     */
     protected function _loadLayer($layer, $ids) {
 		$tableName = $this->_modelNameFromKey($layer);
 		$finderName = lcfirst($tableName);
-        
+
 		return $this->$tableName
 						->find($finderName, ['values' => $ids]);
 	}
 
 	/**
 	 * Throw together a temporary Join Table class and search it
-	 * 
-	 * This will actually work for any table, but habtm tables typically 
+	 *
+	 * This will actually work for any table, but habtm tables typically
 	 * don't have a named class written for them.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param string $table The name of the table class by convention
 	 * @param string $column Name of the integer column to search
 	 * @param array $ids
@@ -575,7 +575,7 @@ class StacksTable extends AppTable
     {
         foreach ($addedTables as $index => $addedTable) {
             if(is_a(
-					TableRegistry::getTableLocator()->get($addedTable), 
+					TableRegistry::getTableLocator()->get($addedTable),
 					'App\Model\Table\AppTable')){
                 $this->layerTables[] = $addedTable;
             } else {
@@ -587,7 +587,7 @@ class StacksTable extends AppTable
 	}
 
 	/**
-	 * 
+	 *
 	 * @param array $addedSchemaNames
 	 * @throws MissingMarshallerException
 	 */
