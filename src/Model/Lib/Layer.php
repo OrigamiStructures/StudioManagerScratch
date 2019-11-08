@@ -311,7 +311,7 @@ class Layer implements LayerAccessInterface {
 	 * An unknown operator will yield a function that never finds matches
 	 *
 	 * @param string $operator
-	 * @return function
+	 * @return callable
 	 */
 	public function selectComparison($operator) {
 		$ops = [
