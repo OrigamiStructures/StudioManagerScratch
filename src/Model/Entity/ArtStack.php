@@ -36,11 +36,13 @@ class ArtStack extends StackEntity {
      * @var array
      */
     protected $_accessible = [
-        'artwork' => true,
-        'editions' => true,
-        'formats' => true,
-        'pieces' => true,
-        'series' => true
+        '*' => true
+        /* broke test StackEntityTest::testSet() line 442 */
+//        'artwork' => true,
+//        'editions' => true,
+//        'formats' => true,
+//        'pieces' => true,
+//        'series' => true
     ];
 
     //<editor-fold desc="ID getters">
