@@ -4,9 +4,12 @@ namespace App\Controller;
 use App\Controller\AppController;
 use App\Controller\Component\UserContextComponent;
 use App\Lib\Range;
+use App\Model\Entity\ArtStack;
+use App\Model\Table\ArtStacksTable;
 use Cake\Cache\Cache;
 use App\Model\Entity\Piece;
 use Cake\Collection\Collection;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
 use App\Lib\RenumberRequest;
 use App\Lib\RenumberRequests;
@@ -21,7 +24,7 @@ use Twig\Error\RuntimeError;
  * Pieces Controller
  *
  * @property \App\Model\Table\PiecesTable $Pieces
- * @param UserContextComponent $UserContext
+ * @property UserContextComponent $UserContext
  */
 class PiecesController extends AppController
 {
@@ -181,29 +184,41 @@ class PiecesController extends AppController
      *      Also see EditionsController::assign()
 	 */
 	public function renumber() {
-	    $this->contextUser()->set('artist', 1);
+        /*
+         * This method is in transition.
+         * The old EditionStackComponent::stackQuery() is now dead and
+         * ArtStack has been outfitted with replacement code.
+         */
+        $artId = Hash::get($this->request->getQueryParams(), 'artwork');
+        /* @var ArtStacksTable $ArtStackTable */
+        /* @var StackSet $artworks */
+        /* @var ArtStack $artStack */
+        /* @var Atrwork $arworkEntity */
+
+        $ArtStackTable = TableRegistry::getTableLocator()->get('ArtStacks');
+        $artworks = $ArtStackTable->find('stacksFor', ['seed' => 'artwork', 'ids' => [$artId]]);
+        $artStack = $artworks->shift();
+        $artworkEntity = $artStack->artwork->shift();
+
+        $this->contextUser()->set('artist', $artworkEntity->user_id);
+        // use the new stub class for Processes
         $result = $this->UserContext->required(['artist']);
-        osd($result);
 
         if ($result !== true) {
             return $result;
         }
 
-		$cache_prefix = $this->_renumber_cache_prefix();
-		/*
-		 * This method is in transition.
-		 * The old EditionStackComponent::stackQuery() is now dead and
-		 * ArtStack has been outfitted with replacement code.
-		 *
-		 * To make this method work, I'll have to figure out what IDs are
-		 * available and use them to get the ArtStack that contains the
-		 * edition of interest.
-		 *
-		 * The prouct of that process will be a StackSet and would be
-		 * send to $artStack (below).
-		 */
-        $artStack = $artworks->shift();
         extract($artStack->oldEditionStack('13')); // providers, pieces, artwork
+
+        osd($providers);
+        osd($artwork);
+        osd($pieces);
+        die;
+
+//		$cache_prefix = $this->_renumber_cache_prefix();
+
+        /* Original code resumes here */
+
 		/* prevent inappropriate entry */
 		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');
