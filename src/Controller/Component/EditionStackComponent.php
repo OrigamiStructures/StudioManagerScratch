@@ -43,7 +43,7 @@ class EditionStackComponent extends Component {
 
 	protected $pieces_to_save ;
 	protected $pieces_to_delete;
-	
+
 	/**
 	 * Move the indicated pieces to to indicated destination
 	 *
