@@ -37,7 +37,7 @@ class ArtStack extends StackEntity {
      */
     protected $_accessible = [
         '*' => true
-        /* broke test StackEntityTest::testSet() line 442 */
+        /* broke test StackEntityTest::testSet() line 442  */
 //        'artwork' => true,
 //        'editions' => true,
 //        'formats' => true,
