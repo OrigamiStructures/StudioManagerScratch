@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
 
@@ -28,11 +29,11 @@ class AddressBookController extends AppController
 
 		$stackCall = function($paginator) use ($PersonCards, $ids) {
 			return $PersonCards->find(
-					'stacksFor', 
+					'stacksFor',
 					['seed' => 'identity', 'ids' => $ids, 'paginator' => $paginator]
 				);
 		};
-		
+
         $results = $this->paginate($stackCall);
         $this->set('results', $results);
     }
@@ -42,7 +43,7 @@ class AddressBookController extends AppController
      *
      * @param string|null $id Member id.
      * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @throws NotFoundException When record not found.
      */
     public function view($id = null)     {
         try {
@@ -50,7 +51,8 @@ class AddressBookController extends AppController
                 'contain' => ['Images', 'Groups', 'Users', 'Dispositions', 'Locations']
             ]);
         } catch (\Exception $e) {
-
+            //No record has been found
+            $this->set('error_message', $e->getMessage());
         }
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
