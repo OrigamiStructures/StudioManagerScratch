@@ -62,7 +62,7 @@ class EditionStackComponent extends Component {
 	 */
 	public function reassignPieces($assignment, $providers) {
 		$edition = $providers['edition'];
-		$split = preg_split('/\\\/', $assignment->destination);
+		$split = preg_split('/\/', $assignment->destination);
 		if (stristr($split[count($split)-2], 'Format')) {
 			$patch = ['format_id' => $split[count($split)-1]];
 		} else {
@@ -183,7 +183,7 @@ class EditionStackComponent extends Component {
 			$piece_entity = new Piece([
 				'quantity' => $assignment->request_quantity,
 				'edition_id' => $edition_id,
-				'user_id' => $this->SystemState->artistId(),
+				'user_id' => $this->getController()->contextUser()->artistId(),
 			]);
 		} else {
 			$piece_entity = $assignment->destination_piece;
@@ -210,7 +210,8 @@ class EditionStackComponent extends Component {
 	 */
 	public function reassignmentTransaction() {
 		$PiecesTable = TableRegistry::getTableLocator()->get('Pieces');
-		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
+		$artworkId = Hash::get($this->getController()->request->getQueryParams(), 'artwork');
+		Cache::delete("get_default_artworks[_{$artworkId}_]", 'artwork');//die;
 		$result = $PiecesTable->getConnection()->transactional(function () use ($PiecesTable) {
 			$result = TRUE;
 			if (is_array($this->pieces_to_save)) {

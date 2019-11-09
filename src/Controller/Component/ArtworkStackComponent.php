@@ -29,6 +29,9 @@ use App\Model\Lib\Providers;
  *
  * @todo Exceptions in this or calling code should clear the art stack cache, probably
  *			a special Exception class should be written that takes care of the cache.
+ * @todo I'm not removing SystemState because this Component will be trashed. But
+ *      I'm leaving it for now for reference. There are probably some methods that
+ *      point to forgotten concepts that shouldn't be lost.
  *
  * @author dondrake
  */

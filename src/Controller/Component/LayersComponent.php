@@ -53,7 +53,6 @@ class LayersComponent extends Component {
     public function initialize(array $config)
 	{
 		$this->controller = $this->getController();
-		$this->SystemState = $this->controller->SystemState;
 	}
 
 	/**
@@ -94,7 +93,7 @@ class LayersComponent extends Component {
 	}
 
     /**
-     * @todo This method doesn't seem to be used. But I added the parameter
+     * @todo This method doesn't seem to be used. But I refactored with parameter
      *      to remove SystemState references.
      * @param $artwork Artwork
      * @param $edition Edition
