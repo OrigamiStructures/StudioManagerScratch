@@ -1,11 +1,13 @@
 <?php
 namespace App\Controller\Component;
 
+use App\Controller\AppController;
 use Cake\Controller\Component;
 use Cake\Cache\Cache;
 use App\Model\Entity\Disposition;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
+use Cake\Utility\Hash;
 use DateTime;
 use App\Form\AssignmentForm;
 
@@ -43,14 +45,27 @@ class DispositionManagerComponent extends Component {
 	 */
 	public $disposition;
 
-	protected $controller;
+    /**
+     * @var AppController
+     */
+    protected $controller;
 
-	protected $SystemState;
+    /**
+     * @var string
+     */
+    protected $artistId;
+
+    /**
+     * @var array
+     */
+    protected $queryArgs;
+
 
 	public function initialize(array $config)
 	{
 		$this->controller = $this->_registry->getController();
-		$this->SystemState = $this->controller->SystemState;
+		$this->artistId = $this->controller->contextUser()->artistId();
+		$this->queryArgs = $this->controller->request->getQueryParams();
 		$this->Pieces = TableRegistry::getTableLocator()->get('Pieces');
 	}
 
@@ -68,7 +83,7 @@ class DispositionManagerComponent extends Component {
 	 * @return Disposition The evolving or brand new disposition
 	 */
 	public function get() {
-		$this->disposition = Cache::remember($this->SystemState->artistId(), [$this, 'generate'], 'dispo');
+		$this->disposition = Cache::remember($this->artistId, [$this, 'generate'], 'dispo');
 		return $this->disposition;
 	}
 
@@ -83,7 +98,7 @@ class DispositionManagerComponent extends Component {
 			if (is_int($disposition->id)) {
 				$this->controller->Dispositions->delete($disposition);
 			}
-			Cache::delete($this->SystemState->artistId(), 'dispo');
+			Cache::delete($this->artistId, 'dispo');
 		} else {
 			$this->controller->Flash->error('Open Edition pieces could not be restored to their orginal places. Please try again');
 		}
@@ -95,24 +110,25 @@ class DispositionManagerComponent extends Component {
 	 * @return
 	 */
 	public function remove() {
-		if ($this->SystemState->urlArgIsKnown('artwork')) {
+	    ;
+		if (!is_null(Hash::get($this->queryArgs, 'artwork  '))) {
 			$this->_removeArtwork();
-		} elseif ($this->SystemState->urlArgIsKnown('member')) {
+		} elseif (!is_null(Hash::get($this->queryArgs, 'member  '))) {
 			$this->_removeMember();
-		} elseif ($this->SystemState->urlArgIsKnown('address')) {
-			$this->_removeAddress($this->SystemState->queryArg('address'));
+		} elseif (!is_null(Hash::get($this->queryArgs, 'address  '))) {
+			$this->_removeAddress(!is_null(Hash::get($this->queryArgs, 'artwork  ')));
 		}
 
 	}
 
 	protected function _removeArtwork() {
 		$disposition = $this->get();
-		$index = $disposition->indexOfPiece($this->SystemState->queryArg('piece'));
+		$index = $disposition->indexOfPiece(!is_null(Hash::get($this->queryArgs, 'piece  ')));
 		$piece = $disposition->pieces[$index];
 		if ($this->Pieces->merge([$piece])) {
 			unset($disposition->pieces[$index]);
 			$this->write();
-			Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
+			Cache::delete("get_default_artworks[_{!is_null(Hash::get($this->queryArgs, 'artwork  '))}_]", 'artwork');//die;
 		} else {
 			$this->controller->Flash->error('Open Edition pieces could not be restored to their orginal places. Please try again');
 		}
@@ -165,11 +181,11 @@ class DispositionManagerComponent extends Component {
 
 	public function write($disposition = NULL) {
 		$this->disposition = is_null($disposition) ? $this->disposition : $disposition;
-		Cache::write($this->SystemState->artistId(), $this->disposition, 'dispo');
+		Cache::write($this->artistId, $this->disposition, 'dispo');
 	}
 
 	public function read() {
-		return Cache::read($this->SystemState->artistId(), 'dispo');
+		return Cache::read($this->artistId, 'dispo');
 	}
 
 	/**
@@ -300,7 +316,7 @@ class DispositionManagerComponent extends Component {
 // -------------------------------------------------------
 // AT THIS POINT $PIECE MAY DIVERGE FROM THE ID IN QUERY ARGS
 			$piece = $this->Pieces->splitPiece($piece->id, $quantity);
-			$piece->source_piece = $this->SystemState->queryArg('piece');
+			$piece->source_piece = !is_null(Hash::get($this->queryArgs, 'piece  '));
 		}
 
 		if (!$piece) {
@@ -324,7 +340,7 @@ class DispositionManagerComponent extends Component {
 		}
 
 //		osd($piece);die;
-		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
+		Cache::delete("get_default_artworks[_{!is_null(Hash::get($this->queryArgs, 'artwork  '))}_]", 'artwork');//die;
 		$this->disposition->pieces[] = $piece;
 		$this->disposition->dropFormat($arguments['format']);
 
@@ -410,7 +426,7 @@ class DispositionManagerComponent extends Component {
 
 	protected function _registerMember($arguments) {
 		$Memebers = TableRegistry::getTableLocator()->get('Members');
-		$conditions = $this->SystemState->buildConditions([]);
+		$conditions = ['user_id' => $this->queryArgs];
 		$member = $Memebers->get(
 				$arguments['member'],
 				[
@@ -424,7 +440,7 @@ class DispositionManagerComponent extends Component {
 
 	protected function _registerAddress($arguments) {
 		$Addresses = TableRegistry::getTableLocator()->get('Addresses');
-		$conditions = $this->SystemState->buildConditions([]);
+        $conditions = ['user_id' => $this->queryArgs];
 		$address = $Addresses->get($arguments['address'], ['conditions' => $conditions]);
 		$this->disposition->addresses = [$address];
 	}

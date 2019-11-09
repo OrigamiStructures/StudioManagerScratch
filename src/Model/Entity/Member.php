@@ -38,17 +38,17 @@ class Member extends Entity
         '*' => true,
         'id' => false,
     ];
-    
+
 	/**
 	 * The assembled `name` property; first/last format
-	 * 
+	 *
 	 * @return string
 	 */
     protected function _name(){
         switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(' ', [
-					$this->firstName(), 
+					$this->firstName(),
 					$this->lastName()
 				]);
                 break;
@@ -58,7 +58,7 @@ class Member extends Entity
         }
 		return trim($name);
     }
-    
+
 	/**
 	 * The assembled `reverse name`; last/first format
 	 */
@@ -66,7 +66,7 @@ class Member extends Entity
         switch ($this->type()) {
             case MEMBER_TYPE_PERSON:
                 $name = implode(', ', [
-					$this->lastName(), 
+					$this->lastName(),
 					$this->firstName(),
 				]);
                 break;
@@ -76,15 +76,15 @@ class Member extends Entity
         }
 		return $name;
     }
-	
+
 	/**
 	 * Returns an institution/group name
-	 * 
-	 * Handles messy usage of the first/last name fields for these 
+	 *
+	 * Handles messy usage of the first/last name fields for these
 	 * names that only need one field
-	 * 
+	 *
 	 * @todo The Member UX needs to route Institution/Group names to last_name
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function _institutionName() {
@@ -99,12 +99,12 @@ class Member extends Entity
 
 		/**
 	 * Flexible name getter
-	 * 
+	 *
 	 * Can return 3 variations of concatention
 	 *	FIRST_LAST = first_name last_name
 	 *  LAST_FIRST = last_name, first_name
 	 *  LABELED = memeber_type: first_name last_name
-	 * 
+	 *
 	 * @param string $format
 	 * @return string
 	 */
@@ -124,14 +124,14 @@ class Member extends Entity
 				break;
 		}
 	}
-	
+
 	public function imageId() {
 		return $this->image_id;
 	}
-	
+
 	/**
 	 * Has this Memeber collected artwork
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isCollector() {
@@ -140,11 +140,11 @@ class Member extends Entity
 		}
 		return FALSE;
 	}
-	
+
 	public function collector() {
 		return $this->collector;
 	}
-    
+
 	public function collectedCount() {
 		$count = $this->collector();
 		if (!is_null($count) && $count > 0 ) {
@@ -152,14 +152,14 @@ class Member extends Entity
 		}
 		return 0;
 	}
-	
+
 	public function isDispositionParticipant() {
 		if (!is_null($this->dispositionCount()) && $this->dispositionCount() > 0 ) {
 			return TRUE;
 		}
 		return FALSE;
 	}
-	
+
 	public function dispositionCount() {
 		$count = $this->disposition_count;
 		if (!is_null($count) && $count > 0 ) {
@@ -167,19 +167,19 @@ class Member extends Entity
 		}
 		return 0;
 	}
-	
+
 	public function isActive() {
 		return $this->active;
 	}
-	
+
 	public function firstName() {
 		return $this->first_name;
 	}
-	
+
 	public function lastName() {
 		return $this->last_name;
 	}
-	
+
 	public function type() {
 		return $this->member_type;
 	}
@@ -190,6 +190,6 @@ class Member extends Entity
 
     public function registeredUserId()
     {
-        $this->user_id;
+        return $this->user_id;
     }
 }

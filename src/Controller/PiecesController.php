@@ -2,10 +2,14 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Controller\Component\UserContextComponent;
 use App\Lib\Range;
+use App\Model\Entity\ArtStack;
+use App\Model\Table\ArtStacksTable;
 use Cake\Cache\Cache;
 use App\Model\Entity\Piece;
 use Cake\Collection\Collection;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
 use App\Lib\RenumberRequest;
 use App\Lib\RenumberRequests;
@@ -14,16 +18,18 @@ use Cake\Http\Exception\BadRequestException;
 use App\Controller\Component\LayersComponent;
 use App\Model\Lib\Providers;
 use Cake\Utility\Hash;
+use Twig\Error\RuntimeError;
 
 /**
  * Pieces Controller
  *
  * @property \App\Model\Table\PiecesTable $Pieces
+ * @property UserContextComponent $UserContext
  */
 class PiecesController extends AppController
 {
 
-	public $components = ['ArtworkStack', 'Layers'];
+	public $components = ['ArtworkStack', 'Layers', 'UserContext'];
 
 	/**
 	 * Before filter
@@ -178,45 +184,41 @@ class PiecesController extends AppController
      *      Also see EditionsController::assign()
 	 */
 	public function renumber() {
-		$cache_prefix = $this->_renumber_cache_prefix();
-		/*
-		 * EditionStack was an old nested array implementation.
-		 * Below is documentation of the $providers and $pieces structures it
-		 * returned so this method can be fixed to work with flat stacks
-		 */
-		$EditionStack = $this->loadComponent('EditionStack');
-		extract($EditionStack->stackQuery()); // providers, pieces
         /*
-         * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
-         *
-         * The Edition carries its Artwork record for some upstream context.
-         * The Edition and its Formats are returned as siblings, each with its Pieces.
-         * The Pieces are categorized as appropriate to that layer.
-         * The AssignemntTrait on the Edition and Piece entities unify piece access.
-         * <pre>
-         * // providers array
-         * ['edition' => EditionEntity {
-         *			...,
-         *			'unassigned' -> PiecesEntity {},
-         *      },
-         *  0 => FormatEntity {
-         *			...,
-         *			'fluid' -> PiecesEntity {},
-         *      },
-         *  ...
-         *  0+n => FormatEntity {
-         *			...,
-         *			'fluid' -> PiecesEntity {},
-         *      },
-         * ]
-         *
-         * // pieces array
-         * [0 => PieceEntity {},
-         * ...
-         * 0+n => PieceEntity {},
-         * ]
-         * </pre>
-         *
+         * This method is in transition.
+         * The old EditionStackComponent::stackQuery() is now dead and
+         * ArtStack has been outfitted with replacement code.
+         */
+        $artId = Hash::get($this->request->getQueryParams(), 'artwork');
+        /* @var ArtStacksTable $ArtStackTable */
+        /* @var StackSet $artworks */
+        /* @var ArtStack $artStack */
+        /* @var Atrwork $arworkEntity */
+
+        $ArtStackTable = TableRegistry::getTableLocator()->get('ArtStacks');
+        $artworks = $ArtStackTable->find('stacksFor', ['seed' => 'artwork', 'ids' => [$artId]]);
+        $artStack = $artworks->shift();
+        $artworkEntity = $artStack->artwork->shift();
+
+        $this->contextUser()->set('artist', $artworkEntity->user_id);
+        // use the new stub class for Processes
+        $result = $this->UserContext->required(['artist']);
+
+        if ($result !== true) {
+            return $result;
+        }
+
+        extract($artStack->oldEditionStack('13')); // providers, pieces, artwork
+
+        osd($providers);
+        osd($artwork);
+        osd($pieces);
+        die;
+
+//		$cache_prefix = $this->_renumber_cache_prefix();
+
+        /* Original code resumes here */
+
 		/* prevent inappropriate entry */
 		if (!$providers->isLimitedEdition()) {
 			$this->Flash->set('Only numbered editions may be renumbered.');

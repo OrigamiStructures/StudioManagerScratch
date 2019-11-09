@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Entity;
 
+use App\Model\Entity\Traits\ParentEntityTrait;
 use Cake\ORM\Entity;
 
 /**
@@ -20,6 +21,8 @@ use Cake\ORM\Entity;
  */
 class EditionsFormat extends Entity
 {
+
+    use ParentEntityTrait;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -41,18 +44,30 @@ class EditionsFormat extends Entity
         'format' => true,
         'edition' => true
     ];
-	
+
 	/**
 	protected $_salable;
 
 	/**
 	 * Fully detailed descriptive label for the edition
-	 * 
+	 *
 	 * @return string
 	 */
 	public function _getDisplayTitle() {
 		$title = empty($this->title) ? 'Format: ' . $this->description : $this->title;
 		return $title;
 	}
-	
+
+    /**
+     * provide a key that relates Pieces back to their Format or Edition
+     *
+     * will yeild something like 917_1119
+     * Piece->key() generates it's ancestory key that will match this value
+     *
+     * @return string
+     */
+    public function key() {
+        return $this->_key([$this->edition_id, $this->id]);
+    }
+
 }

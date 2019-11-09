@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Model\Entity\PersonCard;
 use Cake\ORM\TableRegistry;
 use Cake\Http\Session;
 use Cake\Http\Exception\BadRequestException;
@@ -207,7 +208,49 @@ class ContextUser {
 
 	// </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
+
+    /**
+     * @todo this thing has an id return value hard coded FIX IT!
+     * @return string
+     */
+    public function artistId()
+    {
+        /** @var PersonCard $personCard */
+        $personCard = $this->getCard('artist');
+        return $personCard->registeredUserId();
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo() {
+        $actorCard = [];
+        foreach (array_keys($this->defaultValues) as $key) {
+            $actorCard[$key] =
+                is_null($this->actorCard[$key])
+                    ? NULL
+                    : 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
+        }
+        return [
+            'user' =>
+                is_object($this->user)
+                    ? "CurrentUser object: {$this->user->getName()} {$this->user->userId()}"
+                    : 'Not set',
+            'actorId' => $this->actorId,
+            'actorCard' => $actorCard,
+            'Session' => is_object(self::$Session) ? 'Session object' : 'Not set',
+            'PersonCardsTable' =>
+                is_object($this->PersonCardsTable)
+                    ? 'PersonCardsTable object'
+                    : 'Not set',
+            'instance' =>
+                is_null(self::$instance)
+                    ? 'instance is clear'
+                    : 'instance is populated'
+        ];
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
 
 	private function cacheKey() {
 		return "{$this->user->userId()}.ContextUser";
@@ -237,7 +280,7 @@ class ContextUser {
 	/**
 	 * Convert the string to lower case and verify it is a known value
 	 *
-	 * @param type $actor
+	 * @param string $actor
 	 * @return string The validated string in lower case
 	 */
 	private function validateActor($actor) {
@@ -299,7 +342,6 @@ class ContextUser {
 				->find('stacksFor',
 				[
 			'seed' => 'identity',
-
 			'ids' => [$this->actorId['artist']]
 		]);
 		$this->actorCard['artist'] = $set->shift();
@@ -333,41 +375,6 @@ class ContextUser {
 			'ids' => [$this->actorId['manager']]
 		]);
 		$this->actorCard['manager'] = $set->shift();
-	}
-
-    public function artistId()
-    {
-        return $this->getCard('artist')->registeredUserId();
-	}
-
-	/**
-	 * @return array
-	 */
-	public function __debugInfo() {
-		$actorCard = [];
-		foreach (array_keys($this->defaultValues) as $key) {
-			$actorCard[$key] =
-					is_null($this->actorCard[$key])
-					? NULL
-					: 'App\Mode\Entity\PersonCard stack for ' . $this->getCard($key)->name();
-		}
-		return [
-			'user' =>
-					is_object($this->user)
-					? "CurrentUser object: {$this->user->getName()} {$this->user->userId()}"
-					: 'Not set',
-			'actorId' => $this->actorId,
-			'actorCard' => $actorCard,
-			'Session' => is_object(self::$Session) ? 'Session object' : 'Not set',
-			'PersonCardsTable' =>
-					is_object($this->PersonCardsTable)
-					? 'PersonCardsTable object'
-					: 'Not set',
-			'instance' =>
-					is_null(self::$instance)
-					? 'instance is clear'
-					: 'instance is populated'
-		];
 	}
 
 	// </editor-fold>

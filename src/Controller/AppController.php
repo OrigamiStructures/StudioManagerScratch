@@ -42,7 +42,7 @@ class AppController extends Controller
 	protected $currentUser;
 
     /**
-     * @var ContextUser
+     * @var ContextUser $contextUser
      */
 	protected $contextUser;
 

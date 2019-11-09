@@ -1,6 +1,10 @@
 <?php
 namespace App\Controller\Component;
 
+use App\Model\Lib\ContextUser;
+use App\Model\Table\EditionsTable;
+use App\Model\Table\FormatsTable;
+use App\Model\Table\PiecesTable;
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
 use Cake\Collection\Collection;
@@ -10,6 +14,7 @@ use Cake\Cache\Cache;
 use App\Lib\Traits\EditionStackCache;
 use App\Model\Lib\Providers;
 use App\Lib\EditionTypeMap;
+use Cake\Utility\Hash;
 
 /**
  * EditionStackComponent provides a unified interface for the three layers, Edition, Format and Piece
@@ -39,100 +44,6 @@ class EditionStackComponent extends Component {
 	protected $pieces_to_save ;
 	protected $pieces_to_delete;
 
-
-	public function initialize(array $config)
-	{
-		$this->controller = $this->_registry->getController();
-		$this->SystemState = $this->controller->SystemState;
-	}
-
-	/**
-	 * Return the object representing an Edition and its contents down through Pieces, and the full Piece set
-	 *
-	 * The Edition carries its Artwork record for some upstream context.
-	 * The Edition and its Formats are returned as siblings, each with its Pieces.
-	 * The Pieces are categorized as appropriate to that layer.
-	 * The AssignemntTrait on the Edition and Piece entities unify piece access.
-	 * <pre>
-	 * // providers array
-	 * ['edition' => EditionEntity {
-	 *			...,
-	 *			'unassigned' -> PiecesEntity {},
-	 *      },
-	 *  0 => FormatEntity {
-	 *			...,
-	 *			'fluid' -> PiecesEntity {},
-	 *      },
-	 *  ...
-	 *  0+n => FormatEntity {
-	 *			...,
-	 *			'fluid' -> PiecesEntity {},
-	 *      },
-	 * ]
-	 *
-	 * // pieces array
-	 * [0 => PieceEntity {},
-	 * ...
-	 * 0+n => PieceEntity {},
-	 * ]
-	 * </pre>
-	 *
-	 * @todo make providers an object?
-	 * This would allow it to contain its own ownerTitle hash map. This map
-	 * allows piece->key() to lookup its assigned owner's display title.
-	 * Currently, redundant code in the elements build the hash. A helper
-	 * solution has to return the table as a variable or save it as a property.
-	 * but it has difficulty knowing if the property is for the current
-	 * version of $providers.
-	 *
-	 * @return tuple 'providers, pieces'
-	 */
-	public function stackQuery() {
-	$stack = $this->readCache($this->SystemState->queryArg('edition'));
-	if ($stack === FALSE) {
-		$Pieces = TableRegistry::getTableLocator()->get('Pieces');
-		$Formats = TableRegistry::getTableLocator()->get('Formats');
-		$Editions = TableRegistry::getTableLocator()->get('Editions');
-
-		$edition_condition = $this->SystemState->buildConditions(['edition' => 'Editions.id'], 'Editions');
-		$format_condition = $this->SystemState->buildConditions(['edition'], 'Formats');
-		$piece_condition = $this->SystemState->buildConditions(['edition'], 'Pieces');
-
-		$edition = $Editions->find()
-				->where($edition_condition)
-				->contain('Artworks')
-				->toArray()[0];
-		$artwork = $edition->artwork;
-		$unassigned = $Pieces->find('unassigned', $piece_condition);
-		$edition->unassigned = $unassigned->toArray();
-
-		$formats = $Formats->find()->where($format_condition);
-		$formats = $formats->each(function($format) use($piece_condition, $Pieces) {
-			$conditions = $piece_condition + ['format_id' => $format->id];
-			$format->fluid = $Pieces->find('fluid', $conditions)->toArray();
-		});
-
-		$providers = ['edition' => $edition] + $formats->toArray();
-		$artwork->editions = [$edition];
-		$artwork->editions[0]->formats = $formats;
-
-		// this may need ->order() later for piece-table reporting of open editions
-		$pieces = $Pieces->find()
-				->where($piece_condition)
-				->contain('Dispositions')
-				->order('Pieces.number');
-		$stack = [
-			'providers' => new Providers($providers),
-			'pieces' => ($pieces->toArray()),
-			'artwork' => $artwork,
-			];
-		$this->writeCache($this->SystemState->queryArg('edition'), $stack);
-		}
-
-		return $stack;
-
-	}
-
 	/**
 	 * Move the indicated pieces to to indicated destination
 	 *
@@ -151,7 +62,7 @@ class EditionStackComponent extends Component {
 	 */
 	public function reassignPieces($assignment, $providers) {
 		$edition = $providers['edition'];
-		$split = preg_split('/\\\/', $assignment->destination);
+		$split = preg_split('/\/', $assignment->destination);
 		if (stristr($split[count($split)-2], 'Format')) {
 			$patch = ['format_id' => $split[count($split)-1]];
 		} else {
@@ -272,7 +183,7 @@ class EditionStackComponent extends Component {
 			$piece_entity = new Piece([
 				'quantity' => $assignment->request_quantity,
 				'edition_id' => $edition_id,
-				'user_id' => $this->SystemState->artistId(),
+				'user_id' => $this->getController()->contextUser()->artistId(),
 			]);
 		} else {
 			$piece_entity = $assignment->destination_piece;
@@ -284,10 +195,6 @@ class EditionStackComponent extends Component {
 		$this->pieces_to_delete = $deletions;
 
 		return $this->pieces_to_save;
-
-	}
-
-	protected function searchExistingPiece($assignment) {
 
 	}
 
@@ -303,7 +210,8 @@ class EditionStackComponent extends Component {
 	 */
 	public function reassignmentTransaction() {
 		$PiecesTable = TableRegistry::getTableLocator()->get('Pieces');
-		Cache::delete("get_default_artworks[_{$this->SystemState->queryArg('artwork')}_]", 'artwork');//die;
+		$artworkId = Hash::get($this->getController()->request->getQueryParams(), 'artwork');
+		Cache::delete("get_default_artworks[_{$artworkId}_]", 'artwork');//die;
 		$result = $PiecesTable->getConnection()->transactional(function () use ($PiecesTable) {
 			$result = TRUE;
 			if (is_array($this->pieces_to_save)) {

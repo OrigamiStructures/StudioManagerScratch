@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\RolodexCard;
@@ -39,13 +40,13 @@ class RolodexCardTest extends TestCase
     {
         parent::setUp();
         $this->RolodexCards = $this->getTableLocator()->get('RolodexCards');
-        
-        $targets = ['seed' => 'identity', 'ids' => [2,3]];
+
+        $targets = ['seed' => 'identity', 'ids' => [2, 3]];
         $cards = $this->RolodexCards->find('stacksFor', $targets);
-        
+
         $this->Person = $cards->element(0);
         $this->Group = $cards->element(1);
-        
+
     }
 
     /**
@@ -72,10 +73,10 @@ class RolodexCardTest extends TestCase
     {
         $this->assertEquals('Gail Drake', $this->Person->name(),
             'The person card\'s name() passthrough did not work');
-        
+
         $this->assertEquals('Drake Family', $this->Group->name(),
             'The group card\'s name() passthrough did not work');
-        
+
     }
 
     /**
@@ -87,10 +88,10 @@ class RolodexCardTest extends TestCase
     {
         $this->assertTrue($this->Person->isMember(),
             'The person card\'s isMember() check did not work');
-        
+
         $this->assertFalse($this->Group->isMember(),
             'The group card\'s isMember() check did not work');
-        
+
     }
 
     /**
@@ -98,14 +99,14 @@ class RolodexCardTest extends TestCase
      *
      * @return void
      */
-    public function testmembershipElements()
+    public function testGetMemberships()
     {
-        $this->assertCount(2, $this->Person->membershipElements(),
+        $this->assertCount(2, $this->Person->getMemberships(),
             'The person card\'s membershipElements() accessor did not work');
-        
-        $this->assertCount(0, $this->Group->membershipElements(),
+
+        $this->assertCount(0, $this->Group->getMemberships(),
             'The group card\'s membershipElements() accessor did not work');
-        
+
     }
 
     /**
@@ -116,15 +117,15 @@ class RolodexCardTest extends TestCase
     public function testMemberships()
     {
         $this->assertArraySubset(
-				['Drake Family', 'Wonderland Group'], 
-				$this->Person->memberships(),
+            ['Drake Family', 'Wonderland Group'],
+            $this->Person->memberships(),
             'The person card\'s memberships() (name listcreator) did not work');
-        
+
         $this->assertArraySubset(
-				[], 
-				$this->Group->memberships(),
+            [],
+            $this->Group->memberships(),
             'The group card\'s memberships() (name listcreator) did not work');
-        
+
     }
 
     /**
@@ -135,14 +136,14 @@ class RolodexCardTest extends TestCase
     public function testMembershipIDs()
     {
         $this->assertArraySubset(
-				[3,4], 
-				$this->Person->membershipIDs(),
+            [3, 4],
+            $this->Person->membershipIDs(),
             'The person card\'s membershipIDs() did not work');
-        
+
         $this->assertArraySubset(
-				[], 
-				$this->Group->membershipIDs(),
+            [],
+            $this->Group->membershipIDs(),
             'The group card\'s membershipIDs() did not work');
-        
+
     }
 }

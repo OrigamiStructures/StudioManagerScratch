@@ -7,6 +7,7 @@ use Cake\Collection\Collection;
 use App\Model\Entity\Artwork;
 use App\Model\Entity\Edition;
 use App\Model\Entity\Format;
+use Cake\Utility\Hash;
 
 /**
  * CakePHP LayerElementComponent
@@ -51,8 +52,7 @@ class LayersComponent extends Component {
 
     public function initialize(array $config)
 	{
-		$this->controller = $this->_registry->getController();
-		$this->SystemState = $this->controller->SystemState;
+		$this->controller = $this->getController();
 	}
 
 	/**
@@ -84,7 +84,7 @@ class LayersComponent extends Component {
 		return [
 			'Artwork/no_decoration',
 			function (Artwork $artwork) {
-				return $this->SystemState->hasFocus($artwork) ?
+				return $this->hasFocus($artwork) ?
 					'Artwork/describe' : 'Artwork/summary';
 			},
 			'Edition/summary',
@@ -92,17 +92,24 @@ class LayersComponent extends Component {
 		];
 	}
 
-	protected function artworksRefine() {
+    /**
+     * @todo This method doesn't seem to be used. But I refactored with parameter
+     *      to remove SystemState references.
+     * @param $artwork Artwork
+     * @param $edition Edition
+     * @return array
+     */
+	protected function artworksRefine($artwork, $edition) {
 		return [
 			'Artwork/form_decoration',
 			'Artwork/fieldset',
 			function() {
-				return $this->SystemState->artwork->edition_count === 1 ?
+				return $artwork->edition_count === 1 ?
 					'Edition/fieldset' : 'Edition/describe';
 			},
 			function() {
-				return $this->SystemState->artwork->edition_count === 1 &&
-				$this->SystemState->edition->format_count === 1 ?
+				return $artwork->edition_count === 1 &&
+				$edition->format_count === 1 ?
 				'Format/fieldset' : 'Format/describe';
 			}
 		];
@@ -131,7 +138,7 @@ class LayersComponent extends Component {
 			'Artwork/no_decoration',
 			'Artwork/describe',
 			function (Edition $edition) {
-				return $this->SystemState->hasFocus($edition) ?
+				return $this->hasFocus($edition) ?
 					'Edition/describe' : 'Edition/summary';
 			},
 			'Format/describe',
@@ -176,7 +183,7 @@ class LayersComponent extends Component {
 			'Artwork/summary',
 			'Edition/summary',
 			function (Format $format) {
-				return $this->SystemState->hasFocus($format) ?
+				return $this->hasFocus($format) ?
 					'Format/describe' : 'Format/summary';
 			},
 		];
@@ -208,4 +215,33 @@ class LayersComponent extends Component {
 			'Format/describe',
 		];
 	}
+
+    /**
+     * Is an ID'd record referenced in the URL arguments?
+     *
+     * hasFocus('artwork', 641)
+     * hasFocus('member', 1215)
+     * or
+     * hasFocus($artwork) // Artwork entity
+     * hasFocus($format) // Format entity
+     *
+     * @param entity|string $name
+     * @param string $value
+     * @return boolean
+     */
+    public function hasFocus($name, $value = NULL) {
+        $queryArgs = $this->getController()->request->getQueryParams();
+
+        if (is_object($name)) {
+            $value = $name->id;
+            $name = $this::stripNamespace($name);
+        }
+        $argValue = Hash::get($queryArgs, $name);
+        if (!is_null($argValue)) {
+            $result = $argValue == $value;
+        } else {
+            $result = false;
+        }
+        return $result;
+    }
 }

@@ -3,13 +3,17 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\StackEntity;
+use App\Model\Lib\Layer;
 
 /**
  * CakePHP RolodexCard
  * @author dondrake
+ * @property Layer $memberships
+ * @property Layer $identity
+ * @property Layer $data_owner
  */
 class RolodexCard extends StackEntity {
-	
+
 	/**
 	 * @todo Let StackTable::marshalStack() set this
 	 * {@inheritdoc}
@@ -22,44 +26,83 @@ class RolodexCard extends StackEntity {
 	 */
 	public $rootDisplaySource = 'name';
 
-	public function name() {
+    /**
+     * @return array|Layer
+     */
+    public function getIdentity($asArray = LAYERACC_ARRAY) {
+        if($this->identity->count() > 0) {
+            $result = $this->identity->load();
+        } else {
+            $result = [];
+        }
+        return $this->_resolveReturnStructure($result, $asArray, 'identity');
+    }
+
+    /**
+     * @return array|Layer
+     */
+    public function getDataOwner($asArray = LAYERACC_ARRAY) {
+        if($this->data_owner->count() > 0) {
+            $result = $this->data_owner->load();
+        } else {
+            $result = [];
+        }
+        return $this->_resolveReturnStructure($result, $asArray, 'data_owner');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function name() {
 		return $this->rootElement()->name();
 	}
-	
+
 	/**
-	 * Is `memberships` a Layer object (TRUE) or array (FALSE)
-	 * 
+	 * does `memberships` layer have elements
+	 *
 	 * @return boolean
 	 */
 	public function isMember() {
 		return $this->memberships->count() > 0;
 	}
-	
-	public function isGroup() {
+
+    /**
+     * @return mixed
+     */
+    public function isGroup() {
 	    return $this->rootElement()->isGroup();
 	}
-	
-	public function isArtist() {
+
+    /**
+     * @return bool
+     */
+    public function isArtist() {
 		return FALSE;
 	}
-	
-	public function isManager() {
+
+    /**
+     * @return bool
+     */
+    public function isManager() {
 		return FALSE;
 	}
-	
-	public function canParticipate() {
+
+    /**
+     * @return bool
+     */
+    public function canParticipate() {
 		return FALSE;
 	}
 
 	/**
 	 * Get the membership elements
-	 * 
+	 *
 	 * Optionally get the entities as a Layer
-	 * 
-	 * @param boolean $asLayer 
+	 *
+	 * @param boolean $asLayer
 	 * @return array|layer
 	 */
-	public function membershipElements($asArray = LAYERACC_ARRAY) {
+	public function getMemberships($asArray = LAYERACC_ARRAY) {
 		if($this->isMember()) {
 			$result = $this->memberships->load();
 		} else {
@@ -67,23 +110,23 @@ class RolodexCard extends StackEntity {
 		}
 		return $this->_resolveReturnStructure($result, $asArray, 'memberships');
 	}
-	
+
 	/**
 	 * Get the IDs of the Groups this card belongs to
-	 * 
+	 *
 	 * @return array
 	 */
 	public function membershipIDs() {
-		return $this->valueList('id', $this->membershipElements());
+		return $this->valueList('id', $this->getMemberships());
 	}
-	
+
 	/**
 	 * Get the names of the Groups this card belongs to
-	 * 
+	 *
 	 * @return array
 	 */
 	public function memberships() {
-		return $this->distinct('name', $this->membershipElements());
+		return $this->distinct('name', $this->getMemberships());
 	}
-	
+
 }

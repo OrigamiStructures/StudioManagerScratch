@@ -30,7 +30,6 @@ use CakeDC\Users\Exception\BadConfigurationException;
 class PieceAllocationComponent extends Component {
 
 	protected $controller;
-	protected $SystemState;
 	protected $stack;
 	protected $artwork;
 	protected $Artworks;
@@ -44,7 +43,6 @@ class PieceAllocationComponent extends Component {
 	/**
 	 * Build the required component internals
 	 *
-	 * Makes controller, SystemState, and artwork available
 	 *
 	 * @param array $config
 	 * @throws Exception Requires and Artwork Entity
@@ -55,13 +53,15 @@ class PieceAllocationComponent extends Component {
 		}
 		parent::initialize($config);
 		$this->controller = $this->_registry->getController();
-		$this->SystemState = $this->controller->SystemState;
 		$this->artwork = $config['artwork'];
 	}
 
 	/**
 	 * @todo Flagged as a serious issue:
-	 *		https://github.com/OrigamiStructures/StudioManagerScratch/issues/41
+	 *		 https://github.com/OrigamiStructures/StudioManagerScratch/issues/41
+     * @todo addition of variable $create is a hack/apprimation of the old
+     *      SystemState/StateMap check. It can't be trusted in production
+     *      without verification and testing
 	 */
 	public function allocate() {
 		$index = array_keys($this->artwork->editions)[0];
@@ -71,8 +71,9 @@ class PieceAllocationComponent extends Component {
 //			$this->multiple_formats = (boolean) $this->artwork->multiple; // an input value from creation forms
 //		}
 		unset($this->pieces);
-		if ($this->SystemState->is(ARTWORK_CREATE) &&
-				($this->onePiece() || !$this->multiple_formats)) {
+
+		$create = stristr($this->getController()->request->getParam('action'), 'create');
+		if ($create && ($this->onePiece() || !$this->multiple_formats)) {
 			$this->piecesToFormat();
 		}
 	}
