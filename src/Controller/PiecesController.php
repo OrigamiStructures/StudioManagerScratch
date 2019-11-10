@@ -210,138 +210,139 @@ class PiecesController extends AppController
 
         extract($artStack->oldEditionStack('13')); // providers, pieces, artwork
 
-        osd($providers);
-        osd($artwork);
-        osd($pieces);
-        die;
+        $this->set(compact('providers', 'artwork', 'pieces'));
+//        osd($providers);
+//        osd($artwork);
+//        osd($pieces);
+//        die;
 
 //		$cache_prefix = $this->_renumber_cache_prefix();
 
         /* Original code resumes here */
 
 		/* prevent inappropriate entry */
-		if (!$providers->isLimitedEdition()) {
-			$this->Flash->set('Only numbered editions may be renumbered.');
-			$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
-		}
-		/* allow cacellation of renumbering process */
-        $cancel = $this->request->getData('cancel');
-		if (isset($cancel)) {
-			$this->_clear_renumber_caches($cache_prefix);
-			$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
-		}
-		/*
-		 * If it's not a post, we'll just render the basic form
-		 * to get the users renumbering request and give a submit button
-		 */
-		if ($this->request->is('post') /*&&
-				// don't know why this second test is necessary
-				!isset($this->request->data['cancel'])*/) {
-			/*
-			 * If it is a post, there are two possibile TRDs because
-			 * the page can have up to two different forms.
-			 * 1. The standard request-renumbing form could have been
-			 *		submitted or resubmitted
-			 * 2. An approval-of-changes form could have been submitted
-			 *		after being shown a summary of the changes proposed
-			 * A third form and TRD supports the Cancel feature (above)
-			 */
-			$doMove = $this->request->getData('do_move');
-			if (isset($doMove)) {
-				/*
-				 * user confirmed accuracy of summary
-				 * retreive the cached change requests,
-				 * assemble entities, and try to save them
-				 */
-				$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
-				if ($messagePackage === FALSE) {
-					$this->Flash->error("Your request expired after 90 minutes. Sorry.");
-					$this->redirect($this->refererStack(SYSTEM_VOID_REFERER));
-					/*
-					 * @todo Don't know why the redirect always falls through
-					 *			so, for now this is an exception
-					 */
-					throw new BadRequestException("Your request expired after 90 minutes. Sorry.");
-				}
-				$renumbered_pieces = [];
-				foreach ($pieces as $piece) {
-					if ($change = $messagePackage->request($piece->number)) {
-						$renumbered_pieces[] = new Piece([
-							'id' => $piece->id,
-							'number' => $change->new]
-						);
-					}
-				}
-				$pieceTable = $this->Pieces; //'use' won't accept property... ?
-				$result = $pieceTable->getConnection()->transactional(
-						function () use ($pieceTable, $renumbered_pieces) {
-							$result = TRUE;
-							foreach ($renumbered_pieces as $entity) {
-								$result = $result && $pieceTable->save($entity, ['atomic' => false]);
-							}
-							return $result;
-						});
-				if ($result) {
-				    $artworkId = Hash::get($this->request->getQueryParams(), 'artwork');
-					Cache::delete("get_default_artworks[_{$artworkId}_]",'artwork');
-					$this->Flash->set('The save was successful');
-					/*
-					 * On success we can clear the cached values
-					 * and return to wherever we started
-					 */
-					$this->_clear_renumber_caches($cache_prefix);
-					$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
-				} else {
-					/*
-					 * attempted save failed. Restore the request form data
-					 * which was in a different <Form> that didn't post
-					 */
-					$this->request = $this->request->withData(
-					    'number', Cache::read($cache_prefix . '.request_data','renumber'));
-					$this->Flash->set('The save was unsuccessful');
-				}
-			} else {
-                /*
-                 *  user made renumbering request, now needs to confirm accuracy of summary
-                 */
-                $pieces = is_array($pieces) ? $pieces : $pieces->toArray();
-                $this->_renumber($this->request->getData('number'), $pieces);
-            }
-		}
-		/* this is common fall-through code for all modes of request */
-        $number = $this->request->getData('number');
-		if (!isset($number) &&
-				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
-			/*
-			 * if the user is going through the approval process, they can be
-			 * headed back to the page with form data that doesn't include
-			 * the renumber requests. We saved that data so the form can stay
-			 * populated throughout the process.
-			 */
-			$this->request = $this->request->withData('number', $request_data);
-		}
-		/**
-		 * Not sure how to autoald and the class is needed
-		 * for when the cached object arrives
-		 */
-		new RenumberMessaging([]);
-		$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
-		/*
-		 * At this point we have one of three situations,
-		 * in all cases $messagePackage has a value.
-		 * 1. $messagePackage is False, a brand new request form will render
-		 * 2. $messagePackage summary is truthy, a confirmation section will render
-		 * 2. An error message says the change could not be saved
-		 *      and the confirmation section renders again
-		 *
-		 * $artwork is the standard stackQuery
-		 * $providers is ['edition' => EditionEntity, 'format' => [FormatEntity, ...]
-		 * $pieces is [PieceEntity, ...] for every piece in the Edition, assigned or not
-		 * $messagePackage is a RenumberMessaging object
-		*/
-//		osd($pieces->toArray(), 'pieces');
-		$this->set('elements', $this->Layers->setElements());
-		$this->set(compact(['providers', 'pieces', 'messagePackage', 'elements']));
+//		if (!$providers->isLimitedEdition()) {
+//			$this->Flash->set('Only numbered editions may be renumbered.');
+//			$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
+//		}
+//		/* allow cacellation of renumbering process */
+//        $cancel = $this->request->getData('cancel');
+//		if (isset($cancel)) {
+//			$this->_clear_renumber_caches($cache_prefix);
+//			$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
+//		}
+//		/*
+//		 * If it's not a post, we'll just render the basic form
+//		 * to get the users renumbering request and give a submit button
+//		 */
+//		if ($this->request->is('post') /*&&
+//				// don't know why this second test is necessary
+//				!isset($this->request->data['cancel'])*/) {
+//			/*
+//			 * If it is a post, there are two possibile TRDs because
+//			 * the page can have up to two different forms.
+//			 * 1. The standard request-renumbing form could have been
+//			 *		submitted or resubmitted
+//			 * 2. An approval-of-changes form could have been submitted
+//			 *		after being shown a summary of the changes proposed
+//			 * A third form and TRD supports the Cancel feature (above)
+//			 */
+//			$doMove = $this->request->getData('do_move');
+//			if (isset($doMove)) {
+//				/*
+//				 * user confirmed accuracy of summary
+//				 * retreive the cached change requests,
+//				 * assemble entities, and try to save them
+//				 */
+//				$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
+//				if ($messagePackage === FALSE) {
+//					$this->Flash->error("Your request expired after 90 minutes. Sorry.");
+//					$this->redirect($this->refererStack(SYSTEM_VOID_REFERER));
+//					/*
+//					 * @todo Don't know why the redirect always falls through
+//					 *			so, for now this is an exception
+//					 */
+//					throw new BadRequestException("Your request expired after 90 minutes. Sorry.");
+//				}
+//				$renumbered_pieces = [];
+//				foreach ($pieces as $piece) {
+//					if ($change = $messagePackage->request($piece->number)) {
+//						$renumbered_pieces[] = new Piece([
+//							'id' => $piece->id,
+//							'number' => $change->new]
+//						);
+//					}
+//				}
+//				$pieceTable = $this->Pieces; //'use' won't accept property... ?
+//				$result = $pieceTable->getConnection()->transactional(
+//						function () use ($pieceTable, $renumbered_pieces) {
+//							$result = TRUE;
+//							foreach ($renumbered_pieces as $entity) {
+//								$result = $result && $pieceTable->save($entity, ['atomic' => false]);
+//							}
+//							return $result;
+//						});
+//				if ($result) {
+//				    $artworkId = Hash::get($this->request->getQueryParams(), 'artwork');
+//					Cache::delete("get_default_artworks[_{$artworkId}_]",'artwork');
+//					$this->Flash->set('The save was successful');
+//					/*
+//					 * On success we can clear the cached values
+//					 * and return to wherever we started
+//					 */
+//					$this->_clear_renumber_caches($cache_prefix);
+//					$this->redirect($this->refererStack(SYSTEM_CONSUME_REFERER));
+//				} else {
+//					/*
+//					 * attempted save failed. Restore the request form data
+//					 * which was in a different <Form> that didn't post
+//					 */
+//					$this->request = $this->request->withData(
+//					    'number', Cache::read($cache_prefix . '.request_data','renumber'));
+//					$this->Flash->set('The save was unsuccessful');
+//				}
+//			} else {
+//                /*
+//                 *  user made renumbering request, now needs to confirm accuracy of summary
+//                 */
+//                $pieces = is_array($pieces) ? $pieces : $pieces->toArray();
+//                $this->_renumber($this->request->getData('number'), $pieces);
+//            }
+//		}
+//		/* this is common fall-through code for all modes of request */
+//        $number = $this->request->getData('number');
+//		if (!isset($number) &&
+//				$request_data = Cache::read($cache_prefix . '.request_data', 'renumber')){
+//			/*
+//			 * if the user is going through the approval process, they can be
+//			 * headed back to the page with form data that doesn't include
+//			 * the renumber requests. We saved that data so the form can stay
+//			 * populated throughout the process.
+//			 */
+//			$this->request = $this->request->withData('number', $request_data);
+//		}
+//		/**
+//		 * Not sure how to autoald and the class is needed
+//		 * for when the cached object arrives
+//		 */
+//		new RenumberMessaging([]);
+//		$messagePackage = Cache::read($cache_prefix . '.messagePackage','renumber');
+//		/*
+//		 * At this point we have one of three situations,
+//		 * in all cases $messagePackage has a value.
+//		 * 1. $messagePackage is False, a brand new request form will render
+//		 * 2. $messagePackage summary is truthy, a confirmation section will render
+//		 * 2. An error message says the change could not be saved
+//		 *      and the confirmation section renders again
+//		 *
+//		 * $artwork is the standard stackQuery
+//		 * $providers is ['edition' => EditionEntity, 'format' => [FormatEntity, ...]
+//		 * $pieces is [PieceEntity, ...] for every piece in the Edition, assigned or not
+//		 * $messagePackage is a RenumberMessaging object
+//		*/
+////		osd($pieces->toArray(), 'pieces');
+//		$this->set('elements', $this->Layers->setElements());
+//		$this->set(compact(['providers', 'pieces', 'messagePackage', 'elements']));
 	}
 
 	/**
