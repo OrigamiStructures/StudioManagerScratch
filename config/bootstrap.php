@@ -245,6 +245,12 @@ Type::build('timestamp')
 //Type::map('layer', 'App\Database\Type\LayerType');
 //</editor-fold>
 
+//<editor-fold desc="CakeDC User Management Configurations">
+Configure::write('Users.Social.login', true); //to enable social login
+
+//</editor-fold>
+
+//<editor-fold desc="Constants">
 /**
  * Constants
  */
@@ -306,7 +312,7 @@ define('ADMIN_ARTIST', 'artist_admin');
 define('SYSTEM_VOID_REFERER'	, TRUE);
 define('SYSTEM_CONSUME_REFERER' , FALSE);
 
-//AssignemtTrait Constants
+//AssigmentTrait Constants
 // boolean argument to control the kind of return value from a method
 define('PIECE_ENTITY_RETURN'	, FALSE);
 define('PIECE_COLLECTION_RETURN', TRUE);
@@ -391,6 +397,7 @@ define('ARTWORK_LAYER', 1);
 define('EDITION_LAYER', 2);
 define('FORMAT_LAYER', 3);
 // </editor-fold>
+//</editor-fold>
 
 function layer($data) {
 	return new \App\Model\Lib\Layer($data);
