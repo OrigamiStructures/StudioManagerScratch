@@ -332,9 +332,6 @@ class EditionedHelper extends EditionHelper {
 			return;
 		}
 
-//		osd($this->SystemState->standing_disposition);
-//		osd($this->SystemState->controller() !== 'formats');die;
-
 		// detecting when we're fully qualified to the format level has been uncertain.
 		// controller() can't be relied on because of redirecting that happens
 		if ($this->SystemState->standing_disposition && $this->SystemState->urlArgIsKnown('format')) {
