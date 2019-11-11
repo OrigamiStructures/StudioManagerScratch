@@ -1,4 +1,4 @@
-<?php 
+<?php
 $render_title_input = TRUE;
 //osd($SystemState->is(ARTWORK_REFINE), '$SystemState->is(ARTWORK_REFINE)');
 if ($SystemState->is(ARTWORK_REFINE)) {
@@ -12,7 +12,7 @@ if ($SystemState->is(ARTWORK_REFINE)) {
 if ($render_title_input) :
 ?>
 
-<?= $this->Form->input("editions.$edition_index.formats.$format_index.title", 
+<?= $this->Form->input("editions.$edition_index.formats.$format_index.title",
 			['placeholder' => 'Optional Format Title', 'label' => 'Format Title']); ?>
 
 <?php
