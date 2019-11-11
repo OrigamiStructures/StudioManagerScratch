@@ -71,8 +71,7 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-
-        $this->loadComponent('RequestHandler');
+        $this->loadComponent('RequestHandler', ['enableBeforeRedirect' => false]);
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
 		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
