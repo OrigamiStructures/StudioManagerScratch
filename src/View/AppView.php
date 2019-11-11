@@ -38,32 +38,10 @@ class AppView extends View
     {
 		$this->loadHelper('DropDown');
         $this->loadHelper('Html');
-        /*
-         * This breaks if I modernize it. And SystemState is being removed.
-         * So, don't bother with the deprecation fix
-         */
-        if (isset($this->viewVars['SystemState'])) {
-            $this->SystemState = $this->viewVars['SystemState'];
-        }
         $this->loadHelper('ArtStackTools');
         $this->loadHelper('MemberView');
 //		$this->loadHelper('DispositionTools');
     }
 
-	/**
-	 * Override native ViewVarsTrait::set()
-	 *
-	 * Maintain a copy of all current variables in the SystemState object
-	 *
-	 * @param mixed $name
-	 * @param mixed $value
-	 * @return object
-	 */
-    public function set($name, $value = null) {
-		parent::set($name, $value);
-		$result = $this->viewBuilder()->getVars();
-		$this->SystemState->storeVars($result);
-		return $result;
-	}
 
 }
