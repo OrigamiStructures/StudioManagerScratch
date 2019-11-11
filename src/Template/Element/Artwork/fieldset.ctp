@@ -13,7 +13,7 @@
 //					['type' => 'hidden']); ?>
 		</fieldset>
 		<?php
-			if ($SystemState->controller() === 'artworks' && 
+			if ($this->request->getParam('controller') === 'artworks' &&
 					$artwork->edition_count > 1) {
 				echo $this->Form->submit('Submit', ['class' => 'button']);
 			}

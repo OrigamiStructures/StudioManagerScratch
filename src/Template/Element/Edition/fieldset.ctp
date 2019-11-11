@@ -29,7 +29,7 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
     <?= $this->element('Edition/quantity_input'); // complex quantity input logic ?>
 
 	<?php
- if ($SystemState->controller() !== 'formats' && $SystemState->is(ARTWORK_CREATE)) {
+ if ($this->request->getParam('controller') !== 'formats' && $SystemState->is(ARTWORK_CREATE)) {
 	 // do this for Artworks::create or Editions::create
 	 // It allows the system to streamline piece creation in some cases
 	 echo '<div><p>If this Edition has more than one Piece:</p>';
@@ -44,9 +44,9 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 }
 	?>
 </fieldset>
-<?php 
-				if (($SystemState->controller() === 'editions' ||
-						$SystemState->controller() === 'artworks') && 
+<?php
+				if (($this->request->getParam('controller') === 'editions' ||
+						$this->request->getParam('controller') === 'artworks') &&
 						$edition->format_count > 1) {
 					echo $this->Form->submit('Submit', ['class' => 'button']);
 				}

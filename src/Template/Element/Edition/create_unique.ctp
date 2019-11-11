@@ -19,9 +19,9 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
     <?= $this->form->input("editions.$edition_index.quantity", ['type' => 'hidden', 'default' => 1]); // complex quantity input logic ?>
 
 <!--</fieldset>-->
-<?php 
-				if (($SystemState->controller() === 'editions' ||
-						$SystemState->controller() === 'artworks') && 
+<?php
+				if (($this->request->getParam('controller') === 'editions' ||
+						$this->request->getParam('controller') === 'artworks') &&
 						$edition->format_count > 1) {
 					echo $this->Form->submit('Submit', ['class' => 'button']);
 				}
