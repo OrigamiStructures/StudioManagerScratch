@@ -7,7 +7,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
-use App\Lib\SystemState;
 
 /**
  * Series Model
@@ -35,8 +34,6 @@ class SeriesTable extends AppTable
         $this->addBehavior('Timestamp');
 		$this->addBehavior('Family');
 
-//		if (!isset($this->SystemState) || $this->SystemState->is(ARTWORK_SAVE)) {
-//		if ($this->SystemState->is(ARTWORK_SAVE)) {
 			$this->belongsTo('Users', [
 				'foreignKey' => 'user_id'
 			]);

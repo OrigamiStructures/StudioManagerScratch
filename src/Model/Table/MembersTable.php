@@ -5,6 +5,7 @@ use App\Model\Entity\Member;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Cake\Event\Event;
 use ArrayObject;
@@ -18,7 +19,6 @@ use App\Model\Behavior\StringQueryBehavior;
  * @property \Cake\ORM\Association\BelongsTo $Images
  * @property \Cake\ORM\Association\HasMany $Dispositions
  * @property \Cake\ORM\Association\HasMany $Locations
- * @property \Cake\ORM\Association\HasMany $Users
  * @property \Cake\ORM\Association\BelongsToMany $Groups
  */
 class MembersTable extends AppTable
@@ -246,8 +246,8 @@ class MembersTable extends AppTable
      * @return Query
      */
     public function findContainment(Query $query, array $options) {
-        if ($this->SystemState->urlArgIsKnown('member')) {
-            $member_id = $this->SystemState->queryArg('member');
+        if (isset($options['member'])) {
+            $member_id = $options['member'];
             $query->where([
                 'Members.id' => $member_id
             ]);

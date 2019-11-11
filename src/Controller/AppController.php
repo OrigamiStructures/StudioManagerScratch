@@ -53,10 +53,6 @@ class AppController extends Controller
         null, $components = null
     ) {
 
-		$this->SystemState = new SystemState($request);
-		$this->set('SystemState', $this->SystemState);
-		$this->set('SystemState', (new SystemState($request)));
-
 		parent::__construct($request, $response, $name, $eventManager, $components);
 	}
 

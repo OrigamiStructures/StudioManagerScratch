@@ -1,7 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use App\Lib\SystemState;
 use App\Model\Lib\ContextUser;
 use Cake\ORM\Table;
 use Cake\Http\Session;
@@ -139,7 +138,6 @@ class AppTable extends Table {
         $debug = parent::__debugInfo();
         $debug['CurrentUser'] = $this->currentUser();
         $debug['ContextUser'] = $this->contextUser();
-        $debug['SystemState'] = isset($this->SystemState) ? 'Present' : 'Not Present';
 
         return $debug;
 	}

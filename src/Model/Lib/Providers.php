@@ -4,7 +4,6 @@ namespace App\Model\Lib;
 
 use \App\Exception\BadEditionStackContentException;
 use Cake\Utility\Text;
-use App\Lib\SystemState;
 use App\Lib\EditionTypeMap;
 
 /**

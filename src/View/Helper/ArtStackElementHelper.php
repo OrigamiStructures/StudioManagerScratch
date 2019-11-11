@@ -1,6 +1,7 @@
 <?php
 namespace App\View\Helper;
 
+use Cake\Utility\Hash;
 use Cake\View\Helper;
 use CakeDC\Users\Exception\BadConfigurationException;
 use BadMethodCallException;
@@ -30,7 +31,6 @@ class ArtStackElementHelper extends Helper {
 
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
-		$this->SystemState = $this->_View->SystemState;
 	}
 
 	/**
@@ -73,12 +73,12 @@ class ArtStackElementHelper extends Helper {
 	 * @param entity $edition
 	 * @return string Name of the Piece Table wrapper element
 	 */
-	protected function _editionPieceTable($edition) {
-		if (!is_null($this->SystemState->artworks)) {
+	protected function _editionPieceTable($edition, $artworks) {
+		if (!is_null($artworks)) {
 			// paginated result does not render piece tables
 			$element = 'empty';
 		} else {
-			switch ($this->SystemState->now()) {
+			switch ($this->getView()->getRequest()->getParam('action')) {
 				case ARTWORK_REVIEW:
 				case ARTWORK_REFINE:
 					if ($edition->hasUnassigned()) {
@@ -108,15 +108,15 @@ class ArtStackElementHelper extends Helper {
 	 *
 	 * @return string Name of the element to render
 	 */
-	public function _formatPieceTable($format, $edition) {
-		if (!is_null($this->SystemState->artworks)) {
+	public function _formatPieceTable($pieces, $format, $edition, $artworks) {
+		if (!is_null($artworks)) {
 			// paginated result does not render piece tables
 			return 'empty';
 		} else {
-			switch ($this->SystemState->now()) {
+			switch ($this->getView()->getRequest()->getParam('action')) {
 				case ARTWORK_REVIEW:
-					if (count($this->SystemState->pieces) > 0) {
-						if ($this->SystemState->urlArgIsKnown('format')) {
+					if (count($pieces) > 0) {
+						if (!is_null(Hash::get($this->getView()->getRequest()->getQueryParams(), 'format'))) {
 							// single format focus allows detailed piece work
 							$element = 'Pieces/overview_table';
 						} else {

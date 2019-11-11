@@ -85,7 +85,7 @@ trait ArtReviewTrait {
 	 * @return string
 	 */
 	private function _cache_name($artwork_id, $edition_id) {
-		return "_{$this->SystemState->artistId()}_$artwork_id" .
+		return "_{$this->contextUser()->artistId()}_$artwork_id" .
 			($edition_id ? "_$edition_id" : '');
 	}
 
@@ -117,7 +117,7 @@ trait ArtReviewTrait {
 	private function _flatness_determination($artwork_id, $edition_id) {
 		$redirect_needed = NULL;
 		$conditions = [
-			'user_id' => $this->SystemState->artistId(),
+			'user_id' => $this->contextUser()->artistId(),
 		];
 		if (!$edition_id) {
 			/*
