@@ -11,11 +11,11 @@ foreach($pieces as $piece) :
 //	osd($piece);//die;
 ?>
 	<tr>
-		<?php 
+		<?php
 		if (\App\Lib\EditionTypeMap::isNumbered($edition->type)) : ;
 		?>
 		<td><?= $piece->number; ?></td>
-		<?php 
+		<?php
 		 endif;
 		 ?>
 		<td><?= $piece->quantity; ?></td>
@@ -23,8 +23,8 @@ foreach($pieces as $piece) :
 		<td><?= (boolean) $piece->disposition_count ? $piece->disposition_count . ' events' : '-'; ?></td>
 		<td><?= $piece->collected ? 'Yes' : '-'; ?></td>
 		<?php // osd($piece->id);?> -->
-		<td class="tools"><?= $SystemState->standing_disposition ? $this->DispositionTools->connect($piece) : ''; ?>
-			<?= $this->element('Disposition/disposition_event_descriptions'); ?>
+		<td class="tools">
+            <?= $this->element('Disposition/disposition_event_descriptions'); ?>
 		</td>
 	</tr>
 <?php

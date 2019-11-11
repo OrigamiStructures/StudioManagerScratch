@@ -73,8 +73,6 @@ class SystemState implements EventListenerInterface {
 	 */
 	protected $_viewVars;
 
-	protected $_standing_disposition = FALSE;
-
 
 	/**
 	 * Array of types of 'admin' access
@@ -112,24 +110,7 @@ class SystemState implements EventListenerInterface {
 	 * @return mixed
 	 */
 	public function __get($name) {
-		if ($name === 'standing_disposition') {
-			return $this->_standingDisposition();
-		}
 		return isset($this->_viewVars[$name]) ? $this->_viewVars[$name] : null;
-	}
-
-	/**
-	 * See if there is a disposition cached
-	 *
-	 * Standing Dispositions may exist by may not have been put into viewVars.
-	 * So in this special case, when there value is requested we'll pull it
-	 * from the cache so it will be available.
-	 */
-	protected function _standingDisposition() {
-//		if (!($this->_standing_disposition) && !is_null($this->artistId())) {
-//			$this->_standing_disposition = Cache::read($this->artistId(), 'dispo');
-//		}
-//		return $this->_standing_disposition;
 	}
 
 	/**
