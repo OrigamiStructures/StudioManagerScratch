@@ -332,16 +332,9 @@ class EditionedHelper extends EditionHelper {
 			return;
 		}
 
-//		osd($this->SystemState->standing_disposition);
-//		osd($this->SystemState->controller() !== 'formats');die;
-
 		// detecting when we're fully qualified to the format level has been uncertain.
 		// controller() can't be relied on because of redirecting that happens
-		if ($this->SystemState->standing_disposition && $this->SystemState->urlArgIsKnown('format')) {
-			$this->_dispositionModeFormatPieceTable($format, $edition);
-		} else {
-			$this->_mainModeFormatPieceTable($format, $edition);
-		}
+		$this->_mainModeFormatPieceTable($format, $edition);
 	}
 
 	/**
@@ -355,10 +348,8 @@ class EditionedHelper extends EditionHelper {
 	 * @param entity $edition
 	 */
 	private function _dispositionModeFormatPieceTable($format, $edition){
-		$disposition = $this->SystemState->standing_disposition;
 
-		$pieces = $this->pieceFilter()
-			->filter($edition->pieces, $disposition);
+		$pieces = $this->pieceFilter();
         $pieces = array_merge($pieces, $this->pieceFilter()->rejected());
 		$caption = "Indicate the pieces you want to include in this {$this->DispositionTools->dispositionLabel($disposition)}";
 		$providers = $this->_prepareProviders();

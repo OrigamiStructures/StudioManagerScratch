@@ -52,10 +52,6 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 <!--	<nav class="breadcrumbs">
 		<?= $this->Html->getCrumbList([], 'All Art'); ?>
 	</nav>-->
-	<?= $this->cell('StandingDisposition', [] , ['SystemState' => $SystemState]); ?>
-	<?php // $this->element($this->DispositionTools->panel($standing_disposition)
-//			? 'Disposition/panel'
-//			: 'empty'); ?>
 
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">

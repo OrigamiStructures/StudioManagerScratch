@@ -7,7 +7,6 @@ foreach ($member->addresses as $key => $address) :
     $this->set('address', $address);
 ?>
     <?= $this->element('Address/display'); ?>
-	<?= $this->SystemState->standing_disposition ? $this->DispositionTools->connect($address) : ''; ?>
 
 <?php endforeach; ?>
 <!-- END Element/Address/full.ctp -->
