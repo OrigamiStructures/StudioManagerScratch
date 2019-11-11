@@ -27,7 +27,7 @@ endif;
  * Setup breadcrumbs
  */
 $this->Html->addCrumb('All Members', ['action' => 'review']);
-if($SystemState->urlArgIsKnown('member')){
+if(\Cake\Utility\Hash::get($this->request->getQueryParams(), 'member', FALSE) !== FALSE){
     $this->Html->addCrumb($member->name(), ['action' => 'review', '?' => ['member' => $member->id]]);
 }
 if(in_array($this->request->getParam('action'), ['refine', 'addNode'])){

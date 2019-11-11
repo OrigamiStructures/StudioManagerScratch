@@ -39,8 +39,6 @@ class ArtworkStackComponent extends Component {
 
 	public $components = ['Paginator'];
 
-	public $SystemState;
-
 	public $full_containment = [
 		'Users', 'Images', /*'Editions.Users',*/ 'Editions' => [
 			'Series', 'Pieces' => ['Dispositions'], /*'Formats.Users',*/ 'Formats' => [

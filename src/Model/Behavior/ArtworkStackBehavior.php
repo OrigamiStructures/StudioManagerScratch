@@ -28,7 +28,6 @@ use ArrayObject;
  */
 class ArtworkStackBehavior extends Behavior {
 
-	protected $SystemState;
 	public $Artwork = FALSE;
     public $Edition = FALSE;
     public $Format = FALSE;

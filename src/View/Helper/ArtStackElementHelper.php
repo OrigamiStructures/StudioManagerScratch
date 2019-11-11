@@ -28,8 +28,6 @@ use BadMethodCallException;
  */
 class ArtStackElementHelper extends Helper {
 
-	protected $SystemState;
-
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
 		$this->SystemState = $this->_View->SystemState;

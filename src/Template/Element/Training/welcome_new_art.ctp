@@ -7,9 +7,10 @@
 	<?= $this->Html->link('Video', ['?' => ['video' => 'unique_create.mp4']], ['class' => 'button']); ?>
 
 	<?php
-	if ($SystemState->urlArgIsKnown('video')) {
-		echo $this->Html->media($SystemState->queryArg('video'), ['pathPrefix' => 'files/training_videos/', 'controls' => true, 'autoplay' => true]);
+    $video = \Cake\Utility\Hash::get($this->request->getQueryParams(), 'video', FALSE);
+	if ($video !== FALSE) {
+		echo $this->Html->media($video, ['pathPrefix' => 'files/training_videos/', 'controls' => true, 'autoplay' => true]);
 	}
 	?>
-	
+
 </div>
