@@ -6,7 +6,7 @@
 		<fieldset>
 			<?= $this->Form->input('id'); ?>
 			<?= $this->Form->input('title', ['label' => 'Artwork Title']); ?>
-			<?= $this->Form->input('image_id', 
+			<?= $this->Form->input('image_id',
 					['type' => 'hidden']); ?>
 		</fieldset>
 		<?php
