@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Lib\Layer;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Core\Configure;
@@ -31,7 +32,7 @@ class MembersController extends AppController
 
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
-        $this->retreiveAndSetGroups();
+//        $this->retreiveAndSetGroups();
     }
 
 // <editor-fold defaultstate="collapsed" desc="CRUD Methods">
@@ -277,5 +278,21 @@ class MembersController extends AppController
         osd($this->request->getSession()->read(), 'session before');
         $this->request->getSession()->destroy();
         osd($this->request->getSession()->read(), 'session after destroy');
+    }
+
+    public function docs()
+    {
+        $MembersTable = $this->Members;
+        $members = $this->Members->find('all')
+            ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type'])
+            ->order(['id' => 'DESC'])
+            ->limit(3)
+            ->toArray();
+
+        $sample = layer([new Member(['id' => 9999])]);
+
+        $memberLayer = new Layer(($members));
+        $this->set(compact('members', 'memberLayer', 'MembersTable', 'sample'));
+
     }
 }
