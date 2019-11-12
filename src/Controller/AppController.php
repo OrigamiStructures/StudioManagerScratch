@@ -17,7 +17,6 @@ namespace App\Controller;
 use App\Model\Lib\ContextUser;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
-use App\Lib\SystemState;
 use App\Model\Table\CSTableLocator;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -52,10 +51,6 @@ class AppController extends Controller
         $name = null, $eventManager =
         null, $components = null
     ) {
-
-		$this->SystemState = new SystemState($request);
-		$this->set('SystemState', $this->SystemState);
-		$this->set('SystemState', (new SystemState($request)));
 
 		parent::__construct($request, $response, $name, $eventManager, $components);
 	}

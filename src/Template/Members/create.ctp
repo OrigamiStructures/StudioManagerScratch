@@ -9,12 +9,12 @@
 //                $url = ['action' => 'refine', '?' => ['member' => $member->id]];
 //            }
 //            echo $this->Form->create($member, ['url' => $url]);
-//            
+//
 //                echo $this->element('Member/refine');
 //                echo $this->element('Address/refine');
 //                echo $this->element('Contact/refine');
 //                echo $this->Form->button('Submit', ['type' => 'submit', 'class' => 'button success']);
-//                echo $this->Html->link('Cancel', $SystemState->referer(), ['class' => 'button secondary', 'confirm' => 'Are you sure you want to cancel?']);
+//                echo $this->Html->link('Cancel', $this->request->referer(), ['class' => 'button secondary', 'confirm' => 'Are you sure you want to cancel?']);
 //            echo $this->Form->end();
             ?>
         </div>

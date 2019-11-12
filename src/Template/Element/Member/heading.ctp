@@ -1,9 +1,9 @@
 
 <!-- Element/Member/heading.ctp -->
 <?php
-if($SystemState->now() != MEMBER_CREATE):
+if($this->request->getParam('action') == 'create'):
     $q = [
-        'controller' => 'members', 
+        'controller' => 'members',
         '?' => [
             'member' => $member->id
         ]];

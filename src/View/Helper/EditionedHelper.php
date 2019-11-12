@@ -3,6 +3,7 @@ namespace App\View\Helper;
 
 use App\View\Helper\EditionHelper;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 
 /**
@@ -299,8 +300,8 @@ class EditionedHelper extends EditionHelper {
 	 *
 	 * @param Entity $edition
 	 */
-	protected function _editionPieceTable($edition) {
-		if (is_null($this->SystemState->artworks)) {
+	protected function _editionPieceTable($edition, $artworks = null) {
+		if (is_null($artworks)) {
 
 			// the filter strategy is assumed to have been set at this point .
 			// Seems like a lot of coupling.
@@ -325,8 +326,8 @@ class EditionedHelper extends EditionHelper {
 	 * @param Entity $format
 	 * @param Entity $edition
 	 */
-	protected function _formatPieceTable($format, $edition) {
-		if (!is_null($this->SystemState->artworks)) {
+	protected function _formatPieceTable($format, $edition, $artworks = null) {
+		if (!is_null($artworks)) {
 			$caption = '';
 			$this->_View->set('caption', $caption);
 			return;
@@ -369,9 +370,10 @@ class EditionedHelper extends EditionHelper {
 	 */
 	private function _prepareProviders() {
 		$EditionTable = TableRegistry::getTableLocator()->get('Editions');
-		$conditions = $this->_View->SystemState->buildConditions([]);
+		$conditions = $this->undefinedMethod->buildConditions([]);
 
-		$provider_set = $EditionTable->get($this->_View->SystemState->queryArg('edition'), [
+		$editionId = Hash::get($this->getView()->getRequest()->getQueryParams(), 'edition');
+		$provider_set = $EditionTable->get($editionId, [
 				'conditions' => $conditions,
 				'contain' => ['Formats']]);
 		return ['edition' => $provider_set] + $provider_set->formats;

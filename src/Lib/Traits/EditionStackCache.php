@@ -47,6 +47,6 @@ trait EditionStackCache {
 	 * @return string
 	 */
 	private function cache_key($id) {
-		return "{$this->SystemState->artistId()}_$id";
+		return "{$this->contextUser()->artistId()}_$id";
 	}
 }

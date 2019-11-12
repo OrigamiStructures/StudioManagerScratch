@@ -10,6 +10,9 @@ use CakeDC\Users\Exception\BadConfigurationException;
 /**
  * PieceAllocation Handles allocation/deletion of pieces during create/refine
  *
+ * The legs have been cut off the upstream code that lead here. But this class
+ * is being preserved for reference and past thoughts on business rules.
+ *
  * The rules for piece management are too complex to include in the
  * Artwork Stack Component which manages Artwork CRUD tasks. So they've
  * all been delegated to this class.
@@ -59,7 +62,7 @@ class PieceAllocationComponent extends Component {
 	/**
 	 * @todo Flagged as a serious issue:
 	 *		 https://github.com/OrigamiStructures/StudioManagerScratch/issues/41
-     * @todo addition of variable $create is a hack/apprimation of the old
+     * @todo addition of variable $create is a hack/approximation of the old
      *      SystemState/StateMap check. It can't be trusted in production
      *      without verification and testing
 	 */

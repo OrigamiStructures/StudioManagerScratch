@@ -29,7 +29,7 @@ use Twig\Error\RuntimeError;
 class PiecesController extends AppController
 {
 
-	public $components = ['ArtworkStack', 'Layers', 'UserContext'];
+	public $components = ['Layers', 'UserContext'];
 
 	/**
 	 * Before filter

@@ -1,2 +1,2 @@
 <?php
-osd($SystemState->queryArg());
+osd($this->request->getQueryParams());

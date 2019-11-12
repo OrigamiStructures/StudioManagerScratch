@@ -28,7 +28,7 @@ class FamilyBehavior extends Behavior {
      * @return array
      */
     public function findSiblingList(Query $query, $options) {
-        $artist_id = $this->_table->SystemState->artistId();
+        $artist_id = $this->getTable()->ContextUser->artistId();
         $options += [
             'id' => FALSE,
             'index_name' => FALSE,
@@ -64,7 +64,7 @@ class FamilyBehavior extends Behavior {
      * @return array
      */
     public function findSiblings(Query $query, $options) {
-        $artist_id = $this->_table->SystemState->artistId();
+        $artist_id = $this->getTable()->ContextUser->artistId();
         list($id, $index_name) = $options;
 
         return $query->where([$index_field => $id, 'user_id' => $artist_id]);

@@ -50,8 +50,8 @@ class UniqueHelper extends EditionHelper {
 		return '';
 	}
 
-	protected function _formatPieceTable($format, $edition) {
-		if (is_null($this->SystemState->artworks)) {
+	protected function _formatPieceTable($format, $edition, $artworks) {
+		if (is_null($artworks)) {
             $caption = 'Details about this work';
             $pieces = $format->pieces;
 			$providers = [$format];

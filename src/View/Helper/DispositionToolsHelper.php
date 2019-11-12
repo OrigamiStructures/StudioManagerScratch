@@ -4,7 +4,6 @@ namespace App\View\Helper;
 use Cake\View\Helper;
 use Cake\Cache\Cache;
 use App\View\Helper\Traits\ValidationErrors;
-use App\Lib\SystemState;
 use App\Lib\EditionTypeMap;
 
 /**
@@ -21,7 +20,6 @@ class DispositionToolsHelper extends Helper {
 
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
-		$this->SystemState = $View->SystemState;
 	}
 
 	/**
@@ -40,7 +38,7 @@ class DispositionToolsHelper extends Helper {
 
 	public function disposition() {
 		if (!isset($this->_disposition)) {
-			$this->_disposition = Cache::read($this->SystemState->artistId(), 'dispo');
+			$this->_disposition = Cache::read($this->contextUser()->artistId(), 'dispo');
 		}
 		return $this->_disposition;
 	}
@@ -137,7 +135,7 @@ class DispositionToolsHelper extends Helper {
 	 * @return string
 	 */
 	public function connect($entity) {
-            $class = SystemState::stripNamespace($entity);
+            $class = array_pop(namespaceSplit($entity));
 //            $class = array_pop((explode('\\', get_class($entity))));
             $method = "_connect$class";
 
@@ -150,12 +148,10 @@ class DispositionToolsHelper extends Helper {
 	 * @param Entity $piece
 	 * @return string
 	 */
-	protected function _connectPiece($piece) {
+	protected function _connectPiece($piece, $edition) {
         if(isset($piece->rejected)){
             return $this->_rejectedReason($piece);
         }
-		// This assumes we came in through some 'review/ArtworkStack' pathway
-		$edition = $this->SystemState->edition;
 
 		$in_disposition = $this->_pieceInDisposition($piece);
 		if (!$in_disposition) {
@@ -206,7 +202,7 @@ class DispositionToolsHelper extends Helper {
 			[
 				'controller' => 'dispositions',
 				'action' => 'refine',
-				'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
+				'?' => ['piece' => $piece->id] + $this->getView()->getRequest()->getQueryParams()
 		]);
 	}
 
@@ -226,7 +222,7 @@ class DispositionToolsHelper extends Helper {
 			[
 				'controller' => 'dispositions',
 				'action' => 'remove',
-				'?' => ['piece' => $piece->id] + $this->SystemState->queryArg()
+				'?' => ['piece' => $piece->id] + $this->getView()->getRequest()->getQueryParams()
 		]);
 	}
 
@@ -278,7 +274,7 @@ class DispositionToolsHelper extends Helper {
 			[
 				'controller' => 'dispositions',
 				'action' => 'remove',
-				'?' => ['member' => $member->id] + $this->SystemState->queryArg()
+				'?' => ['member' => $member->id] + $this->getView()->getRequest()->getQueryParams()
 		]);
     }
 
@@ -368,7 +364,7 @@ class DispositionToolsHelper extends Helper {
 
 	public function addressLabel($disposition) {
 		$multiple = count($disposition->addresses) > 1;
-		if ($this->SystemState->controller === 'dispositions') {
+		if ($this->getView()->getRequest()->getParams('controller') === 'dispositions') {
 			$text_node = $multiple ? 'Pending Addresses' : '' ;
 		} else {
 			$text_node = $multiple ? 'Click the address you want to keep.' : '' ;
@@ -419,7 +415,7 @@ class DispositionToolsHelper extends Helper {
 		$piece_message = $this->_pieceMessage($disposition);
 		$message = trim("$member_message$address_message$piece_message");
 
-		if ($this->SystemState->controller() !== 'dispositions' && $message === '') {
+		if ($this->getView()->getRequest()->getParams('controller') !== 'dispositions' && $message === '') {
 			return $this->Html->link('Save disposition',
 			['controller' => 'dispositions', 'action' => 'save'],
 			['class' => 'button']);

@@ -1,7 +1,7 @@
-<?php if ($SystemState->is(ARTWORK_CREATE)) : ?>
-		
+<?php if (stristr($this->request->getParam('action'), 'create')) : ?>
+
 		<?= $this->Form->input("editions.$edition_index.quantity", [
-			'default' => 1, 
+			'default' => 1,
 			'label' => 'Edition Size'
 		]); ?>
 

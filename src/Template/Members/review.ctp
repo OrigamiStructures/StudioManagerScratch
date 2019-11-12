@@ -2,15 +2,16 @@
 <?php
 /**
  * set values that amend tag classes for css refinement
+ * @property \Cake\Http\ServerRequest $request
  */
 $editing = FALSE;
-if (in_array($SystemState->now(), [MEMBER_CREATE, MEMBER_REFINE])):
+if (in_array($this->request->getParam('action'), ['create', 'refine', 'addNode'])):
     $editing = TRUE;
     $element = "Member/refine";
-    $url = (!empty($member->id)) 
-            ? ['action' => 'refine', '?' => ['member' => $member->id]] 
+    $url = (!empty($member->id))
+            ? ['action' => 'refine', '?' => ['member' => $member->id]]
             : ['action' => "create", $member->member_type];
-elseif($SystemState->urlArgIsKnown('member')):
+elseif(\Cake\Utility\Hash::get($this->request->getQueryParams(), 'member')):
     $element = "Member/refine";
     if(!isset($member)){
         $members = $members->toArray();
@@ -26,13 +27,13 @@ endif;
  * Setup breadcrumbs
  */
 $this->Html->addCrumb('All Members', ['action' => 'review']);
-if($SystemState->urlArgIsKnown('member')){
+if(\Cake\Utility\Hash::get($this->request->getQueryParams(), 'member', FALSE) !== FALSE){
     $this->Html->addCrumb($member->name(), ['action' => 'review', '?' => ['member' => $member->id]]);
 }
-if($SystemState->now() == MEMBER_REFINE){
+if(in_array($this->request->getParam('action'), ['refine', 'addNode'])){
     $this->Html->addCrumb('Edit ' . $member->name(), ['action' => 'refine', '?' => ['member' => $member->id]]);
 }
-if($SystemState->now() == MEMBER_CREATE){
+if($this->request->getParam('action') == 'create'){
     $this->Html->addCrumb('Create Member', ['action' => 'create']);
 }
 ?>

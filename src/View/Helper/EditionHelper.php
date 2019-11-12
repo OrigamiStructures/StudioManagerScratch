@@ -26,7 +26,6 @@ class EditionHelper extends Helper {
 
 	public function __construct(\Cake\View\View $View, array $config = array()) {
 		parent::__construct($View, $config);
-		$this->SystemState = $View->SystemState;
 	}
 
 	/**

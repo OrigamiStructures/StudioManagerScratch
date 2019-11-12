@@ -16,7 +16,7 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
 			['placeholder' => 'Optional Edition Title', 'label' => 'Edition Title']); ?>
 
     <?php
- if ($SystemState->is(ARTWORK_CREATE)) {
+ if (stristr($this->request->getParam('action'), 'create')) {
 	 // I have a blanket 'disallowed' on type change after creation
 	 // but it could be otherwise. fare
 	 // Once dispositions start, edition types cannot be change because it
@@ -29,7 +29,7 @@ $edition_index = isset($edition_index) ? $edition_index : 0 ;
     <?= $this->element('Edition/quantity_input'); // complex quantity input logic ?>
 
 	<?php
- if ($this->request->getParam('controller') !== 'formats' && $SystemState->is(ARTWORK_CREATE)) {
+ if ($this->request->getParam('controller') !== 'formats' && stristr($this->request->getParam('action'), 'create')) {
 	 // do this for Artworks::create or Editions::create
 	 // It allows the system to streamline piece creation in some cases
 	 echo '<div><p>If this Edition has more than one Piece:</p>';

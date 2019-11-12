@@ -3,9 +3,6 @@
 /*
  * MenuTable generates arrays that can be translated into nested navigation tools
  *
- * Navigation lists are built from standing arrays and synthesized from values
- * stored in teh SystemState property. No data tables exist.
- *
  * Copyright 2015 Origami Structures
  */
 
@@ -14,7 +11,6 @@ namespace App\Model\Table;
 use Cake\ORM\Table;
 use App\Model\Table\AppTable;
 use Cake\Collection\Collection;
-use App\Lib\SystemState;
 use App\Lib\EditionTypeMap;
 
 /**
@@ -144,24 +140,7 @@ class MenusTable extends AppTable{
 	 * @return array
 	 */
 	protected function addArtworks() {
-//		if (is_null($this->SystemState->menu_artworks)) {
-//			if (is_null($this->SystemState->menu_artwork)) {
-					return;
-//			}
-//			$artworks = [$this->SystemState->menu_artwork];
-//		} else {
-//			$artworks = $this->SystemState->menu_artworks;
-//		}
-		$combined = (new Collection($artworks))->combine(
-			function($artworks) { return $artworks->title; },
-			function($artworks) { return "/artworks/refine?artwork={$artworks->id}"; }
-		);
-		$this->menu['Artwork']['Refine Artwork'] = $combined->toArray();
-		$combined = (new Collection($artworks))->combine(
-			function($artworks) { return $artworks->title; },
-			function($artworks) { return "/artworks/review?artwork={$artworks->id}"; }
-		);
-		$this->menu['Artwork']['Review Artwork'] = $combined->toArray();
+	    return;
 	}
 
 	/**
@@ -176,71 +155,14 @@ class MenusTable extends AppTable{
 
 		// NEW RULE - not everything allows create
 
-//		if (is_null($this->SystemState->menu_artwork)) {
-			return;
-//		}
-		$editions = $this->SystemState->menu_artwork->editions;
-
-		$refine = (new Collection($editions))->combine(
-			function($editions) { return $editions->display_title; },
-			function($editions) { return "/editions/refine?artwork={$editions->artwork_id}&edition={$editions->id}"; }
-		);
-		$review = (new Collection($editions))->combine(
-			function($editions) { return $editions->display_title; },
-			function($editions) { return "/editions/review?artwork={$editions->artwork_id}&edition={$editions->id}"; }
-		);
-			$refine = $refine->toArray();
-			$review = $review->toArray();
-		if (count($refine) === 1) {
-			$refine = array_pop($refine);
-			$review = array_pop($review);
-		}
-
-		$this->menu['Artwork']['Edition'] = [
-			'Create' => "/editions/create?artwork={$this->SystemState->menu_artwork->id}",
-			'Refine' => $refine,
-			'Review' => $review,
-		];
+        return;
 	}
 
 	protected function addFormats() {
 
 		// NEW RULE - not everything allows create
 
-//		if (is_null($this->SystemState->menu_artwork)) {
-			return;
-//		}
-		$editions = $this->SystemState->menu_artwork->editions;
-		$many_editions = count($editions) > 1;
-
-		foreach ($editions as $index => $edition) {
-			$formats = $edition->formats;
-			$query_args = "?artwork={$edition->artwork_id}&edition={$edition->id}";
-
-			$refine = $review = [];
-			foreach ($edition->formats as $index => $format) {
-				$refine[$format->display_title] = "/formats/refine$query_args&format={$format->id}";
-				$review[$format->display_title] = "/formats/review$query_args&format={$format->id}";
-			}
-			if (count($refine) === 1) {
-				$refine = array_pop($refine);
-				$review = array_pop($review);
-			}
-
-			if ($many_editions) {
-				$this->menu['Artwork']['Format'][$edition->display_title] = [
-					'Create' => $this->allowNewFormat($edition) ? "/formats/create$query_args" : [],
-					'Refine' => $refine,
-					'Review' => $review
-				];
-			} else {
-				$this->menu['Artwork']['Format'] = [
-					'Create' => $this->allowNewFormat($edition) ? "/formats/create$query_args" : [],
-					'Refine' => $refine,
-					'Review' => $review
-			];
-			}
-		}
+        return;
 	}
 
 	protected function allowNewFormat($edition) {

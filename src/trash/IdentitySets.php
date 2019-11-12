@@ -6,32 +6,31 @@ use App\Model\Lib\IdentitySet;
 use Cake\Core\ConventionsTrait;
 use Cake\Utility\Inflector;
 use Cake\ORM\Entity;
-use App\Lib\SystemState;
 use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 use App\Exception\BadClassConfigurationException;
 use Cake\ORM\Query;
 /**
  * IdentitySets
- * 
- * Contains and reports on a many IdentitySet objects. All the contained 
- * objects are based on the same source Entity type and collect the 
+ *
+ * Contains and reports on a many IdentitySet objects. All the contained
+ * objects are based on the same source Entity type and collect the
  * same associated entity IDs
- * 
- * @todo This class could, if appropriate, compose itself into the Table 
- *		object of the association. This would potentially solve transport 
+ *
+ * @todo This class could, if appropriate, compose itself into the Table
+ *		object of the association. This would potentially solve transport
  *		and availability problems. Otherwise, who keeps this object?
- * 
- * @todo If it becomes useful to know the Source and Association names, 
- *		properties and methods to report on those exist in IdentitySet and 
+ *
+ * @todo If it becomes useful to know the Source and Association names,
+ *		properties and methods to report on those exist in IdentitySet and
  *		could be moved to the base class to make them available here.
  */
 class IdentitySets extends IdentitySetBase {
-	
+
 	/**
 	 * IdentitySet objects indexed by source id
-	 * 
-	 * Each object names IDs of one type of record that are linked to 
+	 *
+	 * Each object names IDs of one type of record that are linked to
 	 * the source record.
 	 *
 	 * @var array
@@ -39,8 +38,8 @@ class IdentitySets extends IdentitySetBase {
 	protected $_sets;
 
 	/**
-	 * @todo needs to tollerate empty configs too. [], zero records found 
-	 * 
+	 * @todo needs to tollerate empty configs too. [], zero records found
+	 *
 	 * @param string $TableName The related IDs to compile from the $config
 	 * @param array|Entity $config A single or an array of Entities
 	 */
@@ -50,10 +49,10 @@ class IdentitySets extends IdentitySetBase {
 			$this->add($config);
 		}
 	}
-	
+
 	/**
 	 * Add one or many enties to the set of sets
-	 * 
+	 *
 	 * @param array|Entity $entities
 	 */
 	public function add($entities) {
@@ -65,30 +64,30 @@ class IdentitySets extends IdentitySetBase {
 			}
 		}
 	}
-	
+
 	/**
 	 * Establish the kind of entity and ensure only that kind is accepted
-	 * 
+	 *
 	 * @param Entity $object
 	 * @return boolean|string
 	 */
 	private function verifyClass($object) {
 		if (isset($this->source_entity_name)) {
 			$entity = Inflector::singularize($this->source_entity_name);
-			return get_class($object) === "App\Model\Entity\\$entity" ;			
+			return get_class($object) === "App\Model\Entity\\$entity" ;
 		} elseif (is_subclass_of($object, 'Cake\ORM\Entity')) {
-			$this->source_entity_name = 
-				$this->_entityName(SystemState::stripNamespace($object));
+			$this->source_entity_name =
+				$this->_entityName(array_pop(namespaceSplit($object)));
 			return TRUE;
 		} else {
 			$msg = "The IdentitySets class only accepts Entity objects";
 			throw new BadClassConfigurationException($msg);
 		}
 	}
-	
+
 	/**
 	 * Get a speicifc set object by its source id
-	 * 
+	 *
 	 * @param string $source_id
 	 * @return boolean|IdentitySet
 	 */
@@ -96,14 +95,14 @@ class IdentitySets extends IdentitySetBase {
 		if (isset($this->_sets[$source_id])) {
 			return $this->_sets[$source_id];
 		} else {
-			return FALSE; 
+			return FALSE;
 		}
 	}
-	
+
 // <editor-fold defaultstate="collapsed" desc="Abstract implementations">
 	/**
 	 * How many unique IDs are stored?
-	 * 
+	 *
 	 * @return int
 	 */
 	public function count() {
@@ -113,10 +112,10 @@ class IdentitySets extends IdentitySetBase {
 
 	/**
 	 * Is the id a member of any set
-	 * 
+	 *
 	 * @todo shouldn't this be $acc || $set and FALSE to start?
 	 * @param string $id
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function has($id) {
 		$sets = new Collection($this->_sets);
@@ -128,7 +127,7 @@ class IdentitySets extends IdentitySetBase {
 
 	/**
 	 * Return any source-record IDs that relate to the set-member id
-	 * 
+	 *
 	 * @param string $id
 	 * @return array|boolean
 	 */
@@ -143,10 +142,10 @@ class IdentitySets extends IdentitySetBase {
 		}, []);
 		return !empty($sources) ? $sources : FALSE;
 	}
-	
+
 	/**
 	 * Return all the stored IDs with no duplicates
-	 * 
+	 *
 	 * @return array
 	 */
 	public function idList() {

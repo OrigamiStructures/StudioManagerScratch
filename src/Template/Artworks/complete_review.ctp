@@ -13,7 +13,7 @@ foreach ($artworks as $artwork_index => $artwork) :
 	<section class="artwork">
 		<?= $this->element($artwork_element) ?>
 		<div class="editions">
-<?php 
+<?php
 foreach ($artwork->editions as $edition_index => $edition) :
 	$this->set(compact('edition_index', 'edition'));
 	$edition_element = $this->ArtElement->choose('editionContent');
@@ -26,7 +26,8 @@ foreach ($edition->formats as $format_index => $format) :
 	$this->set(compact('format_index', 'format'));
 	$format_element = $this->ArtElement->choose('formatContent');
 	 /* make an isFocus() method for this, edition and artwork? */
-	$class = ($SystemState->urlArgIsKnown('format')) ? ' focus' : '';
+    $formatId = \Cake\Utility\Hash::get($this->request->getQueryParams(), 'format', FALSE);
+	$class = $formatId ? ' focus' : '';
 ?>
 					<section class="format<?= $class; ?>">
 						<?= $this->element($format_element); ?>
@@ -39,4 +40,4 @@ foreach ($edition->formats as $format_index => $format) :
 	</section>
 <?php endforeach; // end foreach artworks?>
 </div> <!-- END div artworks -->
-<?php 
+<?php

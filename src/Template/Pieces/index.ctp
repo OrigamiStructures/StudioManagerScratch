@@ -1,4 +1,4 @@
-<?php 
+<?php
 //osd($pieces);die;
 ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
@@ -49,7 +49,8 @@
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $piece->id]) ?>
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $piece->id], ['confirm' => __('Are you sure you want to delete # {0}?', $piece->id)]) ?>
 					<br />
-                    <?= $this->Html->link(__('Review Counts'), ['controller' => 'artworks', 'action' => 'validate_quantities', $SystemState->queryArg('artwork')]) ?>
+                    <?php $artworkId = \Cake\Utility\Hash::get($this->request->getQueryArgs(), 'artwork'); ?>
+                    <?= $this->Html->link(__('Review Counts'), ['controller' => 'artworks', 'action' => 'validate_quantities', $artworkId]) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

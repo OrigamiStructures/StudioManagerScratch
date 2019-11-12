@@ -11,13 +11,13 @@ use Cake\ORM\TableRegistry;
  * @author dondrake
  */
 class AdministratorController extends AppController {
-	
+
 	public function index() {
 		$Users = TableRegistry::getTableLocator()->get('Users');
 		$users = $Users->find('list', ['valueField' => 'username']);
 		$this->set(compact('users'));
 	}
-	
+
 	public function userDataIntegrity() {
 		if(!$this->request->is('post') || is_null($this->request->getData('users'))) {
 			$this->redirect('administrator');
@@ -28,32 +28,32 @@ class AdministratorController extends AppController {
 		$Format = TableRegistry::getTableLocator()->get('EditionsFormats');
 		$Piece = TableRegistry::getTableLocator()->get('Pieces');
 		$condition = ['user_id' => $user_id];
-		
+
 		$artworks = new Layer(
 				$Artwork->find('all')
 				->where($condition)
-				->toArray(), 
+				->toArray(),
 				'artworks'
 			);
 		$editions = new Layer(
 				$Edition->find('all')
 				->where($condition)
-				->toArray(), 
+				->toArray(),
 				'editions'
 			);
 		$formats = new Layer(
 				$Format->find('all')
 				->where($condition)
-				->toArray(), 
+				->toArray(),
 				'formats'
 			);
 		$pieces = new Layer(
 				$Piece->find('all')
 				->where($condition)
-				->toArray(), 
+				->toArray(),
 				'pieces'
 			);
-		
+
 		$this->errors = [
 			'pieces' => [
 				'missing format' => []
@@ -63,7 +63,8 @@ class AdministratorController extends AppController {
 		$this->editions = $editions->load();
 		$this->formats = $formats->load();
 		$this->pieces = $pieces->load();
-		
+
+		osd(is_object($artworks));
 		foreach ($artworks->IDs() as $artworkID) {
 			$this->recordArtworkUse($artworkID);
 			$editionIDs = array_keys($editions
@@ -79,36 +80,37 @@ class AdministratorController extends AppController {
 						->find()
 						->specifyFilter('edition_id', $editionID)
 						->load(LAYERACC_LAYER);
+				osd(is_object($pieceSet));
 				$pieceIDs = $pieceSet->IDs();
 				$pieceFormats = $pieceSet->distinct('format_id');
-				
+
 				$this->verifyPieceFormatLink($pieceFormats, $formatIDs, $pieceSet);
 				$this->recordPieceUse($pieceIDs);
-				
+
 				$this->recordEditionUse($editionID);
 			}
-			
+
 		}
 		osd($this->errors);
 		osd(Range::arrayToString(array_keys($this->pieces)), 'Unreferenced pieces');
 		osd(array_keys($this->editions), 'Unreferenced editions');
 	}
-	
+
 	private function recordEditionUse($id) {
 		unset($this->editions[$id]);
 	}
-	
+
 	private function recordFormatUse($id) {
-		
+
 	}
-	
+
 	private function recordArtworkUse($id) {
-		
+
 	}
-	
+
 	/**
 	 * Remove pieces from the master checklist
-	 * 
+	 *
 	 * @param type $id
 	 */
 	private function recordPieceUse($pieceIDs) {
@@ -116,10 +118,10 @@ class AdministratorController extends AppController {
 			unset($this->pieces[$pieceId]);
 		}
 	}
-	
+
 	/**
 	 * Verifies that pieces reference only formats from the editions pool
-	 * 
+	 *
 	 * @param type $pieceFormats
 	 * @param type $formatIDs
 	 * @param type $pieceSet
@@ -133,13 +135,13 @@ class AdministratorController extends AppController {
 						->load();
 				$this->errors['pieces']['missing format'] =
 						array_merge(
-								$this->errors['pieces']['missing format'], 
-								$pieces->IDs()
+								$this->errors['pieces']['missing format'],
+								layer($pieces)->IDs()
 						);
 			}
 		}
 	}
-	
-	
-	
+
+
+
 }

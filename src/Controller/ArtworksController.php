@@ -18,14 +18,14 @@ class ArtworksController extends AppController
 
     use ArtReviewTrait;
 
-    public $components = ['ArtworkStack', 'Layers'];
+    public $components = ['Layers'];
 
     public $ArtworkStack;
     public $Layers;
 
     public function initialize() {
         parent::initialize();
-        $this->loadComponent('ArtworkStack');
+//        $this->loadComponent('ArtworkStack');
 //		$this->Artworks = TableRegistry::getTableLocator()->get('Artworks');
     }
 
