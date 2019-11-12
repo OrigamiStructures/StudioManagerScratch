@@ -4,7 +4,6 @@ namespace App\Model\Lib;
 
 use App\Model\Lib\IdentitySetBase;
 use Cake\ORM\Entity;
-use App\Lib\SystemState;
 use Cake\Collection\Collection;
 use Cake\Utility\Inflector;
 use Cake\Core\ConventionsTrait;
@@ -15,14 +14,14 @@ use Cake\ORM\Query;
 
 /**
  * IdentitySet manages sets of record IDs, thier context and other details
- * 
- * To pursue a flat style of query as an alternative to deep containment, we'll 
- * need to collect and transport sets of IDs to use in WHERE IN (list) queries. 
- * 
- * This object self assembles from an Entity, then reports on various contexual 
- * details and, most importantly, can deliver an IN list (the IDs of one 
+ *
+ * To pursue a flat style of query as an alternative to deep containment, we'll
+ * need to collect and transport sets of IDs to use in WHERE IN (list) queries.
+ *
+ * This object self assembles from an Entity, then reports on various contexual
+ * details and, most importantly, can deliver an IN list (the IDs of one
  * specific association) for further queries.
- * 
+ *
  */
 class IdentitySet extends IdentitySetBase {
 
@@ -50,19 +49,19 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * Create the object from one entity with one containment of linked records
-     * 
-     * The provided entity must have a property ($property_name) that contains 
+     *
+     * The provided entity must have a property ($property_name) that contains
      * linked records. These linked entities only need the id field.
-     * 
-     * @todo The full range of Table name configurations (and transformations) 
+     *
+     * @todo The full range of Table name configurations (and transformations)
      * 		has not been tested
-     * 
+     *
      * @param Entity $entity
      * @param string $property_name
      */
     public function __construct(Entity $entity, $table_name) {
         $this->_table_name = $table_name;
-        $this->source_entity_name = SystemState::stripNamespace($entity);
+        $this->source_entity_name = array_pop(namespaceSplit($entity));
         $this->_source_id = $entity->id;
         $this->_property_name = $this->linkPropertyName($entity);
         if (is_array($entity->{$this->_property_name})) {
@@ -80,15 +79,15 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * Get the name of the table/entities the ID list references
-     * 
-     * By passing the name of an Inflector method, the output can be 
+     *
+     * By passing the name of an Inflector method, the output can be
      * modified as needed.
-     * 
-     * @todo If this method becomes generally useful, it would be simpler 
-     * 		to pass in the which object name was required (like Table, 
-     * 		Entity, or Property), rather than the name of an inflection style. 
+     *
+     * @todo If this method becomes generally useful, it would be simpler
+     * 		to pass in the which object name was required (like Table,
+     * 		Entity, or Property), rather than the name of an inflection style.
      * 		This change would eliminate ->linkPropertyName() too.
-     * 
+     *
      * @param mixed $inflection The name of any Inflector method
      * @return string
      */
@@ -102,13 +101,13 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * Discover and return the property name of the linked ids
-     * 
-     * @todo This could be done with table and association classes 
-     * 			but I don't have them available here and don't know how anyway. 
-     * 			But without looking it up, we rely on conventions which the 
-     * 			developers may have overridden 
+     *
+     * @todo This could be done with table and association classes
+     * 			but I don't have them available here and don't know how anyway.
+     * 			But without looking it up, we rely on conventions which the
+     * 			developers may have overridden
      * @todo See todo on ->pointsTo()
-     * 
+     *
      * @return string
      */
     public function linkPropertyName($entity = NULL) {
@@ -132,7 +131,7 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * Get the ID of the source record
-     * 
+     *
      * @return string
      */
     public function sourceId() {
@@ -141,9 +140,9 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * Get a human readable count
-     * 
-     * eg: '6 pieces', '0 members', '12 articles' 
-     * 
+     *
+     * eg: '6 pieces', '0 members', '12 articles'
+     *
      * @return string
      */
     public function countString() {
@@ -156,7 +155,7 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * Get the count of IDs in the list of linked records
-     * 
+     *
      * @return int
      */
     public function count() {
@@ -165,7 +164,7 @@ class IdentitySet extends IdentitySetBase {
 
     /**
 	 * Is the id stored in this list
-	 * 
+	 *
 	 * @param string $id
 	 * @return boolean
      */
@@ -175,8 +174,8 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * If the id exists, report the source record id
-     * 
-     * @param string $id 
+     *
+     * @param string $id
      * @return boolean|string FALSE or the id of the source
      */
     public function sourceFor($id) {
@@ -185,11 +184,11 @@ class IdentitySet extends IdentitySetBase {
 
     /**
      * An array containing the IDs of the linked records
-     * 
-     * This can be used in the queries: 
-     * `$query->where(['id' => $this->idSet()]` or 
+     *
+     * This can be used in the queries:
+     * `$query->where(['id' => $this->idSet()]` or
      * `$query->where([$this->pointsTo('singularize') . '_id' => $this->idSet()]`
-     * 
+     *
      * @return array
      */
     public function idList() {

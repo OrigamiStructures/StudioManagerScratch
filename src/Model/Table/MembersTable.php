@@ -251,19 +251,7 @@ class MembersTable extends AppTable
             $query->where([
                 'Members.id' => $member_id
             ]);
-
-
-            /**
-             * The type arg is never included so this always does 'group' containment
-             * and Disposition containment doesn't work
-             */
-//            if($this->SystemState->queryArg('type') === MEMBER_TYPE_PERSON){
-//                $query->contain($this->_person_containment);
-//                $query->contain($this->_persons_disposition);
-//            } else {
             $query->contain($this->_complete_containment);
-//                $query->contain($this->_groups_disposition);
-//            }
         } else {
             $query->contain($this->_complete_containment);
         }
@@ -442,7 +430,11 @@ class MembersTable extends AppTable
                 ]
             ]
         ];
-        if(in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION]) && $this->SystemState->is(MEMBER_CREATE)){
+        if(
+            in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION])
+            && $this->ContextUser->actionIs('create')//this is a bullshit call and
+                        //this request processing should never happen in the Model
+        ){
             $proxy_group = [
                 'user_id' => $this->contextUser()->artistId()
             ];

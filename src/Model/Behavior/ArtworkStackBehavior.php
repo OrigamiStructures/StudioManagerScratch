@@ -46,7 +46,9 @@ class ArtworkStackBehavior extends Behavior {
 	 * @return array
 	 */
 	public function createPieces($edition) {
-		if ($this->_table->SystemState->controller() !== 'formats') {
+		if ($this->request->controller !== 'formats') // bullshit code.
+		    // request processing should never be happening in the table
+		{
 			$this->Pieces = TableRegistry::getTableLocator()->get('Pieces');
 
 			// THIS COULD MOVE TO PIECES TABLE
