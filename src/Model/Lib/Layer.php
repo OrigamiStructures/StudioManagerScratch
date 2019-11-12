@@ -1,13 +1,13 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Model\Lib\LayerAccessArgs;
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
 use \App\Interfaces\LayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
-use App\Model\Lib\LayerAccessArgs;
 use App\Lib\Traits\ErrorRegistryTrait;
 
 /**
@@ -28,6 +28,7 @@ class Layer implements LayerAccessInterface {
 	use LayerAccessTrait;
 	use ErrorRegistryTrait;
 
+    //<editor-fold desc="************** Properties **************">
     /**
      * The lower case, singular name of this layer (matches the entity type)
      *
@@ -55,6 +56,7 @@ class Layer implements LayerAccessInterface {
      * @var array
      */
     protected $_entityProperties = [];
+    //</editor-fold>
 
     /**
      * Populate the object
@@ -84,6 +86,7 @@ class Layer implements LayerAccessInterface {
         }
     }
 
+    //<editor-fold desc="************** Introspection **************">
     /**
      * Does the set contain an entity with ID = $id
      *
@@ -137,31 +140,6 @@ class Layer implements LayerAccessInterface {
         return $result;
     }
 
-//	public function functionName($param) {
-//
-//
-//		$args = (new LayerFilterParms())
-//				->layer('addresses')
-//				->property('state')
-//				->conditions(['CA']);
-//
-//		// to get the values out
-//		$value = $args->valueOf('conditions');
-//
-//		$result = $stacks->load($args);
-//
-//		$args = [
-//			'layer' => '',
-//			'page' => 1,
-//			'limit' => -1,
-//			'property' => '',
-//			'method' => '',
-//			'conditions' => [],
-//			'match' => TRUE,
-//		];
-//	}
-
-
     /**
      * The count of stored entities in this layer
      *
@@ -170,8 +148,10 @@ class Layer implements LayerAccessInterface {
     public function count() {
         return count($this->_data);
     }
+    //</editor-fold>
 
-	/**
+    //<editor-fold desc="************** Data Access Methods **************">
+    /**
 	 * Perform data load from Layer context
 	 *
 	 * No args gets the id-indexed array of all stored entities
@@ -200,82 +180,43 @@ class Layer implements LayerAccessInterface {
 
 	}
 
-	/**
-	 * Run a filter process on entities in an array
-	 *
-	 * Support the Layer::load by doing original/desired filter testing
-	 * This is the final stop of all three levels of load(). If some simple
-	 * case wasn't requested, the matching data will be sought here.
-	 *
-	 * $value_source can be the name of a property or a method on the
-	 *		entity. Methods must require no arguemnts.
-	 * $test_value is will be compared to $value_source's result
-	 * $operator is the kind of comparison to be done. The actual function
-	 *		that does comparison will be looked up (selectComparison($op))
-	 *		using $operator as a lookup key
-	 *
-	 * @param string $value_source name of a property or method
-	 * @param mixed $test_value
-	 * @param string $operator A comparison operator
-	 * @return array
-	 */
-//    public function xfilter($value_source, $test_value = null, $operator = null) {
-//
-//		// SHUNT TO NEW FILTER
-//		if (is_a($value_source, '\App\Model\Lib\LayerAccessArgs')) {
-//			return $this->newFilter($value_source);
-//		}
-//
-//		if	(	!$this->has($value_source) &&
-//				!method_exists($this->entityClass('namespaced'), $value_source))
-//		{
-//            return [];
-//        }
-//		if(is_null($operator)) {
-//			$operator = is_array($test_value) ? 'in_array' : '==';
-//		}
-//
-//		$comparison = $this->selectComparison($operator);
-//
-//        $set = collection($this->_data);
-//        $results = $set->filter(function ($entity, $key)
-//				use ($value_source, $test_value, $comparison) {
-//				if(in_array($value_source, $entity->visibleProperties())) {
-//					$actual = $entity->$value_source;
-//				} else {
-//					$actual = $entity->$value_source();
-//				}
-//				return $comparison($actual, $test_value);
-//            })->toArray();
-//        return $results;
-//    }
-//
-	protected function normalizeArgs($params) {
+    /**
+     * Get an array of the IDs of the stored entities
+     *
+     * @return array
+     */
+    public function IDs($layer = null) {
+        return array_keys($this->load());
+    }
 
-		if (is_a($params[0], '\App\Model\Lib\LayerAccessArgs')) {
-			return $params[0];
-		}
-		$argObj = $this->accessArgs();
-		$args = func_get_args()[0];
-		switch ( count($args) ) {
-			case 2:
-				$argObj->specifyFilter(
-						$args[0],
-						$args[1]);
-				break;
-			case 3:
-				$argObj->specifyFilter(
-						$args[0], //value source
-						$args[1], //filter value
-						$args[2]); //filter operator
-                break;
-			default:
-//				pr(func_get_args());//die;
-//				throw new \BadMethodCallException('Bad arguments for Layer::filter() provided.');
-				break;
-		}
-		return $argObj;
-	}
+    /**
+     * Get the records with a matching foreign key value
+     *
+     * <code>
+     * $pieces->linkedTo('format', 434)
+     * </code>
+     *
+     * @todo this will only work on belongsTo associations where the entity
+     *      were searching has a property like 'artwork_id'. It's an open question
+     *      whether some entities will carry the join table from a HABTM
+     *      association. If some do, and if we need to use the data, it is usually
+     *      found in a nested layer on an entity property. Two main questions
+     *      then; 1) how would we insure it always came in with the data
+     *      2) would it be more convenient to use mapper/reducer functions to
+     *      move it up out of the (somewhat messy) native nest structure?
+     *
+     * @param string $layer The simple name of the associate (eg: artwork, format)
+     * @param string $id The foreign key value to match
+     * @return array
+     */
+    public function linkedTo($foreign, $foreign_id, $linked = null) {
+        $foreign_key = $this->_modelKey($foreign);
+        if (!$this->has($foreign_key)) {
+            return [];
+        }
+        return $this->filter($foreign_key, $foreign_id);
+    }
+    //</editor-fold>
 
 	/**
 	 * Filter this layers set of entities
@@ -304,6 +245,33 @@ class Layer implements LayerAccessInterface {
             })->toArray();
         return $results;
     }
+
+    /**
+     * Provide single column search
+     *
+     * <code>
+     *  $formats->filter('title', 'Boxed Set');
+     *  $pieces->filter('number', 12);
+     *  $pieces->filter('number', [6, 8, 10]);
+     * </code>
+     *
+     * @param string $property The property to examine
+     * @param mixed $value The value or array of values to search for
+     * @return array An array of entities that passed the test
+     */
+//    public function filter($property, $value) {
+//        if (!$this->verifyProperty($property)) {
+//            return [];
+//        }
+//        $set = new Collection($this->_data);
+//        $results = $set->filter(function ($entity, $key) use ($property, $value) {
+//				if (is_array($value)) {
+//					return in_array($entity->$property, $value);
+//				}
+//                return $entity->$property == $value;
+//            })->toArray();
+//        return $results;
+//    }
 
 	/**
 	 * Choose a comparison function based on a provided operator
@@ -337,108 +305,22 @@ class Layer implements LayerAccessInterface {
 		}
 
 	}
-	/**
-	 * Get a key => value map from some or all of the stored entities
-	 *
-	 * Filtering is performed by Layer::load() (see the docs)
-	 * $key must be a visible property of the entities
-	 * $value must be either a visible property or a method that needs no args
-	 *
-	 * @param string $key The property to use for the result array keys
-	 * @param string $value The property or method to provide the result values
-	 * @param string $type First arg passed to $this->load() ('all' or 'first')
-	 * @param array $options Search conditions passed to $this->load()
-	 * @return array
-	 */
-//	public function keyedList($key, $value, $type = 'all', $options =[]) {
-	public function keyedList(LayerAccessArgs $args) {
-		$validKey = $this->has($key);
-		$valueIsProperty = $validValue = $this->has($value);
-		if (!$valueIsProperty) {
-			$valueIsMethod = $validValue = method_exists($this->className(), $value);
-		}
-
-		if(!$validKey || !$validValue) {
-			return [];
-		}
-
-		$result = [];
-		$argObj = $this->accessArgs(); // THIS IS UNIMPLEMENTED;
-		$data = $this->load($argObj); // THIS IS UNIMPLEMENTED
-		foreach ($data as $datum) {
-			$result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
-		}
-
-		return $result;
-	}
 
     /**
-     * Get an array of the IDs of the stored entities
+     * Does the $property exist in this layer?
      *
-     * @return array
+     * This checks against visible properties, echos Entity::has()
+     *
+     * @param string $property
+     * @return boolean
      */
-    public function IDs($layer = null) {
-        return array_keys($this->load());
+    public function has($property) {
+        return in_array($property, $this->_entityProperties);
     }
 
-	public function unwrap() {
-		return $this->_data;
-	}
-
-    /**
-     * Get the records with a matching foreign key value
-     *
-     * <code>
-     * $pieces->linkedTo('format', 434)
-     * </code>
-     *
-     * @todo this will only work on belongsTo associations where the entity
-     *      were searching has a property like 'artwork_id'. It's an open question
-     *      whether some entities will carry the join table from a HABTM
-     *      association. If some do, and if we need to use the data, it is usually
-     *      found in a nested layer on an entity property. Two main questions
-     *      then; 1) how would we insure it always came in with the data
-     *      2) would it be more convenient to use mapper/reducer functions to
-     *      move it up out of the (somewhat messy) native nest structure?
-     *
-     * @param string $layer The simple name of the associate (eg: artwork, format)
-     * @param string $id The foreign key value to match
-     * @return array
-     */
-    public function linkedTo($foreign, $foreign_id, $linked = null) {
-        $foreign_key = $this->_modelKey($foreign);
-        if (!$this->has($foreign_key)) {
-            return [];
-        }
-        return $this->filter($foreign_key, $foreign_id);
+    public function hasElements() {
+        return $this->count() > 0;
     }
-
-//    /**
-//     * Provide single column search
-//     *
-//     * <code>
-//     *  $formats->filter('title', 'Boxed Set');
-//     *  $pieces->filter('number', 12);
-//	 *  $pieces->filter('number', [6, 8, 10]);
-//     * </code>
-//     *
-//     * @param string $property The property to examine
-//     * @param mixed $value The value or array of values to search for
-//     * @return array An array of entities that passed the test
-//     */
-//    public function filter($property, $value) {
-//        if (!$this->verifyProperty($property)) {
-//            return [];
-//        }
-//        $set = new Collection($this->_data);
-//        $results = $set->filter(function ($entity, $key) use ($property, $value) {
-//				if (is_array($value)) {
-//					return in_array($entity->$property, $value);
-//				}
-//                return $entity->$property == $value;
-//            })->toArray();
-//        return $results;
-//    }
 
     /**
      * Provide single column sorting
@@ -465,25 +347,42 @@ class Layer implements LayerAccessInterface {
         return $result;
     }
 
-// <editor-fold defaultstate="collapsed" desc="Protected and Private">
-
     /**
-     * Does the $property exist in this layer?
-	 *
-	 * This checks against visible properties, echos Entity::has()
+     * Get a key => value map from some or all of the stored entities
      *
-     * @param string $property
-     * @return boolean
+     * Filtering is performed by Layer::load() (see the docs)
+     * $key must be a visible property of the entities
+     * $value must be either a visible property or a method that needs no args
+     *
+     * @param string $key The property to use for the result array keys
+     * @param string $value The property or method to provide the result values
+     * @param string $type First arg passed to $this->load() ('all' or 'first')
+     * @param array $options Search conditions passed to $this->load()
+     * @return array
      */
-    public function has($property) {
-        return in_array($property, $this->_entityProperties);
+//	public function keyedList($key, $value, $type = 'all', $options =[]) {
+    public function keyedList(LayerAccessArgs $args) {
+        $validKey = $this->has($key);
+        $valueIsProperty = $validValue = $this->has($value);
+        if (!$valueIsProperty) {
+            $valueIsMethod = $validValue = method_exists($this->className(), $value);
+        }
+
+        if(!$validKey || !$validValue) {
+            return [];
+        }
+
+        $result = [];
+        $argObj = $this->accessArgs(); // THIS IS UNIMPLEMENTED;
+        $data = $this->load($argObj); // THIS IS UNIMPLEMENTED
+        foreach ($data as $datum) {
+            $result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
+        }
+
+        return $result;
     }
 
-	public function hasElements() {
-		return $this->count() > 0;
-	}
-
-
+// <editor-fold defaultstate="collapsed" desc="************** Protected and Private **************">
     /**
      * Store all the provided entities indexed by id
      *
@@ -548,6 +447,32 @@ class Layer implements LayerAccessInterface {
         $this->_entityProperties = $sampleData->visibleProperties();
     }
 
+    protected function normalizeArgs($params) {
+
+        if (is_a($params[0], '\App\Model\Lib\LayerAccessArgs')) {
+            return $params[0];
+        }
+        $argObj = $this->accessArgs();
+        $args = func_get_args()[0];
+        switch ( count($args) ) {
+            case 2:
+                $argObj->specifyFilter(
+                    $args[0],
+                    $args[1]);
+                break;
+            case 3:
+                $argObj->specifyFilter(
+                    $args[0], //value source
+                    $args[1], //filter value
+                    $args[2]); //filter operator
+                break;
+            default:
+//				pr(func_get_args());//die;
+//				throw new \BadMethodCallException('Bad arguments for Layer::filter() provided.');
+                break;
+        }
+        return $argObj;
+    }
 // </editor-fold>
 
 }
