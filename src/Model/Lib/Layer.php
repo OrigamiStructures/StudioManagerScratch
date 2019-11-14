@@ -239,7 +239,8 @@ class Layer implements LayerAccessInterface, \Countable {
     }
     //</editor-fold>
 
-	/**
+    //<editor-fold desc="************************* Advanced Features *************************">
+    /**
 	 * Filter this layers set of entities
 	 *
 	 * Supply an LayerAccessArg object with a `specifyFilter()` done or provide
@@ -265,6 +266,7 @@ class Layer implements LayerAccessInterface, \Countable {
             })->toArray();
         return $results;
     }
+    //</editor-fold>
 
     /**
      * Provide single column search
@@ -292,39 +294,6 @@ class Layer implements LayerAccessInterface, \Countable {
 //            })->toArray();
 //        return $results;
 //    }
-
-	/**
-	 * Choose a comparison function based on a provided operator
-	 *
-	 * An unknown operator will yield a function that never finds matches
-	 *
-	 * @param string $operator
-	 * @return callable
-	 */
-	public function selectComparison($operator) {
-		$ops = [
-			'bad_op' => function($actual, $test_value) { return FALSE; },
-			'==' => function($actual, $test_value) { return $actual == $test_value; },
-			'!=' => function($actual, $test_value) { return $actual != $test_value; },
-			'===' => function($actual, $test_value) { return $actual === $test_value; },
-			'!==' => function($actual, $test_value) { return $actual !== $test_value; },
-			'<' => function($actual, $test_value) { return $actual < $test_value; },
-			'>' => function($actual, $test_value) { return $actual > $test_value; },
-			'<=' => function($actual, $test_value) { return $actual <= $test_value; },
-			'>=' => function($actual, $test_value) { return $actual >= $test_value; },
-			'true' => function($actual, $test_value) { return $actual === TRUE; },
-			'false' => function($actual, $test_value) { return $actual === FALSE; },
-			'in_array' => function($actual, $test_values) {return in_array($actual, $test_values);},
-			'truthy' => function($actual, $test_value) {return (boolean) $actual; }
-		];
-
-		if (!array_key_exists($operator, $ops)) {
-			return $ops['bad_op'];
-		} else {
-			return $ops[$operator];
-		}
-
-	}
 
     /**
      * Does the $property exist in this layer?
@@ -378,6 +347,39 @@ class Layer implements LayerAccessInterface, \Countable {
     }
 
 // <editor-fold defaultstate="collapsed" desc="************** Protected and Private **************">
+    /**
+     * Choose a comparison function based on a provided operator
+     *
+     * An unknown operator will yield a function that never finds matches
+     *
+     * @param string $operator
+     * @return callable
+     */
+    public function selectComparison($operator) {
+        $ops = [
+            'bad_op' => function($actual, $test_value) { return FALSE; },
+            '==' => function($actual, $test_value) { return $actual == $test_value; },
+            '!=' => function($actual, $test_value) { return $actual != $test_value; },
+            '===' => function($actual, $test_value) { return $actual === $test_value; },
+            '!==' => function($actual, $test_value) { return $actual !== $test_value; },
+            '<' => function($actual, $test_value) { return $actual < $test_value; },
+            '>' => function($actual, $test_value) { return $actual > $test_value; },
+            '<=' => function($actual, $test_value) { return $actual <= $test_value; },
+            '>=' => function($actual, $test_value) { return $actual >= $test_value; },
+            'true' => function($actual, $test_value) { return $actual === TRUE; },
+            'false' => function($actual, $test_value) { return $actual === FALSE; },
+            'in_array' => function($actual, $test_values) {return in_array($actual, $test_values);},
+            'truthy' => function($actual, $test_value) {return (boolean) $actual; }
+        ];
+
+        if (!array_key_exists($operator, $ops)) {
+            return $ops['bad_op'];
+        } else {
+            return $ops[$operator];
+        }
+
+    }
+
     /**
      * Store all the provided entities indexed by id
      *
