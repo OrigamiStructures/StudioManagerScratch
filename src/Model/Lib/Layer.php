@@ -22,7 +22,7 @@ use App\Lib\Traits\ErrorRegistryTrait;
  *
  * @author Main
  */
-class Layer implements LayerAccessInterface {
+class Layer implements LayerAccessInterface, \Countable {
 
     use ConventionsTrait;
 	use LayerAccessTrait;
