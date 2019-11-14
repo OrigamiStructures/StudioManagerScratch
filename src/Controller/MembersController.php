@@ -286,12 +286,15 @@ class MembersController extends AppController
         $members = $this->Members->find('all')
             ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type'])
             ->order(['id' => 'DESC'])
-            ->limit(3)
+            ->limit(7)
             ->toArray();
+
+        $memberLayer = new Layer(($members));
+
+
 
         $sample = layer([new Member(['id' => 9999])]);
 
-        $memberLayer = new Layer(($members));
         $this->set(compact('members', 'memberLayer', 'MembersTable', 'sample'));
 
     }
