@@ -43,7 +43,7 @@ class StackEntityTest extends TestCase
 		'app.series',
         'app.dispositions_pieces'
     ];
-	
+
     /**
      * setUp method
      *
@@ -57,7 +57,7 @@ class StackEntityTest extends TestCase
         $stacks = $this->ArtStacks
 				->find('stacksFor', ['seed' => 'artworks', 'ids' => [$artID]]);
 		$this->StackEntity = $stacks->element(0, LAYERACC_INDEX);
-                
+
         //art 4, ed 5 Unique qty 1, ed 8 Open Edition qty 150
         //fmt 5 desc Watercolor 6 x 15", fmt 8 desc Digital output with cloth-covered card stock covers
         //pc 20 nm null qty 1, pc 38,40,509,955 qty 140,7,1,2
@@ -76,7 +76,7 @@ class StackEntityTest extends TestCase
 
         parent::tearDown();
     }
-    
+
 
 	/**
 	 * Test find method
@@ -100,11 +100,11 @@ class StackEntityTest extends TestCase
         $arg = $this->StackEntity->find('layerChoice');
         $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
             'find() did not create a LayerAccessArgs object');
-		
+
         $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
             'The access object created by find() did not contain the expected data');
-		
-		$this->assertTrue($arg->valueOf('layer') === 'layerChoice', 
+
+		$this->assertTrue($arg->valueOf('layer') === 'layerChoice',
 			'The access object created with the \'layer\' option '
 			. 'did not have a layer set');
 	}
@@ -114,28 +114,28 @@ class StackEntityTest extends TestCase
 
     /**
      * Test load method
-     * 
+     *
      * These all pass through to Layer and that class tests edge cases.
-     * So all I need here is verification of the proper passthrough 
+     * So all I need here is verification of the proper passthrough
      * of all the variants
      *
      * @return void
      */
     public function testLoadWithNoArg() {
-		
-		$this->assertCount(1, $this->StackEntity->load(), 
+
+		$this->assertCount(1, $this->StackEntity->load(),
 				'simple load( ) did not return array with one element');
-		$this->assertArrayHasKey(4, $this->StackEntity->load(), 
+		$this->assertArrayHasKey(4, $this->StackEntity->load(),
 				'simple load( ) did not return expected key for element');
 	}
-	
+
 	public function testLoadWithStringArg() {
-		$this->assertCount(2, $this->StackEntity->load('formats'), 
+		$this->assertCount(2, $this->StackEntity->load('formats'),
 				'string naming layer did not return expected quantity of data');
-		$this->assertCount(0, $this->StackEntity->load('unkown'), 
+		$this->assertCount(0, $this->StackEntity->load('unkown'),
 				'string naming unknown layer did not return empty array');
 	}
-	
+
 	/**
 	 * @expectedException \BadMethodCallException
 	 */
@@ -144,7 +144,7 @@ class StackEntityTest extends TestCase
 		$this->StackEntity->load($arg, '$this->StackEntity->load() with wrong kind '
 				. 'of object did not throw expected exception');
 	}
-		
+
 	/**
 	 * @expectedException \BadMethodCallException
 	 */
@@ -153,32 +153,32 @@ class StackEntityTest extends TestCase
 		$this->StackEntity->load($arg, '$this->StackEntity->load() with an'
 				. ' array did not throw expected exception');
 	}
-	
+
 	public function testLoadWithArgObj() {
-		
+
 		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
-		
-		$this->assertCount(2, $this->StackEntity->load($formats_arg), 
+
+		$this->assertCount(2, $this->StackEntity->load($formats_arg),
 				'argObj naming layer did not return expected quantity of data');
-		
+
         $pieces = $this->StackEntity
 				->find('pieces')
 				->specifyFilter('quantity', 140)
 				->load();
         $piece = array_shift($pieces);
         $this->assertEquals(
-				140, 
+				140,
 				$piece->quantity,
 				'loading a valid format by property/value test ...'
 				. '->load(\'pieces\', [\'quantity\', 140])... did not '
 				. 'return an entity with an expected property value.');
 
-		
+
 		$all_pieces_args = $this->StackEntity->accessArgs()
 				->setLayer('pieces')
 				->setLimit('all');
         $this->assertEquals(
-				5, 
+				5,
 				count($this->StackEntity->load($all_pieces_args)),
 				'loading using \'all\' did not return the expected '
 				. 'number of entities');
@@ -187,7 +187,7 @@ class StackEntityTest extends TestCase
 				->setLayer('formats')
 				->setLimit('all');
         $this->assertEquals(
-				2, 
+				2,
 				count($this->StackEntity->load($all_formats_args)),
 				'loading using [\'all\'] did not return the expected '
 				. 'number of entities');
@@ -203,7 +203,7 @@ class StackEntityTest extends TestCase
 				->setLayer('formats')
 				->setLimit('first');
         $this->assertEquals(
-				1, 
+				1,
 				count($this->StackEntity->load($first_format_args)),
 				'loading using [\'first\'] did not return one entity');
 
@@ -213,12 +213,12 @@ class StackEntityTest extends TestCase
 				->setAccessNodeObject('value', 'edition_id')
 				->filterValue(8);
         $this->assertEquals(
-				0, 
+				0,
 				count($this->StackEntity->load($first_editionId_is_8_arg)),
 				'loading using an unknow layer name and a property/value '
 				. 'search returned something other than the 0 expected entities.');
     }
-	
+
 	public function testLoadWithArrayFilter() {
 		$actual = $this->StackEntity->find()
 				->setLayer('pieces')
@@ -227,7 +227,7 @@ class StackEntityTest extends TestCase
 	}
 
 // </editor-fold>
-	
+
 	/**
 	 * Test element (a trait method) in StackEntity context
 	 */
@@ -240,7 +240,7 @@ class StackEntityTest extends TestCase
 
     /**
      * Test exists method
-     * 
+     *
      * @return void
      */
     public function testExists()     {
@@ -300,7 +300,7 @@ class StackEntityTest extends TestCase
         $entity = $this->StackEntity->rootElement();
         $this->assertInstanceOf('\App\Model\Entity\Artwork', $entity);
     }
-	
+
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
@@ -323,7 +323,7 @@ class StackEntityTest extends TestCase
         $this->assertEquals([5, 8], $actual,
 			'A valid layer and property did not return the expected values');
     }
-	
+
 	public function testTraitDistinct() {
 		$result = $this->StackEntity
 				->find()
@@ -332,7 +332,7 @@ class StackEntityTest extends TestCase
 				->load();
 		$actual = $this->StackEntity->distinct('edition_id', $result);
 		$this->assertArraySubset([8], $actual);
-		
+
 	}
 
     /**
@@ -342,15 +342,15 @@ class StackEntityTest extends TestCase
      */
     public function testIDs()     {
 		$this->assertTrue(
-				$this->StackEntity->IDs() === [4], 
+				$this->StackEntity->IDs() === [4],
 				'IDs() did not return the expected primary id for this stack');
         $this->assertEquals(
-				[20, 38, 40, 509, 955], 
+				[20, 38, 40, 509, 955],
 				$this->StackEntity->IDs('pieces'),
 				'IDs() on a valid layer did not return the expected array of values');
         $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
 		$this->assertEmpty(
-				$this->StackEntity->IDs('bad_layer'), 
+				$this->StackEntity->IDs('bad_layer'),
 				'IDs(badLayer) did not return an empty array');
     }
 
@@ -368,7 +368,7 @@ class StackEntityTest extends TestCase
         $this->assertEquals(1, count($unique), 'unique edition');
         $this->assertEquals(4, count($open), 'open edition');
         $this->assertEquals(0, count($none), 'nothing');
-    
+
     }
 
 	public function testDataOwner() {
@@ -376,9 +376,9 @@ class StackEntityTest extends TestCase
 		$this->assertTrue('f22f9b46-345f-4c6f-9637-060ceacb21b2' === $actual);
 	}
 // </editor-fold>
-    
+
 // <editor-fold defaultstate="collapsed" desc="Modified parent methods">
-    
+
     /**
      * Test extension of isEmpty method
      *
@@ -386,12 +386,12 @@ class StackEntityTest extends TestCase
      */
     public function testIsEmpty(){
         $this->assertTrue(
-				$this->StackEntity->isEmpty('member'), 
+				$this->StackEntity->isEmpty('member'),
 				'An uset property');
         $emptyLayer = new Layer([], 'addresses');
         $this->StackEntity->addresses = $emptyLayer;
         $this->assertTrue(
-				$this->StackEntity->isEmpty('addresses'), 
+				$this->StackEntity->isEmpty('addresses'),
 				'An empty layer property, count = 0');
     }
 
@@ -407,16 +407,16 @@ class StackEntityTest extends TestCase
 				->accessArgs()
 				->setLayer('pieces')
 				->setLimit('all');
-        $pieces = $this->StackEntity->load($all_pieces_arg);        
+        $pieces = $this->StackEntity->load($all_pieces_arg);
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', $pieces);
-		
+
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('pieces'), 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->get('pieces'),
 				'set()ing a layer type column with and array of '
 				. 'entities did not produce a Layer object.');
-        
+
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
 		$dp = $this->StackEntity->find()
@@ -424,20 +424,20 @@ class StackEntityTest extends TestCase
 				->load();
         unset($this->StackEntity->pieces);
         unset($this->StackEntity->dispositions_pieces);
-        
+
         $this->StackEntity->set([
-			'pieces' => $pieces, 
-			'dispositions_pieces' => $dp, 
+			'pieces' => $pieces,
+			'dispositions_pieces' => $dp,
 			'something' => ['array']]);
-        
+
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('pieces'), 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->get('pieces'),
 				'set()ing a layer type column with and array of '
 				. 'entities did not produce a Layer object.');
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('dispositions_pieces'), 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->get('dispositions_pieces'),
 				'set()ing a layer type column with and array of '
 				. 'entities did not produce a Layer object.');
         $this->assertTrue(
@@ -445,27 +445,27 @@ class StackEntityTest extends TestCase
 				'set()ing an arbitrary column to an array did '
 				. 'not give the entity\'s property an array value');
     }
-	
+
 	/**
-	 * Using this two-argument form of StackEntity->set() works fine 
-	 * but the marshalling system for stackEntities uses a different 
-	 * variaiton, one arg = ['pieces' => []] and this variant 
+	 * Using this two-argument form of StackEntity->set() works fine
+	 * but the marshalling system for stackEntities uses a different
+	 * variaiton, one arg = ['pieces' => []] and this variant
 	 * caused problems when the value of the node was an empty array.
 	 * That's why the tests were passing though the code was failing.
 	 */
 	public function testSetLayerColumnToEmptyArray() {
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', []);
-		
+
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('pieces'), 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->get('pieces'),
 				'set()ing a layer type column with an emptynarray '
 				. 'did not produce a Layer object when using ->get($property)');
 
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->pieces, 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->pieces,
 				'set()ing a layer type column with an emptynarray '
 				. 'did not produce a Layer object when using ->$property');
 
@@ -477,16 +477,16 @@ class StackEntityTest extends TestCase
 	public function testSetLayerColumnToEmptyArrayAlt() {
         unset($this->StackEntity->pieces);
         $this->StackEntity->set(['pieces' => []]);
-		
+
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->get('pieces'), 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->get('pieces'),
 				'set([])ing a layer type column with an emptynarray '
 				. 'did not produce a Layer object when using ->get($property)');
 
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
-				$this->StackEntity->pieces, 
+				'\App\Model\Lib\Layer',
+				$this->StackEntity->pieces,
 				'set([])ing a layer type column with an emptynarray '
 				. 'did not produce a Layer object when using ->$property');
 
@@ -495,15 +495,15 @@ class StackEntityTest extends TestCase
 	public function testMethodOnEmptyLayer() {
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', []);
-		
+
 		$this->assertTrue(is_array($this->StackEntity->IDs('pieces')));
 		$this->assertTrue(empty($this->StackEntity->IDs('pieces')));
 	}
 
 // </editor-fold>
-    
+
 // <editor-fold defaultstate="collapsed" desc="Inherited from entity">
-    
+
     /**
      * Test has method
      *
@@ -511,7 +511,7 @@ class StackEntityTest extends TestCase
      */
     public function testGet(){
         $this->assertInstanceOf(
-				'\App\Model\Lib\Layer', 
+				'\App\Model\Lib\Layer',
 				$this->StackEntity->get('pieces'));
         $this->assertEquals(null, $this->StackEntity->get('members'));
     }
