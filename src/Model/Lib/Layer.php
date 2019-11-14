@@ -160,7 +160,7 @@ class Layer implements LayerAccessInterface {
 	 * If a filter is set, the data is filtered, then paginated and returned
 	 * Otherwise, the full set is paginated and returned
 	 *
-	 * @param mixed $argObj
+	 * @param LayerAccessArgs|null $argObj
 	 * @return array
 	 */
 	public function load($argObj = null) {
@@ -216,6 +216,27 @@ class Layer implements LayerAccessInterface {
         }
         return $this->filter($foreign_key, $foreign_id);
     }
+
+    /**
+     * Provide single column sorting
+     *
+     * <code>
+     *  $artworks->sort('title');
+     *  $pieces->sort('number', SORT_ASC, SORT_NUMERIC);
+     * </code>
+     *
+     * @param string $property Name of the property to sort by
+     * @param string $dir SORT_ASC or SORT_DESC
+     * @param string $type sort type constants
+     * @see https://book.cakephp.org/3.0/en/core-libraries/collections.html#Cake\Collection\Collection::sortBy
+     * @return array Array of entities
+     */
+    public function sort($property, $dir = \SORT_DESC, $type = \SORT_NUMERIC) {
+        $set = new Collection($this->_data);
+        $sorted = $set->sortBy($property, $dir, $type)->toArray();
+        //indexes are out of order and could be confusing
+        return array_values($sorted);
+    }
     //</editor-fold>
 
 	/**
@@ -227,13 +248,12 @@ class Layer implements LayerAccessInterface {
 	 * `filter-operaration` string (the comparison operation to perform)
 	 *		filter-op is options, defaults to == for values, in_array for arrays
 	 *
-	 * @param mixed $argObj
+	 * @param LayerAccessArgs $argObj
 	 * @return array
 	 */
     public function filter($argObj) {
 		$argObj = $this->NormalizeArgs(func_get_args());
 		if (!$argObj->hasAccessNodeObject('filter')) {
-//			pr($this->layerName());
 			$argObj->setLayer($this->layerName());
 		}
 		$comparison = $this->selectComparison($argObj->valueOf('filterOperator'));
@@ -294,7 +314,7 @@ class Layer implements LayerAccessInterface {
 			'>=' => function($actual, $test_value) { return $actual >= $test_value; },
 			'true' => function($actual, $test_value) { return $actual === TRUE; },
 			'false' => function($actual, $test_value) { return $actual === FALSE; },
-			'in_array' => function($actual, $test_value) {return in_array($actual, $test_value);},
+			'in_array' => function($actual, $test_values) {return in_array($actual, $test_values);},
 			'truthy' => function($actual, $test_value) {return (boolean) $actual; }
 		];
 
@@ -320,31 +340,6 @@ class Layer implements LayerAccessInterface {
 
     public function hasElements() {
         return $this->count() > 0;
-    }
-
-    /**
-     * Provide single column sorting
-     *
-     * <code>
-     *  $artworks->sort('title');
-     *  $pieces->sort('number', SORT_ASC, SORT_NUMERIC);
-     * </code>
-     *
-     * @param string $property Name of the property to sort by
-     * @param string $dir SORT_ASC or SORT_DESC
-     * @param string $type sort type constants
-	 * @see https://book.cakephp.org/3.0/en/core-libraries/collections.html#Cake\Collection\Collection::sortBy
-     * @return array Array of entities
-     */
-    public function sort($property, $dir = \SORT_DESC, $type = \SORT_NUMERIC) {
-        $set = new Collection($this->_data);
-        $sorted = $set->sortBy($property, $dir, $type)->toArray();
-        $result = [];
-        //indexes are out of order
-        foreach ($sorted as $entity) {
-            $result[] = $entity;
-        }
-        return $result;
     }
 
     /**
@@ -476,4 +471,3 @@ class Layer implements LayerAccessInterface {
 // </editor-fold>
 
 }
-
