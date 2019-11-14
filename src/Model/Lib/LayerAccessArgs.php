@@ -347,6 +347,15 @@ protected $_registry;
 		return $this;
 	}
 
+    /**
+     * Set the property or method that will be filtered
+     *
+     * @param $value_source string
+     */
+	public function setFilterTestSubject($value_source) {
+        $this->setAccessNodeObject('filter', $value_source);
+    }
+
 	/**
 	 * Set a filterValue and flag that this has been done
 	 *
