@@ -3,6 +3,10 @@
 /* @var \App\Model\Lib\Layer $memberLayer */
 //echo 'debug($memberLayer->sort(\'last_name\', \SORT_ASC, \SORT_NATURAL));';
 //echo "<pre>\n";
+debug(count($memberLayer));
+
+//osd($memberLayer->loadDistinct('member_type'), 'loadDistinct');
+
 osd(
     $memberLayer
         ->find()

@@ -97,7 +97,7 @@ $pieces = [];
 foreach ($artworks->load() as $artwork){
 //	osd($artwork->series);
 	if ($artwork->series->hasElements()) {
-		osd($artwork->series->distinct('title'));
+		osd($artwork->series->loadDistinct('title'));
 	}
 	echo $this->Html->tag('h1',$artwork->rootID() . ' || ' . $artwork->title());
 	echo $this->Html->para(null, $artwork->description());

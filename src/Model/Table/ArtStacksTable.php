@@ -249,7 +249,7 @@ class ArtStacksTable extends StacksTable
 
 	public function marshalSeries($id, $stack) {
 		if ($stack->count('editions')) {
-			$series_ids = $stack->editions->distinct('series_id');
+			$series_ids = $stack->editions->loadDistinct('series_id');
 			$series_ids = empty($series_ids) ? [''] : $series_ids;
 			$series = $this->Series->find('all')
 					->where(['id IN' => $series_ids]);
