@@ -1,0 +1,39 @@
+<?php
+namespace App\Interfaces;
+
+use App\Model\Lib\LayerAccessArgs;
+use App\Model\Lib\LayerIterator;
+
+interface LayerTaskInterface
+{
+
+    /**
+     * Initiate a fluent Access definition
+     *
+     * @return LayerAccessArgs
+     */
+    public function find();
+
+    /**
+     * Run the Access process and return an iterator containing the result
+     *
+     * @param $argObj LayerAccessArgs
+     * @return LayerIterator
+     */
+    public function perform($argObj);
+
+    /**
+     * Store an the Access process instructions
+     *
+     * @param $argObj LayerAccessArgs
+     * @return bool
+     */
+    public function setArgObj($argObj);
+
+    /**
+     * Get a copy of the Access instructions (with no included data)
+     *
+     * @return LayerAccessArgs
+     */
+    public function copyArgObj();
+}
