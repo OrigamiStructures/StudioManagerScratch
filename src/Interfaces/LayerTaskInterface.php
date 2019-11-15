@@ -10,9 +10,10 @@ interface LayerTaskInterface
     /**
      * Initiate a fluent Access definition
      *
+     * @todo This name has a collision. It will be changed later
      * @return LayerAccessArgs
      */
-    public function find();
+    public function NEWfind();
 
     /**
      * Run the Access process and return an iterator containing the result
