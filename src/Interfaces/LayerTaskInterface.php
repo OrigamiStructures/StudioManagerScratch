@@ -29,7 +29,7 @@ interface LayerTaskInterface
      * @param $argObj LayerAccessArgs
      * @return bool
      */
-    public function setArgObj($argObj);
+    public function setAccessArgs($argObj);
 
     /**
      * Get a copy of the Access instructions (with no included data)
