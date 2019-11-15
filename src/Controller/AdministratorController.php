@@ -82,7 +82,7 @@ class AdministratorController extends AppController {
 						->load(LAYERACC_LAYER);
 				osd(is_object($pieceSet));
 				$pieceIDs = $pieceSet->IDs();
-				$pieceFormats = $pieceSet->loadDistinct('format_id');
+				$pieceFormats = $pieceSet->distinct('format_id');
 
 				$this->verifyPieceFormatLink($pieceFormats, $formatIDs, $pieceSet);
 				$this->recordPieceUse($pieceIDs);

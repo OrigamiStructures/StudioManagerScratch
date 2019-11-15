@@ -104,11 +104,6 @@ trait LayerAccessTrait {
 //	public function all($property);
 //
 	public function loadDistinct($argObj, $sourcePoint = null){
-	    if (is_string($argObj) && $this instanceof Layer) {
-	        $data = $sourcePoint;
-	        $sourcePoint = $argObj;
-	        return $this->distinct($sourcePoint, $data);
-        }
 		if (is_null($sourcePoint)) {
 			$ValueSource = $argObj->accessNodeObject('value');
 		} else {
@@ -216,7 +211,7 @@ trait LayerAccessTrait {
 	 * @param array $data Array of entities (required except for Layer calls)
 	 * @return array Array containing the unique values found
 	 */
-	protected function distinct($sourcePoint, $data = null) {
+	public function distinct($sourcePoint, $data = null) {
 		$rawData = $this->insureData($data);
 		return array_unique($this->valueList($sourcePoint, $rawData));
 	}
