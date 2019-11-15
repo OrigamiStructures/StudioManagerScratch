@@ -6,7 +6,7 @@ use Cake\ORM\Entity;
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use App\Interfaces\LayerAccessInterface;
+use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 use App\Exception\BadClassConfigurationException;
@@ -23,7 +23,7 @@ use App\Exception\BadClassConfigurationException;
  *
  * @author Main
  */
-class StackEntity extends Entity implements LayerAccessInterface
+class StackEntity extends Entity implements xxxLayerAccessInterface
 {
 
     use LayerAccessTrait;
