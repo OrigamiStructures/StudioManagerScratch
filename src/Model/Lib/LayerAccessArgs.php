@@ -1,6 +1,10 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Exception\MissingPropertyException;
+use App\Interfaces\LayerAccessInterface;
+use App\Interfaces\LayerTaskInterface;
+use App\Interfaces\xxxLayerAccessInterface;
 use BadMethodCallException;
 use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
@@ -46,11 +50,14 @@ use App\Model\Lib\ValueSourceRegistry;
  *
  * @author dondrake
  */
-class LayerAccessArgs {
+class LayerAccessArgs implements LayerAccessInterface {
 
 use ErrorRegistryTrait;
 
-protected $data;
+    /**
+     * @var LayerTaskInterface
+     */
+    protected $data;
 
 protected $_registry;
 
@@ -134,6 +141,101 @@ protected $_registry;
     {
         return $this->_page !== FALSE && $this->_limit !== FALSE;
     }
+
+    /**
+     * Get the result as an array of entities
+     *
+     * @throws MissingPropertyException
+     * @return array
+     */
+    public function toArray()
+    {
+        $this->_validateExecution();
+        return $this->data->toArray();
+
+    }
+
+    /**
+     * Get the result as Layer object
+     *
+     * @throws MissingPropertyException
+     * @return Layer
+     */
+    public function toLayer()
+    {
+        $this->_validateExecution();
+        return $this->data->toLayer();
+    }
+
+    /**
+     * Get an array of values
+     *
+     * @param $valueSource string|ValueSource
+     * @throws MissingPropertyException
+     * @return array
+     */
+    public function toValueList($valueSource = null)
+    {
+        $this->_validateExecution();
+        return $this->data->toValueList($valueSource);
+    }
+
+    /**
+     * Get a key => value list
+     *
+     * @param $keySource string|ValueSource
+     * @param $valueSource string|ValueSource
+     * @throws MissingPropertyException
+     * @return array
+     */
+    public function toKeyValueList($keySource = null, $valueSource = null)
+    {
+        $this->_validateExecution();
+        return $this->data->toKeyValueList($valueSource, $keySource);
+    }
+
+    /**
+     * Get a list of distinct values
+     *
+     * @param $valueSource string|ValueSource
+     * @throws MissingPropertyException
+     * @return array
+     */
+    public function toDistinctList($valueSource = null)
+    {
+        $this->_validateExecution();
+        return $this->data->toDistinctList($valueSource);
+    }
+
+    /**
+     * Get the stored registry instance
+     *
+     * @return ValueSourceRegistry
+     */
+    public function getValueRegistry()
+    {
+        // TODO: Implement getValueRegistry() method.
+    }
+
+    /**
+     * Insure data is present and flag $this as process initiator
+     *
+     * @throws MissingPropertyException
+     * @return void
+     */
+    protected function _validateExecution()
+    {
+        if (!isset($this->data)){
+            $msg = 'Processing was requested on a bare LayerAccessArgs object.';
+            throw new MissingPropertyException($msg);
+        }
+    }
+
+    public function clearPendingFlag()
+    {
+        $this->_pending = FALSE;
+    }
+
     //</editor-fold>
 
 	public function __construct($data = FALSE) {
