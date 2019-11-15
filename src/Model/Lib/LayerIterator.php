@@ -22,6 +22,22 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
     protected $AccessArgs;
 
     /**
+     * All the entities to operate on
+     *
+     * @var \AppendIterator
+     */
+    protected $AppendIterator;
+
+    protected $FilterIterator;
+
+    protected $ResultIterator;
+
+    public function __construct()
+    {
+        $this->AppendIterator = new \AppendIterator();
+    }
+
+    /**
      * Make the class tollerant of the input
      *
      * This will take any form of entity data we might have from our system;
@@ -56,6 +72,7 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
         parent::append($result);
     }
 
+    //<editor-fold desc="****************** LAYER ACCESS INTERFACE *******************">
     /**
      * Get the result as an array of entities
      *
@@ -119,6 +136,7 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
     {
         // TODO: Implement getValueRegistry() method.
     }
+    //</editor-fold>
 
     /**
      * Initiate a fluent Access definition
@@ -128,11 +146,19 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      */
     public function NEWfind()
     {
-        // TODO: Implement NEWfind() method.
+        $this->AccessArgs = new LayerAccessArgs();
+        return $this->AccessArgs;
     }
 
     /**
      * Run the Access process and return an iterator containing the result
+     *
+     * @TODO storing each process result separately could function as a
+     *      cache system. If we needed multiple related results from one
+     *      pool, we could make an identity test for each step and only
+     *      do them when they change. This would allow a filtered, sorted
+     *      set that we could pull sequential pages from with out
+     *      refiltering/resorting. For now, this need seems farfetched.
      *
      * @param $argObj LayerAccessArgs
      * @return LayerIterator
@@ -142,15 +168,19 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
         $this->setAccessArgs($argObj);
 
         if($this->AccessArgs->hasFilter()) {
-            $this->performFilter();
+            $this->ResultIterator = $this->performFilter();
         }
 
         if($this->AccessArgs->hasSort()) {
-            $this->performSort();
+            $this->ResultIterator = $this->performSort();
         }
 
         if($this->AccessArgs->hasPagination()) {
-            $this->performPagination();
+            $this->ResultIterator = $this->performPagination();
+        }
+
+        if(!isset($this->ResultIterator)) {
+            $this->ResultIterator = $this->AppendIterator;
         }
 
     }
@@ -179,6 +209,7 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
     public function setAccessArgs($argObj)
     {
         $this->AccessArgs = $argObj;
+        unset($this->ResultIterator);
     }
 
     /**
