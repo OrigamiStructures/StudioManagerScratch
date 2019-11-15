@@ -106,6 +106,36 @@ protected $_registry;
 
 // </editor-fold>
 
+//<editor-fold desc="SORT VALUES">
+
+    private $_sortDir = FALSE;
+    private $_sortType = FALSE;
+    private $_sort_value_isset = FALSE;
+
+//</editor-fold>
+
+    //<editor-fold desc="NEW METHODS FOR REFACTOR">
+    public function resetData()
+    {
+        unset($this->data);
+    }
+
+    public function hasFilter()
+    {
+        return $this->source_node['filter'] && $this->valueOf('filter_value_isset');
+    }
+
+    public function hasSort()
+    {
+        return $this->_sortDir !== FALSE && $this->_sortType !== FALSE && $this->valueOf('sort_value_isset');
+    }
+
+    public function hasPagination()
+    {
+        return $this->_page !== FALSE && $this->_limit !== FALSE;
+    }
+    //</editor-fold>
+
 	public function __construct($data = FALSE) {
 		$this->_registry = new ValueSourceRegistry();
         if($data) {
