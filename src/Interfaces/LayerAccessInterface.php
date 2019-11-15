@@ -30,7 +30,7 @@ interface LayerAccessInterface
      * @param $valueSource string|ValueSource
      * @return array
      */
-    public function toValueList($valueSource);
+    public function toValueList($valueSource = null);
 
     /**
      * Get a key => value list
@@ -39,7 +39,7 @@ interface LayerAccessInterface
      * @param $valueSource string|ValueSource
      * @return array
      */
-    public function toKeyValueList($keySource, $valueSource);
+    public function toKeyValueList($keySource = null, $valueSource = null);
 
     /**
      * Get a list of distinct values
@@ -47,7 +47,7 @@ interface LayerAccessInterface
      * @param $valueSource string|ValueSource
      * @return array
      */
-    public function toDistinctList($valueSource);
+    public function toDistinctList($valueSource = null);
 
     /**
      * Get the stored registry instance
