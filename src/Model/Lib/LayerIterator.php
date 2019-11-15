@@ -157,17 +157,17 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
 
     protected function performFilter()
     {
-        
+
     }
 
     protected function performSort()
     {
-        
+
     }
 
     protected function performPagination()
     {
-        
+
     }
 
     /**
