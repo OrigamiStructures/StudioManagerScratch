@@ -195,9 +195,9 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
     protected function performFilter()
     {
         $argObj = $this->AccessArgs;
-        $comparison = $this->selectComparison($argObj->valueOf('filterOperator'));
-        $set = collection($this->AppendIterator);
+        $comparison = $argObj->selectComparison($argObj->valueOf('filterOperator'));
 
+        $set = collection($this->AppendIterator);
         $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
             $actual = $argObj->accessNodeObject('filter')->value($entity);
             return $comparison($actual, $argObj->valueOf('filterValue'));
