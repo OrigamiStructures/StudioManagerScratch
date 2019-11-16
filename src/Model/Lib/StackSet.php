@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Interfaces\LayerStructureInterface;
 use App\Model\Entity\StackEntity;
 use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
@@ -17,13 +18,34 @@ use App\Model\Lib\StackSetAccessArgs;
  *
  * @author dondrake
  */
-class StackSet implements xxxLayerAccessInterface {
+class StackSet implements LayerStructureInterface {
 
 	use LayerAccessTrait;
 
 	protected $_data = [];
 
 	protected $_stackName;
+
+    /**
+     * Gather the available data at this level and package the iterator
+     *
+     * @param $name string
+     * @return LayerIterator
+     */
+    public function getLayer($name)
+    {
+        $Product = new LayerIterator();
+        $stacks = $this->all();
+        foreach ($stacks as $stack) {
+            if (is_a($stack->$name, '\App\Model\Lib\Layer')) {
+                $result = $stack->$name;
+            } else {
+                $result = [];
+            }
+            $Product->insert($result);
+        }
+        return $Product;
+    }
 
 	/**
 	 * Add another entity to the collection

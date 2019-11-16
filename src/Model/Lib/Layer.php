@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Lib;
 
+use App\Interfaces\LayerAccessInterface;
+use App\Interfaces\LayerStructureInterface;
 use App\Model\Lib\LayerAccessArgs;
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
@@ -22,7 +24,7 @@ use App\Lib\Traits\ErrorRegistryTrait;
  *
  * @author Main
  */
-class Layer implements xxxLayerAccessInterface, \Countable {
+class Layer implements LayerStructureInterface, \Countable {
 
     use ConventionsTrait;
 	use LayerAccessTrait;
@@ -85,6 +87,18 @@ class Layer implements xxxLayerAccessInterface, \Countable {
 
         }
     }
+
+    /**
+     * Gather the available data at this level and package the iterator
+     *
+     * @param $name string
+     * @return LayerIterator
+     */
+    public function getLayer($name = null)
+    {
+        return  new LayerIterator($this->_data);
+    }
+
 
     //<editor-fold desc="************** Introspection **************">
     /**

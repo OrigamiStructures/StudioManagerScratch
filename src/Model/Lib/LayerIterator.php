@@ -13,13 +13,13 @@ use App\Interfaces\LayerTaskInterface;
  *
  * @package App\Model\Lib
  */
-class LayerIterator extends \AppendIterator implements LayerAccessInterface, LayerTaskInterface
+class LayerIterator implements LayerAccessInterface, LayerTaskInterface
 {
 
     /**
      * @var LayerAccessArgs
      */
-    protected $AccessArgs;
+    protected $AccessArgs = null;
 
     /**
      * All the entities to operate on
@@ -30,11 +30,16 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
 
     protected $FilterIterator;
 
-    protected $ResultIterator;
+    protected $ResultArray;
 
-    public function __construct()
+    public function __construct($data = [])
     {
         $this->AppendIterator = new \AppendIterator();
+        $this->insert($data);
+    }
+
+    public function getAppendIterator() {
+        return $this->AppendIterator;
     }
 
     /**
@@ -56,20 +61,16 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      */
     public function insert($data)
     {
-        switch ($data) {
-            case is_array($data):
-                $result = new \ArrayIterator($data);
-                break;
-            case is_a($data, '\APP\MODEL\LIB\Layer'):
-                $result = new \ArrayIterator($data->load());
-                break;
-            case is_a($data, '\Iterator');
-                $result = $data;
-                break;
-            default:
-                $result = new \ArrayIterator([$data]);
+        if (is_array($data)){
+            $result = new \ArrayIterator($data);
+        } elseif (is_a($data, '\App\Model\Lib\Layer')) {
+            $result = new \ArrayIterator($data->load());
+        } elseif (is_a($data, '\Iterator'))  {
+            $result = $data;
+        } else {
+            $result = new \ArrayIterator([$data]);
         }
-        parent::append($result);
+        $this->AppendIterator->append($result);
     }
 
     //<editor-fold desc="****************** LAYER ACCESS INTERFACE *******************">
@@ -99,9 +100,9 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      * @param $valueSource string|ValueSource
      * @return array
      */
-    public function toValueList($valueSource)
+    public function toValueList($valueSource = null)
     {
-        // TODO: Implement toValueList() method.
+        // TODO: Implement toValueList($valueSource = null) method.
     }
 
     /**
@@ -111,9 +112,9 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      * @param $valueSource string|ValueSource
      * @return array
      */
-    public function toKeyValueList($keySource, $valueSource)
+    public function toKeyValueList($keySource = null, $valueSource = null)
     {
-        // TODO: Implement toKeyValueList() method.
+        // TODO: Implement toKeyValueList($keySource = null, $valueSource = null) method.
     }
 
     /**
@@ -122,9 +123,9 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      * @param $valueSource string|ValueSource
      * @return array
      */
-    public function toDistinctList($valueSource)
+    public function toDistinctList($valueSource = null)
     {
-        // TODO: Implement toDistinctList() method.
+        // TODO: Implement toDistinctList($valueSource = null) method.
     }
 
     /**
@@ -146,7 +147,7 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      */
     public function NEWfind()
     {
-        $this->AccessArgs = new LayerAccessArgs();
+        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
         return $this->AccessArgs;
     }
 
@@ -168,26 +169,40 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
         $this->setAccessArgs($argObj);
 
         if($this->AccessArgs->hasFilter()) {
-            $this->ResultIterator = $this->performFilter();
+            $this->ResultArray = $this->performFilter();
         }
 
         if($this->AccessArgs->hasSort()) {
-            $this->ResultIterator = $this->performSort();
+            $this->ResultArray = $this->performSort();
         }
 
         if($this->AccessArgs->hasPagination()) {
-            $this->ResultIterator = $this->performPagination();
+            $this->ResultArray = $this->performPagination();
         }
 
-        if(!isset($this->ResultIterator)) {
-            $this->ResultIterator = $this->AppendIterator;
+        if(!isset($this->ResultArray)) {
+            $this->ResultArray = $this->AppendIterator;
         }
+
+        return $this->ResultArray;
 
     }
 
+    /**
+     * Unedited code from Layer
+     * @return array
+     */
     protected function performFilter()
     {
+        $argObj = $this->AccessArgs;
+        $comparison = $this->selectComparison($argObj->valueOf('filterOperator'));
+        $set = collection($this->AppendIterator);
 
+        $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
+            $actual = $argObj->accessNodeObject('filter')->value($entity);
+            return $comparison($actual, $argObj->valueOf('filterValue'));
+        })->toArray();
+        return $results;
     }
 
     protected function performSort()
@@ -209,7 +224,12 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
     public function setAccessArgs($argObj)
     {
         $this->AccessArgs = $argObj;
-        unset($this->ResultIterator);
+        unset($this->ResultArray);
+    }
+
+    public function clearAccessArgs()
+    {
+        $this->AccessArgs = null;
     }
 
     /**
@@ -219,7 +239,7 @@ class LayerIterator extends \AppendIterator implements LayerAccessInterface, Lay
      */
     public function copyArgObj()
     {
-        $obj = clone $this->AccessArgs;
+        $obj = clone $this->AccessArgs ?? new LayerAccessArgs();
         $obj->resetData();
         return $obj;
 

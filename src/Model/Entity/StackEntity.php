@@ -2,6 +2,8 @@
 
 namespace App\Model\Entity;
 
+use App\Interfaces\LayerStructureInterface;
+use App\Model\Lib\LayerIterator;
 use Cake\ORM\Entity;
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
@@ -23,7 +25,7 @@ use App\Exception\BadClassConfigurationException;
  *
  * @author Main
  */
-class StackEntity extends Entity implements xxxLayerAccessInterface
+class StackEntity extends Entity implements LayerStructureInterface
 {
 
     use LayerAccessTrait;
@@ -62,6 +64,23 @@ class StackEntity extends Entity implements xxxLayerAccessInterface
      * @var string
      */
     public $rootDisplaySource = FALSE;
+
+    /**
+     * Gather the available data at this level and package the iterator
+     *
+     * @param $name string
+     * @return LayerIterator
+     */
+    public function getLayer($name)
+    {
+        if (is_a($this->$name, '\App\Model\Lib\Layer')) {
+            $result = $this->$name;
+        } else {
+            $result = [];
+        }
+        return new LayerIterator($result);
+    }
+
 
     /**
      * Is the id a member of the set
@@ -253,7 +272,7 @@ class StackEntity extends Entity implements xxxLayerAccessInterface
 
         $this->verifyInstanceArgObj($argObj);
 
-        $layer = $this->getLayer($argObj);
+        $layer = $this->OldGetLayer($argObj);
         if (!$layer) {
             return [];
         }
@@ -272,7 +291,7 @@ class StackEntity extends Entity implements xxxLayerAccessInterface
      * @param LayerAccessArgs $argObj
      * @return boolean|Layer Layer object if valid, FALSE otherwise
      */
-    private function getLayer($argObj)
+    private function OldGetLayer($argObj)
     {
         $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
         if ($property && is_a($property, '\App\Model\Lib\Layer')) {

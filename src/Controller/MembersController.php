@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Model\Lib\Layer;
+use App\Model\Lib\LayerIterator;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Core\Configure;
@@ -290,12 +291,27 @@ class MembersController extends AppController
             ->toArray();
 
         $memberLayer = new Layer(($members));
+        $ids = $memberLayer->IDs();
+        $list = $memberLayer->keyValueList('id', 'name');
+
+        osd('built');
+        $it = new LayerIterator();
+        osd('string');
+        $it->insert('thing');
+        osd('layer');
+        $it->insert($memberLayer);
+        osd('ids array');
+        $it->insert($ids);
+        osd('iterator');
+        $it->insert(new \ArrayIterator($list));
 
 
+        $sample = [new Member(['id' => 9999])];
+        $it->insert($sample);
 
-        $sample = layer([new Member(['id' => 9999])]);
+        $it = $it->getAppendIterator();
 
-        $this->set(compact('members', 'memberLayer', 'MembersTable', 'sample'));
+        $this->set(compact('members', 'memberLayer', 'MembersTable', 'sample', 'it'));
 
     }
 }
