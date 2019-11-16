@@ -349,7 +349,6 @@ class ArtworksController extends AppController
         $result = [];
         $anscestors = [];
         $disp = TableRegistry::getTableLocator()->get('Dispositions');
-        osd(get_class(TableRegistry::getTableLocator()));
         $methods = $disp->customFinders();
         $options = $this->request->getData();
 
@@ -369,7 +368,6 @@ class ArtworksController extends AppController
             $stacks = $ArtStacks->find('stacksFor',
                 ['seed' => 'disposition', 'ids' => $activity->IDs()]);
 
-			osd(count($stacks->all()));
 
 //            $sorted = [];
 //            foreach ($dispositions as $disposition) {
