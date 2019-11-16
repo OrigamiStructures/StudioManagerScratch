@@ -11,6 +11,7 @@ use Cake\Utility\Inflector;
 use App\Model\Lib\ValueSource;
 use App\Lib\Traits\ErrorRegistryTrait;
 use App\Model\Lib\ValueSourceRegistry;
+use http\Exception\InvalidArgumentException;
 
 /**
  * LayerAccessArgs manages the arguments used by Set/Stack/Layer::load()
@@ -118,11 +119,75 @@ class LayerAccessArgs implements LayerAccessInterface
 //<editor-fold desc="SORT VALUES">
     private $_sortDir = FALSE;
     private $_sortType = FALSE;
-    private $_sort_value_isset = FALSE;
+    private $_sortColumn = FALSE;
 
 //</editor-fold>
 
-    //<editor-fold desc="NEW METHODS FOR REFACTOR">
+//<editor-fold desc="NEW METHODS FOR REFACTOR">
+
+    public function specifySort($value_source, $direction, $type = SORT_NATURAL)
+    {
+        $this->setSortColumn($value_source);
+        $this->setSortDir($direction);
+        $this->setSortType($type);
+        return $this;
+    }
+
+    public function setSortDir($direction)
+    {
+        if(!in_array($direction, [SORT_DESC, SORT_ASC])) {
+            $msg = 'The sort diection must be one of the php SORT_x constants (or values 3 or 4).';
+            throw new InvalidArgumentException($msg);
+        }
+        $this->_sortDir = $direction;
+        return $this;
+    }
+
+    /**
+     * Set the sort type
+     *
+     * @throws \InvalidArgumentException
+     * @param $type int
+     * @return $this
+     */
+    public function setSortType($type)
+    {
+        if(!in_array($type, [SORT_NUMERIC, SORT_STRING, SORT_NATURAL, SORT_LOCALE_STRING])) {
+            $msg = 'The sort type must be one of the php SORT_x constants (or values 1, 2, 6, or 5).';
+            throw new InvalidArgumentException($msg);
+        }
+        $this->_sortType = $type;
+        return $this;
+    }
+
+    /**
+     * @todo what is the story with _sort_value_isset? Can't verify ValObj any other what? deleted for now
+     *
+     * @todo supressed ValueObjects. Can they be used?
+     * @param $valueSource
+     * @return $this
+     */
+    public function setSortColumn($valueSource)
+    {
+        $this->_sortColumn = $valueSource;
+        return $this;
+    }
+
+    public function getSortDirection()
+    {
+        return $this->_sortDir;
+    }
+
+    public function getSortType()
+    {
+        return $this->_sortType;
+    }
+
+    public function getSortColumn()
+    {
+        return $this->_sortColumn;
+    }
+
     public function resetData()
     {
         unset($this->data);
@@ -135,7 +200,8 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function hasSort()
     {
-        return $this->_sortDir !== FALSE && $this->_sortType !== FALSE && $this->valueOf('sort_value_isset');
+        debug($this);
+        return $this->_sortDir !== FALSE && $this->_sortType !== FALSE && $this->_sortColumn !== FALSE;
     }
 
     public function hasPagination()
@@ -258,6 +324,8 @@ class LayerAccessArgs implements LayerAccessInterface
         return $this->_registry;
     }
 
+//<editor-fold desc="LOAD methods">
+
     /**
      * Final processing tool for layer access arguments
      *
@@ -299,6 +367,7 @@ class LayerAccessArgs implements LayerAccessInterface
         }
         return $this->data()->loadValueList($this);
     }
+//</editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 

@@ -7,6 +7,7 @@ use App\Interfaces\Layer;
 use App\Interfaces\LayerAccessInterface;
 use App\Interfaces\LayerStructureInterface;
 use App\Interfaces\LayerTaskInterface;
+use Cake\Collection\Collection;
 
 /**
  * LayerIterator
@@ -177,6 +178,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
             $this->ResultArray = $this->performFilter();
         }
 
+        osd($this->AccessArgs->hasSort());
         if($this->AccessArgs->hasSort()) {
             $this->ResultArray = $this->performSort();
         }
@@ -212,7 +214,18 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
 
     protected function performSort()
     {
-
+        if (!isset($this->ResultArray)) {
+            $this->ResultArray = $this->AppendIterator;
+        }
+        $column = $this->AccessArgs->getSortColumn('sort');
+//        $column = 'last_name';
+        $dir = $this->AccessArgs->getSortDirection();
+        $type = $this->AccessArgs->getSortType();
+        $unsorted = new Collection($this->ResultArray);
+        osd($unsorted);
+        $sorted = $unsorted->sortBy($column, $dir, $type)->toArray();
+        //indexes are out of order and could be confusing
+        return array_values($sorted);
     }
 
     protected function performPagination()
