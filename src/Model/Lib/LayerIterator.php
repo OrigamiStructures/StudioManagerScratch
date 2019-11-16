@@ -16,6 +16,7 @@ use App\Interfaces\LayerTaskInterface;
 class LayerIterator implements LayerAccessInterface, LayerTaskInterface
 {
 
+    protected $layerName;
     /**
      * @var LayerAccessArgs
      */
@@ -32,10 +33,10 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
 
     protected $ResultArray;
 
-    public function __construct($data = [])
+    public function __construct($layerName)
     {
         $this->AppendIterator = new \AppendIterator();
-        $this->insert($data);
+        $this->layerName = $layerName;
     }
 
     public function getAppendIterator() {
@@ -58,6 +59,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      * @todo Code smell? Should this be input tollerant like this?
      *
      * @param mixed $data
+     * @return LayerIterator
      */
     public function insert($data)
     {
@@ -71,6 +73,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
             $result = new \ArrayIterator([$data]);
         }
         $this->AppendIterator->append($result);
+        return $this;
     }
 
     //<editor-fold desc="****************** LAYER ACCESS INTERFACE *******************">
@@ -148,6 +151,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
     public function NEWfind()
     {
         $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
+        $this->AccessArgs->setLayer($this->layerName);
         return $this->AccessArgs;
     }
 
@@ -167,6 +171,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
     public function perform($argObj)
     {
         $this->setAccessArgs($argObj);
+        $this->AccessArgs->setLayer($this->layerName);
 
         if($this->AccessArgs->hasFilter()) {
             $this->ResultArray = $this->performFilter();

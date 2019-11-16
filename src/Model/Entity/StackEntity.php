@@ -73,12 +73,13 @@ class StackEntity extends Entity implements LayerStructureInterface
      */
     public function getLayer($name)
     {
+        $Iterator = new LayerIterator($name);
         if (is_a($this->$name, '\App\Model\Lib\Layer')) {
             $result = $this->$name;
         } else {
             $result = [];
         }
-        return new LayerIterator($result);
+        return new $Iterator->insert($result);
     }
 
 
