@@ -324,7 +324,7 @@ protected $_registry;
 	}
 
 	/**
-	 * Make a ValueSource object or defer the tas for later
+	 * Make a ValueSource object or defer the task for later
 	 *
 	 * 'layer'
 	 *		if the Value and Key objects haven't been made yet but
@@ -336,7 +336,7 @@ protected $_registry;
 	 *		known, make the object since the source node is now known
 	 * 'key'
 	 *		set the layer if we can
-	 *		if the KeyObject isn't yet constructued but the layer is
+	 *		if the KeyObject isn't yet constructed but the layer is
 	 *		known, make the object since the key node is now known
 
 	 *
