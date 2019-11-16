@@ -50,19 +50,22 @@ echo '<h1>Change</h1>';
 $contactAccess = $people->getLayer('contacts');
 
 $args = new \App\Model\Lib\LayerAccessArgs();
-osd($args);
-$args
-    ->setLayer('contacts')
-    ->specifyFilter('label', 'phone');
-osd($args);
+
+$args->specifyFilter('label', 'email');
 
 $contacts = new ArrayIterator($contactAccess->perform($args));
 
-//debug($contacts);
-
 while ($contacts->valid()) {
-//    echo "<h3>{$contacts->getIteratorIndex()}</h3>";
-        echo '<p>' . $contacts->current()->asString() . '</p>';
+    $personCards = $people->ownerOf('identity', $contacts->current()->id);
+    $card = array_shift($personCards);
+    if (is_a($card, '\App\Model\Entity\PersonCard')
+        && is_a($card->identity, '\App\Model\Lib\Layer')) {
+        $identity = $card->rootElement();
+        $name = $identity->name();
+    } else {
+        $name = 'unknown';
+    }
+    echo '<p>' . $name . ' : ' . $contacts->current()->asString() . '</p>';
     $contacts->next();
 }
 

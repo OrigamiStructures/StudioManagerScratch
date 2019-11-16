@@ -294,7 +294,7 @@ class MembersController extends AppController
             ->toArray();
 
         $memberLayer = new Layer(($members));
-        $it = new LayerIterator();
+        $it = new LayerIterator('members');
         $it->insert($memberLayer);
         $it = $it->getAppendIterator();
 
