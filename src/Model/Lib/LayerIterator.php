@@ -230,7 +230,19 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
 
     protected function performPagination()
     {
-
+        $page = $this->AccessArgs->valueOf('page');
+        $limit = $this->AccessArgs->valueOf('limit');
+        if (!isset($this->ResultArray)) {
+            $this->ResultArray = $this->AppendIterator;
+        }
+        $unchuncked = new Collection($this->ResultArray);
+        $chunked = $unchuncked->chunk($limit)->toArray();
+        if(isset($chunked[$page])) {
+            $result = $chunked[$page];
+        } else {
+            $result = array_pop($chunked);
+        }
+        return $result;
     }
 
     /**
