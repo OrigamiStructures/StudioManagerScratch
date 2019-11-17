@@ -716,6 +716,9 @@ class LayerAccessArgs implements LayerAccessInterface
             'in_array' => function ($actual, $test_values) {
                 return in_array($actual, $test_values);
             },
+            '!in_array' => function ($actual, $test_values) {
+                return !in_array($actual, $test_values);
+            },
             'truthy' => function ($actual, $test_value) {
                 return (boolean)$actual;
             }
