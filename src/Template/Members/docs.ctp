@@ -51,8 +51,10 @@ $contactAccess = $people->getLayer('contacts');
 
 $args = new \App\Model\Lib\LayerAccessArgs();
 
-$args->specifyFilter('label', 'email')
-->specifySort('data', SORT_ASC);
+$args->specifyFilter('label', 'email');
+//$args->specifyFilter('label', ['phone', 'email'], '!in_array');
+$args->specifySort('data', SORT_ASC);
+$args->setPagination(1, 10);
 
 $contacts = new ArrayIterator($contactAccess->perform($args));
 
