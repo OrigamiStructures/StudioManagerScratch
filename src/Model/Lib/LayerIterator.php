@@ -237,8 +237,8 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
         }
         $unchuncked = new Collection($this->ResultArray);
         $chunked = $unchuncked->chunk($limit)->toArray();
-        if(isset($chunked[$page])) {
-            $result = $chunked[$page];
+        if(isset($chunked[$page - 1])) {
+            $result = $chunked[$page - 1];
         } else {
             $result = array_pop($chunked);
         }
