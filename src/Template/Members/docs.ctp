@@ -4,15 +4,28 @@
 /* @var \App\Model\Lib\AppendIterator $it */
 /* @var \App\Model\Lib\StackSet $people */
 
-osd($people->getLayer('identity')->toValueList('name'));
+//$contactEmails = $people->getLayer('contacts')
+//    ->NEWfind()
+//    ->specifyFilter('label', 'email')
+//    ->specifySort('data', SORT_DESC)
+//    ->toArray();
+//
+//osd($contactEmails);
 
-$contactEmails = $people->getLayer('contacts')
+$idents = $people->getLayer('identity')->toArray();
+
+$result = ($people->getLayer('identity'))
+    ->NEWfind()
+    ->setPagination(1, 5)
+    ->toLayer();
+
+$contactPhones = $people->getLayer('contacts')
     ->NEWfind()
     ->specifyFilter('label', 'phone')
     ->specifySort('data', SORT_DESC)
     ->toValueList('data');
 
-osd($contactEmails);
+osd($contactPhones);
 
 //while ($it->valid()) {
 //    echo "<p>{$it->getIteratorIndex()}</p>";
