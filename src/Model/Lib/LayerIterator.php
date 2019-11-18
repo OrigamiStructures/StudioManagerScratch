@@ -85,7 +85,33 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toArray()
     {
-        // TODO: Implement toArray() method.
+        $this->evaluate();
+        return iterator_to_array($this->ResultArray);
+    }
+
+    /**
+     * Do final processing in for the various 'toXxxxx' methods
+     *
+     * The 5 'toXxxxx` methods return ResultArray. If it exists, it can be
+     * trusted as current and valid for the existing AccessArgs (if present).
+     *
+     * This is because the three ways of resetting AccessArgs
+     *      - calling $this->NEWfind()
+     *      - calling $this->perform($argObj)
+     *      - calling $this->setAccessArgs($argObj)
+     * also unset ResultArray. And aquiring the AccessArgs to modify
+     * their settings can only be done through a method that also
+     * resets ResultArray.
+     *
+     */
+    protected function evaluate()
+    {
+        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
+        if(!isset($this->ResultArray)) {
+            $this->ResultArray = (!is_null($this->AccessArgs))
+                ? $this->perform($this->AccessArgs)
+                : iterator_to_array($this->AppendIterator);
+        }
     }
 
     /**
@@ -95,7 +121,9 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toLayer()
     {
-        // TODO: Implement toLayer() method.
+        $this->evaluate();
+        $result =  iterator_to_array($this->ResultArray);
+        return layer($result);
     }
 
     /**
@@ -106,7 +134,28 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toValueList($valueSource = null)
     {
-        // TODO: Implement toValueList($valueSource = null) method.
+        $this->evaluate();
+
+        //this skips out if appenditerator is empty but hasn't been tested
+        //and the need for this hasn't been verified
+        $resultValueSource = FALSE;
+        if (count($this->ResultArray) > 0) {
+            $this->AccessArgs->setAccessNodeObject('resultValue', $valueSource);
+            $resultValueSource = $this->AccessArgs->accessNodeObject('resultValue');
+        }
+
+        if ($resultValueSource) {
+            $result = collection($this->ResultArray)
+                ->reduce(function ($harvest, $entity) use ($resultValueSource){
+                    if (!is_null($resultValueSource->value($entity))) {
+                        array_push($harvest, $resultValueSource->value($entity));
+                    }
+                    return $harvest;
+                }, []);
+        } else {
+            $result = [];
+        }
+        return $result;
     }
 
     /**
@@ -118,7 +167,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toKeyValueList($keySource = null, $valueSource = null)
     {
-        // TODO: Implement toKeyValueList($keySource = null, $valueSource = null) method.
+        osd('arrived in toKeyValueList');die;
     }
 
     /**
@@ -151,7 +200,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function NEWfind()
     {
-        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
+        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs($this);
         $this->AccessArgs->setLayer($this->layerName);
         return $this->AccessArgs;
     }
@@ -174,11 +223,11 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
         $this->setAccessArgs($argObj);
         $this->AccessArgs->setLayer($this->layerName);
 
+        osd($this->AccessArgs->hasFilter());
         if($this->AccessArgs->hasFilter()) {
             $this->ResultArray = $this->performFilter();
         }
 
-        osd($this->AccessArgs->hasSort());
         if($this->AccessArgs->hasSort()) {
             $this->ResultArray = $this->performSort();
         }

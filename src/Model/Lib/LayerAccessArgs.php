@@ -103,7 +103,9 @@ class LayerAccessArgs implements LayerAccessInterface
 	private $source_node = [
 		'value' => FALSE,
 		'key' => FALSE,
-		'filter' => FALSE
+		'filter' => FALSE,
+        'resultValue' => FALSE,
+        'resultKey' => FALSE
 	];
 
     // </editor-fold>
@@ -200,7 +202,6 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function hasSort()
     {
-        debug($this);
         return $this->_sortDir !== FALSE && $this->_sortType !== FALSE && $this->_sortColumn !== FALSE;
     }
 

@@ -4,6 +4,15 @@
 /* @var \App\Model\Lib\AppendIterator $it */
 /* @var \App\Model\Lib\StackSet $people */
 
+osd($people->getLayer('identity')->toValueList('name'));
+
+$contactEmails = $people->getLayer('contacts')
+    ->NEWfind()
+    ->specifyFilter('label', 'phone')
+    ->specifySort('data', SORT_DESC)
+    ->toValueList('data');
+
+osd($contactEmails);
 
 //while ($it->valid()) {
 //    echo "<p>{$it->getIteratorIndex()}</p>";
@@ -12,17 +21,17 @@
 //    $it->next();
 //}
 
-//$person = $people->shift();
 //$contacts = $person->getLayer('contacts')->getAppendIterator();
 //while ($contacts->valid()) {
 //    echo "<h3>{$contacts->getIteratorIndex()}</h3>";
-//    echo sprintf(
-//        '<p>Short list %s-%s: %s: %s</p>',
-//        $contacts->key(),
-//        $contacts->current()->id,
-//        $contacts->current()->label,
-//        $contacts->current()->data
-//    );
+////    echo sprintf(
+////        '<p>Short list %s-%s: %s: %s</p>',
+////        $contacts->key(),
+////        $contacts->current()->id,
+////        $contacts->current()->label,
+////        $contacts->current()->data
+////    );
+//    osd($contacts->current());
 //    $contacts->next();
 //}
 
@@ -46,13 +55,13 @@
 
 echo '<h1>Change</h1>';
 
+$args = $people->getLayer('contacts')->NEWfind();
 
 $contactAccess = $people->getLayer('contacts');
 
 $args = new \App\Model\Lib\LayerAccessArgs();
 
 $args->specifyFilter('label', 'email');
-//$args->specifyFilter('label', ['phone', 'email'], '!in_array');
 $args->specifySort('data', SORT_ASC);
 $args->setPagination(1, 10);
 
