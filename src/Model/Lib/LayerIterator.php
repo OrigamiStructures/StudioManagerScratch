@@ -110,15 +110,14 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      * also unset ResultArray. And aquiring the AccessArgs to modify
      * their settings can only be done through a method that also
      * resets ResultArray.
-     *
+     * @todo check for new args too
      */
     protected function evaluate()
     {
         $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
+        //This has to check for new Args too
         if(!isset($this->ResultArray)) {
-            $this->ResultArray = (!is_null($this->AccessArgs))
-                ? $this->perform($this->AccessArgs)
-                : iterator_to_array($this->AppendIterator);
+            $this->ResultArray = $this->perform($this->AccessArgs);
         }
     }
 
@@ -129,8 +128,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toLayer()
     {
-        $this->evaluate();
-        $result =  iterator_to_array($this->ResultArray);
+        $result = $this->toArray();
         return layer($result);
     }
 
@@ -153,6 +151,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
         }
 
         if ($resultValueSource) {
+
             $result = collection($this->ResultArray)
                 ->reduce(function ($harvest, $entity) use ($resultValueSource){
                     if (!is_null($resultValueSource->value($entity))) {
@@ -231,7 +230,6 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
         $this->setAccessArgs($argObj);
         $this->AccessArgs->setLayer($this->layerName);
 
-        osd($this->AccessArgs->hasFilter());
         if($this->AccessArgs->hasFilter()) {
             $this->ResultArray = $this->performFilter();
         }
@@ -246,6 +244,8 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
 
         if(!isset($this->ResultArray)) {
             $this->ResultArray = $this->AppendIterator;
+        } else {
+            $this->ResultArray = new \ArrayIterator($this->ResultArray);
         }
 
         return $this->ResultArray;
@@ -275,11 +275,9 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
             $this->ResultArray = $this->AppendIterator;
         }
         $column = $this->AccessArgs->getSortColumn('sort');
-//        $column = 'last_name';
         $dir = $this->AccessArgs->getSortDirection();
         $type = $this->AccessArgs->getSortType();
         $unsorted = new Collection($this->ResultArray);
-        osd($unsorted);
         $sorted = $unsorted->sortBy($column, $dir, $type)->toArray();
         //indexes are out of order and could be confusing
         return array_values($sorted);
