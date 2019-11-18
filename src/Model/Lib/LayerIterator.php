@@ -30,8 +30,6 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     protected $AppendIterator;
 
-    protected $FilterIterator;
-
     protected $ResultArray;
 
     public function __construct($layerName)
