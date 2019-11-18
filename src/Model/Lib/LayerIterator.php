@@ -331,4 +331,21 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
         return $obj;
 
     }
+
+    public function __debugInfo()
+    {
+        $result = [
+            '[AppendIterator]' => isset($this->AppendIterator)
+                ? 'Contains ' . $this->rawCount() . ' items.'
+                : 'not set',
+            '[AccessArgs]' => is_null($this->AccessArgs)
+                ? 'null'
+                : $this->AccessArgs,
+            '[layerName]' => $this->layerName,
+            '[ResultArray]' => is_null($this->ResultArray)
+                ? 'null'
+                : 'Contains ' . $this->resultCount() . ' items.'
+        ];
+        return $result;
+    }
 }

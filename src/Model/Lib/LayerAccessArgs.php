@@ -733,4 +733,23 @@ class LayerAccessArgs implements LayerAccessInterface
 
     }
 
+    public function __debugInfo()
+    {
+        $val = [
+            '_page', '_limit',
+            '_layer', 'source_node', '_filter_value',
+            '_filter_value_isset', '_filter_operator',
+            '_sortDir', '_sortType', '_sortColumn',
+        ];
+        $result = [
+            '[data]' => isset($this->data)
+                ? get_class($this->data) . ' containing ' . $this->data->rawCount() . 'items.'
+                : 'not set',
+            '[_registry]' => $this->_registry,
+        ];
+        foreach ($val as $property) {
+            $result[$property] = $this->$property;
+        }
+        return $result;
+    }
 }
