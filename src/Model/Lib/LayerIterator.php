@@ -87,6 +87,16 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
         return iterator_to_array($this->ResultArray);
     }
 
+    public function rawCount()
+    {
+        return iterator_count($this->AppendIterator);
+    }
+
+    public function resultCount()
+    {
+        return iterator_count($this->ResultArray);
+    }
+
     /**
      * Do final processing in for the various 'toXxxxx' methods
      *
