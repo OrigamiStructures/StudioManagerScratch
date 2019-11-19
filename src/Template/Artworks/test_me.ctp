@@ -94,19 +94,19 @@ echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
 
 	foreach ($activity->load() as $dispId => $disposition) {
-		$joinArray = $stacks->find()
-				->setLayer('dispositions_pieces')
-				->specifyFilter('disposition_id', $dispId)
-				->load();
+		$joinArray = $stacks->getLayer('dispositions_pieces')
+            ->NEWfind()
+            ->specifyFilter('disposition_id', $dispId)
+            ->toArray();
 		$joinLayer = new Layer($joinArray, 'dispositions_pieces');
 
-		$distinct_pieces = $stacks->find()
-				->setLayer('pieces')
-				->specifyFilter(
-						'id',
-						$joinLayer->distinct('piece_id'),
-						'in_array')
-				->load();
+		$distinct_pieces = $stacks->getLayer('pieces')
+            ->NEWfind()
+            ->specifyFilter(
+                'id',
+                $joinLayer->distinct('piece_id'),
+                'in_array')
+            ->toArray();
 		$pieces = new Layer($distinct_pieces, 'pieces');
 
 		echo '<h3>' . $disposition->displayTitle . " (id: $disposition->id)" . '</h3><ul>';
