@@ -107,6 +107,15 @@ class Layer implements LayerStructureInterface, \Countable {
         return $this->_data;
     }
 
+    /**
+     * Get an array of the IDs of the stored entities
+     *
+     * @return array
+     */
+    public function IDs($layer = null) {
+        return array_keys($this->getData());
+    }
+
     //<editor-fold desc="************** Introspection **************">
     /**
      * Does the set contain an entity with ID = $id
@@ -163,7 +172,7 @@ class Layer implements LayerStructureInterface, \Countable {
 
     //</editor-fold>
 
-    //<editor-fold desc="************** Data Access Methods **************">
+    //<editor-fold desc="************** OLD LAA Access Methods **************">
     /**
 	 * Perform data load from Layer context
 	 *
@@ -194,15 +203,6 @@ class Layer implements LayerStructureInterface, \Countable {
 	}
 
     /**
-     * Get an array of the IDs of the stored entities
-     *
-     * @return array
-     */
-    public function IDs($layer = null) {
-        return array_keys($this->getData());
-    }
-
-    /**
      * Get the records with a matching foreign key value
      *
      * <code>
@@ -222,12 +222,15 @@ class Layer implements LayerStructureInterface, \Countable {
      * @param string $id The foreign key value to match
      * @return array
      */
-    public function linkedTo($foreign, $foreign_id, $linked = null) {
+    public function linkedTo($foreign, $foreign_id) {
         $foreign_key = $this->_modelKey($foreign);
         if (!$this->has($foreign_key)) {
             return [];
         }
-        return $this->filter($foreign_key, $foreign_id);
+        return $this->getLayer()
+            ->NEWfind()
+            ->specifyFilter($foreign_key, $foreign_id)
+            ->toArray();
     }
 
     /**

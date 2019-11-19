@@ -209,14 +209,14 @@ trait LayerAccessTrait {
 		return new ValueSource($entity, $sourcePoint);
 	}
 
-	public function filter($argObj) {
-
-	}
+//	public function filter($argObj) {
+//
+//	}
 
 //
-	public function linkedTo($foreign, $foreign_id, $linked = null){
-
-	}
+//	public function linkedTo($foreign, $foreign_id, $linked = null){
+//
+//	}
 
 	/**
 	 * Full feature load() with pagination at the end
