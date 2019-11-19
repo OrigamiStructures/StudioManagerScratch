@@ -19,7 +19,7 @@ use App\Model\Traits\LayerElementAccessTrait;
  *
  * @author dondrake
  */
-class StackSet implements LayerStructureInterface {
+class StackSet implements LayerStructureInterface, \Countable {
 
 	use LayerAccessTrait;
 	use LayerElementAccessTrait;
@@ -27,6 +27,8 @@ class StackSet implements LayerStructureInterface {
 	protected $_data = [];
 
 	protected $_stackName;
+
+    // <editor-fold defaultstate="collapsed" desc="LayerStructureInterface REALIZATION">
 
     /**
      * Gather the available data at this level and package the iterator
@@ -36,7 +38,7 @@ class StackSet implements LayerStructureInterface {
      */
     public function getLayer($name)
     {
-        $stacks = $this->all();
+        $stacks = $this->getData();
         $Product = new LayerProcessor($name);
         foreach ($stacks as $stack) {
             if (is_a($stack->$name, '\App\Model\Lib\Layer')) {
@@ -49,12 +51,42 @@ class StackSet implements LayerStructureInterface {
         return $Product;
     }
 
+    /**
+     * Get all the ids accross all the stored StackEntities or the Layer entities
+     *
+     * This is a collection-level method that matches the StackEntity's and Layer's
+     * IDs() methods. These form a pass-through chain.
+     *
+     * Calling IDs() from this level will insure unique results if
+     * Layer IDs are pulled.
+     *
+     * StackEntity IDs will be from the primary entity propery and will
+     * be unique becuase the set structure insures it.
+     *
+     * @param string $layer
+     * @return array
+     */
+    public function IDs($layer = null) {
+        if(is_null($layer)){
+            return array_keys($this->getData());
+        }
+        $ids = $this->getLayer($layer)
+            ->toDistinctList('id');
+
+        return $ids;
+    }
+
+// </editor-fold>
+
+    //<editor-fold desc="LayerElementAccessTrait abstract completion">
     public function getData()
     {
         return $this->_data;
     }
+    //</editor-fold>
+
 	/**
-	 * Add another entity to the collection
+	 * Add another entity to the StackSet
 	 *
 	 * @param string $id
 	 * @param StackEntity $stack
@@ -66,18 +98,7 @@ class StackSet implements LayerStructureInterface {
 		}
 	}
 
-	public function shift() {
-		return $this->element(0, LAYERACC_INDEX);
-	}
-
-	/**
-	 * Return all the entities in an array
-	 *
-	 * @return array
-	 */
-	public function all() {
-		return $this->_data;
-	}
+    //<editor-fold desc="OLD LAA TOOLS">
 
     /**
      * StackSet level fluent query
@@ -137,27 +158,30 @@ class StackSet implements LayerStructureInterface {
 
 	}
 
-    /**
-     * Get the count of stored Stack objects
-     *
-     * @return integer
-     */
-    public function count() {
-        return count($this->_data);
+    public function keyedList(LayerAccessArgs $argObj) {
+
     }
 
-	/**
-	 * Is this the id of one of the primary enities in a stored stack entity
-	 *
-	 * @param string $id
-	 * @return boolean
-	 */
-	public function isMember($id) {
-		return array_key_exists($id, $this->_data);
-	}
+    public function filter($property, $value) {
+        debug('other strike');
+    }
+
+    public function linkedTo($foreign, $foreign_id, $linked = null) {
+        $accum = [];
+        foreach ($this->_data as $stack) {
+            $result = $stack->linkedTo($foreign, $foreign_id, $linked);
+            $accum = array_merge($accum, $result);
+        }
+        return $accum;
+    }
+
+    //</editor-fold>
+
 
 	/**
 	 * Return all StackEntities that contain a layer entity with id = $id
+     *
+     * @todo This method seems confusing. Is it necessary?
 	 *
 	 * @param string $layer
 	 * @param string $id
@@ -176,51 +200,5 @@ class StackSet implements LayerStructureInterface {
         }
 		return $stacks;
 	}
-
-// <editor-fold defaultstate="collapsed" desc="LAYER ACCESS INTERFACE REALIZATION">
-
-	/**
-	 * Get all the ids accross all the stored StackEntities or the Layer entities
-	 *
-	 * This is a collection-level method that matches the StackEntity's and Layer's
-	 * IDs() methods. These form a pass-through chain.
-	 *
-	 * Calling IDs() from this level will insure unique results if
-	 * Layer IDs are pulled.
-	 *
-	 * StackEntity IDs will be from the primary entity propery and will
-	 * be unique becuase the set structure insures it.
-	 *
-	 * @param string $layer
-	 * @return array
-	 */
-	public function IDs($layer = null) {
-		if(is_null($layer)){
-			return array_keys($this->getData());
-		}
-		$ids = $this->getLayer($layer)
-            ->toDistinctList('id');
-
-		return $ids;
-	}
-
-	public function keyedList(LayerAccessArgs $argObj) {
-
-	}
-
-	public function filter($property, $value) {
-		debug('other strike');
-	}
-
-	public function linkedTo($foreign, $foreign_id, $linked = null) {
-		$accum = [];
-		foreach ($this->_data as $stack) {
-			$result = $stack->linkedTo($foreign, $foreign_id, $linked);
-			$accum = array_merge($accum, $result);
-		}
-		return $accum;
-	}
-
-// </editor-fold>
 
 }
