@@ -11,6 +11,7 @@
 //    ->toArray();
 //
 //osd($contactEmails);
+osd($people->getLayer('addresses')->toDistinctList('id'));
 
 $idents = $people->getLayer('identity')
     ->toKeyValueList('last_name', 'name');
