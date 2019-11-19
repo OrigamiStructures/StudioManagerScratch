@@ -203,37 +203,6 @@ class Layer implements LayerStructureInterface, \Countable {
 	}
 
     /**
-     * Get the records with a matching foreign key value
-     *
-     * <code>
-     * $pieces->linkedTo('format', 434)
-     * </code>
-     *
-     * @todo this will only work on belongsTo associations where the entity
-     *      were searching has a property like 'artwork_id'. It's an open question
-     *      whether some entities will carry the join table from a HABTM
-     *      association. If some do, and if we need to use the data, it is usually
-     *      found in a nested layer on an entity property. Two main questions
-     *      then; 1) how would we insure it always came in with the data
-     *      2) would it be more convenient to use mapper/reducer functions to
-     *      move it up out of the (somewhat messy) native nest structure?
-     *
-     * @param string $layer The simple name of the associate (eg: artwork, format)
-     * @param string $id The foreign key value to match
-     * @return array
-     */
-    public function linkedTo($foreign, $foreign_id) {
-        $foreign_key = $this->_modelKey($foreign);
-        if (!$this->has($foreign_key)) {
-            return [];
-        }
-        return $this->getLayer()
-            ->NEWfind()
-            ->specifyFilter($foreign_key, $foreign_id)
-            ->toArray();
-    }
-
-    /**
      * Provide single column sorting
      *
      * <code>
@@ -285,31 +254,35 @@ class Layer implements LayerStructureInterface, \Countable {
     //</editor-fold>
 
     /**
-     * Provide single column search
+     * Get the records with a matching foreign key value
      *
      * <code>
-     *  $formats->filter('title', 'Boxed Set');
-     *  $pieces->filter('number', 12);
-     *  $pieces->filter('number', [6, 8, 10]);
+     * $pieces->linkedTo('format', 434)
      * </code>
      *
-     * @param string $property The property to examine
-     * @param mixed $value The value or array of values to search for
-     * @return array An array of entities that passed the test
+     * @todo this will only work on belongsTo associations where the entity
+     *      were searching has a property like 'artwork_id'. It's an open question
+     *      whether some entities will carry the join table from a HABTM
+     *      association. If some do, and if we need to use the data, it is usually
+     *      found in a nested layer on an entity property. Two main questions
+     *      then; 1) how would we insure it always came in with the data
+     *      2) would it be more convenient to use mapper/reducer functions to
+     *      move it up out of the (somewhat messy) native nest structure?
+     *
+     * @param string $layer The simple name of the associate (eg: artwork, format)
+     * @param string $id The foreign key value to match
+     * @return array
      */
-//    public function filter($property, $value) {
-//        if (!$this->verifyProperty($property)) {
-//            return [];
-//        }
-//        $set = new Collection($this->_data);
-//        $results = $set->filter(function ($entity, $key) use ($property, $value) {
-//				if (is_array($value)) {
-//					return in_array($entity->$property, $value);
-//				}
-//                return $entity->$property == $value;
-//            })->toArray();
-//        return $results;
-//    }
+    public function linkedTo($foreign, $foreign_id) {
+        $foreign_key = $this->_modelKey($foreign);
+        if (!$this->has($foreign_key)) {
+            return [];
+        }
+        return $this->getLayer()
+            ->NEWfind()
+            ->specifyFilter($foreign_key, $foreign_id)
+            ->toArray();
+    }
 
     /**
      * Does the $property exist in this layer?
@@ -321,45 +294,6 @@ class Layer implements LayerStructureInterface, \Countable {
      */
     public function has($property) {
         return in_array($property, $this->_entityProperties);
-    }
-
-    public function hasElements() {
-        return $this->count() > 0;
-    }
-
-    /**
-     * Get a key => value map from some or all of the stored entities
-     *
-     * Filtering is performed by Layer::load() (see the docs)
-     * $key must be a visible property of the entities
-     * $value must be either a visible property or a method that needs no args
-     *
-     * @param string $key The property to use for the result array keys
-     * @param string $value The property or method to provide the result values
-     * @param string $type First arg passed to $this->load() ('all' or 'first')
-     * @param array $options Search conditions passed to $this->load()
-     * @return array
-     */
-//	public function keyedList($key, $value, $type = 'all', $options =[]) {
-    public function keyedList(LayerAccessArgs $args) {
-        $validKey = $this->has($key);
-        $valueIsProperty = $validValue = $this->has($value);
-        if (!$valueIsProperty) {
-            $valueIsMethod = $validValue = method_exists($this->className(), $value);
-        }
-
-        if(!$validKey || !$validValue) {
-            return [];
-        }
-
-        $result = [];
-        $argObj = $this->accessArgs(); // THIS IS UNIMPLEMENTED;
-        $data = $this->load($argObj); // THIS IS UNIMPLEMENTED
-        foreach ($data as $datum) {
-            $result[$datum->$key] = $valueIsProperty ? $datum->$value : $datum->$value();
-        }
-
-        return $result;
     }
 
 // <editor-fold defaultstate="collapsed" desc="************** Protected and Private **************">
