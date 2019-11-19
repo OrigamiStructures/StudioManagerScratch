@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @property \App\View\Helper\PeopleHelper $People
+ */
     $this->loadHelper('People');
 
 	$delegatedManagement = $managerManifests
