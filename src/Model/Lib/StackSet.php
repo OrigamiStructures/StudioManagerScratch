@@ -7,6 +7,7 @@ use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\StackSetAccessArgs;
 use App\Model\Traits\LayerElementAccessTrait;
+use Cake\Utility\Text;
 
 /**
  * StackSet
@@ -187,18 +188,44 @@ class StackSet implements LayerStructureInterface, \Countable {
 	 * @param string $id
 	 * @return array
 	 */
-	public function ownerOf($layer, $id, $set = 'all') {
+	public function ownerOf($layer, $id) {
 		$stacks = [];
 		foreach ($this->_data as $stack) {
 			if ($stack->exists($layer, $id)) {
 				$stacks[] = $stack;
 			}
 		}
-        if ($set === 'first' && count($stacks) > 0) {
-            $stack = array_shift($stacks);
-            return $stack;
-        }
 		return $stacks;
 	}
+
+    /**
+     * Get all StackEntities containing any of the layer elements in the set
+     *
+     * @param $layer string The layer to search in
+     * @param $ids array The ids to search for
+     */
+    public function stacksContaining($layer, $ids)
+    {
+        $stacks = [];
+        foreach ($this->getData() as $stack) {
+            //get the ids of the layer members in this stackentity
+            //and intersect with the found set
+            $intersection = array_intersect($stack->$layer->IDs(), $ids);
+            if (count($intersection) > 0) {
+                //if there was some overlap, save this stack for return.
+                $stacks[$stack->rootID()] = $stack;
+            }
+        }
+        return $stacks;
+	}
+
+	public function __debugInfo()
+    {
+        return [
+            '[_data]' => 'Contains ' . count($this->_data) . ' elements, '
+                . Text::toList($this->IDs()),
+            '[$stackName]' => $this->_stackName
+        ];
+    }
 
 }
