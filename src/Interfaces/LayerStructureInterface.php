@@ -17,4 +17,6 @@ interface LayerStructureInterface
      */
     public function getLayer($name);
 
+    public function IDs($layer = null);
+
 }
