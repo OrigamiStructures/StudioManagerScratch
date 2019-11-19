@@ -161,14 +161,6 @@ class Layer implements LayerStructureInterface, \Countable {
         return $result;
     }
 
-    /**
-     * The count of stored entities in this layer
-     *
-     * @return int
-     */
-    public function count() {
-        return count($this->_data);
-    }
     //</editor-fold>
 
     //<editor-fold desc="************** Data Access Methods **************">

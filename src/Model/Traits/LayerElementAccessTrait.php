@@ -58,4 +58,13 @@ trait LayerElementAccessTrait
      */
     abstract function getData();
 
+    /**
+     * Get the count of stored entities
+     *
+     * @return integer
+     */
+    public function count() {
+        return count($this->getData());
+    }
+
 }
