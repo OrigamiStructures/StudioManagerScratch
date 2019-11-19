@@ -34,12 +34,12 @@ class StackSet implements LayerStructureInterface, \Countable {
      * Gather the available data at this level and package the iterator
      *
      * @param $name string
-     * @return LayerProcessor
+     * @return LayerAccessProcessor
      */
     public function getLayer($name)
     {
         $stacks = $this->getData();
-        $Product = new LayerProcessor($name);
+        $Product = new LayerAccessProcessor($name);
         foreach ($stacks as $stack) {
             if (is_a($stack->$name, '\App\Model\Lib\Layer')) {
                 $result = $stack->$name;
