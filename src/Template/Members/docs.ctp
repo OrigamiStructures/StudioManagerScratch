@@ -12,7 +12,10 @@
 //
 //osd($contactEmails);
 
-$idents = $people->getLayer('identity')->toArray();
+$idents = $people->getLayer('identity')
+    ->toKeyValueList('last_name', 'name');
+
+osd($idents);
 
 $result = ($people->getLayer('identity'))
     ->NEWfind()
@@ -23,7 +26,13 @@ $contactPhones = $people->getLayer('contacts')
     ->NEWfind()
     ->specifyFilter('label', 'phone')
     ->specifySort('data', SORT_DESC)
-    ->toValueList('data');
+    ->toLayer();
+
+$contactPhones = $contactPhones
+    ->getLayer()
+    ->NEWfind()
+    ->specifyFilter('data', '', '!==')
+    ->toKeyValueList('id','data');
 
 osd($contactPhones);
 
