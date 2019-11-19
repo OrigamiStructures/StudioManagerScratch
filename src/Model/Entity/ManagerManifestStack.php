@@ -31,7 +31,7 @@ class ManagerManifestStack extends StackEntity {
 				->loadStacks();
 		return array_pop($card);
 	}
-	
+
     public function selfAssigned()
     {
         return $this->rootElement()->selfAssigned();
@@ -39,8 +39,8 @@ class ManagerManifestStack extends StackEntity {
 
     public function accessSummary()
     {
-        return (!isset($this->permissions) || $this->permissions->count() == 0) 
-		? "Full Access" 
+        return (!isset($this->permissions) || $this->permissions->count() == 0)
+		? "Full Access"
 		: "Limited Access";
 	}
 

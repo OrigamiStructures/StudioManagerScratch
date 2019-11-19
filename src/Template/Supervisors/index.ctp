@@ -10,9 +10,9 @@
 	<h1>Recruit a new delegate</h1>
 	<p>tools here</p>
 
-	
+
 	<h1>Change a Management Agreement</h1>
-	
+
     <h2>Delegated Management</h2>
 
 <?php
@@ -29,7 +29,7 @@
     <?= "<p>{$this->People->artistManifestSummary($agrement)}</p>"; ?>
 
 <?php endforeach; ?>
-	
+
 <?php
-	
+
 
