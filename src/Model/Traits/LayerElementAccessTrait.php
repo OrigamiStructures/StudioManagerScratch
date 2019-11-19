@@ -52,14 +52,8 @@ trait LayerElementAccessTrait
         return $this->element(0, LAYERACC_INDEX);
     }
 
-
     /**
-     * Get the IDs of all the primary entities in the stored stack entities
-     *
      * @return array
      */
-    public function IDs() {
-        return array_keys($this->getData());
-    }
 
 }

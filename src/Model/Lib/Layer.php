@@ -207,7 +207,7 @@ class Layer implements LayerStructureInterface, \Countable {
      * @return array
      */
     public function IDs($layer = null) {
-        return array_keys($this->load());
+        return array_keys($this->getData());
     }
 
     /**

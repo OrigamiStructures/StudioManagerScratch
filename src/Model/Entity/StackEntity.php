@@ -310,16 +310,12 @@ class StackEntity extends Entity implements LayerStructureInterface
      */
     public function IDs($layer = null)
     {
-        if (is_null($layer)) {
-            return array_keys($this->load());
+        if(is_null($layer)) {
+            $result = $this->rootID(LAYERACC_WRAP);
+        } else {
+            $result = $this->getLayer($layer)->toDistinctList('id');
         }
-
-        $property = is_null($layer) ? null : $this->get($layer);
-        if (is_null($property) || !is_a($property, '\App\Model\Lib\Layer')) {
-            return [];
-        }
-
-        return $property->IDs();
+        return $result;
     }
 
     /**
@@ -356,6 +352,8 @@ class StackEntity extends Entity implements LayerStructureInterface
     {
         if ($unwrap) {
             $result = array_shift($data);
+        } else {
+            $result = $data;
         }
         return $result;
     }

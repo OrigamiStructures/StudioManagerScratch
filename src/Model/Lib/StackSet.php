@@ -196,13 +196,12 @@ class StackSet implements LayerStructureInterface {
 	 */
 	public function IDs($layer = null) {
 		if(is_null($layer)){
-			return array_keys($this->load());
+			return array_keys($this->getData());
 		}
-		$ids = [];
-		foreach($this->_data as $stack) {
-			$ids = array_merge($ids, $stack->IDs($layer));
-		}
-		return array_unique($ids);
+		$ids = $this->getLayer($layer)
+            ->toDistinctList('id');
+
+		return $ids;
 	}
 
 	public function keyedList(LayerAccessArgs $argObj) {
