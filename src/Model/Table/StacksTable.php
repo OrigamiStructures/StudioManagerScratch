@@ -449,9 +449,13 @@ class StacksTable extends AppTable
 		$stack = $this->newEntity([])
 				->setRoot($this->rootName())
 				->setRootDisplaySource($this->getDisplayField());
+		$stack->schema = Hash::combine($this->stackSchema, '{n}.name', '');
 
 		foreach($this->layers() as $layer) {
 			$stack = $this->{$this->marshalMethodName($layer)}($id, $stack);
+			if(!is_null($stack->$layer)) {
+                $stack->schema[$layer] = $stack->$layer->entityClass();
+            }
 		}
 		return $stack;
 	}
