@@ -79,7 +79,7 @@ class StackEntity extends Entity implements LayerStructureInterface
         } else {
             $result = [];
         }
-        return new $Iterator->insert($result);
+        return $Iterator->insert($result);
     }
 
 
