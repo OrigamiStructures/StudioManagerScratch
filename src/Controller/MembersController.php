@@ -3,7 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Model\Lib\Layer;
-use App\Model\Lib\LayerProcessor;
+use App\Model\Lib\LayerAccessProcessor;
 use App\Model\Table\PersonCardsTable;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -294,7 +294,7 @@ class MembersController extends AppController
             ->toArray();
 
         $memberLayer = new Layer(($members));
-        $it = new LayerProcessor('members');
+        $it = new LayerAccessProcessor('members');
         $it->insert($memberLayer);
         $it = $it->getAppendIterator();
 

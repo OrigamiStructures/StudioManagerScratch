@@ -3,7 +3,7 @@
 namespace App\Model\Entity;
 
 use App\Interfaces\LayerStructureInterface;
-use App\Model\Lib\LayerProcessor;
+use App\Model\Lib\LayerAccessProcessor;
 use Cake\ORM\Entity;
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
@@ -69,11 +69,11 @@ class StackEntity extends Entity implements LayerStructureInterface
      * Gather the available data at this level and package the iterator
      *
      * @param $name string
-     * @return LayerProcessor
+     * @return LayerAccessProcessor
      */
     public function getLayer($name)
     {
-        $Iterator = new LayerProcessor($name);
+        $Iterator = new LayerAccessProcessor($name);
         if (is_a($this->$name, '\App\Model\Lib\Layer')) {
             $result = $this->$name;
         } else {
