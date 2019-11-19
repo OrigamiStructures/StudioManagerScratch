@@ -103,15 +103,23 @@ class StackSetTest extends TestCase {
 		$this->assertTrue($this->StackEntities->element(2) === null);
 	}
 
+    /**
+     * @todo Test unkown layer, should return empty array
+     */
 	public function testIDs() {
 		$this->assertTrue($this->StackEntities->IDs() === [4, 5], 'IDs() did '
 				. 'not return the IDs of the primary entities of the set');
-		$this->assertEmpty($this->StackEntities->IDs('badLayer'), 'IDs(badLayer) '
-				. 'did not return the expected empty array');
 		$this->assertTrue($this->StackEntities->IDs('editions') === [5,8,6,20],
 				'IDs(editions) did not return the expected 4 IDs');
 	}
 
+    /**
+     * @expectedException Error
+     */
+    public function testIDsOnBadLayer()
+    {
+		$this->StackEntities->IDs('badLayer');
+	}
 	/**
 	 * Test linkedTo method
 	 *

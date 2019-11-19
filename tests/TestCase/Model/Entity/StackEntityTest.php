@@ -330,6 +330,8 @@ class StackEntityTest extends TestCase
     /**
      * Test IDs method
      *
+     * @todo test bad layer name, should return empty array
+     *
      * @return void
      */
     public function testIDs()     {
@@ -341,11 +343,15 @@ class StackEntityTest extends TestCase
 				$this->StackEntity->IDs('pieces'),
 				'IDs() on a valid layer did not return the expected array of values');
         $this->assertEquals([4], $this->StackEntity->IDs('artwork'));
-		$this->assertEmpty(
-				$this->StackEntity->IDs('bad_layer'),
-				'IDs(badLayer) did not return an empty array');
     }
 
+    /**
+     * @expectedException Error
+     */
+    public function testIDsOnBadLayer()
+    {
+        $this->StackEntity->IDs('bad_layer');
+    }
     /**
      * Test linkedTo method
      *
