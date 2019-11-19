@@ -59,6 +59,17 @@ trait LayerElementAccessTrait
     abstract function getData();
 
     /**
+     * Return the list of IDs for the named layer or default structure
+     *
+     * null will get the ids of the stored entities.
+     * Name a layer to get the ids of a layer store in the stored entities
+     *
+     * @param string|null $layer
+     * @return array
+     */
+    abstract function IDs($layer = null);
+
+    /**
      * Get the count of stored entities
      *
      * @return integer
