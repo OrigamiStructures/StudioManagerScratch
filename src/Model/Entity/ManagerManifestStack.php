@@ -2,10 +2,20 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\StackEntity;
+use App\Model\Lib\StackSet;
 
 /**
- * CakePHP ManifestStackEntity
+ * ManifestStackEntity
+ *
+ *  * There are multiple PersonCards required to identify everyone included
+ * in a Manifest. But they may all be the same person. So, they are stored
+ * in a pool, rather than seperately. So, if only one is needed, we only
+ * have one, if 3 are needed we have them all.
+ *
  * @author dondrake
+ *
+ * @property StackSet $people
+ * @property Layer $manifest
  */
 class ManagerManifestStack extends StackEntity {
 
@@ -13,23 +23,37 @@ class ManagerManifestStack extends StackEntity {
 //	    return $this->manifest->element(0, LAYERACC_INDEX);
 		return $this->manifest->shift();
 	}
-	
+
+    /**
+     * Get the Person Card describing this Supervisor
+     *
+     * @return PersonCard
+     */
 	public function supervisorCard() {
 		$id = $this->rootElement()->supervisorId();
-		$card = $this->people
-				->find('identity')
-				->specifyFilter('supervisor_id', $id)
-				->loadStacks();
+        $identityIDs = $this->people
+            ->getLayer('identity')
+            ->NEWfind()
+            ->specifyFilter('supervisor_id', $id)
+            ->toDistinctList('id');
+        $card = $this->people->stacksContaining('identity', $identityIDs);
 		return array_pop($card);
 	}
-	
+
+    /**
+     * Get the Person Card describing this Manager
+     *
+     * @return PersonCard
+     */
 	public function managerCard() {
 		$id = $this->rootElement()->managerId();
-		$card = $this->people
-				->find('identity')
-				->specifyFilter('manager_id', $id)
-				->loadStacks();
-		return array_pop($card);
+		$identityIDs = $this->people
+            ->getLayer('identity')
+            ->NEWfind()
+            ->specifyFilter('manager_id', $id)
+            ->toDistinctList('id');
+        $card = $this->people->stacksContaining('identity', $identityIDs);
+        return array_pop($card);
 	}
 
     public function selfAssigned()
