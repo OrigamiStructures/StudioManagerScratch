@@ -26,13 +26,13 @@ $contactPhones = $people->getLayer('contacts')
     ->NEWfind()
     ->specifyFilter('label', 'phone')
     ->specifySort('data', SORT_DESC)
-    ->toLayer();
+    ->toDistinctList('data');
 
-$contactPhones = $contactPhones
-    ->getLayer()
-    ->NEWfind()
-    ->specifyFilter('data', '', '!==')
-    ->toKeyValueList('id','data');
+//$contactPhones = $contactPhones
+//    ->getLayer()
+//    ->NEWfind()
+//    ->specifyFilter('data', '', '!==')
+//    ->toKeyValueList('id','data');
 
 osd($contactPhones);
 

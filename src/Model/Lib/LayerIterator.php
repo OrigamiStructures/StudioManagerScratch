@@ -206,7 +206,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toDistinctList($valueSource = null)
     {
-        // TODO: Implement toDistinctList($valueSource = null) method.
+        return array_unique($this->toValueList($valueSource));
     }
 
     /**
