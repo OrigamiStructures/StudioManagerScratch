@@ -219,7 +219,6 @@ class StacksTable extends AppTable
 
 		$paginator = 'none';
         $this->validateArguments($options);
-//        debug($options);
         extract($options); //$seed, $ids, $paginator
         if (empty($ids)) {
             return new StackSet();
@@ -344,14 +343,14 @@ class StacksTable extends AppTable
                 $stack = $this->readCache($id);
             }
             if($stack === FALSE) {
-                $stack = $this->newVersionMarshalStack($id);
+                $stack = $this->MarshalStack($id);
             }
 
 
 
 			$stack = $this->readRegistry($id);
 			if (!$stack && !$this->stacks->element($id, LAYERACC_ID)) {
-				$stack = $this->writeRegistry($id, $this->newVersionMarshalStack($id));
+				$stack = $this->writeRegistry($id, $this->MarshalStack($id));
 			}
 
 			if ($stack->isEmpty()) { continue; }
@@ -430,12 +429,15 @@ class StacksTable extends AppTable
 		}
 	}
 
+    /**
+     * Get the array of property names that contain Layer data
+     * @return array|\ArrayAccess
+     */
 	public function layers() {
 		$schema = collection($this->stackSchema);
 		$layerColumns = $schema->filter(function($column, $key) {
 				return $column['specs']['type'] === 'layer';
 			})->toArray();
-//		debug($layerColumns->toArray());
 		return Hash::extract($layerColumns, '{n}.name');
 	}
 
@@ -445,7 +447,7 @@ class StacksTable extends AppTable
 	 * @param type $id
 	 * @return type
 	 */
-	protected function newVersionMarshalStack($id) {
+	protected function MarshalStack($id) {
 		$stack = $this->newEntity([])
 				->setRoot($this->rootName())
 				->setRootDisplaySource($this->getDisplayField());
@@ -466,7 +468,7 @@ class StacksTable extends AppTable
 	 * ArtStackTable - ArtStack (entity) - ArtStackSet
 	 *
 	 * @todo There is no way to override the StackSet class
-	 *		in the case of conventions-breaking usage
+	 *	    in the case of conventions-breaking usage
 	 *
 	 * @return StackSet
 	 */
