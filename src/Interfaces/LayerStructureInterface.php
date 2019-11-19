@@ -4,7 +4,7 @@
 namespace App\Interfaces;
 
 
-use App\Model\Lib\LayerIterator;
+use App\Model\Lib\LayerProcessor;
 
 interface LayerStructureInterface
 {
@@ -13,7 +13,7 @@ interface LayerStructureInterface
      * Gather the available data at this level and package the iterator
      *
      * @param $name string
-     * @return LayerIterator
+     * @return LayerProcessor
      */
     public function getLayer($name);
 

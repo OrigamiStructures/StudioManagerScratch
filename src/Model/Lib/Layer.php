@@ -92,11 +92,11 @@ class Layer implements LayerStructureInterface, \Countable {
      * Gather the available data at this level and package the iterator
      *
      * @param $name string
-     * @return LayerIterator
+     * @return LayerProcessor
      */
     public function getLayer($name = null)
     {
-        $Iterator = new LayerIterator($this->layerName());
+        $Iterator = new LayerProcessor($this->layerName());
         return  $Iterator->insert($this->_data);
     }
 

@@ -30,12 +30,12 @@ class StackSet implements LayerStructureInterface {
      * Gather the available data at this level and package the iterator
      *
      * @param $name string
-     * @return LayerIterator
+     * @return LayerProcessor
      */
     public function getLayer($name)
     {
         $stacks = $this->all();
-        $Product = new LayerIterator($name);
+        $Product = new LayerProcessor($name);
         foreach ($stacks as $stack) {
             if (is_a($stack->$name, '\App\Model\Lib\Layer')) {
                 $result = $stack->$name;

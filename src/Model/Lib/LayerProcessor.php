@@ -10,11 +10,11 @@ use App\Interfaces\LayerTaskInterface;
 use Cake\Collection\Collection;
 
 /**
- * LayerIterator
+ * LayerProcessor
  *
  * @package App\Model\Lib
  */
-class LayerIterator implements LayerAccessInterface, LayerTaskInterface
+class LayerProcessor implements LayerAccessInterface, LayerTaskInterface
 {
 
     protected $layerName;
@@ -51,14 +51,14 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      *  - a bare entity
      *  - an Iterator
      *
-     * @todo Maybe we should loop through the produced iterator to verify
+     * @param mixed $data
+     * @return LayerProcessor
+     *@todo Maybe we should loop through the produced iterator to verify
      *      it contains entities and that all the entities appended are
      *      of the same type?
      *
      * @todo Code smell? Should this be input tollerant like this?
      *
-     * @param mixed $data
-     * @return LayerIterator
      */
     public function insert($data)
     {
@@ -244,7 +244,7 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      *      refiltering/resorting. For now, this need seems farfetched.
      *
      * @param $argObj LayerAccessArgs
-     * @return LayerIterator
+     * @return LayerProcessor
      */
     public function perform($argObj)
     {

@@ -2,7 +2,7 @@
 namespace App\Interfaces;
 
 use App\Model\Lib\LayerAccessArgs;
-use App\Model\Lib\LayerIterator;
+use App\Model\Lib\LayerProcessor;
 
 interface LayerTaskInterface
 {
@@ -19,7 +19,7 @@ interface LayerTaskInterface
      * Run the Access process and return an iterator containing the result
      *
      * @param $argObj LayerAccessArgs
-     * @return LayerIterator
+     * @return LayerProcessor
      */
     public function perform($argObj);
 
