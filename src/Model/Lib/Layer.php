@@ -4,6 +4,7 @@ namespace App\Model\Lib;
 use App\Interfaces\LayerAccessInterface;
 use App\Interfaces\LayerStructureInterface;
 use App\Model\Lib\LayerAccessArgs;
+use App\Model\Traits\LayerElementAccessTrait;
 use Cake\Core\ConventionsTrait;
 use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
@@ -29,6 +30,7 @@ class Layer implements LayerStructureInterface, \Countable {
     use ConventionsTrait;
 	use LayerAccessTrait;
 	use ErrorRegistryTrait;
+	use LayerElementAccessTrait;
 
     //<editor-fold desc="************** Properties **************">
     /**
@@ -100,6 +102,10 @@ class Layer implements LayerStructureInterface, \Countable {
         return  $Iterator->insert($this->_data);
     }
 
+    public function getData()
+    {
+        return $this->_data;
+    }
 
     //<editor-fold desc="************** Introspection **************">
     /**

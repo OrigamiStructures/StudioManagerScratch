@@ -6,6 +6,7 @@ use App\Model\Entity\StackEntity;
 use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\StackSetAccessArgs;
+use App\Model\Traits\LayerElementAccessTrait;
 
 /**
  * StackSet
@@ -21,6 +22,7 @@ use App\Model\Lib\StackSetAccessArgs;
 class StackSet implements LayerStructureInterface {
 
 	use LayerAccessTrait;
+	use LayerElementAccessTrait;
 
 	protected $_data = [];
 
@@ -47,6 +49,10 @@ class StackSet implements LayerStructureInterface {
         return $Product;
     }
 
+    public function getData()
+    {
+        return $this->_data;
+    }
 	/**
 	 * Add another entity to the collection
 	 *
