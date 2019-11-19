@@ -105,7 +105,8 @@ class LayerAccessArgs implements LayerAccessInterface
 		'key' => FALSE,
 		'filter' => FALSE,
         'resultValue' => FALSE,
-        'resultKey' => FALSE
+        'resultKey' => FALSE,
+        'distinctValue' => FALSE
 	];
 
     // </editor-fold>
@@ -259,7 +260,7 @@ class LayerAccessArgs implements LayerAccessInterface
     public function toKeyValueList($keySource = null, $valueSource = null)
     {
         $this->_validateExecution();
-        return $this->data->toKeyValueList($valueSource, $keySource);
+        return $this->data->toKeyValueList($keySource, $valueSource);
     }
 
     /**

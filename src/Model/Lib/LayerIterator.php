@@ -174,7 +174,28 @@ class LayerIterator implements LayerAccessInterface, LayerTaskInterface
      */
     public function toKeyValueList($keySource = null, $valueSource = null)
     {
-        osd('arrived in toKeyValueList');die;
+        $this->evaluate();
+
+        //this skips out if appenditerator is empty but hasn't been tested
+        //and the need for this hasn't been verified
+        $resultValueSource = FALSE;
+        if (count($this->ResultArray) > 0) {
+            $this->AccessArgs->setAccessNodeObject('resultKey', $keySource);
+            $resultKeySource = $this->AccessArgs->accessNodeObject('resultKey');
+            $this->AccessArgs->setAccessNodeObject('resultValue', $valueSource);
+            $resultValueSource = $this->AccessArgs->accessNodeObject('resultValue');
+        }
+
+        if ($resultKeySource && $resultValueSource) {
+                $result = collection($this->ResultArray)
+                    ->reduce(function($harvest, $entity) use ($resultKeySource, $resultValueSource){
+                        $harvest[$resultKeySource->value($entity)] = $resultValueSource->value($entity);
+                        return $harvest;
+                    }, []);
+        } else {
+            $result = [];
+        }
+        return $result;
     }
 
     /**
