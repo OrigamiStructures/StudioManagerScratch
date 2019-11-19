@@ -53,7 +53,9 @@ trait LayerElementAccessTrait
     }
 
     /**
+     * Return the id indexed array of entities
      * @return array
      */
+    abstract function getData();
 
 }
