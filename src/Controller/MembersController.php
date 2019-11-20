@@ -289,8 +289,8 @@ class MembersController extends AppController
         $MembersTable = $this->Members;
         $members = $this->Members->find('all')
             ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type'])
-            ->order(['id' => 'DESC'])
-            ->limit(7)
+//            ->order(['id' => 'DESC'])
+//            ->limit(5)
             ->toArray();
 
         $memberLayer = new Layer(($members));
@@ -303,7 +303,7 @@ class MembersController extends AppController
         $ids = layer($all)->IDs();
         $people = $PersonTable->find('stacksFor', ['seed' => 'identity', 'ids' => $ids]);
 
-        $this->set(compact('memberLayer','it', 'people'));
+        $this->set(compact('memberLayer','it', 'people', 'members'));
 
     }
 }
