@@ -70,6 +70,23 @@ trait LayerElementAccessTrait
     abstract function IDs($layer = null);
 
     /**
+     * Does the primary data or the named layer contain the id'd item?
+     * 
+     * @param $id
+     * @param string|null $layer
+     * @return bool
+     */
+    public function hasId($id, $layer = null)
+    {
+        if(is_null($layer)) {
+            $haystack = $this->getData();
+        } else {
+            $haystack = array_flip($IDs($layer));
+        }
+        return key_exists($id, $haystack);
+    }
+
+    /**
      * Get the count of stored entities
      *
      * @return integer

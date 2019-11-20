@@ -117,15 +117,6 @@ class Layer implements LayerStructureInterface, \Countable {
     }
 
     //<editor-fold desc="************** Introspection **************">
-    /**
-     * Does the set contain an entity with ID = $id
-     *
-     * @param string $id
-     * @return boolean
-     */
-    public function hasId($id) {
-        return isset($this->_data[$id]);
-    }
 
 	/**
 	 * The type/name of this layer data
