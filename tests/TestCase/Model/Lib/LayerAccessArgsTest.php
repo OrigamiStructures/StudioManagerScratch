@@ -117,7 +117,7 @@ class LayerAccessArgsTest extends TestCase
      */
     public function testFilterValue()
     {
-        $this->args->filterValue(FALSE);
+        $this->args->setFilterValue(FALSE);
 		$this->assertTrue($this->args->valueOf('filter_value_isset'),
 				"Setting the filter value to FALSE did not register "
 				. "trigger filter_value_isset to become true.");
@@ -146,11 +146,11 @@ class LayerAccessArgsTest extends TestCase
 		$this->args->setAccessNodeObject('filter', '_value_source');
         $this->assertFalse($this->args->isFilter(),
 				'argObject with only a _value_source says it is a valid Filter');
-		$this->args->filterValue('filter_value');
 
+		$this->args->setFilterValue('filter_value');
         $this->assertTrue($this->args->isFilter(),
 				'argObject with a _value_source and filter value says it is not a valid Filter');
-						
+
     }
 
     /**

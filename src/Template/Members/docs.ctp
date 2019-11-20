@@ -4,6 +4,16 @@
 /* @var \App\Model\Lib\AppendIterator $it */
 /* @var \App\Model\Lib\StackSet $people */
 
+debug(count($memberLayer));
+debug($memberLayer
+    ->getLayer()
+    ->NEWfind()
+    ->specifyFilter('member_type', 'Category', '!=')
+    ->specifySort('last_name', SORT_ASC, SORT_STRING)
+    ->setPagination(2, 10)
+    ->toKeyValueList('name', 'member_type')
+);
+
 //$contactEmails = $people->getLayer('contacts')
 //    ->NEWfind()
 //    ->specifyFilter('label', 'email')

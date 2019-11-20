@@ -211,7 +211,7 @@ class StackEntityTest extends TestCase
 		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
 				->setLimit('first')
 				->setAccessNodeObject('value', 'edition_id')
-				->filterValue(8);
+				->setFilterValue(8);
         $this->assertEquals(
 				0,
 				count($this->StackEntity->load($first_editionId_is_8_arg)),

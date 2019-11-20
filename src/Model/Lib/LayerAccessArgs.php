@@ -570,7 +570,7 @@ class LayerAccessArgs implements LayerAccessInterface
     {
         $this->setFilterOperator($filter_operator);
         $this->setAccessNodeObject('filter', $value_source);
-        $this->filterValue($filter_value);
+        $this->setFilterValue($filter_value);
         return $this;
     }
 
@@ -599,7 +599,7 @@ class LayerAccessArgs implements LayerAccessInterface
      * @param mixed $param
      * @return \App\Model\Lib\LayerAccessArgs
      */
-    public function filterValue($param)
+    public function setFilterValue($param)
     {
         $this->_filter_value_isset = TRUE;
         $this->_filter_value = $param;
