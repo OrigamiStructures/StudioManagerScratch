@@ -1,10 +1,16 @@
-This describes simple Layer use. For more detail about layers and the more complex data aggregates that contain them see:
+This describes use of the LayerAccessSystem which provides a unified set of data 
+access tools for Layers, StackEntities, and StackSets. For more detail about Layers 
+and the data aggregates that contain them see:
 
 - [Interacting with Layer Objects](/article/interacting-with-layer-objects "Interacting with Layer Objects")
 - [Interacting with StackEntities](/article/interacting-with-stackentities "Interacting with StackEntities")
 - [Interacting with StackSet Objects.](/article/interacting-with-stackset-objects "Interacting with StackSet Objects.")
 
-##What are Layers
+![Class diagram showing the three layer access structures—Layer, StackEntity, and StackSet—and the way they each former class is contained by the later class.](/OStructures/img/images/image/df494027-529f-4d40-968e-ae2b249adfb5/Screen%20Shot%202019-11-19%20at%208.55.43%20PM.png "LayerAccessStructures")
+
+StackSets contain sets of StackEntities. StackEntities contain mutiple Layers. Layers contain arrays of Entities.
+
+##Starting Simple: What are Layers
  Layers are wrapper objects that simplify the use of arrays of entities.
 
 **Content Rules**
@@ -12,7 +18,14 @@ This describes simple Layer use. For more detail about layers and the more compl
 - The entities in the array must all be the same type
 - The `id` column must be included and must be named `id`
 
-Once an array is wrapped in a Layer you will have tools to filter and retrieve the contained data.
+Once an array is wrapped in a Layer you will have tools to filter and retrieve the contained data. 
+Some of the methods are available directly on the LayerObject to do basic object introspecition. 
+Then there are some simple data access tools available on the object through a Trait (Layer and 
+StackSet use the Trait). Finally, there is a set of filtering, sorting, and pagination tools 
+available through the collaboration of the **LayerAccessProcessor** and **LayerAccessArgs** objects.
+
+Layer, StackEntity, and StackSet all implement the `LayerAccessStructureInterface` which 
+gives them access to these advanced tools.
 
 ##Making a Layer
 
@@ -127,7 +140,10 @@ object(App\Model\Lib\Layer) {
 ```
 As you can see, your data is now in a protected property of the Layer object.
 
-##Class Introspection
+##Layer Class Introspection
+
+Before we get into the data access tools, there are a couple of basic introspection tools 
+available on Layers.
 
 ###layerName()
 
@@ -227,56 +243,32 @@ debug($memberLayer->load());
 ]
 ```
 
-###count()
-
-`count()` tells you how many entities are stored.
-
-```php
-echo $memberLayer->count();
-
-3
-```
-
 ##Data Access Methods
 
-###load()
+Layers use the `LayerElementAccessTrait` and so, have several useful data 
+access tools available directly.
 
-To retrieve the array entities, simply use the `load()` method. 
 
-Note that the data is now indexed by ID rather than 0...n as in the original query.
+Classes that use this trait need to implement the abastract method `getData()` 
+so that it delivers an array of homogenous entities indexed by their ids; 
+a trivial matter for Layer, which contains an array just like this.
 
-*`load()` plays an important role in **[Advanced Use](#advanced-use)** features. 
-`load()` is to Layers as `toArray()` is to Query*
+![A class diagram showing Layer and StackSet using the trait but not StackEntity](/OStructures/img/images/image/9b00978f-854e-4d59-adf7-c22bf2e23f36/Screen%20Shot%202019-11-19%20at%208.56.14%20PM.png "The Layer structures and their use of LayerElementAccessTrait")
+
+###count()
+
+`Layer::count()` tells you how many entities are stored.
+
+Layers also implement the \Countable interface so you can do `count($layer)`;
 
 ```php
-debug($memberLayer->load());
+echo $memberLayer->count(); //method on the layer
 
-[
-	(int) 75 => object(App\Model\Entity\Member) {
+3
 
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'member_type' => 'Person',
-	
-	},
-	(int) 74 => object(App\Model\Entity\Member) {
+echo count($memberLayer); //syntax for a \Countable class
 
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-		'member_type' => 'Category',
-	
-	},
-	(int) 73 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 73,
-		'first_name' => 'Sheila',
-		'last_name' => 'Botein',
-		'member_type' => 'Person',
-
-	}
-]
+3
 ```
 
 ###element($key, $byIndex = LAYERACC_INDEX)
@@ -318,7 +310,7 @@ debug($memberLayer->element(74, LAYERACC_ID);
 ]
 ```
 
-###IDs()
+###IDs($layer = null)
 
 `IDs()` returns an array containing the entity IDs
 
@@ -331,15 +323,245 @@ debug($memberLayer->IDs());
   2 => 73
 ]
 ```
+The `$layer` argument is ignored in Layers. Its use is described in the documetation of 
+the LayerAccessSystem's use with StackEntities and StackSets.
 
-###distinct($sourcePoint)
+###shift()
 
-`distinct()` will return an array of the distinct values of one property.
+As was the case with `layerName()`, `shift()`'s use is primarily in more complex structures.
 
-*Note: The return arrays are indexed 0...n.*
+However, there may be times when you can be sure there is only one stored entitiy. 
+Or you may specifically want the first (or a sample) entity. 
 
 ```php
-debug($memberLayer->distinct('member_type'));
+$members = $this->Members->find('first')
+    ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type');
+
+$memberLayer = layer($members); // uses the global function for construction
+                                // see Making a Layer
+
+debug($memberLayer->shift());
+
+object(App\Model\Entity\Member) {
+
+	'id' => (int) 75,
+	'first_name' => 'Leonardo',
+	'last_name' => 'DiVinci',
+	'member_type' => 'Person',
+
+}
+```
+
+`shift()` does not alter the content of the Layer like its namesake, the php method 
+`array_shift()`.
+
+##Advanced features through two Interfaces
+
+The advanced data retrieval features are defined in two Interfaces:
+
+- LayerAccessInterface - defines the data structures that can be returned   
+   Any one of these can be used to deliver a final product after performing the 
+   desired processing. Or you can use them on unprocessed data to get the full set.
+   - toArray
+   - toLayer
+   - toValueList
+   - toKeyValueList
+   - toDistinctVaueList
+
+- LayerTaskInterface - defines the processing that can be done to limit or arrange the results   
+  You can perform any or all of these processes, but only once each.
+    - filter
+    - sort
+    - paginate
+
+###Where are these advanced tools
+
+The three structures—Layer, StackEntity, and StackSet—all implement `AccessLayerStructure`'s 
+`getLayer($layer)` method. This method delivers a **LayerAccessProcessor** which implements 
+both the advanced interfaces.
+
+**LayerAccessProcessor** also has a `find()` method which delivers a **LayerAccessArgs** 
+object which implements `LayerAccessInterface`. So, either of these classes can return 
+processed, structured data.
+
+####Why two separate classes?
+
+The ***Args*** class oversees setting all the filter, sort, and pagination details. The 
+***Processor*** is responsible for actually manipulating the data as requested through ***Args***.
+
+###Getting Structured Data back
+
+*NOTE: `getLayer()` optionally accepts one string parameter, `$layer`. This is needed when 
+calling from the structures that contain more than one Layer; StackEntity and StackSet. 
+It will be ignored on a Layer::getLayer() call.*
+
+####toArray()
+
+```php
+
+$members = $this->Members->find('all')
+    ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type')
+    ->order(['id' => 'DESC'])
+    ->limit(5);
+
+$memberLayer = new Layer($members);
+
+$memberLayer->getLayer()->toArray();
+
+//Will produce 
+
+[
+	(int) 0 => object(App\Model\Entity\Member) {
+		'id' => (int) 75,
+		'first_name' => 'Leonardo',
+		'last_name' => 'DiVinci',
+		'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+		'member_type' => 'Person',
+	},
+	(int) 1 => object(App\Model\Entity\Member) {
+		'id' => (int) 74,
+		'first_name' => 'Bay Area Book Artists',
+		'last_name' => 'Bay Area Book Artists',
+		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+		'member_type' => 'Category',
+	},
+	(int) 2 => object(App\Model\Entity\Member) {
+		'id' => (int) 73,
+		'first_name' => 'Sheila',
+		'last_name' => 'Botein',
+		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+		'member_type' => 'Person',
+	},
+	(int) 3 => object(App\Model\Entity\Member) {
+		'id' => (int) 72,
+		'first_name' => 'Carla',
+		'last_name' => 'Bohnett',
+		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+		'member_type' => 'Person',
+	},
+	(int) 4 => object(App\Model\Entity\Member) {
+		'id' => (int) 71,
+		'first_name' => 'Irene',
+		'last_name' => 'Jordahl',
+		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+		'member_type' => 'Person',
+	}
+]
+```
+
+####toLayer()
+
+This method will convert the result array to a new layer.
+
+There is no processing done in this case so the example is a bit circular.
+
+This return type is handy if you have to do additional processing on the data.
+
+```php
+
+$memberLayer->getLayer()->toLayer()
+
+//produces
+
+object(App\Model\Lib\Layer) {
+	[protected] _layer => 'member'
+	[protected] _className => 'Member'
+	[protected] _data => [
+		(int) 75 => object(App\Model\Entity\Member) {
+			'id' => (int) 75,
+			'first_name' => 'Leonardo',
+			'last_name' => 'DiVinci',
+			'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+			'member_type' => 'Person',
+		},
+		(int) 74 => object(App\Model\Entity\Member) {
+			'id' => (int) 74,
+			'first_name' => 'Bay Area Book Artists',
+			'last_name' => 'Bay Area Book Artists',
+			'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_type' => 'Category',
+		},
+		(int) 73 => object(App\Model\Entity\Member) {
+			'id' => (int) 73,
+			'first_name' => 'Sheila',
+			'last_name' => 'Botein',
+			'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_type' => 'Person',
+		},
+		(int) 72 => object(App\Model\Entity\Member) {
+			'id' => (int) 72,
+			'first_name' => 'Carla',
+			'last_name' => 'Bohnett',
+			'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_type' => 'Person',
+		},
+		(int) 71 => object(App\Model\Entity\Member) {
+			'id' => (int) 71,
+			'first_name' => 'Irene',
+			'last_name' => 'Jordahl',
+			'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_type' => 'Person',
+		}
+	]
+	[protected] _entityProperties => [
+		(int) 0 => 'id',
+		(int) 1 => 'first_name',
+		(int) 2 => 'last_name',
+		(int) 3 => 'user_id',
+		(int) 4 => 'member_type'
+	]
+	[protected] primary => null
+	[protected] _errors => []
+}
+```
+
+####toValueList($valueSource)
+
+`$valueSource` may point to a property or method the accepts no arguments. For example, 
+Member entitiy has a method `name()` which concatenates a full name.
+
+```php
+$memberLayer->getLayer()->toValueList('name');
+
+//produces
+
+[
+	(int) 0 => 'Leonardo DiVinci',
+	(int) 1 => 'Bay Area Book Artists',
+	(int) 2 => 'Sheila Botein',
+	(int) 3 => 'Carla Bohnett',
+	(int) 4 => 'Irene Jordahl'
+]
+```
+
+####toKeyValueList($keySource, $valueSource)
+
+Both `keySource` and `valueSource` may point to a property or method that accepts no arguments.
+
+```php
+$memberLayer->getLayer()->toKeyValueList('id', 'name');
+
+//produces
+
+[
+	(int) 75 => 'Leonardo DiVinci',
+	(int) 74 => 'Bay Area Book Artists',
+	(int) 73 => 'Sheila Botein',
+	(int) 72 => 'Carla Bohnett',
+	(int) 71 => 'Irene Jordahl'
+]
+```
+
+####toDistinctValueList($valueSource)
+
+Retuns an array of unique values.
+
+`$valueSource` may point to a property or method the accepts no arguments.
+
+```php
+$memberLayer->getLayer->toDistinctValueList('member_type');
+
+//produces 
 
 [
 	(int) 0 => 'Person',
@@ -347,70 +569,7 @@ debug($memberLayer->distinct('member_type'));
 ]
 ```
 
-If your entity has methods that don't require arguments, you can also get 
-the distinct results of those methods. For example, these Member entities 
-have a `name()` method that delivers a full name for the record.
-
-```php
- debug($memberLayer->distinct('name'));
-
-[
-	(int) 0 => 'Leonardo DiVinci',
-	(int) 1 => 'Bay Area Book Artists',
-	(int) 2 => 'Sheila Botein'
-]
-```
-
-###valueList($sourcePoint)
-
-`valueList()` returns an array of values from a property or method 
-that doesn't take arguments.
-
-```php
-debug($memberLayer->valueList('last_name'));
-
-[
-	(int) 0 => 'DiVinci',
-	(int) 1 => 'Bay Area Book Artists',
-	(int) 2 => 'Botein'
-]
-
-//Member has a method 
-//public function name() {}
-debug($memberLayer->valueList('name'));
-
-[
-	(int) 0 => 'Leonardo DiVinci',
-	(int) 1 => 'Bay Area Book Artists',
-	(int) 2 => 'Sheila Botein'
-]
-```
-
-###keyValueList($keySource, $valueSource)
-
-`keyValueList($keySource, $valueSource)` returns a hash with the keys and 
-values drawn from properties and methods of the entities. If a method 
-is used as a source it can't require arguments.
-
-```php
-debug($memberLayer->valueList('id', 'last_name'));
-
-[
-	(int) 75 => 'DiVinci',
-	(int) 74 => 'Bay Area Book Artists',
-	(int) 73 => 'Botein'
-]
-
-//Member has a method 
-//public function name() {}
-debug($memberLayer->valueList('last_name', 'name'));
-
-[
-	(string) 'DiVinci' => 'Leonardo DiVinci',
-	(string) 'Bay Area Book Artists' => 'Bay Area Book Artists',
-	(string) 'Botein' => 'Sheila Botein'
-]
-```
+#NOT EDITED PAST HERE
 
 ###linkedTo($foreignKey, $foreignId)
 
@@ -434,53 +593,6 @@ debug($memberLayer->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9'));
 	}
 ]
 ```
-
-###shift()
-
-As was the case with `layerName()`, `shift()`'s use is primarily in more complex structures.
-
-However, there may be times when you can be sure there is only one stored entitiy. 
-Or you may specifically want the first (or a sample) entity. 
-
-*NOTE:* If you use `load()` on a layer with one member, you will get an array containing 
-one entity. `shift()` returns the entity itself.
-
-```php
-$members = $this->Members->find('first')
-    ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type');
-
-$memberLayer = layer($members); // uses the global function for construction
-                                // see Making a Layer
-
-debug($memberLayer->shift());
-
-object(App\Model\Entity\Member) {
-
-	'id' => (int) 75,
-	'first_name' => 'Leonardo',
-	'last_name' => 'DiVinci',
-	'member_type' => 'Person',
-
-}
-
-// compare to 
-debug($memberLayer->load());
-
-[
-	(int) 0 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'member_type' => 'Person',	
-	}
-[
-```
-
-`shift()` does not alter the content of the Layer like its namesake, the php method 
-`array_shift()`. From the example above it may be clear that internally it is 
-performing `return array_shift($layerObject->load());`. The product of the `load()` 
-command is modified, but the Layer properties are uneffected.
 
 ##Data Manipulation Methods
 
