@@ -14,7 +14,7 @@ class LayerAccessArgsTest extends TestCase
 	public function setUp() {
 		$this->args = new LayerAccessArgs();
 	}
-	
+
 	public function tearDown() {
 		unset($this->args);
 	}
@@ -103,11 +103,11 @@ class LayerAccessArgsTest extends TestCase
 		$this->assertTrue($this->args->hasAccessNodeObject('filter'));
 		$this->assertTrue($this->args->valueOf('filterValue') === [12,13,14,15]);
 		$this->assertTrue($this->args->valueOf('filterOperator') === 'in_array');
-		
+
 		$this->setUp();
 		$this->args->specifyFilter('cityStateZip', '', '!=');
 		$this->assertTrue($this->args->valueOf('filterOperator') === '!=');
-		
+
     }
 
     /**
@@ -142,12 +142,12 @@ class LayerAccessArgsTest extends TestCase
     {
         $this->assertFalse($this->args->isFilter(),
 				'unmodified argObject says it is a valid Filter');
-		
+
 		$this->args->setAccessNodeObject('filter', '_value_source');
         $this->assertFalse($this->args->isFilter(),
 				'argObject with only a _value_source says it is a valid Filter');
-		
 		$this->args->filterValue('filter_value');
+
         $this->assertTrue($this->args->isFilter(),
 				'argObject with a _value_source and filter value says it is not a valid Filter');
 						
@@ -163,24 +163,24 @@ class LayerAccessArgsTest extends TestCase
         $this->args
 				->setFilterOperator('==')
 				->setLayer('layer');
-		$this->assertTrue($this->args->valueOf('filter_operator') == '==', 
+		$this->assertTrue($this->args->valueOf('filter_operator') == '==',
 				"valueOf('filter_operator') did not return expected propery value");
-		$this->assertTrue($this->args->valueOf('_filter_operator') == '==', 
+		$this->assertTrue($this->args->valueOf('_filter_operator') == '==',
 				"valueOf('_filter_operator') did not return expected propery value");
-		$this->assertTrue($this->args->valueOf('filterOperator') == '==', 
+		$this->assertTrue($this->args->valueOf('filterOperator') == '==',
 				"valueOf('filterOperator') did not return expected propery value");
-		$this->assertTrue($this->args->valueOf('FilterOperator') == '==', 
+		$this->assertTrue($this->args->valueOf('FilterOperator') == '==',
 				"valueOf('FilterOperator') did not return expected propery value");
-		
-		$this->assertTrue($this->args->valueOf('layer') == 'layer', 
+
+		$this->assertTrue($this->args->valueOf('layer') == 'layer',
 				"valueOf('layer') did not return expected propery value");
-		$this->assertTrue($this->args->valueOf('_layer') == 'layer', 
+		$this->assertTrue($this->args->valueOf('_layer') == 'layer',
 				"valueOf('layer') did not return expected propery value");
-		$this->assertTrue($this->args->valueOf('Layer') == 'layer', 
+		$this->assertTrue($this->args->valueOf('Layer') == 'layer',
 				"valueOf('Layer') did not return expected propery value");
-		$this->assertTrue($this->args->valueOf('bad_property') == '', 
+		$this->assertTrue($this->args->valueOf('bad_property') == '',
 				"valueOf('bad_property') did not return expected empty string");
-		$this->assertTrue($this->args->valueOf(null) == '', 
+		$this->assertTrue($this->args->valueOf(null) == '',
 				"valueOf(null) did not return expected empty string");
     }
 }
