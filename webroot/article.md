@@ -6,7 +6,7 @@ and the data aggregates that contain them see:
 - [Interacting with StackEntities](/article/interacting-with-stackentities "Interacting with StackEntities")
 - [Interacting with StackSet Objects.](/article/interacting-with-stackset-objects "Interacting with StackSet Objects.")
 
-![Class diagram showing the three layer access structures—Layer, StackEntity, and StackSet—and the way they each former class is contained by the later class.](/OStructures/img/images/image/df494027-529f-4d40-968e-ae2b249adfb5/Screen%20Shot%202019-11-19%20at%208.55.43%20PM.png "LayerAccessStructures")
+![Class diagram showing the three layer access structures—Layer, StackEntity, and StackSet—and the way they each former class is contained by the later class.](/OStructures/img/images/image/df494027-529f-4d40-968e-ae2b249adfb5/layer-struct.png "LayerAccessStructures")
 
 StackSets contain sets of StackEntities. StackEntities contain mutiple Layers. Layers contain arrays of Entities.
 
@@ -248,12 +248,13 @@ debug($memberLayer->load());
 Layers use the `LayerElementAccessTrait` and so, have several useful data 
 access tools available directly.
 
-
 Classes that use this trait need to implement the abastract method `getData()` 
 so that it delivers an array of homogenous entities indexed by their ids; 
 a trivial matter for Layer, which contains an array just like this.
 
-![A class diagram showing Layer and StackSet using the trait but not StackEntity](/OStructures/img/images/image/9b00978f-854e-4d59-adf7-c22bf2e23f36/Screen%20Shot%202019-11-19%20at%208.56.14%20PM.png "The Layer structures and their use of LayerElementAccessTrait")
+Classes that use this trait also need to implement the abstract `IDs($layer = null)` method. 
+
+![A class diagram showing Layer and StackSet using the trait but not StackEntity](/OStructures/img/images/image/9b00978f-854e-4d59-adf7-c22bf2e23f36/layer-struct-and-element-trait.png "The Layer structures and their use of LayerElementAccessTrait")
 
 ###count()
 
@@ -357,6 +358,8 @@ object(App\Model\Entity\Member) {
 
 ##Advanced features through two Interfaces
 
+![Class diagram showing the two classes that collaborate to provide advanced features and detailing their implementation of processing and retrieval interfaces](/OStructures/img/images/image/3940eb86-fe17-4450-b144-7782a472edff/layer-access-adv.png "Layer access system classes that provide advance data retrieval features")
+
 The advanced data retrieval features are defined in two Interfaces:
 
 - LayerAccessInterface - defines the data structures that can be returned   
@@ -394,6 +397,8 @@ The ***Args*** class oversees setting all the filter, sort, and pagination detai
 *NOTE: `getLayer()` optionally accepts one string parameter, `$layer`. This is needed when 
 calling from the structures that contain more than one Layer; StackEntity and StackSet. 
 It will be ignored on a Layer::getLayer() call.*
+
+![Class diagram showing that the three classes Layer, StackEntity, and StackSet all implement the LayerStructureInterface which provides tools for filtering, sorting and pagination](/OStructures/img/images/image/5e47aa0a-c5b9-426d-b971-b7771a2e8630/layer-struct-and-access-interface.png "Layer Structures use of the LayerStructureInterface")
 
 ####toArray()
 
@@ -569,7 +574,310 @@ $memberLayer->getLayer->toDistinctValueList('member_type');
 ]
 ```
 
+###Data Manipulation Options: filter, sort, paginate
+
+With those return-data structuring tools in hand, we can look at the tools that effect 
+*which* data gets returned and how it is sorted.
+
+These processes can be written using a *fluent* interface style or assembled manually. 
+The examples will all show the *fluent* style. A general discussion of 
+[manual style processing](#manual-style-processing) is a the end of this article.
+
+Your fluent operations will look like this:
+
+```php
+$someValidStructure                 //any implementor of LayerStructureInterface
+    ->getLayer($ofInterest)         //returns a LayerAccessProcessor object
+    ->find()                        //returns a LayerAccessArgs object
+    ->specifyFilter($a, $b, $c)     //modifies and returns the LayerAccessArgs instance
+    ->specifySort($d, $e, $f)       //modifies and returns the LayerAccessArgs instance
+    ->specifyPagination($g, $h)     //modifies and returns the LayerAccessArgs instance
+    ->toArray();                    //returns the result data in the requested form
+```
+You can call the **LayerAccessArgs** methods in any order. They will not be executed until 
+one of the `toXxxxx()` methods is called. When executed they will always run in the same 
+order; filter, sort, paginate.
+
+####Optional hyper-detail
+Any `toXxxxx()` call on **LayerAccessArgs** causes it to pass itself to the 
+**LayerAccessProcessor** delegating both processing and return-data structuring to that class.
+
+###specifyFilter($value_source, $filter_value, $filter_operator = FALSE)
+
+You can filter the contained entities by testing one value. If you need to test multiple values 
+you'll need write code for the purpose. Or you might convert each result to a new layer and 
+then filter that result.
+
+####Available comparison operations
+The supported comparisons are: `==`, `!=`, `===`, `!==`, `<`, `>`, `<=`, `>=`, `in_array`, 
+`!in_array`, `true`, `false`, `truthy`
+
+- if `$filter_value` is a scalar (string, int, real, boolean) and no   
+   `$filter_operator` is specified, the comparison **==** will be used.
+- if `$filter_value` is an array and no `$filter_operator` is specified,   
+   the test **in_array** will be used.
+- `true`, `false`, and `truthy` ignore the `$filter_value`. `true` and `false` perform 
+`property === true|false`. `truthy` casts the property as a boolean treats the result as 
+the test's outcome.
+
+In this case, the operation defaults to `==`  ('Member->member_type' == 'Person')
+
+```php
+debug(
+    $memberLayer
+        ->getLayer()
+        ->find()
+        ->specifyFilter('member_type', 'Person')
+        ->toArray()
+);
+
+	(int) 75 => object(App\Model\Entity\Member) {
+		'id' => (int) 75,
+		'first_name' => 'Leonardo',
+		'last_name' => 'DiVinci',
+		'member_type' => 'Person',
+	},
+	(int) 73 => object(App\Model\Entity\Member) {
+		'id' => (int) 73,
+		'first_name' => 'Sheila',
+		'last_name' => 'Botein',
+		'member_type' => 'Person',
+	},
+	(int) 3 => object(App\Model\Entity\Member) {
+		'id' => (int) 72,
+		'first_name' => 'Carla',
+		'last_name' => 'Bohnett',
+		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+		'member_type' => 'Person',
+	},
+	(int) 4 => object(App\Model\Entity\Member) {
+		'id' => (int) 71,
+		'first_name' => 'Irene',
+		'last_name' => 'Jordahl',
+		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+		'member_type' => 'Person',
+	}
+
+]
+```
+
+In this case the operation is specified ('Member->member_type' != 'Person')
+
+```php
+debug(
+    $memberLayer
+        ->getLayer()
+        ->find()
+        ->specifyFilter('member_type', 'Person', '!=')
+        ->toArray()
+);
+
+[
+	(int) 74 => object(App\Model\Entity\Member) {
+		'id' => (int) 74,
+		'first_name' => 'Bay Area Book Artists',
+		'last_name' => 'Bay Area Book Artists',
+		'member_type' => 'Category',
+	}
+]
+```
+
+In this case the operation defaults to in\_array (in\_array('Member->member_type', $arrayOfValues)
+
+```php
+$arrayOfValues = ['Leonardo', 'Bay Area Book Artists'];
+debug(
+    $memberLayer
+        ->getLayer()
+        ->find()
+        ->specifyFilter('first_name', $arrayOfValues)
+        ->toArray()
+);
+
+[
+	(int) 75 => object(App\Model\Entity\Member) {
+		'id' => (int) 75,
+		'first_name' => 'Leonardo',
+		'last_name' => 'DiVinci',
+	},
+	(int) 74 => object(App\Model\Entity\Member) {
+		'id' => (int) 74,
+		'first_name' => 'Bay Area Book Artists',
+		'last_name' => 'Bay Area Book Artists',
+	}
+]
+```
+And don't forget. You can test the value of a method too (as long as it doesn't require arguments) 
+and use any of the return-structuring methods
+
+```php
+debug(
+    $memberLayer
+        ->getLayer
+        ->find()
+        ->specifyFilter('name', 'Leonardo Divinci')
+        ->toKeyValueList('id', 'last_name')
+);
+
+[
+	(int) 75 => 'DiVinci',
+]
+
+```
+
+There may be times that you need to set or modify just one parameter of a filter. 
+There are individual calls available for each:
+
+- `setFilterTestSubject($value_source)`
+    - sets the property or method return to test
+- `setFilterValue($param)`
+    - sets the values to search for in *TestSubject*
+- `setFilterOperator($param)`
+    - one of the allowed [test types](#available-comparison-operations)
+
+###sort($property, $dir = \SORT/\_DESC, $type = \SORT\_NUMERIC)
+
+Don't neglect the `$type` parameter. Sorting with the wrong value here can prevent sorting. 
+For example, the default `\SORT_NUMERIC` would produce no change in the example below.
+
+- **`SORT_NUMERIC`:** For comparing numbers
+- **`SORT_STRING`:** For comparing string values
+- **`SORT_NATURAL`:** For sorting string containing numbers and you’d like those numbers to be    
+order in a natural way. For example: showing “10” after “2”.
+- **`SORT_LOCALE_STRING`:** For comparing strings based on the current locale.
+
+*NOTE:* `sort()` builds on the 
+[Cake Collection::sortBy()](https://book.cakephp.org/3/en/core-libraries/collections.html#Cake\Collection\Collection::sortBy) 
+method. For more details review that documentation
+
+```php
+$memberLayer
+    ->getLayer()
+    ->find()
+    ->specifySort('last_name', \SORT_ASC, \SORT_STRING)
+    ->toValueList('last_name');
+
+[
+	(int) 0 => 'Bay Area Book Artists',
+	(int) 1 => 'Bohnett',
+	(int) 2 => 'Botein',
+	(int) 3 => 'DiVinci',
+	(int) 4 => 'Jordahl'
+]
+```
+###specifyPagination($page, $limit);
+
+```php
+$members = $MembersTable->find('all')
+    ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type'])
+    ->toArray();
+
+$memberLayer = new Layer($members);
+
+echo count($memberLayer);
+
+(int) 75
+
+$memberLayer
+    ->getLayer()
+    ->find()
+    ->specifyPagination(2, 10)
+    ->toValueList('name');
+
+[
+	(int) 0 => 'Don Drake',
+	(int) 1 => 'Gail Drake',
+	(int) 2 => 'Drake Family',
+	(int) 3 => 'Wonderland Group',
+	(int) 4 => 'Alice Goask',
+	(int) 5 => 'SFMOMA',
+	(int) 6 => 'Art Collecteur',
+	(int) 7 => 'Kate Jordahl',
+	(int) 8 => 'Rae Trujillo',
+	(int) 9 => 'Vamp and Tramp'
+]
+
+$memberLayer
+    ->getLayer()
+    ->find()
+    ->specifyFilter('member_type', 'Category', '!=')
+    ->specifySort('last_name', SORT_ASC, SORT_STRING)
+    ->specifyPagination(2, 10)
+    ->toKeyValueList('name', 'member_type');
+
+[
+	'John Thacker' => 'Person',
+	'Paula Tognarelli' => 'Person',
+	'Rae Trujillo' => 'Person',
+	'Sonia Underdown' => 'Person',
+	'Vamp and Tramp' => 'Institution',
+	'Wonderland Group' => 'Institution',
+	'Rachel Wooster' => 'Person',
+	'Nanette Wylde' => 'Person',
+	'joson photo llc' => 'Institution',
+	'photo-eye' => 'Institution'
+]
+
+```
+
+###Manual Style Processing
+
 #NOT EDITED PAST HERE
+
+#####Filtering by manually creating a LayerArgObj
+
+```php
+$findByType = new \App\Model\Lib\LayerAccessArgs();
+
+$findByType
+    ->setFilterOperator('===')      //if not specified, the default '==' would be used
+    ->setFilterTestSubject('member_type');
+//  ->filterValue('aString')        this would set the last required parameter
+
+//use the LayerAccessArgs object as a parameter for Layer::load()
+//remember, the 'set' calls to LayerAccessArgs return the instance
+foreach (['Person', 'Category', 'Unknown'] as $type) {
+    debug($memberLayer->load($findByType->filterValue($type)));
+}
+
+//first pass, $type = Person
+
+[
+	(int) 75 => object(App\Model\Entity\Member) {
+
+		'id' => (int) 75,
+		'first_name' => 'Leonardo',
+		'last_name' => 'DiVinci',
+		'member_type' => 'Person',
+	
+	},
+	(int) 73 => object(App\Model\Entity\Member) {
+
+		'id' => (int) 73,
+		'first_name' => 'Sheila',
+		'last_name' => 'Botein',
+		'member_type' => 'Person',
+	
+	}
+]
+
+//second pass, $type = Category
+
+[
+	(int) 74 => object(App\Model\Entity\Member) {
+
+		'id' => (int) 74,
+		'first_name' => 'Bay Area Book Artists',
+		'last_name' => 'Bay Area Book Artists',
+		'member_type' => 'Category',
+	
+	}
+]
+
+//third pass, $type = Unknown
+
+[]
+```
 
 ###linkedTo($foreignKey, $foreignId)
 
@@ -594,55 +902,6 @@ debug($memberLayer->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9'));
 ]
 ```
 
-##Data Manipulation Methods
-
-###sort($property, $dir = \SORT/\_DESC, $type = \SORT\_NUMERIC)
-
-Don't neglect the `$type` parameter. Sorting with the wrong value here can prevent sorting. 
-For example, the default `\SORT_NUMERIC` would produce no change in the example below.
-
-- **SORT_NUMERIC:** For comparing numbers
-- **SORT_STRING:** For comparing string values
-- **SORT_NATURAL:** For sorting string containing numbers and you’d like those numbers to be    
-order in a natural way. For example: showing “10” after “2”.
-- **SORT\_LOCALE\_STRING:** For comparing strings based on the current locale.
-
-*NOTE:* `sort()` builds on the 
-[Cake Collection::sortBy()](https://book.cakephp.org/3/en/core-libraries/collections.html#Cake\Collection\Collection::sortBy) 
-method. For more details review that documentation
-
-```php
-debug($memberLayer->sort('last_name', \SORT_ASC, \SORT_STRING));
-
-[
-	(int) 0 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-	
-	},
-	(int) 1 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 73,
-		'first_name' => 'Sheila',
-		'last_name' => 'Botein',
-	
-	},
-	(int) 2 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-	
-	}
-]
-```
-
-`sort()` is a terminal method and can't be chained. It only exists on the **Layer** object. 
-Details of its in combination with other **Layer** and **LayerAccessArgs** features are 
-discussed in the **Advanced User** section **[Sorting Filtered Results and Getting Sorted Value Lists]
-(#sorting-filtered-results-and-getting-sorted-value-lists)**.
 
 ##Advanced Use
 
