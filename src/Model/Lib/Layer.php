@@ -10,7 +10,7 @@ use Cake\ORM\Enitity;
 use Cake\Collection\Collection;
 use App\Exception\BadClassConfigurationException;
 use \App\Interfaces\xxxLayerAccessInterface;
-use App\Model\Traits\LayerAccessTrait;
+//use App\Model\Traits\LayerAccessTrait;
 use App\Lib\Traits\ErrorRegistryTrait;
 
 /**
@@ -28,7 +28,7 @@ use App\Lib\Traits\ErrorRegistryTrait;
 class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable {
 
     use ConventionsTrait;
-	use LayerAccessTrait;
+//	use LayerAccessTrait;
 	use ErrorRegistryTrait;
 	use LayerElementAccessTrait;
 

@@ -9,7 +9,7 @@ use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use App\Interfaces\xxxLayerAccessInterface;
-use App\Model\Traits\LayerAccessTrait;
+//use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 use App\Exception\BadClassConfigurationException;
 
@@ -28,7 +28,7 @@ use App\Exception\BadClassConfigurationException;
 class StackEntity extends Entity implements LayerStructureInterface
 {
 
-    use LayerAccessTrait;
+//    use LayerAccessTrait;
 
     /**
      * Name of the tip-of-the-iceberg entity for this stack

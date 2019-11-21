@@ -4,7 +4,7 @@ namespace App\Model\Lib;
 use App\Interfaces\LayerStructureInterface;
 use App\Model\Entity\StackEntity;
 use App\Interfaces\xxxLayerAccessInterface;
-use App\Model\Traits\LayerAccessTrait;
+//use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\StackSetAccessArgs;
 use App\Model\Traits\LayerElementAccessTrait;
 use Cake\Utility\Text;
@@ -22,7 +22,7 @@ use Cake\Utility\Text;
  */
 class StackSet implements LayerStructureInterface, \Countable {
 
-	use LayerAccessTrait;
+//	use LayerAccessTrait;
 	use LayerElementAccessTrait;
 
 	protected $_data = [];

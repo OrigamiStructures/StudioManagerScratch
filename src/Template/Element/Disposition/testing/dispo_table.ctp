@@ -1,3 +1,4 @@
+<!--START Element/Disposition/testing/dispo_table.ctp-->
 <?php
 $columns = ['id', 'created', 'start_date', 'end_date', 'type',
     'label', 'name', 'complete', 'disposition_id', 'first_name', 'city', 'state'];
@@ -8,11 +9,8 @@ $columns = ['id', 'created', 'start_date', 'end_date', 'type',
             <caption><?= 'Records found: ' . $activity->count(); ?></caption>
             <tbody>
             <?= $this->Html->tableHeaders($columns) ?>
-            <?php //$pieceLists = [];
-            $allInLayer = $activity->accessArgs()->setLimit('all');
+            <?php
             foreach ($activity->toArray() as $disposition):
-//			$pieceLists[$disposition->id] =
-//				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
                 $properties = array_intersect_key($disposition->properties(), array_flip($columns));
                 $properties['disposition_id'] = $disposition->pieceCount();
                 ?>
@@ -23,3 +21,5 @@ $columns = ['id', 'created', 'start_date', 'end_date', 'type',
     </table>
 <?php
 //osd($pieceLists);
+?>
+<!--END Element/Disposition/testing/dispo_table.ctp-->

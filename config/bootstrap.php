@@ -249,6 +249,8 @@ Type::build('timestamp')
  * Constants
  */
 
+require_once 'layer_access_bootstrap.php';
+
 //Member Types for Member/Group
 define('MEMBER_TYPE_INSTITUTION', 'Institution');
 define('MEMBER_TYPE_PERSON', 'Person');
