@@ -43,6 +43,8 @@ use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use Cake\Event\EventManager;
+use App\Events\EventNotifier;
 
 /**
  * Uncomment block of code below if you want to use `.env` file during development.
@@ -395,3 +397,9 @@ define('FORMAT_LAYER', 3);
 function layer($data) {
 	return new \App\Model\Lib\Layer($data);
 }
+
+/**
+ * Event Listener Registration
+ */
+$EventNotifier = new EventNotifier();
+EventManager::instance()->attach($EventNotifier);
