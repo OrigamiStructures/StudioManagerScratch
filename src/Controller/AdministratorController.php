@@ -91,9 +91,9 @@ class AdministratorController extends AppController {
 			}
 
 		}
-		osd($this->errors);
-		osd(Range::arrayToString(array_keys($this->pieces)), 'Unreferenced pieces');
-		osd(array_keys($this->editions), 'Unreferenced editions');
+		$this->set('errors', $this->errors);
+        $this->set('range', Range::arrayToString(array_keys($this->pieces)));
+        $this->set('uneds', array_keys($this->editions), 'Unreferenced editions');
 	}
 
 	private function recordEditionUse($id) {
