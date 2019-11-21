@@ -175,20 +175,6 @@ fully namespaced version.
 
 ```
 
-###hasId($id)
-
-Returns a boolean indicating if the Layer contains an entity with the id value.
-
-```php
- debug($memberLayer->hasId(33));
-
-false
-
- debug($memberLayer->hasId(75));
-
-true
-```
-
 ###isClean()
 
 Returns `true` if all entities in the stack are clean, `false` if any have been modified.
@@ -326,6 +312,20 @@ debug($memberLayer->IDs());
 ```
 The `$layer` argument is ignored in Layers. Its use is described in the documetation of 
 the LayerAccessSystem's use with StackEntities and StackSets.
+
+###hasId($id)
+
+Returns a boolean indicating if the Layer contains an entity with the id value.
+
+```php
+ debug($memberLayer->hasId(33));
+
+false
+
+ debug($memberLayer->hasId(75));
+
+true
+```
 
 ###shift()
 
