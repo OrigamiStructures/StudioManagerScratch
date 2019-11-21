@@ -154,78 +154,6 @@ class StackEntityTest extends TestCase
 				. ' array did not throw expected exception');
 	}
 
-	public function testLoadWithArgObj() {
-
-		$formats_arg = $this->StackEntity->accessArgs()->setLayer('formats');
-
-		$this->assertCount(2, $this->StackEntity->load($formats_arg),
-				'argObj naming layer did not return expected quantity of data');
-
-        $pieces = $this->StackEntity
-				->find('pieces')
-				->specifyFilter('quantity', 140)
-				->load();
-        $piece = array_shift($pieces);
-        $this->assertEquals(
-				140,
-				$piece->quantity,
-				'loading a valid format by property/value test ...'
-				. '->load(\'pieces\', [\'quantity\', 140])... did not '
-				. 'return an entity with an expected property value.');
-
-
-		$all_pieces_args = $this->StackEntity->accessArgs()
-				->setLayer('pieces')
-				->setLimit('all');
-        $this->assertEquals(
-				5,
-				count($this->StackEntity->load($all_pieces_args)),
-				'loading using \'all\' did not return the expected '
-				. 'number of entities');
-
-		$all_formats_args = $this->StackEntity->accessArgs()
-				->setLayer('formats')
-				->setLimit('all');
-        $this->assertEquals(
-				2,
-				count($this->StackEntity->load($all_formats_args)),
-				'loading using [\'all\'] did not return the expected '
-				. 'number of entities');
-
-		$first_piece_args = $this->StackEntity->accessArgs()
-				->setLayer('pieces')
-				->setLimit('first');
-        $this->assertEquals(1, count($this->StackEntity->load($first_piece_args)),
-				'loading using \'first\' did not return one entity');
-
-		$first_format_args = $this->StackEntity
-				->accessArgs()
-				->setLayer('formats')
-				->setLimit('first');
-        $this->assertEquals(
-				1,
-				count($this->StackEntity->load($first_format_args)),
-				'loading using [\'first\'] did not return one entity');
-
-        // unknown layer combinded with a field search
-		$first_editionId_is_8_arg = $this->StackEntity->accessArgs()
-				->setLimit('first')
-				->setAccessNodeObject('value', 'edition_id')
-				->setFilterValue(8);
-        $this->assertEquals(
-				0,
-				count($this->StackEntity->load($first_editionId_is_8_arg)),
-				'loading using an unknow layer name and a property/value '
-				. 'search returned something other than the 0 expected entities.');
-    }
-
-	public function testLoadWithArrayFilter() {
-		$actual = $this->StackEntity->find()
-				->setLayer('pieces')
-				->specifyFilter('id', [40, 509], 'in_array')
-				->load();
-	}
-
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Simple class methods">
@@ -315,17 +243,6 @@ class StackEntityTest extends TestCase
         $this->assertEquals([5, 8], $actual,
 			'A valid layer and property did not return the expected values');
     }
-
-	public function testTraitDistinct() {
-		$result = $this->StackEntity
-				->find()
-				->setLayer('pieces')
-				->specifyFilter('quantity', 2, '>')
-				->load();
-		$actual = $this->StackEntity->distinct('edition_id', $result);
-		$this->assertArraySubset([8], $actual);
-
-	}
 
     /**
      * Test IDs method
@@ -417,9 +334,9 @@ class StackEntityTest extends TestCase
 
         //do the same process to multiple values
         //to test the [prop=>val, prop=>val] arguement syntax
-		$dp = $this->StackEntity->find()
-				->setLayer('dispositions_pieces')
-				->load();
+		$dp = $this->StackEntity
+            ->getLayer('dispositions_pieces')
+            ->toArray();
         unset($this->StackEntity->pieces);
         unset($this->StackEntity->dispositions_pieces);
 

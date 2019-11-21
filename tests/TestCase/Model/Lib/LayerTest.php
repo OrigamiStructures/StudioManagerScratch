@@ -279,39 +279,6 @@ class LayerTest extends TestCase
 				. 'not throw expected exception');
 	}
 
-    public function testloadUsingPropertyValue() {
-        $layer = new Layer($this->fivePieces);
-
-		$results = $layer
-				->find()
-				->specifyFilter('number', 4)
-				->load();// good find
-        $this->assertTrue(is_array($results));
-        $match = array_pop($results);
-        $this->assertEquals(4, $match->number);
-
- 		$number_is_4_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->setFilterValue('4');
-        $results = $layer->load($number_is_4_arg); // good val, casting mismatch
-        $this->assertTrue(is_array($results));
-        $match = array_pop($results);
-        $this->assertEquals(4, $match->number);
-
- 		$number_is_badval_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->setFilterValue(9000);
-        $results = $layer->load($number_is_badval_arg); // val doesn't exist
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(empty($results));
-
- 		$badproperty_is_3_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'boogers')
-				->setFilterValue(3);
-        $results = $layer->load($badproperty_is_3_arg); // property doesn't exist
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(empty($results));
-    }
 
 	public function testloadUsingPropertyArray() {
         $layer = new Layer($this->pieceRecords);

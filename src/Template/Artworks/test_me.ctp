@@ -70,14 +70,18 @@ if (isset($stacks)) {
             echo "<h2>{$edition->displayTitle}</h2>";
             foreach ($formats->load() as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
-				$assignedPieces = $pieces->find()
-						->specifyFilter('format_id', $format->id)
-						->load();
+				$assignedPieces = $pieces
+                    ->getLayer()
+                    ->NEWfind()
+                    ->specifyFilter('format_id', $format->id)
+                    ->toArray();
 				foreach ($assignedPieces as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
-					$pieceActivity = $joinLayer->find()
-							->specifyFilter('piece_id', $piece->id)
-							->load();
+					$pieceActivity = $joinLayer
+                        ->getLayer()
+                        ->NEWfind()
+                        ->specifyFilter('piece_id', $piece->id)
+                        ->toArray();
 					foreach ($pieceActivity as $link) {
 						echo "<li>"
 						. "{$activity->element($link->disposition_id, LAYERACC_ID)->displayTitle}"
