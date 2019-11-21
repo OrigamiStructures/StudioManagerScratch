@@ -25,7 +25,7 @@ use App\Lib\Traits\ErrorRegistryTrait;
  *
  * @author Main
  */
-class Layer implements LayerStructureInterface, \Countable {
+class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable {
 
     use ConventionsTrait;
 	use LayerAccessTrait;
@@ -90,6 +90,7 @@ class Layer implements LayerStructureInterface, \Countable {
         }
     }
 
+    //<editor-fold desc="LayerStructureInterface implementation">
     /**
      * Gather the available data at this level and package the iterator
      *
@@ -101,7 +102,9 @@ class Layer implements LayerStructureInterface, \Countable {
         $Iterator = new LayerAccessProcessor($this->layerName());
         return  $Iterator->insert($this->_data);
     }
+    //</editor-fold>
 
+    //<editor-fold desc="LayerAccessElementTrait abstract method implementations">
     public function getData()
     {
         return $this->_data;
@@ -115,6 +118,74 @@ class Layer implements LayerStructureInterface, \Countable {
     public function IDs($layer = null) {
         return array_keys($this->getData());
     }
+    //</editor-fold>
+
+    //<editor-fold desc="LayerAccessInterface implementation">
+    /**
+     * Get the result as an array of entities
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->_data;
+    }
+
+    /**
+     * Get the result as Layer object
+     *
+     * @return Layer
+     */
+    public function toLayer()
+    {
+        return $this;
+    }
+
+    /**
+     * Get an array of values
+     *
+     * @param $valueSource string|ValueSource
+     * @return array
+     */
+    public function toValueList($valueSource = null)
+    {
+        return $this->getLayer()->toValueList($valueSource);
+    }
+
+    /**
+     * Get a key => value list
+     *
+     * @param $keySource string|ValueSource
+     * @param $valueSource string|ValueSource
+     * @return array
+     */
+    public function toKeyValueList($keySource = null, $valueSource = null)
+    {
+        return $this->getLayer()->toKeyValueList($keySource, $valueSource);
+    }
+
+    /**
+     * Get a list of distinct values
+     *
+     * @param $valueSource string|ValueSource
+     * @return array
+     */
+    public function toDistinctList($valueSource = null)
+    {
+        return $this->getLayer()->toDistinctList($valueSource);
+    }
+
+    /**
+     * Get the stored registry instance
+     *
+     * @return ValueSourceRegistry
+     */
+    public function getValueRegistry()
+    {
+        return null;
+    }
+
+    //</editor-fold>
 
     //<editor-fold desc="************** Introspection **************">
 
