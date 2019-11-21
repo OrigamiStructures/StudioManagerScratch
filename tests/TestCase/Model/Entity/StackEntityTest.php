@@ -170,11 +170,10 @@ class StackEntityTest extends TestCase
     }
 
     /**
-     * @expectedException Error
      */
     public function testIDsOnBadLayer()
     {
-        $this->StackEntity->IDs('bad_layer');
+        $this->assertEquals([], $this->StackEntity->IDs('bad_layer'));
     }
     /**
      * Test linkedTo method

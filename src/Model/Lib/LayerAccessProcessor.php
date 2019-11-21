@@ -34,7 +34,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function __construct($layerName)
     {
-        $this->AppendIterator = new \AppendIterator();
+        $this->AppendIterator = new LayerAppendIterator();
         $this->layerName = $layerName;
     }
 
@@ -269,6 +269,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
             $this->ResultArray = new \ArrayIterator($this->ResultArray);
         }
 
+        if (!($this->ResultArray instanceof \Countable)) {
+            osd($this->ResultArray);
+        }
         return $this->ResultArray;
 
     }

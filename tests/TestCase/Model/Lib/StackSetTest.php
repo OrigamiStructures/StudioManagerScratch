@@ -114,11 +114,10 @@ class StackSetTest extends TestCase {
 	}
 
     /**
-     * @expectedException Error
      */
     public function testIDsOnBadLayer()
     {
-		$this->StackEntities->IDs('badLayer');
+		$this->assertEquals([], $this->StackEntities->IDs('badLayer'));
 	}
 	/**
 	 * Test linkedTo method
