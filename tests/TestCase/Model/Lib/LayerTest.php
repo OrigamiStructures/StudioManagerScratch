@@ -79,18 +79,18 @@ class LayerTest extends TestCase
 
         $layer = new Layer([], 'edition');
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer,
-				'Creation with an empty array does not produce a '
-				. 'Layer object');
+            'Creation with an empty array does not produce a '
+            . 'Layer object');
 
         $layer = new Layer([$record], 'edition');
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer,
-				'Creation with records in an array, plus a matching '
-				. 'entity name does not produce a Layer object.');
+            'Creation with records in an array, plus a matching '
+            . 'entity name does not produce a Layer object.');
 
         $layer = new Layer([$record]);
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer,
-				'Creation with an array of records does not '
-				. 'produce a Layer object');
+            'Creation with an array of records does not '
+            . 'produce a Layer object');
     }
 
 
@@ -99,7 +99,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testNoArgInitialization() {
+    public function testNoArgInitialization()
+    {
 //        $piece = $this->pieceRecords[0];
 //        $art = $this->artRecord[0];
 //        $notEntityObj = new \stdClass();
@@ -113,7 +114,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testNotEntityInitialization() {
+    public function testNotEntityInitialization()
+    {
         $notEntityObj = new \stdClass();
 
         $this->expectExceptionMessageRegExp('/only accept objects that extend Entity/');
@@ -125,7 +127,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testMixedEntityInitialization() {
+    public function testMixedEntityInitialization()
+    {
         $piece = $this->pieceRecords[0];
         $art = $this->artRecord[0];
 
@@ -138,7 +141,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testMissingIdInitialization() {
+    public function testMissingIdInitialization()
+    {
         $art = $this->artRecord[0];
         unset($art->id);
 
@@ -146,28 +150,31 @@ class LayerTest extends TestCase
         $layer = new Layer([$art], null);
     }
 
-	/**
-	 * Test find method
-	 *
-	 * @return void
-	 */
-	public function testFind() {
+    /**
+     * Test find method
+     *
+     * @return void
+     */
+    public function testFind()
+    {
         $layer = new Layer([], 'edition');
-        $arg =  $layer->find();
+        $arg = $layer->find();
 
         $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
             'find() did not create a LayerAccessArgs object');
         $this->assertTrue(is_a($arg->data(), 'App\Model\Lib\Layer'),
             'The access object created by find() did not contain the expected data');
-	}
+    }
 
-    public function testMembersFromTheTrait() {
+    public function testMembersFromTheTrait()
+    {
         $layer = new Layer($this->fivePieces);
         $this->assertCount(5, $layer->IDs(),
             'IDs() did not return an array of the expected size');
     }
 
-    public function testMemberFromTheTrait() {
+    public function testMemberFromTheTrait()
+    {
         $layer = new Layer($this->fivePieces);
         $this->assertInstanceOf('App\Model\Entity\Piece', $layer->element(962, LAYERACC_ID),
             'element(x, LAYERACC_ID) did not return a piece entity');
@@ -176,7 +183,8 @@ class LayerTest extends TestCase
     /**
      * test name property
      */
-    public function testLayerName() {
+    public function testLayerName()
+    {
         $record = $this->pieceRecords[0];
 
         $layer = new Layer([], 'edition');
@@ -192,7 +200,8 @@ class LayerTest extends TestCase
     /**
      * test entityClass name property
      */
-    public function testEntityClass() {
+    public function testEntityClass()
+    {
         $record = $this->pieceRecords[0];
 
         $layer = new Layer([], 'edition');
@@ -208,7 +217,8 @@ class LayerTest extends TestCase
     /**
      * test count method
      */
-    public function testCount() {
+    public function testCount()
+    {
         $layer = new Layer([], 'edition');
         $this->assertEquals(0, $layer->count());
 
@@ -219,22 +229,24 @@ class LayerTest extends TestCase
         $this->assertEquals(1, $layer->count());
     }
 
-    public function testIDs() {
+    public function testIDs()
+    {
         $layer = new Layer($this->fivePieces);
 
         foreach ($this->fivePieces as $entity) {
             $this->assertContains($entity->id, $layer->IDs(),
-					'IDs() on a layer of five elements did not return 5 IDs. '
-					. 'At one expected id was missing');
+                'IDs() on a layer of five elements did not return 5 IDs. '
+                . 'At one expected id was missing');
         }
 
-		$layer = new Layer([], 'contact');
-		$this->assertEmpty($layer->IDs(), 'IDs() on an empty layer'
-				. 'did not return an empty array.');
+        $layer = new Layer([], 'contact');
+        $this->assertEmpty($layer->IDs(), 'IDs() on an empty layer'
+            . 'did not return an empty array.');
 
     }
 
-    public function testHas() {
+    public function testHas()
+    {
         $layer = new Layer($this->fivePieces);
 
         $this->assertTrue($layer->hasId(965));
@@ -410,7 +422,8 @@ class LayerTest extends TestCase
     /**
      * Check that no entities have changed
      */
-    public function testIsClean() {
+    public function testIsClean()
+    {
         $layer = new Layer($this->fivePieces);
         $this->assertTrue($layer->isClean());
 
@@ -422,7 +435,8 @@ class LayerTest extends TestCase
     /**
      * Test access to belongsTo sets
      */
-    public function testLinkedTo() {
+    public function testLinkedTo()
+    {
         $layer = new Layer($this->pieceRecords);
         $this->assertEquals(5, count($layer->linkedTo('format', 36)));
         $this->assertEquals(40, count($layer->linkedTo('format', null)));
