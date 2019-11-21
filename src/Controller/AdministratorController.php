@@ -123,14 +123,15 @@ class AdministratorController extends AppController {
 		foreach ($pieceFormats as $formatId) {
 			if (!in_array($formatId, $formatIDs)){
 				$pieces = $pieceSet
-						->find()
-						->specifyFilter('format_id', $formatId)
-						->load();
+                    ->getLayer()
+                    ->NEWfind()
+                    ->specifyFilter('format_id', $formatId)
+                    ->toArray();
 				$this->errors['pieces']['missing format'] =
-						array_merge(
-								$this->errors['pieces']['missing format'],
-								layer($pieces)->IDs()
-						);
+                    array_merge(
+                            $this->errors['pieces']['missing format'],
+                            layer($pieces)->IDs()
+                    );
 			}
 		}
 	}

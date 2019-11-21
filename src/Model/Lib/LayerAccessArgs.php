@@ -328,24 +328,6 @@ class LayerAccessArgs implements LayerAccessInterface
 
 //<editor-fold desc="LOAD methods">
 
-    /**
-     * Final processing tool for layer access arguments
-     *
-     * This method executes the chained layer access arguments, and returns
-     * the resulting dataset as either an array (default) or as a layer object.
-     *
-     * @param bool $asArray
-     * @return array|Layer
-     */
-    public function load($asArray = LAYERACC_ARRAY)
-    {
-        $result = $this->data()->load($this);
-        if (!$asArray) {
-            $result = new Layer($result, $this->valueOf('layer'));
-        }
-        return $result;
-    }
-
     public function loadDistinct($sourcePoint = null)
     {
         return $this->data()->loadDistinct($this, $sourcePoint);

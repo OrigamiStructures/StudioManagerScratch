@@ -31,37 +31,42 @@ use App\Model\Lib\Layer;
 echo $this->element('Disposition/testing/dispo_table');
 if (isset($stacks)) {
 	foreach ($stacks->getData() as $stack) {
+	    /* @var \App\Model\Entity\ArtStack $stack */
 
 		$artwork = $stack->rootElement();
-		$joinArray = $stack->find()
-				->setLayer('dispositions_pieces')
-				->specifyFilter('disposition_id', $activity->IDs())
-				->load();
+		$joinArray = $stack
+            ->getLayer('dispositions_pieces')
+            ->NEWfind()
+            ->specifyFilter('disposition_id', $activity->IDs())
+            ->toArray();
 		$joinLayer = new Layer($joinArray);
 
-		$distinct_pieces = $stack->find()
-				->setLayer('pieces')
-				->specifyFilter(
-						'id',
-						$joinLayer->distinct('piece_id'),
-						'in_array')
-				->load();
+		$distinct_pieces = $stack
+            ->getLayer('pieces')
+            ->NEWfind()
+            ->specifyFilter(
+                    'id',
+                    $joinLayer->distinct('piece_id'),
+                    'in_array')
+            ->toArray();
 
 		$formatIDs = $stack->distinct('format_id', $distinct_pieces);
 		$pieces = new Layer($distinct_pieces);
 
-		$formats = $stack->find()
-				->setLayer('formats')
-				->specifyFilter('id', $formatIDs)
-				->load();
+		$formats = $stack
+            ->getLayer('formats')
+            ->NEWfind()
+            ->specifyFilter('id', $formatIDs)
+            ->toArray();
 
 		$editionIDs = $stack->distinct('edition_id', $formats);
 		$formats = new Layer($formats, 'editions_format');
 
-		$editions = $stack->find()
-				->setLayer('editions')
-				->specifyFilter('id', $editionIDs)
-				->load();
+		$editions = $stack
+            ->getLayer('editions')
+            ->NEWfind()
+            ->specifyFilter('id', $editionIDs)
+            ->toArray();
 		$editions = new Layer($editions, 'editions');
 
         echo "<h1>{$artwork->title}</h1>";
