@@ -64,23 +64,16 @@ class AdministratorController extends AppController {
 		$this->formats = $formats->load();
 		$this->pieces = $pieces->load();
 
-		osd(is_object($artworks));
 		foreach ($artworks->IDs() as $artworkID) {
 			$this->recordArtworkUse($artworkID);
-			$editionIDs = array_keys($editions
-						->find()
-						->specifyFilter('artwork_id', $artworkID)
-						->load());
+			$editionIDs = $editions->IDs();
 			foreach ($editionIDs as $editionID) {
-				$formatIDs = array_keys($formats
-						->find()
-						->specifyFilter('edition_id', $editionID)
-						->load());
+				$formatIDs = $formats->IDs();
 				$pieceSet = $pieces
-						->find()
-						->specifyFilter('edition_id', $editionID)
-						->load(LAYERACC_LAYER);
-				osd(is_object($pieceSet));
+                    ->getLayer()
+                    ->NEWfind()
+                    ->specifyFilter('edition_id', $editionID)
+                    ->toLayer();
 				$pieceIDs = $pieceSet->IDs();
 				$pieceFormats = $pieceSet->distinct('format_id');
 
