@@ -300,11 +300,6 @@ class LayerAccessArgs implements LayerAccessInterface
         }
     }
 
-    public function clearPendingFlag()
-    {
-        $this->_pending = FALSE;
-    }
-
 //</editor-fold>
 
     public function __construct($data = FALSE)
@@ -325,33 +320,6 @@ class LayerAccessArgs implements LayerAccessInterface
     {
         return $this->_registry;
     }
-
-//<editor-fold desc="LOAD methods">
-
-    public function loadDistinct($sourcePoint = null)
-    {
-        return $this->data()->loadDistinct($this, $sourcePoint);
-    }
-
-    public function loadKeyValueList($key = NULL, $value = NULL)
-    {
-        if (!is_null($key)) {
-            $this->setAccessNodeObject('key', $key);
-        }
-        if (!is_null($value)) {
-            $this->setAccessNodeObject('value', $value);
-        }
-        return $this->data()->loadKeyValueList($this);
-    }
-
-    public function loadValueList($valueName = NULL)
-    {
-        if (!is_null($valueName)) {
-            $this->setAccessNodeObject('value', $valueName);
-        }
-        return $this->data()->loadValueList($this);
-    }
-//</editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
