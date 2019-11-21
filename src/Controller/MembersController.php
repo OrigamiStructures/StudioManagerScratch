@@ -2,6 +2,10 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Lib\Layer;
+use App\Model\Lib\LayerAccessProcessor;
+use App\Model\Table\PersonCardsTable;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Core\Configure;
@@ -31,7 +35,7 @@ class MembersController extends AppController
 
     public function beforeRender(\Cake\Event\Event $event) {
         parent::beforeRender($event);
-        $this->retreiveAndSetGroups();
+//        $this->retreiveAndSetGroups();
     }
 
 // <editor-fold defaultstate="collapsed" desc="CRUD Methods">
@@ -277,5 +281,29 @@ class MembersController extends AppController
         osd($this->request->getSession()->read(), 'session before');
         $this->request->getSession()->destroy();
         osd($this->request->getSession()->read(), 'session after destroy');
+    }
+
+    public function docs()
+    {
+        /* @var PersonCardsTable $PersonTable*/
+        $MembersTable = $this->Members;
+        $members = $this->Members->find('all')
+            ->select(['id', 'first_name', 'last_name', 'user_id', 'member_type'])
+//            ->order(['id' => 'DESC'])
+//            ->limit(5)
+            ->toArray();
+
+        $memberLayer = new Layer(($members));
+        $it = new LayerAccessProcessor('members');
+        $it->insert($memberLayer);
+        $it = $it->getAppendIterator();
+
+        $PersonTable = TableRegistry::getTableLocator()->get('PersonCards');
+        $all = $this->Members->find('all')->select('id')->toArray();
+        $ids = layer($all)->IDs();
+        $people = $PersonTable->find('stacksFor', ['seed' => 'identity', 'ids' => $ids]);
+
+        $this->set(compact('memberLayer','it', 'people', 'members'));
+
     }
 }

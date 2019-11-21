@@ -79,18 +79,18 @@ class LayerTest extends TestCase
 
         $layer = new Layer([], 'edition');
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer,
-				'Creation with an empty array does not produce a '
-				. 'Layer object');
+            'Creation with an empty array does not produce a '
+            . 'Layer object');
 
         $layer = new Layer([$record], 'edition');
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer,
-				'Creation with records in an array, plus a matching '
-				. 'entity name does not produce a Layer object.');
+            'Creation with records in an array, plus a matching '
+            . 'entity name does not produce a Layer object.');
 
         $layer = new Layer([$record]);
         $this->assertInstanceOf('App\Model\Lib\Layer', $layer,
-				'Creation with an array of records does not '
-				. 'produce a Layer object');
+            'Creation with an array of records does not '
+            . 'produce a Layer object');
     }
 
 
@@ -99,7 +99,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testNoArgInitialization() {
+    public function testNoArgInitialization()
+    {
 //        $piece = $this->pieceRecords[0];
 //        $art = $this->artRecord[0];
 //        $notEntityObj = new \stdClass();
@@ -113,7 +114,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testNotEntityInitialization() {
+    public function testNotEntityInitialization()
+    {
         $notEntityObj = new \stdClass();
 
         $this->expectExceptionMessageRegExp('/only accept objects that extend Entity/');
@@ -125,7 +127,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testMixedEntityInitialization() {
+    public function testMixedEntityInitialization()
+    {
         $piece = $this->pieceRecords[0];
         $art = $this->artRecord[0];
 
@@ -138,7 +141,8 @@ class LayerTest extends TestCase
      *
      * @expectedException App\Exception\BadClassConfigurationException
      */
-    public function testMissingIdInitialization() {
+    public function testMissingIdInitialization()
+    {
         $art = $this->artRecord[0];
         unset($art->id);
 
@@ -146,28 +150,31 @@ class LayerTest extends TestCase
         $layer = new Layer([$art], null);
     }
 
-	/**
-	 * Test find method
-	 *
-	 * @return void
-	 */
-	public function testFind() {
+    /**
+     * Test find method
+     *
+     * @return void
+     */
+    public function testFind()
+    {
         $layer = new Layer([], 'edition');
-        $arg =  $layer->find();
+        $arg = $layer->find();
 
         $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
             'find() did not create a LayerAccessArgs object');
         $this->assertTrue(is_a($arg->data(), 'App\Model\Lib\Layer'),
             'The access object created by find() did not contain the expected data');
-	}
+    }
 
-    public function testMembersFromTheTrait() {
+    public function testMembersFromTheTrait()
+    {
         $layer = new Layer($this->fivePieces);
         $this->assertCount(5, $layer->IDs(),
             'IDs() did not return an array of the expected size');
     }
 
-    public function testMemberFromTheTrait() {
+    public function testMemberFromTheTrait()
+    {
         $layer = new Layer($this->fivePieces);
         $this->assertInstanceOf('App\Model\Entity\Piece', $layer->element(962, LAYERACC_ID),
             'element(x, LAYERACC_ID) did not return a piece entity');
@@ -176,7 +183,8 @@ class LayerTest extends TestCase
     /**
      * test name property
      */
-    public function testLayerName() {
+    public function testLayerName()
+    {
         $record = $this->pieceRecords[0];
 
         $layer = new Layer([], 'edition');
@@ -192,7 +200,8 @@ class LayerTest extends TestCase
     /**
      * test entityClass name property
      */
-    public function testEntityClass() {
+    public function testEntityClass()
+    {
         $record = $this->pieceRecords[0];
 
         $layer = new Layer([], 'edition');
@@ -208,7 +217,8 @@ class LayerTest extends TestCase
     /**
      * test count method
      */
-    public function testCount() {
+    public function testCount()
+    {
         $layer = new Layer([], 'edition');
         $this->assertEquals(0, $layer->count());
 
@@ -219,22 +229,24 @@ class LayerTest extends TestCase
         $this->assertEquals(1, $layer->count());
     }
 
-    public function testIDs() {
+    public function testIDs()
+    {
         $layer = new Layer($this->fivePieces);
 
         foreach ($this->fivePieces as $entity) {
             $this->assertContains($entity->id, $layer->IDs(),
-					'IDs() on a layer of five elements did not return 5 IDs. '
-					. 'At one expected id was missing');
+                'IDs() on a layer of five elements did not return 5 IDs. '
+                . 'At one expected id was missing');
         }
 
-		$layer = new Layer([], 'contact');
-		$this->assertEmpty($layer->IDs(), 'IDs() on an empty layer'
-				. 'did not return an empty array.');
+        $layer = new Layer([], 'contact');
+        $this->assertEmpty($layer->IDs(), 'IDs() on an empty layer'
+            . 'did not return an empty array.');
 
     }
 
-    public function testHas() {
+    public function testHas()
+    {
         $layer = new Layer($this->fivePieces);
 
         $this->assertTrue($layer->hasId(965));
@@ -243,207 +255,21 @@ class LayerTest extends TestCase
         $this->assertFalse($layer->hasId('something wrong'));
     }
 
-	public function testLoadBare() {
-		$layer = new Layer($this->fivePieces);
-		$this->assertCount(5, $layer->load());
-		$this->assertArrayHasKey(961, $layer->load());
-	}
-
-	/**
-	 * @expectedException \BadMethodCallException
-	 */
-	public function testLoadUsingWrongObject() {
-		$layer = new Layer($this->fivePieces);
-		$arg = new \stdClass();
-		$layer->load($arg, 'layer=>load() with wrong kind of object did '
-				. 'not throw expected exception');
-	}
-
-	/**
-	 * @expectedException \BadMethodCallException
-	 */
-	public function testLoadUsingString() {
-		$layer = new Layer($this->fivePieces);
-		$arg = 'someString';
-		$layer->load($arg, 'layer=>load() with a string did '
-				. 'not throw expected exception');
-	}
-
-	/**
-	 * @expectedException \BadMethodCallException
-	 */
-	public function testLoadUsingArray() {
-		$layer = new Layer($this->fivePieces);
-		$arg = [1,2];
-		$layer->load($arg, 'layer=>load() with an array did '
-				. 'not throw expected exception');
-	}
-
-    public function testloadUsingPropertyValue() {
-        $layer = new Layer($this->fivePieces);
-
-		$results = $layer
-				->find()
-				->specifyFilter('number', 4)
-				->load();// good find
-        $this->assertTrue(is_array($results));
-        $match = array_pop($results);
-        $this->assertEquals(4, $match->number);
-
- 		$number_is_4_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->filterValue('4');
-        $results = $layer->load($number_is_4_arg); // good val, casting mismatch
-        $this->assertTrue(is_array($results));
-        $match = array_pop($results);
-        $this->assertEquals(4, $match->number);
-
- 		$number_is_badval_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->filterValue(9000);
-        $results = $layer->load($number_is_badval_arg); // val doesn't exist
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(empty($results));
-
- 		$badproperty_is_3_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'boogers')
-				->filterValue(3);
-        $results = $layer->load($badproperty_is_3_arg); // property doesn't exist
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(empty($results));
-    }
-
-	public function testloadUsingPropertyArray() {
-        $layer = new Layer($this->pieceRecords);
-
- 		$number_is_4_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->filterValue(4);
-        $four = $layer->load($number_is_4_arg);
- 		$number_is_3_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->filterValue(3);
-        $three = $layer->load($number_is_3_arg);
- 		$number_is_3and4_arg = $layer->accessArgs()
-				->setAccessNodeObject('filter', 'number')
-				->filterValue([4,3]);
-        $results = $layer->load($number_is_3and4_arg); // good find
-        $this->assertTrue((count($four) + count($three)) === count($results));
-	}
-
-    public function testLoadUsingAll() {
-        $layer = new Layer($this->fivePieces);
-
- 		$simpleAllArg = $layer->accessArgs()
-				->setLimit('all');
-        $this->assertEquals(5, count($layer->load($simpleAllArg)));
- 		$all_id_equals_12 = $layer->accessArgs()
-				->setLimit('all')
-				->setAccessNodeObject('filter', 'id')
-				->filterValue('12');
-        $this->assertEquals(0, count($layer->load($all_id_equals_12)));
-    }
-
-    public function testloadUsingFirst() {
-        $layer = new Layer($this->fivePieces);
-
- 		$simpleFirstArg = $layer->
-				accessArgs()
-				->setLimit('first');
-        $this->assertEquals(1, count($layer->load($simpleFirstArg)));
-
- 		$first_with_0_dispos_arg = $layer->accessArgs()
-				->setLimit('first')
-				->setAccessNodeObject('filter', 'disposition_count')
-				->filterValue(0);
-        $this->assertEquals(1, count($layer->load($first_with_0_dispos_arg)));
-
- 		$first_badSearch_args = $layer->accessArgs()
-				->setLimit('first')
-				->setAccessNodeObject('filter', 'boogers')
-				->filterValue(0);
-		/**
-		 * This fails because of the property validation check's loosness
-		 * combinded with the == default comparison. The property validation
-		 * process needs to be tightened up. visibleProperties() need
-		 * Entity::accessible to be set to something other than '*' ?
-		 */
-        $this->assertEquals(0, count($layer->load($first_badSearch_args)),
-            'Find first on a bad source pointer still found someting.');
-
- 		$first_with_50_dispos_arg = $layer->accessArgs()
-				->setLimit(1)
-				->setAccessNodeObject('filter', 'disposition_count')
-				->filterValue(50);
-        $this->assertEquals(0, count($layer->load($first_with_50_dispos_arg)));
-    }
-
-	/**
-	 * Test element (a trait method) in Layer context
-	 */
-	public function testElement() {
-		$layer = new Layer($this->fivePieces);
-		$this->assertTrue($layer->element(0)->id === 961);
-		$this->assertTrue($layer->element(6) === null);
-	}
-
     /**
-     * Test filter with property comparisons
-     *
+     * Test element (a trait method) in Layer context
      */
-    public function testFilterWithProperties() {
+    public function testElement()
+    {
         $layer = new Layer($this->fivePieces);
-
-        $results = $layer->filter('number', 4); // good find
-        $this->assertTrue(is_array($results),
-				'A valid search for \'number\' = 4 failed');
-        $match = array_pop($results);
-        $this->assertEquals(4, $match->number,
-				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
-
-        $results = $layer->filter('number', '4'); // good val, casting mismatch
-        $this->assertTrue(is_array($results),
-				'A valid search for \'number\' = \'4\' failed');
-        $match = array_pop($results);
-        $this->assertEquals(4, $match->number,
-				'A valid search for \'number\' = 4 failed to return an entity that had 4 on that property');
-
-        $results = $layer->filter('number', 9000); // val doesn't exist
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(empty($results));
-
-        $results = $layer->filter('boogers', 3); // property doesn't exist
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(empty($results));
+        $this->assertTrue($layer->element(0)->id === 961);
+        $this->assertTrue($layer->element(6) === null);
     }
 
-	/**
-	 * Test filter with method comparisons
-	 *
-	 */
-	public function testFilterWithMethods() {
-		$layer = new Layer($this->fivePieces);
-
-		$result = $layer->filter('isCollected', '', 'truthy');
-		$this->assertCount(2, $result, 'unexpected result while testing truthy '
-				. 'on the boolean output of an entity method');
-
-		$result = $layer->filter('isCollected', TRUE, '!=');
-		$this->assertCount(3, $result, 'unexpected result while searching != '
-				. 'on the boolean output of an entity method');
-
-		$result = $layer->filter('key', '35_36', '==');
-		$this->assertCount(5, $result, 'unexpected result while searching == '
-				. 'on the string output of an entity method');
-
-		$result = $layer->filter('key', '35_36', '!=');
-		$this->assertCount(0, $result, 'unexpected result while searching != '
-				. 'on the string output of an entity method');
-	}
     /**
      * Check that no entities have changed
      */
-    public function testIsClean() {
+    public function testIsClean()
+    {
         $layer = new Layer($this->fivePieces);
         $this->assertTrue($layer->isClean());
 
@@ -455,7 +281,8 @@ class LayerTest extends TestCase
     /**
      * Test access to belongsTo sets
      */
-    public function testLinkedTo() {
+    public function testLinkedTo()
+    {
         $layer = new Layer($this->pieceRecords);
         $this->assertEquals(5, count($layer->linkedTo('format', 36)));
         $this->assertEquals(40, count($layer->linkedTo('format', null)));
@@ -463,217 +290,4 @@ class LayerTest extends TestCase
         $this->assertEquals(0, count($layer->linkedTo('junk', 36)));
     }
 
-    /**
-     * Test sorting
-     *
-     * @todo Test character type sorting too
-     */
-    public function testSort() {
-        $layer = new Layer($this->fivePieces);
-
-        $result = $layer->sort('number'); //DESC default
-        $first = $result[0]->number;
-        $middle = $result[2]->number;
-        $last = $result[4]->number;
-        $this->assertTrue(($first > $middle) && ($middle > $last));
-
-        $result = $layer->sort('number', SORT_ASC);
-        $first = $result[0]->number;
-        $middle = $result[2]->number;
-        $last = $result[4]->number;
-        $this->assertTrue($first < $middle && $middle < $last);
-    }
-
-    public function testDistinctWithValidPropertyManual() {
-        $layer = new Layer($this->fivePieces);
-
-        $distinct = $layer->distinct('number', $this->fivePieces);
-        sort($distinct);
-        $this->assertEquals([1,2,3,4,5], $distinct,
-            'distinct on a valid property did not return expected values');
-        $this->assertEquals([36], $layer->distinct('format_id'),
-            'distinct on a valid property did not return expected values');
-    }
-
-    public function testDistinctWithBadProperyManual() {
-        $layer = new Layer($this->fivePieces);
-        $distinct = $layer->distinct('wrong', $this->fivePieces);
-        $this->assertEmpty($distinct, 'Distinct on a non-existent '
-            . 'property/method value source did not return an empty array');
-    }
-
-    public function testDistinctWithMethodCallManual() {
-        $layer = new Layer($this->fivePieces);
-        $distinct = $layer->distinct('key', $this->fivePieces);
-        $this->assertArraySubset(['35_36'], $distinct,
-            'Distinct call on a method source didn\'t return expected value');
-    }
-
-    public function testLoadDistinctWithValidPropertyArgObj() {
-        $layer = new Layer($this->fivePieces);
-        $distinct = $layer->find()
-            ->setAccessNodeObject('value', 'number')
-            ->loadDistinct();
-        sort($distinct);
-        $this->assertEquals([1,2,3,4,5], $distinct,
-            'distinct on a valid property did not return expected values '
-            . 'when using an argObj');
-
-        $distinct = $layer->find()
-            ->setAccessNodeObject('value', 'format_id')
-            ->loadDistinct();
-        $this->assertEquals([36], $distinct,
-            'distinct on a valid property did not return expected values '
-            . 'when using an argObj');
-    }
-
-    public function testLoadDistinctWithBadProperyArgObj() {
-        $layer = new Layer($this->fivePieces);
-        $distinct = $layer->find()
-            ->setAccessNodeObject('value', 'wrong')
-            ->loadDistinct();
-        $this->assertEmpty($distinct, 'Distinct on a non-existent '
-            . 'property/method value source did not return an empty array '
-            . 'when using an argObj');
-    }
-
-    public function testLoadDistinctWithMethodCallArgObj() {
-        $layer = new Layer($this->fivePieces);
-        $distinct = $layer->find()
-            ->setAccessNodeObject('value', 'key')
-            ->loadDistinct();
-        $this->assertArraySubset(['35_36'], $distinct,
-            'Distinct call on a method source didn\'t return expected value '
-            . 'when using an argObj');
-    }
-
-	public function testLoadDistinctWithSourcePoint() {
-		$layer = new Layer($this->pieceRecords);
-		$actual = $layer->find()
-				->specifyFilter('collected', 0, '>')
-				->loadDistinct('edition_id');
-		$this->assertEquals([35], $actual);
-	}
-
-	// TRAIT TESTING
-
-	// value list
-	public function testValueListOnEmptyArray() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList('key', []);
-		$this->assertEmpty($actual);
-	}
-
-	public function testValueListFromMethod() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList('key', $this->pieceRecords);
-		$this->assertArraySubset([4=>'35_', 5=>'35_36'], $actual);
-		$this->assertCount(53, $actual);
-	}
-
-	public function testValueListFromProperty() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->valueList('format_id', $this->pieceRecords);
-		$this->assertArraySubset([0=>'36', 5=>'37',10=>38], $actual);
-		$this->assertCount(13, $actual);
-	}
-
-//	 distinct
-    public function testDistinctOnEmptyArray() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->distinct('key', []);
-		$this->assertEmpty($actual);
-	}
-
-	public function testDistinctFromMethod() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->distinct('key', $this->pieceRecords);
-		$this->assertArraySubset([0 => '35_', 5 => '35_36', 15 => '35_37', 50 => '36_38'], $actual);
-	}
-
-	public function testDistinctFromProperty() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->distinct('format_id', $this->pieceRecords);
-		$this->assertArraySubset([0 => '36', 5 => '37', 10 => '38'], $actual);
-	}
-
-	//key value list
-    public function testKeyValueOnEmptyArray() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->keyValueList('key', 'key', []);
-		$this->assertEmpty($actual);
-	}
-//
-	public function testKeyValueFromMethodProperty() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->keyValueList('key', 'id', $this->pieceRecords);
-		$this->assertArraySubset(
-				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008],
-				$actual,
-				'Direct keyValueList request with a method for the '
-				. 'key did not return the expected array');
-	}
-
-	public function testKeyValueFromProperty() {
-		$layer = new Layer([], 'contacts');
-		$actual = $layer->keyValueList('format_id', 'id', $this->pieceRecords);
-		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual,
-				'Basic loadKeyValueList with two properties did not '
-				. 'return the expected array');
-	}
-
-    public function testLoadKeyValueListSimple() {
-		$layer = new Layer($this->pieceRecords);
-		$actual = $layer->find()
-				->setAccessNodeObject('key', 'format_id')
-				->setAccessNodeObject('value', 'id')
-				->setLayer('piece')
-				->loadKeyValueList();
-		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
-	}
-
-	public function testLoadKeyValueListWithArguments() {
-		$layer = new Layer($this->pieceRecords);
-		$actual = $layer->find()
-				->setLayer('piece')
-				->loadKeyValueList('format_id', 'id');
-		$this->assertArraySubset([''=>1005, '36'=>965, '37'=>975, '38'=>1008], $actual);
-	}
-
-    public function testLoadKeyValueListMethodForKey() {
-		$layer = new Layer($this->pieceRecords);
-		$actual = $layer->find()
-				->setAccessNodeObject('key', 'key')
-				->setAccessNodeObject('value', 'id')
-				->loadKeyValueList();
-		$this->assertArraySubset(
-				['35_'=>1005, '35_36'=>965, '35_37'=>975, '36_38'=>1008],
-				$actual,
-				'loadKeyValueList with a method supplied for the key '
-				. 'did not return the expected array');
-	}
-
-	/**
-	 * A compound filter and fetch
-	 *
-	 * The filter field and desired result field are different.
-	 * This was a bug due to the reuse of ValueSource
-	 * by both the filter and the value list return code
-	 */
-	public function testFilterAndLoadValueList() {
-		$pieces = new Layer($this->pieceRecords);
-		$editionIDs = $pieces
-				->find()
-				->specifyFilter('edition_id', '36')
-				->setAccessNodeObject('value', 'id')
-				->loadValueList();
-		$this->assertArraySubset([1006, 1007, 1008], $editionIDs);
-	}
-
-	public function testLoadValueListWithAgument() {
-		$list = layer($this->fivePieces)
-				->find()
-				->loadValueList('quantity');
-		$this->assertArraySubset([1,1,1,1,1], $list);
-	}
 }

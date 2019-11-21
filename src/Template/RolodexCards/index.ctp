@@ -1,5 +1,5 @@
 <?php
-foreach($rolodexCards->all() as $id => $card) {
+foreach($rolodexCards->getData() as $id => $card) {
 	echo "<h1>{$card->name()}</h1>";
 	$output = collection($card->memberships())
 		->reduce(function($membershipList, $name){
@@ -7,4 +7,4 @@ foreach($rolodexCards->all() as $id => $card) {
 			return $membershipList;
 		},'');
 	echo $output;
-} 
+}

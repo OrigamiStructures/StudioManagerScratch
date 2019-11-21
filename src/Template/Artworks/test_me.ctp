@@ -21,7 +21,7 @@ echo $this->Form->create();
     <?= $this->Form->input('first_end_date'); ?>
     <?= $this->Form->input('second_end_date'); ?>
     <?= $this->Form->button('submit'); ?>
-<?php	
+<?php
 echo $this->Form->end();
 ?>
 
@@ -30,54 +30,62 @@ use App\Model\Lib\Layer;
 
 echo $this->element('Disposition/testing/dispo_table');
 if (isset($stacks)) {
-	foreach ($stacks->all() as $stack) {
-		
-		$artwork = $stack->rootElement();
-		$joinArray = $stack->find()
-				->setLayer('dispositions_pieces')
-				->specifyFilter('disposition_id', $activity->IDs())
-				->load();
-		$joinLayer = new Layer($joinArray);
-		
-		$distinct_pieces = $stack->find()
-				->setLayer('pieces')
-				->specifyFilter(
-						'id', 
-						$joinLayer->distinct('piece_id'), 
-						'in_array')
-				->load();
-		
-		$formatIDs = $stack->distinct('format_id', $distinct_pieces);
-		$pieces = new Layer($distinct_pieces);
-		
-		$formats = $stack->find()
-				->setLayer('formats')
-				->specifyFilter('id', $formatIDs)
-				->load();
-		
-		$editionIDs = $stack->distinct('edition_id', $formats);
-		$formats = new Layer($formats, 'editions_format');	
+	foreach ($stacks->getData() as $stack) {
+	    /* @var \App\Model\Entity\ArtStack $stack */
 
-		$editions = $stack->find()
-				->setLayer('editions')
-				->specifyFilter('id', $editionIDs)
-				->load();
+		$artwork = $stack->rootElement();
+		$joinArray = $stack
+            ->getLayer('dispositions_pieces')
+            ->NEWfind()
+            ->specifyFilter('disposition_id', $activity->IDs())
+            ->toArray();
+		$joinLayer = new Layer($joinArray);
+
+		$pieces = $stack
+            ->getLayer('pieces')
+            ->NEWfind()
+            ->specifyFilter(
+                    'id',
+                    $joinLayer->toDistinctList('piece_id'),
+                    'in_array')
+            ->toLayer();
+
+		$formatIDs = $pieces->toDistinctList('format_id');
+
+		$formats = $stack
+            ->getLayer('formats')
+            ->NEWfind()
+            ->specifyFilter('id', $formatIDs)
+            ->toLayer();
+
+		$editionIDs = $formats->toDistinctList('edition_id');
+//		$formats = new Layer($formats, 'editions_format');
+
+		$editions = $stack
+            ->getLayer('editions')
+            ->NEWfind()
+            ->specifyFilter('id', $editionIDs)
+            ->toArray();
 		$editions = new Layer($editions, 'editions');
-				
+
         echo "<h1>{$artwork->title}</h1>";
 //		$allInLayer = $editions->accessArgs()->setLimit('all');
-        foreach ($editions->load() as $edition) {
+        foreach ($editions->toArray() as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-            foreach ($formats->load() as $format) {
+            foreach ($formats->toArray() as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
-				$assignedPieces = $pieces->find()
-						->specifyFilter('format_id', $format->id)
-						->load();
+				$assignedPieces = $pieces
+                    ->getLayer()
+                    ->NEWfind()
+                    ->specifyFilter('format_id', $format->id)
+                    ->toArray();
 				foreach ($assignedPieces as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
-					$pieceActivity = $joinLayer->find()
-							->specifyFilter('piece_id', $piece->id)
-							->load();
+					$pieceActivity = $joinLayer
+                        ->getLayer()
+                        ->NEWfind()
+                        ->specifyFilter('piece_id', $piece->id)
+                        ->toArray();
 					foreach ($pieceActivity as $link) {
 						echo "<li>"
 						. "{$activity->element($link->disposition_id, LAYERACC_ID)->displayTitle}"
@@ -93,25 +101,25 @@ if (isset($stacks)) {
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
 
-	foreach ($activity->load() as $dispId => $disposition) {
-		$joinArray = $stacks->find()
-				->setLayer('dispositions_pieces')
-				->specifyFilter('disposition_id', $dispId)
-				->load();
+	foreach ($activity->toArray() as $dispId => $disposition) {
+		$joinArray = $stacks->getLayer('dispositions_pieces')
+            ->NEWfind()
+            ->specifyFilter('disposition_id', $dispId)
+            ->toArray();
 		$joinLayer = new Layer($joinArray, 'dispositions_pieces');
-		
-		$distinct_pieces = $stacks->find()
-				->setLayer('pieces')
-				->specifyFilter(
-						'id', 
-						$joinLayer->distinct('piece_id'), 
-						'in_array')
-				->load();
+
+		$distinct_pieces = $stacks->getLayer('pieces')
+            ->NEWfind()
+            ->specifyFilter(
+                'id',
+                $joinLayer->toDistinctList('piece_id'),
+                'in_array')
+            ->toArray();
 		$pieces = new Layer($distinct_pieces, 'pieces');
-		
+
 		echo '<h3>' . $disposition->displayTitle . " (id: $disposition->id)" . '</h3><ul>';
         foreach ($pieces->sort('format_id') as $piece) {
-			
+
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			$format = $stack->formats->element($piece->format_id, LAYERACC_ID);
 			if(is_null($format)) {
@@ -120,10 +128,10 @@ if (isset($stacks)) {
 			$edition = $stack->editions->element($piece->edition_id, LAYERACC_ID);
 			$artwork = $stack->rootElement();
 
-			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' . 
-                $artwork->title . ', ' . 
-                $edition->displayTitle . ', ' . 
-//                $format->displayTitle . 
+			echo '<li>' . ucfirst($piece->displayTitle) . ' from ' .
+                $artwork->title . ', ' .
+                $edition->displayTitle . ', ' .
+//                $format->displayTitle .
                 '</li>';
         }
         echo '</ul></li></ul>';

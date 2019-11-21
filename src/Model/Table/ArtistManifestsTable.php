@@ -103,7 +103,7 @@ class ArtistManifestsTable extends StacksTable {
 
 	protected function marshalManagers($id, $stack) {
 		if ($stack->count('identity')) {
-			$manager_ids = $stack->manifests->valueList('manager_id');
+			$manager_ids = $stack->manifests->toValueList('manager_id');
 			$managers = $this->DataOwners
 					->find('hook')
 					->where(['id IN' => $manager_ids]);
@@ -114,7 +114,7 @@ class ArtistManifestsTable extends StacksTable {
 
 	protected function marshalPermissions($id, $stack) {
 		if ($stack->count('identity')) {
-			$manifest_ids = $stack->manifests->valueList('id');
+			$manifest_ids = $stack->manifests->toValueList('id');
 			$permissions = $this->Permissions
                 ->find('all')
                 ->where(['manifest_id IN' => $manifest_ids]);

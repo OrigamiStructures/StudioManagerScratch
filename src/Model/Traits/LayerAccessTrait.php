@@ -54,167 +54,118 @@ trait LayerAccessTrait {
 		return new Layer($entities);
 	}
 
-	/**
-	 * Return the n-th stored element or element(ID)
-	 *
-	 * Data is stored in id-indexed arrays, but this method will let you
-	 * pluck the id's or n-th item out
-	 *
-	 * @param int $number Array index 0 through n or Id of element
-	 * @param boolean $byIndex LAYERACC_INDEX or LAYERACC_ID
-	 * @return Entity
-	 */
-	public function element($key, $byIndex = LAYERACC_INDEX){
-		if ($byIndex) {
-			$data = array_values($this->load());
-			if (count($data) > $key) {
-				$result = $data[$key];
-			} else {
-				$result = null;
-			}
-		} else {
-			if (in_array($key, $this->IDs())) {
-				$result = $this->_data[$key];
-			} else {
-				$result = null;
-			}
-		}
-			return $result;
-	}
-
-    /**
-     * Convenience wrapper to return the first element
-     *
-     * @return Entity
-     */
-	public function shift() {
-        return $this->element(0, LAYERACC_INDEX);
-    }
-
-
-    /**
-	 * Get the IDs of all the primary entities in the stored stack entities
-	 *
-	 * @return array
-	 */
-	public function IDs() {
-		return array_keys($this->_data);
-	}
-
-//	public function all($property);
+//	public function loadDistinct($argObj, $sourcePoint = null){
+//		if (is_null($sourcePoint)) {
+//			$ValueSource = $argObj->accessNodeObject('value');
+//		} else {
+//			$ValueSource = new ValueSource(
+//					$argObj->valueOf('layer'),
+//					$sourcePoint
+//				);
+//		}
+//		return $this->getLayer()->perform($argObj)->toDistinctValueList($ValueSource);
+////		return $this->distinct($ValueSource, $result);
+//	}
 //
-	public function loadDistinct($argObj, $sourcePoint = null){
-		if (is_null($sourcePoint)) {
-			$ValueSource = $argObj->accessNodeObject('value');
-		} else {
-			$ValueSource = new ValueSource(
-					$argObj->valueOf('layer'),
-					$sourcePoint
-				);
-		}
-		$result = $this->load($argObj);
-		return $this->distinct($ValueSource, $result);
-	}
-
-	/**
-	 * Full feature load(), results reduced to key=>value arrry
-	 *
-	 * @param LayerAccessArgs $args
-	 * @return array
-	 */
-	public function loadKeyValueList(LayerAccessArgs $args){
-		$data = $this->load($args);
-		$KeySource = $args->accessNodeObject('key');
-		$ValueSource = $args->accessNodeObject('value');
-		return $this->keyValueList($KeySource, $ValueSource, $data);
-	}
-
-	/**
-	 * Full feature load(), results reduced to value array
-	 *
-	 * @param LayerAccessArgs $args
-	 * @return array
-	 */
-	public function loadValueList(LayerAccessArgs $args){
-		$data = $this->load($args);
-		$ValueSource = $args->accessNodeObject('value');
-		return $this->valueList($ValueSource, $data);
-	}
-
-	/**
-	 * Reduce an array of entities to a key=>value array
-	 *
-	 * The keys and values may be from properties or from methods on the
-	 * entity. If from a method, that method can have no arguemnts.
-	 *
-	 * @param string|KeySource $keySource Name of (or ValueSource defining) a property or method
-	 * @param string|ValueSource $valueSource Name of (or ValueSource defining) a property or method
-	 * @param array $data Array of entities
-	 * @return array
-	 */
-	public function keyValueList($keySource, $valueSource, $data = null) {
-		$rawData = $this->insureData($data);
-		if ($rawData === []) {
-			return $rawData;
-		}
-		$KeySource = $this->defineValueSource($keySource, $rawData);
-		$ValueSource = $this->defineValueSource($valueSource, $rawData);
-		if($KeySource && $ValueSource) {
-			$result = collection($rawData)
-				->reduce(function($harvest, $entity) use ($KeySource, $ValueSource){
-					$harvest[$KeySource->value($entity)] = $ValueSource->value($entity);
-					return $harvest;
-				}, []);
-		} else {
-			$result = [];
-		}
-		return $result;
-	}
-
-	/**
-	 * Reduce an array of entities to a value array
-	 *
-	 * The values may be from a property or from a method on the
-	 * entity. If from a method, that method can have no arguemnts.
-	 *
-	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
-	 * @param array $data Array of entities (required except for Layer calls)
-	 * @return array Array containing the unique values found
-	 */
-	public function valueList($sourcePoint, $data = null) {
-		$rawData = $this->insureData($data);
-		if ($rawData === []) {
-			return $rawData;
-		}
-		$ValueSource = $this->defineValueSource($sourcePoint, $rawData);
-		if ($ValueSource) {
-			$result = collection($rawData)
-					->reduce(function ($harvest, $entity) use ($ValueSource){
-						if (!is_null($ValueSource->value($entity))) {
-							array_push($harvest, $ValueSource->value($entity));
-						}
-						return $harvest;
-					}, []);
-		} else {
-			$result = [];
-		}
-		return $result;
-	}
-
-	/**
-	 * Get unique values from a set of entities
-	 *
-	 * The values may be from a property or from a method on the
-	 * entity. If from a method, that method can have no arguemnts.
-	 *
-	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
-	 * @param array $data Array of entities (required except for Layer calls)
-	 * @return array Array containing the unique values found
-	 */
-	public function distinct($sourcePoint, $data = null) {
-		$rawData = $this->insureData($data);
-		return array_unique($this->valueList($sourcePoint, $rawData));
-	}
+//	/**
+//	 * Full feature load(), results reduced to key=>value arrry
+//	 *
+//	 * @param LayerAccessArgs $args
+//	 * @return array
+//	 */
+//	public function loadKeyValueList(LayerAccessArgs $args){
+//		$data = $this->load($args);
+//		$KeySource = $args->accessNodeObject('key');
+//		$ValueSource = $args->accessNodeObject('value');
+//		return $this->keyValueList($KeySource, $ValueSource, $data);
+//	}
+//
+//	/**
+//	 * Full feature load(), results reduced to value array
+//	 *
+//	 * @param LayerAccessArgs $args
+//	 * @return array
+//	 */
+//	public function loadValueList(LayerAccessArgs $args){
+//		$data = $this->load($args);
+//		$ValueSource = $args->accessNodeObject('value');
+//		return $this->valueList($ValueSource, $data);
+//	}
+//
+//	/**
+//	 * Reduce an array of entities to a key=>value array
+//	 *
+//	 * The keys and values may be from properties or from methods on the
+//	 * entity. If from a method, that method can have no arguemnts.
+//	 *
+//	 * @param string|KeySource $keySource Name of (or ValueSource defining) a property or method
+//	 * @param string|ValueSource $valueSource Name of (or ValueSource defining) a property or method
+//	 * @param array $data Array of entities
+//	 * @return array
+//	 */
+//	public function keyValueList($keySource, $valueSource, $data = null) {
+//		$rawData = $this->insureData($data);
+//		if ($rawData === []) {
+//			return $rawData;
+//		}
+//		$KeySource = $this->defineValueSource($keySource, $rawData);
+//		$ValueSource = $this->defineValueSource($valueSource, $rawData);
+//		if($KeySource && $ValueSource) {
+//			$result = collection($rawData)
+//				->reduce(function($harvest, $entity) use ($KeySource, $ValueSource){
+//					$harvest[$KeySource->value($entity)] = $ValueSource->value($entity);
+//					return $harvest;
+//				}, []);
+//		} else {
+//			$result = [];
+//		}
+//		return $result;
+//	}
+//
+//	/**
+//	 * Reduce an array of entities to a value array
+//	 *
+//	 * The values may be from a property or from a method on the
+//	 * entity. If from a method, that method can have no arguemnts.
+//	 *
+//	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
+//	 * @param array $data Array of entities (required except for Layer calls)
+//	 * @return array Array containing the unique values found
+//	 */
+//	public function valueList($sourcePoint, $data = null) {
+//		$rawData = $this->insureData($data);
+//		if ($rawData === []) {
+//			return $rawData;
+//		}
+//		$ValueSource = $this->defineValueSource($sourcePoint, $rawData);
+//		if ($ValueSource) {
+//			$result = collection($rawData)
+//					->reduce(function ($harvest, $entity) use ($ValueSource){
+//						if (!is_null($ValueSource->value($entity))) {
+//							array_push($harvest, $ValueSource->value($entity));
+//						}
+//						return $harvest;
+//					}, []);
+//		} else {
+//			$result = [];
+//		}
+//		return $result;
+//	}
+//
+//	/**
+//	 * Get unique values from a set of entities
+//	 *
+//	 * The values may be from a property or from a method on the
+//	 * entity. If from a method, that method can have no arguemnts.
+//	 *
+//	 * @param string|ValueSource $sourcePoint Name of (or ValueSource defining) a property or method
+//	 * @param array $data Array of entities (required except for Layer calls)
+//	 * @return array Array containing the unique values found
+//	 */
+//	public function distinct($sourcePoint, $data = null) {
+//		$rawData = $this->insureData($data);
+//		return array_unique($this->valueList($sourcePoint, $rawData));
+//	}
 
 	/**
 	 * Insure some array is passed for methods where the arg is optional
@@ -258,14 +209,14 @@ trait LayerAccessTrait {
 		return new ValueSource($entity, $sourcePoint);
 	}
 
-	public function filter($argObj) {
-
-	}
+//	public function filter($argObj) {
+//
+//	}
 
 //
-	public function linkedTo($foreign, $foreign_id, $linked = null){
-
-	}
+//	public function linkedTo($foreign, $foreign_id, $linked = null){
+//
+//	}
 
 	/**
 	 * Full feature load() with pagination at the end

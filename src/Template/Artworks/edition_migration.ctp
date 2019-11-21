@@ -1,90 +1,90 @@
 <?php
 $f = [
 	[
-		1, 
-		'title' => '', 
+		1,
+		'title' => '',
 		'description' => 'Watercolor 6 x 15"'
 	],
 	[
-		2, 
-		'title' => 'Card Bound', 
+		2,
+		'title' => 'Card Bound',
 		'description' => 'Digital output with cloth-covered card stock covers'
 	],
 	[
-		3, 
-		'title' => 'Mini Box', 
+		3,
+		'title' => 'Mini Box',
 		'description' => 'Paper covered container with 4 trays. Trays display '
 		. 'mounted and lacquered digital content on the front and QR codes '
 		. 'which link web addresses on the reverse'
 	],
 	[
-		4, 
-		'title' => '', 
+		4,
+		'title' => '',
 		'description' => 'Prototype made while developing edition details. '
 		. 'Paper covered container with 4 trays. Trays display mounted and '
 		. 'lacquered digital content on the front and QR codes which link '
 		. 'web addresses on the reverse.'
 	],
 	[
-		5, 
-		'title' => '16 x 20 Box', 
+		5,
+		'title' => '16 x 20 Box',
 		'description' => '16 x 20 drop-spine box with linen sides, brown iris '
 		. 'case. Leather label (honey calf) on front with title stamped in '
 		. 'black. Title stamped in black of cloth of spine'
 	],
 	[
 		6,
-		'title' => 'Hand bound', 
+		'title' => 'Hand bound',
 		'description' => '6.5" x 5.25" 20 page offset printed book. Pamphlet '
 		. 'stitched, bound in cloth over board covers.'
 	],
 	[
 		7,
-		'title' => '', 
+		'title' => '',
 		'description' => '6.5" x 5.25" 20 page offset printed book. '
 		. 'Pamphlet stitched, in a paper cover with sleaves'
 	],
 	[
 		8,
-		'title' => '', 
+		'title' => '',
 		'description' => '6.5" x 5.25" 20 page offset printed book '
 		. 'unbound page sets'
 	],
 	[
 		9,
-		'title' => '', 
+		'title' => '',
 		'description' => 'Digital printing on Mohawk Superfine; sewn signatures '
 		. 'bound in black goat skin. Pages have graphite edging. '
 		. 'Covers are gold foil stamped.'
-	], 
+	],
 	[
 		10,
-		'title' => 'Boxed', 
+		'title' => 'Boxed',
 		'description' => ''
 	],
 	[
 		11,
-		'title' => '', 
+		'title' => '',
 		'description' => ''
 	],
 	[
 		12,
-		'title' => '16 x 20', 
+		'title' => '16 x 20',
 		'description' => 'Loose silver gelatin prints'
 	],
 	[
 		13,
-		'title' => '8x10 ', 
+		'title' => '8x10 ',
 		'description' => 'Matted, framed, silver gelatin prints.'
 	],
 	[
 		14,
-		'title' => '', 
+		'title' => '',
 		'description' => ''
 	],
 	[
 		15,
-		'title' => '', 
+		'title' => '',
 		'description' =>'6.5" x 5.25" 20 page offset printed book. '
 		. 'Pamphlet stitched, bound in cloth over board covers.'
 	]
@@ -97,14 +97,14 @@ $pieces = [];
 foreach ($artworks->load() as $artwork){
 //	osd($artwork->series);
 	if ($artwork->series->hasElements()) {
-		osd($artwork->series->distinct('title'));
+		osd($artwork->series->toDistinctList('title'));
 	}
 	echo $this->Html->tag('h1',$artwork->rootID() . ' || ' . $artwork->title());
 	echo $this->Html->para(null, $artwork->description());
 	osd($artwork->editions->IDs(), 'editions');
-	
+
 	$formats = $artwork->formats->load();
-	
+
 	// each format
 	// write the editions_formats join records
 	// find piece on original id and change to new format_id
@@ -137,24 +137,24 @@ sort($edition_id_set);
 function describeOriginal($art, $format, $piece) {
 	$pattern = '%s #%s/q%s %s:%s';
 	return sprintf(
-			$pattern, 
-			$art->title(), 
-			$piece->number, 
+			$pattern,
+			$art->title(),
+			$piece->number,
 			$piece->quantity,
 			$piece->format_id,
 			$format->description
-		); 
+		);
 }
 
 function describeNew($art, $format, $piece) {
 	$pattern = '%s #%s/q%s %s:%s';
 	return sprintf(
-			$pattern, 
-			$art->title(), 
-			$piece->number, 
-			$piece->quantity, 
+			$pattern,
+			$art->title(),
+			$piece->number,
+			$piece->quantity,
 			$piece->format_id - 1,
 			$format[$piece->format_id - 1]['description']
-		); 
+		);
 }
 

@@ -59,30 +59,23 @@ class AdministratorController extends AppController {
 				'missing format' => []
 			]
 		];
-		$this->artworks = $artworks->load();
-		$this->editions = $editions->load();
-		$this->formats = $formats->load();
-		$this->pieces = $pieces->load();
+		$this->artworks = $artworks->toarray();
+		$this->editions = $editions->toarray();
+		$this->formats = $formats->toarray();
+		$this->pieces = $pieces->toarray();
 
-		osd(is_object($artworks));
 		foreach ($artworks->IDs() as $artworkID) {
 			$this->recordArtworkUse($artworkID);
-			$editionIDs = array_keys($editions
-						->find()
-						->specifyFilter('artwork_id', $artworkID)
-						->load());
+			$editionIDs = $editions->IDs();
 			foreach ($editionIDs as $editionID) {
-				$formatIDs = array_keys($formats
-						->find()
-						->specifyFilter('edition_id', $editionID)
-						->load());
+				$formatIDs = $formats->IDs();
 				$pieceSet = $pieces
-						->find()
-						->specifyFilter('edition_id', $editionID)
-						->load(LAYERACC_LAYER);
-				osd(is_object($pieceSet));
+                    ->getLayer()
+                    ->NEWfind()
+                    ->specifyFilter('edition_id', $editionID)
+                    ->toLayer();
 				$pieceIDs = $pieceSet->IDs();
-				$pieceFormats = $pieceSet->distinct('format_id');
+				$pieceFormats = $pieceSet->toDistinctList('format_id');
 
 				$this->verifyPieceFormatLink($pieceFormats, $formatIDs, $pieceSet);
 				$this->recordPieceUse($pieceIDs);
@@ -91,9 +84,9 @@ class AdministratorController extends AppController {
 			}
 
 		}
-		osd($this->errors);
-		osd(Range::arrayToString(array_keys($this->pieces)), 'Unreferenced pieces');
-		osd(array_keys($this->editions), 'Unreferenced editions');
+		$this->set('errors', $this->errors);
+        $this->set('range', Range::arrayToString(array_keys($this->pieces)));
+        $this->set('uneds', array_keys($this->editions), 'Unreferenced editions');
 	}
 
 	private function recordEditionUse($id) {
@@ -130,14 +123,15 @@ class AdministratorController extends AppController {
 		foreach ($pieceFormats as $formatId) {
 			if (!in_array($formatId, $formatIDs)){
 				$pieces = $pieceSet
-						->find()
-						->specifyFilter('format_id', $formatId)
-						->load();
+                    ->getLayer()
+                    ->NEWfind()
+                    ->specifyFilter('format_id', $formatId)
+                    ->toArray();
 				$this->errors['pieces']['missing format'] =
-						array_merge(
-								$this->errors['pieces']['missing format'],
-								layer($pieces)->IDs()
-						);
+                    array_merge(
+                            $this->errors['pieces']['missing format'],
+                            layer($pieces)->IDs()
+                    );
 			}
 		}
 	}

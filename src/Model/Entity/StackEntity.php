@@ -2,11 +2,13 @@
 
 namespace App\Model\Entity;
 
+use App\Interfaces\LayerStructureInterface;
+use App\Model\Lib\LayerAccessProcessor;
 use Cake\ORM\Entity;
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use App\Interfaces\LayerAccessInterface;
+use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 use App\Exception\BadClassConfigurationException;
@@ -23,7 +25,7 @@ use App\Exception\BadClassConfigurationException;
  *
  * @author Main
  */
-class StackEntity extends Entity implements LayerAccessInterface
+class StackEntity extends Entity implements LayerStructureInterface
 {
 
     use LayerAccessTrait;
@@ -62,6 +64,24 @@ class StackEntity extends Entity implements LayerAccessInterface
      * @var string
      */
     public $rootDisplaySource = FALSE;
+
+    /**
+     * Gather the available data at this level and package the iterator
+     *
+     * @param $name string
+     * @return LayerAccessProcessor
+     */
+    public function getLayer($name)
+    {
+        $Iterator = new LayerAccessProcessor($name);
+        if (is_a($this->$name, '\App\Model\Lib\Layer')) {
+            $result = $this->$name;
+        } else {
+            $result = [];
+        }
+        return $Iterator->insert($result);
+    }
+
 
     /**
      * Is the id a member of the set
@@ -125,7 +145,7 @@ class StackEntity extends Entity implements LayerAccessInterface
      */
     public function rootElement($unwrap = LAYERACC_UNWRAP)
     {
-        $result = $this->{$this->rootLayerName()}->load();
+        $result = $this->{$this->rootLayerName()}->toArray();
         return $this->_resolveWrapper($result, $unwrap);
     }
 
@@ -165,8 +185,16 @@ class StackEntity extends Entity implements LayerAccessInterface
      */
     public function rootDisplayValue($unwrap = LAYERACC_UNWRAP)
     {
-        $result = $this->valueList($this->rootDisplaySource(), [$this->rootElement()]);
-        return $this->_resolveWrapper($result, $unwrap);
+        /* @var Layer $rootLayer */
+        $rootLayer = layer($this->rootElement(LAYERACC_WRAP));
+        $title = $rootLayer->toValueList($this->rootDisplaySource());
+        return array_shift($title);
+//        osd($rootLayer);
+//        osd($this->rootDisplaySource());
+//        return $rootLayer->toValueList($this->rootDisplaySource())[0];
+
+//        $result = $this->valueList($this->rootDisplaySource(), [$this->rootElement()]);
+//        return $this->_resolveWrapper($result, $unwrap);
     }
 
     /**
@@ -253,12 +281,13 @@ class StackEntity extends Entity implements LayerAccessInterface
 
         $this->verifyInstanceArgObj($argObj);
 
-        $layer = $this->getLayer($argObj);
+        $layer = $this->OldGetLayer($argObj);
         if (!$layer) {
             return [];
         }
 
-        return $layer->load($argObj);
+        /* @var Layer $layer */
+        return $layer->getLayer()->perform($argObj);
 
     }
 
@@ -272,7 +301,7 @@ class StackEntity extends Entity implements LayerAccessInterface
      * @param LayerAccessArgs $argObj
      * @return boolean|Layer Layer object if valid, FALSE otherwise
      */
-    private function getLayer($argObj)
+    private function OldGetLayer($argObj)
     {
         $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
         if ($property && is_a($property, '\App\Model\Lib\Layer')) {
@@ -290,16 +319,12 @@ class StackEntity extends Entity implements LayerAccessInterface
      */
     public function IDs($layer = null)
     {
-        if (is_null($layer)) {
-            return array_keys($this->load());
+        if(is_null($layer)) {
+            $result = $this->rootID(LAYERACC_WRAP);
+        } else {
+            $result = $this->getLayer($layer)->toDistinctList('id');
         }
-
-        $property = is_null($layer) ? null : $this->get($layer);
-        if (is_null($property) || !is_a($property, '\App\Model\Lib\Layer')) {
-            return [];
-        }
-
-        return $property->IDs();
+        return $result;
     }
 
     /**
@@ -336,6 +361,8 @@ class StackEntity extends Entity implements LayerAccessInterface
     {
         if ($unwrap) {
             $result = array_shift($data);
+        } else {
+            $result = $data;
         }
         return $result;
     }

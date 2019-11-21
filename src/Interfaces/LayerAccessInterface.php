@@ -1,62 +1,59 @@
 <?php
+
+
 namespace App\Interfaces;
 
-use App\Model\Lib\LayerAccessArgs;
-/**
- * Create basic random-access tools for StackSets, StackEntities, and Layers
- * 
- * StackSets, StackEntities, and Layers fit together in a nest of flat 
- * data structures. Stored entities at each level are indexed by their id 
- * so record associations can be reconstructed by using a foreign-key value.
- * 
- * This interface establishes the ways that data can be retrieved, filtered, 
- * formatted, and paginated. Each level of detail will work slightly 
- * differently but from the highest levels it will be possible to reach 
- * down to the very bottom and extract useful data without looping.
- * 
- * 
- *
- * @author dondrake
- */
-interface LayerAccessInterface {
-	
-	/* Done */
-	public function accessArgs();
-	
-	/* Done */
-	public function layer(array $entities);
-	
-	/* Done */
-//	public function distinct($propery, $layer = '');
-	
-	/* Done */
-	public function element($number);
-	
-	/* Done */
-	public function IDs($layer = null);
-	
-	public function keyedList(LayerAccessArgs $argObj);
-	
-	/* Done */
-	public function linkedTo($layer, $id);
-	
-	/* Done */
-	/**
-	 * 
-	 * @param string|LayerAccessArg $argObj
-	 */
-	public function load($argObj = null);
-	
-//	function filter($property, $value);
-	
-//	public function all($property); //FUTURE FEATURE
-	
-	
-	/**
-	 * This one seems silly
-	 */
-//	public function duplicate($property); // FUTURE FEATURE
-	
-//	
-	
+
+use App\Model\Lib\ValueSource;
+use App\Model\Lib\ValueSourceRegistry;
+
+interface LayerAccessInterface
+{
+
+    /**
+     * Get the result as an array of entities
+     *
+     * @return array
+     */
+    public function toArray();
+
+    /**
+     * Get the result as Layer object
+     *
+     * @return Layer
+     */
+    public function toLayer();
+
+    /**
+     * Get an array of values
+     *
+     * @param $valueSource string|ValueSource
+     * @return array
+     */
+    public function toValueList($valueSource = null);
+
+    /**
+     * Get a key => value list
+     *
+     * @param $keySource string|ValueSource
+     * @param $valueSource string|ValueSource
+     * @return array
+     */
+    public function toKeyValueList($keySource = null, $valueSource = null);
+
+    /**
+     * Get a list of distinct values
+     *
+     * @param $valueSource string|ValueSource
+     * @return array
+     */
+    public function toDistinctList($valueSource = null);
+
+    /**
+     * Get the stored registry instance
+     *
+     * @return ValueSourceRegistry
+     */
+    public function getValueRegistry();
+
 }
