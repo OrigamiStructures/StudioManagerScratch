@@ -117,7 +117,7 @@ class RolodexCard extends StackEntity {
 	 * @return array
 	 */
 	public function membershipIDs() {
-		return $this->valueList('id', $this->getMemberships());
+		return $this->memberships->toValueList('id');
 	}
 
 	/**
@@ -126,7 +126,7 @@ class RolodexCard extends StackEntity {
 	 * @return array
 	 */
 	public function memberships() {
-		return $this->distinct('name', $this->getMemberships());
+		return $this->memberships->toDistinctList('name');
 	}
 
 }

@@ -93,7 +93,7 @@ class ArtistCardsTable extends PersonCardsTable {
 	 */
 	protected function marshalManagers($id, $stack) {
 		if ($stack->count('identity')) {
-			$managerIds = $stack->manifest->valueList('manager_id');
+			$managerIds = $stack->manifest->toValueList('manager_id');
 			$dataOwner = $this->associations()->get('DataOwners')
 				->find(
 					'hook',

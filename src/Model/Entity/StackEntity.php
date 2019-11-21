@@ -185,8 +185,16 @@ class StackEntity extends Entity implements LayerStructureInterface
      */
     public function rootDisplayValue($unwrap = LAYERACC_UNWRAP)
     {
-        $result = $this->valueList($this->rootDisplaySource(), [$this->rootElement()]);
-        return $this->_resolveWrapper($result, $unwrap);
+        /* @var Layer $rootLayer */
+        $rootLayer = layer($this->rootElement(LAYERACC_WRAP));
+        $title = $rootLayer->toValueList($this->rootDisplaySource());
+        return array_shift($title);
+//        osd($rootLayer);
+//        osd($this->rootDisplaySource());
+//        return $rootLayer->toValueList($this->rootDisplaySource())[0];
+
+//        $result = $this->valueList($this->rootDisplaySource(), [$this->rootElement()]);
+//        return $this->_resolveWrapper($result, $unwrap);
     }
 
     /**

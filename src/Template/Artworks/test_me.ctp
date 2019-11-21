@@ -41,26 +41,25 @@ if (isset($stacks)) {
             ->toArray();
 		$joinLayer = new Layer($joinArray);
 
-		$distinct_pieces = $stack
+		$pieces = $stack
             ->getLayer('pieces')
             ->NEWfind()
             ->specifyFilter(
                     'id',
-                    $joinLayer->distinct('piece_id'),
+                    $joinLayer->toDistinctList('piece_id'),
                     'in_array')
-            ->toArray();
+            ->toLayer();
 
-		$formatIDs = $stack->distinct('format_id', $distinct_pieces);
-		$pieces = new Layer($distinct_pieces);
+		$formatIDs = $pieces->toDistinctList('format_id');
 
 		$formats = $stack
             ->getLayer('formats')
             ->NEWfind()
             ->specifyFilter('id', $formatIDs)
-            ->toArray();
+            ->toLayer();
 
-		$editionIDs = $stack->distinct('edition_id', $formats);
-		$formats = new Layer($formats, 'editions_format');
+		$editionIDs = $formats->toDistinctList('edition_id');
+//		$formats = new Layer($formats, 'editions_format');
 
 		$editions = $stack
             ->getLayer('editions')
@@ -113,7 +112,7 @@ if (isset($stacks)) {
             ->NEWfind()
             ->specifyFilter(
                 'id',
-                $joinLayer->distinct('piece_id'),
+                $joinLayer->toDistinctList('piece_id'),
                 'in_array')
             ->toArray();
 		$pieces = new Layer($distinct_pieces, 'pieces');

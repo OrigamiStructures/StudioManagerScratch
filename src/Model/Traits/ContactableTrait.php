@@ -22,12 +22,12 @@ trait ContactableTrait {
 	}
 
 	public function contactIDs() {
-		return $this->valueList('id', $this->contactEntities());
+		return $this->contacts->IDs();
 	}
 
 
 	public function contacts() {
-		return $this->valueList('asString', $this->contactEntities());
+		return $this->contacts->toValueList('asString');
 	}
 
 	public function hasAddresses() {
@@ -42,10 +42,10 @@ trait ContactableTrait {
 	}
 
 	public function addressIDs() {
-		return $this->valueList('id', $this->addressEntities());
+		return $this->addresses->IDs();
 	}
 
 	public function addresses() {
-		return $this->valueList('asString', $this->addressEntities());
+		return $this->addresses->toValueList('asString');
 	}
 }

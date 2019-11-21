@@ -75,7 +75,7 @@ class AdministratorController extends AppController {
                     ->specifyFilter('edition_id', $editionID)
                     ->toLayer();
 				$pieceIDs = $pieceSet->IDs();
-				$pieceFormats = $pieceSet->distinct('format_id');
+				$pieceFormats = $pieceSet->toDistinctList('format_id');
 
 				$this->verifyPieceFormatLink($pieceFormats, $formatIDs, $pieceSet);
 				$this->recordPieceUse($pieceIDs);

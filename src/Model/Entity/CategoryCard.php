@@ -2,11 +2,13 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\RolodexCard;
+use App\Model\Lib\Layer;
 
 /**
  * Description of CategoryCard
  *
  * @author dondrake
+ * @property Layer $members
  */
 class CategoryCard extends RolodexCard{
 
@@ -33,7 +35,7 @@ class CategoryCard extends RolodexCard{
 	}
 
 	public function members() {
-		return $this->valueList('name', $this->memberElements());
+		return $this->members->toValueList('name');
 	}
 
 }
