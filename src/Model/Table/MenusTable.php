@@ -40,14 +40,16 @@ class MenusTable extends AppTable{
             'Create Person' => '/members/create/Person',
 		]];
 	protected $disposition = ['Work Status' => [
-			'Review' => '/dispositions/index',
-			'test-artworks' => '/artworks/test_me',
-			'test-supervision' => '/supervisors',
-			'test-addressbook' => '/addressbook',
-			'test-rolodex' => '/rolodexcards',
-			'test-rolodex-institutions' => '/rolodexcards/groups',
-            'test-pieces-renumber' => '/pieces/renumber?artwork=10'
-        ]];
+        'Review' => '/dispositions/index',
+        'test-artworks' => '/artworks/test_me',
+        'test-supervision' => '/supervisors',
+        'test-addressbook' => '/addressbook',
+        'test-rolodex' => '/rolodexcards',
+        'test-rolodex-institutions' => '/rolodexcards/groups',
+        'test-pieces-renumber' => '/pieces/renumber?artwork=10',
+        'documentation-REPL' => '/members/docs',
+        'data-integrity' => '/administrator/userDataIntegrity'
+    ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',
 			'Logout' => '/users/users/logout',
