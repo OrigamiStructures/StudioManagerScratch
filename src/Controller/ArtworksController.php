@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Lib\RequestUtility;
+use App\Model\Lib\StackSet;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Model\Lib\Layer;
@@ -324,27 +325,6 @@ class ArtworksController extends AppController
     }
 
     public function testMe() {
-
-//		$intNumberSet = [1,2,3,4,5];
-//		$symNumberSet = ['A','B','C','D','E'];
-//        $reqs = new \App\Lib\RenumberRequests($symNumberSet);
-////		$requests = [[1,2],[2,3],[3,1]];
-////		$requests = [[1,2],[3,4]];
-////		$data = ['A'=>'B','B'=>'C','C'=>'B','D'=>'A','E'=>'B'];
-//		$data = ['A'=>'B','C'=>'D'];
-//		foreach($data as $on => $nn) {
-//			$reqs->insert(new \App\Lib\RenumberRequest($on, $nn));
-//		}
-////		foreach ($requests as $request) {
-////			$reqs->insert(new \App\Lib\RenumberRequest($request[0],$request[1]));
-////		}
-//		osd($reqs->_explicit_providers, 'explicit providers');
-//		osd($reqs->_explicit_receivers, 'explicit receiver');
-//		osd($reqs->messagePackage());
-//		osd($reqs->_receiver_checklist, 'receiver checklist');
-//		osd($reqs->_provider_checklist, 'providers checklist');
-//		die;
-
         $queries = $this->request->getData('method');
         $result = [];
         $anscestors = [];
@@ -367,22 +347,10 @@ class ArtworksController extends AppController
             $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
             $stacks = $ArtStacks->find('stacksFor',
                 ['seed' => 'disposition', 'ids' => $activity->IDs()]);
-
-
-//            $sorted = [];
-//            foreach ($dispositions as $disposition) {
-//                    $sorted[$disposition->id] = $disposition;
-//            }
-//            $dispositions = $sorted;
-//            $pieces = new IdentitySets('Pieces', $dispositions);
-//            $pieces->arrayResult();
-//            $editions = new IdentitySets('Editions', $pieces->entity());
-//            $editions->arrayResult();
-//            $formats = new IdentitySets('Formats', $pieces->entity());
-//            $formats->arrayResult();
-//            $artworks = new IdentitySets('Artworks', $editions->entity());
-//            $artworks->arrayResult();
-//            osd($t->result());
+        } else {
+            $stacks = null;
+            $dispositions = null;
+            $activity = null;
         }
 
         $this->set(compact('stacks', 'result', 'methods', 'dispositions', 'activity'));
