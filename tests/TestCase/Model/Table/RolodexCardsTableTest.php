@@ -155,22 +155,22 @@ class RolodexCardsTableTest extends TestCase
         $person = $cards->element(2, LAYERACC_ID);
         $group = $cards->element(3, LAYERACC_ID);
 
-        $this->assertCount(1, $person->identity->load(),
+        $this->assertCount(1, $person->identity->toArray(),
             'The person card doesn\'t have a single Identity entity');
 
-        $this->assertCount(1, $group->identity->load(),
+        $this->assertCount(1, $group->identity->toArray(),
             'The group card doesn\'t have a single Identity entity');
 
-        $this->assertCount(1, $person->data_owner->load(),
+        $this->assertCount(1, $person->data_owner->toArray(),
             'The person card doesn\'t have a single DataOwner entity');
 
-        $this->assertCount(1, $group->data_owner->load(),
+        $this->assertCount(1, $group->data_owner->toArray(),
             'The group card doesn\'t have a single DataOwner entity');
 
-        $this->assertCount(2, $person->memberships->load(),
+        $this->assertCount(2, $person->memberships->toArray(),
             'The person card doesn\'t have a two Membership entities');
 
-        $this->assertCount(0, $group->memberships->load(),
+        $this->assertCount(0, $group->memberships->toArray(),
             'The group card has some Membership entities when it shouldn\'t');
 
     }

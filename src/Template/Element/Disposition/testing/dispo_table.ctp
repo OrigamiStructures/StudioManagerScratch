@@ -10,7 +10,7 @@ $columns = ['id', 'created', 'start_date', 'end_date', 'type',
             <?= $this->Html->tableHeaders($columns) ?>
             <?php //$pieceLists = [];
             $allInLayer = $activity->accessArgs()->setLimit('all');
-            foreach ($activity->load($allInLayer) as $disposition): //Layer::load
+            foreach ($activity->toArray() as $disposition):
 //			$pieceLists[$disposition->id] =
 //				new \App\Model\Lib\IdentitySet($disposition, 'pieces');
                 $properties = array_intersect_key($disposition->properties(), array_flip($columns));

@@ -31,7 +31,7 @@ class RolodexCard extends StackEntity {
      */
     public function getIdentity($asArray = LAYERACC_ARRAY) {
         if($this->identity->count() > 0) {
-            $result = $this->identity->load();
+            $result = $this->identity->toarray();
         } else {
             $result = [];
         }
@@ -43,7 +43,7 @@ class RolodexCard extends StackEntity {
      */
     public function getDataOwner($asArray = LAYERACC_ARRAY) {
         if($this->data_owner->count() > 0) {
-            $result = $this->data_owner->load();
+            $result = $this->data_owner->toarray();
         } else {
             $result = [];
         }
@@ -104,7 +104,7 @@ class RolodexCard extends StackEntity {
 	 */
 	public function getMemberships($asArray = LAYERACC_ARRAY) {
 		if($this->isMember()) {
-			$result = $this->memberships->load();
+			$result = $this->memberships->toarray();
 		} else {
 			$result = [];
 		}

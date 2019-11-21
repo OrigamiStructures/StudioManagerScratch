@@ -247,22 +247,22 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
 	 * @param LayerAccessArgs|null $argObj
 	 * @return array
 	 */
-	public function load($argObj = null) {
-		if(is_null($argObj)) {
-			return $this->_data;
-		}
-
-		$this->verifyInstanceArgObj($argObj);
-
-		if ($argObj->isFilter()) {
-			$result = $this->filter($argObj);
-		} else {
-			$result = $this->_data;
-		}
-
-		return $this->paginate($result, $argObj);
-
-	}
+//	public function load($argObj = null) {
+//		if(is_null($argObj)) {
+//			return $this->_data;
+//		}
+//
+//		$this->verifyInstanceArgObj($argObj);
+//
+//		if ($argObj->isFilter()) {
+//			$result = $this->filter($argObj);
+//		} else {
+//			$result = $this->_data;
+//		}
+//
+//		return $this->paginate($result, $argObj);
+//
+//	}
 
     /**
      * Provide single column sorting

@@ -71,9 +71,9 @@ if (isset($stacks)) {
 
         echo "<h1>{$artwork->title}</h1>";
 //		$allInLayer = $editions->accessArgs()->setLimit('all');
-        foreach ($editions->load() as $edition) {
+        foreach ($editions->toArray() as $edition) {
             echo "<h2>{$edition->displayTitle}</h2>";
-            foreach ($formats->load() as $format) {
+            foreach ($formats->toArray() as $format) {
                 echo "<h3>{$format->displayTitle}</h3>";
 				$assignedPieces = $pieces
                     ->getLayer()
@@ -102,7 +102,7 @@ if (isset($stacks)) {
 echo '<h1>Reverse Formatting Piece Lines</h1>';
 if (isset($stacks)) {
 
-	foreach ($activity->load() as $dispId => $disposition) {
+	foreach ($activity->toArray() as $dispId => $disposition) {
 		$joinArray = $stacks->getLayer('dispositions_pieces')
             ->NEWfind()
             ->specifyFilter('disposition_id', $dispId)

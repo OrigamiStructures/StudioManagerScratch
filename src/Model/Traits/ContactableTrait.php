@@ -36,7 +36,7 @@ trait ContactableTrait {
 
 	public function addressEntities() {
 		if($this->hasAddresses()) {
-			return $this->addresses->load();
+			return $this->addresses->toArray();
 		}
 		return [];
 	}

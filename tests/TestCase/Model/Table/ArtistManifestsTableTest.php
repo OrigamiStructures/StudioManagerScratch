@@ -172,20 +172,20 @@ class ArtistManifestsTableTest extends TestCase
 
     public function testAritstManifestDataQuantity() {
         $manifest = $this->ArtistManifests->element(0);
-        
-        $this->assertCount(1, $manifest->identity->load(),
+
+        $this->assertCount(1, $manifest->identity->toArray(),
             'The manifest doesn\'t have a single Identity entity');
-        
-        $this->assertCount(1, $manifest->data_owner->load(),
+
+        $this->assertCount(1, $manifest->data_owner->toArray(),
             'The manifest doesn\'t have a single DataOwner entity');
-        
-        $this->assertCount(2, $manifest->manifests->load(),
+
+        $this->assertCount(2, $manifest->manifests->toArray(),
             'The manifest doesn\'t have a two Manifest entities');
-        
-        $this->assertCount(2, $manifest->managers->load(),
+
+        $this->assertCount(2, $manifest->managers->toArray(),
             'The manifest doesn\'t have a two manager entities');
-        
-        $this->assertCount(3, $manifest->permissions->load(),
+
+        $this->assertCount(3, $manifest->permissions->toArray(),
             'The manifest doesn\'t have a three Permissions entities');
 	}
 

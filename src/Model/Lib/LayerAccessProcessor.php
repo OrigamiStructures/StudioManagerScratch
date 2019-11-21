@@ -65,7 +65,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         if (is_array($data)){
             $result = new \ArrayIterator($data);
         } elseif (is_a($data, '\App\Model\Lib\Layer')) {
-            $result = new \ArrayIterator($data->load());
+            $result = new \ArrayIterator($data->toArray());
         } elseif (is_a($data, '\Iterator'))  {
             $result = $data;
         } else {

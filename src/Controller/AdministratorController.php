@@ -59,10 +59,10 @@ class AdministratorController extends AppController {
 				'missing format' => []
 			]
 		];
-		$this->artworks = $artworks->load();
-		$this->editions = $editions->load();
-		$this->formats = $formats->load();
-		$this->pieces = $pieces->load();
+		$this->artworks = $artworks->toarray();
+		$this->editions = $editions->toarray();
+		$this->formats = $formats->toarray();
+		$this->pieces = $pieces->toarray();
 
 		foreach ($artworks->IDs() as $artworkID) {
 			$this->recordArtworkUse($artworkID);

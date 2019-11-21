@@ -63,8 +63,8 @@ trait LayerAccessTrait {
 					$sourcePoint
 				);
 		}
-		$result = $this->load($argObj);
-		return $this->distinct($ValueSource, $result);
+		return $this->getLayer()->perform($argObj)->toDistinctValueList($ValueSource);
+//		return $this->distinct($ValueSource, $result);
 	}
 
 	/**

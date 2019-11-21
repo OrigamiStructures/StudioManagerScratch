@@ -110,52 +110,6 @@ class StackEntityTest extends TestCase
 	}
 
 
-// <editor-fold defaultstate="collapsed" desc="Load method tests">
-
-    /**
-     * Test load method
-     *
-     * These all pass through to Layer and that class tests edge cases.
-     * So all I need here is verification of the proper passthrough
-     * of all the variants
-     *
-     * @return void
-     */
-    public function testLoadWithNoArg() {
-
-		$this->assertCount(1, $this->StackEntity->load(),
-				'simple load( ) did not return array with one element');
-		$this->assertArrayHasKey(4, $this->StackEntity->load(),
-				'simple load( ) did not return expected key for element');
-	}
-
-	public function testLoadWithStringArg() {
-		$this->assertCount(2, $this->StackEntity->load('formats'),
-				'string naming layer did not return expected quantity of data');
-		$this->assertCount(0, $this->StackEntity->load('unkown'),
-				'string naming unknown layer did not return empty array');
-	}
-
-	/**
-	 * @expectedException \BadMethodCallException
-	 */
-	public function testLoadUsingWrongObject() {
-		$arg = new \stdClass();
-		$this->StackEntity->load($arg, '$this->StackEntity->load() with wrong kind '
-				. 'of object did not throw expected exception');
-	}
-
-	/**
-	 * @expectedException \BadMethodCallException
-	 */
-	public function testLoadUsingArray() {
-		$arg = [1,2];
-		$this->StackEntity->load($arg, '$this->StackEntity->load() with an'
-				. ' array did not throw expected exception');
-	}
-
-// </editor-fold>
-
 // <editor-fold defaultstate="collapsed" desc="Simple class methods">
 
     /**
@@ -228,21 +182,6 @@ class StackEntityTest extends TestCase
 		$entity = New StackEntity();
         $entity->rootElement();
 	}
-
-    /**
-     * Test distinct method
-     *
-     * @return void
-     */
-    public function testLoadDistinctWithGoodArgObj() {
-		$actual = $this->StackEntity
-			->find()
-			->setLayer('pieces')
-			->setAccessNodeObject('value', 'edition_id')
-			->loadDistinct();
-        $this->assertEquals([5, 8], $actual,
-			'A valid layer and property did not return the expected values');
-    }
 
     /**
      * Test IDs method
@@ -318,11 +257,10 @@ class StackEntityTest extends TestCase
     public function testSet(){
         //extract an array, unset that value then 'set' the value
         //the set is a (string, value) arg arrangement
-		$all_pieces_arg = $this->StackEntity
-				->accessArgs()
-				->setLayer('pieces')
-				->setLimit('all');
-        $pieces = $this->StackEntity->load($all_pieces_arg);
+        $pieces = $this->StackEntity
+            ->getLayer('pieces')
+            ->NEWfind()
+            ->toArray();
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', $pieces);
 

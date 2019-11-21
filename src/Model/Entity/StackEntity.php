@@ -145,7 +145,7 @@ class StackEntity extends Entity implements LayerStructureInterface
      */
     public function rootElement($unwrap = LAYERACC_UNWRAP)
     {
-        $result = $this->{$this->rootLayerName()}->load();
+        $result = $this->{$this->rootLayerName()}->toArray();
         return $this->_resolveWrapper($result, $unwrap);
     }
 
@@ -278,7 +278,8 @@ class StackEntity extends Entity implements LayerStructureInterface
             return [];
         }
 
-        return $layer->load($argObj);
+        /* @var Layer $layer */
+        return $layer->getLayer()->perform($argObj);
 
     }
 

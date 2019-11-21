@@ -21,7 +21,7 @@ class CategoryCard extends RolodexCard{
 
 	public function memberElements($asArray = LAYERACC_ARRAY) {
 		if($this->hasMembers()) {
-			$result = $this->members->load();
+			$result = $this->members->toArray();
 		} else {
 			$result = [];
 		}
