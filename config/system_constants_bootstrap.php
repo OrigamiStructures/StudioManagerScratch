@@ -5,32 +5,6 @@ define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
 
-// <editor-fold defaultstate="collapsed" desc="SYSTEM STATES, ARTWORK_REVIEW etc.">
-
-// These are used in Lib/StateMap.php to map Controller actions
-// But that class has been eliminated
-//Member State
-define('MEMBER_CREATE', 1);
-define('MEMBER_REVIEW', 2);
-define('MEMBER_REFINE', 4);
-define('MEMBER_SAVE', 8);
-
-// Artwork State
-define('ARTWORK_CREATE', 1);
-define('ARTWORK_REVIEW', 2);
-define('ARTWORK_REFINE', 4);
-define('ARTWORK_SAVE', 8);
-define('ARTWORK_CREATE_UNIQUE', 3);
-
-//Disposition State
-define('DISPOSITION_CREATE', 1);
-define('DISPOSITION_REVIEW', 2);
-define('DISPOSITION_REFINE', 4);
-
-// Piece State
-define('PIECE_RENUMBER', 5);
-// </editor-fold>
-
 // <editor-fold defaultstate="collapsed" desc="EDITION TYPES">
 define('EDITION_UNIQUE', 'Unique');
 define('EDITION_RIGHTS', 'Rights');
