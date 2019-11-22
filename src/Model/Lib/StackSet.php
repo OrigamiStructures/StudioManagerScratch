@@ -53,6 +53,16 @@ class StackSet implements LayerStructureInterface, \Countable {
     }
 
     /**
+     * Get an new LayerAccessArgs instance
+     * @return LayerAccessArgs
+     */
+    public function getArgObj()
+    {
+        return new LayerAccessArgs();
+    }
+
+
+    /**
      * Get all the ids accross all the stored StackEntities or the Layer entities
      *
      * This is a collection-level method that matches the StackEntity's and Layer's

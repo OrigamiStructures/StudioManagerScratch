@@ -248,7 +248,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     public function perform($argObj)
     {
-        $this->setAccessArgs($argObj);
+        $this->setArgObj($argObj);
         $this->AccessArgs->setLayer($this->layerName);
 
         if($this->AccessArgs->hasFilter()) {
@@ -316,8 +316,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         }
         $unchuncked = new Collection($this->ResultArray);
         $chunked = $unchuncked->chunk($limit)->toArray();
-        if(isset($chunked[$page - 1])) {
-            $result = $chunked[$page - 1];
+//        osd($chunked);
+        if(isset($chunked[$page])) {
+            $result = $chunked[$page];
         } else {
             $result = array_pop($chunked);
         }
@@ -330,7 +331,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * @param $argObj LayerAccessArgs
      * @return bool
      */
-    public function setAccessArgs($argObj)
+    public function setArgObj($argObj)
     {
         $this->AccessArgs = $argObj;
         unset($this->ResultArray);

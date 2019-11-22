@@ -102,6 +102,17 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
         $Iterator = new LayerAccessProcessor($this->layerName());
         return  $Iterator->insert($this->_data);
     }
+
+    /**
+     * Get an new LayerAccessArgs instance
+     * @return LayerAccessArgs
+     */
+    public function getArgObj()
+    {
+        return new LayerAccessArgs();
+    }
+
+
     //</editor-fold>
 
     //<editor-fold desc="LayerAccessElementTrait abstract method implementations">

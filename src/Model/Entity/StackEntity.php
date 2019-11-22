@@ -82,6 +82,15 @@ class StackEntity extends Entity implements LayerStructureInterface
         return $Iterator->insert($result);
     }
 
+    /**
+     * Get an new LayerAccessArgs instance
+     * @return LayerAccessArgs
+     */
+    public function getArgObj()
+    {
+        return new LayerAccessArgs();
+    }
+
 
     /**
      * Is the id a member of the set

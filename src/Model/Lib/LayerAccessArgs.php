@@ -456,7 +456,7 @@ class LayerAccessArgs implements LayerAccessInterface
      * @param int $page
      * @param int $limit
      */
-    public function setPagination($page, $limit)
+    public function specifyPagination($page, $limit)
     {
         $this->setPage($page);
         $this->setLimit($limit);
