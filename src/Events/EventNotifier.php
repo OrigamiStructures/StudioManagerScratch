@@ -44,8 +44,8 @@ class EventNotifier implements EventListenerInterface
             ->to('jason@tempestinis.com')
             ->subject('Test')
             ->send('My message');
-        osdLog($email, 'After Register Email');
-        osd($event, 'afterRegisterEmail event');die;
+//        osdLog($email, 'After Register Email');
+//        osd($event, 'afterRegisterEmail event');die;
 
     }
     public function beforeRegisterEmail($event)
