@@ -2,6 +2,7 @@
 
 namespace App\Model\Entity;
 
+use App\Exception\UnknownLayerException;
 use App\Interfaces\LayerStructureInterface;
 use App\Model\Lib\LayerAccessProcessor;
 use Cake\ORM\Entity;
@@ -12,6 +13,8 @@ use App\Interfaces\xxxLayerAccessInterface;
 //use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 use App\Exception\BadClassConfigurationException;
+use Cake\Utility\Text;
+use http\Exception\InvalidArgumentException;
 
 /**
  * Stacks
@@ -64,6 +67,19 @@ class StackEntity extends Entity implements LayerStructureInterface
      * @var string
      */
     public $rootDisplaySource = FALSE;
+
+    /**
+     * names of the layers and thier Entity types
+     *
+     * eg:
+     * [
+     *      'identity' => 'Member',
+     *      'artwork' => 'Artwork'
+     * ]
+     *
+     * @var array
+     */
+    public $schema;
 
     /**
      * Gather the available data at this level and package the iterator
@@ -399,16 +415,25 @@ class StackEntity extends Entity implements LayerStructureInterface
     /**
      * In a layer, get the entities linked to a specified record
      *
+     * @throws UnknownLayerException
      * @param string $layer
      * @param array $options
-     * @return array
+     * @return LayerAccessArgs
      */
-    public function linkedTo($foreign, $foreign_id, $linked = null)
+    public function linkedTo($foreign, $foreign_id, $layer = null)
     {
-        if ($this->has($linked)) {
-            return $this->$linked->linkedTo($foreign, $foreign_id);
+        if (!array_key_exists($layer, $this->schema)) {
+
+            $className = get_class($this);
+            $layers = array_keys($this->schema);
+            $available = Text::toList($layers);
+
+            $msg = "'The layer $layer doesn\'t exist in $className. '
+                . 'Available choices are $available.'";
+
+            throw new UnknownLayerException($msg);
         }
-        return [];
+        return $this->$layer->linkedTo($foreign, $foreign_id);
     }
 
     public function keyedList(LayerAccessArgs $argObj)

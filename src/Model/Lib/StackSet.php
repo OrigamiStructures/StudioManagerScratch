@@ -7,6 +7,7 @@ use App\Interfaces\xxxLayerAccessInterface;
 //use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\StackSetAccessArgs;
 use App\Model\Traits\LayerElementAccessTrait;
+use Cake\Core\ConventionsTrait;
 use Cake\Utility\Text;
 
 /**
@@ -24,6 +25,7 @@ class StackSet implements LayerStructureInterface, \Countable {
 
 //	use LayerAccessTrait;
 	use LayerElementAccessTrait;
+	use ConventionsTrait;
 
 	protected $_data = [];
 
@@ -178,12 +180,11 @@ class StackSet implements LayerStructureInterface, \Countable {
     }
 
     public function linkedTo($foreign, $foreign_id, $linked = null) {
-        $accum = [];
-        foreach ($this->_data as $stack) {
-            $result = $stack->linkedTo($foreign, $foreign_id, $linked);
-            $accum = array_merge($accum, $result);
-        }
-        return $accum;
+	    $accessProcessor = $this->getLayer($linked);
+        $foreign_key = $this->_modelKey($foreign);
+        return $accessProcessor
+            ->NEWfind()
+            ->specifyFilter($foreign_key, $foreign_id);
     }
 
     //</editor-fold>

@@ -333,28 +333,16 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
      * $pieces->linkedTo('format', 434)
      * </code>
      *
-     * @todo this will only work on belongsTo associations where the entity
-     *      were searching has a property like 'artwork_id'. It's an open question
-     *      whether some entities will carry the join table from a HABTM
-     *      association. If some do, and if we need to use the data, it is usually
-     *      found in a nested layer on an entity property. Two main questions
-     *      then; 1) how would we insure it always came in with the data
-     *      2) would it be more convenient to use mapper/reducer functions to
-     *      move it up out of the (somewhat messy) native nest structure?
-     *
      * @param string $layer The simple name of the associate (eg: artwork, format)
      * @param string $id The foreign key value to match
-     * @return array
+     * @return LayerAccessArgs
      */
     public function linkedTo($foreign, $foreign_id) {
         $foreign_key = $this->_modelKey($foreign);
-        if (!$this->has($foreign_key)) {
-            return [];
-        }
+
         return $this->getLayer()
             ->NEWfind()
-            ->specifyFilter($foreign_key, $foreign_id)
-            ->toArray();
+            ->specifyFilter($foreign_key, $foreign_id);
     }
 
     /**
