@@ -9,7 +9,6 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Collection\Collection;
 use App\Lib\Traits\EditionStackCache;
-use App\Model\Lib\ArtistIdConditionTrait;
 use App\Model\Behavior\IntegerQueryBehavior;
 
 /**
@@ -23,7 +22,6 @@ use App\Model\Behavior\IntegerQueryBehavior;
 class PiecesTable extends AppTable {
 
     use EditionStackCache;
-    use ArtistIdConditionTrait;
 
 // <editor-fold defaultstate="collapsed" desc="Core methods">
 

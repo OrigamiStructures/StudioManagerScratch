@@ -8,7 +8,6 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\Event;
 use ArrayObject;
-use App\Model\Lib\ArtistIdConditionTrait;
 use App\Model\Behavior\StringQueryBehavior;
 use App\Model\Behavior\IntegerQueryBehavior;
 
@@ -21,7 +20,6 @@ use App\Model\Behavior\IntegerQueryBehavior;
  */
 class ArtworksTable extends AppTable
 {
-    use ArtistIdConditionTrait;
 
 // <editor-fold defaultstate="collapsed" desc="Core methods">
 
