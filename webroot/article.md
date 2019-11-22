@@ -1,6 +1,7 @@
-This describes use of the LayerAccessSystem which provides a unified set of data 
-access tools for Layers, StackEntities, and StackSets. For more detail about Layers 
-and the data aggregates that contain them see:
+This describes use of the **Layer** class specifically and the **LayerAccessSystem** (**LAS**) 
+more generally. **LAS** provides a unified set of data access tools for classes that implement 
+the *LayerAccessSturctureInterface*; Layers, StackEntity, and StackSet. For more detail about 
+Layers and the data aggregates that contain them see:
 
 - [Interacting with Layer Objects](/article/interacting-with-layer-objects "Interacting with Layer Objects")
 - [Interacting with StackEntities](/article/interacting-with-stackentities "Interacting with StackEntities")
@@ -8,7 +9,11 @@ and the data aggregates that contain them see:
 
 ![Class diagram showing the three layer access structures—Layer, StackEntity, and StackSet—and the way they each former class is contained by the later class.](/OStructures/img/images/image/df494027-529f-4d40-968e-ae2b249adfb5/layer-struct.png "LayerAccessStructures")
 
-StackSets contain sets of StackEntities. StackEntities contain mutiple Layers. Layers contain arrays of Entities.
+The basic organizing principles:
+
+- StackSets contain sets of StackEntity objects stored in an ID indexed array of same-type entities
+- A StackEntity contains mutiple Layers stored as properties of the entity, one layer per property
+- Layers contain an ID indexed array of same-type entities.
 
 ##Starting Simple: What are Layers
  Layers are wrapper objects that simplify the use of arrays of entities.
@@ -19,15 +24,19 @@ StackSets contain sets of StackEntities. StackEntities contain mutiple Layers. L
 - The `id` column must be included and must be named `id`
 
 Once an array is wrapped in a Layer you will have tools to filter and retrieve the contained data. 
-Some of the methods are available directly on the LayerObject to do basic object introspecition. 
-Then there are some simple data access tools available on the object through a Trait (Layer and 
-StackSet use the Trait). Finally, there is a set of filtering, sorting, and pagination tools 
+Some methods are available directly on the Layer to do basic object-structure introspection. 
+There are also tools to access and inspect the stored array data. These tools are available through 
+the *LayerElementAccessTrait*. **StackSet** also uses the trait since it holds a similar 
+array of data. Finally, there is a set of filtering, sorting, and pagination tools 
 available through the collaboration of the **LayerAccessProcessor** and **LayerAccessArgs** objects.
 
-Layer, StackEntity, and StackSet all implement the `LayerAccessStructureInterface` which 
+**Layer**, **StackEntity**, and **StackSet** all implement the `LayerAccessStructureInterface` which 
 gives them access to these advanced tools.
 
 ##Making a Layer
+
+**StackEntity** objects are automatically populated with **Layer**s of appropriate data. But 
+**Layer**s are useful whenever you have an homogenous array of entities.
 
 Query the db to get an array of entities
 
@@ -38,7 +47,7 @@ $members = $this->Members->find('all')
     ->limit(3);
 ```
 
-if we unpack and output the result we'll see the typical query result array. 
+If we unpack and output the result we'll see the typical query result array. 
 This is the correct data to wrap in a Layer.
 
 ```php
@@ -46,7 +55,6 @@ debug($members->toArray());
 
 [
 	(int) 0 => object(App\Model\Entity\Member) {
-
 		'id' => (int) 75,
 		'first_name' => 'Leonardo',
 		'last_name' => 'DiVinci',
@@ -56,10 +64,8 @@ debug($members->toArray());
 		'[dirty]' => [],
 		'[original]' => [],
 		'[repository]' => 'Members'
-	
 	},
 	(int) 1 => object(App\Model\Entity\Member) {
-
 		'id' => (int) 74,
 		'first_name' => 'Bay Area Book Artists',
 		'last_name' => 'Bay Area Book Artists',
@@ -69,10 +75,8 @@ debug($members->toArray());
 		'[dirty]' => [],
 		'[original]' => [],
 		'[repository]' => 'Members'
-	
 	},
 	(int) 2 => object(App\Model\Entity\Member) {
-
 		'id' => (int) 73,
 		'first_name' => 'Sheila',
 		'last_name' => 'Botein',
@@ -82,7 +86,6 @@ debug($members->toArray());
 		'[dirty]' => [],
 		'[original]' => [],
 		'[repository]' => 'Members'
-	
 	}
 ]
 ```
@@ -103,28 +106,22 @@ object(App\Model\Lib\Layer) {
 	[protected] _className => 'Member'
 	[protected] _data => [
 	   (int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'member_type' => 'Person',
-
+            'id' => (int) 75,
+            'first_name' => 'Leonardo',
+            'last_name' => 'DiVinci',
+            'member_type' => 'Person',
 	     },
 	     (int) 74 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-		'member_type' => 'Category',
-
+            'id' => (int) 74,
+            'first_name' => 'Bay Area Book Artists',
+            'last_name' => 'Bay Area Book Artists',
+            'member_type' => 'Category',
 	     },
 	     (int) 73 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 73,
-		'first_name' => 'Sheila',
-		'last_name' => 'Botein',
-		'member_type' => 'Person',
-
+            'id' => (int) 73,
+            'first_name' => 'Sheila',
+            'last_name' => 'Botein',
+            'member_type' => 'Person',
 	     }
            ]
 	[protected] _entityProperties => [
@@ -186,6 +183,7 @@ true
 
 //shift() gets an entity from the layer as described later in this document
 $MembersTable->patchEntity($memberLayer->shift(), ['person_type' => 'Gallery']);
+
 debug($memberLayer->isClean());
 
 false
@@ -194,7 +192,6 @@ debug($memberLayer->load());
 
 [
 	(int) 75 => object(App\Model\Entity\Member) {
-
 		'id' => (int) 75,
 		'first_name' => 'Leonardo',
 		'last_name' => 'DiVinci',
@@ -204,41 +201,36 @@ debug($memberLayer->load());
 		'[dirty]' => [
 			'person_type' => true
 		],
-	
 	},
 	(int) 74 => object(App\Model\Entity\Member) {
-
 		'id' => (int) 74,
 		'first_name' => 'Bay Area Book Artists',
 		'last_name' => 'Bay Area Book Artists',
 		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
 		'member_type' => 'Category',
 		'[dirty]' => [],
-	
 	},
 	(int) 73 => object(App\Model\Entity\Member) {
-
 		'id' => (int) 73,
 		'first_name' => 'Sheila',
 		'last_name' => 'Botein',
 		'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
 		'member_type' => 'Person',
 		'[dirty]' => [],
-	
 	}
 ]
 ```
 
-##Data Access Methods
+##Basic Data Access and Introspection
 
 Layers use the `LayerElementAccessTrait` and so, have several useful data 
 access tools available directly.
 
-Classes that use this trait need to implement the abastract method `getData()` 
-so that it delivers an array of homogenous entities indexed by their ids; 
-a trivial matter for Layer, which contains an array just like this.
+Classes that use this trait need to implement the abastract method 
+`LayerElementAccessTrait::getData()` so that it delivers an array of homogenous entities 
+indexed by their ids; a trivial matter for Layer, which contains an array just like this.
 
-Classes that use this trait also need to implement the abstract `IDs($layer = null)` method. 
+Classes that use this trait also need to implement the trait's abstract `IDs($layer = null)`.. 
 
 ![A class diagram showing Layer and StackSet using the trait but not StackEntity](/OStructures/img/images/image/9b00978f-854e-4d59-adf7-c22bf2e23f36/layer-struct-and-element-trait.png "The Layer structures and their use of LayerElementAccessTrait")
 
@@ -257,6 +249,40 @@ echo count($memberLayer); //syntax for a \Countable class
 
 3
 ```
+
+###hasId($id)
+
+Returns a boolean indicating if the Layer contains an entity with the id value.
+
+```php
+ debug($memberLayer->hasId(33));
+
+false
+
+ debug($memberLayer->hasId(75));
+
+true
+```
+
+###getData()
+
+Retrieve the array of stored data
+
+###IDs($layer = null)
+
+`IDs()` returns an array containing the entity IDs
+
+```php
+debug($memberLayer->IDs());
+
+ [
+  0 => 75
+  1 => 74
+  2 => 73
+]
+```
+The `$layer` argument is ignored in **Layers**. Its use is described in the documetation of 
+the **LAS**'s use with **StackEntities** and **StackSets**.
 
 ###element($key, $byIndex = LAYERACC_INDEX)
 
@@ -297,36 +323,6 @@ debug($memberLayer->element(74, LAYERACC_ID);
 ]
 ```
 
-###IDs($layer = null)
-
-`IDs()` returns an array containing the entity IDs
-
-```php
-debug($memberLayer->IDs());
-
- [
-  0 => 75
-  1 => 74
-  2 => 73
-]
-```
-The `$layer` argument is ignored in Layers. Its use is described in the documetation of 
-the LayerAccessSystem's use with StackEntities and StackSets.
-
-###hasId($id)
-
-Returns a boolean indicating if the Layer contains an entity with the id value.
-
-```php
- debug($memberLayer->hasId(33));
-
-false
-
- debug($memberLayer->hasId(75));
-
-true
-```
-
 ###shift()
 
 As was the case with `layerName()`, `shift()`'s use is primarily in more complex structures.
@@ -356,51 +352,28 @@ object(App\Model\Entity\Member) {
 `shift()` does not alter the content of the Layer like its namesake, the php method 
 `array_shift()`.
 
-##Advanced features through two Interfaces
+##Returning Restructured Data
 
-![Class diagram showing the two classes that collaborate to provide advanced features and detailing their implementation of processing and retrieval interfaces](/OStructures/img/images/image/3940eb86-fe17-4450-b144-7782a472edff/layer-access-adv.png "Layer access system classes that provide advance data retrieval features")
+**Layer** implements the ***LayerAccessInterface*** which alows it to return its storeed data in 
+a variety of useful ways.
 
-The advanced data retrieval features are defined in two Interfaces:
+![A class diagram showing that Layer, LayerAccessArgs, and LayerAccessProcessor all implement the LayerAccessInterface](/OStructures/img/images/image/34f7201f-b339-42be-9829-82d19ebd54d5/layer-access-interface.png "Classes that implement the LayerAccessInterface")
 
-- LayerAccessInterface - defines the data structures that can be returned   
-   Any one of these can be used to deliver a final product after performing the 
-   desired processing. Or you can use them on unprocessed data to get the full set.
-   - toArray
-   - toLayer
-   - toValueList
-   - toKeyValueList
-   - toDistinctVaueList
+You can see that two other classes implement this interfaces. More details on that later, but 
+you should note, these return-data structures are generally available in the Layer Access system. 
+In fact, other than the Trait features discussed earlier, they are *THE* ways to retrieve 
+your data from the LA system.
 
-- LayerTaskInterface - defines the processing that can be done to limit or arrange the results   
-  You can perform any or all of these processes, but only once each.
-    - filter
-    - sort
-    - paginate
+- LayerAccessInterface - Any one of these can be used to deliver a final product after 
+    performing the desired processing (discussed later). Or you can use them on unprocessed 
+    data to get the full set as discussed in this section.
+   - `toArray()`
+   - `toLayer()`
+   - `toValueList()`
+   - `toKeyValueList()`
+   - `toDistinctVaueList()`
 
-###Where are these advanced tools
-
-The three structures—Layer, StackEntity, and StackSet—all implement `AccessLayerStructure`'s 
-`getLayer($layer)` method. This method delivers a **LayerAccessProcessor** which implements 
-both the advanced interfaces.
-
-**LayerAccessProcessor** also has a `find()` method which delivers a **LayerAccessArgs** 
-object which implements `LayerAccessInterface`. So, either of these classes can return 
-processed, structured data.
-
-####Why two separate classes?
-
-The ***Args*** class oversees setting all the filter, sort, and pagination details. The 
-***Processor*** is responsible for actually manipulating the data as requested through ***Args***.
-
-###Getting Structured Data back
-
-*NOTE: `getLayer()` optionally accepts one string parameter, `$layer`. This is needed when 
-calling from the structures that contain more than one Layer; StackEntity and StackSet. 
-It will be ignored on a Layer::getLayer() call.*
-
-![Class diagram showing that the three classes Layer, StackEntity, and StackSet all implement the LayerStructureInterface which provides tools for filtering, sorting and pagination](/OStructures/img/images/image/5e47aa0a-c5b9-426d-b971-b7771a2e8630/layer-struct-and-access-interface.png "Layer Structures use of the LayerStructureInterface")
-
-####toArray()
+###toArray()
 
 ```php
 
@@ -411,7 +384,7 @@ $members = $this->Members->find('all')
 
 $memberLayer = new Layer($members);
 
-$memberLayer->getLayer()->toArray();
+$memberLayer->toArray();
 
 //Will produce 
 
@@ -454,17 +427,17 @@ $memberLayer->getLayer()->toArray();
 ]
 ```
 
-####toLayer()
+###toLayer()
 
 This method will convert the result array to a new layer.
 
 There is no processing done in this case so the example is a bit circular.
 
-This return type is handy if you have to do additional processing on the data.
+This return type is handy if you have to do additional processing on the data. More on that later.
 
 ```php
 
-$memberLayer->getLayer()->toLayer()
+$memberLayer->toLayer()
 
 //produces
 
@@ -520,13 +493,13 @@ object(App\Model\Lib\Layer) {
 }
 ```
 
-####toValueList($valueSource)
+###toValueList($valueSource)
 
 `$valueSource` may point to a property or method the accepts no arguments. For example, 
 Member entitiy has a method `name()` which concatenates a full name.
 
 ```php
-$memberLayer->getLayer()->toValueList('name');
+$memberLayer->toValueList('name');
 
 //produces
 
@@ -539,12 +512,12 @@ $memberLayer->getLayer()->toValueList('name');
 ]
 ```
 
-####toKeyValueList($keySource, $valueSource)
+###toKeyValueList($keySource, $valueSource)
 
 Both `keySource` and `valueSource` may point to a property or method that accepts no arguments.
 
 ```php
-$memberLayer->getLayer()->toKeyValueList('id', 'name');
+$memberLayer->toKeyValueList('id', 'name');
 
 //produces
 
@@ -557,14 +530,14 @@ $memberLayer->getLayer()->toKeyValueList('id', 'name');
 ]
 ```
 
-####toDistinctValueList($valueSource)
+###toDistinctValueList($valueSource)
 
 Retuns an array of unique values.
 
 `$valueSource` may point to a property or method the accepts no arguments.
 
 ```php
-$memberLayer->getLayer->toDistinctValueList('member_type');
+$memberLayer->toDistinctValueList('member_type');
 
 //produces 
 
@@ -574,10 +547,30 @@ $memberLayer->getLayer->toDistinctValueList('member_type');
 ]
 ```
 
-###Data Manipulation Options: filter, sort, paginate
+##Advanced Features: Filter, Sort, Paginate
 
-With those return-data structuring tools in hand, we can look at the tools that effect 
-*which* data gets returned and how it is sorted.
+![Class diagram showing the two classes that collaborate to provide advanced features and detailing their implementation of processing and retrieval interfaces](/OStructures/img/images/image/3940eb86-fe17-4450-b144-7782a472edff/layer-access-adv.png "Layer access system classes that provide advance data retrieval features")
+
+The advanced data retrieval features are defined by *LayerTaskInterface* and provide tools 
+to filter, sort and paginate your data. The data will be returned as defined by the 
+*LayerAccessInterface* described above.
+
+###Where are these advanced tools
+
+Classes that implement `AccessLayerStructureInterface` (in our case **Layer**, **StackEntity**, and 
+**StackSet**) will have `getLayer($layer)` which will deliver a **LayerAccessProcessor** 
+instance (**LAP**).
+
+**LayerAccessProcessor** has a `find()` method which delivers a **LayerAccessArgs** 
+object (**LAA**).
+
+Finally, `AccessLayerStructureInterface::getArgObj()` will return a **LayerAccessArgs** 
+instance so you can break the whole process down. This technique is described 
+[here](#manual-style-processing).
+
+Use **LAA** to define all the details of the processing you want done, **LAP** will do 
+the actual data manipulation according to these instructions. Finally, use one of the 
+`LayerAccessInterface` methods to structure and retrieve our data.
 
 These processes can be written using a *fluent* interface style or assembled manually. 
 The examples will all show the *fluent* style. A general discussion of 
@@ -597,10 +590,6 @@ $someValidStructure                 //any implementor of LayerStructureInterface
 You can call the **LayerAccessArgs** methods in any order. They will not be executed until 
 one of the `toXxxxx()` methods is called. When executed they will always run in the same 
 order; filter, sort, paginate.
-
-####Optional hyper-detail
-Any `toXxxxx()` call on **LayerAccessArgs** causes it to pass itself to the 
-**LayerAccessProcessor** delegating both processing and return-data structuring to that class.
 
 ###specifyFilter($value_source, $filter_value, $filter_operator = FALSE)
 
