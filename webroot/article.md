@@ -352,35 +352,6 @@ object(App\Model\Entity\Member) {
 `shift()` does not alter the content of the Layer like its namesake, the php method 
 `array_shift()`.
 
-##Associated Data
-
-The Stack system is designed simplify access to linked data. So it is common to need to 
-locate the layer data that belongs to some other entity. Given the owning entities name and id 
-we can easily find the linked records.
-
-###linkedTo($foreignKey, $foreignId)
-
-`linkedTo()` provides a quick way to locate certain kinds of associated data. 
-
-This method assume the foreign key property in the entity will follow Cake 
-conventions (*name*\_id). The value you provide must be the *name* portion 
-of the key.
-
-```php
-debug($memberLayer->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9'));
-
-[
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
-		'member_type' => 'Person',
-	}
-]
-```
-
 ##Returning Restructured Data
 
 **Layer** implements the ***LayerAccessInterface*** which alows it to return its storeed data in 
@@ -837,6 +808,53 @@ $memberLayer
 	'photo-eye' => 'Institution'
 ]
 
+```
+
+##Associated Data
+
+The Stack system is designed simplify access to linked data. So a common need is to 
+locate the layer data that belongs to some other entity. Given the owning entities name 
+($foreignKey) and id ($foreignId) we can easily find the linked records.
+
+This is a good example of what use higher level structures can make of the **LA** system 
+as they create their own interfaces. Internally, this method creates a *LAA:filter()* 
+based on provided data and CakePHP conventions.
+
+###linkedTo($foreignKey, $foreignId)
+
+`linkedTo()` provides a quick way to locate certain kinds of associated data. 
+
+This method assume the foreign key property in the entity will follow Cake 
+conventions (*name*\_id). The value you provide should be the *name* portion 
+of the key.
+
+This method returns a **LayerAccessArgs**. You can chain any of the 
+`LayerAccessInterface::toXxxxx()` return methods to it. You can chain other **LAA** 
+methods too, but the `filter` is already in use for this method. Overwriting that 
+will produce unexpected results.
+
+```php
+$memberLayer
+    ->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9')
+    ->toArray();
+
+[
+	(int) 75 => object(App\Model\Entity\Member) {
+
+		'id' => (int) 75,
+		'first_name' => 'Leonardo',
+		'last_name' => 'DiVinci',
+		'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+		'member_type' => 'Person',
+	}
+]
+
+//another valid example
+$memberLayer
+    ->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9')
+    ->specifySort('created', SORT_DESC)
+    ->speicifyPagination($page, $limit)
+    ->toKeyValueList('id', 'name');
 ```
 
 ##Advance Features: Manual Style Processing
