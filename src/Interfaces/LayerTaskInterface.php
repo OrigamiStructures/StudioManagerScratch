@@ -29,12 +29,12 @@ interface LayerTaskInterface
      * @param $argObj LayerAccessArgs
      * @return bool
      */
-    public function setAccessArgs($argObj);
+    public function setArgObj($argObj);
 
     /**
      * Get a copy of the Access instructions (with no included data)
      *
      * @return LayerAccessArgs
      */
-    public function copyArgObj();
+    public function cloneArgObj();
 }

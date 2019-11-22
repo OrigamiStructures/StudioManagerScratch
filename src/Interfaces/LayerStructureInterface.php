@@ -4,6 +4,7 @@
 namespace App\Interfaces;
 
 
+use App\Model\Lib\LayerAccessArgs;
 use App\Model\Lib\LayerAccessProcessor;
 
 interface LayerStructureInterface
@@ -17,6 +18,10 @@ interface LayerStructureInterface
      */
     public function getLayer($name);
 
-    public function IDs($layer = null);
+    /**
+     * Get an new LayerAccessArgs instance
+     * @return LayerAccessArgs
+     */
+    public function getArgObj();
 
 }

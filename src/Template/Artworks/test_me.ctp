@@ -108,17 +108,17 @@ if (isset($stacks)) {
             ->toArray();
 		$joinLayer = new Layer($joinArray, 'dispositions_pieces');
 
-		$distinct_pieces = $stacks->getLayer('pieces')
+        $pieces = $stacks->getLayer('pieces')
             ->NEWfind()
             ->specifyFilter(
                 'id',
                 $joinLayer->toDistinctList('piece_id'),
                 'in_array')
+            ->specifySort('format_id',\SORT_DESC, \SORT_NUMERIC)
             ->toArray();
-		$pieces = new Layer($distinct_pieces, 'pieces');
 
 		echo '<h3>' . $disposition->displayTitle . " (id: $disposition->id)" . '</h3><ul>';
-        foreach ($pieces->sort('format_id') as $piece) {
+        foreach ($pieces as $piece) {
 
 			$stack = $stacks->ownerOf('pieces', $piece->id)[0];
 			$format = $stack->formats->element($piece->format_id, LAYERACC_ID);

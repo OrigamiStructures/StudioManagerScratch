@@ -10,7 +10,6 @@ use Cake\Validation\Validator;
 use App\Lib\Traits\EditionStackCache;
 use App\Model\Behavior\IntegerQueryBehavior;
 use App\Model\Behavior\StringQueryBehavior;
-use App\Model\Lib\ArtistIdConditionTrait;
 
 /**
  * Formats Model
@@ -29,7 +28,6 @@ use App\Model\Lib\ArtistIdConditionTrait;
 class FormatsTable extends AppTable {
 
     use EditionStackCache;
-    use ArtistIdConditionTrait;
 
 // <editor-fold defaultstate="collapsed" desc="Core processes">
 

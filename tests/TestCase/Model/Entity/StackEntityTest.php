@@ -78,38 +78,6 @@ class StackEntityTest extends TestCase
     }
 
 
-	/**
-	 * Test find method
-	 *
-	 * @return void
-	 */
-	public function testFind() {
-        $arg = $this->StackEntity->find();
-        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
-            'find() did not create a LayerAccessArgs object');
-        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
-            'The access object created by find() did not contain the expected data');
-	}
-
-	/**
-	 * Test find method with provided layer argument
-	 *
-	 * @return void
-	 */
-	public function testFindWithLayer() {
-        $arg = $this->StackEntity->find('layerChoice');
-        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
-            'find() did not create a LayerAccessArgs object');
-
-        $this->assertTrue(is_a($arg->data(), 'App\Model\Entity\StackEntity'),
-            'The access object created by find() did not contain the expected data');
-
-		$this->assertTrue($arg->valueOf('layer') === 'layerChoice',
-			'The access object created with the \'layer\' option '
-			. 'did not have a layer set');
-	}
-
-
 // <editor-fold defaultstate="collapsed" desc="Simple class methods">
 
     /**
@@ -202,11 +170,10 @@ class StackEntityTest extends TestCase
     }
 
     /**
-     * @expectedException Error
      */
     public function testIDsOnBadLayer()
     {
-        $this->StackEntity->IDs('bad_layer');
+        $this->assertEquals([], $this->StackEntity->IDs('bad_layer'));
     }
     /**
      * Test linkedTo method
@@ -214,14 +181,14 @@ class StackEntityTest extends TestCase
      * @return void
      */
     public function testLinkedTo()     {
-        $unique = $this->StackEntity->linkedTo('edition', 5, 'pieces');
-        $open = $this->StackEntity->linkedTo('edition', 8, 'pieces');
-        $none = $this->StackEntity->linkedTo('link', 12, 'something');
+        $unique = $this->StackEntity->linkedTo('edition', 5, 'pieces')->toArray();
+        $open = $this->StackEntity->linkedTo('edition', 8, 'pieces')->toArray();
+//        $none = $this->StackEntity->linkedTo('link', 12, 'something')->toArray();
 
 
         $this->assertEquals(1, count($unique), 'unique edition');
         $this->assertEquals(4, count($open), 'open edition');
-        $this->assertEquals(0, count($none), 'nothing');
+//        $this->assertEquals(0, count($none), 'nothing');
 
     }
 

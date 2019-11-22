@@ -1,4 +1,4 @@
-<?php foreach ($results->load() as $entity) {
+<?php foreach ($results->getData() as $entity) {
     if($entity->isGroup()){
         echo $this->Html->tag('h2', 'SKIPPED GROUP');
         continue;

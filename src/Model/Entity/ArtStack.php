@@ -94,8 +94,8 @@ class ArtStack extends StackEntity {
         }
         $artwork = $this->artwork->shift();
         $edition = $this->editions->element($editionId, LAYERACC_ID);
-        $formats = $this->formats->linkedTo('edition', $editionId);
-        $pieces = $this->pieces->linkedTo('edition', $editionId);
+        $formats = $this->formats->linkedTo('edition', $editionId)->toArray();
+        $pieces = $this->pieces->linkedTo('edition', $editionId)->toArray();
         $providers = ['edition' => $edition] + $formats;
         $stack = [
             'providers' => new Providers($providers),

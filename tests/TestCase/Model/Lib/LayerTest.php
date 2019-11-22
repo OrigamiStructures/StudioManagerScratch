@@ -150,22 +150,6 @@ class LayerTest extends TestCase
         $layer = new Layer([$art], null);
     }
 
-    /**
-     * Test find method
-     *
-     * @return void
-     */
-    public function testFind()
-    {
-        $layer = new Layer([], 'edition');
-        $arg = $layer->find();
-
-        $this->assertTrue(is_a($arg, 'App\Model\Lib\LayerAccessArgs'),
-            'find() did not create a LayerAccessArgs object');
-        $this->assertTrue(is_a($arg->data(), 'App\Model\Lib\Layer'),
-            'The access object created by find() did not contain the expected data');
-    }
-
     public function testMembersFromTheTrait()
     {
         $layer = new Layer($this->fivePieces);
@@ -284,10 +268,10 @@ class LayerTest extends TestCase
     public function testLinkedTo()
     {
         $layer = new Layer($this->pieceRecords);
-        $this->assertEquals(5, count($layer->linkedTo('format', 36)));
-        $this->assertEquals(40, count($layer->linkedTo('format', null)));
-        $this->assertEquals(0, count($layer->linkedTo('format', 500)));
-        $this->assertEquals(0, count($layer->linkedTo('junk', 36)));
+        $this->assertEquals(5, count($layer->linkedTo('format', 36)->toArray()));
+        $this->assertEquals(40, count($layer->linkedTo('format', null)->toArray()));
+        $this->assertEquals(0, count($layer->linkedTo('format', 500)->toArray()));
+        $this->assertEquals(0, count($layer->linkedTo('junk', 36)->toArray()));
     }
 
 }

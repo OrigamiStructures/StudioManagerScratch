@@ -15,11 +15,8 @@ use \SPLStorageObject;
 use Cake\I18n\Time;
 use App\Model\Behavior\DateQueryBehavior;
 use App\Model\Behavior\IntegerQueryBehavior;
-use App\Model\Lib\ArtistIdConditionTrait;
 
 class DispositionsTable extends AppTable {
-
-    use ArtistIdConditionTrait;
 
 // <editor-fold defaultstate="collapsed" desc="Type and Label mapping properties">
 

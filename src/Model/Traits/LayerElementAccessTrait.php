@@ -15,6 +15,49 @@ trait LayerElementAccessTrait
 {
 
     /**
+     * Get the count of stored entities
+     *
+     * @return integer
+     */
+    public function count() {
+        return count($this->getData());
+    }
+
+    /**
+     * Does the primary data or the named layer contain the id'd item?
+     *
+     * @param $id
+     * @param string|null $layer
+     * @return bool
+     */
+    public function hasId($id, $layer = null)
+    {
+        if(is_null($layer)) {
+            $haystack = $this->getData();
+        } else {
+            $haystack = array_flip($IDs($layer));
+        }
+        return key_exists($id, $haystack);
+    }
+
+    /**
+     * Return the id indexed array of entities
+     * @return array
+     */
+    abstract function getData();
+
+    /**
+     * Return the list of IDs for the named layer or default structure
+     *
+     * null will get the ids of the stored entities.
+     * Name a layer to get the ids of a layer store in the stored entities
+     *
+     * @param string|null $layer
+     * @return array
+     */
+    abstract function IDs($layer = null);
+
+    /**
      * Return the n-th stored element or element(ID)
      *
      * Data is stored in id-indexed arrays, but this method will let you
@@ -50,49 +93,6 @@ trait LayerElementAccessTrait
      */
     public function shift() {
         return $this->element(0, LAYERACC_INDEX);
-    }
-
-    /**
-     * Return the id indexed array of entities
-     * @return array
-     */
-    abstract function getData();
-
-    /**
-     * Return the list of IDs for the named layer or default structure
-     *
-     * null will get the ids of the stored entities.
-     * Name a layer to get the ids of a layer store in the stored entities
-     *
-     * @param string|null $layer
-     * @return array
-     */
-    abstract function IDs($layer = null);
-
-    /**
-     * Does the primary data or the named layer contain the id'd item?
-     * 
-     * @param $id
-     * @param string|null $layer
-     * @return bool
-     */
-    public function hasId($id, $layer = null)
-    {
-        if(is_null($layer)) {
-            $haystack = $this->getData();
-        } else {
-            $haystack = array_flip($IDs($layer));
-        }
-        return key_exists($id, $haystack);
-    }
-
-    /**
-     * Get the count of stored entities
-     *
-     * @return integer
-     */
-    public function count() {
-        return count($this->getData());
     }
 
 }

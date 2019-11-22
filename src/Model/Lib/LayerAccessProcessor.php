@@ -34,7 +34,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function __construct($layerName)
     {
-        $this->AppendIterator = new \AppendIterator();
+        $this->AppendIterator = new LayerAppendIterator();
         $this->layerName = $layerName;
     }
 
@@ -248,7 +248,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     public function perform($argObj)
     {
-        $this->setAccessArgs($argObj);
+        $this->setArgObj($argObj);
         $this->AccessArgs->setLayer($this->layerName);
 
         if($this->AccessArgs->hasFilter()) {
@@ -269,6 +269,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
             $this->ResultArray = new \ArrayIterator($this->ResultArray);
         }
 
+        if (!($this->ResultArray instanceof \Countable)) {
+            osd($this->ResultArray);
+        }
         return $this->ResultArray;
 
     }
@@ -313,8 +316,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         }
         $unchuncked = new Collection($this->ResultArray);
         $chunked = $unchuncked->chunk($limit)->toArray();
-        if(isset($chunked[$page - 1])) {
-            $result = $chunked[$page - 1];
+//        osd($chunked);
+        if(isset($chunked[$page])) {
+            $result = $chunked[$page];
         } else {
             $result = array_pop($chunked);
         }
@@ -327,7 +331,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * @param $argObj LayerAccessArgs
      * @return bool
      */
-    public function setAccessArgs($argObj)
+    public function setArgObj($argObj)
     {
         $this->AccessArgs = $argObj;
         unset($this->ResultArray);
@@ -343,7 +347,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      *
      * @return LayerAccessArgs
      */
-    public function copyArgObj()
+    public function cloneArgObj()
     {
         $obj = clone $this->AccessArgs ?? new LayerAccessArgs();
         $obj->resetData();
