@@ -10,7 +10,6 @@ use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use App\Interfaces\xxxLayerAccessInterface;
-//use App\Model\Traits\LayerAccessTrait;
 use App\Model\Lib\LayerAccessArgs;
 use App\Exception\BadClassConfigurationException;
 use Cake\Utility\Text;
@@ -30,8 +29,6 @@ use http\Exception\InvalidArgumentException;
  */
 class StackEntity extends Entity implements LayerStructureInterface
 {
-
-//    use LayerAccessTrait;
 
     /**
      * Name of the tip-of-the-iceberg entity for this stack
@@ -81,6 +78,7 @@ class StackEntity extends Entity implements LayerStructureInterface
      */
     public $schema;
 
+    //<editor-fold desc="LayerStructureInterface Realization">
     /**
      * Gather the available data at this level and package the iterator
      *
@@ -106,7 +104,49 @@ class StackEntity extends Entity implements LayerStructureInterface
     {
         return new LayerAccessArgs();
     }
+    //</editor-fold>
 
+
+    //<editor-fold desc="Introspection">
+
+    /**
+     * Get this primary id or the IDs of all the entities in a layer
+     *
+     * @param string $layer
+     * @return array
+     */
+    public function IDs($layer = null)
+    {
+        if(is_null($layer)) {
+            $result = $this->rootID(LAYERACC_WRAP);
+        } else {
+            $result = $this->getLayer($layer)->toDistinctList('id');
+        }
+        return $result;
+    }
+
+    /**
+     * Adds Layer property empty checks to other native checks
+     *
+     * {@inheritdoc}
+     *
+     * @param string $property The property to check.
+     * @return bool
+     */
+    public function isEmpty($property = null)
+    {
+        if (is_null($property)) {
+            $property = $this->rootLayerName();
+        }
+        $value = $this->get($property);
+        if (is_object($value)
+            && $value instanceof \App\Model\Lib\Layer
+            && $value->count() === 0
+        ) {
+            return true;
+        }
+        return parent::isEmpty($property);
+    }
 
     /**
      * Is the id a member of the set
@@ -149,6 +189,9 @@ class StackEntity extends Entity implements LayerStructureInterface
     {
         return $this->count($layer) > 0;
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Root Layer Introspection and Access">
 
     /**
      * Return the owner of the primary entity
@@ -254,126 +297,7 @@ class StackEntity extends Entity implements LayerStructureInterface
         }
         return $this->get('rootName');
     }
-
-    /**
-     * Get the id of the primary entity in the stack
-     *
-     * @return string
-     */
-//	public function primaryId() {
-//		return $this->primaryEntity()->id;
-//	}
-
-    /**
-     * Get the primary entity in the stack
-     *
-     * @return Entity
-     */
-//	public function primaryEntity() {
-////		$allArg = $this->accessArgs()->setLimit('first');
-//		return $this->get($this->capLayer())->element(0);
-//	}
-
-    /**
-     * Load data from the StackEntity context
-     *
-     * If no args are given, return $this in an array indexed by the primary id
-     *
-     * If a string if given, it's assumed to be a layer name and we'll try
-     *  to use it to fetch that layer
-     *
-     * If a layer is registered in $argObj, it should be a layer of this stack.
-     *    If its not, an empty array is returned.
-     *
-     * Given a valid layer in $argObj, the  query is delegated to that named layer.
-     *    The layer will do all required filtering and pagination. StackEntity
-     *    will return that result
-     *
-     * @param mixed $argObj
-     * @return array
-     */
-    public function load($argObj = null)
-    {
-
-        if (is_null($argObj)) {
-            return [$this->rootID() => $this];
-        }
-
-        if (is_string($argObj)) {
-            $argObj = (new LayerAccessArgs())
-                ->setLayer($argObj);
-        }
-
-        $this->verifyInstanceArgObj($argObj);
-
-        $layer = $this->OldGetLayer($argObj);
-        if (!$layer) {
-            return [];
-        }
-
-        /* @var Layer $layer */
-        return $layer->getLayer()->perform($argObj);
-
-    }
-
-    /**
-     * Get a property of this stack that is a Layer
-     *
-     * The target is named in 'layer' of the arg object, but it is seen as a
-     * property of the stack. ('property' in the argObj is of the layer entities)
-     *
-     *
-     * @param LayerAccessArgs $argObj
-     * @return boolean|Layer Layer object if valid, FALSE otherwise
-     */
-    private function OldGetLayer($argObj)
-    {
-        $property = $argObj->hasLayer() ? $this->get($argObj->valueOf('layer')) : FALSE;
-        if ($property && is_a($property, '\App\Model\Lib\Layer')) {
-            return $property;
-        } else {
-            return FALSE;
-        }
-    }
-
-    /**
-     * Get this primary id or the IDs of all the entities in a layer
-     *
-     * @param string $layer
-     * @return array
-     */
-    public function IDs($layer = null)
-    {
-        if(is_null($layer)) {
-            $result = $this->rootID(LAYERACC_WRAP);
-        } else {
-            $result = $this->getLayer($layer)->toDistinctList('id');
-        }
-        return $result;
-    }
-
-    /**
-     * Adds Layer property empty checks to other native checks
-     *
-     * {@inheritdoc}
-     *
-     * @param string $property The property to check.
-     * @return bool
-     */
-    public function isEmpty($property = null)
-    {
-        if (is_null($property)) {
-            $property = $this->rootLayerName();
-        }
-        $value = $this->get($property);
-        if (is_object($value)
-            && $value instanceof \App\Model\Lib\Layer
-            && $value->count() === 0
-        ) {
-            return true;
-        }
-        return parent::isEmpty($property);
-    }
+    //</editor-fold>
 
     /**
      * For an array with a single item, should it be unwrapped
@@ -434,16 +358,6 @@ class StackEntity extends Entity implements LayerStructureInterface
             throw new UnknownLayerException($msg);
         }
         return $this->$layer->linkedTo($foreign, $foreign_id);
-    }
-
-    public function keyedList(LayerAccessArgs $argObj)
-    {
-        ;
-    }
-
-    public function filter($property, $value)
-    {
-        debug('strike');
     }
 
 // </editor-fold>
