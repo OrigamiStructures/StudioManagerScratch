@@ -19,7 +19,7 @@ class ManagerManifestStacksSet extends StackSet{
 	}
 	
 	public function delegatedManagement($supervisor_id) {
-		$collection = collection($this->load());
+		$collection = collection($this->getData());
 		$delegated = $collection->filter(function($stack) use ($supervisor_id) {
 			return $stack->rootElement()->supervisorId() == $supervisor_id
 					&& !$stack->rootElement()->selfAssigned();

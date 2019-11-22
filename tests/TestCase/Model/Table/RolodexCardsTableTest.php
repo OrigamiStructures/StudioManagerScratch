@@ -212,7 +212,7 @@ class RolodexCardsTableTest extends TestCase
 		$cards = $this->RolodexCards->find(
 				'stacksFor',
 				['seed' => 'membership', 'ids' => [4]]);
-		$this->assertCount(2, $cards->load(),
+		$this->assertCount(2, $cards,
 				'building from membership ids did not find the right '
 				. 'number of stacks');
 		$this->assertArraySubset(
@@ -228,7 +228,7 @@ class RolodexCardsTableTest extends TestCase
 		$cards = $this->RolodexCards->find(
 				'stacksFor',
 				['seed' => 'data_owner', 'ids' => ['f22f9b46-345f-4c6f-9637-060ceacb21b2']]);
-		$this->assertCount(9, $cards->load(),
+		$this->assertCount(9, $cards,
 				'building from data_owner ids did not find the right '
 				. 'number of stacks');
 		$this->assertArraySubset(

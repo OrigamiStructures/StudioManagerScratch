@@ -8,6 +8,7 @@ use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Lib\StackSetAccessArgs;
 use App\Model\Traits\LayerElementAccessTrait;
 use Cake\Core\ConventionsTrait;
+use Cake\Error\Debugger;
 use Cake\Utility\Text;
 
 /**
@@ -23,7 +24,6 @@ use Cake\Utility\Text;
  */
 class StackSet implements LayerStructureInterface, \Countable {
 
-//	use LayerAccessTrait;
 	use LayerElementAccessTrait;
 	use ConventionsTrait;
 
@@ -31,8 +31,7 @@ class StackSet implements LayerStructureInterface, \Countable {
 
 	protected $_stackName;
 
-    // <editor-fold defaultstate="collapsed" desc="LayerStructureInterface REALIZATION">
-
+    //<editor-fold desc="LayerStructureInterface Realization">
     /**
      * Gather the available data at this level and package the iterator
      *
@@ -62,7 +61,13 @@ class StackSet implements LayerStructureInterface, \Countable {
     {
         return new LayerAccessArgs();
     }
+    //</editor-fold>
 
+    //<editor-fold desc="LayerElementAccessTrait abstract completion">
+    public function getData()
+    {
+        return $this->_data;
+    }
 
     /**
      * Get all the ids accross all the stored StackEntities or the Layer entities
@@ -89,108 +94,18 @@ class StackSet implements LayerStructureInterface, \Countable {
         return $ids;
     }
 
-// </editor-fold>
-
-    //<editor-fold desc="LayerElementAccessTrait abstract completion">
-    public function getData()
-    {
-        return $this->_data;
-    }
     //</editor-fold>
 
-	/**
-	 * Add another entity to the StackSet
-	 *
-	 * @param string $id
-	 * @param StackEntity $stack
-	 */
-	public function insert($id, $stack) {
-		$this->_data[$id] = $stack;
-		if (!isset($this->_stackName)) {
-			$this->_stackName = $stack->rootLayerName();
-		}
-	}
-
-    //<editor-fold desc="OLD LAA TOOLS">
-
-    /**
-     * StackSet level fluent query
-     *
-     * Returns layer access arg (LAA) object allowing LAA fluent queries.
-     * Usage must be terminated by one of the load method variants.
-     * Will aggregate data from entire Set, and will include duplicates.
-     *
-     * @param null $layer
-     * @return \App\Model\Lib\StackSetAccessArgs\
-     */
-	public function find($layer = NULL) {
-        $args = new StackSetAccessArgs($this);
-		if (!is_null($layer)) {
-			$args->setLayer($layer);
-		}
-        return $args;
-    }
-
-	/**
-	 * Perform data load from StackSet context
-	 *
-	 * No args will get the id-indexed array of stack entities
-	 * No layer specified will get the paginated chunck of the stack entity array
-	 * Once a layer is specified, load will deligate to each stack entity
-	 * in turn. Filtering and pagination will be done, and the accumulated
-	 * result will be returned
-	 *
-	 * @param mixed $argObj
-	 * @return array
-	 */
-	public function load($argObj = null) {
-
-		if (is_null($argObj)) {
-			return $this->_data;
-		}
-
-		if (is_string($argObj)) {
-			$argObj = (new LayerAccessArgs())
-					->setLayer($argObj);
-		}
-
-		$this->verifyInstanceArgObj($argObj);
-
-		if (!$argObj->hasLayer()) {
-			return $this->paginate($this->_data, $argObj);
-		} else {
-			$result = [];
-			foreach ($this->_data as $stack) {
-				$found = $stack->load($argObj);
-				$result = array_merge($result, (is_array($found) ? array_values($found) : [$found]));
-//				debug($result);
-			}
-		}
-
-		return $result;
-
-	}
-
-    public function keyedList(LayerAccessArgs $argObj) {
-
-    }
-
-    public function filter($property, $value) {
-        debug('other strike');
-    }
-
+    //<editor-fold desc="Public Associated Data Features">
     public function linkedTo($foreign, $foreign_id, $linked = null) {
-	    $accessProcessor = $this->getLayer($linked);
+        $accessProcessor = $this->getLayer($linked);
         $foreign_key = $this->_modelKey($foreign);
         return $accessProcessor
             ->NEWfind()
             ->specifyFilter($foreign_key, $foreign_id);
     }
 
-    //</editor-fold>
-
-
-	/**
+    /**
 	 * Return all StackEntities that contain a layer entity with id = $id
      *
      * @todo This method seems confusing. Is it necessary?
@@ -228,9 +143,24 @@ class StackSet implements LayerStructureInterface, \Countable {
             }
         }
         return $stacks;
-	}
+    }
 
-	public function __debugInfo()
+    //</editor-fold>
+
+    /**
+     * Add another entity to the StackSet
+     *
+     * @param string $id
+     * @param StackEntity $stack
+     */
+    public function insert($id, $stack) {
+        $this->_data[$id] = $stack;
+        if (!isset($this->_stackName)) {
+            $this->_stackName = $stack->rootLayerName();
+        }
+    }
+
+    public function __debugInfo()
     {
         return [
             '[_data]' => 'Contains ' . count($this->_data) . ' elements, '

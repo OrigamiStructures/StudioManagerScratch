@@ -24,9 +24,10 @@
 	<?= "<p>{$manifest->managerCard()->name()}</p>"; ?>
 
 <?php endforeach; ?>
+
     <h2>Owned Management</h2>
 
-<?php foreach ($managementAgreements->load() as $agrement) : ?>
+<?php foreach ($managementAgreements->getData() as $agrement) : ?>
 
     <?= "<p>{$this->People->artistManifestSummary($agrement)}</p>"; ?>
 
