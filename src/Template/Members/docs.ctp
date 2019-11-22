@@ -4,6 +4,58 @@
 /* @var \App\Model\Lib\AppendIterator $it */
 /* @var \App\Model\Lib\StackSet $people */
 
+/*
+ * Get a new, empty LAA
+ */
+$argObj = $memberLayer->getArgObj();
+
+debug($argObj);
+
+/*
+ * Get one from an LAP
+ */
+$lap = $memberLayer->getLayer();
+$selectList = $lap->NEWfind()->toKeyValueList('id', 'name');
+
+debug($lap);
+
+$argObj = $lap->cloneArgObj();
+
+debug($argObj);
+
+/*
+ * simple
+ */
+$layerAccessProcessor = $memberLayer->getLayer($memberLayer);
+
+debug($layerAccessProcessor);
+
+
+$layer = layer([
+    new \App\Model\Entity\Member(['id' => 1, 'first_name' => 'one']),
+    new \App\Model\Entity\Member(['id' => 2, 'first_name' => 'two']),
+]);
+$array =[
+    new \App\Model\Entity\Member(['id' => 3, 'first_name' => 'three']),
+    new \App\Model\Entity\Member(['id' => 4, 'first_name' => 'four']),
+];
+$entity = new \App\Model\Entity\Member(['id' => 5, 'first_name' => 'five']);
+/*
+ * fully manual
+ *
+ * All the entities inserted must be of the same type
+ * and they must all match the type passed to the constructor
+ *
+ * @param $entityType string lower case singular version of the Entity class
+ */
+$lap = new \App\Model\Lib\LayerAccessProcessor('member');
+$lap->insert($layer)        //you can chain the insert calls
+    ->insert($array)
+    ->insert($entity);
+
+debug($lap);
+
+
 $memberProcessor = $memberLayer->getLayer();
 $groupFilters = [
     'People' => $memberLayer->getArgObj()     //you can chain off the accessor if you want

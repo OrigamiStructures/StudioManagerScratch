@@ -352,6 +352,35 @@ object(App\Model\Entity\Member) {
 `shift()` does not alter the content of the Layer like its namesake, the php method 
 `array_shift()`.
 
+##Associated Data
+
+The Stack system is designed simplify access to linked data. So it is common to need to 
+locate the layer data that belongs to some other entity. Given the owning entities name and id 
+we can easily find the linked records.
+
+###linkedTo($foreignKey, $foreignId)
+
+`linkedTo()` provides a quick way to locate certain kinds of associated data. 
+
+This method assume the foreign key property in the entity will follow Cake 
+conventions (*name*\_id). The value you provide must be the *name* portion 
+of the key.
+
+```php
+debug($memberLayer->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9'));
+
+[
+	(int) 75 => object(App\Model\Entity\Member) {
+
+		'id' => (int) 75,
+		'first_name' => 'Leonardo',
+		'last_name' => 'DiVinci',
+		'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+		'member_type' => 'Person',
+	}
+]
+```
+
 ##Returning Restructured Data
 
 **Layer** implements the ***LayerAccessInterface*** which alows it to return its storeed data in 
@@ -914,27 +943,57 @@ There are a methods to help you to decompose the process.
 
 ###Getting and Populating a LayerAccessProcessor
 
+Making and capturing a populated **LAP**
+
 ```php
-/*
- * simple
- */
+
 $layerAccessProcessor = $validStructure->getLayer($someLayer);
 
+debug($layerAccessProcessor);
+
+object(App\Model\Lib\LayerAccessProcessor) {
+'[AppendIterator]' => 'Contains 75 items.',
+	'[AccessArgs]' => 'null',
+	'[layerName]' => 'member',
+	'[ResultArray]' => 'null'
+}
+```
+
+Making an **LAP** and populating it by hand
+
+```php
+//Data to place in the LayerAccessProcessor
+$layer = layer([
+    new \App\Model\Entity\Member(['id' => 1, 'first_name' => 'one']),
+    new \App\Model\Entity\Member(['id' => 2, 'first_name' => 'two']),
+]);
+$array =[
+    new \App\Model\Entity\Member(['id' => 3, 'first_name' => 'three']),
+    new \App\Model\Entity\Member(['id' => 4, 'first_name' => 'four']),
+];
+$entity = new \App\Model\Entity\Member(['id' => 5, 'first_name' => 'five']);
+
 /*
- * fully manual
+ * fully manual populating
  *
- * All the entities inserted must be of the same type 
+ * All the entities inserted must be of the same type
  * and they must all match the type passed to the constructor
  *
  * @param $entityType string lower case singular version of the Entity class
  */
-$lap = new LayerAccessProcessor($entityType);
-$lap->insert($aLayer);
-$lap->insert($anArray);
-$lap->insert($anEntity);
+$lap = new \App\Model\Lib\LayerAccessProcessor('member');
+$lap->insert($layer)        //you can chain the insert calls
+    ->insert($array)
+    ->insert($entity);
 
-//now $lap::AppendIterator contains aLayer + anArray + anEntity
+debug($lap);
 
+object(App\Model\Lib\LayerAccessProcessor) {
+	'[AppendIterator]' => 'Contains 5 items.',
+	'[AccessArgs]' => 'null',
+	'[layerName]' => 'member',
+	'[ResultArray]' => 'null'
+}
 ```
 
 ###Getting a LayerAccessArgs
@@ -943,16 +1002,126 @@ $lap->insert($anEntity);
 /*
  * Get a new, empty LAA
  */
-$argObj = $validStructure->getArgObj();
+$argObj = $memberLayer->getArgObj();
+
+debug($argObj);
+
+object(App\Model\Lib\LayerAccessArgs) {
+
+	'[data]' => 'not set',
+	'[_registry]' => object(App\Model\Lib\ValueSourceRegistry) {
+
+		'_loaded' => []
+	
+	},
+	'_page' => false,
+	'_limit' => false,
+	'_layer' => false,
+	'source_node' => [
+		'value' => false,
+		'key' => false,
+		'filter' => false,
+		'resultValue' => false,
+		'resultKey' => false,
+		'distinctValue' => false
+	],
+	'_filter_value' => false,
+	'_filter_value_isset' => false,
+	'_filter_operator' => false,
+	'_sortDir' => false,
+	'_sortType' => false,
+	'_sortColumn' => false
+
+}
 
 /*
  * Get one from an LAP
  */
-$lap = $rolodexCards->getLayer('identity');         //no LAA available yet
-$selectList = $lap->toKeyValueList('id', 'name');   //toXxxxxx() creates an LAA in none existed
+$lap = $memberLayer->getLayer();    //make a LayerTaksProcessor
+$selectList = $lap                  
+    ->find()                        //from this point we have a LayerAccessArgs
+    ->toKeyValueList('id', 'name'); 
 
+debug($lap);                        //we didn't save the LAA but it is now in the LAP
+
+object(App\Model\Lib\LayerAccessProcessor) {
+
+	'[AppendIterator]' => 'Contains 75 items.',
+	'[AccessArgs]' => object(App\Model\Lib\LayerAccessArgs) {
+
+		'[data]' => 'App\Model\Lib\LayerAccessProcessor containing 75items.',
+		'[_registry]' => object(App\Model\Lib\ValueSourceRegistry) {
+
+			'_loaded' => [
+				(int) 0 => 'resultKey',
+				(int) 1 => 'resultValue'
+			]
+		
+		},
+		'_page' => false,
+		'_limit' => false,
+		'_layer' => 'member',
+		'source_node' => [
+			'value' => false,
+			'key' => false,
+			'filter' => false,
+			'resultValue' => 'name',
+			'resultKey' => 'id',
+			'distinctValue' => false
+		],
+		'_filter_value' => false,
+		'_filter_value_isset' => false,
+		'_filter_operator' => false,
+		'_sortDir' => false,
+		'_sortType' => false,
+		'_sortColumn' => false
+	
+	},
+	'[layerName]' => 'member',
+	'[ResultArray]' => 'Contains 75 items.'
+
+}
+```
+We can get a clone of the **LAA**. But notice, the **LAA::data** is unset in the clone
+
+```php
 $argObj = $lap->cloneArgObj();
-//this has all the settings of the source but an empty data property
+
+debug($argObj);
+
+/src/Template/Members/docs.ctp (line 24)
+
+object(App\Model\Lib\LayerAccessArgs) {
+
+	'[data]' => 'not set',
+	'[_registry]' => object(App\Model\Lib\ValueSourceRegistry) {
+
+		'_loaded' => [
+			(int) 0 => 'resultKey',
+			(int) 1 => 'resultValue'
+		]
+	
+	},
+	'_page' => false,
+	'_limit' => false,
+	'_layer' => 'member',
+	'source_node' => [
+		'value' => false,
+		'key' => false,
+		'filter' => false,
+		'resultValue' => 'name',
+		'resultKey' => 'id',
+		'distinctValue' => false
+	],
+	'_filter_value' => false,
+	'_filter_value_isset' => false,
+	'_filter_operator' => false,
+	'_sortDir' => false,
+	'_sortType' => false,
+	'_sortColumn' => false
+
+}
+
 
 ```
 
@@ -1015,403 +1184,8 @@ debug($result);
 	]
 ]
 ```
+###Advanced Use Summary
 
-
-
-
-#NOT EDITED PAST HERE
-
-#####Filtering by manually creating a LayerArgObj
-
-```php
-$findByType = new \App\Model\Lib\LayerAccessArgs();
-
-$findByType
-    ->setFilterOperator('===')      //if not specified, the default '==' would be used
-    ->setFilterTestSubject('member_type');
-//  ->filterValue('aString')        this would set the last required parameter
-
-//use the LayerAccessArgs object as a parameter for Layer::load()
-//remember, the 'set' calls to LayerAccessArgs return the instance
-foreach (['Person', 'Category', 'Unknown'] as $type) {
-    debug($memberLayer->load($findByType->filterValue($type)));
-}
-
-//first pass, $type = Person
-
-[
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'member_type' => 'Person',
-	
-	},
-	(int) 73 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 73,
-		'first_name' => 'Sheila',
-		'last_name' => 'Botein',
-		'member_type' => 'Person',
-	
-	}
-]
-
-//second pass, $type = Category
-
-[
-	(int) 74 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-		'member_type' => 'Category',
-	
-	}
-]
-
-//third pass, $type = Unknown
-
-[]
-```
-
-###linkedTo($foreignKey, $foreignId)
-
-`linkedTo()` provides a quick way to locate certain kinds of associated data. 
-
-This method assume the foreign key property in the entity will follow Cake 
-conventions (*name*\_id). The value you provide must be the *name* portion 
-of the key.
-
-```php
-debug($memberLayer->linkedTo('user', '708cfc57-1162-4c5b-9092-42c25da131a9'));
-
-[
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
-		'member_type' => 'Person',
-	}
-]
-```
-
-
-##Advanced Use
-
-The simple access methods described above are built on a more comprehensive set of 
-filtering and access tools. They provide simple calls for the most common uses. 
-
-But even the advanced tools have limits. If you want to filter or manipulate 
-the data beyond these provided features, `load()` the array and have at it.
-
-###Basic Concepts
-
-Gettin data from a Layer is a two step process
-
-- specify what data you want
-- request a return structure
-
-These two steps can be done through a fluent interface or through a parameter system.
-
-```php
-//fluent interface example
-$layerObject
-    ->find()                                    //initiates a fluent expression
-    ->specifyFilter('member_type', 'Person')    //multiple calls to define the  data
-    ->load();                                    //one of the 4 load variations 
-
-//paramter system example
-$args = new App\Model\Lib\LayerAccessArgs();    //make the arguement object
-$args->specifyFilter('member_type', 'Person');  //multple calls to define the  data
-$layerObject->load($args);                      //one of the 4 load variations
-```
-
-The parameter system lets you design reusable access patterns. 
-
-The fluent system may be easier to read in most cases.
-
-####Important concepts
-The `find()` method on the `Layer` object returns a `LayerAccessArgs` object. 
-So these two lines create the same basic object:
-
-```php
-$argObj = $layer->find();
-$argObj = new App\Model\Lib\LayerAccessArgs();
-```
-So anything that can be done in one style (including call-chaining) can be done in the other... until 
-the final step of retrieving the result.
-
-The difference is, the first syntax places a copy of the **Layer** inside the `$argObj`. The second syntax 
-creates an `$argObj` that has no knowledge of any **Layer** object.
-
-#####Why This distiction matters
-Both **LayerAccessArgs** and **Layer** have the four `load()` variations to retrieve the results (see below). 
-Those `load()` methods in **LayerAccessArgs** do not accept any paramters. The methods in **Layer** optionally 
-alow a parameter (a LayerAccessArgs instance). The parameter is required for everything beyond simply 
-retrieving the unaltered, stored array.
-
-This means that, when using the first syntax, the **LayerAccessArgs** has `Layer::load()` composed it. It calls 
-this method and passes a reference to itself as an argument.
-
-When the second syntax is used, you must pass your constructed argument object to your 
-layer object manually.
-
-As a final, unnecessary note:
-
-```php
-//These two calls will make $argObj instances with the exact same properties.
-$argObj = $layer->find();
-$argObj = new App\Model\Lib\LayerAccessArgs($layer);
-
-//You could now call load() on either
-
-//If you make
-$argObj = new App\Model\Lib\LayerAccessArgs();
-
-//then try
-$argObj->load();
-
-//You would get an error because the true and final Layer::load() would be unavailable
-
-//These two approaches are also equivalent
-
-//Approach 1
-$layerObj = layer($entityArray);
-$argObj = new LayerAccessArgs();
-$result = $layerObj->load($argObj);
-
-//Approach 2
-$layerObj = layer($entityArray);
-$result = $layerObj
-    ->find()
-    ->load();
-```
-
-####Variations on load()
-
-There are two commands to return an array of entities from a Layer and two commands 
-to retrun an array of values extracted from the entities.
-
-**Get an array of entities**
-
-- `load()`
-   - an array of the specified entities
-- `loadPage()`
-   - paginate the results and return a page
-   
-**Get an array of values extracted from the entities**
-
-- `loadValueList()`
-   - the requested values indexed 0...n   
-   the values may be a property or method return from the entity.    
-   If a method return, the method must not require arguments
-- `loadKeyValueList()`
-   - the requested values indexed by the specified key   
-   both derived from the same entity and both may be any value   
-   described for `loadValueList()`
-   
-Topics: Studio Manager, Layer, 
-
-###Filtering
-
-You can filter the contained entities by testing one value. If you need to test multiple values 
-you'll need write code for the purpose. Or you might convert each result to a new layer and 
-then filter that result.
-
-####Using specifyFilter($value_source, $filter_value, $filter_operator = FALSE)
-
-Using `specifyFilter()` is the simplest case for filtering data.
-
-- name the property to test
-- provide the value to test against
-- provide the operation to use in the test
-   - if `$filter_value` is a scalar (string, int, real, boolean) and no   
-   `$filter_operator` is specified, the comparison **==** will be used.
-   - if `$filter_value` is an array and no `$filter_operator` is specified,   
-   the test **in_array** will be used.
-   
-The supported comparisons are: `==`, `!=`, `===`, `!==`, `<`, `>`, `<=`, `>=`, `in_array`, `true`, `false`, `truthy`
-
-*NOTE: `true`, `false`, and `truthy` ignore the `$filter_value`. `true` and `false` perform `property === true|false`. 
-`truthy` casts the property as a boolean treats the result as the test's outcome.
-
-#####Filtering with the fluent syntax
-
-In this case, the operation defaults to `==`  ('Member->member_type' == 'Person')
-
-```php
-debug(
-    $memberLayer
-        ->find()
-        ->specifyFilter('member_type', 'Person')
-        ->load()
-);
-
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'member_type' => 'Person',
-	
-	},
-	(int) 73 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 73,
-		'first_name' => 'Sheila',
-		'last_name' => 'Botein',
-		'member_type' => 'Person',
-	
-	}
-]
-```
-
-In this case the operation is specified ('Member->member_type' != 'Person')
-
-```php
-debug(
-    $memberLayer
-        ->find()
-        ->specifyFilter('member_type', 'Person', '!=')
-        ->load()
-);
-
-[
-	(int) 74 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-		'member_type' => 'Category',
-	
-	}
-]
-```
-
-In this case the operation defaults to in\_array (in\_array('Member->member_type', $arrayOfValues)
-
-```php
-$arrayOfValues = ['Leonardo', 'Bay Area Book Artists'];
-debug(
-    $memberLayer
-        ->find()
-        ->specifyFilter('first_name', $arrayOfValues)
-        ->load()
-);
-
-[
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-	
-	},
-	(int) 74 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-	
-	}
-]
-```
-And don't forget. You can test the value of a method too (as long as it doesn't require arguments)
-
-```php
-debug(
-    $memberLayer
-        ->find()
-        ->specifyFilter('name', 'Leonardo Divinci')
-        ->load()
-);
-
-[
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-	
-	}
-]
-
-```
-#####Filtering by manually creating a LayerArgObj
-
-```php
-$findByType = new \App\Model\Lib\LayerAccessArgs();
-
-$findByType
-    ->setFilterOperator('===')      //if not specified, the default '==' would be used
-    ->setFilterTestSubject('member_type');
-//  ->filterValue('aString')        this would set the last required parameter
-
-//use the LayerAccessArgs object as a parameter for Layer::load()
-//remember, the 'set' calls to LayerAccessArgs return the instance
-foreach (['Person', 'Category', 'Unknown'] as $type) {
-    debug($memberLayer->load($findByType->filterValue($type)));
-}
-
-//first pass, $type = Person
-
-[
-	(int) 75 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 75,
-		'first_name' => 'Leonardo',
-		'last_name' => 'DiVinci',
-		'member_type' => 'Person',
-	
-	},
-	(int) 73 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 73,
-		'first_name' => 'Sheila',
-		'last_name' => 'Botein',
-		'member_type' => 'Person',
-	
-	}
-]
-
-//second pass, $type = Category
-
-[
-	(int) 74 => object(App\Model\Entity\Member) {
-
-		'id' => (int) 74,
-		'first_name' => 'Bay Area Book Artists',
-		'last_name' => 'Bay Area Book Artists',
-		'member_type' => 'Category',
-	
-	}
-]
-
-//third pass, $type = Unknown
-
-[]
-```
-
-###Sorting Filtered Results and Getting Sorted Value Lists
-
-##Developer notes
-
-Sort cannot chain. It directly returns an array. Though that can be re-layerized. 
-It is only a method on layer. Adding it to the trait may be needed? or to LAAs?
-
-Sort could probably be implemented like the LLA::specifyFileter() method. I don't 
-think there would be a problem either order we ran filter and sorting. But it seems 
-like running sorts second would always ensure the smallest work set.
-
-For real efficiency, filtering the pieces directly into a heap might be possible.
-
-For Sort to work with any of the value list return tools, it will have to 
-work in the fluent interface.
-
-Layer::keyedList is not used. It is forced to exist by the Interface. Do the other 
-object use it or is Layer::keyValueList the future norm?
+This is not a comprehensive set of example. But it should give you a solid foundation 
+if you need to venture beyond the *fluent* interface.
 
