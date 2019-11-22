@@ -36,5 +36,5 @@ interface LayerTaskInterface
      *
      * @return LayerAccessArgs
      */
-    public function copyArgObj();
+    public function cloneArgObj();
 }

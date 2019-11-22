@@ -347,7 +347,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      *
      * @return LayerAccessArgs
      */
-    public function copyArgObj()
+    public function cloneArgObj()
     {
         $obj = clone $this->AccessArgs ?? new LayerAccessArgs();
         $obj->resetData();
