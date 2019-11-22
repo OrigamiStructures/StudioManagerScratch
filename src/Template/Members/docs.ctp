@@ -4,13 +4,30 @@
 /* @var \App\Model\Lib\AppendIterator $it */
 /* @var \App\Model\Lib\StackSet $people */
 
+$memberProcessor = $memberLayer->getLayer();
+$groupFilters = [
+    'People' => $memberLayer->getArgObj()     //you can chain off the accessor if you want
+        ->specifyFilter('member_type', 'Person'),
+    'Institutions' => $memberLayer->getArgObj()
+        ->specifyFilter('member_type', 'Institution')
+];
+
+$result = [];
+foreach($groupFilters as $type => $filter) {
+    $filter->specifyPagination(1, 3);               //you can keep modifying the LAA
+    $memberProcessor->setArgObj($filter);           //and use it when you're ready
+    $result[$type] = $memberProcessor->toArray();
+}
+
+debug($result);
+
 debug(count($memberLayer));
 debug($memberLayer
     ->getLayer()
     ->NEWfind()
     ->specifyFilter('member_type', 'Category', '!=')
     ->specifySort('last_name', SORT_ASC, SORT_STRING)
-    ->setPagination(2, 10)
+    ->specifyPagination(2, 10)
     ->toKeyValueList('name', 'member_type')
 );
 
@@ -30,7 +47,7 @@ osd($idents);
 
 $result = ($people->getLayer('identity'))
     ->NEWfind()
-    ->setPagination(1, 5)
+    ->specifyPagination(1, 5)
     ->toLayer();
 
 $contactPhones = $people->getLayer('contacts')
@@ -96,7 +113,7 @@ $args = new \App\Model\Lib\LayerAccessArgs();
 
 $args->specifyFilter('label', 'email');
 $args->specifySort('data', SORT_ASC);
-$args->setPagination(1, 10);
+$args->specifyPagination(1, 10);
 
 $contacts = new ArrayIterator($contactAccess->perform($args));
 

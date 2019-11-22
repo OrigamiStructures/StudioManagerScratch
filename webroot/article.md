@@ -587,6 +587,7 @@ $someValidStructure                 //any implementor of LayerStructureInterface
     ->specifyPagination($g, $h)     //modifies and returns the LayerAccessArgs instance
     ->toArray();                    //returns the result data in the requested form
 ```
+
 You can call the **LayerAccessArgs** methods in any order. They will not be executed until 
 one of the `toXxxxx()` methods is called. When executed they will always run in the same 
 order; filter, sort, paginate.
@@ -809,7 +810,214 @@ $memberLayer
 
 ```
 
-###Manual Style Processing
+##Advance Features: Manual Style Processing
+
+Take another look at the template *fluent* statement. 
+ 
+```php
+ $result = $someValidStructure       //any implementor of LayerStructureInterface
+     ->getLayer($ofInterest)         //returns a LayerAccessProcessor object
+     ->find()                        //returns a LayerAccessArgs object
+     ->specifyFilter($a, $b, $c)     //modifies and returns the LayerAccessArgs instance
+     ->specifySort($d, $e, $f)       //modifies and returns the LayerAccessArgs instance
+     ->specifyPagination($g, $h)     //modifies and returns the LayerAccessArgs instance
+     ->toArray();                    //returns the result data in the requested form
+```
+
+Notice that both the **LAP** and **LAA** instances are transient. You begin with an 
+object that implements *LSI* and end up with that object and some result.
+
+But there may be times that you want to reuse an **LAA** setup. Or you may want to 
+get many result sets from a single **LAP** without performing the full fluent call 
+each time.
+
+###Understanding LAP/LAA Collaboration
+
+To make best use of manual processes, you'll need to understand how the two object 
+interact. 
+
+Internally, the **LAP** has three important properties:
+
+- `AppendIterator`
+   - holds all the data to operate on
+- `AccessArgs`
+   - holds the **LAA**. May be empty
+- `ResultIterator`
+   - holds the processed prior to formatting for output (`LayerAccessInterface::toXxxxxx()`)
+  
+Besides the access speicifications, **LAA** holds one important property:
+
+- `data`
+   - an **LAP** instance. May be empty
+
+We'll use the exaple fluent code to explain how these objects interact.
+
+```php
+ $result = $someValidStructure       //any implementor of LayerStructureInterface
+     ->getLayer($ofInterest)         //returns a LayerAccessProcessor object
+```
+
+This produces an **LAP** with `AppendIterator` populated. An **LAP** without this property 
+set will throw an exception during processing.
+
+```php
+     ->find()                        //returns a LayerAccessArgs object
+```
+
+This will return a new **LAA** with its `data` property set to the **LAP** which 
+made the `find()` call. Calling any of the `LAI::toXxxxxx()` methods on an **LAA** 
+that doesn't have this property set will throw an exception.
+
+```php
+     ->specifyFilter($a, $b, $c)     //modifies and returns the LayerAccessArgs instance
+     ->specifySort($d, $e, $f)       //modifies and returns the LayerAccessArgs instance
+     ->specifyPagination($g, $h)     //modifies and returns the LayerAccessArgs instance
+```
+
+With an **LAA** in hand, you can make any of its `set` or `specify` calls in any order.
+
+```php
+     ->toArray();                    //returns the result data in the requested form
+```
+
+There is a lot that happens in this call. First, it's important to note, in this case, 
+the call is made on an **LAA** object that contains an **LAP** instance.
+ 
+The **LAA** delegates the call to its contained **LAP** and passes itself as a parameter.
+
+In the `fluent` pattern, this is the moment when **LAP** finally gets the instructions to 
+direct processing. **LAP** passes this recieved **LAA** instance to its `perform($argObj` 
+method. This method runs any requred processing and stores the result in `ResultIterator`.
+
+**LAP** then structures `ResultIterator` according to the `toXxxxx()` method called and 
+returns that data.
+
+This suggests many places where the process can be broken down.
+
+###The Tools For Manual Processes
+
+There are a methods to help you to decompose the process.
+
+- `LayerStructureInterface::getLayer($layer = null)`
+   - Yeilds an **LAP** that contains the specified $layer data. This is the data that   
+   will be processed to produce the result. The **LAP** will not contain an **LAA** 
+   at this point.
+- `LayerStructureInterface::getArgObj()`
+- `LayerTaskProcessor::insert($data)`
+   - add a layer, array of entities, or loose entity to the data set
+- `LayerTaskProcessor::cloneArgObj()`
+   - Returns a clone of the current **LAA** stripped of its **LAP**. If no **LAA** 
+   exists, a new empty instance will be returned.
+- `LayerTaskProcessor::setArgObj($argObj)`
+- `LayerTaskProcessor::perform($argObj)`
+   - Process the **LAP** and sets the result to `ResultIterator`.
+
+###Getting and Populating a LayerAccessProcessor
+
+```php
+/*
+ * simple
+ */
+$layerAccessProcessor = $validStructure->getLayer($someLayer);
+
+/*
+ * fully manual
+ *
+ * All the entities inserted must be of the same type 
+ * and they must all match the type passed to the constructor
+ *
+ * @param $entityType string lower case singular version of the Entity class
+ */
+$lap = new LayerAccessProcessor($entityType);
+$lap->insert($aLayer);
+$lap->insert($anArray);
+$lap->insert($anEntity);
+
+//now $lap::AppendIterator contains aLayer + anArray + anEntity
+
+```
+
+###Getting a LayerAccessArgs
+
+```php
+/*
+ * Get a new, empty LAA
+ */
+$argObj = $validStructure->getArgObj();
+
+/*
+ * Get one from an LAP
+ */
+$lap = $rolodexCards->getLayer('identity');         //no LAA available yet
+$selectList = $lap->toKeyValueList('id', 'name');   //toXxxxxx() creates an LAA in none existed
+
+$argObj = $lap->cloneArgObj();
+//this has all the settings of the source but an empty data property
+
+```
+
+###Using the Manual Objects
+
+```php
+$memberProcessor = $memberLayer->getLayer();
+$groupFilters = [
+    'People' => $memberLayer->getArgObj()     //you can chain off the accessor if you want
+        ->specifyFilter('member_type', 'Person'),
+    'Institutions' => $memberLayer->getArgObj()
+        ->specifyFilter('member_type', 'Institution')
+];
+
+$result = [];
+foreach($groupFilters as $type => $filter) {
+    $filter->setPagination(1, 3);                   //you can keep modifying the LAA
+    $memberProcessor->setArgObj($filter);           //and use it when you're ready
+    $result[$type] = $memberProcessor->toArray();
+}
+
+debug($result);
+
+[
+	'People' => [
+		(int) 0 => object(App\Model\Entity\Member) {
+			'id' => (int) 1,
+			'first_name' => 'Don',
+			'last_name' => 'Drake',
+			'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+			'member_type' => 'Person',
+		},
+		(int) 1 => object(App\Model\Entity\Member) {
+			'id' => (int) 2,
+			'first_name' => 'Gail',
+			'last_name' => 'Drake',
+			'member_type' => 'Person',
+		},
+		(int) 2 => object(App\Model\Entity\Member) {
+			'id' => (int) 7,
+			'first_name' => 'Art',
+			'last_name' => 'Collecteur',
+			'member_type' => 'Person',
+		}
+	],
+	'Institutions' => [
+		(int) 0 => object(App\Model\Entity\Member) {
+			'id' => (int) 61,
+			'first_name' => 'Center for Photo Arts',
+			'last_name' => 'Center for Photo Arts',
+			'member_type' => 'Institution',
+		},
+		(int) 1 => object(App\Model\Entity\Member) {
+
+			'id' => (int) 66,
+			'first_name' => 'joson photo llc',
+			'last_name' => 'joson photo llc',
+			'member_type' => 'Institution',
+		}
+	]
+]
+```
+
+
+
 
 #NOT EDITED PAST HERE
 
