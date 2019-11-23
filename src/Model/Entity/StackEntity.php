@@ -170,7 +170,7 @@ class StackEntity extends Entity implements LayerStructureInterface
      *
      * @todo There is still the possiblity of having empty properties
      *      hold empty Layers so they count and act normally
-     * 
+     *
      * @param string $layer
      * @return int
      */

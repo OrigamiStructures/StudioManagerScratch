@@ -22,7 +22,7 @@ class ArtistsController extends AppController
     public function index()
     {
 		$ManifestsTable = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
-		$manifests = $ManifestsTable->find('stacksFor', 
+		$manifests = $ManifestsTable->find('stacksFor',
 			['seed' => 'manifest', 'ids' => [1,2,3]]);
 		
 		foreach($manifests->load() as $manifestStack) {
@@ -31,15 +31,15 @@ class ArtistsController extends AppController
 			osd($manifestStack->managerCard()->name(), 'MANAGER');
 			osd($manifestStack->artistCard()->name(), 'ARTIST');
 		}
-		
+
 //        $this->paginate = [
 //            'contain' => ['Members', 'MemberUsers']
 //        ];
 //        $artists = $this->paginate($this->Artists);
 		$ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
-		$artists = $ArtistCards->find('stacksFor', 
+		$artists = $ArtistCards->find('stacksFor',
 			['seed' => 'manifest', 'ids' => [1,2,3,4,5]]);
-		
+
         $this->set(compact('artists'));
     }
 
