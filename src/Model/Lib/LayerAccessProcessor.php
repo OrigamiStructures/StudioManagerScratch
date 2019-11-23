@@ -104,7 +104,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * trusted as current and valid for the existing AccessArgs (if present).
      *
      * This is because the three ways of resetting AccessArgs
-     *      - calling $this->NEWfind()
+     *      - calling $this->find()
      *      - calling $this->perform($argObj)
      *      - calling $this->setAccessArgs($argObj)
      * also unset ResultArray. And aquiring the AccessArgs to modify
@@ -226,7 +226,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * @return LayerAccessArgs
      * @todo This name has a collision. It will be changed later
      */
-    public function NEWfind()
+    public function find()
     {
         $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs($this);
         $this->AccessArgs->setLayer($this->layerName);

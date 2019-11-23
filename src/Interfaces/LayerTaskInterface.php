@@ -13,7 +13,7 @@ interface LayerTaskInterface
      * @todo This name has a collision. It will be changed later
      * @return LayerAccessArgs
      */
-    public function NEWfind();
+    public function find();
 
     /**
      * Run the Access process and return an iterator containing the result

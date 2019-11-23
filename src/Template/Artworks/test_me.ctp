@@ -36,14 +36,14 @@ if (isset($stacks)) {
 		$artwork = $stack->rootElement();
 		$joinArray = $stack
             ->getLayer('dispositions_pieces')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('disposition_id', $activity->IDs())
             ->toArray();
 		$joinLayer = new Layer($joinArray);
 
 		$pieces = $stack
             ->getLayer('pieces')
-            ->NEWfind()
+            ->find()
             ->specifyFilter(
                     'id',
                     $joinLayer->toDistinctList('piece_id'),
@@ -54,7 +54,7 @@ if (isset($stacks)) {
 
 		$formats = $stack
             ->getLayer('formats')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('id', $formatIDs)
             ->toLayer();
 
@@ -63,7 +63,7 @@ if (isset($stacks)) {
 
 		$editions = $stack
             ->getLayer('editions')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('id', $editionIDs)
             ->toArray();
 		$editions = new Layer($editions, 'editions');
@@ -76,14 +76,14 @@ if (isset($stacks)) {
                 echo "<h3>{$format->displayTitle}</h3>";
 				$assignedPieces = $pieces
                     ->getLayer()
-                    ->NEWfind()
+                    ->find()
                     ->specifyFilter('format_id', $format->id)
                     ->toArray();
 				foreach ($assignedPieces as $piece) {
 					echo '<ul><li>' . $piece->displayTitle . '<ul>';
 					$pieceActivity = $joinLayer
                         ->getLayer()
-                        ->NEWfind()
+                        ->find()
                         ->specifyFilter('piece_id', $piece->id)
                         ->toArray();
 					foreach ($pieceActivity as $link) {
@@ -103,13 +103,13 @@ if (isset($stacks)) {
 
 	foreach ($activity->toArray() as $dispId => $disposition) {
 		$joinArray = $stacks->getLayer('dispositions_pieces')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('disposition_id', $dispId)
             ->toArray();
 		$joinLayer = new Layer($joinArray, 'dispositions_pieces');
 
         $pieces = $stacks->getLayer('pieces')
-            ->NEWfind()
+            ->find()
             ->specifyFilter(
                 'id',
                 $joinLayer->toDistinctList('piece_id'),

@@ -271,7 +271,7 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
         $foreign_key = $this->_modelKey($foreign);
 
         return $this->getLayer()
-            ->NEWfind()
+            ->find()
             ->specifyFilter($foreign_key, $foreign_id);
     }
     //</editor-fold>
