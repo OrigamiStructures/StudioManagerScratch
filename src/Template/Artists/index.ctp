@@ -25,10 +25,10 @@ should probably be renamed). </p>
 <?php
 //osd($artists);
 //die;
+/* @var \App\View\AppView $this */
 /* @var \App\Model\Entity\Manifest $manifest */
 /* @var \App\Model\Entity\DataOwner $dataOwner */
 /* @var \App\Model\Entity\ArtistCard $artist */
-/* @var \Cake\View\Helper\HtmlHelper $this->Html */
 
 foreach($artists->getData() as $artist) :
 	$manifest = $artist->manifest->element(0);
