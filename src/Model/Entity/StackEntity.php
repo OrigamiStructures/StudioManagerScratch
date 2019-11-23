@@ -168,13 +168,16 @@ class StackEntity extends Entity implements LayerStructureInterface
     /**
      * Get the count of entities in a layer
      *
+     * @todo There is still the possiblity of having empty properties
+     *      hold empty Layers so they count and act normally
+     * 
      * @param string $layer
      * @return int
      */
     public function count($layer)
     {
         $property = $this->get($layer);
-        if ($property) {
+        if (is_countable($property)) {
             return $property->count();
         }
         return 0;
