@@ -56,11 +56,11 @@ class ArtistsController extends AppController
      */
     public function view($id = null)
     {
-        $artist = $this->Artists->get($id, [
-            'contain' => ['Members', 'MemberUsers', 'Users']
-        ]);
+        $ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
+        $artists = $ArtistCards->find('stacksFor',
+            ['seed' => 'manifest', 'ids' => [$id]]);
 
-        $this->set('artist', $artist);
+        $this->set(compact('artists'));
     }
 
     /**
