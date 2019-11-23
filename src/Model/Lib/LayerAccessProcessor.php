@@ -39,7 +39,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      *
      * @var array|\ArrayIterator
      */
-    protected $ResultArray = [];
+    protected $ResultIterator = [];
 
     public function __construct($layerName)
     {
@@ -93,7 +93,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function toArray()
     {
         $this->evaluate();
-        return iterator_to_array($this->ResultArray);
+        return iterator_to_array($this->ResultIterator);
     }
 
     public function rawCount()
@@ -103,10 +103,10 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function resultCount()
     {
-        if(is_array($this->ResultArray)) {
+        if(is_array($this->ResultIterator)) {
             $result = 0;
         } else {
-            $result = iterator_count($this->ResultArray);
+            $result = iterator_count($this->ResultIterator);
         }
         return $result;
     }
@@ -130,8 +130,8 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
         //This has to check for new Args too
-        if(is_array($this->ResultArray)) {
-            $this->ResultArray = $this->perform($this->AccessArgs);
+        if(is_array($this->ResultIterator)) {
+            $this->ResultIterator = $this->perform($this->AccessArgs);
         }
     }
 
@@ -159,14 +159,14 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         //this skips out if appenditerator is empty but hasn't been tested
         //and the need for this hasn't been verified
         $resultValueSource = FALSE;
-        if (count($this->ResultArray) > 0) {
+        if (count($this->ResultIterator) > 0) {
             $this->AccessArgs->setAccessNodeObject('resultValue', $valueSource);
             $resultValueSource = $this->AccessArgs->accessNodeObject('resultValue');
         }
 
         if ($resultValueSource) {
 
-            $result = collection($this->ResultArray)
+            $result = collection($this->ResultIterator)
                 ->reduce(function ($harvest, $entity) use ($resultValueSource){
                     if (!is_null($resultValueSource->value($entity))) {
                         array_push($harvest, $resultValueSource->value($entity));
@@ -193,7 +193,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         //this skips out if appenditerator is empty but hasn't been tested
         //and the need for this hasn't been verified
         $resultValueSource = FALSE;
-        if (count($this->ResultArray) > 0) {
+        if (count($this->ResultIterator) > 0) {
             $this->AccessArgs->setAccessNodeObject('resultKey', $keySource);
             $resultKeySource = $this->AccessArgs->accessNodeObject('resultKey');
             $this->AccessArgs->setAccessNodeObject('resultValue', $valueSource);
@@ -201,7 +201,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         }
 
         if ($resultKeySource && $resultValueSource) {
-                $result = collection($this->ResultArray)
+                $result = collection($this->ResultIterator)
                     ->reduce(function($harvest, $entity) use ($resultKeySource, $resultValueSource){
                         $harvest[$resultKeySource->value($entity)] = $resultValueSource->value($entity);
                         return $harvest;
@@ -266,27 +266,27 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $this->AccessArgs->setLayer($this->layerName);
 
         if($this->AccessArgs->hasFilter()) {
-            $this->ResultArray = $this->performFilter();
+            $this->ResultIterator = $this->performFilter();
         }
 
         if($this->AccessArgs->hasSort()) {
-            $this->ResultArray = $this->performSort();
+            $this->ResultIterator = $this->performSort();
         }
 
         if($this->AccessArgs->hasPagination()) {
-            $this->ResultArray = $this->performPagination();
+            $this->ResultIterator = $this->performPagination();
         }
 
-        if(!isset($this->ResultArray)) {
-            $this->ResultArray = $this->AppendIterator;
+        if(!isset($this->ResultIterator)) {
+            $this->ResultIterator = $this->AppendIterator;
         } else {
-            $this->ResultArray = new \ArrayIterator($this->ResultArray);
+            $this->ResultIterator = new \ArrayIterator($this->ResultIterator);
         }
 
-        if (!($this->ResultArray instanceof \Countable)) {
-            osd($this->ResultArray);
+        if (!($this->ResultIterator instanceof \Countable)) {
+            osd($this->ResultIterator);
         }
-        return $this->ResultArray;
+        return $this->ResultIterator;
 
     }
 
@@ -309,13 +309,13 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     protected function performSort()
     {
-        if (!isset($this->ResultArray)) {
-            $this->ResultArray = $this->AppendIterator;
+        if (!isset($this->ResultIterator)) {
+            $this->ResultIterator = $this->AppendIterator;
         }
         $column = $this->AccessArgs->getSortColumn('sort');
         $dir = $this->AccessArgs->getSortDirection();
         $type = $this->AccessArgs->getSortType();
-        $unsorted = new Collection($this->ResultArray);
+        $unsorted = new Collection($this->ResultIterator);
         $sorted = $unsorted->sortBy($column, $dir, $type)->toArray();
         //indexes are out of order and could be confusing
         return array_values($sorted);
@@ -325,10 +325,10 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $page = $this->AccessArgs->valueOf('page');
         $limit = $this->AccessArgs->valueOf('limit');
-        if (!isset($this->ResultArray)) {
-            $this->ResultArray = $this->AppendIterator;
+        if (!isset($this->ResultIterator)) {
+            $this->ResultIterator = $this->AppendIterator;
         }
-        $unchuncked = new Collection($this->ResultArray);
+        $unchuncked = new Collection($this->ResultIterator);
         $chunked = $unchuncked->chunk($limit)->toArray();
 //        osd($chunked);
         if(isset($chunked[$page])) {
@@ -348,7 +348,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function setArgObj($argObj)
     {
         $this->AccessArgs = $argObj;
-        unset($this->ResultArray);
+        unset($this->ResultIterator);
     }
 
     public function clearAccessArgs()
@@ -379,7 +379,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
                 ? 'null'
                 : $this->AccessArgs,
             '[layerName]' => $this->layerName,
-            '[ResultArray]' => is_null($this->ResultArray)
+            '[ResultArray]' => is_null($this->ResultIterator)
                 ? 'null'
                 : 'Contains ' . $this->resultCount() . ' items.'
         ];
