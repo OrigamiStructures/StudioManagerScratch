@@ -25,7 +25,7 @@ should probably be renamed). </p>
 <?php
 //osd($artists);
 //die;
-foreach($artists->load() as $artist) :
+foreach($artists->getData() as $artist) :
 	$manifest = $artist->manifest->element(0);
 	$dataOwner = $artist->data_owner->element(0);
 	$otherManagerCount = $artist->managers->count() - 1;
@@ -33,9 +33,9 @@ foreach($artists->load() as $artist) :
 ?>
 
 <?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
-	
-<?php if ($manifest->self()) : ?>
-		
+
+<?php if ($manifest->selfAssigned()) : ?>
+
 <?= $this->Html->para('', "You are the creator/owner of this aritst's "
 			. "data and have identified $otherManagerCount "
 			. "other managers for the data. View those details [here/make link]"); ?>
@@ -64,8 +64,6 @@ foreach($artists->load() as $artist) :
 		</ul>
 	</li>
 </ul>
-
-<?php osd($artist->artworks->find()->loadValueList('identityLabel')); ?>
 
 <?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
 

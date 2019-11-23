@@ -69,7 +69,10 @@ class ManagerManifestStacksTable extends StacksTable {
 	}
 		
 	protected function distillFromPermission($ids) {
-		
+        osd('distilling permission');
+        $manifest_ids = $this->Permissions->find('list', ['fieldValue' => 'manifest_id'])
+            ->where(['id IN' => $ids]);
+        return $this->distillFromManifest($manifest_ids);
 	}
 	/**
 	 * Derive the Manifest ids relevant to these Managers
