@@ -114,7 +114,17 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testToKeyValueList()
     {
+        $aLayer = $this->getLayerData();
+        $this->lap->insert($aLayer);
 
+        $actual = $this->lap->toKeyValueList('id', 'name');
+        $expected = [
+            1 => 'one ONE',
+            2 => 'two TWO'
+        ];
+
+        $this->assertTrue($expected == $actual,
+            'toKeyValueList() didn\t produce the expected array');
     }
 
     /**
@@ -122,7 +132,14 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testToValueList()
     {
+        $aLayer = $this->getLayerData();
+        $this->lap->insert($aLayer);
 
+        $actual = $this->lap->toValueList('first_name');
+        $expected = ['one', 'two'];
+
+        $this->assertTrue($expected == $actual,
+            'toValueList() didn\t produce the expected array');
     }
 
     /**
@@ -144,7 +161,7 @@ class LayerAccessProcessorTest extends TestCase
 
     //<editor-fold desc="Introspection">
     /**
-     *
+     * The insert() test gives this a thorough workout.
      */
     public function testRawCount()
     {
@@ -158,7 +175,16 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testResultCount()
     {
-        $this->assertTrue(0 === $this->lap->resultCount());
+        $this->assertTrue(0 === $this->lap->resultCount(),
+            'ResutlIterator is not set to an empty array after construction');
+
+        $aLayer = $this->getLayerData();
+        $this->lap->insert($aLayer);
+        $actual = $this->lap->toArray();
+
+        $this->assertEquals(2, $this->lap->resultCount(),
+            'ResultIterator does not contain the expected number of '
+            . 'items after return data');
 
     }
     //</editor-fold>
@@ -242,7 +268,8 @@ class LayerAccessProcessorTest extends TestCase
         $entityData = [
             'id' => $id,
             'first_name' => $seed,
-            'last_name' => strtoupper($seed)
+            'last_name' => strtoupper($seed),
+            'member_type' => 'Person'
         ];
         return new Member($entityData);
     }
