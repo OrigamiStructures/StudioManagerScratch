@@ -30,7 +30,16 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     protected $AppendIterator;
 
-    protected $ResultArray;
+    /**
+     * The product of processing AppendIterator data using AccessArgs
+     *
+     * After processing, this property will store an ArrayIterator.
+     * Prior to processing, this property will store an empty array.
+     * So it is always Countable, but we can detect when processing is needed.
+     *
+     * @var array|\ArrayIterator
+     */
+    protected $ResultArray = [];
 
     public function __construct($layerName)
     {
@@ -94,7 +103,12 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function resultCount()
     {
-        return iterator_count($this->ResultArray);
+        if(is_array($this->ResultArray)) {
+            $result = 0;
+        } else {
+            $result = iterator_count($this->ResultArray);
+        }
+        return $result;
     }
 
     /**
@@ -116,7 +130,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
         //This has to check for new Args too
-        if(!isset($this->ResultArray)) {
+        if(is_array($this->ResultArray)) {
             $this->ResultArray = $this->perform($this->AccessArgs);
         }
     }
