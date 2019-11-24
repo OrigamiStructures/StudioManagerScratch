@@ -3,6 +3,7 @@
 namespace App\Test\TestCase\Model\Lib;
 
 use App\Model\Entity\Member;
+use App\Model\Lib\LayerAccessArgs;
 use App\Model\Lib\LayerAccessProcessor;
 use Cake\TestSuite\TestCase;
 
@@ -72,11 +73,30 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testPerform()
     {
+        $aLayer = $this->getLayerData();
+        $anArray = $this->getArrayData();
+        $anEntity = $this->getEntityData();
 
+        $this->lap
+            ->insert($aLayer)
+            ->insert($anArray)
+            ->insert($anEntity);
+        $argObj = new LayerAccessArgs('member');
+
+        $this->assertNull($this->lap->getArgObj(),
+            'AccessArgs was not empty after insert()ing and before processing');
+        $this->assertTrue(0 == $this->lap->resultCount(),
+            'The ResultIterator was not empty after insert()ing and before processing');
+
+        $this->lap->perform($argObj);
+
+//        $this->assertTrue(4 == $this->lap->resultCount(),
+//            'The ResultIterator didn\'t have the expected count after processing');
     }
     //</editor-fold>
 
     //<editor-fold desc="LayerAccessInterface implementations">
+
     /**
      *
      */
@@ -147,7 +167,14 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testGetValueRegistry()
     {
+        $this->assertNull($this->lap->getValueRegistry());
 
+        $argObj = new LayerAccessArgs();
+        $this->lap->setArgObj($argObj);
+
+        $this->assertInstanceOf('\App\Model\Lib\ValueSourceRegistry',
+            $this->lap->getValueRegistry(),
+            'The ValueSourceRegistry was not returned');
     }
 
     /**
@@ -155,7 +182,14 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testToDistinctList()
     {
+        $aLayer = $this->getLayerData();
+        $this->lap->insert($aLayer);
 
+        $actual = $this->lap->toDistinctList('member_type');
+        $expected = ['Person'];
+
+        $this->assertTrue($expected == $actual,
+            'toDistinctList() didn\t produce the expected array');
     }
     //</editor-fold>
 
@@ -196,8 +230,15 @@ class LayerAccessProcessorTest extends TestCase
     public function testFind()
     {
         $actual = $this->lap->find();
+
         $this->assertInstanceOf('App\Model\Lib\LayerAccessArgs', $actual,
             'find() did not return a LayerAccessArgs instance');
+        $this->assertInstanceOf('App\Model\Lib\LayerAccessArgs', $this->lap->getArgObj(),
+            'Intiating a find did not populate the Processors AccessArg property');
+
+        $argObj = $this->lap->getArgObj();
+        $this->assertEquals($this->lap, $argObj->data(),
+            'The argObj doesn\'t contain the Processor after a find() is started');
     }
 
     /**
@@ -205,7 +246,13 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testSetArgObj()
     {
+        $this->assertNull($this->lap->getArgObj(),
+            'AccessArgs were not null on a new Processor');
 
+        $argObj = new LayerAccessArgs();
+        $this->lap->setArgObj(($argObj));
+        $this->assertEquals($argObj, $this->lap->getArgObj(),
+            'Setting an AccessArg value did not work.');
     }
 
     /**
@@ -213,7 +260,12 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testClearAccessArgs()
     {
+        $argObj = new LayerAccessArgs();
+        $this->lap->setArgObj(($argObj));
+        $this->lap->clearAccessArgs();
 
+        $this->assertNull($this->lap->getArgObj(),
+            'AccessArgs were not clear when requested');
     }
 
     /**
@@ -221,7 +273,15 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function testCloneArgObj()
     {
+        $this->lap->find()
+            ->specifyFilter('id', '1');
 
+        $argClone = $this->lap->cloneArgObj();
+
+        $this->assertTrue($argClone->hasFilter(),
+            'clone did not produce a populated copy of AccessArg');
+        $this->assertNull($argClone->data(),
+            'clone left the data property of AccessArg populated');
     }
     //</editor-fold>
 
