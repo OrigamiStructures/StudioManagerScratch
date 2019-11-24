@@ -238,7 +238,6 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * Initiate a fluent Access definition
      *
      * @return LayerAccessArgs
-     * @todo This name has a collision. It will be changed later
      */
     public function find()
     {
@@ -321,6 +320,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         return array_values($sorted);
     }
 
+    /**
+     * @return array
+     */
     protected function performPagination()
     {
         $page = $this->AccessArgs->valueOf('page');
