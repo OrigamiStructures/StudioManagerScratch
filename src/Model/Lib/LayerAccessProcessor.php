@@ -34,12 +34,15 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * The product of processing AppendIterator data using AccessArgs
      *
      * After processing, this property will store an ArrayIterator.
-     * Prior to processing, this property will store an empty array.
-     * So it is always Countable, but we can detect when processing is needed.
+     * Prior to processing, this property will store FALSE. Changes to
+     * AccessArgs will set it to FALSE also.
+     *
+     * @todo how do we detect internal chages to AccessArgs?
      *
      * @var array|\ArrayIterator
      */
-    protected $ResultIterator = [];
+    protected $ResultIterator = FALSE;
+
 
     public function __construct($layerName)
     {
@@ -103,7 +106,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function resultCount()
     {
-        if(is_array($this->ResultIterator)) {
+        if($this->ResultIterator === FALSE) {
             $result = 0;
         } else {
             $result = iterator_count($this->ResultIterator);
@@ -130,7 +133,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
         //This has to check for new Args too
-        if(is_array($this->ResultIterator)) {
+        if($this->ResultIterator === FALSE) {
             $this->ResultIterator = $this->perform($this->AccessArgs);
         }
     }
@@ -263,6 +266,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $this->setArgObj($argObj);
         $this->AccessArgs->setLayer($this->layerName);
+        $this->ResultIterator = $this->AppendIterator;
 
         if($this->AccessArgs->hasFilter()) {
             $this->ResultIterator = $this->performFilter();
@@ -276,15 +280,10 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
             $this->ResultIterator = $this->performPagination();
         }
 
-        if(!isset($this->ResultIterator)) {
-            $this->ResultIterator = $this->AppendIterator;
-        } else {
+        if(is_array($this->ResultIterator)) {
             $this->ResultIterator = new \ArrayIterator($this->ResultIterator);
         }
 
-        if (!($this->ResultIterator instanceof \Countable)) {
-            osd($this->ResultIterator);
-        }
         return $this->ResultIterator;
 
     }
@@ -298,7 +297,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $argObj = $this->AccessArgs;
         $comparison = $argObj->selectComparison($argObj->valueOf('filterOperator'));
 
-        $set = collection($this->AppendIterator);
+        $set = collection($this->ResultIterator);
         $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
             $actual = $argObj->accessNodeObject('filter')->value($entity);
             return $comparison($actual, $argObj->valueOf('filterValue'));
@@ -308,9 +307,6 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     protected function performSort()
     {
-        if (!isset($this->ResultIterator)) {
-            $this->ResultIterator = $this->AppendIterator;
-        }
         $column = $this->AccessArgs->getSortColumn('sort');
         $dir = $this->AccessArgs->getSortDirection();
         $type = $this->AccessArgs->getSortType();
@@ -327,9 +323,6 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $page = $this->AccessArgs->valueOf('page');
         $limit = $this->AccessArgs->valueOf('limit');
-        if (!isset($this->ResultIterator)) {
-            $this->ResultIterator = $this->AppendIterator;
-        }
         $unchuncked = new Collection($this->ResultIterator);
         $chunked = $unchuncked->chunk($limit)->toArray();
 //        osd($chunked);
@@ -350,7 +343,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function setArgObj($argObj)
     {
         $this->AccessArgs = $argObj;
-        unset($this->ResultIterator);
+        $this->ResultIterator = FALSE;
+    }
+
     }
 
     public function clearAccessArgs()
@@ -381,8 +376,8 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
                 ? 'null'
                 : $this->AccessArgs,
             '[layerName]' => $this->layerName,
-            '[ResultArray]' => is_null($this->ResultIterator)
-                ? 'null'
+            '[ResultArray]' => $this->ResultIterator === FALSE
+                ? 'FALSE'
                 : 'Contains ' . $this->resultCount() . ' items.'
         ];
         return $result;
