@@ -193,7 +193,7 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function resetData()
     {
-        unset($this->data);
+        $this->data = null;
     }
 
     public function hasFilter()
