@@ -65,11 +65,6 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      *
      * @param mixed $data
      * @return LayerAccessProcessor
-     *@todo Maybe we should loop through the produced iterator to verify
-     *      it contains entities and that all the entities appended are
-     *      of the same type?
-     *
-     * @todo Code smell? Should this be input tollerant like this?
      *
      */
     public function insert($data)
@@ -229,11 +224,17 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     /**
      * Get the stored registry instance
      *
-     * @return ValueSourceRegistry
+     *
+     * @return null|ValueSourceRegistry
      */
     public function getValueRegistry()
     {
-        // TODO: Implement getValueRegistry() method.
+        if(!is_null($this->getArgObj())) {
+            $result = $this->getArgObj()->registry();
+        } else {
+            $result = null;
+        }
+        return $result;
     }
     //</editor-fold>
 
@@ -251,13 +252,6 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     /**
      * Run the Access process and return an iterator containing the result
-     *
-     * @TODO storing each process result separately could function as a
-     *      cache system. If we needed multiple related results from one
-     *      pool, we could make an identity test for each step and only
-     *      do them when they change. This would allow a filtered, sorted
-     *      set that we could pull sequential pages from with out
-     *      refiltering/resorting. For now, this need seems farfetched.
      *
      * @param $argObj LayerAccessArgs
      * @return LayerAccessProcessor
@@ -346,6 +340,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $this->ResultIterator = FALSE;
     }
 
+    public function getArgObj()
+    {
+        return $this->AccessArgs;
     }
 
     public function clearAccessArgs()
