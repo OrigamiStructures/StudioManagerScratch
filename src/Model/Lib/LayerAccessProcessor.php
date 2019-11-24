@@ -23,6 +23,8 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     protected $AccessArgs = null;
 
+    protected $previousAccessArgs = null;
+
     /**
      * All the entities to operate on
      *
@@ -126,7 +128,11 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     protected function evaluate()
     {
-        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
+        if(is_null($this->AccessArgs)) {
+            $this->AccessArgs = new LayerAccessArgs($this);
+            $this->ResultIterator = FALSE;
+        }
+//        debug($this->AccessArgs);
         //This has to check for new Args too
         if($this->ResultIterator === FALSE) {
             $this->ResultIterator = $this->perform($this->AccessArgs);
@@ -245,7 +251,10 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     public function find()
     {
-        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs($this);
+        if(is_null($this->AccessArgs)) {
+            $this->AccessArgs = new LayerAccessArgs($this);
+            $this->ResultIterator = FALSE;
+        }
         $this->AccessArgs->setLayer($this->layerName);
         return $this->AccessArgs;
     }
@@ -348,6 +357,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function clearAccessArgs()
     {
         $this->AccessArgs = null;
+        $this->ResultIterator = FALSE;
     }
 
     /**
