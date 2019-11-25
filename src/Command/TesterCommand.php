@@ -62,6 +62,8 @@ class TesterCommand extends Command
 
     protected $warnings = ['Tests that did not run due to errors'];
 
+    protected $commnad = 'bin/cake tester ';
+
     /**
      * @param ConsoleOptionParser $parser
      * @return ConsoleOptionParser
@@ -161,7 +163,7 @@ DESC;
                 return substr($methodName, 0, 4) === 'test';
             });
             foreach ($tests->toArray() as $test) {
-                array_push($this->tests, "{$this->getPathArg()} $this->requestFile $test");
+                array_push($this->tests, $this->commnad . "{$this->getPathArg()} $this->requestFile $test");
             }
         }
     }
@@ -182,7 +184,7 @@ DESC;
         $Folder = new Folder($this->getFullPath($path));
         $content = $Folder->read();
         foreach ($content[0] as $dir) {
-            $nextDir = $path . $dir . DS;
+            $nextDir = $this->commnad . $path . $dir . DS;
             array_push($this->dirs, $nextDir);
             if ($this->recursive) {
                 $this->readDirectory($nextDir);
@@ -192,7 +194,7 @@ DESC;
             if (substr($file, -8, 4) === 'Test') {
                 array_push(
                     $this->files,
-                    $path . ' ' . str_replace('.php', '', $file)
+                    $this->commnad . $path . ' ' . str_replace('.php', '', $file)
                 );
             }
         }
