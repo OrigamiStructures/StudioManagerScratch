@@ -238,6 +238,15 @@ DESC;
 
     //<editor-fold desc="RENDERING">
 
+    /**
+     * Output the inspection lists for the user
+     *
+     * Runs for each level of detail (Dir, Test Files, Individual Tests)
+     * @todo make last 2 levels show normal vendor/phpunit commands,
+     *      not tester commands. When arrayshift list != Test Directories
+     *      then bin/case tester, list should be getCommand()
+     * @param $list
+     */
     public function renderList($list)
     {
         $this->io->info("\n##" . array_shift($list) . '##');
