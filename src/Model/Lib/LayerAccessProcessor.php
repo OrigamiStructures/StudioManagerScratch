@@ -345,7 +345,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     public function setArgObj($argObj)
     {
-        $this->AccessArgs = $argObj;
+        $obj = clone $argObj;
+        $obj->resetData();
+        $this->AccessArgs = $obj;
         $this->ResultIterator = FALSE;
     }
 
