@@ -96,7 +96,7 @@ class LayerAccessProcessorTest extends TestCase
 
     }
 
-    public function testPerformDetectsChangesToLAA()
+    public function testToXxxxDetectsLAAChange()
     {
         $aLayer = $this->getLayerData();
         $anArray = $this->getArrayData();
@@ -107,26 +107,15 @@ class LayerAccessProcessorTest extends TestCase
             ->insert($anArray)
             ->insert($anEntity);
         $argObj = new LayerAccessArgs('member');
-        debug('before perform() prevTS' . $this->lap->getPreviousArgsTimestamp());
         $this->lap->perform($argObj);
-        debug('after perform() prevTS' . $this->lap->getPreviousArgsTimestamp());
 
         $this->assertTrue(7 == $this->lap->resultCount(),
             'The ResultIterator didn\'t have the expected count after processing');
 
-        debug('before specFilter() prevTS' . $this->lap->getArgObj()->getTimestamp());
         $this->lap->getArgObj()->specifyFilter('id', 4, '>');
-        debug('after specFilter() prevTS' . $this->lap->getArgObj()->getTimestamp());
 
-        debug($this->lap->resultCount());
-
-        $this->assertTrue(0 == $this->lap->resultCount(),
-            'changing settings in a previously used argObj did not reset ResultIterator');
-
-//        $this->lap->perform($argObj);
-//
-//        $this->assertTrue(2 == $this->lap->resultCount(),
-//            'The ResultIterator didn\'t have the expected count after processing');
+        $this->assertCount(2, $this->lap->toArray(),
+            'The ResultIterator didn\'t have the expected count after processing');
 
     }
 
@@ -289,7 +278,11 @@ class LayerAccessProcessorTest extends TestCase
         $argObj = new LayerAccessArgs();
         $this->lap->setArgObj(($argObj));
         $this->assertEquals($argObj, $this->lap->getArgObj(),
-            'Setting an AccessArg value did not work.');
+            'set()ing an AccessArg value did not work result in an obj with matching values');
+
+        $this->assertNotEquals(spl_object_id($argObj), spl_object_id($this->lap->getArgObj()),
+            'after set()ing, the internal argObj was still are reference of the external');
+
     }
 
     /**
@@ -314,6 +307,9 @@ class LayerAccessProcessorTest extends TestCase
             ->specifyFilter('id', '1');
 
         $argClone = $this->lap->cloneArgObj();
+
+        $this->assertNotEquals(spl_object_id($this->lap->getArgObj()), spl_object_id($argClone),
+            'after clone()ing, the external argObj was still are reference of the internal');
 
         $this->assertTrue($argClone->hasFilter(),
             'clone did not produce a populated copy of AccessArg');
