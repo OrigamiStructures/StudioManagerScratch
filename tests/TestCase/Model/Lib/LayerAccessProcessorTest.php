@@ -96,6 +96,40 @@ class LayerAccessProcessorTest extends TestCase
 
     }
 
+    public function testPerformDetectsChangesToLAA()
+    {
+        $aLayer = $this->getLayerData();
+        $anArray = $this->getArrayData();
+        $anEntity = $this->getEntityData();
+
+        $this->lap
+            ->insert($aLayer)
+            ->insert($anArray)
+            ->insert($anEntity);
+        $argObj = new LayerAccessArgs('member');
+        debug('before perform() prevTS' . $this->lap->getPreviousArgsTimestamp());
+        $this->lap->perform($argObj);
+        debug('after perform() prevTS' . $this->lap->getPreviousArgsTimestamp());
+
+        $this->assertTrue(7 == $this->lap->resultCount(),
+            'The ResultIterator didn\'t have the expected count after processing');
+
+        debug('before specFilter() prevTS' . $this->lap->getArgObj()->getTimestamp());
+        $this->lap->getArgObj()->specifyFilter('id', 4, '>');
+        debug('after specFilter() prevTS' . $this->lap->getArgObj()->getTimestamp());
+
+        debug($this->lap->resultCount());
+
+        $this->assertTrue(0 == $this->lap->resultCount(),
+            'changing settings in a previously used argObj did not reset ResultIterator');
+
+//        $this->lap->perform($argObj);
+//
+//        $this->assertTrue(2 == $this->lap->resultCount(),
+//            'The ResultIterator didn\'t have the expected count after processing');
+
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="LayerAccessInterface implementations">
