@@ -315,10 +315,10 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function checkOut()
     {
-        $this->change_timestamp = time();
+        $this->change_timestamp = microtime();
         return $this;
     }
-    public function getChangeTimestamp()
+    public function getTimestamp()
     {
         return $this->change_timestamp;
     }
