@@ -85,14 +85,17 @@ class LayerAccessProcessorTest extends TestCase
 
         $this->assertNull($this->lap->getArgObj(),
             'AccessArgs was not empty after insert()ing and before processing');
+
         $this->assertTrue(0 == $this->lap->resultCount(),
             'The ResultIterator was not empty after insert()ing and before processing');
 
         $this->lap->perform($argObj);
 
-//        $this->assertTrue(4 == $this->lap->resultCount(),
-//            'The ResultIterator didn\'t have the expected count after processing');
+        $this->assertTrue(7 == $this->lap->resultCount(),
+            'The ResultIterator didn\'t have the expected count after processing');
+
     }
+
     //</editor-fold>
 
     //<editor-fold desc="LayerAccessInterface implementations">
