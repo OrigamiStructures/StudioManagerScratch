@@ -23,7 +23,12 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     protected $AccessArgs = null;
 
-    protected $previousAccessArgs = null;
+    /**
+     * microtime stamp of the AccessArg object responsible for the current ResultIterator
+     *
+     * @var null|microtime
+     */
+    protected $previousArgsTimestamp = null;
 
     /**
      * All the entities to operate on
@@ -52,8 +57,22 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $this->layerName = $layerName;
     }
 
+    /**
+     * Get the currently stored AppendIterator
+     *
+     * @return LayerAppendIterator|\AppendIterator
+     */
     public function getAppendIterator() {
         return $this->AppendIterator;
+    }
+
+    /**
+     * microtime stamp of the AccessArg object responsible for the current ResultIterator
+     * @return microtime|null
+     */
+    public function getPreviousArgsTimestamp()
+    {
+        return $this->previousArgsTimestamp;
     }
 
     /**
@@ -96,11 +115,21 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         return iterator_to_array($this->ResultIterator);
     }
 
+    /**
+     * Count of records currently in AppendIterator
+     *
+     * @return int
+     */
     public function rawCount()
     {
         return iterator_count($this->AppendIterator);
     }
 
+    /**
+     * Count of records currently in ResultIterator
+     *
+     * @return int
+     */
     public function resultCount()
     {
         if($this->ResultIterator === FALSE) {
@@ -114,26 +143,20 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     /**
      * Do final processing in for the various 'toXxxxx' methods
      *
-     * The 5 'toXxxxx` methods return ResultArray. If it exists, it can be
-     * trusted as current and valid for the existing AccessArgs (if present).
-     *
-     * This is because the three ways of resetting AccessArgs
-     *      - calling $this->find()
-     *      - calling $this->perform($argObj)
-     *      - calling $this->setAccessArgs($argObj)
-     * also unset ResultArray. And aquiring the AccessArgs to modify
-     * their settings can only be done through a method that also
-     * resets ResultArray.
-     * @todo check for new args too
+     * The 5 'toXxxxx` methods return ResultArray. If it exists, and
+     * AccessArgs has not changed it can be ResultArray can be
+     * trusted as current and valid. Then we avoid reprocessing.
      */
     protected function evaluate()
     {
         if(is_null($this->AccessArgs)) {
             $this->AccessArgs = new LayerAccessArgs($this);
+        }
+
+        if($this->previousArgsTimestamp != $this->AccessArgs->getTimestamp()) {
             $this->ResultIterator = FALSE;
         }
-//        debug($this->AccessArgs);
-        //This has to check for new Args too
+
         if($this->ResultIterator === FALSE) {
             $this->ResultIterator = $this->perform($this->AccessArgs);
         }
@@ -287,12 +310,15 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
             $this->ResultIterator = new \ArrayIterator($this->ResultIterator);
         }
 
+        $this->previousArgsTimestamp = $this->AccessArgs->getTimestamp();
+
         return $this->ResultIterator;
 
     }
 
     /**
-     * Unedited code from Layer
+     * Filter the data based on AccessArgs settings
+     *
      * @return array
      */
     protected function performFilter()
@@ -308,6 +334,11 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         return $results;
     }
 
+    /**
+     * Sort the data based on AccessArgs settings
+     *
+     * @return array
+     */
     protected function performSort()
     {
         $column = $this->AccessArgs->getSortColumn('sort');
@@ -320,6 +351,8 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     }
 
     /**
+     * Paginate the data based on AccessArgs settings
+
      * @return array
      */
     protected function performPagination()
@@ -338,7 +371,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     }
 
     /**
-     * Store an the Access process instructions
+     * Store an the Access process instruction set
      *
      * @param $argObj LayerAccessArgs
      * @return bool
@@ -351,11 +384,21 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $this->ResultIterator = FALSE;
     }
 
+    /**
+     * Get a reference to the internal AccessArgs
+     *
+     * Consider using cloneArgObj() to avoid unanticipated value changes
+     *
+     * @return LayerAccessArgs A reference to the internal copy
+     */
     public function getArgObj()
     {
         return $this->AccessArgs;
     }
 
+    /**
+     * Remove the internal AccessArgs object
+     */
     public function clearAccessArgs()
     {
         $this->AccessArgs = null;
@@ -363,7 +406,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     }
 
     /**
-     * Get a copy of the Access instructions (with no included data)
+     * Get a clone of the Access instructions (with an empty data property)
      *
      * @return LayerAccessArgs
      */
