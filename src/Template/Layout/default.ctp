@@ -3,7 +3,8 @@
  *
  */
 
-$cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
+
+$cakeDescription = 'ClearStudio';
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,9 +15,7 @@ $cakeDescription = 'ClearStudio: Your Artwork\'s Lifeline';
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<title>
         <?= $cakeDescription ?>:
-        <?= $this->fetch('title') ?>
     </title>
-    <?= $this->Html->meta('icon') ?>
 
 	<?= $this->Html->css('artstack-response'); ?>
     <?= $this->Html->css('glyphicon.css') ?>
