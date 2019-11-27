@@ -7,10 +7,17 @@
  * @var \App\Model\Entity\DataOwner $dataOwner
  */
 ?>
-<p>&nbsp;&nbsp;This may not be the correct data for this page but it brings the page online for further consideration.</p>
 
 <p>&nbsp;&nbsp;What we should show is the one artistCard for the ID'd member, flanked by the data describing this
     users settings for thier relationship to this artist.</p>
+
+<ul>
+    <li>Management agreements sent issued but this user to other users</li>
+    <li>The Management agreement that enables this user to manage this artist
+    <ul>
+        <li>Permission settings (current) and access to tools to change them</li>
+    </ul></li>
+</ul>
 
 <p>&nbsp;&nbsp;This is a potenial gateway page to various other pools of Artist data. It isn't clear to me what we
 would need or want. But it's IMPORTANT AT THIS POINT not to get lost in implementation, espeicially
@@ -69,3 +76,38 @@ foreach($artists->getData() as $artist) :
     <?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
 
 <?php endforeach; ?>
+<?php
+$this->Form->fieldset();
+
+$data = $artist->emitFormData();
+?>
+
+<?= $this->Form->create($data); ?>
+<?= $this->element('Member/fieldset', ['type' => $data->member_type]); ?>
+
+<?= '<fieldset><legend>Memberships</legend>'; ?>
+<?php foreach ($data->memberships as $index => $membership) : ?>
+    <?= $this->Form->control("memberships.$index.id", ['type' => 'hidden']); ?>
+    <?php if ($membership->member_type === 'Person') : ?>
+        <?= $this->Form->control("memberships.$index.first_name"); ?>
+        <?= $this->Form->control("memberships.$index.last_name"); ?>
+    <?php else: ?>
+    <?= $this->Form->control("memberships.$index.last_name", ['label' => $membership->member_type]); ?>
+    <?php endif; ?>
+<?php endforeach; ?>
+<?= '</fieldset>'; ?>
+
+<?= '<section class="addresses fieldsets"><p>Addresses</p>'; ?>
+<?php foreach ($data->addresses as $key => $address):?>
+    <?= $this->element('Address/fieldset_hasManyAddresses', ['key' => $key]); ?>
+<?php endforeach; ?>
+<?= '</section>'; ?>
+
+<?= '<section class="contacts fieldsets"><p>Addresses</p>'; ?>
+<?php foreach ($data->addresses as $key => $address): ?>
+    <?= $this->element('Contact/fieldset_hasManyContacts', ['key' => $key]); ?>
+<?php endforeach; ?>
+<?= '</section>'; ?>
+
+
+<?= $this->Form->end(); ?>
