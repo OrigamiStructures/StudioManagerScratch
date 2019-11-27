@@ -1,7 +1,5 @@
-<!-- Element/Contact/fieldset.ctp -->
-<fieldset>
-	<legend>Contact <?=$key+1?></legend>
+<!-- BEGIN Element/Contact/hasManyContacts.ctp -->
     <?= $this->Form->input("contacts.$key.id"); ?>
     <?= $this->Form->input("contacts.$key.label"); ?>
     <?= $this->Form->input("contacts.$key.data");?>
-</fieldset>
+<!-- END Element/Contact/hasManyContacts.ctp -->
