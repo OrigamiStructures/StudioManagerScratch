@@ -45,6 +45,7 @@ use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 use Cake\Event\EventManager;
 use App\Events\EventNotifier;
+use App\Events\UserNotifier;
 
 /**
  * Uncomment block of code below if you want to use `.env` file during development.
@@ -263,3 +264,5 @@ function layer($data) {
  */
 $EventNotifier = new EventNotifier();
 EventManager::instance()->attach($EventNotifier);
+$UserNotifier = new UserNotifier();
+EventManager::instance()->attach($UserNotifier);
