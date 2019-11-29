@@ -19,16 +19,17 @@ $cakeDescription = 'ClearStudio';
 
 	<?= $this->Html->css('artstack-response'); ?>
     <?= $this->Html->css('glyphicon.css') ?>
-<!--
 	<?= $this->Html->script('../bower_components/jquery/dist/jquery.min.js'); ?>
 	<?= $this->Html->script('../bower_components/foundation-sites/dist/foundation.js'); ?>
 	<?= $this->Html->script('app.js'); ?>
 	<?= $this->Html->script('testing'); ?>
-
+<!--
 	<?= $this->Html->css('../bower_components/foundation-sites/dist/foundation.min.css'); ?>
+ -->
     <?= $this->Html->css('app.css') ?>
     <?= $this->Html->css('prime.css') ?>
--->
+    <?= $this->Html->css('cake.css') ?>
+    <?= $this->Html->css('base.css') ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('script') ?>
     <?= $this->fetch('css') ?>
