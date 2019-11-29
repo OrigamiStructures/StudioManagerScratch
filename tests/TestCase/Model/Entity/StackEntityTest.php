@@ -226,7 +226,7 @@ class StackEntityTest extends TestCase
         //the set is a (string, value) arg arrangement
         $pieces = $this->StackEntity
             ->getLayer('pieces')
-            ->NEWfind()
+            ->find()
             ->toArray();
         unset($this->StackEntity->pieces);
         $this->StackEntity->set('pieces', $pieces);

@@ -71,7 +71,7 @@ class AdministratorController extends AppController {
 				$formatIDs = $formats->IDs();
 				$pieceSet = $pieces
                     ->getLayer()
-                    ->NEWfind()
+                    ->find()
                     ->specifyFilter('edition_id', $editionID)
                     ->toLayer();
 				$pieceIDs = $pieceSet->IDs();
@@ -124,7 +124,7 @@ class AdministratorController extends AppController {
 			if (!in_array($formatId, $formatIDs)){
 				$pieces = $pieceSet
                     ->getLayer()
-                    ->NEWfind()
+                    ->find()
                     ->specifyFilter('format_id', $formatId)
                     ->toArray();
 				$this->errors['pieces']['missing format'] =

@@ -5,11 +5,13 @@ use App\Model\Lib\ContextUser;
 use Cake\ORM\Table;
 use Cake\Http\Session;
 use App\Model\Lib\CurrentUser;
+use Cake\View\Helper\HtmlHelper;
 
 /**
  * Description of AppTable
  *
  * @author dondrake
+ *
  */
 class AppTable extends Table {
 

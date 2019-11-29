@@ -21,5 +21,14 @@ class PersonCard extends RolodexCard{
         return $entity->registeredUserId();
 	}
 
+    public function emitFormData()
+    {
+        $data = $this->rootElement();
+        $data->user = $this->data_owner->shift();
+        $data->memberships = $this->getMemberships();
+        $data->addresses = $this->addressEntities();
+        $data->contacts = $this->contactEntities();
+        return $data;
+    }
 
 }

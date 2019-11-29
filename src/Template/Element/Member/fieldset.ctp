@@ -4,11 +4,11 @@
     <?= $this->Form->input("id"); ?>
     <?= $this->Form->input("group.id", ['type' => 'hidden']); ?>
     <?php
-        $fnameLabel = ($member->member_type != MEMBER_TYPE_PERSON) ? 'Name' : 'First Name';
+        $fnameLabel = ($type != MEMBER_TYPE_PERSON) ? 'Name' : 'First Name';
     ?>
     <?= $this->Form->input("first_name", ['label' => $fnameLabel]);?>
     <?php
-        if($member->member_type == MEMBER_TYPE_PERSON){
+        if($type == MEMBER_TYPE_PERSON){
             echo $this->Form->input("last_name");
         }
     ?>

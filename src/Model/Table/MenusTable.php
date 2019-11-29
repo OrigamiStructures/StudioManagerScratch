@@ -39,8 +39,9 @@ class MenusTable extends AppTable{
             'Create Institution' => '/members/create/Institution',
             'Create Person' => '/members/create/Person',
 		]];
-	protected $disposition = ['Work Status' => [
-        'Review' => '/dispositions/index',
+//    protected $disposition = ['Work Status' => [
+	protected $disposition = ['[Dev-REPL-Pages]' => [
+//        'Review' => '/dispositions/index',
         'test-artworks' => '/artworks/test_me',
         'test-supervision' => '/supervisors',
         'test-addressbook' => '/addressbook',
@@ -48,7 +49,9 @@ class MenusTable extends AppTable{
         'test-rolodex-institutions' => '/rolodexcards/groups',
         'test-pieces-renumber' => '/pieces/renumber?artwork=10',
         'documentation-REPL' => '/members/docs',
-        'data-integrity' => '/administrator/userDataIntegrity'
+        'data-integrity' => '/administrator/userDataIntegrity',
+        'artists-index' => '/artists',
+        'artists-view' => '/artists/view/1'
     ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',

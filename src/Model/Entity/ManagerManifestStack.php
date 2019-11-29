@@ -33,7 +33,7 @@ class ManagerManifestStack extends StackEntity {
 		$id = $this->rootElement()->supervisorId();
         $identityIDs = $this->people
             ->getLayer('identity')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('supervisor_id', $id)
             ->toDistinctList('id');
         $card = $this->people->stacksContaining('identity', $identityIDs);
@@ -49,7 +49,7 @@ class ManagerManifestStack extends StackEntity {
 		$id = $this->rootElement()->managerId();
 		$identityIDs = $this->people
             ->getLayer('identity')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('manager_id', $id)
             ->toDistinctList('id');
         $card = $this->people->stacksContaining('identity', $identityIDs);

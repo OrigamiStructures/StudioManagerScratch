@@ -1,95 +1,113 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Artist $artist
+ * @var StackSet $artist
+ * @var \App\Model\Entity\ArtistCard $artist
+ * @var \App\Model\Entity\Manifest $manifest
+ * @var \App\Model\Entity\DataOwner $dataOwner
  */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Artist'), ['action' => 'edit', $artist->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Artist'), ['action' => 'delete', $artist->id], ['confirm' => __('Are you sure you want to delete # {0}?', $artist->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Artists'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Artist'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Members'), ['controller' => 'Members', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Member'), ['controller' => 'Members', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
+
+<p>&nbsp;&nbsp;What we should show is the one artistCard for the ID'd member, flanked by the data describing this
+    users settings for thier relationship to this artist.</p>
+
+<ul>
+    <li>Management agreements sent issued but this user to other users</li>
+    <li>The Management agreement that enables this user to manage this artist
+    <ul>
+        <li>Permission settings (current) and access to tools to change them</li>
+    </ul></li>
+</ul>
+
+<p>&nbsp;&nbsp;This is a potenial gateway page to various other pools of Artist data. It isn't clear to me what we
+would need or want. But it's IMPORTANT AT THIS POINT not to get lost in implementation, espeicially
+    of a user interface. The goal is to discover what kind of object we need and what interface they should have.</p>
+
+<p>&nbsp;&nbsp;To this end, having the sequence of pages linked together should help identify what objects we need,
+what other objects they need to help us access, and how they realate to one another. So, being able to move
+through a sequence of stub display pages would give us a feel for the system without committing to a
+final solution.</p>
+
+<?php
+//osd(get_class($artists));
+//die;
+
+foreach($artists->getData() as $artist) :
+//    osd(get_class($artist));
+    $manifest = $artist->manifest->element(0);
+    $dataOwner = $artist->data_owner->element(0);
+    $otherManagerCount = $artist->managers->count() - 1;
+    $dispositionIDs = $artist->IDs('dispositions');
+    ?>
+
+    <?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
+
+    <?php if ($manifest->selfAssigned()) : ?>
+
+    <?= $this->Html->para('', "You are the creator/owner of this aritst's "
+        . "data and have identified $otherManagerCount "
+        . "other managers for the data. View those details [here/make link]"); ?>
+
+<?php else: ?>
+
+    <?= $this->Html->para('', 'To request changes in your access to this '
+        . 'artist, contact ' . $dataOwner->username() ); ?>
+
+<?php endif; ?>
+
+    <ul>
+        <li>Contacts
+            <ul>
+                <?php foreach ($artist->contacts() as $contact) : ?>
+                    <li><?= $contact ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+        <li>
+            Addresses
+            <ul>
+                <?php foreach ($artist->addresses() as $address) : ?>
+                    <li><?= $address ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
     </ul>
-</nav>
-<div class="artists view large-9 medium-8 columns content">
-    <h3><?= h($artist->id) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th scope="row"><?= __('Member') ?></th>
-            <td><?= $artist->has('member') ? $this->Html->link($artist->member->name(), ['controller' => 'Members', 'action' => 'view', $artist->member->id]) : '' ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('User Id') ?></th>
-            <td><?= h($artist->user_id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Id') ?></th>
-            <td><?= $this->Number->format($artist->id) ?></td>
-        </tr>
-        <tr>
-            <th scope="row"><?= __('Member User Id') ?></th>
-            <td><?= $this->Number->format($artist->member_user_id) ?></td>
-        </tr>
-    </table>
-    <div class="related">
-        <h4><?= __('Related Users') ?></h4>
-        <?php if (!empty($artist->users)): ?>
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <th scope="col"><?= __('Id') ?></th>
-                <th scope="col"><?= __('Username') ?></th>
-                <th scope="col"><?= __('Email') ?></th>
-                <th scope="col"><?= __('Password') ?></th>
-                <th scope="col"><?= __('First Name') ?></th>
-                <th scope="col"><?= __('Last Name') ?></th>
-                <th scope="col"><?= __('Token') ?></th>
-                <th scope="col"><?= __('Token Expires') ?></th>
-                <th scope="col"><?= __('Api Token') ?></th>
-                <th scope="col"><?= __('Activation Date') ?></th>
-                <th scope="col"><?= __('Tos Date') ?></th>
-                <th scope="col"><?= __('Active') ?></th>
-                <th scope="col"><?= __('Is Superuser') ?></th>
-                <th scope="col"><?= __('Role') ?></th>
-                <th scope="col"><?= __('Created') ?></th>
-                <th scope="col"><?= __('Modified') ?></th>
-                <th scope="col"><?= __('Artist Id') ?></th>
-                <th scope="col"><?= __('Member Id') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-            <?php foreach ($artist->users as $users): ?>
-            <tr>
-                <td><?= h($users->id) ?></td>
-                <td><?= h($users->username) ?></td>
-                <td><?= h($users->email) ?></td>
-                <td><?= h($users->password) ?></td>
-                <td><?= h($users->first_name) ?></td>
-                <td><?= h($users->last_name) ?></td>
-                <td><?= h($users->token) ?></td>
-                <td><?= h($users->token_expires) ?></td>
-                <td><?= h($users->api_token) ?></td>
-                <td><?= h($users->activation_date) ?></td>
-                <td><?= h($users->tos_date) ?></td>
-                <td><?= h($users->active) ?></td>
-                <td><?= h($users->is_superuser) ?></td>
-                <td><?= h($users->role) ?></td>
-                <td><?= h($users->created) ?></td>
-                <td><?= h($users->modified) ?></td>
-                <td><?= h($users->artist_id) ?></td>
-                <td><?= h($users->member_id) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'Users', 'action' => 'view', $users->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Users', 'action' => 'edit', $users->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Users', 'action' => 'delete', $users->id], ['confirm' => __('Are you sure you want to delete # {0}?', $users->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-        <?php endif; ?>
-    </div>
-</div>
+
+    <?= 'The disposition ids are ' . \Cake\Utility\Text::toList($dispositionIDs); ?>
+
+<?php endforeach; ?>
+<?php
+$this->Form->fieldset();
+
+$data = $artist->emitFormData();
+?>
+
+<?= $this->Form->create($data); ?>
+<?= $this->element('Member/fieldset', ['type' => $data->member_type]); ?>
+
+<?= '<fieldset><legend>Memberships</legend>'; ?>
+<?php foreach ($data->memberships as $index => $membership) : ?>
+    <?= $this->Form->control("memberships.$index.id", ['type' => 'hidden']); ?>
+    <?php if ($membership->member_type === 'Person') : ?>
+        <?= $this->Form->control("memberships.$index.first_name"); ?>
+        <?= $this->Form->control("memberships.$index.last_name"); ?>
+    <?php else: ?>
+    <?= $this->Form->control("memberships.$index.last_name", ['label' => $membership->member_type]); ?>
+    <?php endif; ?>
+<?php endforeach; ?>
+<?= '</fieldset>'; ?>
+
+<?= '<section class="addresses fieldsets"><p>Addresses</p>'; ?>
+<?php foreach ($data->addresses as $key => $address):?>
+    <?= $this->element('Address/fieldset_hasManyAddresses', ['key' => $key]); ?>
+<?php endforeach; ?>
+<?= '</section>'; ?>
+
+<?= '<section class="contacts fieldsets"><p>Addresses</p>'; ?>
+<?php foreach ($data->addresses as $key => $address): ?>
+    <?= $this->element('Contact/fieldset_hasManyContacts', ['key' => $key]); ?>
+<?php endforeach; ?>
+<?= '</section>'; ?>
+
+
+<?= $this->Form->end(); ?>

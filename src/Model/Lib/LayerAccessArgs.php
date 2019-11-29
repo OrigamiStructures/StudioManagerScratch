@@ -64,6 +64,8 @@ class LayerAccessArgs implements LayerAccessInterface
 
     protected $_registry;
 
+    protected $change_timestamp;
+
 // <editor-fold defaultstate="collapsed" desc="PAGINATION PROPERTIES">
 
     /**
@@ -193,7 +195,7 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function resetData()
     {
-        unset($this->data);
+        $this->data = null;
     }
 
     public function hasFilter()
@@ -308,7 +310,17 @@ class LayerAccessArgs implements LayerAccessInterface
         if ($data) {
             $this->data = $data;
         }
+        return $this->checkOut();
+    }
+
+    public function checkOut()
+    {
+        $this->change_timestamp = microtime();
         return $this;
+    }
+    public function getTimestamp()
+    {
+        return $this->change_timestamp;
     }
 
     public function data()
@@ -331,7 +343,7 @@ class LayerAccessArgs implements LayerAccessInterface
             $this->_layer = $param;
             $this->setupValueObjects('layer');
         }
-        return $this;
+        return $this->checkOut();
     }
 
     public function accessNodeObject($name)
@@ -350,7 +362,7 @@ class LayerAccessArgs implements LayerAccessInterface
             $this->source_node[$objectName] = $nodeName;
             $this->setupValueObjects($objectName);
         }
-        return $this;
+        return $this->checkOut();
 
     }
 
@@ -460,13 +472,13 @@ class LayerAccessArgs implements LayerAccessInterface
     {
         $this->setPage($page);
         $this->setLimit($limit);
-        return $this;
+        return $this->checkOut();
     }
 
     public function setPage($param)
     {
         $this->_page = $param;
-        return $this;
+        return $this->checkOut();
     }
 
     /**
@@ -483,7 +495,7 @@ class LayerAccessArgs implements LayerAccessInterface
         $param = $param === 'all' ? -1 : $param;
         $param = $param === 'first' ? 1 : $param;
         $this->_limit = $param;
-        return $this;
+        return $this->checkOut();
     }
 
 // </editor-fold>
@@ -521,7 +533,7 @@ class LayerAccessArgs implements LayerAccessInterface
         $this->setFilterOperator($filter_operator);
         $this->setAccessNodeObject('filter', $value_source);
         $this->setFilterValue($filter_value);
-        return $this;
+        return $this->checkOut();
     }
 
     /**
@@ -532,7 +544,7 @@ class LayerAccessArgs implements LayerAccessInterface
     public function setFilterTestSubject($value_source)
     {
         $this->setAccessNodeObject('filter', $value_source);
-        return $this;
+        return $this->checkOut();
     }
 
     /**
@@ -561,7 +573,7 @@ class LayerAccessArgs implements LayerAccessInterface
             }
             $this->setFilterOperator($default_operator);
         }
-        return $this;
+        return $this->checkOut();
     }
 
     /**
@@ -580,7 +592,7 @@ class LayerAccessArgs implements LayerAccessInterface
     public function setFilterOperator($param)
     {
         $this->_filter_operator = $param;
-        return $this;
+        return $this->checkOut();
     }
 
 // </editor-fold>
@@ -688,6 +700,7 @@ class LayerAccessArgs implements LayerAccessInterface
     public function __debugInfo()
     {
         $val = [
+            'change_timestamp',
             '_page', '_limit',
             '_layer', 'source_node', '_filter_value',
             '_filter_value_isset', '_filter_operator',

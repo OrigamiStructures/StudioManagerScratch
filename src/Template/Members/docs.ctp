@@ -15,7 +15,7 @@ debug($argObj);
  * Get one from an LAP
  */
 $lap = $memberLayer->getLayer();
-$selectList = $lap->NEWfind()->toKeyValueList('id', 'name');
+$selectList = $lap->find()->toKeyValueList('id', 'name');
 
 debug($lap);
 
@@ -76,7 +76,7 @@ debug($result);
 debug(count($memberLayer));
 debug($memberLayer
     ->getLayer()
-    ->NEWfind()
+    ->find()
     ->specifyFilter('member_type', 'Category', '!=')
     ->specifySort('last_name', SORT_ASC, SORT_STRING)
     ->specifyPagination(2, 10)
@@ -84,7 +84,7 @@ debug($memberLayer
 );
 
 //$contactEmails = $people->getLayer('contacts')
-//    ->NEWfind()
+//    ->find()
 //    ->specifyFilter('label', 'email')
 //    ->specifySort('data', SORT_DESC)
 //    ->toArray();
@@ -98,19 +98,19 @@ $idents = $people->getLayer('identity')
 osd($idents);
 
 $result = ($people->getLayer('identity'))
-    ->NEWfind()
+    ->find()
     ->specifyPagination(1, 5)
     ->toLayer();
 
 $contactPhones = $people->getLayer('contacts')
-    ->NEWfind()
+    ->find()
     ->specifyFilter('label', 'phone')
     ->specifySort('data', SORT_DESC)
     ->toDistinctList('data');
 
 //$contactPhones = $contactPhones
 //    ->getLayer()
-//    ->NEWfind()
+//    ->find()
 //    ->specifyFilter('data', '', '!==')
 //    ->toKeyValueList('id','data');
 
@@ -157,7 +157,7 @@ osd($contactPhones);
 
 echo '<h1>Change</h1>';
 
-$args = $people->getLayer('contacts')->NEWfind();
+$args = $people->getLayer('contacts')->find();
 
 $contactAccess = $people->getLayer('contacts');
 

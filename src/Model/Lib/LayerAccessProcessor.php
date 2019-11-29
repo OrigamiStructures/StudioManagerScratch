@@ -24,13 +24,32 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     protected $AccessArgs = null;
 
     /**
+     * microtime stamp of the AccessArg object responsible for the current ResultIterator
+     *
+     * @var null|microtime
+     */
+    protected $previousArgsTimestamp = null;
+
+    /**
      * All the entities to operate on
      *
      * @var \AppendIterator
      */
     protected $AppendIterator;
 
-    protected $ResultArray;
+    /**
+     * The product of processing AppendIterator data using AccessArgs
+     *
+     * After processing, this property will store an ArrayIterator.
+     * Prior to processing, this property will store FALSE. Changes to
+     * AccessArgs will set it to FALSE also.
+     *
+     * @todo how do we detect internal chages to AccessArgs?
+     *
+     * @var array|\ArrayIterator
+     */
+    protected $ResultIterator = FALSE;
+
 
     public function __construct($layerName)
     {
@@ -38,8 +57,22 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $this->layerName = $layerName;
     }
 
+    /**
+     * Get the currently stored AppendIterator
+     *
+     * @return LayerAppendIterator|\AppendIterator
+     */
     public function getAppendIterator() {
         return $this->AppendIterator;
+    }
+
+    /**
+     * microtime stamp of the AccessArg object responsible for the current ResultIterator
+     * @return microtime|null
+     */
+    public function getPreviousArgsTimestamp()
+    {
+        return $this->previousArgsTimestamp;
     }
 
     /**
@@ -53,11 +86,6 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      *
      * @param mixed $data
      * @return LayerAccessProcessor
-     *@todo Maybe we should loop through the produced iterator to verify
-     *      it contains entities and that all the entities appended are
-     *      of the same type?
-     *
-     * @todo Code smell? Should this be input tollerant like this?
      *
      */
     public function insert($data)
@@ -84,40 +112,53 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function toArray()
     {
         $this->evaluate();
-        return iterator_to_array($this->ResultArray);
+        return iterator_to_array($this->ResultIterator);
     }
 
+    /**
+     * Count of records currently in AppendIterator
+     *
+     * @return int
+     */
     public function rawCount()
     {
         return iterator_count($this->AppendIterator);
     }
 
+    /**
+     * Count of records currently in ResultIterator
+     *
+     * @return int
+     */
     public function resultCount()
     {
-        return iterator_count($this->ResultArray);
+        if($this->ResultIterator === FALSE) {
+            $result = 0;
+        } else {
+            $result = iterator_count($this->ResultIterator);
+        }
+        return $result;
     }
 
     /**
      * Do final processing in for the various 'toXxxxx' methods
      *
-     * The 5 'toXxxxx` methods return ResultArray. If it exists, it can be
-     * trusted as current and valid for the existing AccessArgs (if present).
-     *
-     * This is because the three ways of resetting AccessArgs
-     *      - calling $this->NEWfind()
-     *      - calling $this->perform($argObj)
-     *      - calling $this->setAccessArgs($argObj)
-     * also unset ResultArray. And aquiring the AccessArgs to modify
-     * their settings can only be done through a method that also
-     * resets ResultArray.
-     * @todo check for new args too
+     * The 5 'toXxxxx` methods return ResultArray. If it exists, and
+     * AccessArgs has not changed it can be ResultArray can be
+     * trusted as current and valid. Then we avoid reprocessing.
      */
     protected function evaluate()
     {
-        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs();
-        //This has to check for new Args too
-        if(!isset($this->ResultArray)) {
-            $this->ResultArray = $this->perform($this->AccessArgs);
+        if(is_null($this->AccessArgs)) {
+            $this->AccessArgs = new LayerAccessArgs($this);
+        }
+
+        if($this->previousArgsTimestamp != $this->AccessArgs->getTimestamp()) {
+            $this->ResultIterator = FALSE;
+        }
+
+        if($this->ResultIterator === FALSE) {
+            $this->ResultIterator = $this->perform($this->AccessArgs);
         }
     }
 
@@ -145,14 +186,14 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         //this skips out if appenditerator is empty but hasn't been tested
         //and the need for this hasn't been verified
         $resultValueSource = FALSE;
-        if (count($this->ResultArray) > 0) {
+        if (count($this->ResultIterator) > 0) {
             $this->AccessArgs->setAccessNodeObject('resultValue', $valueSource);
             $resultValueSource = $this->AccessArgs->accessNodeObject('resultValue');
         }
 
         if ($resultValueSource) {
 
-            $result = collection($this->ResultArray)
+            $result = collection($this->ResultIterator)
                 ->reduce(function ($harvest, $entity) use ($resultValueSource){
                     if (!is_null($resultValueSource->value($entity))) {
                         array_push($harvest, $resultValueSource->value($entity));
@@ -179,7 +220,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         //this skips out if appenditerator is empty but hasn't been tested
         //and the need for this hasn't been verified
         $resultValueSource = FALSE;
-        if (count($this->ResultArray) > 0) {
+        if (count($this->ResultIterator) > 0) {
             $this->AccessArgs->setAccessNodeObject('resultKey', $keySource);
             $resultKeySource = $this->AccessArgs->accessNodeObject('resultKey');
             $this->AccessArgs->setAccessNodeObject('resultValue', $valueSource);
@@ -187,7 +228,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         }
 
         if ($resultKeySource && $resultValueSource) {
-                $result = collection($this->ResultArray)
+                $result = collection($this->ResultIterator)
                     ->reduce(function($harvest, $entity) use ($resultKeySource, $resultValueSource){
                         $harvest[$resultKeySource->value($entity)] = $resultValueSource->value($entity);
                         return $harvest;
@@ -212,11 +253,17 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     /**
      * Get the stored registry instance
      *
-     * @return ValueSourceRegistry
+     *
+     * @return null|ValueSourceRegistry
      */
     public function getValueRegistry()
     {
-        // TODO: Implement getValueRegistry() method.
+        if(!is_null($this->getArgObj())) {
+            $result = $this->getArgObj()->registry();
+        } else {
+            $result = null;
+        }
+        return $result;
     }
     //</editor-fold>
 
@@ -224,24 +271,19 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      * Initiate a fluent Access definition
      *
      * @return LayerAccessArgs
-     * @todo This name has a collision. It will be changed later
      */
-    public function NEWfind()
+    public function find()
     {
-        $this->AccessArgs = $this->AccessArgs ?? new LayerAccessArgs($this);
+        if(is_null($this->AccessArgs)) {
+            $this->AccessArgs = new LayerAccessArgs($this);
+            $this->ResultIterator = FALSE;
+        }
         $this->AccessArgs->setLayer($this->layerName);
         return $this->AccessArgs;
     }
 
     /**
      * Run the Access process and return an iterator containing the result
-     *
-     * @TODO storing each process result separately could function as a
-     *      cache system. If we needed multiple related results from one
-     *      pool, we could make an identity test for each step and only
-     *      do them when they change. This would allow a filtered, sorted
-     *      set that we could pull sequential pages from with out
-     *      refiltering/resorting. For now, this need seems farfetched.
      *
      * @param $argObj LayerAccessArgs
      * @return LayerAccessProcessor
@@ -250,34 +292,33 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     {
         $this->setArgObj($argObj);
         $this->AccessArgs->setLayer($this->layerName);
+        $this->ResultIterator = $this->AppendIterator;
 
         if($this->AccessArgs->hasFilter()) {
-            $this->ResultArray = $this->performFilter();
+            $this->ResultIterator = $this->performFilter();
         }
 
         if($this->AccessArgs->hasSort()) {
-            $this->ResultArray = $this->performSort();
+            $this->ResultIterator = $this->performSort();
         }
 
         if($this->AccessArgs->hasPagination()) {
-            $this->ResultArray = $this->performPagination();
+            $this->ResultIterator = $this->performPagination();
         }
 
-        if(!isset($this->ResultArray)) {
-            $this->ResultArray = $this->AppendIterator;
-        } else {
-            $this->ResultArray = new \ArrayIterator($this->ResultArray);
+        if(is_array($this->ResultIterator)) {
+            $this->ResultIterator = new \ArrayIterator($this->ResultIterator);
         }
 
-        if (!($this->ResultArray instanceof \Countable)) {
-            osd($this->ResultArray);
-        }
-        return $this->ResultArray;
+        $this->previousArgsTimestamp = $this->AccessArgs->getTimestamp();
+
+        return $this->ResultIterator;
 
     }
 
     /**
-     * Unedited code from Layer
+     * Filter the data based on AccessArgs settings
+     *
      * @return array
      */
     protected function performFilter()
@@ -285,7 +326,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $argObj = $this->AccessArgs;
         $comparison = $argObj->selectComparison($argObj->valueOf('filterOperator'));
 
-        $set = collection($this->AppendIterator);
+        $set = collection($this->ResultIterator);
         $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
             $actual = $argObj->accessNodeObject('filter')->value($entity);
             return $comparison($actual, $argObj->valueOf('filterValue'));
@@ -293,28 +334,32 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         return $results;
     }
 
+    /**
+     * Sort the data based on AccessArgs settings
+     *
+     * @return array
+     */
     protected function performSort()
     {
-        if (!isset($this->ResultArray)) {
-            $this->ResultArray = $this->AppendIterator;
-        }
         $column = $this->AccessArgs->getSortColumn('sort');
         $dir = $this->AccessArgs->getSortDirection();
         $type = $this->AccessArgs->getSortType();
-        $unsorted = new Collection($this->ResultArray);
+        $unsorted = new Collection($this->ResultIterator);
         $sorted = $unsorted->sortBy($column, $dir, $type)->toArray();
         //indexes are out of order and could be confusing
         return array_values($sorted);
     }
 
+    /**
+     * Paginate the data based on AccessArgs settings
+
+     * @return array
+     */
     protected function performPagination()
     {
         $page = $this->AccessArgs->valueOf('page');
         $limit = $this->AccessArgs->valueOf('limit');
-        if (!isset($this->ResultArray)) {
-            $this->ResultArray = $this->AppendIterator;
-        }
-        $unchuncked = new Collection($this->ResultArray);
+        $unchuncked = new Collection($this->ResultIterator);
         $chunked = $unchuncked->chunk($limit)->toArray();
 //        osd($chunked);
         if(isset($chunked[$page])) {
@@ -326,24 +371,42 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     }
 
     /**
-     * Store an the Access process instructions
+     * Store an the Access process instruction set
      *
      * @param $argObj LayerAccessArgs
      * @return bool
      */
     public function setArgObj($argObj)
     {
-        $this->AccessArgs = $argObj;
-        unset($this->ResultArray);
-    }
-
-    public function clearAccessArgs()
-    {
-        $this->AccessArgs = null;
+        $obj = clone $argObj;
+        $obj->resetData();
+        $this->AccessArgs = $obj;
+        $this->ResultIterator = FALSE;
     }
 
     /**
-     * Get a copy of the Access instructions (with no included data)
+     * Get a reference to the internal AccessArgs
+     *
+     * Consider using cloneArgObj() to avoid unanticipated value changes
+     *
+     * @return LayerAccessArgs A reference to the internal copy
+     */
+    public function getArgObj()
+    {
+        return $this->AccessArgs;
+    }
+
+    /**
+     * Remove the internal AccessArgs object
+     */
+    public function clearAccessArgs()
+    {
+        $this->AccessArgs = null;
+        $this->ResultIterator = FALSE;
+    }
+
+    /**
+     * Get a clone of the Access instructions (with an empty data property)
      *
      * @return LayerAccessArgs
      */
@@ -365,8 +428,8 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
                 ? 'null'
                 : $this->AccessArgs,
             '[layerName]' => $this->layerName,
-            '[ResultArray]' => is_null($this->ResultArray)
-                ? 'null'
+            '[ResultArray]' => $this->ResultIterator === FALSE
+                ? 'FALSE'
                 : 'Contains ' . $this->resultCount() . ' items.'
         ];
         return $result;
