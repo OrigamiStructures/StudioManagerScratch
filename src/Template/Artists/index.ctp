@@ -25,6 +25,11 @@ should probably be renamed). </p>
 <?php
 //osd($artists);
 //die;
+/* @var \App\View\AppView $this */
+/* @var \App\Model\Entity\Manifest $manifest */
+/* @var \App\Model\Entity\DataOwner $dataOwner */
+/* @var \App\Model\Entity\ArtistCard $artist */
+
 foreach($artists->getData() as $artist) :
 	$manifest = $artist->manifest->element(0);
 	$dataOwner = $artist->data_owner->element(0);
@@ -38,12 +43,15 @@ foreach($artists->getData() as $artist) :
 
 <?= $this->Html->para('', "You are the creator/owner of this aritst's "
 			. "data and have identified $otherManagerCount "
-			. "other managers for the data. View those details [here/make link]"); ?>
+			. "other managers for the data. View those details "
+            . $this->Html->link('here', ['controller' => 'artists', 'action' => 'view', $artist->rootID()])
+    ); ?>
 
 <?php else: ?>
 
-<?= $this->Html->para('', 'To request changes in your access to this '
-		. 'artist, contact ' . $dataOwner->username() ); ?>
+    <?= $this->Html->para('', 'To request changes in your access to this '
+        . 'artist, contact ' . $dataOwner->username() . '. Email link here?'); ?>
+    <?= $this->Html->para('', 'But shouldn\'t we still be able to go to a detail page?'); ?>
 
 <?php endif; ?>
 

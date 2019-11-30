@@ -25,7 +25,7 @@ class ArtistManifestStack extends ManagerManifestStack {
 
 		$identityIds = $this->people
             ->getLayer('identity')
-            ->NEWfind()
+            ->find()
             ->specifyFilter('id', $id)
             ->toDistinctList('id');
 

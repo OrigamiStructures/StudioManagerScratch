@@ -64,10 +64,14 @@ bin/cake bake.bake test entity ManifestStack
 
 ## BAKING CUSTOM FOLDER TESTS
 ====================================================================
-bin/cake bake.bake test ModLib StackSet
-bin/cake bake.bake test ModLib StackRegistry
 bin/cake bake.bake test ModLib ContextUser
-bin/cake bake.bake test ModLib CurrentUser
+bin/cake bake.bake test ModLib CurrentUer
+bin/cake bake.bake test ModLib LayerAccessArgs
+bin/cake bake.bake test ModLib Layer
+bin/cake bake.bake test ModLib StackRegistry
+bin/cake bake.bake test ModLib StackSet
+bin/cake bake.bake test ModLib ValueSource
+bin/cake bake.bake test ModLib LayerAccessProcessor
 
 ## TESTING
 ====================================================================

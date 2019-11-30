@@ -50,7 +50,8 @@ class MenusTable extends AppTable{
         'test-pieces-renumber' => '/pieces/renumber?artwork=10',
         'documentation-REPL' => '/members/docs',
         'data-integrity' => '/administrator/userDataIntegrity',
-        'artists-index' => '/artists'
+        'artists-index' => '/artists',
+        'artists-view' => '/artists/view/1'
     ]];
 	protected $account = ['Account' => [
 			'Login' => '/users/users/login',

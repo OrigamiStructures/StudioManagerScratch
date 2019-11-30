@@ -101,7 +101,7 @@ class StackSet implements LayerStructureInterface, \Countable {
         $accessProcessor = $this->getLayer($linked);
         $foreign_key = $this->_modelKey($foreign);
         return $accessProcessor
-            ->NEWfind()
+            ->find()
             ->specifyFilter($foreign_key, $foreign_id);
     }
 
