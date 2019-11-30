@@ -5,7 +5,11 @@ use App\Model\Entity\StackEntity;
 use App\Model\Lib\StackSet;
 
 /**
+<<<<<<< Updated upstream
  * ManifestStackEntity
+=======
+ * StackEntity
+>>>>>>> Stashed changes
  *
  *  * There are multiple PersonCards required to identify everyone included
  * in a Manifest. But they may all be the same person. So, they are stored
@@ -17,7 +21,7 @@ use App\Model\Lib\StackSet;
  * @property StackSet $people
  * @property Layer $manifest
  */
-class ManagerManifestStack extends StackEntity {
+class ManifestStack extends StackEntity {
 
 	public function manifest() {
 //	    return $this->manifest->element(0, LAYERACC_INDEX);

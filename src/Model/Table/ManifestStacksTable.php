@@ -1,19 +1,27 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Manifest;
+use App\Model\Entity\StackEntity;
 use App\Model\Lib\StackSet;
 use App\Model\Table\StacksTable;
 use App\Model\Lib\Layer;
 use Cake\ORM\Query;
+use PharIo\Manifest\UrlTest;
 
 /**
- * Description of ManagerManifestStacksTable
+ * Description of ManifestStacksTable
  *
- * Get the ManagerManifests
+ * Get the ManifestsStacks
+ *
+ * @property ManifestsTable $Manifests
+ * @property PersonCardsTable $PersonCards
+ * @property PermissionsTable $Permissions
+ * @property MembersTable $Members
  *
  * @author dondrake
  */
-class ManagerManifestStacksTable extends StacksTable {
+class ManifestStacksTable extends StacksTable {
 
 	/**
 	 * {@inheritdoc}
@@ -179,6 +187,10 @@ class ManagerManifestStacksTable extends StacksTable {
 				|| $stack->manifest()->managerId() === $management_token;
 	}
 
+    /**
+     * @param $stack StackEntity
+     * @return mixed
+     */
 	protected function marshalNameCards($stack) {
 
 //		$stack->manifest
@@ -186,12 +198,14 @@ class ManagerManifestStacksTable extends StacksTable {
 //				->specifyFilter('layer', 'contact')
 //				->load();
 
+        /* @var Manifest $manifest */
+
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
 					'supervisor' => [$manifest->supervisorId()],
 					'manager' => [$manifest->managerId()],
-                    'artist' => [$manifest->artistId()]
+                    'identity' => [$manifest->artistId()]
 				]
 			);
 		$stack->people = $people;
