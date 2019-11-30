@@ -1,6 +1,7 @@
 <?php
 namespace App\Events;
 
+use Cake\Event\Event;
 use Cake\Http\Client\Request;
 use OSDebug;
 use Cake\Event\EventListenerInterface;
@@ -29,12 +30,12 @@ class UserNotifier implements EventListenerInterface
     /**
      * Write login user object to session after login
      *
-     * @param $event
-     * @property UsersController $Users
+     * @param $event Event
      */
     public function afterLoginAction($event)
     {
-        $Users = $event->_subject;
+        /* @var UsersController $Users */
+        $Users = $event->getSubject();
         $user = $Users->contextUser();
         $session = $Users->getRequest()->getSession();
         $session->write('User', serialize($user));
