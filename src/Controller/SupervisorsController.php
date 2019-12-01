@@ -55,11 +55,11 @@ class SupervisorsController extends AppController
 
         }
         else
-            {
-                $artistId = $this->request->getData('artistId');
+        {
+            $artistId = $this->request->getData('artistId');
             $this->createArtistManifest($artistId);
         }
 
-	}
+    }
 
 }
