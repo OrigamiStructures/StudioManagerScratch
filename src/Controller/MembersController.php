@@ -40,20 +40,6 @@ class MembersController extends AppController
 
 // <editor-fold defaultstate="collapsed" desc="CRUD Methods">
     /**
-     * Index method
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Images']
-        ];
-        $this->set('members', $this->paginate($this->Members));
-        $this->set('_serialize', ['members']);
-    }
-
-    /**
      * View method
      *
      * @param string|null $id Member id.
@@ -66,6 +52,21 @@ class MembersController extends AppController
         ]);
         $this->set('member', $member);
         $this->set('_serialize', ['member']);
+    }
+
+    /**
+     * Revised Index method
+     *
+     * @param string|null $id Member id.
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function index()     {
+        $members = $this->Members->find('all', [
+            'contain' => ['Images', 'Groups', 'Users', 'Dispositions', 'Locations']
+        ]);
+        $this->set('members', $members);
+        $this->set('_serialize', ['members']);
     }
 
     /**
@@ -306,4 +307,6 @@ class MembersController extends AppController
         $this->set(compact('memberLayer','it', 'people', 'members'));
 
     }
+
+
 }

@@ -8,18 +8,18 @@ use Cake\ORM\Query;
 
 /**
  * Description of ManagerManifestStacksTable
- * 
+ *
  * Get the ManagerManifests
  *
  * @author dondrake
  */
 class ManagerManifestStacksTable extends StacksTable {
-	
+
 	/**
 	 * {@inheritdoc}
 	 */
 	protected $rootName = 'manifest';
-	
+
 	protected $rootTable = 'Manifests';
 
 //    /**
@@ -54,10 +54,10 @@ class ManagerManifestStacksTable extends StacksTable {
         ]);
 		parent::initialize($config);
 	}
-	
+
 	/**
 	 * Derive the Manifest ids relevant to these manifest ids
-	 * 
+	 *
 	 * @param array $ids Manifest ids
 	 * @return Query
 	     */
@@ -67,7 +67,7 @@ class ManagerManifestStacksTable extends StacksTable {
 				->where(['id IN' => $ids])
 			;
 	}
-		
+
 	protected function distillFromPermission($ids) {
         osd('distilling permission');
         $manifest_ids = $this->Permissions->find('list', ['fieldValue' => 'manifest_id'])
@@ -76,7 +76,7 @@ class ManagerManifestStacksTable extends StacksTable {
 	}
 	/**
 	 * Derive the Manifest ids relevant to these Managers
-	 * 
+	 *
 	 * @param array $ids Manager ids
 	 * @return Query
 	 */
@@ -86,10 +86,10 @@ class ManagerManifestStacksTable extends StacksTable {
 				->select(['id', 'manager_id'])
 			;
 	}
-	
+
 	/**
 	 * Derive the Manifest ids relevant to these Supervisors
-	 * 
+	 *
 	 * @param array $ids Supervisor ids
 	 * @return Query
 	 */
@@ -100,15 +100,15 @@ class ManagerManifestStacksTable extends StacksTable {
 				->select(['id', 'supervisor_id'])
 			;
 	}
-	
+
 	/**
 	 * Inject appropriate boundary conditions for this user/context
-	 * 
-	 * I think this may grow a little more complex than this example. 
-	 * Controller/action context may be a consideration but we won't have 
-	 * that information here. The `contextUser` object may be our 
+	 *
+	 * I think this may grow a little more complex than this example.
+	 * Controller/action context may be a consideration but we won't have
+	 * that information here. The `contextUser` object may be our
 	 * tool to communicate situational knowledge.
-	 * 
+	 *
 	 * @param Query $query
 	 * @param array $options none supported at this time
      * @return Query
@@ -119,10 +119,10 @@ class ManagerManifestStacksTable extends StacksTable {
 			'member_id IS NULL'
 				]);
 	}
-	
+
 	/**
 	 * Marshal the manifest layer of this object
-	 * 
+	 *
 	 * @param string $id
 	 * @param StackEntity $stack
 	 * @return StackEntity
@@ -134,14 +134,14 @@ class ManagerManifestStacksTable extends StacksTable {
 			$stack = $this->marshalNameCards($stack);
 			return $stack;
 	}
-	
+
 	/**
 	 * Marshal the permissions for the manifest
-	 * 
+	 *
 	 * @todo BUSINESS LOGIC REQUIRED
-	 *		If the current user is not this manifest's supervisor or 
+	 *		If the current user is not this manifest's supervisor or
 	 *		manager, the permissions should be left empty
-	 * 
+	 *
 	 * @param string $id
 	 * @param StackEntity $stack
 	 * @return StackEntity
@@ -156,20 +156,20 @@ class ManagerManifestStacksTable extends StacksTable {
 		$stack->set(['permissions' => $permissions->toArray()]);
 		return $stack;
 	}
-	
+
 	private function permissionsRequired($stack) {
 		$management_token = $this->contextUser()->getId('manager');
 		return $stack->manifest()->supervisorId() === $management_token
 				|| $stack->manifest()->managerId() === $management_token;
 	}
-	
+
 	protected function marshalNameCards($stack) {
-		
+
 //		$stack->manifest
 //				->find('permissions')
 //				->specifyFilter('layer', 'contact')
 //				->load();
-		
+
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
@@ -180,23 +180,23 @@ class ManagerManifestStacksTable extends StacksTable {
 		$stack->people = $people;
 		return $stack;
 	}
-	
+
 	/**
 	 * Get the supervisors manifests
-	 * 
+	 *
 	 * Options allowed
 	 * ['source' => 'currentUser']
 	 * ['source' => 'contextuser']
 	 * ['ids' => [1, 6, 9]
-	 * 
+	 *
 	 * sample call
 	 * $ManifestStacks->find('supervisorManifests', ['source' => 'currentUser');
-	 * 
+	 *
 	 * @todo Could anyone except a Superuser use the 'ids' option?
-	 *		Depending on what our api callpoints allow and how they call 
-	 *		methods like this we may need to do currentUser()->isSuperuser() 
+	 *		Depending on what our api callpoints allow and how they call
+	 *		methods like this we may need to do currentUser()->isSuperuser()
 	 *		checks to cut off crazy access
-	 * 
+	 *
 	 * @param Query $query
 	 * @param array $options
 	 * @return StackSet
@@ -223,10 +223,10 @@ class ManagerManifestStacksTable extends StacksTable {
 
 		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => [$ids]]);
 	}
-	
+
 	public function findManagerManifests($query, $options) {
 		$ids = $this->contextUser()->getId('manager');
 		return $this->find('stacksFor', ['seed' => 'manager', 'ids' => $ids]);
 	}
-	
+
 }

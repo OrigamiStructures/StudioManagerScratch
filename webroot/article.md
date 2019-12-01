@@ -566,7 +566,7 @@ object (**LAA**).
 
 Finally, `AccessLayerStructureInterface::getArgObj()` will return a **LayerAccessArgs** 
 instance so you can break the whole process down. This technique is described 
-[here](#manual-style-processing).
+[here](#advanced-features-manual-style-processing).
 
 Use **LAA** to define all the details of the processing you want done, **LAP** will do 
 the actual data manipulation according to these instructions. Finally, use one of the 
@@ -574,7 +574,7 @@ the actual data manipulation according to these instructions. Finally, use one o
 
 These processes can be written using a *fluent* interface style or assembled manually. 
 The examples will all show the *fluent* style. A general discussion of 
-[manual style processing](#manual-style-processing) is a the end of this article.
+[manual style processing](#advanced-features-manual-style-processing) is a the end of this article.
 
 Your fluent operations will look like this:
 
@@ -949,15 +949,17 @@ There are a methods to help you to decompose the process.
    - Yeilds an **LAP** that contains the specified $layer data. This is the data that   
    will be processed to produce the result. The **LAP** will not contain an **LAA** 
    at this point.
-- `LayerStructureInterface::getArgObj()`
 - `LayerTaskProcessor::insert($data)`
    - add a layer, array of entities, or loose entity to the data set
+- `LayerStructureInterface::getArgObj()`
+   - get a reference to the **LAA**
 - `LayerTaskProcessor::cloneArgObj()`
    - Returns a clone of the current **LAA** stripped of its **LAP**. If no **LAA** 
    exists, a new empty instance will be returned.
 - `LayerTaskProcessor::setArgObj($argObj)`
+   - This clones the provided $argObj and stores the clone. 
 - `LayerTaskProcessor::perform($argObj)`
-   - Process the **LAP** and sets the result to `ResultIterator`.
+   - Set an new **LAA** and process the **LAP** and sets the result to `ResultIterator`.
 
 ###Getting and Populating a LayerAccessProcessor
 
