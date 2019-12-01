@@ -1,12 +1,26 @@
+<h3>Needs tools to allow SuperUsers (and Supervisors?) to change ContextUser settings</h3>
+
 <?php
-/**
- * @property \App\View\Helper\PeopleHelper $People
- */
+//die;
+use App\Model\Lib\ManifestStacksSet;
+
+/* @var \App\View\AjaxView $this */
+
     $this->loadHelper('People');
 
-	$delegatedManagement = $managerManifests
-			->delegatedManagement($contextUser->getId('supervisor'));
-?>
+    /* @var \App\Model\Lib\StackSet $manifestsIssued */
+    /* @var \App\Model\Lib\ContextUser $contextUser */
+
+//	$delegatedManagement = $manifestsIssued
+//        ->getLayer('manifest')
+//        ->find()
+//        ->specifyFilter('manager_id', $contextUser->getId('supervisor'), '!=')
+//        ->toArray();
+$manifestStack = new ManifestStacksSet($manifestsIssued);
+
+$delegatedManagement = $manifestStack
+    ->delegatedManagement($contextUser->getId('supervisor'));?>
+
 	<h1>Add an artist</h1>
 	<p>tools here</p>
 	<h1>Recruit a new delegate</h1>
@@ -27,7 +41,7 @@
 
     <h2>Owned Management</h2>
 
-<?php foreach ($managementAgreements->getData() as $agrement) : ?>
+<?php foreach ($manifestsReceived->getData() as $agrement) : ?>
 
     <?= "<p>{$this->People->artistManifestSummary($agrement)}</p>"; ?>
 

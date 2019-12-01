@@ -23,22 +23,24 @@ use PharIo\Manifest\UrlTest;
  */
 class ManifestStacksTable extends StacksTable {
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected $rootName = 'manifest';
+    const MANIFEST_FOREIGN = 'foreign';
+    const MANIFEST_SELF = 'self';
+    const MANIFEST_ANY = 'any';
 
-	protected $rootTable = 'Manifests';
+    /**
+     * @var string
+     */
+    protected $rootName = 'manifest';
 
-//    /**
-//     * @var \App\Model\Table\ManifestsTable
-//     */
-//	public $Manifests;
-//
-	/**
-	 * {@inheritdoc}
-	 */
-	public $rootDisplaySource = 'id';
+    /**
+     * @var string
+     */
+    protected $rootTable = 'Manifests';
+
+    /**
+     * @var string
+     */
+    public $rootDisplaySource = 'id';
 
 	/**
 	 * Initialize method
@@ -65,7 +67,8 @@ class ManifestStacksTable extends StacksTable {
 		parent::initialize($config);
 	}
 
-	/**
+    //<editor-fold desc="*********************** DISTILLERS ****************************">
+    /**
 	 * Derive the Manifest ids relevant to these manifest ids
 	 *
 	 * @param array $ids Manifest ids
@@ -123,27 +126,10 @@ class ManifestStacksTable extends StacksTable {
             ->select(['id', 'member_id'])
             ;
     }
+    //</editor-fold>
 
-	/**
-	 * Inject appropriate boundary conditions for this user/context
-	 *
-	 * I think this may grow a little more complex than this example.
-	 * Controller/action context may be a consideration but we won't have
-	 * that information here. The `contextUser` object may be our
-	 * tool to communicate situational knowledge.
-	 *
-	 * @param Query $query
-	 * @param array $options none supported at this time
-     * @return Query
-	 */
-	protected function localConditions($query, $options = []) {
-		return $query;//->where([
-//			'user_id' => $this->contextUser()->getId('supervisor'),
-//			'member_id IS NULL'
-//				]);
-	}
-
-	/**
+    //<editor-fold desc="***************************** MARSHALLERS ***************************************">
+    /**
 	 * Marshal the manifest layer of this object
 	 *
 	 * @param string $id
@@ -211,53 +197,89 @@ class ManifestStacksTable extends StacksTable {
 		$stack->people = $people;
 		return $stack;
 	}
+    //</editor-fold>
 
 	/**
-	 * Get the supervisors manifests
+	 * Issued Manifests (this user is Supervisor/Issuer)
 	 *
-	 * Options allowed
-	 * ['source' => 'currentUser']
-	 * ['source' => 'contextuser']
-	 * ['ids' => [1, 6, 9]
-	 *
-	 * sample call
-	 * $ManifestStacks->find('supervisorManifests', ['source' => 'currentUser');
-	 *
-	 * @todo Could anyone except a Superuser use the 'ids' option?
-	 *		Depending on what our api callpoints allow and how they call
-	 *		methods like this we may need to do currentUser()->isSuperuser()
-	 *		checks to cut off crazy access
-	 *
-	 * @param Query $query
-	 * @param array $options
 	 * @return StackSet
 	 * @throws \BadMethodCallException
 	 */
-	public function findSupervisorManifests($query, $options) {
-//	    osd($query);
-//	    osd($options);die;
-//		if (
-//				key_exists('source', $options)
-//				&& (in_array($options['source'], ['currentUser', 'contextUser']))
-//		) {
-//			$ids = [$this->{$options['source']}->supervisorId()];
-//		} elseif (key_exists('ids', $options)) {
-//			$ids = $options['ids'];
-//		} else {
-//			$msg = 'Allowed $options keys: "source" or "ids". "source" values: '
-//					. '"currentUser" or "contextUser". "ids" value must '
-//					. 'be an array of ids.';
-//			throw new \BadMethodCallException($msg);
-//		}
-
-		$ids = $this->contextUser()->getId('supervisor');
-
-		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => [$ids]]);
+	public function ManifestsIssued($receiver = self::MANIFEST_ANY) {
+        /* @var Layer $foreign */
+        /* @var Layer $self */
+        $userId = $this->currentUser()->userId();
+        switch ($receiver) {
+            case self::MANIFEST_ANY:
+                $ids = [$userId];
+                break;
+            case self::MANIFEST_FOREIGN:
+                $foreign = layer($this->Manifests->find('all', [
+                        'where' => ['supervisor_id' => $userId, 'manager_id !=' => $userId],
+                        'select' => ['id', 'supervisor_id', 'manager_id']
+                    ]
+                ));
+                $ids = [$foreign->toDistinctList('manager_id')];
+                break;
+            case self::MANIFEST_SELF:
+                $self = layer($this->Manifests->find('all', [
+                        'where' => ['supervisor_id' => $userId, 'manager_id' => $userId],
+                        'select' => ['id', 'supervisor_id', 'manager_id']
+                    ]
+                ));
+                $ids = [$self->toDistinctList('manager_id')];
+                break;
+            default:
+                $ids = [];
+        }
+		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => $ids]);
 	}
 
-	public function findManagerManifests($query, $options) {
-		$ids = $this->contextUser()->getId('manager');
+    /**
+     * Recieved Manifests (this user is Manager)
+     * @return StackSet
+     * @throws \BadMethodCallException
+     */
+    public function ManifestsRecieved($issuer = self::MANIFEST_ANY) {
+        /* @var Layer $foreign */
+        /* @var Layer $self */
+        $userId = $this->currentUser()->userId();
+        switch ($issuer) {
+            case self::MANIFEST_ANY:
+                $ids = [$this->currentUser()->userId()];
+                break;
+            case self::MANIFEST_FOREIGN:
+                $foreign = layer($this->Manifests->find('all', [
+                    'where' => ['supervisor_id !=' => $userId, 'manager_id' => $userId],
+                    'select' => ['id', 'supervisor_id', 'manager_id']
+                    ]
+                ));
+                $ids = [$foreign->toDistinctList('manager_id')];
+                break;
+            case self::MANIFEST_SELF:
+                $self = layer($this->Manifests->find('all', [
+                        'where' => ['supervisor_id' => $userId, 'manager_id' => $userId],
+                        'select' => ['id', 'supervisor_id', 'manager_id']
+                    ]
+                ));
+                $ids = [$self->toDistinctList('manager_id')];
+                break;
+            default:
+                $ids = [];
+        }
 		return $this->find('stacksFor', ['seed' => 'manager', 'ids' => $ids]);
+	}
+
+    /**
+     * All Manifests (this user is Supervisor or Manager)
+     *
+     * @return StackSet
+     * @throws \BadMethodCallException
+     */
+    public function AllManifests()
+    {
+        $id = $this->currentUser()->userId();
+        return $this->processSeeds(['supervisor' => [$id], 'manager' => [$id]]);
 	}
 
 }
