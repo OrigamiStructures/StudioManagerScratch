@@ -1,8 +1,12 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Image;
+use App\Model\Entity\Manifest;
+use App\Model\Entity\StackEntity;
 use App\Model\Table\RolodexCardsTable;
 
+use Cake\Collection\Collection;
 use Cake\ORM\Table;
 use App\Model\Traits\ContactableTableTrait;
 use App\Model\Traits\ReceiverTableTrait;
@@ -26,6 +30,9 @@ use App\Model\Traits\ReceiverTableTrait;
  *
  *
  * @author dondrake
+ * @property ManifestsTable $Manifests
+ * @property IdentitiesTable $Identities
+ * @property ImagesTable $Images
  */
 class PersonCardsTable extends RolodexCardsTable {
 
@@ -36,9 +43,9 @@ class PersonCardsTable extends RolodexCardsTable {
 		parent::initialize($config);
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
-		$this->addLayerTable(['Images']);
-        $this->addStackSchema(['image']);
-		$this->addSeedPoint(['image', 'images']);
+		$this->addLayerTable(['Images', 'Manifests']);
+        $this->addStackSchema(['image', 'manifests']);
+		$this->addSeedPoint(['image', 'images', 'manifest', 'manifests']);
 //		$this->registry = new PersonCardRegistry();
 	}
 
@@ -46,6 +53,24 @@ class PersonCardsTable extends RolodexCardsTable {
 		$query = $this->Identities->find('list', ['valueField' => 'id'])
 				->where(['image_id IN' => $ids]);
 		return $this->distillFromIdentity($query->toArray());
+	}
+
+    /**
+     * @param array $ids
+     * @return array
+     */
+    protected function distillFromManifest(array $ids)
+    {
+        $query = $this->Manifests->find('all')
+            ->where(['id IN' => $ids]);
+        $manifests = new Collection($query->toArray());
+        $result = $manifests->reduce(function ($accum, $entity) {
+                $accum[]=$entity->supervisorId();
+                $accum[]=$entity->managerId();
+                $accum[]=$entity->artistId();
+                return $accum;
+            }, []);
+        return array_unique($result);
 	}
 
 	protected function marshalImage($id, $stack) {
@@ -69,5 +94,26 @@ class PersonCardsTable extends RolodexCardsTable {
 	protected function localConditions($query, $options = []) {
 		return $query->where(['member_type' => 'Person']);
 	}
+
+    /**
+     * @param $id
+     * @param $stack StackEntity
+     * @return StackEntity
+     */
+    protected function marshalManifest($id, $stack)
+    {
+        $person_id = $stack->rootID();
+        $manifest = $this->Manifests
+            ->find('all')
+            ->where([
+                'OR' => [
+                    'supervisor_id' => $person_id,
+                    'manager_id' => $person_id,
+                    'artist_id' => $person_id
+                ]
+            ]);
+        $stack->set(['manifests' => $manifest->toArray()]);
+        return $stack;
+    }
 
 }
