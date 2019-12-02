@@ -10,9 +10,9 @@ use App\Model\Traits\ReceiverTableTrait;
 
 /**
  * PersonCardsTable
- * 
- * Create PersCards, a variety of stack entity. 
- * Enforce that only member records of member_type === Person are included. 
+ *
+ * Create PersonCards, a variety of stack entity.
+ * Enforce that only member records of member_type === Person are included.
  * All possible distillers for this class
  *   identity (root)
  *   data_owner
@@ -22,16 +22,16 @@ use App\Model\Traits\ReceiverTableTrait;
  *   image
  *   addresses
  *   contact
- * All possible distillers for this classdisposition
- * 
- * 
+ * All possible distillers for this class disposition
+ *
+ *
  * @author dondrake
  */
 class PersonCardsTable extends RolodexCardsTable {
-	
+
 	use ContactableTableTrait;
 	use ReceiverTableTrait;
-	
+
 	public function initialize(array $config) {
 		parent::initialize($config);
 		$this->initializeContactableCard();
@@ -41,20 +41,20 @@ class PersonCardsTable extends RolodexCardsTable {
 		$this->addSeedPoint(['image', 'images']);
 //		$this->registry = new PersonCardRegistry();
 	}
-	
+
 	protected function distillFromImage($ids) {
 		$query = $this->Identities->find('list', ['valueField' => 'id'])
 				->where(['image_id IN' => $ids]);
 		return $this->distillFromIdentity($query->toArray());
 	}
-	
+
 	protected function marshalImage($id, $stack) {
 //		debug($stack);
 		if ($stack->count('identity')) {
 			$image = $this->Images->find('all')
 					->where(['id' => $stack->rootElement()->imageId()]);
 			$stack->set(['image' => $image->toArray()]);
-		}		
+		}
 		return $stack;
 	}
 
@@ -65,9 +65,30 @@ class PersonCardsTable extends RolodexCardsTable {
 			$stack->set(['identity' => $identity->toArray()]);
 			return $stack;
 	}
-	
+
 	protected function localConditions($query, $options = []) {
 		return $query->where(['member_type' => 'Person']);
 	}
-	
+
+    /**
+     * @param $id
+     * @param $stack StackEntity
+     * @return StackEntity
+     */
+    protected function marshalManifests($id, $stack)
+    {
+        $person_id = $stack->rootID();
+        $manifest = $this->Manifests
+            ->find('all')
+            ->where([
+                'OR' => [
+                    'supervisor_id' => $person_id,
+                    'manager_id' => $person_id,
+                    'member_id' => $person_id
+                ]
+            ]);
+        $stack->set(['manifests' => $manifest->toArray()]);
+        return $stack;
+    }
+
 }

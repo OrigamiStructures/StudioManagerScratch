@@ -40,30 +40,65 @@ class Manifest extends Entity
         'users' => true,
         'member_user' => true
     ];
-	
+
 	/**
 	 * Does the member/artist belong to the user
-	 * 
-	 * Users may freely create and edit artists and their works. 
-	 * However, if the member record belongs to another user, then 
+	 *
+	 * Users may freely create and edit artists and their works.
+	 * However, if the member record belongs to another user, then
 	 * there are some restrictions on this user's rights
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function selfAssigned() {
 		return $this->manager_id === $this->supervisor_id;
 	}
-	
-	public function supervisorId() {
+
+    /**
+     * @return mixed
+     */
+    public function supervisorId() {
 		return $this->supervisor_id;
 	}
-	
-	public function managerId() {
+
+    /**
+     * @return string
+     */
+    public function managerId() {
 		return $this->manager_id;
 	}
-	
-	public function artistId() {
+
+    /**
+     * @return int
+     */
+    public function artistId() {
 		return $this->member_id;
 	}
-	
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function isSupervisor($id)
+    {
+        return $this->supervisorId() === $id;
+	}
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function isManager($id)
+    {
+        return $this->managerId() === $id;
+	}
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function isArtist($id)
+    {
+        return $this->artistId() === $id;
+	}
 }
