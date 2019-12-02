@@ -13,11 +13,12 @@ class RolodexCardsController extends AppController {
 
 	public function initialize() {
 		parent::initialize();
+		$this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 	}
 
 	public function index() {
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
-		$rolodexCards = $this->RolodexCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+		$rolodexCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
 		$this->set('rolodexCards', $rolodexCards);
 	}
 
