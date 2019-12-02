@@ -84,8 +84,15 @@ class RolodexCard extends StackEntity {
      * @return bool
      */
     public function isManager() {
-		return FALSE;
-	}
+        return FALSE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSupervisor() {
+        return FALSE;
+    }
 
     /**
      * @return bool
