@@ -3,6 +3,7 @@
 namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\RolodexCard;
+use App\Model\Lib\Layer;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -105,6 +106,18 @@ class RolodexCardTest extends TestCase
             'The person card\'s membershipElements() accessor did not work');
 
         $this->assertCount(0, $this->Group->getMemberships(),
+            'The group card\'s membershipElements() accessor did not work');
+
+        $this->assertInstanceOf(Layer::class, $this->Person->getMemberships(LAYERACC_LAYER),
+            'Requesting a layer did not return one.');
+
+        $this->assertInstanceOf(Layer::class, $this->Group->getMemberships(LAYERACC_LAYER),
+            'Requesting a layer form empty memberships did not return one.');
+
+        $this->assertCount(2, $this->Person->getMemberships(LAYERACC_LAYER),
+            'The person card\'s membershipElements() accessor did not work');
+
+        $this->assertCount(0, $this->Group->getMemberships(LAYERACC_LAYER),
             'The group card\'s membershipElements() accessor did not work');
 
     }
