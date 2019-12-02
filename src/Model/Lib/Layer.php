@@ -120,6 +120,11 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
         return $this->_data;
     }
 
+    public function count()
+    {
+        return count($this->_data);
+    }
+
     /**
      * Get an array of the IDs of the stored entities
      *
