@@ -1,39 +1,37 @@
 <?php
+use Cake\Utility\Text;
+
 foreach($institutionCards->getData() as $id => $card) {
-	echo "<h1>{$card->name()}</h1>";
 
-	$output = collection($card->contacts())
-			->reduce(function($accum, $name) {
-		$accum .= '<p>' . $name . '</p>';
-		return $accum;
-	}, '');
-	echo $output;
+    /* @var \App\Model\Entity\OrganizationCard $card
+     */
+    $contacts = '<p>' . Text::toList($card->contacts()) . '</p>';
 
-	$output = collection($card->addresses())
-			->reduce(function($accum, $name) {
-		$accum .= '<p>' . $name . '</p>';
-		return $accum;
-	}, '');
-	echo $output;
+    $addresses = '<p>' . Text::toList($card->addresses()) . '</p>';
 
-	if ($card->isMember()) {
-		echo "<h2>Memberships</h2>";
-		$output = collection($card->memberships())
-				->reduce(function($accum, $name) {
-			$accum .= '<p>' . $name . '</p>';
-			return $accum;
-		}, '');
-		echo $output;
-	}
+    $memberships = '';
+    if ($card->isMember()) {
+        $memberships =  "<p><strong>Memberships</strong>: "
+            . Text::toList($card->memberships()) . '</p>';
+    }
 
-	if ($card->isGroup()) {
-		echo "<h2>Members</h2>";
-		$output = collection($card->IDs())
-				->reduce(function($accum, $name) {
-			$accum .= '<p>' . $name . '</p>';
-			return $accum;
-		}, '');
-		echo $output;
-	}
+    $members = '';
+    if ($card->hasMembers()) {
+        $members =  "<p><strong>Members</strong>: "
+            . Text::toList($card->members()) . '</p>';
+    }
+
+    $institutions = '';
+    if ($card->isGroup()) {
+        $institutions = "<span>Institution: "
+        . Text::toList($card->IDs()) . '</span>';
+    }
+
+    echo "<p><strong>{$card->name()}</strong> $institutions</p>";
+	echo $contacts;
+	echo $addresses;
+    echo $memberships;
+    echo $members;
+
 
 }
