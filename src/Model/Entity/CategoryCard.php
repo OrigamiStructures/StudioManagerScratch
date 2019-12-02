@@ -17,7 +17,7 @@ class CategoryCard extends RolodexCard{
 	}
 
 	public function hasMembers() {
-		return is_a($this->members, '\App\Model\Lib\Layer');
+		return count($this->members) > 0;
 	}
 
 
