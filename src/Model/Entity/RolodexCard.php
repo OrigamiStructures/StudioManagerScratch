@@ -110,12 +110,11 @@ class RolodexCard extends StackEntity {
 	 * @return array|layer
 	 */
 	public function getMemberships($asArray = LAYERACC_ARRAY) {
-		if($this->isMember()) {
-			$result = $this->memberships->toarray();
-		} else {
-			$result = [];
-		}
-		return $this->_resolveReturnStructure($result, $asArray, 'memberships');
+	    if($asArray){
+	        return $this->memberships->toArray();
+        } else {
+	        return $this->memberships;
+        }
 	}
 
 	/**
