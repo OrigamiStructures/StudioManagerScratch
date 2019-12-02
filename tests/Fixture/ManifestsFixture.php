@@ -18,13 +18,13 @@ class ManifestsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => [
-			'type' => 'integer', 
-			'length' => 11, 
-			'unsigned' => true, 
-			'null' => false, 
-			'default' => null, 
-			'comment' => '', 
-			'autoIncrement' => true, 
+			'type' => 'integer',
+			'length' => 11,
+			'unsigned' => true,
+			'null' => false,
+			'default' => null,
+			'comment' => '',
+			'autoIncrement' => true,
 			'precision' => null
 		],
         'member_id' => [
@@ -46,21 +46,39 @@ class ManifestsFixture extends TestFixture
 			'precision' => null
 		],
         'manager_id' => [
-			'type' => 'uuid',
-			'length' => null,
-			'null' => false,
-			'default' => '',
-			'comment' => 'id of Member record that is the manager',
-			'precision' => null
-		],
+            'type' => 'uuid',
+            'length' => null,
+            'null' => false,
+            'default' => '',
+            'comment' => 'id of User record that is the manager',
+            'precision' => null
+        ],
+        'manager_member' => [
+            'type' => 'integer',
+            'length' => 11,
+            'unsigned' => false,
+            'null' => false,
+            'default' => null,
+            'comment' => 'id of Member record that is the manager',
+            'precision' => null
+        ],
         'supervisor_id' => [
-			'type' => 'uuid',
-			'length' => null,
-			'null' => false,
-			'default' => '',
-			'comment' => 'id of Member record that is the supervisor/issuer',
-			'precision' => null
-		],
+            'type' => 'uuid',
+            'length' => null,
+            'null' => false,
+            'default' => '',
+            'comment' => 'id of User record that is the supervisor/issuer',
+            'precision' => null
+        ],
+        'supervisor_member' => [
+            'type' => 'integer',
+            'length' => 11,
+            'unsigned' => false,
+            'null' => false,
+            'default' => null,
+            'comment' => 'id of Member record that is the supervisor/issuer',
+            'precision' => null
+        ],
         'publish_manager' => [
 			'type' => 'boolean',
 			'length' => null,
@@ -100,7 +118,9 @@ class ManifestsFixture extends TestFixture
                 'member_id' => 1,
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'manager_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'manager_member' => 1,
                 'supervisor_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'supervisor_member' => 1,
                 'publish_manager' => true,
                 'publish_manager_contact' => true
             ],
@@ -109,7 +129,9 @@ class ManifestsFixture extends TestFixture
                 'member_id' => 2,
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'manager_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'manager_member' => 1,
                 'supervisor_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'supervisor_member' => 1,
                 'publish_manager' => false,
                 'publish_manager_contact' => false
             ],
@@ -118,7 +140,9 @@ class ManifestsFixture extends TestFixture
                 'member_id' => 1,
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'manager_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'manager_member' => 75,
                 'supervisor_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'supervisor_member' => 1,
                 'publish_manager' => false,
                 'publish_manager_contact' => false
             ],
@@ -127,7 +151,9 @@ class ManifestsFixture extends TestFixture
                 'member_id' => 75,
                 'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
                 'manager_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+                'manager_member' => 1,
                 'supervisor_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'supervisor_member' => 75,
                 'publish_manager' => true,
                 'publish_manager_contact' => true
             ],
@@ -136,7 +162,9 @@ class ManifestsFixture extends TestFixture
                 'member_id' => 75,
                 'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
                 'manager_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'manager_member' => 75,
                 'supervisor_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'supervisor_member' => 75,
                 'publish_manager' => false,
                 'publish_manager_contact' => false
             ],
