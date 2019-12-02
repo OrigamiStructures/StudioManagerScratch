@@ -123,7 +123,7 @@ class RolodexCard extends StackEntity {
 	 * @return array
 	 */
 	public function membershipIDs() {
-		return $this->memberships->toValueList('id');
+		return $this->memberships->IDs();
 	}
 
 	/**
