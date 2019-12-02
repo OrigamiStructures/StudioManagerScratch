@@ -61,9 +61,9 @@ class PersonCardsTable extends RolodexCardsTable {
             ->where(['id IN' => $ids]);
         $manifests = new Collection($query->toArray());
         $result = $manifests->reduce(function ($accum, $entity) {
-                $accum['userId'][]=$entity->supervisorId();
-                $accum['userId'][]=$entity->managerId();
-                $accum['memberId'][]=$entity->artistId();
+                $accum[]=$entity->getSupervisorMember();
+                $accum[]=$entity->getManagerMember();
+                $accum[]=$entity->artistId();
                 return $accum;
             }, ['userId' => [], 'memberId' => []]);
         return array_unique($result);
@@ -103,8 +103,8 @@ class PersonCardsTable extends RolodexCardsTable {
             ->find('all')
             ->where([
                 'OR' => [
-                    'supervisor_id' => $person_id,
-                    'manager_id' => $person_id,
+                    'supervisor_member' => $person_id,
+                    'manager_member' => $person_id,
                     'member_id' => $person_id
                 ]
             ]);
