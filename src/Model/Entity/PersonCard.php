@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use App\Model\Entity\RolodexCard;
+use App\Model\Lib\Layer;
 use App\Model\Traits\ContactableTrait;
 use App\Model\Traits\ReceiverTrait;
 
@@ -29,6 +30,14 @@ class PersonCard extends RolodexCard{
         $data->addresses = $this->addressEntities();
         $data->contacts = $this->contactEntities();
         return $data;
+    }
+
+    /**
+     * @return Layer
+     */
+    public function manifests()
+    {
+        return $this->manifests;
     }
 
 }
