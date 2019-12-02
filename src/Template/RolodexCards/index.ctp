@@ -17,12 +17,9 @@ foreach($rolodexCards->getData() as $id => $card) {
         $isArtitst = in_array($card->rootID(), $artists) ? 'Artist' : '';
     }
 
-    $memberships = collection($card->memberships())
-        ->reduce(function($membershipList, $name) {
-            $membershipList[] = $name;
-            return $membershipList;
-        },[]) ;
-    $membershipList = count($memberships) == 0 ? 'None' : Text::toList($memberships);
+    $membershipList = count($card->memberships()) == 0
+        ? 'None'
+        : Text::toList($card->memberships());
 
     echo "<p><strong>{$card->name()}</strong> $isSupervisor $isArtitst $isManager</p>";
 	echo '<p>Memberships: ' . $membershipList . '</p>';
