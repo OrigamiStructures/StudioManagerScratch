@@ -26,6 +26,9 @@ use App\Model\Traits\ReceiverTableTrait;
  *
  *
  * @author dondrake
+ * @property ManifestsTable $Manifests
+ * @property IdentitiesTable $Identities
+ * @property ImagesTable $Images
  */
 class PersonCardsTable extends RolodexCardsTable {
 
@@ -36,9 +39,9 @@ class PersonCardsTable extends RolodexCardsTable {
 		parent::initialize($config);
 		$this->initializeContactableCard();
 		$this->initializeReceiverCard();
-		$this->addLayerTable(['Images']);
-        $this->addStackSchema(['image']);
-		$this->addSeedPoint(['image', 'images']);
+		$this->addLayerTable(['Images', 'Manifests']);
+        $this->addStackSchema(['image', 'manifests']);
+		$this->addSeedPoint(['image', 'images', 'manifest', 'manifests']);
 //		$this->registry = new PersonCardRegistry();
 	}
 
@@ -46,6 +49,24 @@ class PersonCardsTable extends RolodexCardsTable {
 		$query = $this->Identities->find('list', ['valueField' => 'id'])
 				->where(['image_id IN' => $ids]);
 		return $this->distillFromIdentity($query->toArray());
+	}
+
+    /**
+     * @param array $ids
+     * @return array
+     */
+    protected function distillFromManifest(array $ids)
+    {
+        $query = $this->Manifests->find('all')
+            ->where(['id IN' => $ids]);
+        $manifests = new Collection($query->toArray());
+        $result = $manifests->reduce(function ($accum, $entity) {
+                $accum['userId'][]=$entity->supervisorId();
+                $accum['userId'][]=$entity->managerId();
+                $accum['memberId'][]=$entity->artistId();
+                return $accum;
+            }, ['userId' => [], 'memberId' => []]);
+        return array_unique($result);
 	}
 
 	protected function marshalImage($id, $stack) {

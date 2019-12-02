@@ -473,13 +473,13 @@ class StacksTable extends AppTable
 	 * @return StackSet
 	 */
 	protected function stackSet() {
-		$alias = $this->getAlias();
-		$className = "\App\Model\Lib\\{$alias}Set";
-		if (class_exists($className)) {
-			$result = new $className();
-		} else {
+//		$alias = $this->getAlias();
+//		$className = "\App\Model\Lib\\{$alias}Set";
+//		if (class_exists($className)) {
+//			$result = new $className();
+//		} else {
 			$result = new StackSet;
-		}
+//		}
 		return $result;
 	}
 

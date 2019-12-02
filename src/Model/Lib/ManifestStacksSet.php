@@ -4,13 +4,26 @@ namespace App\Model\Lib;
 use App\Model\Lib\StackSet;
 
 /**
- * Description of ManagementManifestSet
+ * ManifestSet
+ *
+ * A wrapper class to add features to StackSets of ManifestStacks
  *
  * @author dondrake
  */
-class ManagerManifestStacksSet extends StackSet{
+class ManifestStacksSet {
 
-	public function ownedManagement($supervisor_id) {
+    public function __construct($stackSet)
+    {
+        $this->stackSet = $stackSet;
+    }
+
+    public function __call($name, $arguments)
+    {
+        return $this->stackSet->$name($arguments);
+    }
+
+    public function ownedManagement($supervisor_id)
+    {
 		$owned = $this
 			->find('manifest')
 			->specifyFilter('supervisor_id', $supervisor_id)
@@ -18,8 +31,9 @@ class ManagerManifestStacksSet extends StackSet{
 		return $owned;
 	}
 
-	public function delegatedManagement($supervisor_id) {
-		$collection = collection($this->getData());
+	public function delegatedManagement($supervisor_id)
+    {
+		$collection = collection($this->stackSet->getData());
 		$delegated = $collection->filter(function($stack) use ($supervisor_id) {
 			return $stack->rootElement()->supervisorId() == $supervisor_id
 					&& !$stack->rootElement()->selfAssigned();
@@ -27,7 +41,8 @@ class ManagerManifestStacksSet extends StackSet{
 		return $delegated->toArray();
 	}
 
-	public function receivedManagement($supervisor_id) {
+	public function receivedManagement($supervisor_id)
+    {
 		$received = $this
 			->find('manifest')
 			->specifyFilter('supervisor_id', $supervisor_id, '!=')
