@@ -2,7 +2,7 @@
 use Cake\Utility\Text;
 use App\Model\Entity\PersonCard;
 
-foreach($rolodexCards->getData() as $id => $card) {
+foreach($personCards->getData() as $id => $card) {
 
     /* @var PersonCard $card */
 

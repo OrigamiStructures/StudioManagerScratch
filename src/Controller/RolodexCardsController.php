@@ -18,8 +18,8 @@ class RolodexCardsController extends AppController {
 
 	public function index() {
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
-		$rolodexCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-		$this->set('rolodexCards', $rolodexCards);
+		$personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+		$this->set('personCards', $personCards);
 	}
 
 	public function groups() {
