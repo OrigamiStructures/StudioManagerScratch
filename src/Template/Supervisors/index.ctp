@@ -28,6 +28,7 @@
     <h2>Owned Management</h2>
 
 <?php foreach ($managementAgreements->getData() as $agrement) : ?>
+    <?php osd($agrement); ?>
 
     <?= "<p>{$this->People->artistManifestSummary($agrement)}</p>"; ?>
 
