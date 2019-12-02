@@ -70,4 +70,25 @@ class PersonCardsTable extends RolodexCardsTable {
 		return $query->where(['member_type' => 'Person']);
 	}
 
+    /**
+     * @param $id
+     * @param $stack StackEntity
+     * @return StackEntity
+     */
+    protected function marshalManifests($id, $stack)
+    {
+        $person_id = $stack->rootID();
+        $manifest = $this->Manifests
+            ->find('all')
+            ->where([
+                'OR' => [
+                    'supervisor_id' => $person_id,
+                    'manager_id' => $person_id,
+                    'member_id' => $person_id
+                ]
+            ]);
+        $stack->set(['manifests' => $manifest->toArray()]);
+        return $stack;
+    }
+
 }
