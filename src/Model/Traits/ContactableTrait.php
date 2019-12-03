@@ -11,7 +11,7 @@ namespace App\Model\Traits;
 trait ContactableTrait {
 
 	public function hasContacts() {
-		return is_a($this->contacts, '\App\Model\Lib\Layer');
+		return count($this->getContacts()) > 0;
 	}
 
     /**
@@ -22,7 +22,7 @@ trait ContactableTrait {
 	}
 
 	public function hasAddresses() {
-		return is_a($this->addresses, '\App\Model\Lib\Layer');
+		return count($this->getAddresses()) > 0;
 	}
 
     /**
