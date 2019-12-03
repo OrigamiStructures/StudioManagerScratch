@@ -29,25 +29,15 @@ class RolodexCard extends StackEntity {
     /**
      * @return array|Layer
      */
-    public function getIdentity($asArray = LAYERACC_ARRAY) {
-        if($this->identity->count() > 0) {
-            $result = $this->identity->toarray();
-        } else {
-            $result = [];
-        }
-        return $this->_resolveReturnStructure($result, $asArray, 'identity');
+    public function getIdentity() {
+        return $this->identity;
     }
 
     /**
      * @return array|Layer
      */
-    public function getDataOwner($asArray = LAYERACC_ARRAY) {
-        if($this->data_owner->count() > 0) {
-            $result = $this->data_owner->toarray();
-        } else {
-            $result = [];
-        }
-        return $this->_resolveReturnStructure($result, $asArray, 'data_owner');
+    public function getDataOwner() {
+        return $this->data_owner;
     }
 
     /**
@@ -109,30 +99,8 @@ class RolodexCard extends StackEntity {
 	 * @param boolean $asLayer
 	 * @return array|layer
 	 */
-	public function getMemberships($asArray = LAYERACC_ARRAY) {
-	    if($asArray){
-	        return $this->memberships->toArray();
-        } else {
-	        return $this->memberships;
-        }
-	}
-
-	/**
-	 * Get the IDs of the Groups this card belongs to
-	 *
-	 * @return array
-	 */
-	public function membershipIDs() {
-		return $this->memberships->IDs();
-	}
-
-	/**
-	 * Get the names of the Groups this card belongs to
-	 *
-	 * @return array
-	 */
-	public function memberships() {
-		return $this->memberships->toDistinctList('name');
+	public function getMemberships() {
+	    return $this->memberships;
 	}
 
 }

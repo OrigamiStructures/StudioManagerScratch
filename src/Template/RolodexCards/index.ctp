@@ -17,9 +17,9 @@ foreach($personCards->getData() as $id => $card) {
         $isArtitst = in_array($card->rootID(), $artists) ? 'Artist' : '';
     }
 
-    $membershipList = count($card->memberships()) == 0
+    $membershipList = count($card->getMemberships()) == 0
         ? 'None'
-        : Text::toList($card->memberships());
+        : Text::toList($card->getMemberships()->toValueList('name'));
 
     echo "<p><strong>{$card->name()}</strong> $isSupervisor $isArtitst $isManager</p>";
 	echo '<p>Memberships: ' . $membershipList . '</p>';

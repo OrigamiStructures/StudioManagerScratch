@@ -12,13 +12,13 @@ foreach($institutionCards->getData() as $id => $card) {
     $memberships = '';
     if ($card->isMember()) {
         $memberships =  "<p><strong>Memberships</strong>: "
-            . Text::toList($card->memberships()) . '</p>';
+            . Text::toList($card->getMemberships()->toValueList('name')) . '</p>';
     }
 
     $members = '';
     if ($card->hasMembers()) {
         $members =  "<p><strong>Members</strong>: "
-            . Text::toList($card->members()) . '</p>';
+            . Text::toList($card->getMembers()->toValueList('name')) . '</p>';
     }
 
     $institutions = '';

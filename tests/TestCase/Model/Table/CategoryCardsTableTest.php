@@ -74,61 +74,61 @@ class CategoryCardsTableTest extends TestCase
 			),
 			'The MembersTable object did not get initialized properly'
 		);
-		
+
 		$this->assertTrue(
 			$this->CategoryCardsTable->getSchema()->hasColumn('members'),
 			'The schema did not get a members column added'
 		);
-		
+
 		$this->assertTrue(
-			$this->CategoryCardsTable->getSchema()->getColumnType('members') 
+			$this->CategoryCardsTable->getSchema()->getColumnType('members')
 				=== 'layer',
 			'The schema column `members` is not a `layer` type'
 		);
-		
+
 		$this->assertTrue($this->CategoryCardsTable->hasSeed('members'));
 		$this->assertTrue($this->CategoryCardsTable->hasSeed('member'));
-		
+
     }
-	
+
 	/**
 	 * CategoryCards adds 1 layer and 1 seed
-	 * 
+	 *
 	 * members
 	 */
 	public function testCartegoryCardsFromIdentites() {
-		
+
 		$groups = $this->CategoryCardsTable
 				->find(
-						'stacksFor', 
+						'stacksFor',
 						['seed' => 'identities', 'ids' => [3, 7]]
 				);
-		
+
 //		$this->assertTrue('identity', $groups->element(3, LAYERACC_ID)->primary());
-		$this->assertEquals(2, $groups->count(), 
+		$this->assertEquals(2, $groups->count(),
 				'The set doesn\'t contain 2 CategoryCards as expected');
-		$this->assertEquals(2, count($groups->element(3, LAYERACC_ID)->members()), 
+		$this->assertEquals(2, count($groups->element(3, LAYERACC_ID)->getMembers()),
 				'The aniticipated 2 member group was not included');
-		$this->assertEquals(0, count($groups->element(7, LAYERACC_ID)->members()), 
+		$this->assertEquals(0, count($groups->element(7, LAYERACC_ID)->getMembers()),
 				'The aniticipated 0 member group was not included');
 	}
-	
+
 	public function testCartegoryCardsFromMembers() {
-		
+
 		$groups = $this->CategoryCardsTable
 				->find(
-						'stacksFor', 
+						'stacksFor',
 						['seed' => 'members', 'ids' => [1]]
 				);
 
-		$this->assertEquals(1, $groups->count(), 
+		$this->assertEquals(1, $groups->count(),
 				'The set doesn\'t contain 1 CategoryCards as expected when '
 				. 'building up from members');
-		$this->assertEquals(2, count($groups->element(3, LAYERACC_ID)->members()), 
+		$this->assertEquals(2, count($groups->element(3, LAYERACC_ID)->getMembers()),
 				'The aniticipated 2 member group was not included when '
 				. 'building up from members');
 	}
-	
+
 //	App\Model\Lib\StackSet Object
 //(
 //    [_data:protected] => Array
@@ -145,13 +145,13 @@ class CategoryCardsTableTest extends TestCase
 //                                        (
 //                                            [id] => 3
 //                                            [user_id] => f22f9b46-345f-4c6f-9637-060ceacb21b2
-//                                            [image_id] => 
-//                                            [first_name] => 
+//                                            [image_id] =>
+//                                            [first_name] =>
 //                                            [last_name] => Drake Family
 //                                            [member_type] => Group
 //                                            [active] => 1
-//                                            [disposition_count] => 
-//                                            [collector] => 
+//                                            [disposition_count] =>
+//                                            [collector] =>
 //                                        )
 //                                )
 //
@@ -170,7 +170,7 @@ class CategoryCardsTableTest extends TestCase
 //                                    [10] => collector
 //                                )
 //
-//                            [primary:protected] => 
+//                            [primary:protected] =>
 //                            [_errors:protected] => Array
 //                                (
 //                                )
@@ -197,7 +197,7 @@ class CategoryCardsTableTest extends TestCase
 //                                    [1] => username
 //                                )
 //
-//                            [primary:protected] => 
+//                            [primary:protected] =>
 //                            [_errors:protected] => Array
 //                                (
 //                                )
@@ -218,7 +218,7 @@ class CategoryCardsTableTest extends TestCase
 //                                        (
 //                                            [id] => 1
 //                                            [user_id] => f22f9b46-345f-4c6f-9637-060ceacb21b2
-//                                            [image_id] => 
+//                                            [image_id] =>
 //                                            [first_name] => Don
 //                                            [last_name] => Drake
 //                                            [member_type] => Person
@@ -231,7 +231,7 @@ class CategoryCardsTableTest extends TestCase
 //                                        (
 //                                            [id] => 2
 //                                            [user_id] => f22f9b46-345f-4c6f-9637-060ceacb21b2
-//                                            [image_id] => 
+//                                            [image_id] =>
 //                                            [first_name] => Gail
 //                                            [last_name] => Drake
 //                                            [member_type] => Person
@@ -256,7 +256,7 @@ class CategoryCardsTableTest extends TestCase
 //                                    [10] => collector
 //                                )
 //
-//                            [primary:protected] => 
+//                            [primary:protected] =>
 //                            [_errors:protected] => Array
 //                                (
 //                                )
@@ -275,7 +275,7 @@ class CategoryCardsTableTest extends TestCase
 //                                        (
 //                                            [id] => 7
 //                                            [user_id] => f22f9b46-345f-4c6f-9637-060ceacb21b2
-//                                            [image_id] => 
+//                                            [image_id] =>
 //                                            [first_name] => random text
 //                                            [last_name] => Collectors
 //                                            [member_type] => Group
@@ -301,7 +301,7 @@ class CategoryCardsTableTest extends TestCase
 //                                    [10] => collector
 //                                )
 //
-//                            [primary:protected] => 
+//                            [primary:protected] =>
 //                            [_errors:protected] => Array
 //                                (
 //                                )
@@ -327,7 +327,7 @@ class CategoryCardsTableTest extends TestCase
 //                                    [1] => username
 //                                )
 //
-//                            [primary:protected] => 
+//                            [primary:protected] =>
 //                            [_errors:protected] => Array
 //                                (
 //                                )
@@ -345,6 +345,6 @@ class CategoryCardsTableTest extends TestCase
 //        )
 //
 //    [_stackName:protected] => identity
-//    [primary:protected] => 
+//    [primary:protected] =>
 //)
 }

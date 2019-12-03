@@ -25,8 +25,8 @@
     </li>
     <li>Memberships
         <ul>
-            <?php foreach ($entity->memberships() as $membership) : ?>
-                <li><?= $membership ?></li>
+            <?php foreach ($entity->getMemberships()->toArray() as $membership) : ?>
+                <li><?= $membership->name() ?></li>
             <?php endforeach; ?>
         </ul>
     </li>

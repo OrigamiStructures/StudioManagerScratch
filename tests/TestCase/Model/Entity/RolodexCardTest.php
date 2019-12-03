@@ -108,55 +108,12 @@ class RolodexCardTest extends TestCase
         $this->assertCount(0, $this->Group->getMemberships(),
             'The group card\'s membershipElements() accessor did not work');
 
-        $this->assertInstanceOf(Layer::class, $this->Person->getMemberships(LAYERACC_LAYER),
+        $this->assertInstanceOf(Layer::class, $this->Person->getMemberships(),
             'Requesting a layer did not return one.');
 
-        $this->assertInstanceOf(Layer::class, $this->Group->getMemberships(LAYERACC_LAYER),
+        $this->assertInstanceOf(Layer::class, $this->Group->getMemberships(),
             'Requesting a layer form empty memberships did not return one.');
 
-        $this->assertCount(2, $this->Person->getMemberships(LAYERACC_LAYER),
-            'The person card\'s membershipElements() accessor did not work');
-
-        $this->assertCount(0, $this->Group->getMemberships(LAYERACC_LAYER),
-            'The group card\'s membershipElements() accessor did not work');
-
     }
 
-    /**
-     * Test memberships method
-     *
-     * @return void
-     */
-    public function testMemberships()
-    {
-        $this->assertArraySubset(
-            ['Drake Family', 'Wonderland Group'],
-            $this->Person->memberships(),
-            'The person card\'s memberships() (name listcreator) did not work');
-
-        $this->assertArraySubset(
-            [],
-            $this->Group->memberships(),
-            'The group card\'s memberships() (name listcreator) did not work');
-
-    }
-
-    /**
-     * Test memberships method
-     *
-     * @return void
-     */
-    public function testMembershipIDs()
-    {
-        $this->assertArraySubset(
-            [3, 4],
-            $this->Person->membershipIDs(),
-            'The person card\'s membershipIDs() did not work');
-
-        $this->assertArraySubset(
-            [],
-            $this->Group->membershipIDs(),
-            'The group card\'s membershipIDs() did not work');
-
-    }
 }
