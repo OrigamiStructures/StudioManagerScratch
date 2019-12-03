@@ -26,16 +26,20 @@ class PersonCard extends RolodexCard{
     {
         $data = $this->rootElement();
         $data->user = $this->data_owner->shift();
-        $data->memberships = $this->getMemberships();
-        $data->addresses = $this->addressEntities();
-        $data->contacts = $this->contactEntities();
+        $data->memberships = $this->getMemberships()->toArray();
+        $data->addresses = $this->getAddresses()->toArray();
+        $data->contacts = $this->getContacts()->toArray();
         return $data;
     }
 
+    public function getImages()
+    {
+        return $this->images;
+    }
     /**
      * @return Layer
      */
-    public function manifests()
+    public function getManifests()
     {
         return $this->manifests;
     }

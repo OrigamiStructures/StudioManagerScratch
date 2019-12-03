@@ -8,9 +8,9 @@ foreach($personCards->getData() as $id => $card) {
 
     $isSupervisor = $isArtitst = $isManager = '';
     if(count($card->manifests) > 0){
-        $supervisors = $card->manifests()->toDistinctList('supervisor_member');
-        $managers = $card->manifests()->toDistinctList('manager_member');
-        $artists = $card->manifests()->toDistinctList('member_id');
+        $supervisors = $card->getManifests()->toDistinctList('supervisor_member');
+        $managers = $card->getManifests()->toDistinctList('manager_member');
+        $artists = $card->getManifests()->toDistinctList('member_id');
 
         $isSupervisor = in_array($card->rootID(), $supervisors) ? 'Supervisor' : '';
         $isManager = in_array($card->rootID(), $managers) ? 'Manager' : '';
