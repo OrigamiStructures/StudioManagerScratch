@@ -22,6 +22,36 @@ class PersonCard extends RolodexCard{
         return $entity->registeredUserId();
 	}
 
+    /**
+     * @return bool
+     */
+    public function isArtist()
+    {
+        return in_array(
+            $this->rootID(),
+            $this->getManifests()->toDistinctList('member_id'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManager()
+    {
+        return in_array(
+            $this->rootID(),
+            $this->getManifests()->toDistinctList('manager_member'));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSupervisor()
+    {
+        return in_array(
+            $this->rootID(),
+            $this->getManifests()->toDistinctList('supervisor_member'));
+    }
+
     public function emitFormData()
     {
         $data = $this->rootElement();

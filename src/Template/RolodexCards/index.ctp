@@ -6,16 +6,9 @@ foreach($personCards->getData() as $id => $card) {
 
     /* @var PersonCard $card */
 
-    $isSupervisor = $isArtitst = $isManager = '';
-    if(count($card->manifests) > 0){
-        $supervisors = $card->getManifests()->toDistinctList('supervisor_member');
-        $managers = $card->getManifests()->toDistinctList('manager_member');
-        $artists = $card->getManifests()->toDistinctList('member_id');
-
-        $isSupervisor = in_array($card->rootID(), $supervisors) ? 'Supervisor' : '';
-        $isManager = in_array($card->rootID(), $managers) ? 'Manager' : '';
-        $isArtitst = in_array($card->rootID(), $artists) ? 'Artist' : '';
-    }
+    $isSupervisor = $card->isSupervisor() ? 'Supervisor' : '';
+    $isManager = $card->isManager() ? 'Manager' : '';
+    $isArtitst = $card->isArtist() ? 'Artist' : '';
 
     $membershipList = count($card->getMemberships()) == 0
         ? 'None'
