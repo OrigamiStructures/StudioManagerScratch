@@ -15,6 +15,9 @@ class PersonCard extends RolodexCard{
 
 	use ContactableTrait, ReceiverTrait;
 
+    /**
+     * @return int
+     */
     public function registeredUserId()
     {
         /** @var Identity $entity */
@@ -52,6 +55,9 @@ class PersonCard extends RolodexCard{
             $this->getManifests()->toDistinctList('supervisor_member'));
     }
 
+    /**
+     * @return Member
+     */
     public function emitFormData()
     {
         $data = $this->rootElement();
@@ -62,6 +68,9 @@ class PersonCard extends RolodexCard{
         return $data;
     }
 
+    /**
+     * @return Layer
+     */
     public function getImages()
     {
         return $this->images;
