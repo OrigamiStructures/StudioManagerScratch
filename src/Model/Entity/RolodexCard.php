@@ -96,8 +96,7 @@ class RolodexCard extends StackEntity {
 	 *
 	 * Optionally get the entities as a Layer
 	 *
-	 * @param boolean $asLayer
-	 * @return array|layer
+	 * @return Layer
 	 */
 	public function getMemberships() {
 	    return $this->memberships;
