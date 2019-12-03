@@ -5,9 +5,9 @@ foreach($institutionCards->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\OrganizationCard $card
      */
-    $contacts = '<p>' . Text::toList($card->contacts()) . '</p>';
+    $contacts = '<p>' . Text::toList($card->getContacts()->toValueList('asString')) . '</p>';
 
-    $addresses = '<p>' . Text::toList($card->addresses()) . '</p>';
+    $addresses = '<p>' . Text::toList($card->getAddresses()->toValueList('asString')) . '</p>';
 
     $memberships = '';
     if ($card->isMember()) {
