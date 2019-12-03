@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use App\Controller\Component\UserContextComponent;
 use App\Lib\Range;
 use App\Model\Entity\ArtStack;
 use App\Model\Table\ArtStacksTable;
@@ -29,7 +28,7 @@ use Twig\Error\RuntimeError;
 class PiecesController extends AppController
 {
 
-	public $components = ['Layers', 'UserContext'];
+	public $components = ['Layers'];
 
 	/**
 	 * Before filter
@@ -202,7 +201,7 @@ class PiecesController extends AppController
 
         $this->contextUser()->set('artist', $artworkEntity->user_id);
         // use the new stub class for Processes
-        $result = $this->UserContext->required(['artist']);
+        $result = $this->contextUser()->has('artist');
 
         if ($result !== true) {
             return $result;
