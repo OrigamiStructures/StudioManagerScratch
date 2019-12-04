@@ -220,6 +220,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         //this skips out if appenditerator is empty but hasn't been tested
         //and the need for this hasn't been verified
         $resultValueSource = FALSE;
+        $resultKeySource = FALSE;
         if (count($this->ResultIterator) > 0) {
             $this->AccessArgs->setAccessNodeObject('resultKey', $keySource);
             $resultKeySource = $this->AccessArgs->accessNodeObject('resultKey');
