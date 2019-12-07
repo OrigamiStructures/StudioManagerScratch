@@ -83,4 +83,12 @@ class PersonCard extends RolodexCard{
         return $this->manifests;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasManifests()
+    {
+        return count($this->getManifests()) > 0;
+    }
+
 }
