@@ -1,7 +1,10 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
+use App\Model\Entity\PersonCard;
+use App\Model\Lib\StackSet;
 
 /**
  * CakePHP RolodexCardsController
@@ -30,5 +33,24 @@ class RolodexCardsController extends AppController {
 				->toArray();
 		$institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
 		$this->set('institutionCards', $institutionCards);
+	}
+
+    public function view($id)
+    {
+        /*  @var StackSet $personCards */
+        /* @var PersonCard $personCard */
+
+        $personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
+        $personCard = $personCards->shift();
+
+        if ($personCard->isArtist()) {
+            $ArtworksTable = TableRegistry::getTableLocator()->get('Artworks');
+            $artworks = $ArtworksTable->find('all')
+                ->where(['member_id' => $id])
+                ->toArray();
+            $personCard->artworks = new Layer($artworks, 'artwork');
+        }
+
+        $this->set('personCard', $personCard);
 	}
 }
