@@ -1,29 +1,30 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
+use App\Model\Entity\PersonCard;
+use App\Model\Lib\StackSet;
 
 /**
  * CakePHP RolodexCardsController
  * @author dondrake
  */
 class RolodexCardsController extends AppController {
-	
+
 	public $name = 'RolodexCards';
-	
+
 	public function initialize() {
 		parent::initialize();
+		$this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 	}
-	
+
 	public function index() {
-		$ArtistManifests = TableRegistry::getTableLocator()->get('ArtistManifests');
-		$stacks = $ArtistManifests->find('stacksFor', ['seed' => 'identity', 'ids' => [1]]);
-		
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
-		$rolodexCards = $this->RolodexCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-		$this->set('rolodexCards', $rolodexCards);
+		$personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+		$this->set('personCards', $personCards);
 	}
-	
+
 	public function groups() {
 		$InstitutionCards = TableRegistry::getTableLocator()->get('OrganizationCards');
 		$ids = $InstitutionCards
@@ -32,5 +33,24 @@ class RolodexCardsController extends AppController {
 				->toArray();
 		$institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
 		$this->set('institutionCards', $institutionCards);
+	}
+
+    public function view($id)
+    {
+        /*  @var StackSet $personCards */
+        /* @var PersonCard $personCard */
+
+        $personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
+        $personCard = $personCards->shift();
+
+        if ($personCard->isArtist()) {
+            $ArtworksTable = TableRegistry::getTableLocator()->get('Artworks');
+            $artworks = $ArtworksTable->find('all')
+                ->where(['member_id' => $id])
+                ->toArray();
+            $personCard->artworks = new Layer($artworks, 'artwork');
+        }
+
+        $this->set('personCard', $personCard);
 	}
 }

@@ -8,10 +8,10 @@ use Cake\View\Helper;
 
 class PeopleHelper extends Helper
 {
-	
+
 	public $helpers = ['Html'];
 
-	protected $manifestSummaryFormat = 
+	protected $manifestSummaryFormat =
 		'<em style="font-weight: normal;">Artist:</em> %s '
         . '<span style="font-weight: normal; font-size: smaller;">'
         . '(<em>Manager:</em> %s has %s)'
@@ -19,7 +19,7 @@ class PeopleHelper extends Helper
 
 	/**
      * Give a AritstManifestStackEntity output a summary line describing it
-	 * 
+	 *
 	 * $format recieves $artistName, $managerName, $access
 	 * 'access' says 'Full Access' or 'Limited Access'
      *

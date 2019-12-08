@@ -101,4 +101,20 @@ class Manifest extends Entity
     {
         return $this->artistId() === $id;
 	}
+
+    /**
+     * @return string
+     */
+    public function getSupervisorMember(): string
+    {
+        return $this->supervisor_member;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagerMember(): string
+    {
+        return $this->manager_member;
+    }
 }

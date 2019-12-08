@@ -58,16 +58,16 @@ foreach($artists->getData() as $artist) :
 <ul>
 	<li>Contacts
 		<ul>
-			<?php foreach ($artist->contacts() as $contact) : ?>
-			<li><?= $contact ?></li>
+			<?php foreach ($artist->getContacts()->toArray() as $contact) : ?>
+			<li><?= $contact->asString() ?></li>
 			<?php endforeach; ?>
 		</ul>
 	</li>
 	<li>
 		Addresses
 		<ul>
-			<?php foreach ($artist->addresses() as $address) : ?>
-			<li><?= $address ?></li>
+			<?php foreach ($artist->getAddresses()->toArray() as $address) : ?>
+			<li><?= $address->asString() ?></li>
 			<?php endforeach; ?>
 		</ul>
 	</li>

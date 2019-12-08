@@ -17,25 +17,12 @@ class CategoryCard extends RolodexCard{
 	}
 
 	public function hasMembers() {
-		return is_a($this->members, '\App\Model\Lib\Layer');
+		return count($this->getMembers()) > 0;
 	}
 
 
-	public function memberElements($asArray = LAYERACC_ARRAY) {
-		if($this->hasMembers()) {
-			$result = $this->members->toArray();
-		} else {
-			$result = [];
-		}
-		return $this->_resolveReturnStructure($result, $asArray, 'member');
-	}
-
-	public function memberIDs() {
-		return $this->valueList('id', $this->memberElements());
-	}
-
-	public function members() {
-		return $this->members->toValueList('name');
+	public function getMembers() {
+		return $this->members;
 	}
 
 }

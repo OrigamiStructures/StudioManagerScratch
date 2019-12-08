@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Model\Table\ManifestsTable;
+use App\Model\Table\ManifestStacksTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Lib\ContextUser;
 
@@ -11,15 +13,15 @@ class SupervisorsController extends AppController
 {
     public function index()
     {
+        /* @var ManifestStacksTable $ManifestStacks */
         $contextUser = $this->contextUser();
 
-        $ManagerManifestStacks = TableRegistry::getTableLocator()->get('ManagerManifestStacks');
-        $ArtistManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
+        $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 
-        $managerManifests = $ManagerManifestStacks->find('supervisorManifests');
+        $manifestsIssued = $ManifestStacks->ManifestsIssued();
 
-        $managementAgreements = $ArtistManifestStacks->find('supervisorManifests');
+        $manifestsReceived = $ManifestStacks->ManifestsRecieved();
 
         $myPersonCards =
                 $PersonCards
@@ -27,11 +29,11 @@ class SupervisorsController extends AppController
 //                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->contextUser()->userId()]]);
 
 
-        $this->set(compact(['managementAgreements','managerManifests','contextUser', 'myPersonCards']));
+        $this->set(compact(['manifestsIssued', 'manifestsReceived','contextUser', 'myPersonCards']));
     }
 
 	public function manager() {
-        $ManifestStacks = TableRegistry::getTableLocator()->get('ArtistManifestStacks');
+        $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
 		osd($this->request->getData('assignments'));//die;
 		$managerManifests =
 				$ManifestStacks

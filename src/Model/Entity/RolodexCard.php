@@ -29,25 +29,15 @@ class RolodexCard extends StackEntity {
     /**
      * @return array|Layer
      */
-    public function getIdentity($asArray = LAYERACC_ARRAY) {
-        if($this->identity->count() > 0) {
-            $result = $this->identity->toarray();
-        } else {
-            $result = [];
-        }
-        return $this->_resolveReturnStructure($result, $asArray, 'identity');
+    public function getIdentity() {
+        return $this->identity;
     }
 
     /**
      * @return array|Layer
      */
-    public function getDataOwner($asArray = LAYERACC_ARRAY) {
-        if($this->data_owner->count() > 0) {
-            $result = $this->data_owner->toarray();
-        } else {
-            $result = [];
-        }
-        return $this->_resolveReturnStructure($result, $asArray, 'data_owner');
+    public function getDataOwner() {
+        return $this->data_owner;
     }
 
     /**
@@ -84,8 +74,15 @@ class RolodexCard extends StackEntity {
      * @return bool
      */
     public function isManager() {
-		return FALSE;
-	}
+        return FALSE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSupervisor() {
+        return FALSE;
+    }
 
     /**
      * @return bool
@@ -99,34 +96,10 @@ class RolodexCard extends StackEntity {
 	 *
 	 * Optionally get the entities as a Layer
 	 *
-	 * @param boolean $asLayer
-	 * @return array|layer
+	 * @return Layer
 	 */
-	public function getMemberships($asArray = LAYERACC_ARRAY) {
-		if($this->isMember()) {
-			$result = $this->memberships->toarray();
-		} else {
-			$result = [];
-		}
-		return $this->_resolveReturnStructure($result, $asArray, 'memberships');
-	}
-
-	/**
-	 * Get the IDs of the Groups this card belongs to
-	 *
-	 * @return array
-	 */
-	public function membershipIDs() {
-		return $this->memberships->toValueList('id');
-	}
-
-	/**
-	 * Get the names of the Groups this card belongs to
-	 *
-	 * @return array
-	 */
-	public function memberships() {
-		return $this->memberships->toDistinctList('name');
+	public function getMemberships() {
+	    return $this->memberships;
 	}
 
 }

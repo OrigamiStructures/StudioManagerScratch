@@ -193,22 +193,22 @@ class AddressesFixture extends TestFixture
                 'label' => 'main',
                 'primary_addr' => null
             ],
-            [
-                'id' => 10,
-                'created' => '2016-03-21 18:14:53',
-                'modified' => '2016-08-22 19:23:46',
-                'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
-                'member_id' => 9,
-                'address1' => '40 El Rancho Dr',
-                'address2' => '',
-                'address3' => '',
-                'city' => 'Pleasant Hill',
-                'state' => 'CA',
-                'zip' => '94523',
-                'country' => 'USA',
-                'label' => 'main',
-                'primary_addr' => null
-            ],
+//            [
+//                'id' => 10,
+//                'created' => '2016-03-21 18:14:53',
+//                'modified' => '2016-08-22 19:23:46',
+//                'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
+//                'member_id' => 9,
+//                'address1' => '40 El Rancho Dr',
+//                'address2' => '',
+//                'address3' => '',
+//                'city' => 'Pleasant Hill',
+//                'state' => 'CA',
+//                'zip' => '94523',
+//                'country' => 'USA',
+//                'label' => 'main',
+//                'primary_addr' => null
+//            ],
             [
                 'id' => 11,
                 'created' => '2016-04-14 23:25:16',
