@@ -10,7 +10,7 @@ use App\Model\Lib\Layer;
  * @author dondrake
  */
 class ArtistManifestStacksTable extends ManagerManifestStacksTable {
-	
+
 	public function initialize(array $config) {
         $this->addSeedPoint([
             'artist',
@@ -19,10 +19,10 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
         ]);
 		parent::initialize($config);
 	}
-	
+
 	/**
 	 * Derive the Manifest ids relevant to these Artists (Members)
-	 * 
+	 *
 	 * @param array $ids Artist ids (member_id)
 	 * @return array manifest ids
 	 */
@@ -32,15 +32,15 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 				->select(['id', 'member_id'])
 			;
 	}
-	
+
 	/**
 	 * Inject appropriate boundary conditions for this user/context
-	 * 
-	 * I think this may grow a little more complex than this example. 
-	 * Controller/action context may be a consideration but we won't have 
-	 * that information here. The `contextUser` object may be our 
+	 *
+	 * I think this may grow a little more complex than this example.
+	 * Controller/action context may be a consideration but we won't have
+	 * that information here. The `contextUser` object may be our
 	 * tool to communicate situational knowledge.
-	 * 
+	 *
 	 * @param Query $query
 	 * @param array $options none supported at this time
      * @return Query $query
@@ -51,9 +51,9 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 			'member_id IS NOT NULL'
 			]);
 	}
-	
+
 	protected function marshalNameCards($stack) {
-		
+
 //		$stack->manifest
 //				->find('permissions')
 //				->specifyFilter('layer', 'contact')
@@ -70,5 +70,5 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 		$stack->people = $people;
 		return $stack;
 	}
-	
+
 }
