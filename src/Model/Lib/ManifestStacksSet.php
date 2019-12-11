@@ -35,7 +35,7 @@ class ManifestStacksSet {
     {
 		$collection = collection($this->stackSet->getData());
 		$delegated = $collection->filter(function($stack) use ($supervisor_id) {
-			return $stack->rootElement()->supervisorId() == $supervisor_id
+			return $stack->rootElement()->getSupervisorId() == $supervisor_id
 					&& !$stack->rootElement()->selfAssigned();
 		});
 		return $delegated->toArray();

@@ -62,8 +62,8 @@ class ArtistManifestStacksTable extends ManagerManifestStacksTable {
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
-					'supervisor' => [$manifest->supervisorId()],
-					'manager' => [$manifest->managerId()],
+					'supervisor' => [$manifest->getSupervisorId()],
+					'manager' => [$manifest->getManagerId()],
 					'identity' => [$manifest->artistId()]
 				]
 			);
