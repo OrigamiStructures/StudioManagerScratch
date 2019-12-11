@@ -52,6 +52,8 @@ class PersonCardsTable extends RolodexCardsTable {
 	}
 
     /**
+     * Locate the Member IDs implicated in a set of Manifests
+     *
      * @param array $ids
      * @return array
      */
@@ -61,6 +63,13 @@ class PersonCardsTable extends RolodexCardsTable {
             ->where(['id IN' => $ids]);
         $manifests = new Collection($query->toArray());
         $result = $manifests->reduce(function ($accum, $entity) {
+            /**
+             * Here we should filter to insure the user has access
+             * to the person cards we derive.
+             * If the User is not a superuser, the the userID must
+             * match either SupervisorId or ManagerId. When it does
+             * match, then all the person cards are allowed.
+             */
                 $accum[]=$entity->getSupervisorMember();
                 $accum[]=$entity->getManagerMember();
                 $accum[]=$entity->artistId();
@@ -99,6 +108,13 @@ class PersonCardsTable extends RolodexCardsTable {
     protected function marshalManifests($id, $stack)
     {
         $person_id = $stack->rootID();
+        /**
+         * We can't return every manifest for the person. If this
+         * is a foreign, but visible person, there could be manifests
+         * meant for other foreign managers.
+         * If the current user is a superuser, get everything. Otherwise
+         * the userId must match either supervisorId or ManagerId
+         */
         $manifest = $this->Manifests
             ->find('all')
             ->where([
