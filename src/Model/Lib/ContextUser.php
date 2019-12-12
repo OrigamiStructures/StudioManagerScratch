@@ -124,6 +124,16 @@ class ContextUser {
 		return $this->actorId[$validActor];
 	}
 
+    public function isSuperuser()
+    {
+
+	}
+
+    public function actingAsSuperuser()
+    {
+
+	}
+
 	/**
 	 * Get the actor's PersonCard or NULL if not set
 	 *
