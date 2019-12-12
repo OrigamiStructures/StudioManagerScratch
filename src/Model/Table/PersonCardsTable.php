@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Manifest;
 use App\Model\Table\RolodexCardsTable;
 
 use Cake\ORM\Table;
@@ -59,10 +60,12 @@ class PersonCardsTable extends RolodexCardsTable {
      */
     protected function distillFromManifest(array $ids)
     {
+        $contextUser = $this->contextUser();
         $query = $this->Manifests->find('all')
             ->where(['id IN' => $ids]);
         $manifests = new Collection($query->toArray());
-        $result = $manifests->reduce(function ($accum, $entity) {
+        $result = $manifests->reduce(function ($accum, $entity) use ($contextUser) {
+            /* @var Manifest $entity */
             /**
              * Here we should filter to insure the user has access
              * to the person cards we derive.
@@ -70,11 +73,16 @@ class PersonCardsTable extends RolodexCardsTable {
              * match either SupervisorId or ManagerId. When it does
              * match, then all the person cards are allowed.
              */
-                $accum[]=$entity->getSupervisorMember();
-                $accum[]=$entity->getManagerMember();
-                $accum[]=$entity->artistId();
-                return $accum;
-            }, ['userId' => [], 'memberId' => []]);
+            if (($contextUser->isSuperuser() && is_null($contextUser->getId('supervidor')))
+                || $contextUser->getId('supervisor') == $entity->getSupervisorId()
+                || $contextUser->getId('supervisor') == $entity->getManagerId()
+            ) {
+                $accum[] = $entity->getSupervisorMember();
+                $accum[] = $entity->getManagerMember();
+                $accum[] = $entity->artistId();
+            }
+            return $accum;
+            }, []);
         return array_unique($result);
 	}
 

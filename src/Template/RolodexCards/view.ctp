@@ -45,7 +45,6 @@ if(count($personCard->getManifests()) > 0) {
         ->toArray();
 
 }
-
 ?>
 
 <h1><?= $personCard->rootElement()->name() ?></h1>
