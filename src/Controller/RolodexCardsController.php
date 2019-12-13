@@ -52,5 +52,6 @@ class RolodexCardsController extends AppController {
         }
 
         $this->set('personCard', $personCard);
+        $this->set('contextUser', $this->contextUser());
 	}
 }
