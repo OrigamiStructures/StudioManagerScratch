@@ -1,3 +1,5 @@
+<?php /* @var View $this */ ?>
+<?= $this->Html->link('Index page', ['action' => 'index']) ?>
 <?php
 use App\Model\Lib\Layer;
 /* @var \App\Model\Entity\PersonCard $personCard */
@@ -75,7 +77,7 @@ if(count($personCard->getManifests()) > 0) {
     or of a foreign user. In one case the user would be able to adjust delegations
     they had made. In the other case, the user would be able to see who had made them
     a manager, and what artists they had.<br/>
-    This supervisor has delegated artist management to <?= count($delegateManagement)?> Managers<br/>
+    This supervisor has delegated artist management to <?= ''/*count($delegateManagement)*/ ?> Managers<br/>
         <?= $this->Html->link('Review Delegated Artist Management', ['action' => 'index']) ?><br/>
     A message and a form with a button is probably what we need rather than a simple link.</p>
     <?php endif ?>
