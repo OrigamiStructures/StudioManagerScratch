@@ -25,21 +25,21 @@ class AddressTest extends TestCase
      * @var \App\Model\Entity\Address
      */
     public $Address;
-    
+
     /**
      * A set with 11 set and missing data variations
      *
      * @var Entity
      */
     public $addressRecords;
-    
+
     /**
      * An entity with no values on any properties
      *
      * @var Entity
      */
     public $noAddressInfoRecord;
-    
+
     /**
      * A set with various values for ->primary
      *
@@ -56,20 +56,20 @@ class AddressTest extends TestCase
     {
         parent::setUp();
         $this->Addresses = $this->getTableLocator()->get('Addresses');
-        
+
         $this->addressRecords = $this->Addresses->find('all')
             ->select(['id', 'address1', 'address2', 'address3',
                 'city', 'state', 'zip', 'country'])
             ->where(['id IN' => [1,30,31,32,33,34,35,36,37,38,39]])
             ->toArray();
-        
+
         $record = $this->Addresses->find('all')
             ->select(['id', 'address1', 'address2', 'address3',
                 'city', 'state', 'zip', 'country'])
             ->where(['id' => 29])
             ->toArray();
         $this->noAddressInfoRecord = $record[0];
-        
+
         $this->primaryVariants = $this->Addresses->find('all')
             ->select(['id', 'primary_addr'])
             ->where(['id IN' => [1,2,3]])
@@ -88,7 +88,7 @@ class AddressTest extends TestCase
 
         parent::tearDown();
     }
-    
+
      /**
      * Test cityStateZip with no properties set
      *
@@ -97,13 +97,13 @@ class AddressTest extends TestCase
     public function testIsPrimary() {
         $data = $this->primaryProviders();
         foreach($data as $datum) {
-           $this->assertEquals($datum[0], $datum[1]->isPrimary()); 
+           $this->assertEquals($datum[0], $datum[1]->isPrimary());
         }
     }
 
     /**
      * Build a [result, entity] array for the tests
-     * 
+     *
      * @return array
      */
     public function primaryProviders() {
@@ -118,7 +118,7 @@ class AddressTest extends TestCase
         }
         return $provider;
     }
-    
+
      /**
      * Test cityStateZip with no properties set
      *
@@ -155,13 +155,13 @@ class AddressTest extends TestCase
     {
         $data = $this->elevenZipProviders();
         foreach($data as $datum) {
-           $this->assertEquals($datum[0], $datum[1]->cityStateZip()); 
+           $this->assertEquals($datum[0], $datum[1]->cityStateZip());
         }
     }
-    
+
    /**
      * Test _getAddressLine method
-     * 
+     *
      *
      * @return void
      */
@@ -169,7 +169,7 @@ class AddressTest extends TestCase
     {
         $data = $this->elevenLineProviders();
         foreach($data as $datum) {
-           $this->assertEquals($datum[0], $datum[1]->asString()); 
+           $this->assertEquals($datum[0], $datum[1]->asString());
         }
     }
 
@@ -182,13 +182,13 @@ class AddressTest extends TestCase
     {
         $data = $this->elevenArrayProviders();
         foreach($data as $datum) {
-           $this->assertEquals($datum[0], $datum[1]->asArray()); 
+           $this->assertEquals($datum[0], $datum[1]->asArray());
         }
     }
 
     /**
      * Build a [result, entity] array for the tests
-     * 
+     *
      * @return array
      */
     public function elevenLineProviders() {
@@ -211,10 +211,10 @@ class AddressTest extends TestCase
         }
         return $provider;
     }
-	
+
     /**
      * Build a [result, entity] array for the tests
-     * 
+     *
      * @return array
      */
     public function elevenZipProviders() {
@@ -237,11 +237,11 @@ class AddressTest extends TestCase
         }
         return $provider;
     }
-    
-    
+
+
     /**
      * Build a [result, entity] array for the tests
-     * 
+     *
      * @return array
      */
     public function elevenArrayProviders() {
@@ -297,16 +297,16 @@ class AddressTest extends TestCase
 
     /**
      * Show what this properties data looks like
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function threePrimaries() {
         return $this->primaryVariants;
-        
+
 //    [0] => App\Model\Entity\Address Object
 //        (
 //            [id] => 1
-//            [primary_addr] => 
+//            [primary_addr] =>
 //        )
 //    [1] => App\Model\Entity\Address Object
 //        (
@@ -322,8 +322,8 @@ class AddressTest extends TestCase
 
     /**
      * Show what this properties data looks like
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function elevenEntities() {
 
@@ -334,7 +334,7 @@ class AddressTest extends TestCase
 //            [id] => 1
 //            [address1] => 5664 Sunridge Court
 //            [address2] => In the back
-//            [address3] => 
+//            [address3] =>
 //            [city] => Castro Valley
 //            [state] => CA
 //            [zip] => 94552
@@ -346,89 +346,89 @@ class AddressTest extends TestCase
 //        (
 //            [id] => 30
 //            [address1] => Address Line 1
-//            [address2] => 
-//            [address3] => 
-//            [city] => 
-//            [state] => 
-//            [zip] => 
-//            [country] => 
+//            [address2] =>
+//            [address3] =>
+//            [city] =>
+//            [state] =>
+//            [zip] =>
+//            [country] =>
 //            [label] => main
 //        )
 //
 //    [2] => App\Model\Entity\Address Object
 //        (
 //            [id] => 31
-//            [address1] => 
+//            [address1] =>
 //            [address2] => Address Line 2
-//            [address3] => 
-//            [city] => 
-//            [state] => 
-//            [zip] => 
-//            [country] => 
+//            [address3] =>
+//            [city] =>
+//            [state] =>
+//            [zip] =>
+//            [country] =>
 //            [label] => main
 //        )
 //
 //    [3] => App\Model\Entity\Address Object
 //        (
 //            [id] => 32
-//            [address1] => 
-//            [address2] => 
+//            [address1] =>
+//            [address2] =>
 //            [address3] => Address Line 3
-//            [city] => 
-//            [state] => 
-//            [zip] => 
-//            [country] => 
+//            [city] =>
+//            [state] =>
+//            [zip] =>
+//            [country] =>
 //            [label] => main
 //        )
 //
 //    [4] => App\Model\Entity\Address Object
 //        (
 //            [id] => 33
-//            [address1] => 
-//            [address2] => 
-//            [address3] => 
+//            [address1] =>
+//            [address2] =>
+//            [address3] =>
 //            [city] => City
-//            [state] => 
-//            [zip] => 
-//            [country] => 
+//            [state] =>
+//            [zip] =>
+//            [country] =>
 //            [label] => main
 //        )
 //
 //    [5] => App\Model\Entity\Address Object
 //        (
 //            [id] => 34
-//            [address1] => 
-//            [address2] => 
-//            [address3] => 
-//            [city] => 
+//            [address1] =>
+//            [address2] =>
+//            [address3] =>
+//            [city] =>
 //            [state] => State
-//            [zip] => 
-//            [country] => 
+//            [zip] =>
+//            [country] =>
 //            [label] => main
 //        )
 //
 //    [6] => App\Model\Entity\Address Object
 //        (
 //            [id] => 35
-//            [address1] => 
-//            [address2] => 
-//            [address3] => 
-//            [city] => 
-//            [state] => 
+//            [address1] =>
+//            [address2] =>
+//            [address3] =>
+//            [city] =>
+//            [state] =>
 //            [zip] => Zip
-//            [country] => 
+//            [country] =>
 //            [label] => main
 //        )
 //
 //    [7] => App\Model\Entity\Address Object
 //        (
 //            [id] => 36
-//            [address1] => 
-//            [address2] => 
-//            [address3] => 
-//            [city] => 
-//            [state] => 
-//            [zip] => 
+//            [address1] =>
+//            [address2] =>
+//            [address3] =>
+//            [city] =>
+//            [state] =>
+//            [zip] =>
 //            [country] => Country
 //            [label] => main
 //        )
@@ -438,11 +438,11 @@ class AddressTest extends TestCase
 //            [id] => 37
 //            [address1] => Address Line 1
 //            [address2] => Address Line 2
-//            [address3] => 
+//            [address3] =>
 //            [city] => City
 //            [state] => State
-//            [zip] => 
-//            [country] => 
+//            [zip] =>
+//            [country] =>
 //            [label] => main
 //        )
 //
@@ -450,10 +450,10 @@ class AddressTest extends TestCase
 //        (
 //            [id] => 38
 //            [address1] => Address Line 1
-//            [address2] => 
+//            [address2] =>
 //            [address3] => Address Line 3
 //            [city] => City
-//            [state] => 
+//            [state] =>
 //            [zip] => Zip
 //            [country] => Country
 //            [label] => main
@@ -462,13 +462,13 @@ class AddressTest extends TestCase
 //    [10] => App\Model\Entity\Address Object
 //        (
 //            [id] => 39
-//            [address1] => 
-//            [address2] => 
-//            [address3] => 
-//            [city] => 
+//            [address1] =>
+//            [address2] =>
+//            [address3] =>
+//            [city] =>
 //            [state] => State
 //            [zip] => Zip
-//            [country] => 
+//            [country] =>
 //            [label] => main
 //        )
     }
