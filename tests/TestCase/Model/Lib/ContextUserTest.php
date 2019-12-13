@@ -240,7 +240,15 @@ class ContextUserTest extends TestCase
 		$ContextUser->tearDown();
 	}
 
-	public function starter() {
+	public function testIsSuperuser() {
+        $this->markTestIncomplete('Test isSupervisor');
+    }
+
+    public function testIsActingAsSuperuser() {
+	    $this->markTestIncomplete('Test isActingAsSuperuser');
+    }
+
+    public function starter() {
 
 		/**
 		 * A placeholder for PersonCards
