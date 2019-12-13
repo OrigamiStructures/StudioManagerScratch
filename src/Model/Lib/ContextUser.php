@@ -12,6 +12,8 @@ use App\Model\Lib\CurrentUser;
  *
  * @author dondrake
  * @link http://localhost/OStructures/article/currentuser-and-contextuser
+ *
+ * @property CurrentUser $currentUser
  */
 class ContextUser {
 
@@ -124,14 +126,26 @@ class ContextUser {
 		return $this->actorId[$validActor];
 	}
 
+    /**
+     * Is the registered user a superuser?
+     *
+     * @return bool
+     */
     public function isSuperuser()
     {
-
+        return $this->currentUser->isSuperuser();
 	}
 
-    public function actingAsSuperuser()
+    /**
+     * Is the registered user acting as a superuser
+     *
+     * They are a superuser and have not indicated a specific Supervisor to act as
+     *
+     * @return bool
+     */
+    public function isActingAsSuperuser()
     {
-
+        return $this->isSuperuser() && !$this->has('supervisor');
 	}
 
 	/**
