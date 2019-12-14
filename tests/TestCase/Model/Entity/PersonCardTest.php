@@ -255,10 +255,45 @@ class PersonCardTest extends TestCase
     }
     //</editor-fold>
 
-    public function testIsManagementDelegate()
-    {
+    //<editor-fold desc="isDelegatedManagment variants">
 
+    /**
+     * From the card owner's view, is receiving manager
+     */
+    public function testIsDelegatedManagmentWhenSeenLocally()
+    {
+        $this->assertTrue($this->DonCard->isDelegatedManagment($this->localSupervisor),
+            'A foreign sup delegated to this manager but the manager\'s ' .
+            'owner doesn\'t flag the card as a ReceivingManger');
     }
+
+    /**
+     * From foreign delegator's view, is receiving manager
+     */
+    public function testIsDelegatedManagmentFromForeignView()
+    {
+        $this->assertTrue($this->DonCard->isDelegatedManagment($this->foreignSupervisor),
+            'This foreign sup delegated to this manager but ' .
+            'doesn\'t flag the card as a ReceivingManger');
+    }
+
+    /**
+     * From owner view and foreign view, card is not a receiving manager
+     *
+     * @todo 'Permission development may cause "foriegn" version problems.'
+     */
+    public function testIsDelegatedManagmentNOT()
+    {
+        $this->assertFalse($this->GailCard->isDelegatedManagment($this->localSupervisor),
+            'The card is not a recieving manager but the owner supervisor ' .
+            'saw it as one');
+
+        $this->markAsRisky('Permission development may cause "foriegn" version problems.');
+        $this->assertFalse($this->GailCard->isDelegatedManagment($this->foreignSupervisor),
+            'The card is not a recieving manager but a foreign supervisor ' .
+            'saw it as one');
+    }
+    //</editor-fold>
 
     public function testDelegatedManagement()
     {
