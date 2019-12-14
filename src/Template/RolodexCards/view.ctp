@@ -3,11 +3,14 @@ use App\Model\Lib\Layer;
 use App\Model\Entity\PersonCard;
 use App\Model\Lib\ContextUser;
 use App\Model\Lib\LayerAccessProcessor;
+use App\View\AppView;
 
-/* @var View $this */
-/* @var ContextUser $contextUser */
-/* @var Layer $localSupervision */
-/* @var PersonCard $personCard */
+/**
+ * @var AppView $this
+ * @var ContextUser $contextUser
+ * @var Layer $localSupervision
+ * @var PersonCard $personCard
+ */
 ?>
 
 <?= $this->Html->link('Index page', ['action' => 'index']) ?>
@@ -79,44 +82,38 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
     ?>
 </p>
     <?php
-    if ($personCard->isSupervisor()) : ?>
-
-        <p>This section should respond to whether this is the record of the registered user
-    or of a foreign user. In one case the user would be able to adjust delegations
-    they had made. In the other case, the user would be able to see who had made them
-    a manager, and what artists they had.<br/>
-    <?php
-    ?>
-            This supervisor has delegated artist management to <?= ''/*count($delegateManagement)*/ ?> Managers<br/>
-        <?= $this->Html->link('Review Delegated Artist Management', ['action' => 'index']) ?><br/>
-    A message and a form with a button is probably what we need rather than a simple link.</p>
+    if ($personCard->isSupervisor()) :
+        if($personCard->isManagementDelegate($contextUser->getId('supervisor'))) : ?>
+        <p><em><strong>Delegated Management</strong></em></p>
+            <?php
+            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';
+            foreach ($delegatedManagement as $manifest) {
+                /* @var \App\Model\Entity\Manifest $manifest */
+                $supervisor = $names[$manifest->getSupervisorMember()];
+                $manager = $names[$manifest->getManagerMember()];
+                $artist = $names[$manifest->artistId()];
+                printf($delegatedMessage, $supervisor, $artist, $manager, $manager);
+            }
+            ?>
+        <?php endif; ?>
     <?php endif ?>
 
     <?php if ($personCard->isManager()) : ?>
+        <p><em><strong>Received Management</strong></em></p>
         <?php
-        $delegatedMessage = '<p>%s assigned management of the artist %s to %s. Review details here [link].</p>';
-        foreach ($delegatedManagement as $manifest) {
-            /* @var \App\Model\Entity\Manifest $manifest */
-            $supervisor = $names[$manifest->getSupervisorMember()];
-            $manager = $names[$manifest->getManagerMember()];
-            $artist = $names[$manifest->artistId()];
-            printf($delegatedMessage, $supervisor, $artist, $manager);
-        }
-        ?>
-        <?php
-        $receivedMessage = '<p>%s assigned %s management of the artist %s. Work on this artist now [link].</p>';
+        $receivedMessage = '<p>%s assigned %s management of the artist %s. [Work on this artist now]. [Contact %s].</p>';
         foreach ($receivedManagement as $manifest) {
             /* @var \App\Model\Entity\Manifest $manifest */
             $supervisor = $names[$manifest->getSupervisorMember()];
             $manager = $names[$manifest->getManagerMember()];
             $artist = $names[$manifest->artistId()];
-            printf($receivedMessage, $supervisor, $manager, $artist);
+            printf($receivedMessage, $supervisor, $manager, $artist, $supervisor);
         }
         ?>
-        <p><?= $this->Html->link('Review Artist Management', ['action' => 'index']) ?></p>
     <?php endif ?>
 
     <?php if ($personCard->isArtist()) : ?>
-        <p><?= $this->Html->link('Review Artworks for this Artist', ['action' => 'index']) ?></p>
+        <p><em><strong>This Artist's Works</strong></em></p>
+        <?= $this->Html->nestedList($personCard->artworks->toKeyValueList('id', 'title')); ?>
     <?php endif ?>
 
