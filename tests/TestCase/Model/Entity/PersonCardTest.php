@@ -212,10 +212,48 @@ class PersonCardTest extends TestCase
     }
     //</editor-fold>
 
-    public function testReceivedManagent()
-    {
+    //<editor-fold desc="receivedManagent variants">
 
+    /**
+     * supervisor detects recieved management on a person they own
+     */
+    public function testReceivedManagentOnALocalCard()
+    {
+        $this->assertCount(1, $this->DonCard->receivedManagement($this->localSupervisor),
+            'A foreign sup delegated to this manager but the manager\'s ' .
+            'owner doesn\'t return that foreign manifest');
     }
+
+    /**
+     * foreign supervisor detects received management on a person they delgated to
+     */
+    public function testReceivedManagentOnAForeignCard()
+    {
+        $this->assertCount(1, $this->DonCard->receivedManagement($this->foreignSupervisor),
+            'This foreign sup delegated to this manager but ' .
+            'doesn\'t find the manifest they issued');
+    }
+
+    /**
+     * Non managers act properly when polled for their received managements
+     *
+     * @todo foreign sup variant may fail when permissions are finished
+     */
+    public function testReceivedManagentOnA_NOT_Manager() {
+        $result = $this->GailCard->receivedManagement($this->localSupervisor);
+        $this->assertTrue(is_array($result) && count($result) == 0,
+            'The return on "no received management" should be an empty array');
+
+        $this->assertCount(0, $this->GailCard->receivedManagement($this->localSupervisor),
+            'The card is not a recieving manager but the owner supervisor ' .
+            'found more than zero manifests');
+
+        $this->markAsRisky('Permission development may cause "foriegn" version problems.');
+        $this->assertCount(0, $this->GailCard->receivedManagement($this->foreignSupervisor),
+            'The card is not a recieving manager but a foreign supervisor ' .
+            'found more than zero manifests');
+    }
+    //</editor-fold>
 
     public function testIsManagementDelegate()
     {
