@@ -197,11 +197,11 @@ class StackEntity extends Entity implements LayerStructureInterface
     //<editor-fold desc="Root Layer Introspection and Access">
 
     /**
-     * Return the owner of the primary entity
+     * Return the owner id of the primary entity
      *
      * @return string
      */
-    public function dataOwner()
+    public function dataOwnerId()
     {
         return $this->rootElement()->user_id;
     }

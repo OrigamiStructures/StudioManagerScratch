@@ -10,10 +10,29 @@ use App\Model\Traits\ReceiverTrait;
  * Description of PersonCard
  *
  * @author dondrake
+ *
  */
 class PersonCard extends RolodexCard{
 
 	use ContactableTrait, ReceiverTrait;
+
+    /**
+     * The manifests naming this user as manager (issued by foriegn supervisor)
+     *
+     * calculation requires logged-in user id as param
+     *
+     * @var null|array
+     */
+	private $receivedMangement = null;
+
+    /**
+     * The manifests delegated to foriegn managers (issued by this supervisor)
+     *
+     * calculation requires logged-in user id (supervisor_id) as param
+     *
+     * @var null|array
+     */
+	private $delegatedManagement = null;
 
     /**
      * @return int
@@ -23,6 +42,7 @@ class PersonCard extends RolodexCard{
         /** @var Identity $entity */
         $entity = $this->identity->shift();
         return $entity->registeredUserId();
+
 	}
 
     /**
@@ -36,6 +56,8 @@ class PersonCard extends RolodexCard{
     }
 
     /**
+     * Are there Manifests naming this Member as manager?
+     *
      * @return bool
      */
     public function isManager()
@@ -43,6 +65,121 @@ class PersonCard extends RolodexCard{
         return in_array(
             $this->rootID(),
             $this->getManifests()->toDistinctList('manager_member'));
+    }
+
+    /**
+     * Are there Manifests where foreign supervisors name this Member as manager?
+     *
+     * Qualifying Manifests will all have
+     *  - manager_member ==   PersonCard::rootID()
+     *  - manager_id     ==   $actingUserId
+     *  - supervisor_id  !=   $actingUserId
+     *
+     * The Manifest will belong to the foreign supervisor
+     * The named artist will belong to the foreign supervisor
+     * This card will belong to $actingUserId
+     *
+     * Sets a property which will be used in future calls
+     *
+     * @param $actingUserId string Can be provided by ContextUser::supervisorId()
+     * @return bool
+     */
+    public function isRecievingManager($actingUserId)
+    {
+        if ($this->isManager()) {
+            $received = $this->receivedMangement ?? $this->recievedManagement($supervisorId);
+        }
+        return count($received) > 0;
+    }
+
+    /**
+     * Get the Manifests where foreign supervisors name this Member as manager
+     *
+     * Returned Manifests will all have
+     *  - manager_member ==   PersonCard::rootID()
+     *  - manager_id     ==   $actingUserId
+     *  - supervisor_id  !=   $actingUserId
+     *
+     * The Manifest will belong to the foreign supervisor
+     * The named artist will belong to the foreign supervisor
+     * This card will belong to $actingUserId
+     *
+     * Sets a property which will be used in future calls
+     *
+     * @param $actingUserId string Can be provided by ContextUser::supervisorId()
+     * @return array
+     */
+    public function recievedManagement($actingUserId)
+    {
+        $received = $this->receivedMangement ?? [];
+        if ($this->isManager() && count($received) == 0) {
+            $manifests = collection($this->getManifests()->toArray());
+            $received = $manifests->filter(function($manifest, $key) use ($actingUserId) {
+                /* @var Manifest $manifest */
+                return $manifest->getManagerId() == $actingUserId
+                    && $manifest->getSupervisorId() != $actingUserId;
+            })
+            ->toArray();
+        }
+        $this->receivedMangement = $received;
+        return $received;
+    }
+
+    /**
+     * Are there Manifests where this supervisor named this foreign Member as manager?
+     *
+     * Qualifying Manifests will all have
+     *  - manager_member ==   PersonCard::rootID()
+     *  - manager_id     !=   $actingUserId
+     *  - supervisor_id  ==   $actingUserId
+     *
+     * The Manifest will belong to a this actingUser/supervisor
+     * The named artist will belong to the actingUser/supervisor
+     * This card will belong to a foreign user
+     *
+     * Sets a property which will be used in future calls
+     *
+     * @param $actingUserId string Can be provided by ContextUser::supervisorId()
+     * @return bool
+     */
+    public function isManagerDelegate($actingUserId)
+    {
+        if ($this->isManager()) {
+            $delegates = $this->delegatedManagement ?? $this->delegatedManagement($supervisorId);
+        }
+        return count($delegates) > 0;
+    }
+
+    /**
+     * Get the Manifests where this supervisor names this foreign Member as manager
+     *
+     *  - manager_member ==   PersonCard::rootID()
+     *  - manager_id     !=   $actingUserId
+     *  - supervisor_id  ==   $actingUserId
+     *
+     * The Manifest will belong to a this actingUser/supervisor
+     * The named artist will belong to the actingUser/supervisor
+     * This card will belong to a foreign user
+     *
+     * Sets a property which will be used in future calls
+     *
+     * @param $actingUserId string Can be provided by ContextUser::supervisorId()
+     * @return array
+     */
+    public function delegatedManagement($actingUserId)
+    {
+        $delegates = $this->delegatedManagement ?? [];
+        if ($this->isManager() && count($delegates) == 0) {
+            $manifests = collection($this->getManifests()->toArray());
+            $delegates = $manifests->filter(function($manifest, $key) use ($actingUserId) {
+                /* @var Manifest $manifest */
+                return $manifest->getManagerId() != $actingUserId
+                    && $manifest->getSupervisorId() == $actingUserId;
+            })
+                ->toArray();
+        }
+        $this->delegatedManagement = $delegates;
+        return $delegates;
     }
 
     /**

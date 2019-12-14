@@ -61,7 +61,7 @@ class RolodexCardsTable extends StacksTable {
 	protected function _initializeAssociations() {
 		// also see $this::layerTables setup by StackTable
 		$this->belongsTo('DataOwners')
-			->setProperty('dataOwner')
+			->setProperty('dataOwnerId')
 			->setForeignKey('user_id')
 			->setFinder('hook')
 			;
