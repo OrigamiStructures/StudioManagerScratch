@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Manifest;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use App\Model\Table\AppTable;
@@ -14,14 +15,6 @@ use App\Model\Behavior\IntegerQueryBehavior;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\MemberUsersTable|\Cake\ORM\Association\BelongsTo $MemberUsers
  *
- * @method \App\Model\Entity\Manifest get($primaryKey, $options = [])
- * @method \App\Model\Entity\Manifest newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Manifest[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Manifest|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Manifest|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Manifest patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Manifest[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Manifest findOrCreate($search, callable $callback = null, $options = [])
  */
 class ManifestsTable extends AppTable{
 
@@ -167,4 +160,27 @@ class ManifestsTable extends AppTable{
 		return $query->where($condition);
 	}
 
+    /**
+     * Distill a set of manifests to an id => name list from Members
+     *
+     * These will be the names referenced anywhere in the manifests keyed by member_id
+     *
+     * @param $query
+     * @param $options array ['manifests' => array of manifest entities]
+     */
+    public function findNameOfParticipants($query, $options)
+    {
+        $manifests = collection($options['manifests']);
+        $ids = $manifests->reduce(function($accum, $manifest) {
+            /* @var Manifest $manifest */
+            $accum[] = $manifest->getManagerMember();
+            $accum[] = $manifest->getSupervisorMember();
+            $accum[] = $manifest->artistId();
+            return $accum;
+        }, []);
+        $memberIds = array_unique($ids);
+        $members = $this->Members->find('Members', ['values' => $memberIds])->toArray();
+        $nameList = (layer($members))->toKeyValueList('id', 'name');
+        return $nameList;
+    }
 }

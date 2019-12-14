@@ -52,6 +52,18 @@ class RolodexCardsController extends AppController {
             $personCard->artworks = new Layer($artworks, 'artwork');
         }
 
+        /*
+         * Get an id => name list to support all members mentioned in manifests
+         */
+        if($personCard->hasManifests()) {
+            $ManifestTable = TableRegistry::getTableLocator()->get('Manifests');
+            $names = $ManifestTable->find(
+                'NameOfParticipants',
+                ['manifests' => $personCard->getManifests()->toArray()
+                ]);
+            $this->set('names', $names);
+        }
+
         if ($personCard->isManager()) {
             $actingUserId = $this->contextUser()->getId('supervisor');
             $recievedManagement = $personCard->recievedManagement($actingUserId);
