@@ -145,6 +145,7 @@ class PersonCard extends RolodexCard{
      */
     public function isManagementDelegate($actingUserId)
     {
+        $delegates = [];
         if ($this->isManager()) {
             $delegates = $this->delegatedManagement ?? $this->delegatedManagement($actingUserId);
         }
