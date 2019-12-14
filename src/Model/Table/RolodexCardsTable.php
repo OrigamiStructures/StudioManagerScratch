@@ -17,16 +17,16 @@ use App\Model\Traits\ManagementTrait;
  *
  */
 class RolodexCardsTable extends StacksTable {
-	
+
 	use ManagementTrait;
-	
+
 	/**
 	 * {@inheritdoc}
 	 */
 	protected $rootName = 'identity';
-	
+
 	protected $rootTable = 'Identities';
-	
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -66,7 +66,7 @@ class RolodexCardsTable extends StacksTable {
 			->setFinder('hook')
 			;
         $this->belongsToMany(
-			'Memberships', 
+			'Memberships',
 			['joinTable' => 'groups_members'])
 			->setForeignKey('member_id')
 			->setTargetForeignKey('group_id')
@@ -79,10 +79,10 @@ class RolodexCardsTable extends StacksTable {
         $this->addBehavior('IntegerQuery');
         $this->addBehavior('Timestamp');
     }
-	
+
 	/**
 	 * By id or array of IDs
-	 * 
+	 *
 	 * @param \App\Model\Table\Query $query
 	 * @param array $options
 	 * @return array
@@ -90,20 +90,20 @@ class RolodexCardsTable extends StacksTable {
 	public function findRolodexCards(Query $query, $options) {
         return $this->integer($query, 'id', $options['values']);
 			}
-		
+
 	/**
 	 * Load the artwork stacks to support these artworks
-	 * 
+	 *
 	 * @param array $ids Artwork ids
 	 * @return StackSet
 	     */
 	protected function distillFromIdentity($ids) {
 		return $this->Identities->find('all')->where(['id IN' => $ids]);
 	}
-	
+
 	/**
 	 * @todo Is there a more direct query that could be built here?
-	 * 
+	 *
 	 * @param array $ids
 	 * @return Query
 	 */
@@ -118,10 +118,10 @@ class RolodexCardsTable extends StacksTable {
 		}, []);
 		return $this->distillFromIdentity($IDs);
 	}
-	
+
 	/**
 	 * @todo Is this a valid seed point? Who/How used?
-	 * 
+	 *
 	 * @param array $ids
 	 * @return Query
 	 */
@@ -131,7 +131,7 @@ class RolodexCardsTable extends StacksTable {
 				->select(['id', 'user_id'])
 				->where(['user_id IN' => $ids]);
 	}
-	
+
 	protected function distillFromManager($ids) {
 		$records = $this->Users
 				->find('all')
@@ -144,11 +144,11 @@ class RolodexCardsTable extends StacksTable {
 				}, []);
 		return $this->distillFromIdentity($IDs);
 	}
-	
+
 	protected function distillFromSupervisor($ids) {
 		return $this->distillFromManager($ids);
 	}
-		
+
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
@@ -156,17 +156,17 @@ class RolodexCardsTable extends StacksTable {
 			$stack->set(['identity' => $identity->toArray()]);
 			return $stack;
 	}
-	
+
 	protected function marshalDataOwner($id, $stack) {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')
-					->where(['id' => $stack->dataOwner()]);
+					->where(['id' => $stack->dataOwnerId()]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
 	}
-	
+
 	protected function marshalMemberships($id, $stack) {
 		if ($stack->count('identity')) {
             $records = $this->GroupsMembers
@@ -182,7 +182,7 @@ class RolodexCardsTable extends StacksTable {
 		}
 		return $stack;
 	}
-    
+
     private function addMemberships($IDs, $stack) {
         if(empty($IDs)) {
             $stack->set(['memberships' => []]);
@@ -195,7 +195,7 @@ class RolodexCardsTable extends StacksTable {
         }
         return $stack;
     }
-	
+
 	protected function writeCache($id, $stack) {
 		if (Configure::read('rolodexCache')) {
 			$result = parent::writeCache($id, $stack);
@@ -204,7 +204,7 @@ class RolodexCardsTable extends StacksTable {
 		}
 		return $result;
 	}
-	
+
 	protected function readCache($id) {
 		if (Configure::read('rolodexCache')) {
 			$result = parent::readCache($id, $stack);
