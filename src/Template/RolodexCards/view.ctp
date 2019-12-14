@@ -94,8 +94,6 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 
     <?php if ($personCard->isManager()) : ?>
         <?php
-//        osd($delegatedManagement, 'delegated');
-//        osd($receivedManagement, 'received');
         $delegatedMessage = '<p>%s assigned management of the artist %s to %s. Review details here [link].</p>';
         foreach ($delegatedManagement as $manifest) {
             /* @var \App\Model\Entity\Manifest $manifest */
@@ -103,6 +101,16 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
             $manager = $names[$manifest->getManagerMember()];
             $artist = $names[$manifest->artistId()];
             printf($delegatedMessage, $supervisor, $artist, $manager);
+        }
+        ?>
+        <?php
+        $receivedMessage = '<p>%s assigned %s management of the artist %s. Work on this artist now [link].</p>';
+        foreach ($receivedManagement as $manifest) {
+            /* @var \App\Model\Entity\Manifest $manifest */
+            $supervisor = $names[$manifest->getSupervisorMember()];
+            $manager = $names[$manifest->getManagerMember()];
+            $artist = $names[$manifest->artistId()];
+            printf($receivedMessage, $supervisor, $manager, $artist);
         }
         ?>
         <p><?= $this->Html->link('Review Artist Management', ['action' => 'index']) ?></p>
