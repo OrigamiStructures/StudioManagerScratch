@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Entity\Manifest;
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
@@ -37,7 +38,7 @@ class RolodexCardsController extends AppController {
 
     public function view($id)
     {
-        /*  @var StackSet $personCards */
+        /* @var StackSet $personCards */
         /* @var PersonCard $personCard */
 
         $personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
@@ -49,6 +50,17 @@ class RolodexCardsController extends AppController {
                 ->where(['member_id' => $id])
                 ->toArray();
             $personCard->artworks = new Layer($artworks, 'artwork');
+        }
+
+        if ($personCard->isManager()) {
+            $actingUserId = $this->contextUser()->getId('supervisor');
+            $recievedManagement = $personCard->recievedManagement($actingUserId);
+            $delegatedManagement = $personCard->delegatedManagement($actingUserId);
+            $this->set(compact('recievedManagement', 'delegatedManagement'));
+        }
+
+        if ($personCard->isSupervisor()) {
+
         }
 
         $this->set('personCard', $personCard);
