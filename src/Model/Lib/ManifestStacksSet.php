@@ -58,7 +58,7 @@ class ManifestStacksSet {
 //		return [];
 //	}
 //
-//	public function recievedArtists() {
+//	public function receivedArtists() {
 //		return [];
 //	}
 

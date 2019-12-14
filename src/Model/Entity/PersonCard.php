@@ -87,7 +87,7 @@ class PersonCard extends RolodexCard{
     public function isRecievingManager($actingUserId)
     {
         if ($this->isManager()) {
-            $received = $this->receivedMangement ?? $this->recievedManagement($supervisorId);
+            $received = $this->receivedMangement ?? $this->receivedManagement($supervisorId);
         }
         return count($received) > 0;
     }
@@ -109,7 +109,7 @@ class PersonCard extends RolodexCard{
      * @param $actingUserId string Can be provided by ContextUser::supervisorId()
      * @return array
      */
-    public function recievedManagement($actingUserId)
+    public function receivedManagement($actingUserId)
     {
         $received = $this->receivedMangement ?? [];
         if ($this->isManager() && count($received) == 0) {

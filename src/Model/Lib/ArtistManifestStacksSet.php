@@ -18,7 +18,7 @@ class ArtistManifestStacksSet extends ManifestStacksSet{
 
 	}
 
-	public function recievedArtists($supervisor_id) {
+	public function receivedArtists($supervisor_id) {
 
 	}
 

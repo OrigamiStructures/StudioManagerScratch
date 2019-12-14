@@ -20,7 +20,7 @@ class PeopleHelper extends Helper
 	/**
      * Give a AritstManifestStackEntity output a summary line describing it
 	 *
-	 * $format recieves $artistName, $managerName, $access
+	 * $format receives $artistName, $managerName, $access
 	 * 'access' says 'Full Access' or 'Limited Access'
      *
      * @param ManifestStack $manifest

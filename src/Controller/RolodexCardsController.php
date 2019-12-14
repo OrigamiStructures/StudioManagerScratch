@@ -66,9 +66,9 @@ class RolodexCardsController extends AppController {
 
         if ($personCard->isManager()) {
             $actingUserId = $this->contextUser()->getId('supervisor');
-            $recievedManagement = $personCard->recievedManagement($actingUserId);
+            $receivedManagement = $personCard->receivedManagement($actingUserId);
             $delegatedManagement = $personCard->delegatedManagement($actingUserId);
-            $this->set(compact('recievedManagement', 'delegatedManagement'));
+            $this->set(compact('receivedManagement', 'delegatedManagement'));
         }
 
         if ($personCard->isSupervisor()) {
