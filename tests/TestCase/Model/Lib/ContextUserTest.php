@@ -69,8 +69,8 @@ class ContextUserTest extends TestCase
 	}
 
 	public function tearDown() {
-//		unset($this->Session);
-	}
+        /* Every method must do $ContextUser->tearDown(); to clear the singleton */
+    }
 
     /**
      * Test instance method
@@ -240,15 +240,107 @@ class ContextUserTest extends TestCase
 		$ContextUser->tearDown();
 	}
 
-	public function testIsSuperuser() {
-        $this->markTestIncomplete('Test isSupervisor');
+    //<editor-fold desc="isSuperuser variants">
+    public function testIsSuperuserForFalseCase() {
+        //deafult setup for User in superuser == false
+//        $ContextUser = $this->starter();
+        // make mocks
+        $this->Session->method('read')
+            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
+        // the currentUser must claim it is a superuser
+        $this->CurrentUser
+            ->method('isSuperuser')
+            ->will(
+                $this->onConsecutiveCalls(false)
+            );
+        $ContextUser = ContextUser::instance($this->options);
+
+        $this->assertFalse($ContextUser->isSuperuser());
+
+        $ContextUser->tearDown();
+
     }
 
-    public function testIsActingAsSuperuser() {
-	    $this->markTestIncomplete('Test isActingAsSuperuser');
+    public function testIsSuperuserForTrueCase() {
+
+        // make mocks
+        $this->Session->method('read')
+            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
+        // the currentUser must claim it is a superuser
+        $this->CurrentUser
+            ->method('isSuperuser')
+            ->will(
+                $this->onConsecutiveCalls(true)
+            );
+        $ContextUser = ContextUser::instance($this->options);
+
+        $this->assertTrue($ContextUser->isSuperuser());
+
+        $ContextUser->tearDown();
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="actingAsSuperuser variants">
+    public function testIsActingAsSuperuserTrueCase() {
+        // make mocks
+        $this->Session->method('read')
+            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
+        // the currentUser must claim it is a superuser
+        $this->CurrentUser
+            ->method('isSuperuser')
+            ->will(
+                $this->onConsecutiveCalls(true)
+            );
+        $ContextUser = ContextUser::instance($this->options);
+
+        $ContextUser->set('supervisor', null);
+
+        $this->assertTrue($ContextUser->isActingAsSuperuser());
+
+        $ContextUser->tearDown();
     }
 
-    public function starter() {
+    public function testIsActingAsSuperuserFalseCase() {
+        // make mocks
+        $this->Session->method('read')
+            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
+        // the currentUser must claim it is a superuser
+        $this->CurrentUser
+            ->method('isSuperuser')
+            ->will(
+                $this->onConsecutiveCalls(true)
+            );
+        $ContextUser = ContextUser::instance($this->options);
+
+        $ContextUser->set('supervisor', 'sup_id');
+
+        $this->assertFalse($ContextUser->isActingAsSuperuser());
+
+        $ContextUser->tearDown();
+    }
+
+    public function testIsActingAsSuperuserNotSuperuserCase()
+    {
+        // make mocks
+        $this->Session->method('read')
+            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
+        // the currentUser must claim it is a superuser
+        $this->CurrentUser
+            ->method('isSuperuser')
+            ->will(
+                $this->onConsecutiveCalls(false)
+            );
+        $ContextUser = ContextUser::instance($this->options);
+
+        $ContextUser->set('supervisor', 'sup_id');
+
+        $this->assertFalse($ContextUser->isActingAsSuperuser());
+
+        $ContextUser->tearDown();
+    }
+    //</editor-fold>
+
+        public function starter() {
 
 		/**
 		 * A placeholder for PersonCards
