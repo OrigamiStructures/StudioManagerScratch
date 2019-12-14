@@ -56,6 +56,10 @@ class PersonCardTest extends TestCase
      */
     public $PersonCardsTable;
 
+    public $localSupervisor = 'f22f9b46-345f-4c6f-9637-060ceacb21b2';
+
+    public $foreignSupervisor = '708cfc57-1162-4c5b-9092-42c25da131a9';
+
     /**
      * setUp method
      *
@@ -168,6 +172,60 @@ class PersonCardTest extends TestCase
             'Manager status was detected though this artist is not a manager');
     }
 
+    //<editor-fold desc="isReceivingManager variants">
+
+    /**
+     * From the card owner's view, is receiving manager
+     */
+    public function testIsReceivingManagerWhenSeenLocally()
+    {
+        $this->assertTrue($this->DonCard->isRecievingManager($this->localSupervisor),
+            'A foreign sup delegated to this manager but the manager\'s ' .
+            'owner doesn\'t flag the card as a ReceivingManger');
+    }
+
+    /**
+     * From foreign delegator's view, is receiving manager
+     */
+    public function testIsReceivingManagerFromForeignView()
+    {
+        $this->assertTrue($this->DonCard->isRecievingManager($this->foreignSupervisor),
+            'This foreign sup delegated to this manager but ' .
+            'doesn\'t flag the card as a ReceivingManger');
+    }
+
+    /**
+     * From owner view and foreign view, card is not a receiving manager
+     *
+     * @todo 'Permission development may cause "foriegn" version problems.'
+     */
+    public function testIsReceivingManagerNOT()
+    {
+        $this->assertFalse($this->GailCard->isRecievingManager($this->localSupervisor),
+            'The card is not a recieving manager but the owner supervisor ' .
+            'saw it as one');
+
+        $this->markAsRisky('Permission development may cause "foriegn" version problems.');
+        $this->assertFalse($this->GailCard->isRecievingManager($this->foreignSupervisor),
+            'The card is not a recieving manager but a foreign supervisor ' .
+            'saw it as one');
+    }
+    //</editor-fold>
+
+    public function testReceivedManagent()
+    {
+
+    }
+
+    public function testIsManagementDelegate()
+    {
+
+    }
+
+    public function testDelegatedManagement()
+    {
+
+    }
     /**
      * Test isArtist method
      *
