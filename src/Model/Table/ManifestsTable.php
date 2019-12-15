@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use App\Model\Table\AppTable;
 use Cake\Validation\Validator;
 use App\Model\Behavior\IntegerQueryBehavior;
+use http\Exception\BadMethodCallException;
 
 /**
  * Manifests Model
@@ -175,6 +176,10 @@ class ManifestsTable extends AppTable{
      */
     public function findNameOfParticipants($query, $options)
     {
+        if(!key_exists('manifests', $options)) {
+            $msg = 'The find("nameOfParticipants") $options must be an array: ["manifests" => [ManifestEntity, ManEnt, ...]]';
+            throw new \BadMethodCallException($msg);
+        }
         $manifests = collection($options['manifests']);
         $ids = $manifests->reduce(function($accum, $manifest) {
             /* @var Manifest $manifest */
