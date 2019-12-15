@@ -15,6 +15,8 @@ use App\Model\Behavior\IntegerQueryBehavior;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\MemberUsersTable|\Cake\ORM\Association\BelongsTo $MemberUsers
  *
+ * @method IntegerQueryBehavior integer(Query $query, $column, $params);
+ *
  */
 class ManifestsTable extends AppTable{
 
