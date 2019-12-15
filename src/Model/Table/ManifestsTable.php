@@ -92,8 +92,16 @@ class ManifestsTable extends AppTable{
     /**
      * Find artists by id
      *
+     * <pre>
+     * ['between', 5, 9];
+     * ['<', 3]; // any comparison operator
+     * [13];
+     * ['2-3, 5'];
+     * [3, 5, '6', '24']
+     * </pre>
+
      * @param Query $query
-     * @param array $options see IntegerQueryBehavior
+     * @param array $options ['values' => [values]
      * @return Query
      */
     public function findManifests($query, $options) {
