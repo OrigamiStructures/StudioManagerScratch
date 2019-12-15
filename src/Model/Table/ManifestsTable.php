@@ -79,8 +79,11 @@ class ManifestsTable extends AppTable{
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['member_id'], 'Members'));
+        $rules->add($rules->existsIn(['supervisor_member'], 'Members'));
+        $rules->add($rules->existsIn(['manager_member'], 'Members'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['member_user_id'], 'MemberUsers'));
+        $rules->add($rules->existsIn(['supervisor_id'], 'Users'));
+        $rules->add($rules->existsIn(['manager_id'], 'Users'));
 
         return $rules;
     }
