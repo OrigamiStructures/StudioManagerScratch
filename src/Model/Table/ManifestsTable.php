@@ -1,11 +1,13 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Manifest;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use App\Model\Table\AppTable;
 use Cake\Validation\Validator;
 use App\Model\Behavior\IntegerQueryBehavior;
+use http\Exception\BadMethodCallException;
 
 /**
  * Manifests Model
@@ -14,14 +16,8 @@ use App\Model\Behavior\IntegerQueryBehavior;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @property \App\Model\Table\MemberUsersTable|\Cake\ORM\Association\BelongsTo $MemberUsers
  *
- * @method \App\Model\Entity\Manifest get($primaryKey, $options = [])
- * @method \App\Model\Entity\Manifest newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Manifest[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Manifest|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Manifest|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Manifest patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Manifest[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Manifest findOrCreate($search, callable $callback = null, $options = [])
+ * @method IntegerQueryBehavior integer(Query $query, $column, $params);
+ *
  */
 class ManifestsTable extends AppTable{
 
@@ -84,8 +80,11 @@ class ManifestsTable extends AppTable{
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['member_id'], 'Members'));
+        $rules->add($rules->existsIn(['supervisor_member'], 'Members'));
+        $rules->add($rules->existsIn(['manager_member'], 'Members'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['member_user_id'], 'MemberUsers'));
+        $rules->add($rules->existsIn(['supervisor_id'], 'Users'));
+        $rules->add($rules->existsIn(['manager_id'], 'Users'));
 
         return $rules;
     }
@@ -93,8 +92,16 @@ class ManifestsTable extends AppTable{
     /**
      * Find artists by id
      *
+     * <pre>
+     * ['between', 5, 9];
+     * ['<', 3]; // any comparison operator
+     * [13];
+     * ['2-3, 5'];
+     * [3, 5, '6', '24']
+     * </pre>
+
      * @param Query $query
-     * @param array $options see IntegerQueryBehavior
+     * @param array $options ['values' => [values]
      * @return Query
      */
     public function findManifests($query, $options) {
@@ -167,4 +174,31 @@ class ManifestsTable extends AppTable{
 		return $query->where($condition);
 	}
 
+    /**
+     * Distill a set of manifests to an id => name list from Members
+     *
+     * These will be the names referenced anywhere in the manifests keyed by member_id
+     *
+     * @param $query
+     * @param $options array ['manifests' => array of manifest entities]
+     */
+    public function findNameOfParticipants($query, $options)
+    {
+        if(!key_exists('manifests', $options)) {
+            $msg = 'The find("nameOfParticipants") $options must be an array: ["manifests" => [ManifestEntity, ManEnt, ...]]';
+            throw new \BadMethodCallException($msg);
+        }
+        $manifests = collection($options['manifests']);
+        $ids = $manifests->reduce(function($accum, $manifest) {
+            /* @var Manifest $manifest */
+            $accum[] = $manifest->getManagerMember();
+            $accum[] = $manifest->getSupervisorMember();
+            $accum[] = $manifest->artistId();
+            return $accum;
+        }, []);
+        $memberIds = array_unique($ids);
+        $members = $this->Members->find('Members', ['values' => $memberIds])->toArray();
+        $nameList = (layer($members, 'Manifests'))->toKeyValueList('id', 'name');
+        return $nameList;
+    }
 }

@@ -16,6 +16,8 @@ use Cake\Core\Configure;
  */
 class RolodexCardsTable extends StacksTable {
 
+	use ManagementTrait;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -57,7 +59,7 @@ class RolodexCardsTable extends StacksTable {
 	protected function _initializeAssociations() {
 		// also see $this::layerTables setup by StackTable
 		$this->belongsTo('DataOwners')
-			->setProperty('dataOwner')
+			->setProperty('dataOwnerId')
 			->setForeignKey('user_id')
 			->setFinder('hook')
 			;
@@ -157,7 +159,7 @@ class RolodexCardsTable extends StacksTable {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->associations()->get('DataOwners')
 					->find('hook')
-					->where(['id' => $stack->dataOwner()]);
+					->where(['id' => $stack->dataOwnerId()]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;

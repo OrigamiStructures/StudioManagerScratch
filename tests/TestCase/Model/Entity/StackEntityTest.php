@@ -193,7 +193,7 @@ class StackEntityTest extends TestCase
     }
 
 	public function testDataOwner() {
-		$actual = $this->StackEntity->dataOwner();
+		$actual = $this->StackEntity->dataOwnerId();
 		$this->assertTrue('f22f9b46-345f-4c6f-9637-060ceacb21b2' === $actual);
 	}
 // </editor-fold>

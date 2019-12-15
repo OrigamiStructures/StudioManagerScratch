@@ -147,23 +147,29 @@ class IntegerQueryBehaviorTest extends TestCase
         $v = $q->getValueBinder();
         $this->assertEquals(13, $v->bindings()[':c0']['value']);
         unset($q, $v);
-//
-//        /*
-//         * find based on a single range string in an array
-//         */
+
+        /*
+         * find based on a single range string in an array
+         */
         $q = $this->sample->find('number', ['values' => ['1-3, 9, 13-15']]);
         $this->assertContains('WHERE number in (:c0,:c1,:c2,:c3,:c4,:c5,:c6)', $q->sql());
         $v = $q->getValueBinder();
         $this->assertEquals(7, count($v->bindings()));
         $this->assertEquals(14, $v->bindings()[':c5']['value']);
         unset($q, $v);
-        
+
     }
-    
+
+    public function testIntegerWithEmptyParamArray()
+    {
+        $q = $this->sample->find('number', ['values' => []]);
+        $this->assertContains('WHERE 6 = 9', $q->sql());
+    }
+
     protected function _peek($param) {
         echo '<pre>';
         print_r($param);
         echo '</pre>';
     }
-    
+
 }
