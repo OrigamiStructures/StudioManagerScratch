@@ -32,7 +32,7 @@ class IntegerQueryBehavior extends Behavior{
     public function integer(Query $query, $column, $params) {
 
         if (count($params) == 0) {
-            $query = $query->where('6 = 9');
+            return $query->where(['6 = 9']);
         }
 
         if (in_array('between', $params)) {

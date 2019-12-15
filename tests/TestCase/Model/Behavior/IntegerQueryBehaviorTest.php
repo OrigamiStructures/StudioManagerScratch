@@ -158,10 +158,12 @@ class IntegerQueryBehaviorTest extends TestCase
         $this->assertEquals(14, $v->bindings()[':c5']['value']);
         unset($q, $v);
 
-        $q = $this->sample->find('number', ['values' => []]);
-//        $q = $this->sample->find('number', ['values' => ['1-3, 9, 13-15']]);
-        debug($q);
+    }
 
+    public function testIntegerWithEmptyParamArray()
+    {
+        $q = $this->sample->find('number', ['values' => []]);
+        $this->assertContains('WHERE 6 = 9', $q->sql());
     }
 
     protected function _peek($param) {
