@@ -190,7 +190,7 @@ class ManifestsTable extends AppTable{
         }, []);
         $memberIds = array_unique($ids);
         $members = $this->Members->find('Members', ['values' => $memberIds])->toArray();
-        $nameList = (layer($members))->toKeyValueList('id', 'name');
+        $nameList = (layer($members, 'Manifests'))->toKeyValueList('id', 'name');
         return $nameList;
     }
 }
