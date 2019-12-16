@@ -7,54 +7,58 @@ use App\Lib\Range;
 
 /**
  * IntegerQueryBehavior
- * 
+ *
  * Deduce the correct INT query based on the $params structure
  *
  * @author dondrake
  */
 class IntegerQueryBehavior extends Behavior{
-    
+
     /**
      * Search for a value or range in an INT field
      * <pre>
      * ['between', 5, 9];
      * ['<', 3]; // any comparison operator
      * [13];
-     * ['2-3, 5']; 
+     * ['2-3, 5'];
      * [3, 5, '6', '24']
      * </pre>
-     * 
+     *
      * @param Query $query
      * @param string $column Name of the column to search
      * @param array $params Any of the variations described above
      * @return Query unaltered if an unrecognized $params structure is sent
      */
     public function integer(Query $query, $column, $params) {
-        
+
+        if (count($params) == 0) {
+            return $query->where(['6 = 9']);
+        }
+
         if (in_array('between', $params)) {
             return $this->constructBetween($query, $column, $params);
         }
-        
+
         $op = array_intersect(['<', '>', '=', '<=', '>='], $params);
         if ($op) {
             return $this->constructComparison($query, $column, $op, $params);
         }
-        
+
         if (count($params) > 1) {
             return $query->where(["$column IN" => $params]);
         }
-        
+
         $value = (string) array_shift($params);
         if (!empty($value)) {
             return $this->constructFromRange($query, $column, $value);
         }
-        
+
         return $query;
     }
-    
+
     /**
      * Construct a 'where' using a provided comparison operator
-     * 
+     *
      * @param Query $query
      * @param string $column
      * @param string $op
@@ -72,10 +76,10 @@ class IntegerQueryBehavior extends Behavior{
             throw new BadMethodCallException($msg);
        }
     }
-    
+
     /**
      * Construct a 'between' statement
-     * 
+     *
      * @param Query $query
      * @param string $column
      * @param array $params
@@ -94,10 +98,10 @@ class IntegerQueryBehavior extends Behavior{
             throw new \BadMethodCallException($msg);
        }
     }
-    
+
     /**
      * Construct a 'where =' or 'in ( )' statement
-     * 
+     *
      * @param Query $query
      * @param string $column
      * @param string $range A valid App\Lib\Range string

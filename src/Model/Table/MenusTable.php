@@ -127,9 +127,11 @@ class MenusTable extends AppTable{
 					'Act as...' => [], //$User->artists(),
 				];
 		}
+		if ($this->currentUser()->isSuperuser()) {
+		    $this->menu['Admin']['System Supervisors'] = '/rolodexcards/supervisors';
+        }
 		if ($this->currentUser()->admin(ADMIN_SYSTEM)){
 			$this->menu['Admin']['Logs'] = [];
-			$this->menu['Admin']['Remap States'] = '/artworks/map_states';
 		}
 	}
 

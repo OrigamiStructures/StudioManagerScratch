@@ -12,6 +12,8 @@ use App\Model\Lib\CurrentUser;
  *
  * @author dondrake
  * @link http://localhost/OStructures/article/currentuser-and-contextuser
+ *
+ * @property CurrentUser $currentUser
  */
 class ContextUser {
 
@@ -34,7 +36,7 @@ class ContextUser {
 		'supervisor' => NULL
 	];
 
-	protected $user;
+	protected $currentUser;
 
 	static protected $Session = NULL;
 
@@ -45,7 +47,7 @@ class ContextUser {
 	/**
 	 * Construction of the Singleton instance
 	 *
-	 * The session-persisted version of ContextUser is only and
+	 * The session-persisted version of CurrentUser is only and
 	 * array of data. Those values, if present, are copied into
 	 * this object and the stored copy of ContextUser (self::$instance)
 	 * is made to be a reference to this object that holds it
@@ -65,7 +67,7 @@ class ContextUser {
 				$this->$key = $contextUser[$key];
 			}
 		} else {
-			$this->set('supervisor', $this->user->supervisorId());
+			$this->set('supervisor', $this->currentUser->supervisorId());
 			$this->persist();
 		}
 		self::$instance = $this;
@@ -122,6 +124,28 @@ class ContextUser {
 	public function getId($actor) {
 		$validActor = $this->validateActor($actor);
 		return $this->actorId[$validActor];
+	}
+
+    /**
+     * Is the registered user a superuser?
+     *
+     * @return bool
+     */
+    public function isSuperuser()
+    {
+        return $this->currentUser->isSuperuser();
+	}
+
+    /**
+     * Is the registered user acting as a superuser
+     *
+     * They are a superuser and have not indicated a specific Supervisor to act as
+     *
+     * @return bool
+     */
+    public function isActingAsSuperuser()
+    {
+        return $this->isSuperuser() && !$this->has('supervisor');
 	}
 
 	/**
@@ -182,7 +206,7 @@ class ContextUser {
 
 	private function setCurrentUser($options) {
 		if (isset($options['currentUser'])) {
-			$this->user = $options['currentUser'];
+			$this->currentUser = $options['currentUser'];
 		} else {
 			$currentUser = self::$Session->read('Auth.User');
 			if (is_null($currentUser)) {
@@ -190,7 +214,7 @@ class ContextUser {
 //                $this->Flash->set($message);
 //				throw new BadRequestException($message);
 			}
-			$this->user = new CurrentUser($currentUser);
+			$this->currentUser = new CurrentUser($currentUser);
 		}
 	}
 
@@ -235,8 +259,8 @@ class ContextUser {
         }
         return [
             'user' =>
-                is_object($this->user)
-                    ? "CurrentUser object: {$this->user->getName()} {$this->user->userId()}"
+                is_object($this->currentUser)
+                    ? "CurrentUser object: {$this->currentUser->getName()} {$this->currentUser->userId()}"
                     : 'Not set',
             'actorId' => $this->actorId,
             'actorCard' => $actorCard,
@@ -255,7 +279,7 @@ class ContextUser {
     // <editor-fold defaultstate="collapsed" desc="PRIVATE METHODS">
 
 	private function cacheKey() {
-		return "{$this->user->userId()}.ContextUser";
+		return "{$this->currentUser->userId()}.ContextUser";
 	}
 
 	/**
@@ -267,7 +291,7 @@ class ContextUser {
 	 */
 	private function persist() {
 		$data = [
-			'user' => $this->user,
+			'user' => $this->currentUser,
 			'actorId' => $this->actorId,
 			'actorCard' => $this->actorCard,
 		];

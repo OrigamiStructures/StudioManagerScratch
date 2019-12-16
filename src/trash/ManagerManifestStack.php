@@ -30,7 +30,7 @@ class ManagerManifestStack extends StackEntity {
      * @return PersonCard
      */
 	public function supervisorCard() {
-		$id = $this->rootElement()->supervisorId();
+		$id = $this->rootElement()->getSupervisorId();
         $identityIDs = $this->people
             ->getLayer('identity')
             ->find()
@@ -46,7 +46,7 @@ class ManagerManifestStack extends StackEntity {
      * @return PersonCard
      */
 	public function managerCard() {
-		$id = $this->rootElement()->managerId();
+		$id = $this->rootElement()->getManagerId();
 		$identityIDs = $this->people
             ->getLayer('identity')
             ->find()

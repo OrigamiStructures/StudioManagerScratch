@@ -159,8 +159,8 @@ class ManagerManifestStacksTable extends StacksTable {
 
 	private function permissionsRequired($stack) {
 		$management_token = $this->contextUser()->getId('manager');
-		return $stack->manifest()->supervisorId() === $management_token
-				|| $stack->manifest()->managerId() === $management_token;
+		return $stack->manifest()->getSupervisorId() === $management_token
+				|| $stack->manifest()->getManagerId() === $management_token;
 	}
 
 	protected function marshalNameCards($stack) {
@@ -173,8 +173,8 @@ class ManagerManifestStacksTable extends StacksTable {
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
-					'supervisor' => [$manifest->supervisorId()],
-					'manager' => [$manifest->managerId()],
+					'supervisor' => [$manifest->getSupervisorId()],
+					'manager' => [$manifest->getManagerId()],
 				]
 			);
 		$stack->people = $people;

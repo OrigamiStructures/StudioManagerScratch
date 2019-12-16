@@ -57,14 +57,14 @@ class Manifest extends Entity
     /**
      * @return mixed
      */
-    public function supervisorId() {
+    public function getSupervisorId() {
 		return $this->supervisor_id;
 	}
 
     /**
      * @return string
      */
-    public function managerId() {
+    public function getManagerId() {
 		return $this->manager_id;
 	}
 
@@ -81,7 +81,7 @@ class Manifest extends Entity
      */
     public function isSupervisor($id)
     {
-        return $this->supervisorId() === $id;
+        return $this->getSupervisorId() === $id;
 	}
 
     /**
@@ -90,7 +90,7 @@ class Manifest extends Entity
      */
     public function isManager($id)
     {
-        return $this->managerId() === $id;
+        return $this->getManagerId() === $id;
 	}
 
     /**

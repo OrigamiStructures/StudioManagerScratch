@@ -60,17 +60,10 @@ class ManifestsTableTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->Manifests->hasBehavior('Timestamp'),
+            'The Timestamp behavior was not composed into the ManifestsTable');
+        $this->assertTrue($this->Manifests->hasBehavior('IntegerQuery'),
+            'The IntegerQuery behavior was not composed into the ManifestTable');
     }
 
     /**

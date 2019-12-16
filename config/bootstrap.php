@@ -255,8 +255,8 @@ Type::build('timestamp')
 require_once 'layer_access_bootstrap.php';
 require_once 'system_constants_bootstrap.php';
 
-function layer($data) {
-	return new \App\Model\Lib\Layer($data);
+function layer($data, $entityType = null) {
+	return new \App\Model\Lib\Layer($data,$entityType);
 }
 
 /**

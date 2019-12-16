@@ -1,28 +1,42 @@
 <?php
 use App\Model\Lib\Layer;
-/* @var \App\Model\Entity\PersonCard $personCard */
+use App\Model\Entity\PersonCard;
+use App\Model\Lib\ContextUser;
+use App\Model\Lib\LayerAccessProcessor;
+use App\View\AppView;
 
+/**
+ * @var AppView $this
+ * @var ContextUser $contextUser
+ * @var Layer $localSupervision
+ * @var PersonCard $personCard
+ */
+?>
+
+<?= $this->Html->link('Index page', ['action' => 'index']) ?>
+
+<?php
 /**
  * Contact and Address
  */
 $primaryContact = $personCard->getLayer('contacts')
     ->find()
-    ->specifyFilter('primary_contact', '1')
+    ->specifyFilter('isPrimary', '1')
     ->toKeyValueList('id', 'asString');
 
 $primaryAddress = $personCard->getLayer('addresses')
     ->find()
-    ->specifyFilter('primary', '1')
+    ->specifyFilter('isPrimary', '1')
     ->toKeyValueList('id', 'asString');
 
 $otherContacts = $personCard->getLayer('contacts')
     ->find()
-    ->specifyFilter('primary_contact', 0)
+    ->specifyFilter('isPrimary', 0)
     ->toKeyValueList('id', 'asString');
 
 $otherAddresses = $personCard->getLayer('addresses')
     ->find()
-    ->specifyFilter('primary', 0)
+    ->specifyFilter('isPrimary', 0)
     ->toKeyValueList('id', 'asString');
 
 $con_add_format = '</br><span id="%s%s">%s</span>';
@@ -30,34 +44,19 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 /**
  * Manifests
  */
-if(count($personCard->getManifests()) > 0) {
-
-    $allSupervision = $personCard->getLayer('manifests')
-        ->find()
-        ->specifyFilter('manager_member', $personCard->rootID())
-        ->toArray();
-    $allSupervision = new Layer($allSupervision, 'manifest');
-
-    $delegateManagement = count($allSupervision) == 0
-        ? []
-        : $personCard->getLayer('manifests')
-            ->find()
-            ->specifyFilter('manager_member', $personCard->rootID(), '!=')
-            ->toArray();
-
-    $selfManagement = count($allSupervision) == 0
-        ? []
-        : $personCard->getLayer('manifests')
-            ->find()
-            ->specifyFilter('manager_member', $personCard->rootID())
-            ->toArray();
-
-    $receivedManagement = $personCard->getLayer('manifests')
-        ->find()
-        ->specifyFilter('manager_member', $personCard->rootID(), '!=')
-        ->toArray();
-
-}
+    /**
+     * This card is either
+     *  This supervisor's identity      (sup_id = sup_member = Person->rootId)
+     *      show self artists           (sup_id = mgr_id = Person->ownerId && ! sup identity)
+     *      show foreign artists
+     *      show foreign supervisors
+     *  A foreign supervisor's identity
+     *      show foreign artists
+     *  An aritist this supervisor created
+     *      show foreign managers, show artwork, show permissions
+     *  An artist a foreign supervisor created
+     *      show artwork, show foreign manager
+     */
 
 ?>
 
@@ -82,21 +81,45 @@ if(count($personCard->getManifests()) > 0) {
     }
     ?>
 </p>
-    <?php if ($personCard->isSupervisor()) : ?>
-        <p>This section should respond to whether this is the record of the registered user
-    or of a foreign user. In one case the user would be able to adjust delegations
-    they had made. In the other case, the user would be able to see who had made them
-    a manager, and what artists they had.<br/>
-    This supervisor has delegated artist management to <?= count($delegateManagement)?> Managers<br/>
-        <?= $this->Html->link('Review Delegated Artist Management', ['action' => 'index']) ?><br/>
-    A message and a form with a button is probably what we need rather than a simple link.</p>
+    <?php
+    if ($personCard->isSupervisor()) :
+        if($personCard->isManagementDelegate($contextUser->getId('supervisor'))) : ?>
+        <p><em><strong>Delegated Management</strong></em></p>
+            <?php
+            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';
+            foreach ($delegatedManagement as $manifest) {
+                /* @var \App\Model\Entity\Manifest $manifest */
+                $supervisor = $names[$manifest->getSupervisorMember()];
+                $manager = $names[$manifest->getManagerMember()];
+                $artist = $names[$manifest->artistId()];
+                printf($delegatedMessage, $supervisor, $artist, $manager, $manager);
+            }
+            ?>
+        <?php endif; ?>
     <?php endif ?>
 
     <?php if ($personCard->isManager()) : ?>
-        <p><?= $this->Html->link('Review Received Artist Management', ['action' => 'index']) ?></p>
+        <p><em><strong>Received Management</strong></em></p>
+        <?php
+        $receivedMessage = '<p>%s assigned %s management of the artist %s. [Work on this artist now]. [Contact %s].</p>';
+        foreach ($receivedManagement as $manifest) {
+            /* @var \App\Model\Entity\Manifest $manifest */
+            $supervisor = $names[$manifest->getSupervisorMember()];
+            $manager = $names[$manifest->getManagerMember()];
+            $artist = $names[$manifest->artistId()];
+            printf($receivedMessage, $supervisor, $manager, $artist, $supervisor);
+        }
+        ?>
     <?php endif ?>
 
     <?php if ($personCard->isArtist()) : ?>
-        <p><?= $this->Html->link('Review Artworks for this Artist', ['action' => 'index']) ?></p>
+        <p><em><strong>This Artist's Works</strong></em></p>
+        <?= $this->Html->nestedList($personCard->artworks->toKeyValueList('id', 'title')); ?>
     <?php endif ?>
+<?php
+$membershipList = count($personCard->getMemberships()) == 0
+    ? 'None'
+    : \Cake\Utility\Text::toList($personCard->getMemberships()->toValueList('name'));
+echo "</p>";
+echo '<p>Memberships: ' . $membershipList . '</p>';
 

@@ -1,7 +1,11 @@
 <?php
 namespace App\Controller;
 
+<<<<<<< HEAD
 use App\Model\Entity\RolodexCard;
+=======
+use App\Model\Entity\Manifest;
+>>>>>>> dev
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
@@ -41,7 +45,7 @@ class RolodexCardsController extends AppController {
 
     public function view($id)
     {
-        /*  @var StackSet $personCards */
+        /* @var StackSet $personCards */
         /* @var PersonCard $personCard */
 
         $personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
@@ -55,7 +59,40 @@ class RolodexCardsController extends AppController {
             $personCard->artworks = new Layer($artworks, 'artwork');
         }
 
+        /*
+         * Get an id => name list to support all members mentioned in manifests
+         */
+        if($personCard->hasManifests()) {
+            $ManifestTable = TableRegistry::getTableLocator()->get('Manifests');
+            $names = $ManifestTable->find(
+                'NameOfParticipants',
+                ['manifests' => $personCard->getManifests()->toArray()
+                ]);
+            $this->set('names', $names);
+        }
+
+        if ($personCard->isManager()) {
+            $actingUserId = $this->contextUser()->getId('supervisor');
+            $receivedManagement = $personCard->receivedManagement($actingUserId);
+            $delegatedManagement = $personCard->delegatedManagement($actingUserId);
+            $this->set(compact('receivedManagement', 'delegatedManagement'));
+        }
+
+        if ($personCard->isSupervisor()) {
+
+        }
+
         $this->set('personCard', $personCard);
+        $this->set('contextUser', $this->contextUser());
+	}
+
+    public function supervisors()
+    {
+        if(!$this->currentUser()->isSuperuser()) {
+            $this->redirect('/pages/no_access');
+        }
+        $this->index();
+        $this->render('index');
 	}
 
     public function add()

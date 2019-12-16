@@ -95,7 +95,7 @@ class ArtistManifestsTable extends StacksTable {
 		if ($stack->count('identity')) {
 			$dataOwner = $this->DataOwners
 					->find('hook')
-					->where(['id' => $stack->dataOwner()]);
+					->where(['id' => $stack->dataOwnerId()]);
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
