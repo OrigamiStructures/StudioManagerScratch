@@ -16,7 +16,7 @@ use Cake\Core\Configure;
  */
 class RolodexCardsTable extends StacksTable {
 
-	use ManagementTrait;
+//	use ManagementTrait;
 
 	/**
 	 * {@inheritdoc}
