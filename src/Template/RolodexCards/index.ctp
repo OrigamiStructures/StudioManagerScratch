@@ -2,7 +2,10 @@
 use Cake\Utility\Text;
 use App\Model\Entity\PersonCard;
 
-/* @var \Cake\View\View $this */
+/**
+ * @var \Cake\View\View $this
+ * @var \App\Model\Lib\StackSet $personCards
+ */
 
 foreach($personCards->getData() as $id => $card) {
 
