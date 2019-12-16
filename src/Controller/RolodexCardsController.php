@@ -1,11 +1,8 @@
 <?php
 namespace App\Controller;
 
-<<<<<<< HEAD
 use App\Model\Entity\RolodexCard;
-=======
 use App\Model\Entity\Manifest;
->>>>>>> dev
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
