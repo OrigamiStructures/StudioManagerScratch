@@ -78,4 +78,13 @@ class RolodexCardsController extends AppController {
         $this->set('personCard', $personCard);
         $this->set('contextUser', $this->contextUser());
 	}
+
+    public function supervisors()
+    {
+        if(!$this->currentUser()->isSuperuser()) {
+            $this->redirect('/pages/no_access');
+        }
+        $this->index();
+        $this->render('index');
+	}
 }
