@@ -15,7 +15,7 @@ class EditionsFormatsFixture extends TestFixture
      *
      * @var string
      */
-    public $table = 'artists';
+    public $table = 'editions_formats';
 
     /**
      * Fields
