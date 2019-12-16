@@ -116,4 +116,10 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
         <p><em><strong>This Artist's Works</strong></em></p>
         <?= $this->Html->nestedList($personCard->artworks->toKeyValueList('id', 'title')); ?>
     <?php endif ?>
+<?php
+$membershipList = count($personCard->getMemberships()) == 0
+    ? 'None'
+    : \Cake\Utility\Text::toList($personCard->getMemberships()->toValueList('name'));
+echo "</p>";
+echo '<p>Memberships: ' . $membershipList . '</p>';
 
