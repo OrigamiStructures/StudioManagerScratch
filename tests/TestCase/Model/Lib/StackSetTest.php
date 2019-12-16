@@ -28,7 +28,7 @@ class StackSetTest extends TestCase {
 		'app.formats',
 		'app.pieces',
 		'app.series',
-		'app.dispositions_pieces',
+		'app.dispositions_pieces'
 	];
 
 	/**
