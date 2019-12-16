@@ -263,7 +263,7 @@ Pamphlet stitched, bound in cloth over board covers.'
                 'fluid_piece_count' => 7,
                 'collected_piece_count' => 6,
                 'title' => '',
-                'description' => 'Digital printing on Mohawk Superfine; sewn signatures bound in black goat skin. Pages have graphite edging. Covers are gold foil stamped. 
+                'description' => 'Digital printing on Mohawk Superfine; sewn signatures bound in black goat skin. Pages have graphite edging. Covers are gold foil stamped.
 '
             ],
             [
