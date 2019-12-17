@@ -22,15 +22,16 @@ class ArtistsController extends AppController
      */
     public function index()
     {
-		$ManifestsTable = TableRegistry::getTableLocator()->get('ManifestStacks');
-		$manifests = $ManifestsTable->find('stacksFor',
-			['seed' => 'manifest', 'ids' => [1,2,3]]);
+//		$ManifestsTable = TableRegistry::getTableLocator()->get('ManifestStacks');
+//		$manifests = $ManifestsTable->find('stacksFor',
+//			['seed' => 'manifest', 'ids' => [1,2,3]]);
 
 		$ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
 		$artists = $ArtistCards->find('stacksFor',
 			['seed' => 'manifest', 'ids' => [1,2,3,4,5]]);
+		$contextUser = $this->contextUser();
 
-        $this->set(compact('artists'));
+        $this->set(compact('artists', 'contextUser'));
     }
 
     /**
@@ -45,8 +46,9 @@ class ArtistsController extends AppController
         $ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
         $artists = $ArtistCards->find('stacksFor',
             ['seed' => 'manifest', 'ids' => [$id]]);
+        $contextUser = $this->contextUser();
 
-        $this->set(compact('artists'));
+        $this->set(compact('artists', 'contextUser'));
     }
 
     /**
