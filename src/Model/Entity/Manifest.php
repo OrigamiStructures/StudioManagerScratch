@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Entity;
 
+use Cake\Error\Debugger;
+use Cake\Log\Log;
 use Cake\ORM\Entity;
 
 /**
@@ -116,5 +118,33 @@ class Manifest extends Entity
     public function getManagerMember(): string
     {
         return $this->manager_member;
+    }
+
+    public function getName($role)
+    {
+        if (!in_array($role, ['supervisor', 'manager', 'artist'])) {
+            $message = "'$role' is not a valid manifest participant in Manifest::getName(). "
+                . "Choose actor, manager, or supervisor";
+            throw new \BadMethodCallException($message);
+        }
+        if (!isset($this->names)) {
+            $trace = var_export(Debugger::trace(), true);
+            Log::write(LOG_WARNING, "Manifest::getName($role) was called but the Manifest
+            has not been configured as a link-layer for a stack." . PHP_EOL . "The trace to this getName call: " .
+            PHP_EOL . $trace);
+            return null;
+        }
+        switch ($role) {
+            case 'supervisor':
+                $index = $this->getSupervisorMember();
+                break;
+            case 'manager':
+                $index = $this->getManagerMember();
+                break;
+            case 'artist':
+                $index = $this->artistId();
+                break;
+        }
+        return $this->names[$index];
     }
 }
