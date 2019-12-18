@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var StackSet $artist
+ * @var StackSet $artists
  * @var \App\Model\Entity\ArtistCard $artist
  * @var \App\Model\Entity\Manifest $manifest
  * @var \App\Model\Entity\DataOwner $dataOwner
@@ -35,7 +35,13 @@ final solution.</p>
 foreach($artists->getData() as $artist) :
     $manifest = $artist->getManifests()->element(0);
     $dataOwner = $artist->data_owner->element(0);
-    $managmentDelegation = $artist->delegatedManagement($contextUser->getId('supervisor'));
+    $managmentDelegation =
+        layer($artist->delegatedManagement($contextUser->getId('supervisor')), 'manifests')
+        ->getLayer()
+        ->find()
+        ->specifyFilter('member_id', $artist->rootID())
+        ->toArray()
+    ;
     $dispositionIDs = $artist->IDs('dispositions');
     ?>
 
@@ -45,7 +51,9 @@ foreach($artists->getData() as $artist) :
 
     <?= $this->Html->para('', "You are the creator/owner of this aritst's "
         . "data and have identified " . count($managmentDelegation)
-        . " other managers for the data. View those details ") ?>
+        . " other managers for the data. View those details "
+        . \Cake\Utility\Text::toList($artist->managerDelegateNames($contextUser->getId('supervisor'))))
+    ?>
 
 <?php else: ?>
 
