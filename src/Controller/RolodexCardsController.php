@@ -1,13 +1,17 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
+use App\Model\Table\IdentitiesTable;
+use App\Model\Table\ManifestsTable;
 use App\Model\Lib\Layer;
+use App\Model\Entity\RolodexCard;
 use App\Model\Table\RolodexCardsTable;
+use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\PersonCard;
 use App\Model\Lib\StackSet;
+use App\Model\Entity\PersonCard;
+use App\Model\Table\PersonCardsTable;
 
 /**
  * CakePHP RolodexCardsController
@@ -15,6 +19,8 @@ use App\Model\Lib\StackSet;
  * @property PersonCard $PersonCard
  * @property RolodexCard $RolodexCard
  * @property RolodexCardsTable $RolodexCards
+ * @property PersonCardsTable $PersonCards
+ * @property IdentitiesTable $Identities
  */
 class RolodexCardsController extends AppController {
 
@@ -23,7 +29,7 @@ class RolodexCardsController extends AppController {
 	public function initialize() {
 		parent::initialize();
 		$this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
-		$this->RolodexCard = TableRegistry::getTableLocator()->get('RolodexCards');
+		$this->RolodexCards = TableRegistry::getTableLocator()->get('RolodexCards');
 	}
 
 	public function index() {
@@ -82,8 +88,11 @@ class RolodexCardsController extends AppController {
         $this->render('index');
 	}
 
-    public function add()
+	public function add()
     {
+        /**
+         * @var StackSet $potentialArtistsStackSet
+         */
         if ($this->request->is('post')) {
             $card = $this->RolodexCard->patchEntity($card, $this->request->getData());
             if ($this->RolodexCard->save($card)) {
@@ -92,27 +101,29 @@ class RolodexCardsController extends AppController {
             }
             $this->Flash->error(__('The person could not be saved. Please, try again.'));
         }
-        //Find a list of members/people/rolodexes that belong to the user but aren't currently assigned
-        //as a member_id to any manifest
-        //that would be a list of non-artist members/people/rolodexes
 
-        $potentialArtists = $this->RolodexCards->Identities->find('all')
-            ->contain(['Manifests'])
+        $potentialArtistsQuery = $this->RolodexCards->Identities->find('list',
+            ['valueField' => 'id'])
             ->where([
                 'Identities.user_id' => $this->contextUser()->getId('supervisor'),
-                'Identities.member_type' => 'Person',
-                'Manifests.id' => NULL
+                'Identities.member_type' => 'Person'
             ]);
 
-        osd(sql($potentialArtists));
-        $layerOfPotentialArtists = \layer($potentialArtists->toArray());
-        osd($layerOfPotentialArtists->toKeyValueList('id', 'name'));die;
-        $members = $this->RolodexCard->find('list', ['limit' => 200]);
-        osd(sql($members));
-        osd($members->toArray());die;
-//        $memberUsers = $this->RolodexCard->MemberUsers->find('list', ['limit' => 200]);
-//        $this->set(compact('card', 'members', 'memberUsers'));
-        $this->set(compact('card', 'members'));
+        $potentialArtistsStackSet = $this->PersonCards
+            ->find('stacksFor',[
+                'seed' => 'identity',
+                'ids' => $potentialArtistsQuery->toArray()
+            ]);
 
+        $peopleCollection = new Collection($potentialArtistsStackSet->getData());
+
+        $nonArtists = $peopleCollection->reduce(function($accum, $PersonCard){
+            if (!$PersonCard->isArtist()){
+                $accum[$PersonCard->rootId()] = $PersonCard->rootElement()->name();
+            }
+            return $accum;
+        },[]);
+
+        $this->set(compact('card', 'nonArtists'));
     }
 }
