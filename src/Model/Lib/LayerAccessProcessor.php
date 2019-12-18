@@ -260,7 +260,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function getValueRegistry()
     {
         if(!is_null($this->getArgObj())) {
-            $result = $this->getArgObj()->registry();
+            $result = $this->getArgObj()->getValueRegistry();
         } else {
             $result = null;
         }
@@ -342,9 +342,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     protected function performSort()
     {
-        $column = $this->AccessArgs->getSortColumn('sort');
-        $dir = $this->AccessArgs->getSortDirection();
-        $type = $this->AccessArgs->getSortType();
+        $column = $this->AccessArgs->valueOf('sortColumn');
+        $dir = $this->AccessArgs->valueOf('sortDir');
+        $type = $this->AccessArgs->valueOf('sortType');
         $unsorted = new Collection($this->ResultIterator);
         $sorted = $unsorted->sortBy($column, $dir, $type)->toArray();
         //indexes are out of order and could be confusing
