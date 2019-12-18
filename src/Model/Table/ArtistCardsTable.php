@@ -1,7 +1,9 @@
 <?php
 namespace App\Model\Table;
 
+use App\Model\Entity\Manifest;
 use App\Model\Table\PersonCardsTable;
+use Cake\Collection\Collection;
 
 /**
  * CakePHP ArtistCardsTable
@@ -28,21 +30,19 @@ class ArtistCardsTable extends PersonCardsTable {
 
 	public function initialize(array $config) {
 		parent::initialize($config);
-	    $this->addLayerTable(['Manifests', 'Artworks']);
-		$this->addStackSchema(['manifest', 'managers', 'artworks']);
+	    $this->addLayerTable(['Artworks']);
+		$this->addStackSchema(['artworks']);
 		$this->addSeedPoint([
-					'manifest', 'manifests',
-					'artwork', 'artworks',
-					'manager', 'managers'
+					'artwork', 'artworks'
 				]);
 	}
 
-	protected function distillFromManifest($ids) {
-		$query = $this->Manifests->find('list', ['valueField' => 'member_id'])
-				->where(['id IN' => $ids]);
-		return $this->distillFromIdentity($query->toArray());
-//		return array_unique($IDs);
-	}
+//	protected function distillFromManifest($ids) {
+//		$query = $this->Manifests->find('list', ['valueField' => 'member_id'])
+//				->where(['id IN' => $ids]);
+//		return $this->distillFromIdentity($query->toArray());
+////		return array_unique($IDs);
+//	}
 
 	protected function distillFromArtwork($ids) {
 		$query = $this->Artworks->find('list', ['valueField' => 'member_id'])
@@ -50,17 +50,49 @@ class ArtistCardsTable extends PersonCardsTable {
 		return $this->distillFromIdentity($query->toArray());
 	}
 
-	/**
+    /**
+     * Locate the Member IDs implicated in a set of Manifests
+     *
+     * @param array $ids
+     * @return Query
+     */
+    protected function distillFromManifest(array $ids)
+    {
+        $contextUser = $this->contextUser();
+        $query = $this->Manifests->find('all')
+            ->where(['id IN' => $ids]);
+        $manifests = new Collection($query->toArray());
+        $result = $manifests->reduce(function ($accum, $entity) use ($contextUser) {
+            /* @var Manifest $entity */
+            /**
+             * Here we should filter to insure the user has access
+             * to the person cards we derive.
+             * If the User is not a superuser, the the userID must
+             * match either SupervisorId or ManagerId. When it does
+             * match, then all the person cards are allowed.
+             */
+            if (($contextUser->isSuperuser() && is_null($contextUser->getId('supervisor')))
+                || $contextUser->getId('supervisor') == $entity->getSupervisorId()
+                || $contextUser->getId('supervisor') == $entity->getManagerId()
+            ) {
+                $accum[] = $entity->artistId();
+            }
+            return $accum;
+        }, []);
+        return $this->distillFromIdentity(array_unique($result));
+    }
+
+    /**
 	 *
 	 *
 	 * @param array $ids
 	 * @return array
 	 */
-	protected function distillFromManager($ids) {
-		$query = $this->Manifests->find('list', ['valueField' => 'member_id'])
-				->find('managedBy', ['ids' => $ids]);
-		return $this->distillFromIdentity($query->toArray());
-	}
+//	protected function distillFromManager($ids) {
+//		$query = $this->Manifests->find('list', ['valueField' => 'member_id'])
+//				->find('managedBy', ['ids' => $ids]);
+//		return $this->distillFromIdentity($query->toArray());
+//	}
 
 	protected function marshalArtworks($ids, $stack) {
 		if ($stack->count('identity')) {
@@ -71,14 +103,14 @@ class ArtistCardsTable extends PersonCardsTable {
 		return $stack;
 	}
 
-	protected function marshalManifest($id, $stack) {
-		if ($stack->count('identity')) {
-			$image = $this->Manifests->find('all')
-					->where(['member_id' => $stack->rootId()]);
-			$stack->set(['manifest' => $image->toArray()]);
-		}
-		return $stack;
-	}
+//	protected function marshalManifest($id, $stack) {
+//		if ($stack->count('identity')) {
+//			$image = $this->Manifests->find('all')
+//					->where(['member_id' => $stack->rootId()]);
+//			$stack->set(['manifest' => $image->toArray()]);
+//		}
+//		return $stack;
+//	}
 
 	/**
 	 * Get the permitted Manager hook data
@@ -91,27 +123,27 @@ class ArtistCardsTable extends PersonCardsTable {
 	 * @param StackEntity $stack
 	 * @return StackEntity
 	 */
-	protected function marshalManagers($id, $stack) {
-		if ($stack->count('identity')) {
-			$managerIds = $stack->manifest->toValueList('manager_id');
-			$dataOwner = $this->associations()->get('DataOwners')
-				->find(
-					'hook',
-					['contain' => [
-						'Members' =>[
-							'fields' => [
-								'Members.first_name',
-								'Members.last_name'
-							]
-						]
-					]]
-				)
-				->where(['DataOwners.id IN' => $managerIds])
-				->toArray();
-
-			$stack->set(['managers' => $dataOwner]);
-		}
-		return $stack;
-	}
+//	protected function marshalManagers($id, $stack) {
+//		if ($stack->count('identity')) {
+//			$managerIds = $stack->manifest->toValueList('manager_id');
+//			$dataOwner = $this->associations()->get('DataOwners')
+//				->find(
+//					'hook',
+//					['contain' => [
+//						'Members' =>[
+//							'fields' => [
+//								'Members.first_name',
+//								'Members.last_name'
+//							]
+//						]
+//					]]
+//				)
+//				->where(['DataOwners.id IN' => $managerIds])
+//				->toArray();
+//
+//			$stack->set(['managers' => $dataOwner]);
+//		}
+//		return $stack;
+//	}
 
 }

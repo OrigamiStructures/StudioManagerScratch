@@ -11,12 +11,7 @@ use App\View\AppView;
  * @var Layer $localSupervision
  * @var PersonCard $personCard
  */
-?>
 
-<?= $this->Html->link('Index page', ['action' => 'index']) ?>
-
-<?php
-//<editor-fold desc="Contact and Address variable creation">
 /**
  * Contact and Address
  */
@@ -41,10 +36,31 @@ $otherAddresses = $personCard->getLayer('addresses')
     ->toKeyValueList('id', 'asString');
 
 $con_add_format = '</br><span id="%s%s">%s</span>';
-//</editor-fold>
+
+/**
+ * Manifests
+ */
+    /**
+     * This card is either
+     *  This supervisor's identity      (sup_id = sup_member = Person->rootId)
+     *      show self artists           (sup_id = mgr_id = Person->ownerId && ! sup identity)
+     *      show foreign artists
+     *      show foreign supervisors
+     *  A foreign supervisor's identity
+     *      show foreign artists
+     *  An aritist this supervisor created
+     *      show foreign managers, show artwork, show permissions
+     *  An artist a foreign supervisor created
+     *      show artwork, show foreign manager
+     */
+
 ?>
 
+
+<?= $this->Html->link('Index page', ['action' => 'index']) ?>
+
 <h1><?= $personCard->rootElement()->name() ?></h1>
+
 <p><em><strong>Primary contact and address</strong></em>
     <?php
     foreach($primaryContact as $id => $contact){
@@ -66,42 +82,31 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
     ?>
 </p>
     <?php
-    /**
-     * This is the identity card some registered user uses for their Superviors role
-     */
     if ($personCard->isSupervisor()) :
         if($personCard->isManagementDelegate($contextUser->getId('supervisor'))) : ?>
-        <p>is supervosor</p>
-        <p><em><strong>Delegated Management</strong></em><br/></p>
+        <p><em><strong>Delegated Management</strong></em></p>
             <?php
-            $delegatedMessage = '<p>%s assigned management of the artist %s to %s.<br/> ' .
-                '[Review details] [Contact %s].</p>';
+            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';
             foreach ($delegatedManagement as $manifest) {
                 /* @var \App\Model\Entity\Manifest $manifest */
-                $supervisor = $names[$manifest->getSupervisorMember()];
-                $manager = $names[$manifest->getManagerMember()];
-                $artist = $names[$manifest->artistId()];
+                $supervisor = $manifest->getName('supervisor');
+                $manager = $manifest->getName('manager');
+                $artist = $manifest->getName('artist');
                 printf($delegatedMessage, $supervisor, $artist, $manager, $manager);
             }
             ?>
         <?php endif; ?>
     <?php endif ?>
 
-<?php
-/** This is the identity card some registered user uses for their Manager role */
-?>
     <?php if ($personCard->isManager()) : ?>
-        <p>is manager</p>
-        <p><em><strong>Received Management</strong></em>
-            [Act as this manager now] </p>
+        <p><em><strong>Received Management</strong></em></p>
         <?php
-        $receivedMessage = '<p>%s assigned %s management of the artist %s.<br/> ' .
-            '[Work on this artist now] [Contact %s].</p>';
+        $receivedMessage = '<p>%s assigned %s management of the artist %s. [Work on this artist now]. [Contact %s].</p>';
         foreach ($receivedManagement as $manifest) {
             /* @var \App\Model\Entity\Manifest $manifest */
-            $supervisor = $names[$manifest->getSupervisorMember()];
-            $manager = $names[$manifest->getManagerMember()];
-            $artist = $names[$manifest->artistId()];
+            $supervisor = $manifest->getName('supervisor');
+            $manager = $manifest->getName('manager');
+            $artist = $manifest->getName('artist');
             printf($receivedMessage, $supervisor, $manager, $artist, $supervisor);
         }
         ?>
@@ -111,4 +116,10 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
         <p><em><strong>This Artist's Works</strong></em></p>
         <?= $this->Html->nestedList($personCard->artworks->toKeyValueList('id', 'title')); ?>
     <?php endif ?>
+<?php
+$membershipList = count($personCard->getMemberships()) == 0
+    ? 'None'
+    : \Cake\Utility\Text::toList($personCard->getMemberships()->toValueList('name'));
+echo "</p>";
+echo '<p>Memberships: ' . $membershipList . '</p>';
 

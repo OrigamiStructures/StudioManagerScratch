@@ -9,8 +9,6 @@ use Cake\Utility\Hash;
 use App\Model\Lib\StackSet;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use App\Model\Traits\ManagementTrait;
-
 
 /**
  * Members Model
@@ -18,7 +16,7 @@ use App\Model\Traits\ManagementTrait;
  */
 class RolodexCardsTable extends StacksTable {
 
-	use ManagementTrait;
+//	use ManagementTrait;
 
 	/**
 	 * {@inheritdoc}

@@ -2,11 +2,13 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Manifest;
+use App\Model\Entity\PersonCard;
 use App\Model\Table\RolodexCardsTable;
 
 use Cake\ORM\Table;
 use App\Model\Traits\ContactableTableTrait;
 use App\Model\Traits\ReceiverTableTrait;
+use Cake\Collection\Collection;
 //use App\Model\Lib\PersonCardRegistry;
 
 /**
@@ -56,7 +58,7 @@ class PersonCardsTable extends RolodexCardsTable {
      * Locate the Member IDs implicated in a set of Manifests
      *
      * @param array $ids
-     * @return array
+     * @return Query
      */
     protected function distillFromManifest(array $ids)
     {
@@ -73,7 +75,7 @@ class PersonCardsTable extends RolodexCardsTable {
              * match either SupervisorId or ManagerId. When it does
              * match, then all the person cards are allowed.
              */
-            if (($contextUser->isSuperuser() && is_null($contextUser->getId('supervidor')))
+            if (($contextUser->isSuperuser() && is_null($contextUser->getId('supervisor')))
                 || $contextUser->getId('supervisor') == $entity->getSupervisorId()
                 || $contextUser->getId('supervisor') == $entity->getManagerId()
             ) {
@@ -83,7 +85,7 @@ class PersonCardsTable extends RolodexCardsTable {
             }
             return $accum;
             }, []);
-        return array_unique($result);
+        return $this->distillFromIdentity(array_unique($result));
 	}
 
 	protected function marshalImage($id, $stack) {
@@ -110,8 +112,8 @@ class PersonCardsTable extends RolodexCardsTable {
 
     /**
      * @param $id
-     * @param $stack StackEntity
-     * @return StackEntity
+     * @param $stack PersonCard
+     * @return PersonCard
      */
     protected function marshalManifests($id, $stack)
     {
@@ -123,7 +125,7 @@ class PersonCardsTable extends RolodexCardsTable {
          * If the current user is a superuser, get everything. Otherwise
          * the userId must match either supervisorId or ManagerId
          */
-        $manifest = $this->Manifests
+        $query = $this->Manifests
             ->find('all')
             ->where([
                 'OR' => [
@@ -132,7 +134,9 @@ class PersonCardsTable extends RolodexCardsTable {
                     'member_id' => $person_id
                 ]
             ]);
-        $stack->set(['manifests' => $manifest->toArray()]);
+        $manifests = $this->Manifests->configureLinkLayer($query);
+
+        $stack->set(['manifests' => $manifests]);
         return $stack;
     }
 

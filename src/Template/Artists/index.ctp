@@ -31,9 +31,13 @@ should probably be renamed). </p>
 /* @var \App\Model\Entity\ArtistCard $artist */
 
 foreach($artists->getData() as $artist) :
-	$manifest = $artist->manifest->element(0);
+    /* @var \App\Model\Entity\ArtistCard $artist */
+    /* @var \App\Model\Lib\ContextUser $contextUser */
+
+
+	$manifest = $artist->getManifests()->element(0);
 	$dataOwner = $artist->data_owner->element(0);
-	$otherManagerCount = $artist->managers->count() - 1;
+	$managmentDelegation = $artist->delegatedManagement($contextUser->getId('supervisor'));
 	$dispositionIDs = $artist->IDs('dispositions');
 ?>
 
@@ -42,8 +46,8 @@ foreach($artists->getData() as $artist) :
 <?php if ($manifest->selfAssigned()) : ?>
 
 <?= $this->Html->para('', "You are the creator/owner of this aritst's "
-			. "data and have identified $otherManagerCount "
-			. "other managers for the data. View those details "
+			. "data and have identified " . count($managmentDelegation)
+			. " other managers for the data. View those details "
             . $this->Html->link('here', ['controller' => 'artists', 'action' => 'view', $artist->rootID()])
     ); ?>
 

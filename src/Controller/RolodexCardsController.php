@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Lib\Layer;
 use Cake\ORM\TableRegistry;
@@ -10,6 +11,8 @@ use App\Model\Lib\StackSet;
 /**
  * CakePHP RolodexCardsController
  * @author dondrake
+ * @property PersonCard $PersonCard
+ * @property RolodexCard $RolodexCard
  */
 class RolodexCardsController extends AppController {
 
@@ -18,6 +21,7 @@ class RolodexCardsController extends AppController {
 	public function initialize() {
 		parent::initialize();
 		$this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+		$this->RolodexCard = TableRegistry::getTableLocator()->get('RolodexCards');
 	}
 
 	public function index() {
@@ -52,18 +56,6 @@ class RolodexCardsController extends AppController {
             $personCard->artworks = new Layer($artworks, 'artwork');
         }
 
-        /*
-         * Get an id => name list to support all members mentioned in manifests
-         */
-        if($personCard->hasManifests()) {
-            $ManifestTable = TableRegistry::getTableLocator()->get('Manifests');
-            $names = $ManifestTable->find(
-                'NameOfParticipants',
-                ['manifests' => $personCard->getManifests()->toArray()
-                ]);
-            $this->set('names', $names);
-        }
-
         if ($personCard->isManager()) {
             $actingUserId = $this->contextUser()->getId('supervisor');
             $receivedManagement = $personCard->receivedManagement($actingUserId);
@@ -78,4 +70,30 @@ class RolodexCardsController extends AppController {
         $this->set('personCard', $personCard);
         $this->set('contextUser', $this->contextUser());
 	}
+
+    public function supervisors()
+    {
+        if(!$this->currentUser()->isSuperuser()) {
+            $this->redirect('/pages/no_access');
+        }
+        $this->index();
+        $this->render('index');
+	}
+
+    public function add()
+    {
+        if ($this->request->is('post')) {
+            $card = $this->RolodexCard->patchEntity($card, $this->request->getData());
+            if ($this->RolodexCard->save($card)) {
+                $this->Flash->success(__('The person has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The person could not be saved. Please, try again.'));
+        }
+        $members = $this->RolodexCard->find('list', ['limit' => 200]);
+//        $memberUsers = $this->RolodexCard->MemberUsers->find('list', ['limit' => 200]);
+//        $this->set(compact('card', 'members', 'memberUsers'));
+        $this->set(compact('card', 'members'));
+
+    }
 }

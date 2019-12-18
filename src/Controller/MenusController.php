@@ -11,10 +11,10 @@ namespace App\Controller;
  * @author jasont
  */
 class MenusController extends AppController {
-    
+
     public function index() {
         $menus = $this->Menus->adminMenu;
         $this->set(compact('menus'));
     }
-    
+
 }

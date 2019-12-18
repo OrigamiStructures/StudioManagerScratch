@@ -22,7 +22,15 @@ $delegatedManagement = $manifestStack
     ->delegatedManagement($contextUser->getId('supervisor'));?>
 
 	<h1>Add an artist</h1>
-	<p>tools here</p>
+<?php
+echo $this->Html->link(
+    'Add Artist',
+    'rolodexCards/add',
+    [
+        'class' => 'button large'
+    ]);
+?>
+    <div class="add_artist_dialog"></div>
 	<h1>Recruit a new delegate</h1>
 	<p>tools here</p>
 

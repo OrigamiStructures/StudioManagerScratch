@@ -111,5 +111,12 @@ their work does make sense.
 
 - A Supervisor view should be able to show all delegated work/artists and their managers
 
+##User Roles
+
+CurrentUser has started using the User table `role` column for decision making. But we currently have
+no plan for what the roles are or what they allow.
+
+Nor do we have an knowledge of whether this is part of the DCUsers RBAC system or whether
+there are tools in that system we should be using.
 
 Topics: Studio Manager, Policy, Data Structure
