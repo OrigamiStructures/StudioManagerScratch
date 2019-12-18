@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Lib\Layer;
+use App\Model\Table\RolodexCardsTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
 use App\Model\Lib\StackSet;
@@ -13,6 +14,7 @@ use App\Model\Lib\StackSet;
  * @author dondrake
  * @property PersonCard $PersonCard
  * @property RolodexCard $RolodexCard
+ * @property RolodexCardsTable $RolodexCards
  */
 class RolodexCardsController extends AppController {
 
@@ -102,7 +104,24 @@ class RolodexCardsController extends AppController {
             }
             $this->Flash->error(__('The person could not be saved. Please, try again.'));
         }
+        //Find a list of members/people/rolodexes that belong to the user but aren't currently assigned
+        //as a member_id to any manifest
+        //that would be a list of non-artist members/people/rolodexes
+
+        $potentialArtists = $this->RolodexCards->Identities->find('all')
+            ->contain(['Manifests'])
+            ->where([
+                'Identities.user_id' => $this->contextUser()->getId('supervisor'),
+                'Identities.member_type' => 'Person',
+                'Manifests.id' => NULL
+            ]);
+
+        osd(sql($potentialArtists));
+        $layerOfPotentialArtists = \layer($potentialArtists->toArray());
+        osd($layerOfPotentialArtists->toKeyValueList('id', 'name'));die;
         $members = $this->RolodexCard->find('list', ['limit' => 200]);
+        osd(sql($members));
+        osd($members->toArray());die;
 //        $memberUsers = $this->RolodexCard->MemberUsers->find('list', ['limit' => 200]);
 //        $this->set(compact('card', 'members', 'memberUsers'));
         $this->set(compact('card', 'members'));
