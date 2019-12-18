@@ -22,29 +22,16 @@ class ArtistsController extends AppController
      */
     public function index()
     {
-		$ManifestsTable = TableRegistry::getTableLocator()->get('ManifestStacks');
-		$manifests = $ManifestsTable->find('stacksFor',
-			['seed' => 'manifest', 'ids' => [1,2,3]]);
+//		$ManifestsTable = TableRegistry::getTableLocator()->get('ManifestStacks');
+//		$manifests = $ManifestsTable->find('stacksFor',
+//			['seed' => 'manifest', 'ids' => [1,2,3]]);
 
-		/* @var ArtistManifestStack $manifestStack */
-		foreach($manifests->getData() as $manifestStack) {
-//		    osd($manifestStack->schema);
-//            osd(get_class($manifestStack->permissions));
-//            osd($manifestStack->count('permissions'), 'Permission count');
-//			osd($manifestStack->supervisorCard()->name(), 'SUPERVISOR');
-//			osd($manifestStack->managerCard()->name(), 'MANAGER');
-//			osd($manifestStack->artistCard()->name(), 'ARTIST');
-		}
-
-//        $this->paginate = [
-//            'contain' => ['Members', 'MemberUsers']
-//        ];
-//        $artists = $this->paginate($this->Artists);
 		$ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
 		$artists = $ArtistCards->find('stacksFor',
 			['seed' => 'manifest', 'ids' => [1,2,3,4,5]]);
+		$contextUser = $this->contextUser();
 
-        $this->set(compact('artists'));
+        $this->set(compact('artists', 'contextUser'));
     }
 
     /**
@@ -59,8 +46,9 @@ class ArtistsController extends AppController
         $ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
         $artists = $ArtistCards->find('stacksFor',
             ['seed' => 'manifest', 'ids' => [$id]]);
+        $contextUser = $this->contextUser();
 
-        $this->set(compact('artists'));
+        $this->set(compact('artists', 'contextUser'));
     }
 
     /**
