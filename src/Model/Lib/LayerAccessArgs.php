@@ -178,21 +178,6 @@ class LayerAccessArgs implements LayerAccessInterface
         return $this;
     }
 
-    public function getSortDirection()
-    {
-        return $this->_sortDir;
-    }
-
-    public function getSortType()
-    {
-        return $this->_sortType;
-    }
-
-    public function getSortColumn()
-    {
-        return $this->_sortColumn;
-    }
-
     /**
      * null the stored data so these settings can be reused with new data
      */
@@ -309,7 +294,7 @@ class LayerAccessArgs implements LayerAccessInterface
      */
     public function getValueRegistry()
     {
-        // TODO: Implement getValueRegistry() method.
+        return $this->_registry;
     }
 
     /**
@@ -352,11 +337,6 @@ class LayerAccessArgs implements LayerAccessInterface
         return $this->data;
     }
 
-    public function registry()
-    {
-        return $this->_registry;
-    }
-
 // <editor-fold defaultstate="collapsed" desc="LAYER ARGUMENT">
 
     public function setLayer($param)
@@ -372,7 +352,7 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function accessNodeObject($name)
     {
-        return $this->registry()->get($name);
+        return $this->getValueRegistry()->get($name);
     }
 
     public function setAccessNodeObject($objectName, $nodeName)
@@ -441,7 +421,7 @@ class LayerAccessArgs implements LayerAccessInterface
 
     private function buildAccessObject($name)
     {
-        $result = $this->registry()->load(
+        $result = $this->getValueRegistry()->load(
             $name,
             [
                 'entity' => $this->valueOf('layer'),
@@ -467,7 +447,7 @@ class LayerAccessArgs implements LayerAccessInterface
 
     public function hasAccessNodeObject($name)
     {
-        return !is_null($this->registry()->get($name));
+        return !is_null($this->getValueRegistry()->get($name));
     }
 
     /**
