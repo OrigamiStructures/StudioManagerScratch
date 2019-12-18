@@ -2,17 +2,16 @@
 
 namespace App\Model\Table;
 
-use App\Model\Table\AppTable;
+use App\Model\Table\MembersTable;
 
 /**
  * CakePHP IdentitiesTable
  * @author dondrake
  */
-class IdentitiesTable extends AppTable {
-	
+class IdentitiesTable extends MembersTable {
+
 	public function initialize(array $config) {
-		$this->setTable('members');
 		parent::initialize($config);
 	}
-	
+
 }
