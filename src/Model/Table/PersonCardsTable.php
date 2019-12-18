@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Manifest;
+use App\Model\Entity\PersonCard;
 use App\Model\Table\RolodexCardsTable;
 
 use Cake\ORM\Table;
@@ -111,8 +112,8 @@ class PersonCardsTable extends RolodexCardsTable {
 
     /**
      * @param $id
-     * @param $stack StackEntity
-     * @return StackEntity
+     * @param $stack PersonCard
+     * @return PersonCard
      */
     protected function marshalManifests($id, $stack)
     {
