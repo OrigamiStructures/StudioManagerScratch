@@ -11,11 +11,7 @@ use App\View\AppView;
  * @var Layer $localSupervision
  * @var PersonCard $personCard
  */
-?>
 
-<?= $this->Html->link('Index page', ['action' => 'index']) ?>
-
-<?php
 /**
  * Contact and Address
  */
@@ -60,7 +56,11 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 
 ?>
 
+
+<?= $this->Html->link('Index page', ['action' => 'index']) ?>
+
 <h1><?= $personCard->rootElement()->name() ?></h1>
+
 <p><em><strong>Primary contact and address</strong></em>
     <?php
     foreach($primaryContact as $id => $contact){
@@ -89,9 +89,9 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
             $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';
             foreach ($delegatedManagement as $manifest) {
                 /* @var \App\Model\Entity\Manifest $manifest */
-                $supervisor = $names[$manifest->getSupervisorMember()];
-                $manager = $names[$manifest->getManagerMember()];
-                $artist = $names[$manifest->artistId()];
+                $supervisor = $manifest->getName('supervisor');
+                $manager = $manifest->getName('manager');
+                $artist = $manifest->getName('artist');
                 printf($delegatedMessage, $supervisor, $artist, $manager, $manager);
             }
             ?>
@@ -104,9 +104,9 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
         $receivedMessage = '<p>%s assigned %s management of the artist %s. [Work on this artist now]. [Contact %s].</p>';
         foreach ($receivedManagement as $manifest) {
             /* @var \App\Model\Entity\Manifest $manifest */
-            $supervisor = $names[$manifest->getSupervisorMember()];
-            $manager = $names[$manifest->getManagerMember()];
-            $artist = $names[$manifest->artistId()];
+            $supervisor = $manifest->getName('supervisor');
+            $manager = $manifest->getName('manager');
+            $artist = $manifest->getName('artist');
             printf($receivedMessage, $supervisor, $manager, $artist, $supervisor);
         }
         ?>
