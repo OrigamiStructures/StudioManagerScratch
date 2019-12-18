@@ -45,9 +45,24 @@ class ManifestsTable extends AppTable{
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
-        $this->hasMany('Users', [
-            'foreignKey' => 'artist_id'
+        $this->belongsTo('Supervisor', [
+            'className' => 'Members',
+            'foreignKey' => 'supervisor_member',
+            'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Manager', [
+            'className' => 'Members',
+            'foreignKey' => 'manager_member',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Artist', [
+            'className' => 'Members',
+            'foreignKey' => 'member_id',
+            'joinType' => 'INNER'
+        ]);
+//        $this->hasMany('Users', [
+//            'foreignKey' => 'artist_id'
+//        ]);
     }
 
     protected function _initializeBehaviors() {
