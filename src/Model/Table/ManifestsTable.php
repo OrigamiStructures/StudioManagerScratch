@@ -216,4 +216,26 @@ class ManifestsTable extends AppTable{
         $nameList = (layer($members, 'Manifests'))->toKeyValueList('id', 'name');
         return $nameList;
     }
+
+    /**
+     * Add names to manifests so that the layer can be more useful in the stacks
+     *
+     * @param $array The manifests ready for storage as a layer
+     */
+    public function configureLinkLayer($query) {
+        $query = $query->contain(['Supervisor', 'Manager', 'Artist']);
+
+        $foundSet = collection($query->toArray());
+        $manifests = $foundSet->map(function ($manifest, $index) {
+            $manifest->names = [
+                $manifest->supervisor->id => $manifest->supervisor->name(),
+                $manifest->manager->id => $manifest->manager->name(),
+                $manifest->artist->id => $manifest->artist->name()
+            ];
+            unset($manifest->supervisor, $manifest->manager, $manifest->artist);
+            return $manifest;
+        });
+
+        return $manifests->toArray();
+    }
 }

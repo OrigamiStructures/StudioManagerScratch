@@ -125,7 +125,7 @@ class PersonCardsTable extends RolodexCardsTable {
          * If the current user is a superuser, get everything. Otherwise
          * the userId must match either supervisorId or ManagerId
          */
-        $manifest = $this->Manifests
+        $query = $this->Manifests
             ->find('all')
             ->where([
                 'OR' => [
@@ -134,7 +134,9 @@ class PersonCardsTable extends RolodexCardsTable {
                     'member_id' => $person_id
                 ]
             ]);
-        $stack->set(['manifests' => $manifest->toArray()]);
+        $manifests = $this->Manifests->configureLinkLayer($query);
+
+        $stack->set(['manifests' => $manifests]);
         return $stack;
     }
 
