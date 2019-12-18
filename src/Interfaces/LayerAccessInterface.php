@@ -7,6 +7,14 @@ namespace App\Interfaces;
 use App\Model\Lib\ValueSource;
 use App\Model\Lib\ValueSourceRegistry;
 
+/**
+ * LayerAccessInterface
+ *
+ * This interface establishes the way LA objects that are meant to act as data end-points
+ * must return their contents.
+ *
+ * @package App\Interfaces
+ */
 interface LayerAccessInterface
 {
 

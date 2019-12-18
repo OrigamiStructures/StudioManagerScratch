@@ -193,21 +193,45 @@ class LayerAccessArgs implements LayerAccessInterface
         return $this->_sortColumn;
     }
 
+    /**
+     * null the stored data so these settings can be reused with new data
+     */
     public function resetData()
     {
         $this->data = null;
     }
 
+    /**
+     * Have the minimum required filter values been specified?
+     *
+     * If so, a filter process be run on the data
+     *
+     * @return bool
+     */
     public function hasFilter()
     {
         return $this->source_node['filter'] && $this->valueOf('filter_value_isset');
     }
 
+    /**
+     * Have the minimum required sort values be specified?
+     *
+     * If so, a sort process be run on the data
+     *
+     * @return bool
+     */
     public function hasSort()
     {
         return $this->_sortDir !== FALSE && $this->_sortType !== FALSE && $this->_sortColumn !== FALSE;
     }
 
+    /**
+     * Have the minimum required pagination values been specified?
+     *
+     * If so, a pagination process be run on the data
+     *
+     * @return bool
+     */
     public function hasPagination()
     {
         return $this->_page !== FALSE && $this->_limit !== FALSE;
