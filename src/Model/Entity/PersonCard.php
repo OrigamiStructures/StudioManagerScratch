@@ -185,6 +185,28 @@ class PersonCard extends RolodexCard{
     }
 
     /**
+     * @todo proposed method, not tested
+     *
+     * @param $supervisorId
+     * @param bool $distinct
+     * @return array
+     */
+    public function managerDelegateNames($supervisorId, $distinct = TRUE)
+    {
+        $manifests = collection($this->delegatedManagement($supervisorId));
+        $names = $manifests->reduce(function($accum, $manifest) {
+            /* @var Manifest $manifest */
+            $accum[] = $manifest->getName('manager');
+            return $accum;
+        }, []);
+
+        if ($distinct) {
+            $names = array_unique($names);
+        }
+        return $names;
+    }
+
+    /**
      * @return bool
      */
     public function isSupervisor()
