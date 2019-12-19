@@ -12,6 +12,11 @@ use App\View\AppView;
  * @var PersonCard $personCard
  */
 
+if ($personCard->hasManifests()) {
+    $receivedManagement = $personCard->receivedManagement($contextUser->getId('supervisor'));
+    $delegatedManagement = $personCard->delegatedManagement($contextUser->getId('supervisor'));
+}
+
 /**
  * Contact and Address
  */
