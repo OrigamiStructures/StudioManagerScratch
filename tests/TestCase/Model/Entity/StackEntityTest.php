@@ -171,6 +171,7 @@ class StackEntityTest extends TestCase
     }
 
     /**
+     * @expectedException \BadMethodCallException
      */
     public function testIDsOnBadLayer()
     {

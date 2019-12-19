@@ -115,6 +115,7 @@ class StackSetTest extends TestCase {
 	}
 
     /**
+     * @expectedException \BadMethodCallException
      */
     public function testIDsOnBadLayer()
     {

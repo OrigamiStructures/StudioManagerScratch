@@ -96,9 +96,9 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
      * @param $name string
      * @return LayerAccessProcessor
      */
-    public function getLayer($name = null)
+    public function getLayer($name = null, $className = null)
     {
-        $Iterator = new LayerAccessProcessor($this->layerName());
+        $Iterator = new LayerAccessProcessor($this->layerName(), $this->entityClass());
         return  $Iterator->insert($this->_data);
     }
 
@@ -229,7 +229,7 @@ class Layer implements LayerStructureInterface, LayerAccessInterface, \Countable
 	 * The entity class name of the stored objects
 	 *
 	 * @param string $style 'bare' or 'namespaced'
-	 * @return string
+	 * @return string name of entity class stored in this layer
 	 */
     public function entityClass($style = 'bare') {
 		if ($style === 'bare') {

@@ -1,27 +1,21 @@
 <?php
 namespace App\Controller;
 
-use App\Model\Entity\Manifest;
+use App\Exception\BadMemberRecordType;
 use App\Model\Entity\Member;
-use App\Model\Table\IdentitiesTable;
-use App\Model\Table\ManifestsTable;
-use App\Model\Lib\Layer;
 use App\Model\Entity\RolodexCard;
-use App\Model\Table\RolodexCardsTable;
-use Cake\Collection\Collection;
+use App\Model\Entity\Manifest;
+use App\Model\Lib\Layer;
+use App\Model\Table\ManifestsTable;
 use Cake\ORM\TableRegistry;
-use App\Model\Lib\StackSet;
 use App\Model\Entity\PersonCard;
-use App\Model\Table\PersonCardsTable;
+use App\Model\Lib\StackSet;
 
 /**
  * CakePHP RolodexCardsController
  * @author dondrake
  * @property PersonCard $PersonCard
  * @property RolodexCard $RolodexCard
- * @property RolodexCardsTable $RolodexCards
- * @property PersonCardsTable $PersonCards
- * @property IdentitiesTable $Identities
  */
 class RolodexCardsController extends AppController {
 
@@ -30,7 +24,7 @@ class RolodexCardsController extends AppController {
 	public function initialize() {
 		parent::initialize();
 		$this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
-		$this->RolodexCards = TableRegistry::getTableLocator()->get('RolodexCards');
+		$this->RolodexCard = TableRegistry::getTableLocator()->get('RolodexCards');
 	}
 
 	public function index() {
@@ -49,6 +43,24 @@ class RolodexCardsController extends AppController {
 		$this->set('institutionCards', $institutionCards);
 	}
 
+    /**
+     * HACK STUB METHOD
+     * @param $type
+     * @param $id
+     * @return bool
+     */
+    public function permitted($type, $id)
+    {
+        $MembersTable = TableRegistry::getTableLocator()->get('Members');
+        if (!$MembersTable->exists(['id' => $id])) {
+            $this->Flash->error('The requested record does not exist.');
+            return FALSE;
+        } elseif ('permission check' == FALSE) {
+            $this->Flash->error('You don\'t have access to this record.');
+            return FALSE;
+        }
+        return true;
+	}
     public function view($id)
     {
         /* @var StackSet $personCards */
@@ -58,16 +70,18 @@ class RolodexCardsController extends AppController {
 
 
         // Is this user permitted to see this RolodexCard
-        if (!$this->permited('member', $id)) {
-            $this->Flash->error('You don\'t have access to this record.');
-            $this->redirect($this->referer());
+        if (!$this->permitted('member', $id)) {
+            return $this->redirect(['action' => 'index']);
         }
 
         // What kind of RolodexCard sub-type should we get?
         // get Member member_type and select retrieval method for that type
 
         $MembersTable = TableRegistry::getTableLocator()->get('Members');
-        $member = $MembersTable->get($id);
+        $member = $MembersTable->find()
+            ->where(['id' => $id])
+            ->contain('ArtistManifests')
+            ->toArray()[0];
 
         /* @var Member $member */
 
@@ -82,12 +96,10 @@ class RolodexCardsController extends AppController {
 
             case 'Person':
                 // A person might be an artist. That has a special Stack which includes artworks
-                $ManifestsTable = TableRegistry::getTableLocator()->get('Manifests');
-                $manifest = $ManifestsTable->find('first')
-                    ->where(['member_id' => $id]);
-
-                if (count($manifest) == 1) {
-                    $CardTable = TableRegistry::getTableLocator()->get('Manifests');
+                // We'd be able to eliminate this query if we committed to managing the
+                //   is_artitst field in the Member record.
+                if (count($member->artist_manifests) >0) {
+                    $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
                 } else {
                     $CardTable = $this->PersonCards;
                 }
@@ -102,7 +114,7 @@ class RolodexCardsController extends AppController {
         $rolodexCard = $CardTable->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
         $rolodexCard = $rolodexCard->shift();
 
-        $this->set('rolodexCard', $rolodexCard);
+        $this->set('personCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
 	}
 
@@ -115,11 +127,8 @@ class RolodexCardsController extends AppController {
         $this->render('index');
 	}
 
-	public function add()
+    public function add()
     {
-        /**
-         * @var StackSet $potentialArtistsStackSet
-         */
         if ($this->request->is('post')) {
             $card = $this->RolodexCard->patchEntity($card, $this->request->getData());
             if ($this->RolodexCard->save($card)) {
@@ -128,29 +137,10 @@ class RolodexCardsController extends AppController {
             }
             $this->Flash->error(__('The person could not be saved. Please, try again.'));
         }
+        $members = $this->RolodexCard->find('list', ['limit' => 200]);
+//        $memberUsers = $this->RolodexCard->MemberUsers->find('list', ['limit' => 200]);
+//        $this->set(compact('card', 'members', 'memberUsers'));
+        $this->set(compact('card', 'members'));
 
-        $potentialArtistsQuery = $this->RolodexCards->Identities->find('list',
-            ['valueField' => 'id'])
-            ->where([
-                'Identities.user_id' => $this->contextUser()->getId('supervisor'),
-                'Identities.member_type' => 'Person'
-            ]);
-
-        $potentialArtistsStackSet = $this->PersonCards
-            ->find('stacksFor',[
-                'seed' => 'identity',
-                'ids' => $potentialArtistsQuery->toArray()
-            ]);
-
-        $peopleCollection = new Collection($potentialArtistsStackSet->getData());
-
-        $nonArtists = $peopleCollection->reduce(function($accum, $PersonCard){
-            if (!$PersonCard->isArtist()){
-                $accum[$PersonCard->rootId()] = $PersonCard->rootElement()->name();
-            }
-            return $accum;
-        },[]);
-
-        $this->set(compact('card', 'nonArtists'));
     }
 }

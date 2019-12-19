@@ -13,10 +13,11 @@ interface LayerStructureInterface
     /**
      * Gather the available data at this level and package the iterator
      *
-     * @param $name string
+     * @param $name The property name this layer is stored on in a StackEntity
+     * @param $className $the Entity class stored in the Layer
      * @return LayerAccessProcessor
      */
-    public function getLayer($name);
+    public function getLayer($name, $className);
 
     /**
      * Get an new LayerAccessArgs instance

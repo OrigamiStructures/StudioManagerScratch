@@ -37,7 +37,13 @@ foreach($artists->getData() as $artist) :
 
 	$manifest = $artist->getManifests()->element(0);
 	$dataOwner = $artist->data_owner->element(0);
-	$managmentDelegation = $artist->delegatedManagement($contextUser->getId('supervisor'));
+    $managmentDelegation =
+        layer($artist->delegatedManagement($contextUser->getId('supervisor')), 'manifests')
+            ->getLayer()
+            ->find()
+            ->specifyFilter('member_id', $artist->rootID())
+            ->toArray()
+    ;
 	$dispositionIDs = $artist->IDs('dispositions');
 ?>
 
@@ -45,11 +51,12 @@ foreach($artists->getData() as $artist) :
 
 <?php if ($manifest->selfAssigned()) : ?>
 
-<?= $this->Html->para('', "You are the creator/owner of this aritst's "
-			. "data and have identified " . count($managmentDelegation)
-			. " other managers for the data. View those details "
-            . $this->Html->link('here', ['controller' => 'artists', 'action' => 'view', $artist->rootID()])
-    ); ?>
+    <?= $this->Html->para('', "You are the creator/owner of this aritst's "
+        . "data and have identified " . count($managmentDelegation)
+        . " other managers for the data. View those details "
+        . $this->Html->link('here', ['controller' => 'artists', 'action' => 'view', $artist->rootID()])
+        . \Cake\Utility\Text::toList($artist->managerDelegateNames($contextUser->getId('supervisor'))))
+    ?>
 
 <?php else: ?>
 

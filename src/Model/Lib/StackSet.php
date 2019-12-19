@@ -29,8 +29,27 @@ class StackSet implements LayerStructureInterface, \Countable {
 
 	protected $_data = [];
 
+    /**
+     * A fully constructed but empty StackEntity concrete type
+     *
+     * This allows the stackSet to do introspection on entity
+     * even if it contains no found records. This will allow
+     * the class to act normally in all code whether it has
+     * content or not.
+     *
+     * In particular, this was added so getLayer() in 'empty'
+     * situations could function
+     *
+     * @var StackEntity
+     */
+	protected $template;
+
 	protected $_stackName;
 
+	public function __construct($stackEntityTemplate)
+    {
+        $this->template = $stackEntityTemplate;
+    }
     //<editor-fold desc="LayerStructureInterface Realization">
     /**
      * Gather the available data at this level and package the iterator
@@ -38,10 +57,17 @@ class StackSet implements LayerStructureInterface, \Countable {
      * @param $name string
      * @return LayerAccessProcessor
      */
-    public function getLayer($name)
+    public function getLayer($name, $entityClass = null)
     {
+        if (is_null($this->template->$name)) {
+            $msg = "The layer '$name' is not the name of a layer in the "
+                . get_class($this->template) . " instances stored in " . get_class($this);
+            throw new \BadMethodCallException($msg);
+        }
+
+        $entityClass = $entityClass ?? $this->template->$name->entityClass();
         $stacks = $this->getData();
-        $Product = new LayerAccessProcessor($name);
+        $Product = new LayerAccessProcessor($name, $entityClass);
         foreach ($stacks as $stack) {
             if (is_a($stack->$name, '\App\Model\Lib\Layer')) {
                 $result = $stack->$name;
@@ -88,10 +114,8 @@ class StackSet implements LayerStructureInterface, \Countable {
         if(is_null($layer)){
             return array_keys($this->getData());
         }
-        $ids = $this->getLayer($layer)
+        return $this->getLayer($layer)
             ->toDistinctList('id');
-
-        return $ids;
     }
 
     //</editor-fold>

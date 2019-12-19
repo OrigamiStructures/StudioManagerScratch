@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Lib\StackSet $artists
+ * @var StackSet $artists
  * @var \App\Model\Entity\ArtistCard $artist
  * @var \App\Model\Entity\Manifest $manifest
  * @var \App\Model\Entity\DataOwner $dataOwner
@@ -9,7 +9,7 @@
 ?>
 
 <p>&nbsp;&nbsp;What we should show is the one artistCard for the ID'd member, flanked by the data describing this
-    users settings for their relationship to this artist.</p>
+    users settings for thier relationship to this artist.</p>
 
 <ul>
     <li>Management agreements sent issued but this user to other users</li>
@@ -20,7 +20,7 @@
 </ul>
 
 <p>&nbsp;&nbsp;This is a potenial gateway page to various other pools of Artist data. It isn't clear to me what we
-would need or want. But it's IMPORTANT AT THIS POINT not to get lost in implementation, especially
+would need or want. But it's IMPORTANT AT THIS POINT not to get lost in implementation, espeicially
     of a user interface. The goal is to discover what kind of object we need and what interface they should have.</p>
 
 <p>&nbsp;&nbsp;To this end, having the sequence of pages linked together should help identify what objects we need,
@@ -35,7 +35,13 @@ final solution.</p>
 foreach($artists->getData() as $artist) :
     $manifest = $artist->getManifests()->element(0);
     $dataOwner = $artist->data_owner->element(0);
-    $managmentDelegation = $artist->delegatedManagement($contextUser->getId('supervisor'));
+    $managmentDelegation =
+        layer($artist->delegatedManagement($contextUser->getId('supervisor')), 'manifests')
+        ->getLayer()
+        ->find()
+        ->specifyFilter('member_id', $artist->rootID())
+        ->toArray()
+    ;
     $dispositionIDs = $artist->IDs('dispositions');
     ?>
 
@@ -45,7 +51,9 @@ foreach($artists->getData() as $artist) :
 
     <?= $this->Html->para('', "You are the creator/owner of this aritst's "
         . "data and have identified " . count($managmentDelegation)
-        . " other managers for the data. View those details ") ?>
+        . " other managers for the data. View those details "
+        . \Cake\Utility\Text::toList($artist->managerDelegateNames($contextUser->getId('supervisor'))))
+    ?>
 
 <?php else: ?>
 

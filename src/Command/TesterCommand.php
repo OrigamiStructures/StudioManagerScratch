@@ -106,9 +106,9 @@ DESC;
          */
         if (is_null($this->requestMethod) && $this->inspect) {
             $this->doInspection();
-            $this->renderList($this->dirs);
-            $this->renderList($this->files);
-            $this->renderList($this->tests);
+            $this->renderList($this->dirs, "\n bin/cake tester ");
+            $this->renderList($this->files, "\n bin/cake tester ");
+            $this->renderList($this->tests, "\n bin/cake tester ");
             $this->io->out("\n");
         /*
          * If a method is mentioned, we run it no matter what user wants on inspection
@@ -247,10 +247,10 @@ DESC;
      *      then bin/case tester, list should be getCommand()
      * @param $list
      */
-    public function renderList($list)
+    public function renderList($list, $leader)
     {
         $this->io->info("\n##" . array_shift($list) . '##');
-        $this->io->out(implode("\n bin/cake tester ", $list));
+        $this->io->out(implode($leader, $list));
     }
 
     public function renderTest($result, $command)
@@ -276,8 +276,8 @@ DESC;
             $this->renderTest($result, $command);
             $this->io->verbose(shell_exec($command));
         }
-        $this->renderList($this->errors);
-        $this->renderList($this->warnings);
+        $this->renderList($this->errors, "\n");
+        $this->renderList($this->warnings, "\n");
         $this->io->out("\n");
     }
 

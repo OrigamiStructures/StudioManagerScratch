@@ -18,6 +18,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 {
 
     protected $layerName;
+    protected $entityClass;
     /**
      * @var LayerAccessArgs
      */
@@ -51,10 +52,11 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     protected $ResultIterator = FALSE;
 
 
-    public function __construct($layerName)
+    public function __construct($layerName, $entityClass)
     {
         $this->AppendIterator = new LayerAppendIterator();
         $this->layerName = $layerName;
+        $this->entityClass = $entityClass;
     }
 
     /**
@@ -170,7 +172,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function toLayer()
     {
         $result = $this->toArray();
-        return layer($result);
+        return layer($result, $this->entityClass);
     }
 
     /**
@@ -260,7 +262,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function getValueRegistry()
     {
         if(!is_null($this->getArgObj())) {
-            $result = $this->getArgObj()->registry();
+            $result = $this->getArgObj()->getValueRegistry();
         } else {
             $result = null;
         }
@@ -328,11 +330,10 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $comparison = $argObj->selectComparison($argObj->valueOf('filterOperator'));
 
         $set = collection($this->ResultIterator);
-        $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
+        return $set->filter(function ($entity, $key) use ($argObj, $comparison) {
             $actual = $argObj->accessNodeObject('filter')->value($entity);
             return $comparison($actual, $argObj->valueOf('filterValue'));
         })->toArray();
-        return $results;
     }
 
     /**
@@ -342,9 +343,9 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
      */
     protected function performSort()
     {
-        $column = $this->AccessArgs->getSortColumn('sort');
-        $dir = $this->AccessArgs->getSortDirection();
-        $type = $this->AccessArgs->getSortType();
+        $column = $this->AccessArgs->valueOf('sortColumn');
+        $dir = $this->AccessArgs->valueOf('sortDir');
+        $type = $this->AccessArgs->valueOf('sortType');
         $unsorted = new Collection($this->ResultIterator);
         $sorted = $unsorted->sortBy($column, $dir, $type)->toArray();
         //indexes are out of order and could be confusing
@@ -421,7 +422,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function __debugInfo()
     {
-        $result = [
+        return [
             '[AppendIterator]' => isset($this->AppendIterator)
                 ? 'Contains ' . $this->rawCount() . ' items.'
                 : 'not set',
@@ -433,6 +434,5 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
                 ? 'FALSE'
                 : 'Contains ' . $this->resultCount() . ' items.'
         ];
-        return $result;
     }
 }

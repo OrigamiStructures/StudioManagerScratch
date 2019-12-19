@@ -48,7 +48,7 @@ $entity = new \App\Model\Entity\Member(['id' => 5, 'first_name' => 'five']);
  *
  * @param $entityType string lower case singular version of the Entity class
  */
-$lap = new \App\Model\Lib\LayerAccessProcessor('member');
+$lap = new \App\Model\Lib\LayerAccessProcessor('member', 'Member');
 $lap->insert($layer)        //you can chain the insert calls
     ->insert($array)
     ->insert($entity);
