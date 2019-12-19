@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Model\Entity\Manifest;
+use App\Model\Entity\Member;
 use App\Model\Table\IdentitiesTable;
 use App\Model\Table\ManifestsTable;
 use App\Model\Lib\Layer;
@@ -52,30 +53,56 @@ class RolodexCardsController extends AppController {
     {
         /* @var StackSet $personCards */
         /* @var PersonCard $personCard */
+        /* @var ManifestsTable $ManifestsTable */
+        /* @var StackTable $CardTable */
 
-        $personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
-        $personCard = $personCards->shift();
 
-        if ($personCard->isArtist()) {
-            $ArtworksTable = TableRegistry::getTableLocator()->get('Artworks');
-            $artworks = $ArtworksTable->find('all')
-                ->where(['member_id' => $id])
-                ->toArray();
-            $personCard->artworks = new Layer($artworks, 'artwork');
+        // Is this user permitted to see this RolodexCard
+        if (!$this->permited('member', $id)) {
+            $this->Flash->error('You don\'t have access to this record.');
+            $this->redirect($this->referer());
         }
 
-        if ($personCard->isManager()) {
-            $actingUserId = $this->contextUser()->getId('supervisor');
-            $receivedManagement = $personCard->receivedManagement($actingUserId);
-            $delegatedManagement = $personCard->delegatedManagement($actingUserId);
-            $this->set(compact('receivedManagement', 'delegatedManagement'));
+        // What kind of RolodexCard sub-type should we get?
+        // get Member member_type and select retrieval method for that type
+
+        $MembersTable = TableRegistry::getTableLocator()->get('Members');
+        $member = $MembersTable->get($id);
+
+        /* @var Member $member */
+
+        switch ($member->type()) {
+            case 'Category':
+                $CardTable = TableRegistry::getTableLocator()->get('CategoryCard');
+                break;
+
+            case 'Institution':
+                $CardTable = TableRegistry::getTableLocator()->get('InstitutionCard');
+                break;
+
+            case 'Person':
+                // A person might be an artist. That has a special Stack which includes artworks
+                $ManifestsTable = TableRegistry::getTableLocator()->get('Manifests');
+                $manifest = $ManifestsTable->find('first')
+                    ->where(['member_id' => $id]);
+
+                if (count($manifest) == 1) {
+                    $CardTable = TableRegistry::getTableLocator()->get('Manifests');
+                } else {
+                    $CardTable = $this->PersonCards;
+                }
+                break;
+
+            default:
+                $msg = "The requested record was of unknown type: {$member->type()}";
+                throw new BadMemberRecordType($msg);
+                break;
         }
 
-        if ($personCard->isSupervisor()) {
+        $rolodexCard = $CardTable->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
+        $rolodexCard = $rolodexCard->shift();
 
-        }
-
-        $this->set('personCard', $personCard);
+        $this->set('rolodexCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
 	}
 
