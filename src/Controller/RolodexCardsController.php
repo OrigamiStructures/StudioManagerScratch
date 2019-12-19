@@ -96,9 +96,7 @@ class RolodexCardsController extends AppController {
 
             case 'Person':
                 // A person might be an artist. That has a special Stack which includes artworks
-                // We'd be able to eliminate this query if we committed to managing the
-                //   is_artitst field in the Member record.
-                if (count($member->artist_manifests) >0) {
+                if (count($member->artist_manifests) > 0) {
                     $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
                 } else {
                     $CardTable = $this->PersonCards;
