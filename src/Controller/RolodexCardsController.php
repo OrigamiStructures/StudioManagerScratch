@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Exception\BadMemberRecordType;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
@@ -42,8 +43,22 @@ class RolodexCardsController extends AppController {
 		$this->set('institutionCards', $institutionCards);
 	}
 
+    /**
+     * HACK STUB METHOD
+     * @param $type
+     * @param $id
+     * @return bool
+     */
     public function permitted($type, $id)
     {
+        $MembersTable = TableRegistry::getTableLocator()->get('Members');
+        if (!$MembersTable->exists(['id' => $id])) {
+            $this->Flash->error('The requested record does not exist.');
+            return FALSE;
+        } elseif ('permission check' == FALSE) {
+            $this->Flash->error('You don\'t have access to this record.');
+            return FALSE;
+        }
         return true;
 	}
     public function view($id)
@@ -56,8 +71,7 @@ class RolodexCardsController extends AppController {
 
         // Is this user permitted to see this RolodexCard
         if (!$this->permitted('member', $id)) {
-            $this->Flash->error('You don\'t have access to this record.');
-            $this->redirect($this->referer());
+            return $this->redirect(['action' => 'index']);
         }
 
         // What kind of RolodexCard sub-type should we get?
