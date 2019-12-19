@@ -68,9 +68,6 @@ class MembersTable extends AppTable
         $this->hasMany('Dispositions', [
             'foreignKey' => 'member_id'
         ]);
-//        $this->hasMany('Locations', [
-//            'foreignKey' => 'member_id'
-//        ]);
         $this->hasMany('Addresses', [
             'foreignKey' => 'member_id',
             'dependent' => TRUE
@@ -82,24 +79,26 @@ class MembersTable extends AppTable
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
         ]);
-		$this->hasOne('Manifests', [
-			'foreignKey' => 'member_id',
-			'dependent' => TRUE,
-		]);
+        $this->hasMany('ArtistManifests', [
+            'className' => 'Manifests',
+            'foreignKey' => 'member_id',
+            'dependent' => TRUE,
+        ]);
+        $this->hasMany('ManagerManifests', [
+            'className' => 'Manifests',
+            'foreignKey' => 'manager_member',
+            'dependent' => TRUE,
+        ]);
+        $this->hasMany('SupervisorManifests', [
+            'className' => 'Manifests',
+            'foreignKey' => 'supervisor_member',
+            'dependent' => TRUE,
+        ]);
         $this->belongsToMany('Memberships',
 			['joinTable' => 'groups_members',
             'foreignKey' => 'member_id',
-            'targetForeignKey' => 'group_id',]);
-//        $this->belongsToMany('Groups', [
-//            'className' => 'Groups',
-//            'joinTable' => 'groups_members'
-//        ]);
-//        $this->hasOne('ProxyGroups', [
-//            'className' => 'ProxyGroups',
-//            'foreignKey' => 'member_id',
-//            'propertyName' => 'proxy_group',
-//            'dependent' => TRUE
-//        ]);
+            'targetForeignKey' => 'group_id',
+        ]);
     }
 
 // </editor-fold>
