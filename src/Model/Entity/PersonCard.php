@@ -136,7 +136,7 @@ class PersonCard extends RolodexCard{
      *
      * The Manifest will belong to a this actingUser/supervisor
      * The named artist will belong to the actingUser/supervisor
-     * This card will belong to a foreign user
+     * This member card will belong to a foreign user
      *
      * Sets a property which will be used in future calls
      *
