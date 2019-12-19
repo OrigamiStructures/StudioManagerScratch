@@ -64,7 +64,10 @@ class RolodexCardsController extends AppController {
         // get Member member_type and select retrieval method for that type
 
         $MembersTable = TableRegistry::getTableLocator()->get('Members');
-        $member = $MembersTable->get($id);
+        $member = $MembersTable->find()
+            ->where(['id' => $id])
+            ->contain('ArtistManifests')
+            ->toArray()[0];
 
         /* @var Member $member */
 
@@ -81,11 +84,7 @@ class RolodexCardsController extends AppController {
                 // A person might be an artist. That has a special Stack which includes artworks
                 // We'd be able to eliminate this query if we committed to managing the
                 //   is_artitst field in the Member record.
-                $ManifestsTable = TableRegistry::getTableLocator()->get('Manifests');
-                $manifest = $ManifestsTable->find('all')
-                    ->where(['member_id' => $id]);
-
-                if ($manifest->count() > 0) {
+                if (count($member->artist_manifests) >0) {
                     $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
                 } else {
                     $CardTable = $this->PersonCards;
@@ -98,7 +97,6 @@ class RolodexCardsController extends AppController {
                 break;
         }
 
-        osd(get_class($CardTable));
         $rolodexCard = $CardTable->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
         $rolodexCard = $rolodexCard->shift();
 
