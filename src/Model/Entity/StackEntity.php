@@ -13,6 +13,7 @@ use App\Interfaces\xxxLayerAccessInterface;
 use App\Model\Lib\LayerAccessArgs;
 use App\Exception\BadClassConfigurationException;
 use Cake\Utility\Text;
+use http\Exception\BadMethodCallException;
 use http\Exception\InvalidArgumentException;
 
 /**
@@ -84,10 +85,18 @@ class StackEntity extends Entity implements LayerStructureInterface
      *
      * @param $name string
      * @return LayerAccessProcessor
+     * @throws \BadMethodCallException
      */
-    public function getLayer($name)
+    public function getLayer($name, $className = null)
     {
-        $Iterator = new LayerAccessProcessor($name);
+        if (is_null($this->$name)) {
+            $msg = "The layer '$name' is not the name of a layer in " . get_class($this);
+            throw new \BadMethodCallException($msg);
+        }
+
+        $className = $className ?? $this->$name->entityClass();
+
+        $Iterator = new LayerAccessProcessor($name, $className);
         if (is_a($this->$name, '\App\Model\Lib\Layer')) {
             $result = $this->$name;
         } else {

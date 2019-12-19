@@ -18,6 +18,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 {
 
     protected $layerName;
+    protected $entityClass;
     /**
      * @var LayerAccessArgs
      */
@@ -51,10 +52,11 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     protected $ResultIterator = FALSE;
 
 
-    public function __construct($layerName)
+    public function __construct($layerName, $entityClass)
     {
         $this->AppendIterator = new LayerAppendIterator();
         $this->layerName = $layerName;
+        $this->entityClass = $entityClass;
     }
 
     /**
@@ -170,7 +172,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
     public function toLayer()
     {
         $result = $this->toArray();
-        return layer($result);
+        return layer($result, $this->entityClass);
     }
 
     /**

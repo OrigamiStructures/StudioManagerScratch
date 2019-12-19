@@ -221,7 +221,7 @@ class StacksTable extends AppTable
         $this->validateArguments($options);
         extract($options); //$seed, $ids, $paginator
         if (empty($ids)) {
-            return new StackSet();
+            return new StackSet($this->template());
         }
 
 		$IDs = $this->distillation($seed, $ids, $paginator);
@@ -333,7 +333,9 @@ class StacksTable extends AppTable
 	 * @return StackSet
 	 */
     public function stacksFromRoot($ids) {
-		$this->stacks = $this->stackSet();
+//        $template = $this->template();
+//        osd($template);
+		$this->stacks = $this->stackSet($this->template());
         foreach ($ids as $id) {
             if($this->stacks->element($id, LAYERACC_ID)){
                 continue;
@@ -462,6 +464,33 @@ class StacksTable extends AppTable
 		return $stack;
 	}
 
+    /**
+     * Make an empty StackEntity to provide introspection for StackSet if no records found
+     *
+     * If the found set for this StackEntity is zero, the StackSet will be
+     * returned but will be completely ignorant of what it was meant
+     * to be and what it was meant to contain.
+     *
+     * This method constructs an empty StackEntity with empty properties.
+     * This structure contains information baked in from the schema that
+     * will serve as a means of introspection so the StackSet will still
+     * be able to operate in no-data situations.
+     *
+     * @return StackEntity
+     */
+    public function template()
+    {
+        $stack = $this->newEntity([])
+            ->setRoot($this->rootName())
+            ->setRootDisplaySource($this->getDisplayField());
+        $stack->schema = Hash::combine($this->stackSchema, '{n}.name', '');
+
+        foreach($this->layers() as $layer) {
+            $stack->set([$layer => []]);
+        }
+        return $stack;
+
+    }
 	/**
 	 * Get a new StackSet class instance based on naming conventions
 	 *
@@ -472,13 +501,13 @@ class StacksTable extends AppTable
 	 *
 	 * @return StackSet
 	 */
-	protected function stackSet() {
+	protected function stackSet($template) {
 //		$alias = $this->getAlias();
 //		$className = "\App\Model\Lib\\{$alias}Set";
 //		if (class_exists($className)) {
 //			$result = new $className();
 //		} else {
-			$result = new StackSet;
+			$result = new StackSet($template);
 //		}
 		return $result;
 	}

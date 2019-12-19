@@ -24,7 +24,7 @@ class LayerAccessProcessorTest extends TestCase
      */
     public function setUp()
     {
-        $this->lap = new LayerAccessProcessor('member');
+        $this->lap = new LayerAccessProcessor('member', 'Member');
     }
 
     /**
@@ -137,6 +137,15 @@ class LayerAccessProcessorTest extends TestCase
         $this->assertCount(4, $actual,
             'toLayer() directly on the LayerAccessProcessor did not produce '
             . 'a result array of the proper size');
+    }
+
+    public function testToLayerEmptyResult(){
+        $anArray = [];
+        $LAP = new LayerAccessProcessor('someName', 'Member');
+        $LAP->insert($anArray);
+        $actual = $LAP->toLayer();
+        $this->assertInstanceOf('App\Model\Lib\Layer', $actual,
+            'toLayer() with empty result did not produce a Layer');
     }
 
     /**
