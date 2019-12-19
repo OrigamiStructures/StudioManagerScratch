@@ -114,10 +114,8 @@ class StackSet implements LayerStructureInterface, \Countable {
         if(is_null($layer)){
             return array_keys($this->getData());
         }
-        $ids = $this->getLayer($layer)
+        return $this->getLayer($layer)
             ->toDistinctList('id');
-
-        return $ids;
     }
 
     //</editor-fold>

@@ -330,11 +330,10 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
         $comparison = $argObj->selectComparison($argObj->valueOf('filterOperator'));
 
         $set = collection($this->ResultIterator);
-        $results = $set->filter(function ($entity, $key) use ($argObj, $comparison) {
+        return $set->filter(function ($entity, $key) use ($argObj, $comparison) {
             $actual = $argObj->accessNodeObject('filter')->value($entity);
             return $comparison($actual, $argObj->valueOf('filterValue'));
         })->toArray();
-        return $results;
     }
 
     /**
@@ -423,7 +422,7 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
 
     public function __debugInfo()
     {
-        $result = [
+        return [
             '[AppendIterator]' => isset($this->AppendIterator)
                 ? 'Contains ' . $this->rawCount() . ' items.'
                 : 'not set',
@@ -435,6 +434,5 @@ class LayerAccessProcessor implements LayerAccessInterface, LayerTaskInterface
                 ? 'FALSE'
                 : 'Contains ' . $this->resultCount() . ' items.'
         ];
-        return $result;
     }
 }
