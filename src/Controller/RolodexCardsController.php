@@ -55,7 +55,7 @@ class RolodexCardsController extends AppController {
 
 
         // Is this user permitted to see this RolodexCard
-        if (!$this->permited('member', $id)) {
+        if (!$this->permitted('member', $id)) {
             $this->Flash->error('You don\'t have access to this record.');
             $this->redirect($this->referer());
         }
@@ -82,11 +82,11 @@ class RolodexCardsController extends AppController {
                 // We'd be able to eliminate this query if we committed to managing the
                 //   is_artitst field in the Member record.
                 $ManifestsTable = TableRegistry::getTableLocator()->get('Manifests');
-                $manifest = $ManifestsTable->find('first')
+                $manifest = $ManifestsTable->find('all')
                     ->where(['member_id' => $id]);
 
-                if (count($manifest) == 1) {
-                    $CardTable = TableRegistry::getTableLocator()->get('Manifests');
+                if ($manifest->count() > 0) {
+                    $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
                 } else {
                     $CardTable = $this->PersonCards;
                 }
@@ -98,10 +98,11 @@ class RolodexCardsController extends AppController {
                 break;
         }
 
+        osd(get_class($CardTable));
         $rolodexCard = $CardTable->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
         $rolodexCard = $rolodexCard->shift();
 
-        $this->set('rolodexCard', $rolodexCard);
+        $this->set('personCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
 	}
 
