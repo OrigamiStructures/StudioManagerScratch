@@ -26,7 +26,6 @@ class SupervisorsController extends AppController
         $myPersonCards =
                 $PersonCards
                 ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$contextUser->getId('supervisor')]]);
-//                ->find('stacksFor', ['seed' => 'data_owner', 'ids' => [$this->contextUser()->userId()]]);
 
 
         $this->set(compact(['manifestsIssued', 'manifestsReceived','contextUser', 'myPersonCards']));
