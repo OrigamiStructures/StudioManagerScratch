@@ -72,10 +72,10 @@ class ArtistCardsTable extends PersonCardsTable {
              * match, then all the person cards are allowed.
              */
             if (($contextUser->isSuperuser() && is_null($contextUser->getId('supervisor')))
-                || $contextUser->getId('supervisor') == $entity->getSupervisorId()
-                || $contextUser->getId('supervisor') == $entity->getManagerId()
+                || $contextUser->getId('supervisor') == $entity->getOwnerId('supervisor')
+                || $contextUser->getId('supervisor') == $entity->getOwnerId('manager')
             ) {
-                $accum[] = $entity->artistId();
+                $accum[] = $entity->getMemberId('artist');
             }
             return $accum;
         }, []);

@@ -169,8 +169,8 @@ class ManifestStacksTable extends StacksTable {
 
 	private function permissionsRequired($stack) {
 		$management_token = $this->contextUser()->getId('manager');
-		return $stack->manifest()->getSupervisorId() === $management_token
-				|| $stack->manifest()->getManagerId() === $management_token;
+		return $stack->manifest()->getOwnerId('supervisor') === $management_token
+				|| $stack->manifest()->getOwnerId('manager') === $management_token;
 	}
 
     /**
@@ -189,9 +189,9 @@ class ManifestStacksTable extends StacksTable {
 		$manifest = $stack->rootElement();
 		$people = $this->PersonCards->processSeeds(
 				[
-					'supervisor' => [$manifest->getSupervisorId()],
-					'manager' => [$manifest->getManagerId()],
-                    'identity' => [$manifest->artistId()]
+					'supervisor' => [$manifest->getOwnerId('supervisor')],
+					'manager' => [$manifest->getOwnerId('manager')],
+                    'identity' => [$manifest->getMemberId('artist')]
 				]
 			);
 		$stack->people = $people;

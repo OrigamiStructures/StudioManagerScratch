@@ -117,8 +117,8 @@ class PersonCard extends RolodexCard{
             $manifests = collection($this->getManifests()->toArray());
             $received = $manifests->filter(function($manifest, $key) use ($actingUserId) {
                 /* @var Manifest $manifest */
-                return $manifest->getManagerId() == $actingUserId
-                    && $manifest->getSupervisorId() != $actingUserId;
+                return $manifest->getOwnerId('manager') == $actingUserId
+                    && $manifest->getOwnerId('supervisor') != $actingUserId;
             })
             ->toArray();
         }
@@ -175,8 +175,8 @@ class PersonCard extends RolodexCard{
             $manifests = collection($this->getManifests()->toArray());
             $delegates = $manifests->filter(function($manifest, $key) use ($actingUserId) {
                 /* @var Manifest $manifest */
-                return $manifest->getManagerId() != $actingUserId
-                    && $manifest->getSupervisorId() == $actingUserId;
+                return $manifest->getOwnerId('manager') != $actingUserId
+                    && $manifest->getOwnerId('supervisor') == $actingUserId;
             })
                 ->toArray();
         }

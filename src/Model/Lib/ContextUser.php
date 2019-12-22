@@ -17,6 +17,8 @@ use App\Model\Lib\CurrentUser;
  */
 class ContextUser {
 
+    use ActorParamValidator;
+
 	protected $defaultValues = [
 		'artist' => NULL,
 		'manager' => NULL,
@@ -301,32 +303,6 @@ class ContextUser {
 			$message = "Couldn't write ContextUser to Session. " . $exc->getMessage();
 			throw $exc;
 		}
-	}
-
-	/**
-	 * Convert the string to lower case and verify it is a known value
-	 *
-	 * @param string $actor
-	 * @return string The validated string in lower case
-	 */
-	private function validateActor($actor) {
-		$validActor = strtolower($actor);
-		if (!in_array($validActor, array_keys($this->actorId))) {
-			$this->badActor($validActor);
-		}
-		return $validActor;
-	}
-
-	/**
-	 * Common Exception point when an invalid actor is referenced
-	 *
-	 * @param string $actor
-	 * @throws Exception
-	 */
-	private function badActor($actor) {
-		$message = "$actor is not a valid actor focus point. "
-				. "Choose actor, manager, or supervisor";
-		throw new \BadMethodCallException($message);
 	}
 
 	/**
