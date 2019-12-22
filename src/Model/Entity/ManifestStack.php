@@ -81,7 +81,7 @@ class ManifestStack extends StackEntity {
 
     public function selfAssigned()
     {
-        return $this->rootElement()->selfAssigned();
+        return $this->rootElement()->isSelfAssigned();
 	}
 
     public function accessSummary()
