@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Entity;
 
+use App\Model\Lib\ActorParamValidator;
 use Cake\Error\Debugger;
 use Cake\Log\Log;
 use Cake\ORM\Entity;
@@ -21,6 +22,8 @@ use Cake\ORM\Entity;
  */
 class Manifest extends Entity
 {
+
+    use ActorParamValidator;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -56,93 +59,87 @@ class Manifest extends Entity
 		return $this->manager_id === $this->supervisor_id;
 	}
 
-    /**
-     * @return mixed
-     */
-    public function getSupervisorId() {
-		return $this->supervisor_id;
-	}
-
-    /**
-     * @return string
-     */
-    public function getManagerId() {
-		return $this->manager_id;
-	}
-
-    /**
-     * @return int
-     */
-    public function artistId() {
-		return $this->member_id;
-	}
-
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function isSupervisor($id)
+    public function getOwnerId($actor)
     {
-        return $this->getSupervisorId() === $id;
-	}
+        $validActor = $this->validateActor($actor);
 
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function isManager($id)
-    {
-        return $this->getManagerId() === $id;
-	}
-
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function isArtist($id)
-    {
-        return $this->artistId() === $id;
-	}
-
-    /**
-     * @return string
-     */
-    public function getSupervisorMember(): string
-    {
-        return $this->supervisor_member;
-    }
-
-    /**
-     * @return string
-     */
-    public function getManagerMember(): string
-    {
-        return $this->manager_member;
-    }
-
-    public function getName($role)
-    {
-        if (!in_array($role, ['supervisor', 'manager', 'artist'])) {
-            $message = "'$role' is not a valid manifest participant in Manifest::getName(). "
-                . "Choose actor, manager, or supervisor";
-            throw new \BadMethodCallException($message);
+        switch ($validActor) {
+            case 'artist':
+                return $this->supervisor_id;
+                break;
+            case 'manager':
+                return $this->manager_id;
+                break;
+            case 'supervisor':
+                return $this->supervisor_id;
+                break;
         }
+    }
+    public function getMemberId($actor)
+    {
+        $validActor = $this->validateActor($actor);
+
+        switch ($validActor) {
+            case 'artist':
+                return $this->member_id;
+                break;
+            case 'manager':
+                return $this->manager_member;
+                break;
+            case 'supervisor':
+                return $this->supervisor_member;
+                break;
+        }
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function hasSupervisor($id)
+    {
+        return $this->getOwnerId('supervisor') === $id;
+	}
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function hasManager($id)
+    {
+        return $this->getOwnerId('manager') === $id;
+	}
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function hasArtist($id)
+    {
+        return $this->getOwnerId('artist') === $id;
+	}
+
+    public function getName($actor)
+    {
+        $validActor = $this->validateActor($actor);
+
         if (!isset($this->names)) {
             $trace = var_export(Debugger::trace(), true);
-            Log::write(LOG_WARNING, "Manifest::getName($role) was called but the Manifest
+            Log::write(LOG_WARNING, "Manifest::getName($actor) was called but the Manifest
             has not been configured as a link-layer for a stack." . PHP_EOL . "The trace to this getName call: " .
             PHP_EOL . $trace);
             return null;
         }
-        switch ($role) {
+
+        switch ($validActor) {
             case 'supervisor':
-                $index = $this->getSupervisorMember();
+                $index = $this->getMemberId('supervisor');
                 break;
             case 'manager':
-                $index = $this->getManagerMember();
+                $index = $this->getMemberId(('manager'));
                 break;
             case 'artist':
-                $index = $this->artistId();
+                $index = $this->getMemberId('artist');
                 break;
         }
         return $this->names[$index];

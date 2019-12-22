@@ -88,7 +88,7 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 </p>
     <?php
     if ($personCard->isSupervisor()) :
-        if($personCard->isManagementDelegate($contextUser->getId('supervisor'))) : ?>
+        if($personCard->delegatedManagement($contextUser->getId('supervisor'))) : ?>
         <p><em><strong>Delegated Management</strong></em></p>
             <?php
             $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';

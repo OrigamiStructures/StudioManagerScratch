@@ -76,8 +76,8 @@ class PersonCardsTable extends RolodexCardsTable {
              * match, then all the person cards are allowed.
              */
             if (($contextUser->isSuperuser() && is_null($contextUser->getId('supervisor')))
-                || $contextUser->getId('supervisor') == $entity->getSupervisorId()
-                || $contextUser->getId('supervisor') == $entity->getManagerId()
+                || $contextUser->getId('supervisor') == $entity->getOwnerId('supervisor')
+                || $contextUser->getId('supervisor') == $entity->getOwnerId('manager')
             ) {
                 $accum[] = $entity->getSupervisorMember();
                 $accum[] = $entity->getManagerMember();

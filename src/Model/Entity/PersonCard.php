@@ -117,8 +117,8 @@ class PersonCard extends RolodexCard{
             $manifests = collection($this->getManifests()->toArray());
             $received = $manifests->filter(function($manifest, $key) use ($actingUserId) {
                 /* @var Manifest $manifest */
-                return $manifest->getManagerId() == $actingUserId
-                    && $manifest->getSupervisorId() != $actingUserId;
+                return $manifest->getOwnerId('manager') == $actingUserId
+                    && $manifest->getOwnerId('supervisor') != $actingUserId;
             })
             ->toArray();
         }
@@ -136,7 +136,7 @@ class PersonCard extends RolodexCard{
      *
      * The Manifest will belong to a this actingUser/supervisor
      * The named artist will belong to the actingUser/supervisor
-     * This card will belong to a foreign user
+     * This member card will belong to a foreign user
      *
      * Sets a property which will be used in future calls
      *
@@ -175,8 +175,8 @@ class PersonCard extends RolodexCard{
             $manifests = collection($this->getManifests()->toArray());
             $delegates = $manifests->filter(function($manifest, $key) use ($actingUserId) {
                 /* @var Manifest $manifest */
-                return $manifest->getManagerId() != $actingUserId
-                    && $manifest->getSupervisorId() == $actingUserId;
+                return $manifest->getOwnerId('manager') != $actingUserId
+                    && $manifest->getOwnerId('supervisor') == $actingUserId;
             })
                 ->toArray();
         }

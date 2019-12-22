@@ -34,7 +34,7 @@ class ManifestStack extends StackEntity {
      * @return PersonCard
      */
     public function artistCard() {
-        $id = $this->rootElement()->artistId();
+        $id = $this->rootElement()->getMemberId('artist');
 
         $identityIds = $this->people
             ->getLayer('identity')
@@ -53,7 +53,7 @@ class ManifestStack extends StackEntity {
      * @return PersonCard
      */
 	public function supervisorCard() {
-		$id = $this->rootElement()->getSupervisorId();
+		$id = $this->rootElement()->getOwnerId('supervisor');
         $identityIDs = $this->people
             ->getLayer('identity')
             ->find()
@@ -69,7 +69,7 @@ class ManifestStack extends StackEntity {
      * @return PersonCard
      */
 	public function managerCard() {
-		$id = $this->rootElement()->getManagerId();
+		$id = $this->rootElement()->getOwnerId('manager');
 		$identityIDs = $this->people
             ->getLayer('identity')
             ->find()
