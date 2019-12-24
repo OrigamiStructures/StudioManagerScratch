@@ -228,7 +228,47 @@ class StacksTable extends AppTable
 		return $this->stacksFromRoot($IDs);
     }
 
-	/**
+    /**
+     * For use to return full stack sets
+     *
+     * @param $seed string
+     * @param $ids array
+     * @return StackSet
+     */
+    public function stacksFor($seed, $ids) {
+        return $this->processStackQuery($seed, $ids);
+    }
+
+    /**
+     * For use with paginator system
+     *
+     * @param $seed string
+     * @param $ids array
+     * @return callable
+     */
+    public function pageFor($seed, $ids) {
+        $stackCall = function($paginator) use ($seed, $ids) {
+            return $this->processStackQuery($seed, $ids, $paginator);
+        };
+        return $stackCall;
+    }
+
+    /**
+     * @param $seed
+     * @param $ids
+     * @param bool|callable $paginator
+     */
+    private function processStackQuery($seed, $ids, $paginator = 'none') {
+        if (empty($ids)) {
+            return new StackSet($this->template());
+        }
+
+        $IDs = $this->distillation($seed, $ids, $paginator);
+        return $this->stacksFromRoot($IDs);
+    }
+
+
+    /**
 	 * Distill a set of seed ids down to root layer ids for the stack
 	 *
 	 * Discovering the root layer ids from a set of seed ids is usually
