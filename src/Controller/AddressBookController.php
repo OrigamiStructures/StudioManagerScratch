@@ -25,19 +25,12 @@ class AddressBookController extends AppController
     public function index()
     {
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
-        $ids = $PersonCards->Identities->find('list')->order(['last_name'])->toArray();
+        $ids = $PersonCards->Identities->find('list')
+            ->order(['last_name'])
+            ->toArray();
 
-//		$stackCall = function($paginator) use ($PersonCards, $ids) {
-//			return $PersonCards->find(
-//					'stacksFor',
-//					['seed' => 'identity', 'ids' => $ids, 'paginator' => $paginator]
-//				);
-//		};
-//
-//        $results = $this->paginate($stackCall);
-
-        $results = $this->paginate($PersonCards->pageFor('identity', $ids));
-        $this->set('results', $results);
+        $people = $this->paginate($PersonCards->pageFor('identity', $ids));
+        $this->set('people', $people);
     }
 
     /**
