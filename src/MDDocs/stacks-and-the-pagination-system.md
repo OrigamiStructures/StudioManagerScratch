@@ -99,3 +99,81 @@ class StackPaginator extends Paginator {
 
 ##Plan for improvements
 
+I think I can simplify using stacks with the Pagination system and using them in general with two new stackTable methods.
+
+```php
+class StackTable extends \Cake\ORM\Table
+{
+    /**
+     * For use to return full stack sets
+     *
+     * @param $seed string
+     * @param $ids array
+     * @return StackSet
+     */
+    public function stacksFor($seed, $ids) {
+        return $this->processStackQuery($seed, $ids);
+    }
+
+    /**
+     * For use with paginator system
+     *
+     * @param $seed string
+     * @param $ids array
+     * @return callable
+     */
+    public function pageFor($seed, $ids) {
+       $stackCall = function($paginator) use ($seed, $ids) {
+          return $this->processStackQuery($seed, $ids, $paginator);
+       };
+       return $stackCall;
+    }
+
+    /**
+    * @param $seed
+    * @param $ids
+    * @param bool|callable $paginator
+    */
+    private function processStackQuery($seed, $ids, $paginator = FALSE) {
+
+    }
+
+}
+```
+
+With this code in place contorller usage will look like this:
+
+```php
+class AddressBookController extends AppController
+{
+    public $paginate = [
+        'limit' => 5,
+        'sort' => 'last_name',
+    ];
+
+    public function index()
+    {
+        $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+        $ids = $PersonCards->Identities->find('list')->order(['last_name'])->toArray();
+
+        $people = $this->paginate($PersonCards->pageFor('identity', $ids));
+
+        $this->set('people', $people);
+    }
+
+    public function view($id)
+    {
+        $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+
+        $person = $PersonCards->stacksFor('identity', [$id]);
+
+        $this->set('person', $person);
+    }
+}
+```
+
+Can we just use the first call and add the 3rd params, detecting it later with func\_get\_arg(3) or         func\_num\_args()?
+
+I don't think so because using it will in paginate() will evaluate it rather than pass it.
+
+
