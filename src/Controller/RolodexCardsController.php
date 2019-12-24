@@ -30,7 +30,7 @@ class RolodexCardsController extends AppController {
 	public function index() {
 		$ids = $this->RolodexCards->Identities->find('list')->toArray();
 //		$personCards = $this->PersonCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-		$personCards = $this->PersonCards->pageFor('identity', $ids);
+		$personCards = $this->PersonCards->stacksFor('identity', $ids);
 		$this->set('personCards', $personCards);
 	}
 
