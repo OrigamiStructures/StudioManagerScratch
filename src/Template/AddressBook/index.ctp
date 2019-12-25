@@ -1,6 +1,7 @@
 <?php
 /* @var View $this */
 echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
+echo $this->Preferences->pref();
 
 foreach ($people->getData() as $person) {
     /* @var \App\Model\Entity\PersonCard $person */
