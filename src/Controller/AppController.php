@@ -71,6 +71,7 @@ class AppController extends Controller
         $this->loadComponent('CakeDC/Users.UsersAuth');
 		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
         $this->loadComponent('Security');
+        $this->loadComponent('Preferences');
 		if($this->Auth->isAuthorized()){
             $this->overrideTableLocator();
         }
