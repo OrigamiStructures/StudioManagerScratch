@@ -38,19 +38,17 @@ class PreferencesComponent extends Component
 
         //read the persisted prefs
         $prefs = $this->repository()->getPreferncesFor($supervisor_id);
-        osd($prefs);
-        osd($prefs->for($prefs::PER_PAGE), '$prefs->for($prefs::PER_PAGE)');
-        osd($prefs->for($prefs::KEY_TO_ARRAY.'.1'), '$prefs->for($prefs::KEY_TO_ARRAY.\'.1\')');
-        osd($prefs->for($prefs::KEY_TO_ARRAY.'.0'), '$prefs->for($prefs::KEY_TO_ARRAY.\'.0\'');
-        die;
+        /* @var Preference $prefs */
+
+        osd($prefs->for($prefs::LIMIT), '$prefs->for($prefs::LIMIT)');
+        osd($prefs->for($prefs::SHIPPING), '$prefs->for($prefs::SHIPPING');
+        osd($prefs->for($prefs::SHIPPING_METHOD), '$prefs->for($prefs::SHIPPING_METHOD');
+//        die;
         //Modify prefs to contain new setting
         //write the prefs to storage
-        return $controller->redirect($controller->referer());
+//        return $controller->redirect($controller->referer());
     }
 
-    private function loadPrefs($supervisor_id)
-    {
-    }
     /**
      * Get the Preferences table instance
      *
