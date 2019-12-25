@@ -118,13 +118,10 @@ class PreferencesTable extends Table
         if (empty($prefs)) {
             $entity = new Preference([
                 'id' => '',
-                'user_id' => $supervisor_id,
-//                'defaults' => $this->defaults
+                'user_id' => $supervisor_id
             ]);
         } else {
             $entity = array_shift($prefs);
-            /* @var Preference $entity */
-//            $this->patchEntity($entity, ['defaults' => $this->defaults]);
         }
 
         $entity->clean();

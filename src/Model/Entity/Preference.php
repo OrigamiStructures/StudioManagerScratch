@@ -24,12 +24,17 @@ class Preference extends Entity
      * @var array
      */
     private $defaults = [
-        'perPage' => 10,
-        'keyToArray' => ['five', 'six', 'seven']
+        'limit' => 5,
+        'Shipping' => [
+            'address' => 39,
+            'method' => 'UPS'
+        ]
     ];
 
-    const PER_PAGE = 'perPage';
-    const KEY_TO_ARRAY = 'keyToArray';
+    const LIMIT = 'limit';
+    const SHIPPING = 'Shipping';
+    const SHIPPING_ADDRESS = 'Shipping.address';
+    const SHIPPING_METHOD = 'Shipping.method';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
