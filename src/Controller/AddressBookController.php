@@ -23,6 +23,7 @@ class AddressBookController extends AppController
     public function initialize()
     {
         parent::initialize();
+        $this->loadComponent('Preferences');
     }
 
     public function index()
