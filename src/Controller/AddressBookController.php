@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Controller\Component\PreferencesComponent;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
@@ -8,7 +9,9 @@ use App\Model\Table\MembersTable;
 /**
  * Class AddressBookController
  * @package App\Controller\
+ *
  * @property MembersTable $Members
+ * @property PreferencesComponent $Preferences
  */
 class AddressBookController extends AppController
 {
@@ -24,6 +27,7 @@ class AddressBookController extends AppController
 
     public function index()
     {
+        $this->Preferences->setPref();
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         $ids = $PersonCards->Identities->find('list')
             ->order(['last_name'])
