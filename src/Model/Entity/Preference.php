@@ -24,10 +24,12 @@ class Preference extends Entity
      * @var array
      */
     private $defaults = [
-        'limit' => 5,
-        'Shipping' => [
-            'address' => 39,
-            'method' => 'UPS'
+        'paginate' => [
+            'limit' => 5,
+            'sort' => [
+                'people' => 'last_name',
+                'artwork' => 'title'
+            ]
         ]
     ];
 
