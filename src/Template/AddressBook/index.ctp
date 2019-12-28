@@ -3,6 +3,11 @@
 echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
 echo $this->Preferences->pref();
 
+echo $this->Form->create();
+echo $this->Form->control('paginate.limit');
+echo $this->Form->control('paginate.sort.people');
+echo $this->Form->end();
+
 foreach ($people->getData() as $person) {
     /* @var \App\Model\Entity\PersonCard $person */
 
