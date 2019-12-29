@@ -27,6 +27,21 @@ class PreferencesForm extends Form
             ]);
     }
 
+    public function setPrefs()
+    {
+
+    }
+
+    public function clearPrefs()
+    {
+
+    }
+
+    public function reset()
+    {
+        
+    }
+
     /**
      * Pass in a list of names and values
      *
