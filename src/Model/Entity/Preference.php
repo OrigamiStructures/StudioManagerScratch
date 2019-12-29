@@ -58,12 +58,17 @@ class Preference extends Entity
 
     public function for($path)
     {
-        $setting = Hash::get($this->prefs, $path) ?? Hash::get($this->defaults, $path);
+//        $path = str_replace('-', '.', $path);
+        $setting = Hash::get($this->prefs ?? [], $path) ?? Hash::get($this->defaults, $path);
         if (is_null($setting)) {
             $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
             throw new BadClassConfigurationException($msg);
         }
         return $setting;
+    }
+
+    public function getDefaults() {
+        return $this->defaults;
     }
 
     public function __debugInfo()

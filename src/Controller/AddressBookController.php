@@ -2,9 +2,11 @@
 namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
+use App\Form\PreferencesForm;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
+use Cake\Utility\Hash;
 
 /**
  * Class AddressBookController
@@ -28,14 +30,30 @@ class AddressBookController extends AppController
 
     public function index()
     {
-        $this->Preferences->setPref();
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         $ids = $PersonCards->Identities->find('list')
             ->order(['last_name'])
             ->toArray();
 
+        $prefsForm = new PreferencesForm();
         $people = $this->paginate($PersonCards->pageFor('identity', $ids));
-        $this->set('people', $people);
+        $prefs = $this->Preferences->repository()->getPreferncesFor($this->contextUser()->getId('supervisor'));
+        $prefsForm->overrideDefaults(Hash::flatten($prefs->prefs));
+
+        $this->set(compact('people', 'prefs', 'prefsForm'));
+    }
+
+    public function setPref()
+    {
+        $prefsForm = new PreferencesForm();
+//        osd($this->getRequest());die;
+        if ($this->getRequest()->is('post') || $this->getRequest()->is('put')) {
+            $prefsForm->validate($this->getRequest()->getData());
+            osd($prefsForm->getErrors());
+            die;
+        }
+
+        $this->Preferences->setPref();
     }
 
     /**

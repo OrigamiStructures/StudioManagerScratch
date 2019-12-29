@@ -3,10 +3,14 @@
 echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
 echo $this->Preferences->pref();
 
-echo $this->Form->create();
-echo $this->Form->control('paginate.limit');
-echo $this->Form->control('paginate.sort.people');
+echo $this->Form->create($prefsForm, ['action' => 'setPref']);
+echo $this->Form->input('paginate.limit'/*, ['value' => $prefs->for('paginate.limit')]*/);
+echo $this->Form->input('paginate.sort.people'/*, [ 'value' => $prefs->for('paginate.sort.people')]*/);
+echo $this->Form->submit();
 echo $this->Form->end();
+
+//osd($prefs);
+//osd($people);
 
 foreach ($people->getData() as $person) {
     /* @var \App\Model\Entity\PersonCard $person */

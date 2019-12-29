@@ -41,29 +41,31 @@ class PreferencesComponent extends Component
         /* @var AppController $controller */
 
         if ($controller->getRequest()->is('post')) { //New prefs arrive in some standard, decodable POST (or GET?)
-            $post = $controller->getRequest()->getData();
+            $post = Hash::flatten($controller->getRequest()->getData());
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             //read the persisted prefs
             $prefs = $this->repository()->getPreferncesFor($supervisor_id);
             /* @var Preference $prefs */
             $errors = [];
 
-            osd($post);die;
+            osd($prefs);
+
+//            osd($post);die;
 
             //segregate valid and invalid poste entries
             foreach ($post as $path => $value) {
-                $validated = $this->sanitizeData($path, $value, $prefs->defaults);
-                if(!$validated->results) {
+                $validated = $this->sanitizeData($path, $value, $prefs->getDefaults());
+                if(!$validated->result) {
                     $errors[] = $validated->pathMsg . $validated->dataMsg;
                     $continue;
                 } else {
-                    $prefs->prefs = Hash::insert($prefs->prefs, $path, $value);
+                    $prefs->prefs = Hash::insert($prefs->prefs ?? [], $path, $value);
                     $posted[$path] = $value;
                 }
             }
 
-            $settingSummaries = $this->summarizeSettings($posted);
-            die;
+            $settingSummaries = $this->summarizeSettings($posted ?? []);
+//            die;
 
             if (!$this->repository()->save($prefs)) {
                 $msg = $settingSummaries->count >1
@@ -120,7 +122,7 @@ class PreferencesComponent extends Component
         $validated->pathMsg = $validated->path ? '' : "Unknown preference '$path'";
         //a message only if path is valid and data is not
         $validated->dataMsg = !$validated->path || $validated->data ? '' : "Bad value provided for '$path'";
-        $validated->result = $validPath && $validData;
+        $validated->result = $validated->path && $validated->data;
 
         return $validated;
     }
@@ -130,7 +132,7 @@ class PreferencesComponent extends Component
      *
      * @return PreferencesTable
      */
-    private function repository()
+    public function repository()
     {
         if ($this->repository === false) {
             $this->repository = TableRegistry::getTableLocator()->get('Preferences');
