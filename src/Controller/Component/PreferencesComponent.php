@@ -50,22 +50,7 @@ class PreferencesComponent extends Component
 
             osd($prefs);
 
-//            osd($post);die;
-
-            //segregate valid and invalid poste entries
-            foreach ($post as $path => $value) {
-                $validated = $this->sanitizeData($path, $value, $prefs->getDefaults());
-                if(!$validated->result) {
-                    $errors[] = $validated->pathMsg . $validated->dataMsg;
-                    $continue;
-                } else {
-                    $prefs->prefs = Hash::insert($prefs->prefs ?? [], $path, $value);
-                    $posted[$path] = $value;
-                }
-            }
-
             $settingSummaries = $this->summarizeSettings($posted ?? []);
-//            die;
 
             if (!$this->repository()->save($prefs)) {
                 $msg = $settingSummaries->count >1
@@ -92,6 +77,11 @@ class PreferencesComponent extends Component
         return $controller->redirect($controller->referer());
 }
 
+    /**
+     * Unset one user preference
+     *
+     * @param $path
+     */
     public function clearPref($path)
     {
         $controller = $this->getController();
@@ -105,26 +95,6 @@ class PreferencesComponent extends Component
         $prefs->prefs = Hash::remove($prefs->prefs, $path);
 
 
-    }
-
-    /**
-     * @todo this should be moved to a Table or Form schema/validation process
-     * @param $path
-     * @param $value
-     * @param $defaults
-     * @return \stdClass
-     */
-    private function sanitizeData($path, $value, $defaults)
-    {
-        $validated = new \stdClass();
-        $validated->path = Hash::check($defaults, $path);
-        $validated->data = gettype(Hash::get($defaults, $path)) === gettype($value);
-        $validated->pathMsg = $validated->path ? '' : "Unknown preference '$path'";
-        //a message only if path is valid and data is not
-        $validated->dataMsg = !$validated->path || $validated->data ? '' : "Bad value provided for '$path'";
-        $validated->result = $validated->path && $validated->data;
-
-        return $validated;
     }
 
     /**
