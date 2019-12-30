@@ -72,15 +72,52 @@ class CardFileController extends AppController {
      *
      */
     public function index() {
+        //Get the seed ids
         $ids = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->toArray();
-        $personCards = $this->PersonCardsTable()->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-        osd($ids);
-        osd($personCards);
+
+        //Get the stack sets from the seeds
+//        $personCards = $this->PersonCardsTable()->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+//        $personCards = $this->PersonCardsTable()->stacksFor('identity', $ids);
+        $personCards = $this->paginate($this->PersonCardsTable()->pageFor('identity', $ids));
+//        osd($ids);
+//        osd($personCards);
         $this->set('personCards', $personCards);
     }
 
+    public function institutions()
+    {
+
+    }
+
+    public function people()
+    {
+
+    }
+
+    public function categories()
+    {
+
+    }
+
+    public function insert($type = 'person')
+    {
+        $type = 'person';
+        $type = 'artist';
+        $type = 'institution';
+        $type = 'category';
+    }
+
+    public function remove($id)
+    {
+
+    }
+
+    public function change($id)
+    {
+
+    }
     public function groups() {
         $InstitutionCards = TableRegistry::getTableLocator()->get('OrganizationCards');
         $ids = $InstitutionCards
