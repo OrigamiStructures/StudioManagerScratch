@@ -85,15 +85,26 @@ Manifests have proven very difficult to reason about because each one is descrip
 
 It will be important to define some clear terms to use when discussing what the manifest means in regards to actors. These terms will also guide the naming functions and variables.
 
-It's unlikely you'll have a Manifest and its members in this simple structure. Typically you encounter these elements in a Manifest-primary or Member-primary way. Member-primary objects—**PersonCard** or **ArtistCard**—contain manifests to provide context to the Card. In Manifest-primary mode you'll have a **ManifestStack** which will contain full **PersonCards** providing objects capable of creating richly detailed pages and deep-context processes.
-
 ###Manifests can describe themselves.
 
-A simple manifest record contains a lot of information and so the base entity can answer a lot of questions without the need for larger composite objects.
+A simple record contains a lot of information and so the base entity can answer a lot of questions without the need for larger composite objects. **Manifest** shares its `getter` strategy with **ContextUser** which also records supervisor, manager, and artist links and data. Rather than using **get*ExplicitPropery*()** these classes use **get*DataType*($actor)** to reduce the number of methods in the class.
 
+- data return methods
+    - getMemberId($actor)
+    - getOwnerId($actor)
+    - getName($actor) returns null in some situations
+- boolean checks
+    - selfAssigned()
+    - hasArtist($id)
+    - hasManager($id)
+    - hasSupervisor($id)
 
+These methods also underly methods of the higher level composite objects. Member-primary classes will be **PersonCard** or any class that extends or collects it. Manifest-primary classes are any (future) extenders or collectors of **ManifestStack**.
 
-### Manifests when used as Manager identifiers
+###Terminology in composite objects
+
+Typically you encounter these elements in a Manifest-primary or Member-primary way. Member-primary objects—**PersonCard** or **ArtistCard**—contain manifests to provide context to the Card. In Manifest-primary mode you'll have a **ManifestStack** which will contain full **PersonCards** providing objects capable of creating richly detailed pages and deep-context processes.
+
 Managers can exist in 3 different flavors
 
 - A Manifest which names the user as both Supervisor and Manager

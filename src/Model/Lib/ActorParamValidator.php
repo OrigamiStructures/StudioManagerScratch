@@ -34,7 +34,7 @@ trait ActorParamValidator
      * Common Exception point when an invalid actor is referenced
      *
      * @param string $actor
-     * @throws Exception
+     * @throws \BadMethodCallException
      */
     private function badActor($actor) {
         $message = "$actor is not a valid actor focus point. Choose "

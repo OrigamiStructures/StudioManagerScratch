@@ -19,7 +19,6 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Association\HasMany $GroupsMembers
  * @property \Cake\ORM\Association\HasMany $Images
  * @property \Cake\ORM\Association\HasMany $Locations
- * @property \Cake\ORM\Association\HasMany $Members
  * @property \Cake\ORM\Association\HasMany $Pieces
  * @property \Cake\ORM\Association\HasMany $Series
  * @property \Cake\ORM\Association\HasMany $Subscriptions

@@ -47,7 +47,7 @@ foreach($artists->getData() as $artist) :
 
     <?= $this->Html->tag('h1', $artist->rootDisplayValue()); ?>
 
-    <?php if ($manifest->selfAssigned()) : ?>
+    <?php if ($manifest->isSelfAssigned()) : ?>
 
     <?= $this->Html->para('', "You are the creator/owner of this aritst's "
         . "data and have identified " . count($managmentDelegation)

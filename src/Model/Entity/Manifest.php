@@ -9,16 +9,17 @@ use Cake\ORM\Entity;
 /**
  * Manifest Entity
  *
- * @property int $id
- * @property int $member_id
- * @property string $user_id
- * @property string $manager_id
- * @property bool $publish_manager
- * @property bool $publish_manager_contact
  *
- * @property \App\Model\Entity\Member $member
- * @property \App\Model\Entity\User[] $users
- * @property \App\Model\Entity\MemberUser $member_user
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $supervisor_id
+ * @property string $supervisor_member
+ * @property string $manager_id
+ * @property bool $manager_member
+ * @property bool $member_id
+ * @property bool $c_udd
+ *
  */
 class Manifest extends Entity
 {
@@ -35,19 +36,16 @@ class Manifest extends Entity
      * @var array
      */
     protected $_accessible = [
-        'member_id' => true,
-		'member_user_id' => true,
-        'user_id' => true,
+        'supervisor_id' => true,
+		'supervisor_member' => true,
         'manager_id' => true,
-        'publish_manager' => true,
-        'publish_manager_contact' => true,
-        'member' => true,
-        'users' => true,
-        'member_user' => true
+        'manager_member' => true,
+        'member_id' => true,
+        'c_udd' => true,
     ];
 
 	/**
-	 * Does the member/artist belong to the user
+	 * Is the supervisor the same as the manager?
 	 *
 	 * Users may freely create and edit artists and their works.
 	 * However, if the member record belongs to another user, then
@@ -55,70 +53,101 @@ class Manifest extends Entity
 	 *
 	 * @return boolean
 	 */
-	public function selfAssigned() {
+	public function isSelfAssigned() {
 		return $this->manager_id === $this->supervisor_id;
 	}
 
+    /**
+     * Get the user id (record owner id) of the specified actor
+     *
+     * @param $actor string a value in ActorParamValidator::validNames
+     * @return int
+     * @throws \BadMethodCallException
+     */
     public function getOwnerId($actor)
     {
         $validActor = $this->validateActor($actor);
 
         switch ($validActor) {
             case 'artist':
-                return $this->supervisor_id;
+                $result = $this->supervisor_id;
                 break;
             case 'manager':
-                return $this->manager_id;
+                $result = $this->manager_id;
                 break;
             case 'supervisor':
-                return $this->supervisor_id;
+                $result = $this->supervisor_id;
                 break;
         }
+        return $result;
     }
+
+    /**
+     * Get the member id of the specified actor
+     *
+     * @param $actor string a value in ActorParamValidator::validNames
+     * @return int
+     * @throws \BadMethodCallException
+     */
     public function getMemberId($actor)
     {
         $validActor = $this->validateActor($actor);
 
         switch ($validActor) {
             case 'artist':
-                return $this->member_id;
+                $result = $this->member_id;
                 break;
             case 'manager':
-                return $this->manager_member;
+                $result = $this->manager_member;
                 break;
             case 'supervisor':
-                return $this->supervisor_member;
+                $result = $this->supervisor_member;
                 break;
         }
+        return $result;
     }
 
     /**
-     * @param $id
+     * is this the id of the supervisor record
+     *
+     * @param $id string
      * @return bool
      */
     public function hasSupervisor($id)
     {
-        return $this->getOwnerId('supervisor') === $id;
+        return $this->getMemberId('supervisor') === $id;
 	}
 
     /**
-     * @param $id
+     * Is this the id of the manager artist record
+     *
+     * @param $id string
      * @return bool
      */
     public function hasManager($id)
     {
-        return $this->getOwnerId('manager') === $id;
+        return $this->getMemberId('manager') === $id;
 	}
 
     /**
-     * @param $id
+     * Is this this id of the artist member record?
+     *
+     * @param $id string
      * @return bool
      */
     public function hasArtist($id)
     {
-        return $this->getOwnerId('artist') === $id;
+        return $this->getMemberId('artist') === $id;
 	}
 
+    /**
+     * If $this::names has been set, return the name of the actor
+     *
+     * $this::names will be set when Manifests is used in PersonCards
+     *
+     * @param $actor string a value in ActorParamValidator::validNames
+     * @return string|null
+     */
     public function getName($actor)
     {
         $validActor = $this->validateActor($actor);
