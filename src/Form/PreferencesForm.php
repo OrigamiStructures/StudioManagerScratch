@@ -5,6 +5,7 @@ use App\Model\Entity\Preference;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Text;
 use Cake\Validation\Validator;
 use Cake\Utility\Hash;
 
@@ -34,39 +35,6 @@ class PreferencesForm extends Form
      * @var bool|Preference
      */
     protected $UserPrefs = false;
-
-    /**
-     * @param $user_id
-     * @param $prefs array User submitted data
-     */
-    public function setUserPrefs($user_id, $prefs)
-    {
-        if (!$this->validate($prefs)) {
-            return false;
-        }
-
-    }
-
-    /**
-     * @param $user_id
-     * @param $prefs array User submitted data
-     */
-    public function clearUserPrefs($user_id, $prefs)
-    {
-        if (!$this->validate($prefs)) {
-            return false;
-        }
-
-    }
-
-    /**
-     * @param $user_id
-     */
-    public function resetUserPrefs($user_id)
-    {
-        $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
-            ->delete($user_id);
-    }
 
     /**
      * Return this object with user prefs overwritting default values
@@ -150,4 +118,5 @@ class PreferencesForm extends Form
         // Send an email.
         return true;
     }
+
 }

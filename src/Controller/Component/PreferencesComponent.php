@@ -136,4 +136,17 @@ class PreferencesComponent extends Component
         return $prefsSummary;
     }
 
+    /**
+     * Get the Preferences table instance
+     *
+     * @return PreferencesTable
+     */
+    private function repository()
+    {
+        if ($this->repository === false) {
+            $this->repository = TableRegistry::getTableLocator()->get('Preferences');
+        }
+        return $this->repository;
+    }
+
 }
