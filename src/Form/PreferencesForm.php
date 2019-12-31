@@ -3,43 +3,36 @@ namespace App\Form;
 
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use Cake\Utility\Hash;
 
-
+/**
+ * PreferencesForm
+ *
+ * This class can go to a plugin for a portable preference system.
+ * The user would extend these universal functions with thier own
+ * schema, validation, and rules in their local directory and use
+ * that class for all their work.
+ *
+ * @package App\Form
+ */
 class PreferencesForm extends Form
 {
 
-    protected function _buildSchema(Schema $schema)
-    {
-        return $schema
-            ->addField(
-            'paginate.limit', [
-                'type' => 'integer',
-                'default' => 10
-            ])
-            ->addField('paginate.sort.people', [
-                'type' => 'string',
-                'default' => 'last_name'
-            ])
-            ->addField('paginate.sort.artwork', [
-                'type' => 'string',
-                'default' => 'title'
-            ]);
-    }
-
-    public function setPrefs()
+    public function setUserPrefs($user_id, $prefs)
     {
 
     }
 
-    public function clearPrefs()
+    public function clearUserPrefs($user_id, $prefs)
     {
 
     }
 
-    public function reset()
+    public function resetUserPrefs($user_id, $prefs)
     {
-        
+
     }
 
     /**
@@ -71,14 +64,22 @@ class PreferencesForm extends Form
         $this->schema()->addFields($overrides);
     }
 
-    public function validationDefault(Validator $validator)
+    public function getUserPrefs($user_id)
     {
-        $validator->integer(
-            'paginate.limit',
-            "Pagination limit must be the number of item you want on each page.",
-            'update'
-        );
-        return $validator;
+        /* @var  */
+
+        $userPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
+            ->getPreferncesFor($user_id); //@todo Thes can be paramterized for a Plugin
+
+        $schema = $this->schema();
+
+        $schemaFields = collection($schema->fields());
+        $defaults = $schemaFields->reduce(function($accum, $fieldName, $index) use ($schema) {
+            $accum[$fieldName] = $schema->field($fieldName)['default'];
+            return $accum;
+        }, []);
+
+        return $userPrefs->setDefaults(Hash::expand($defaults));
     }
 
     protected function _execute(array $data)

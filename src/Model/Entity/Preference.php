@@ -23,20 +23,7 @@ class Preference extends Entity
      *
      * @var array
      */
-    private $defaults = [
-        'paginate' => [
-            'limit' => 5,
-            'sort' => [
-                'people' => 'last_name',
-                'artwork' => 'title'
-            ]
-        ]
-    ];
-
-    const LIMIT = 'limit';
-    const SHIPPING = 'Shipping';
-    const SHIPPING_ADDRESS = 'Shipping.address';
-    const SHIPPING_METHOD = 'Shipping.method';
+    private $defaults = [];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -52,8 +39,7 @@ class Preference extends Entity
         'modified' => true,
         'prefs' => true,
         'user_id' => true,
-        'user' => true,
-        'defaults' => true
+        'user' => true
     ];
 
     public function for($path)
@@ -67,8 +53,11 @@ class Preference extends Entity
         return $setting;
     }
 
-    public function getDefaults() {
-        return $this->defaults;
+    public function setDefaults($defaults)
+    {
+        $this->defaults = $defaults;
+        $this->clean();
+        return $this;
     }
 
     public function __debugInfo()
