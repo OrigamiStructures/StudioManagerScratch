@@ -108,7 +108,7 @@ class PreferencesTable extends Table
      * @param $supervisor_id
      * @return Preference
      */
-    public function getPreferncesFor($supervisor_id)
+    public function getPreferencesFor($supervisor_id)
     {
         $prefs = $this->find('all')
             ->where(['user_id' => $supervisor_id])

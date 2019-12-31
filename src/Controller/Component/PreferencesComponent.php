@@ -44,7 +44,7 @@ class PreferencesComponent extends Component
             $post = Hash::flatten($controller->getRequest()->getData());
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             //read the persisted prefs
-            $prefs = $this->repository()->getPreferncesFor($supervisor_id);
+            $prefs = $this->repository()->getPreferencesFor($supervisor_id);
             /* @var Preference $prefs */
             $errors = [];
 
