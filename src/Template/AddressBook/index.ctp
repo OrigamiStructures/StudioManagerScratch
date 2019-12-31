@@ -5,7 +5,7 @@
 echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
 echo $this->Preferences->pref();
 
-echo $this->Form->create($prefsForm, ['action' => 'setPref']);
+echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPref']);
 echo $this->Form->input('paginate.limit'/*, ['value' => $prefs->for('paginate.limit')]*/);
 echo $this->Form->input('paginate.sort.people'/*, [ 'value' => $prefs->for('paginate.sort.people')]*/);
 echo $this->Form->submit();
