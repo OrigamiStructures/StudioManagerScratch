@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
-use App\Form\PreferencesForm;
+use App\Form\LocalPreferencesForm as LocalPrefsForm;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
@@ -35,7 +35,9 @@ class AddressBookController extends AppController
             ->order(['last_name'])
             ->toArray();
 
-        $prefsForm = new PreferencesForm();
+        $prefsForm = new LocalPrefsForm();
+        $userPrefs = $prefsForm->getUserPrefs($this->contextUser()->getId('supervisor'));
+        osd($userPrefs);die;
         $people = $this->paginate($PersonCards->pageFor('identity', $ids));
         $prefs = $this->Preferences->repository()->getPreferncesFor($this->contextUser()->getId('supervisor'));
         $prefsForm->overrideDefaults(Hash::flatten($prefs->prefs));
@@ -45,7 +47,7 @@ class AddressBookController extends AppController
 
     public function setPref()
     {
-        $prefsForm = new PreferencesForm();
+        $prefsForm = new LocalPrefsForm();
 //        osd($this->getRequest());die;
         if ($this->getRequest()->is('post') || $this->getRequest()->is('put')) {
             $prefsForm->validate($this->getRequest()->getData());
