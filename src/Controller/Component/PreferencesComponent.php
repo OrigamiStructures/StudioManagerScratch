@@ -98,19 +98,6 @@ class PreferencesComponent extends Component
     }
 
     /**
-     * Get the Preferences table instance
-     *
-     * @return PreferencesTable
-     */
-    public function repository()
-    {
-        if ($this->repository === false) {
-            $this->repository = TableRegistry::getTableLocator()->get('Preferences');
-        }
-        return $this->repository;
-    }
-
-    /**
      * Make a simple object with versions of the posted user prefs for messaging
      *
      * $post is posted data array

@@ -1,6 +1,7 @@
 <?php
 namespace App\Form;
 
+use App\Model\Entity\Preference;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
@@ -66,10 +67,10 @@ class PreferencesForm extends Form
 
     public function getUserPrefs($user_id)
     {
-        /* @var  */
-
         $userPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
             ->getPreferncesFor($user_id); //@todo Thes can be paramterized for a Plugin
+
+        /* @var  Preference $userPrefs */
 
         $schema = $this->schema();
 

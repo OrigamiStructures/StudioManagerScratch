@@ -36,10 +36,8 @@ class AddressBookController extends AppController
             ->toArray();
 
         $prefsForm = new LocalPrefsForm();
-        $userPrefs = $prefsForm->getUserPrefs($this->contextUser()->getId('supervisor'));
-        osd($userPrefs);die;
+        $prefs = $prefsForm->getUserPrefs($this->contextUser()->getId('supervisor'));
         $people = $this->paginate($PersonCards->pageFor('identity', $ids));
-        $prefs = $this->Preferences->repository()->getPreferncesFor($this->contextUser()->getId('supervisor'));
         $prefsForm->overrideDefaults(Hash::flatten($prefs->prefs));
 
         $this->set(compact('people', 'prefs', 'prefsForm'));

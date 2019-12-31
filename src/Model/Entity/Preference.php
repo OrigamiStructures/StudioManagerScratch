@@ -35,11 +35,8 @@ class Preference extends Entity
      * @var array
      */
     protected $_accessible = [
-        'created' => true,
-        'modified' => true,
         'prefs' => true,
         'user_id' => true,
-        'user' => true
     ];
 
     public function for($path)

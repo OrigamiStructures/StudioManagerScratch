@@ -1,5 +1,7 @@
 <?php
 /* @var View $this */
+/* @var \App\Form\LocalPreferencesForm $prefsForm */
+
 echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
 echo $this->Preferences->pref();
 

@@ -9,9 +9,10 @@ use Cake\Validation\Validator;
 
 class LocalPreferencesForm extends PreferencesForm
 {
+
     const PAGINATION_LIMIT = 'paginate.limit';
-    const PAGINATON_SORT_PEOPLE = 'paginate.sort.people';
-    const PAGINATON_SORT_ARTWORK = 'paginate.sort.artwork';
+    const PAGINATION_SORT_PEOPLE = 'paginate.sort.people';
+    const PAGINATION_SORT_ARTWORK = 'paginate.sort.artwork';
 
     /**
      * @param Schema $schema
