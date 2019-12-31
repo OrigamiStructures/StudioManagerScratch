@@ -57,6 +57,21 @@ class Preference extends Entity
         return $this;
     }
 
+    /**
+     * Get the array of user prefs that aren't defaults
+     *
+     * @return array
+     */
+    public function userVariants()
+    {
+        return $this->prefs ?? [];
+    }
+
+    public function setUserVariant($path, $value)
+    {
+        $this->prefs = Hash::insert($this->prefs, $path, $value);
+    }
+
     public function __debugInfo()
     {
         return [

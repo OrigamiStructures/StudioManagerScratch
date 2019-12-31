@@ -99,7 +99,7 @@ class PreferencesForm extends Form
         $this->user_id = $user_id;
         if ($this->UserPrefs === false) {
             $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
-                ->getPreferncesFor($user_id);
+                ->getPreferencesFor($user_id);
             /* @var  Preference $userPrefs */
 
             $schema = $this->schema();

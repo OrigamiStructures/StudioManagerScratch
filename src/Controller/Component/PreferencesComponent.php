@@ -65,13 +65,21 @@ class PreferencesComponent extends Component
         }
 
         $prefsForm = new LocalPreferencesForm();
+        $post = $controller->getRequest()->getData();
         if ($prefsForm->validate($post)) {
 
-            $post = Hash::flatten($controller->getRequest()->getData());
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             $prefs = $this->repository()->getPreferencesFor($supervisor_id);
-            $errors = [];
-            $settingSummaries = $this->summarizeSettings($posted ?? []);
+
+            $allowedPrefs = collection($prefsForm->schema()->fields());
+            $allowedPrefs->map(function($path, $key) use ($post, $prefs){
+                if (Hash::check($post, $path)) {
+                    $prefs->setUserVariant($path, Hash::extract($post, $path));
+                }
+            });
+            osd($prefs, 'prefs entity');die;
+
+            $settingSummaries = $this->summarizeSettings($post ?? []);
 
             if (!$this->repository()->save($prefs)) {
                 $msg = $settingSummaries->count > 1
@@ -83,11 +91,6 @@ class PreferencesComponent extends Component
                     ? __("Your preferences $settingSummaries->summaryStatement were saved.")
                     : __("Your preference for $settingSummaries->summaryStatement was saved.");
                 $this->Flash->error($msg);
-            }
-            if (count($errors) > 0) {
-                foreach ($errors as $error) {
-                    $this->Flash->error($error);
-                }
             }
         }
 

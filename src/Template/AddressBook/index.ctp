@@ -6,8 +6,9 @@ echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
 echo $this->Preferences->pref();
 
 echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPref']);
-echo $this->Form->input('paginate.limit'/*, ['value' => $prefs->for('paginate.limit')]*/);
-echo $this->Form->input('paginate.sort.people'/*, [ 'value' => $prefs->for('paginate.sort.people')]*/);
+echo $this->Form->input('paginate.limit');
+echo $this->Form->input('paginate.sort.people');
+echo $this->Form->input('randon.data');
 echo $this->Form->submit();
 echo $this->Form->end();
 
