@@ -38,22 +38,28 @@ class AddressBookController extends AppController
         $prefsForm = new LocalPrefsForm();
         $prefs = $prefsForm->getUserPrefs($this->contextUser()->getId('supervisor'));
         $people = $this->paginate($PersonCards->pageFor('identity', $ids));
-//        $prefsForm->asContext(Hash::flatten($prefs->prefs));
 
         $this->set(compact('people', 'prefs', 'prefsForm'));
     }
 
+    /**
+     * This will not be accessible for the API
+     */
     public function setPref()
     {
-        $prefsForm = new LocalPrefsForm();
-//        osd($this->getRequest());die;
-        if ($this->getRequest()->is('post') || $this->getRequest()->is('put')) {
-            $prefsForm->validate($this->getRequest()->getData());
-            osd($prefsForm->getErrors());
-            die;
+        if (!$this->getRequest()->is('post')
+            && !$this->getRequest()->is('put')
+        ) {
+            //improper access attempted
+            //redirect or exception?
         }
+        $prefsForm = new LocalPrefsForm();
 
-        $this->Preferences->setPref();
+        if (!$prefsForm->validate($this->getRequest()->getData())) {
+            //handle
+        }
+        osd($prefsForm->getErrors());
+        die;
     }
 
     /**
