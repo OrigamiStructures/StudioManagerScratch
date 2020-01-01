@@ -57,8 +57,7 @@ class PreferencesComponent extends Component
         $controller = $this->getController();
         /* @var AppController $controller */
 
-        if (!$controller->getRequest()->is('post')
-            && !$controller->getRequest()->is('put')) {
+        if (!$controller->getRequest()->is(['post', 'put'])) {
             //@todo How do we keep this invisible to API calls?
             $msg = __("Preferences can only be changed through POST or PUT");
             throw new BadMethodCallException($msg);
@@ -70,14 +69,35 @@ class PreferencesComponent extends Component
 
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             $prefs = $this->repository()->getPreferencesFor($supervisor_id);
+            $userVariants = $prefs->userVariants();
+            $schema = $prefsForm->schema();
 
             $allowedPrefs = collection($prefsForm->schema()->fields());
-            $allowedPrefs->map(function($path, $key) use ($post, $prefs){
-                if (Hash::check($post, $path)) {
-                    $prefs->setUserVariant($path, Hash::extract($post, $path));
-                }
-            });
-            osd($prefs, 'prefs entity');die;
+            $newVariants = $allowedPrefs
+                ->reduce(function($accum, $path) use ($post, $schema, $userVariants){
+                    //if the post is default, leave variant out of the list
+                    //if post is non-default, non-null
+                    // or variant is non-null, variant must be included
+                    // and we prefere post if its different than variant
+                    $defaultValue = $schema->field($path)['default'];
+                    $postValue = Hash::get($post, $path);
+                    $variantValue = Hash::get($userVariants, $path);
+                    if ( $postValue == $defaultValue ) {
+                        //let variant evaporate
+                    } elseif (!is_null($variantValue) ||  !is_null($postValue)) {
+                        $accum = Hash::insert(
+                            $accum,
+                            $path,
+                            $variantValue != $postValue ? $postValue : $variantValue
+                        );
+                    }
+                    return $accum;
+                }, []);
+            if ($newVariants != $userVariants) {
+                $prefs->setVariants($newVariants);
+            }
+            osd($prefs, 'prefs entity');
+            osd($post);die;
 
             $settingSummaries = $this->summarizeSettings($post ?? []);
 
@@ -141,16 +161,16 @@ class PreferencesComponent extends Component
      */
     private function summarizeSettings(array $post): \stdClass
     {
-        $settings = collection($post);
+        $settings = collection(Hash::flatten($post));
         $settingSummaries = $settings->map(function ($value, $key) {
             $pref = str_replace('.', ', ', $key);
-            return "[__($pref) = __($value)]";
-        });
-
+            return "[$pref = $value]";
+        })
+            ->toArray();
         $prefsSummary = new \stdClass();
         $prefsSummary->post = $post;
-        $prefsSummary->summaryArray = $settingSummaries->toArray();
-        $prefsSummary->summaryStatement = Text::toList($settingSummaries->toArray());
+        $prefsSummary->summaryArray = $settingSummaries;
+        $prefsSummary->summaryStatement = Text::toList($settingSummaries);
         $prefsSummary->count = count($post);
 
         return $prefsSummary;
