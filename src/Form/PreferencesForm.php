@@ -60,7 +60,7 @@ class PreferencesForm extends Form
          *
          * return $this
          */
-        $prefs = collection(Hash::flatten($this->UserPrefs->prefs));
+        $prefs = collection(Hash::flatten($this->UserPrefs->userVariants()));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
             $attributes = $schema->field($fieldName);
             $attributes['default'] = $value;
@@ -86,10 +86,18 @@ class PreferencesForm extends Form
     }
 
     /**
-     * Load the user prefs and add all defaults
+     * Load the user prefs and add all defaults to it
      *
-     * Defaults are required so the entity can always
-     * answer 'value of x' questions
+     * The current user preference record is retrieved then two
+     * modifications are made. Looping on the current schema:
+     *  1. Defaults values are written for each possible schema column
+     *  2. The user's settings are cleaned so they only contain current schema
+     *      columns and only then if there is a non-default value stored
+     * If the entity changes in this 2nd stage it will be resaved.
+     *
+     * In this way we insure that no stale or invalid data is stored
+     * in the users preference. Since this is the only way to get a
+     * user's preference entity, we guarantee validity on every use.
      *
      * @param $user_id string
      * @return Preference
@@ -103,12 +111,21 @@ class PreferencesForm extends Form
             /* @var  Preference $userPrefs */
 
             $schema = $this->schema();
-            $schemaFields = collection($schema->fields());
-            $defaults = $schemaFields->reduce(function ($accum, $fieldName, $index) use ($schema) {
-                $accum[$fieldName] = $schema->field($fieldName)['default'];
-                return $accum;
-            }, []);
-            $this->UserPrefs->setDefaults(Hash::expand($defaults));
+            $defaults = [];
+            $prefs = [];
+            foreach ($schema->fields() as $path) {
+                $defaultValue = $schema->field($path)['default'];
+                $defaults[$path] = $defaultValue;
+                if (!in_array($this->UserPrefs->getUserVariant($path), [null, $defaultValue])) {
+                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getUserVariant($path));
+                }
+            }
+            $this->UserPrefs->setDefaults($defaults);
+            if ($this->UserPrefs->userVariants() != $prefs) {
+                $this->UserPrefs->setVariants($prefs);
+                (TableRegistry::getTableLocator()->get('Preferences'))
+                    ->save($this->UserPrefs);
+            }
         }
         return $this->UserPrefs;
     }
