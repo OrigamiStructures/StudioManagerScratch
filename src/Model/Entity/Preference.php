@@ -67,18 +67,26 @@ class Preference extends Entity
         return $this->prefs ?? [];
     }
 
+    public function setVariants($array) {
+        $this->prefs = $array;
+    }
+
     public function setUserVariant($path, $value)
     {
-        $this->prefs = Hash::insert($this->prefs, $path, $value);
+        $this->prefs = Hash::insert($this->prefs ?? [], $path, $value);
+    }
+
+    public function getUserVariant($path)
+    {
+        return Hash::get($this->prefs ?? [], $path);
     }
 
     public function __debugInfo()
     {
-        return [
-            'id' => $this->id,
-            'user_id (current supervisor)' => $this->user_id,
-            'user prefs' => $this->prefs,
-            'default prefs' => $this->defaults
+        $data = [
+            'defaults' => $this->defaults
         ];
+        $original = parent::__debugInfo();
+        return array_merge($data, $original);
     }
 }
