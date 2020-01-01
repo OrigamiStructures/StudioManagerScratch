@@ -59,7 +59,6 @@ class AddressBookController extends AppController
             //handle
         }
         $this->Preferences->setPref();
-        die;
     }
 
     /**
