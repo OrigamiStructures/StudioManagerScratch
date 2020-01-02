@@ -62,7 +62,7 @@ class Preference extends Entity
      *
      * @return array
      */
-    public function getUserVariants()
+    public function getVariants()
     {
         return $this->prefs ?? [];
     }
@@ -71,12 +71,12 @@ class Preference extends Entity
         $this->prefs = $array;
     }
 
-    public function setUserVariant($path, $value)
+    public function setVariant($path, $value)
     {
         $this->prefs = Hash::insert($this->prefs ?? [], $path, $value);
     }
 
-    public function getUserVariant($path)
+    public function getVariant($path)
     {
         return Hash::get($this->prefs ?? [], $path);
     }

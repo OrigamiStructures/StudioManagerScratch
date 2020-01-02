@@ -104,7 +104,7 @@ class PreferencesForm extends Form
          *
          * return $this
          */
-        $prefs = collection(Hash::flatten($this->UserPrefs->getUserVariants()));
+        $prefs = collection(Hash::flatten($this->UserPrefs->getVariants()));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
             $attributes = $schema->field($fieldName);
             $attributes['default'] = $value;
@@ -161,12 +161,12 @@ class PreferencesForm extends Form
             foreach ($schema->fields() as $path) {
                 $defaultValue = $schema->field($path)['default'];
                 $defaults[$path] = $defaultValue;
-                if (!in_array($this->UserPrefs->getUserVariant($path), [null, $defaultValue])) {
-                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getUserVariant($path));
+                if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
+                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
                 }
             }
             $this->UserPrefs->setDefaults($defaults);
-            if ($this->UserPrefs->getUserVariants() != $prefs) {
+            if ($this->UserPrefs->getVariants() != $prefs) {
                 $this->UserPrefs->setVariants($prefs);
                 (TableRegistry::getTableLocator()->get('Preferences'))
                     ->save($this->UserPrefs);

@@ -79,7 +79,7 @@ class PreferencesComponent extends Component
 
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             $prefs = $this->repository()->getPreferencesFor($supervisor_id);
-            $userVariants = $prefs->getUserVariants();
+            $userVariants = $prefs->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
 
             $allowedPrefs = collection($prefsForm->getAvailablePrefs());
@@ -181,7 +181,7 @@ class PreferencesComponent extends Component
      */
     public function getUserVariants($user_id)
     {
-        return $this->getFormObjet()->getUserPrefs($user_id)->getUserVariants();
+        return $this->getFormObjet()->getUserPrefs($user_id)->getVariants();
     }
 
     /**
