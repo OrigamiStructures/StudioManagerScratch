@@ -8,13 +8,10 @@ echo $this->Preferences->pref();
 echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPrefs']);
 echo $this->Form->input('paginate.limit');
 echo $this->Form->input('paginate.sort.people');
-echo $this->Form->input('random.data');
-echo $this->Form->input('nullfield');
-echo $this->Form->input('emptyfield');
 echo $this->Form->submit();
 echo $this->Form->end();
 
-//osd($prefs);
+osd($prefs);
 //osd($people);
 
 foreach ($people->getData() as $person) {

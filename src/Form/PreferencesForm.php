@@ -92,7 +92,7 @@ class PreferencesForm extends Form
     public function asContext($user_id)
     {
         if ($this->user_id === false || $this->user_id != $user_id) {
-            $this->getUserPrefs($user_id);
+            $this->getUserPrefsEntity($user_id);
         }
         $schema = $this->schema();
         /*
@@ -146,7 +146,7 @@ class PreferencesForm extends Form
      * @param $user_id string
      * @return Preference
      */
-    public function getUserPrefs($user_id)
+    public function getUserPrefsEntity($user_id)
     {
         $this->user_id = $user_id;
         if ($this->UserPrefs === false) {

@@ -161,7 +161,7 @@ class PreferencesComponent extends Component
      */
     public function getUserPrefsEntity($user_id)
     {
-        return $this->getFormObjet()->getUserPrefs($user_id);
+        return $this->getFormObjet()->getUserPrefsEntity($user_id);
     }
 
     /**
@@ -181,7 +181,7 @@ class PreferencesComponent extends Component
      */
     public function getUserVariants($user_id)
     {
-        return $this->getFormObjet()->getUserPrefs($user_id)->getVariants();
+        return $this->getFormObjet()->getUserPrefsEntity($user_id)->getVariants();
     }
 
     /**
