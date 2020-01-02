@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 
 use App\Controller\AppController;
 use App\Form\LocalPreferencesForm;
+use App\Form\PreferencesForm;
 use App\Model\Entity\Preference;
 use App\Model\Table\PreferencesTable;
 use Cake\Controller\Component;
@@ -17,7 +18,6 @@ use http\Exception\BadMethodCallException;
  * Class PreferencesComponent
  * @package App\Controller\Component
  *
- * @method AppController getController()
  * @property \FlashComponent $Flash
  */
 class PreferencesComponent extends Component
@@ -35,7 +35,15 @@ class PreferencesComponent extends Component
      */
     public $components = ['Flash'];
 
+    /**
+     * @var bool|PreferencesForm|LocalPreferencesForm
+     */
     private $PreferenceForm = false;
+
+    /**
+     * @var bool|string
+     */
+    private $formClass = false;
 
     /**
      * Using this component will automatically make PreferencesHelper available
@@ -54,7 +62,7 @@ class PreferencesComponent extends Component
      * @return \Cake\Http\Response|null
      * @throws BadMethodCallException
      */
-    public function setPref()
+    public function setPrefs()
     {
         $controller = $this->getController();
         /* @var AppController $controller */
@@ -72,7 +80,7 @@ class PreferencesComponent extends Component
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             $prefs = $this->repository()->getPreferencesFor($supervisor_id);
             $userVariants = $prefs->getUserVariants();
-            $prefsDefaults = $prefsForm->getPrefDefaults();
+            $prefsDefaults = $this->getPrefsDefaults();
 
             $allowedPrefs = collection($prefsForm->getAvailablePrefs());
             $newVariants = $allowedPrefs
@@ -111,7 +119,7 @@ class PreferencesComponent extends Component
      *
      * @param $path
      */
-    public function clearPref($path)
+    public function clearPrefs()
     {
         $controller = $this->getController();
         /* @var AppController $controller */
@@ -121,9 +129,72 @@ class PreferencesComponent extends Component
         $prefs = $this->repository()->getPreferncesFor($supervisor_id);
         /* @var Preference $prefs */
 
-        $prefs->prefs = Hash::remove($prefs->prefs, $path);
+        $prefs = $this->repository()->patchEntity($prefs, ['prefs' => []]);
 
+        if ($this->repository()->save($prefs)) {
+            $this->Flash->success('Your preferences were reset to the default values.');
+        } else {
+            $this->Flash->error('Your preferences were no reset. Please try again');
+        }
+    }
 
+    /**
+     * Get the ModellessForm object to use as a Form::create context
+     *
+     * The object will carry all user settings to the form as values
+     *
+     * @param $user_id
+     * @return LocalPreferencesForm
+     */
+    public function getFormContextObject($user_id)
+    {
+        return $this->getFormObjet()->asContext($user_id);
+    }
+
+    /**
+     * Get the user's preference entity
+     *
+     * fully stocked with all the default settings and user variants
+     *
+     * @param $user_id
+     * @return Preference
+     */
+    public function getUserPrefsEntity($user_id)
+    {
+        return $this->getFormObjet()->getUserPrefs($user_id);
+    }
+
+    /**
+     * Get the [path => value] array of all prefs and their default values
+     * @return array
+     */
+    public function getPrefsDefaults()
+    {
+        return $this->getFormObjet()->getPrefDefaults();
+    }
+
+    /**
+     * Get the array of non-default settings for the user
+     *
+     * @param $user_id
+     * @return array
+     */
+    public function getUserVariants($user_id)
+    {
+        return $this->getFormObjet()->getUserPrefs($user_id)->getUserVariants();
+    }
+
+    /**
+     * Fully namespaced name of an override PreferencesForm class
+     *
+     * Normally LocalPreferencesForm extends PreferencesForm is used.
+     * But any MyPrefForm extends PreferencesForm can be substituted
+     *
+     * @param $formClass
+     */
+    public function setFormClass($formClass)
+    {
+        $this->formClass = $formClass;
     }
 
     /**
@@ -150,7 +221,6 @@ class PreferencesComponent extends Component
      */
     private function summarizeSettings(array $post): \stdClass
     {
-
         $validPaths = $this->getFormObjet()->getAvailablePrefs();
         $settings = collection(Hash::flatten($post));
         $settingSummaries = $settings->reduce(function ($accum, $value, $path) use ($validPaths) {
@@ -169,9 +239,15 @@ class PreferencesComponent extends Component
         return $prefsSummary;
     }
 
+    /**
+     * @return PreferencesForm|LocalPreferencesForm
+     */
     private function getFormObjet()
     {
-        if ($this->PreferenceForm == false) {
+        if ($this->PreferenceForm == false && !$this->formClass == false) {
+            $class = $this->formClass;
+            $this->PreferenceForm = new $class();
+        } else {
             $this->PreferenceForm = new LocalPreferencesForm();
         }
         return $this->PreferenceForm;

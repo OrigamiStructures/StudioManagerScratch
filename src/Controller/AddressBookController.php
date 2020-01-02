@@ -58,7 +58,7 @@ class AddressBookController extends AppController
         if (!$prefsForm->validate($this->getRequest()->getData())) {
             //handle
         }
-        $this->Preferences->setPref();
+        $this->Preferences->setPrefs();
     }
 
     /**
