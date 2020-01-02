@@ -4,6 +4,7 @@ namespace App\Model\Entity;
 use App\Exception\BadClassConfigurationException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
+use http\Exception\BadMethodCallException;
 
 /**
  * Preference Entity
@@ -50,17 +51,16 @@ class Preference extends Entity
      *
      * @param $path
      * @return mixed
+     * @throws BadClassConfigurationException
+     * @throws \BadMethodCallException
      */
     public function for($path)
     {
-        if ($this->defaults === false) {
-            $msg = "Preferenes entity must have the default preference values set.";
-            throw new BadClassConfigurationException($msg);
-        }
+        $this->validateStructure();
         $setting = Hash::get($this->prefs ?? [], $path) ?? $this->defaults[$path];
         if (is_null($setting)) {
             $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
-            throw new BadClassConfigurationException($msg);
+            throw new BadMethodCallException($msg);
         }
         return $setting;
     }
@@ -78,6 +78,20 @@ class Preference extends Entity
         $this->defaults = $defaults;
         $this->clean();
         return $this;
+    }
+
+    /**
+     * Returns all defaults
+     *
+     * [path.to.pref => value]
+     *
+     * @throws BadClassConfigurationException
+     * @return array
+     */
+    public function getDefaults()
+    {
+        $this->validateStructure();
+        return $this->defaults;
     }
 
     /**
@@ -150,5 +164,14 @@ class Preference extends Entity
         ];
         $original = parent::__debugInfo();
         return array_merge($data, $original);
+    }
+
+    private function validateStructure(): void
+    {
+        if ($this->defaults === false) {
+            $msg = "Preferenes entity must have the default preference values set.";
+            throw new BadClassConfigurationException($msg);
+        }
+        return true;
     }
 }
