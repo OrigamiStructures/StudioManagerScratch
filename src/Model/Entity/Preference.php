@@ -172,6 +172,5 @@ class Preference extends Entity
             $msg = "Preferenes entity must have the default preference values set.";
             throw new BadClassConfigurationException($msg);
         }
-        return true;
     }
 }
