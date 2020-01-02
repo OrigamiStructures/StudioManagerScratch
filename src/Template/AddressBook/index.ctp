@@ -8,7 +8,7 @@ echo $this->Preferences->pref();
 echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPref']);
 echo $this->Form->input('paginate.limit');
 echo $this->Form->input('paginate.sort.people');
-echo $this->Form->input('randon.data');
+echo $this->Form->input('random.data');
 echo $this->Form->input('nullfield');
 echo $this->Form->input('emptyfield');
 echo $this->Form->submit();

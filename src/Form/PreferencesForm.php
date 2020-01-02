@@ -37,6 +37,50 @@ class PreferencesForm extends Form
     protected $UserPrefs = false;
 
     /**
+     * A Hash::flattened array [path-key => default-value]
+     * @var array
+     */
+    protected $prefDefaults;
+
+    /**
+     * Paths of all valid preference values
+     *
+     * @var string[]
+     */
+    protected $availablePrefs;
+
+    public function __construct(EventManager $eventManager = null)
+    {
+        parent::__construct($eventManager);
+        $schema = clone $this->schema();
+        $this->availablePrefs = $schema->fields();
+        $prefDefaults = (collection($this->availablePrefs))
+            ->reduce(function ($accum, $path) use ($schema) {
+                $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
+                return $accum;
+            }, []);
+
+        $this->prefDefaults = Hash::flatten($prefDefaults);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrefDefaults(): array
+    {
+        return $this->prefDefaults;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailablePrefs(): array
+    {
+        return $this->availablePrefs;
+    }
+
+    /**
      * Return this object with user prefs overwritting default values
      *
      * The users stored choices will overwrite the default values
@@ -60,7 +104,7 @@ class PreferencesForm extends Form
          *
          * return $this
          */
-        $prefs = collection(Hash::flatten($this->UserPrefs->userVariants()));
+        $prefs = collection(Hash::flatten($this->UserPrefs->getUserVariants()));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
             $attributes = $schema->field($fieldName);
             $attributes['default'] = $value;
@@ -109,6 +153,7 @@ class PreferencesForm extends Form
             $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
                 ->getPreferencesFor($user_id);
             /* @var  Preference $userPrefs */
+            pj($this->UserPrefs->prefs);
 
             $schema = $this->schema();
             $defaults = [];
@@ -121,7 +166,7 @@ class PreferencesForm extends Form
                 }
             }
             $this->UserPrefs->setDefaults($defaults);
-            if ($this->UserPrefs->userVariants() != $prefs) {
+            if ($this->UserPrefs->getUserVariants() != $prefs) {
                 $this->UserPrefs->setVariants($prefs);
                 (TableRegistry::getTableLocator()->get('Preferences'))
                     ->save($this->UserPrefs);

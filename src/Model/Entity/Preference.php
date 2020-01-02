@@ -62,7 +62,7 @@ class Preference extends Entity
      *
      * @return array
      */
-    public function userVariants()
+    public function getUserVariants()
     {
         return $this->prefs ?? [];
     }

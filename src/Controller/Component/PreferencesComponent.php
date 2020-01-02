@@ -35,6 +35,8 @@ class PreferencesComponent extends Component
      */
     public $components = ['Flash'];
 
+    private $PreferenceForm = false;
+
     /**
      * Using this component will automatically make PreferencesHelper available
      *
@@ -69,20 +71,19 @@ class PreferencesComponent extends Component
 
             $supervisor_id = $controller->contextUser()->getId('supervisor');
             $prefs = $this->repository()->getPreferencesFor($supervisor_id);
-            $userVariants = $prefs->userVariants();
-            $schema = $prefsForm->schema();
+            $userVariants = $prefs->getUserVariants();
+            $prefsDefaults = $prefsForm->getPrefDefaults();
 
-            $allowedPrefs = collection($prefsForm->schema()->fields());
+            $allowedPrefs = collection($prefsForm->getAvailablePrefs());
             $newVariants = $allowedPrefs
-                ->reduce(function($accum, $path) use ($post, $schema, $userVariants){
+                ->reduce(function($accum, $path) use ($post, $prefsDefaults, $userVariants){
                     //if the post is default, leave variant out of the list
                     //if post is non-default, non-null
                     // or variant is non-null, variant must be included
                     // and we prefere post if its different than variant
-                    $defaultValue = $schema->field($path)['default'];
                     $postValue = Hash::get($post, $path);
                     $variantValue = Hash::get($userVariants, $path);
-                    if ( $postValue == $defaultValue ) {
+                    if ( $postValue == $prefsDefaults[$path]) {
                         //let variant evaporate
                     } elseif (!is_null($variantValue) ||  !is_null($postValue)) {
                         $accum = Hash::insert(
@@ -93,24 +94,12 @@ class PreferencesComponent extends Component
                     }
                     return $accum;
                 }, []);
+
             if ($newVariants != $userVariants) {
                 $prefs->setVariants($newVariants);
-            }
-            osd($prefs, 'prefs entity');
-            osd($post);die;
-
-            $settingSummaries = $this->summarizeSettings($post ?? []);
-
-            if (!$this->repository()->save($prefs)) {
-                $msg = $settingSummaries->count > 1
-                    ? __("Your preferences $settingSummaries->summaryStatement were not saved. Please try again")
-                    : __("Your preference for $settingSummaries->summaryStatement was not saved. Please try again");
-                $this->Flash->error($msg);
+                $this->savePrefs($post, $prefs);
             } else {
-                $msg = $settingSummaries->count > 1
-                    ? __("Your preferences $settingSummaries->summaryStatement were saved.")
-                    : __("Your preference for $settingSummaries->summaryStatement was saved.");
-                $this->Flash->error($msg);
+                $this->Flash->success('No new preferences were requested');
             }
         }
 
@@ -161,19 +150,31 @@ class PreferencesComponent extends Component
      */
     private function summarizeSettings(array $post): \stdClass
     {
+
+        $validPaths = $this->getFormObjet()->getAvailablePrefs();
         $settings = collection(Hash::flatten($post));
-        $settingSummaries = $settings->map(function ($value, $key) {
-            $pref = str_replace('.', ', ', $key);
-            return "[$pref = $value]";
-        })
-            ->toArray();
+        $settingSummaries = $settings->reduce(function ($accum, $value, $path) use ($validPaths) {
+            if (in_array($path, $validPaths)) {
+                $pref = str_replace('.', ', ', $path);
+                $accum[] = "[$pref = $value]";
+            }
+            return $accum;
+        }, []);
         $prefsSummary = new \stdClass();
         $prefsSummary->post = $post;
         $prefsSummary->summaryArray = $settingSummaries;
         $prefsSummary->summaryStatement = Text::toList($settingSummaries);
-        $prefsSummary->count = count($post);
+        $prefsSummary->count = count($settingSummaries);
 
         return $prefsSummary;
+    }
+
+    private function getFormObjet()
+    {
+        if ($this->PreferenceForm == false) {
+            $this->PreferenceForm = new LocalPreferencesForm();
+        }
+        return $this->PreferenceForm;
     }
 
     /**
@@ -187,6 +188,27 @@ class PreferencesComponent extends Component
             $this->repository = TableRegistry::getTableLocator()->get('Preferences');
         }
         return $this->repository;
+    }
+
+    /**
+     * @param $post
+     * @param Preference $prefs
+     */
+    protected function savePrefs($post, Preference $prefs): void
+    {
+        $settingSummaries = $this->summarizeSettings($post ?? []);
+
+        if (!$this->repository()->save($prefs)) {
+            $msg = $settingSummaries->count > 1
+                ? __("Your preferences $settingSummaries->summaryStatement were not saved. Please try again")
+                : __("Your preference for $settingSummaries->summaryStatement was not saved. Please try again");
+            $this->Flash->error($msg);
+        } else {
+            $msg = $settingSummaries->count > 1
+                ? __("Your preferences $settingSummaries->summaryStatement were saved.")
+                : __("Your preference for $settingSummaries->summaryStatement was saved.");
+            $this->Flash->success($msg);
+        }
     }
 
 }
