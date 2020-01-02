@@ -10,7 +10,7 @@ use Cake\Utility\Hash;
  *
  * To get a propery constructed entity you must use the getter
  * PreferencesComponent::getUsersPrefsEntity(user_id) or
- * (Concrete)PreferencesForm::getUserPrefsEntity(user_id).
+ * (Concrete)PreferencesForm::getUsersPrefsEntity(user_id).
  * These methods will set the $this::defaults property
  *
  * @property int $id

@@ -40,44 +40,44 @@ class PreferencesForm extends Form
      * A Hash::flattened array [path-key => default-value]
      * @var array
      */
-    protected $prefDefaults;
+    protected $defaults;
 
     /**
      * Paths of all valid preference values
      *
      * @var string[]
      */
-    protected $availablePrefs;
+    protected $validPaths;
 
     public function __construct(EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
         $schema = clone $this->schema();
-        $this->availablePrefs = $schema->fields();
-        $prefDefaults = (collection($this->availablePrefs))
+        $this->validPaths = $schema->fields();
+        $prefDefaults = (collection($this->validPaths))
             ->reduce(function ($accum, $path) use ($schema) {
                 $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
                 return $accum;
             }, []);
 
-        $this->prefDefaults = Hash::flatten($prefDefaults);
+        $this->defaults = Hash::flatten($prefDefaults);
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getPrefDefaults(): array
+    public function getDefaults(): array
     {
-        return $this->prefDefaults;
+        return $this->defaults;
     }
 
     /**
      * @return string[]
      */
-    public function getAvailablePrefs(): array
+    public function getValidPaths(): array
     {
-        return $this->availablePrefs;
+        return $this->validPaths;
     }
 
     /**
@@ -92,7 +92,7 @@ class PreferencesForm extends Form
     public function asContext($user_id)
     {
         if ($this->user_id === false || $this->user_id != $user_id) {
-            $this->getUserPrefsEntity($user_id);
+            $this->getUsersPrefsEntity($user_id);
         }
         $schema = $this->schema();
         /*
@@ -146,14 +146,13 @@ class PreferencesForm extends Form
      * @param $user_id string
      * @return Preference
      */
-    public function getUserPrefsEntity($user_id)
+    public function getUsersPrefsEntity($user_id)
     {
         $this->user_id = $user_id;
         if ($this->UserPrefs === false) {
             $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
                 ->getPreferencesFor($user_id);
             /* @var  Preference $userPrefs */
-            pj($this->UserPrefs->prefs);
 
             $schema = $this->schema();
             $defaults = [];
@@ -174,11 +173,4 @@ class PreferencesForm extends Form
         }
         return $this->UserPrefs;
     }
-
-    protected function _execute(array $data)
-    {
-        // Send an email.
-        return true;
-    }
-
 }

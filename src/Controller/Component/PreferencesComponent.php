@@ -82,7 +82,7 @@ class PreferencesComponent extends Component
             $userVariants = $prefs->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
 
-            $allowedPrefs = collection($prefsForm->getAvailablePrefs());
+            $allowedPrefs = collection($prefsForm->getValidPaths());
             $newVariants = $allowedPrefs
                 ->reduce(function($accum, $path) use ($post, $prefsDefaults, $userVariants){
                     //if the post is default, leave variant out of the list
@@ -161,7 +161,7 @@ class PreferencesComponent extends Component
      */
     public function getUserPrefsEntity($user_id)
     {
-        return $this->getFormObjet()->getUserPrefsEntity($user_id);
+        return $this->getFormObjet()->getUsersPrefsEntity($user_id);
     }
 
     /**
@@ -170,7 +170,7 @@ class PreferencesComponent extends Component
      */
     public function getPrefsDefaults()
     {
-        return $this->getFormObjet()->getPrefDefaults();
+        return $this->getFormObjet()->getDefaults();
     }
 
     /**
@@ -181,7 +181,7 @@ class PreferencesComponent extends Component
      */
     public function getUserVariants($user_id)
     {
-        return $this->getFormObjet()->getUserPrefsEntity($user_id)->getVariants();
+        return $this->getFormObjet()->getUsersPrefsEntity($user_id)->getVariants();
     }
 
     /**
@@ -221,7 +221,7 @@ class PreferencesComponent extends Component
      */
     private function summarizeSettings(array $post): \stdClass
     {
-        $validPaths = $this->getFormObjet()->getAvailablePrefs();
+        $validPaths = $this->getFormObjet()->getValidPaths();
         $settings = collection(Hash::flatten($post));
         $settingSummaries = $settings->reduce(function ($accum, $value, $path) use ($validPaths) {
             if (in_array($path, $validPaths)) {
