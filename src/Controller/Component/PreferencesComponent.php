@@ -8,6 +8,7 @@ use App\Form\PreferencesForm;
 use App\Model\Entity\Preference;
 use App\Model\Table\PreferencesTable;
 use Cake\Controller\Component;
+use Cake\Controller\ComponentRegistry;
 use Cake\Core\App;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -67,18 +68,12 @@ class PreferencesComponent extends Component
         $controller = $this->getController();
         /* @var AppController $controller */
 
-        if (!$controller->getRequest()->is(['post', 'put'])) {
-            //@todo How do we keep this invisible to API calls?
-            $msg = __("Preferences can only be changed through POST or PUT");
-            throw new BadMethodCallException($msg);
-        }
-
         $prefsForm = new LocalPreferencesForm();
         $post = $controller->getRequest()->getData();
+//        osd($post);die;
         if ($prefsForm->validate($post)) {
 
-            $supervisor_id = $controller->contextUser()->getId('supervisor');
-            $prefs = $this->repository()->getPreferencesFor($supervisor_id);
+            $prefs = $this->repository()->getPreferencesFor($post['id']);
             $userVariants = $prefs->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
 
@@ -111,7 +106,7 @@ class PreferencesComponent extends Component
             }
         }
 
-        return $controller->redirect($controller->referer());
+        return;
 }
 
     /**
@@ -119,14 +114,10 @@ class PreferencesComponent extends Component
      *
      * @param $path
      */
-    public function clearPrefs()
+    public function clearPrefs($user_id)
     {
-        $controller = $this->getController();
-        /* @var AppController $controller */
-        $supervisor_id = $controller->contextUser()->getId('supervisor');
-
         //read the persisted prefs
-        $prefs = $this->repository()->getPreferncesFor($supervisor_id);
+        $prefs = $this->repository()->getPreferncesFor($user_id);
         /* @var Preference $prefs */
 
         $prefs = $this->repository()->patchEntity($prefs, ['prefs' => []]);
@@ -136,6 +127,7 @@ class PreferencesComponent extends Component
         } else {
             $this->Flash->error('Your preferences were no reset. Please try again');
         }
+        return;
     }
 
     /**
@@ -242,7 +234,7 @@ class PreferencesComponent extends Component
     /**
      * @return PreferencesForm|LocalPreferencesForm
      */
-    private function getFormObjet()
+    public function getFormObjet()
     {
         if ($this->PreferenceForm == false && !$this->formClass == false) {
             $class = $this->formClass;

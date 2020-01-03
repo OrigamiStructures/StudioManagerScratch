@@ -7,6 +7,7 @@ use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
 use Cake\Utility\Hash;
+use http\Exception\BadMethodCallException;
 
 /**
  * Class AddressBookController
@@ -50,15 +51,16 @@ class AddressBookController extends AppController
         if (!$this->getRequest()->is('post')
             && !$this->getRequest()->is('put')
         ) {
-            //improper access attempted
-            //redirect or exception?
+            $msg = __("Preferences can only be changed through POST or PUT");
+            throw new BadMethodCallException($msg);
         }
-        $prefsForm = new LocalPrefsForm();
+        $prefsForm = $this->Preferences->getFormObjet();
 
         if (!$prefsForm->validate($this->getRequest()->getData())) {
             //handle
         }
         $this->Preferences->setPrefs();
+        return $this->redirect($this->referer());
     }
 
     /**

@@ -33,6 +33,9 @@ class LocalPreferencesForm extends PreferencesForm
             ->addField('paginate.sort.artwork', [
                 'type' => 'string',
                 'default' => 'title'
+            ])
+            ->addField('id', [
+                'type' => 'string'
             ]);
     }
 
@@ -42,11 +45,12 @@ class LocalPreferencesForm extends PreferencesForm
      */
     public function validationDefault(Validator $validator)
     {
-        $validator->integer(
-            'paginate.limit',
-            "Pagination limit must be the number of item you want on each page.",
-            'update'
-        );
+        $validator->requirePresence('id');
+//        $validator->integer(
+//            'paginate.limit',
+//            "Pagination limit must be the number of item you want on each page.",
+//            'update'
+//        );
         return $validator;
     }
 

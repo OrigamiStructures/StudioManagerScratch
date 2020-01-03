@@ -53,10 +53,12 @@ class PreferencesForm extends Form
     {
         parent::__construct($eventManager);
         $schema = $this->schema();
-        $this->validPaths = $schema->fields();
+        $this->validPaths = array_diff($schema->fields(), ['id']);
         $prefDefaults = (collection($this->validPaths))
             ->reduce(function ($accum, $path) use ($schema) {
-                $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
+                if ($path != 'id') {
+                    $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
+                }
                 return $accum;
             }, []);
 
@@ -102,6 +104,10 @@ class PreferencesForm extends Form
             $attributes['default'] = $value;
             return $attributes;
         })->toArray();
+
+        $idAttributes = $schema->field('id');
+        $idAttributes['default'] = $user_id;
+        $overrides['id'] = $idAttributes;
 
         $this->schema()->addFields($overrides);
 
