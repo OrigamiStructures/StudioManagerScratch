@@ -69,10 +69,10 @@ class PreferencesComponent extends Component
         /* @var AppController $controller */
 
         $prefsForm = new LocalPreferencesForm();
-        $post = $controller->getRequest()->getData();
-//        osd($post);die;
-        if ($prefsForm->validate($post)) {
 
+        $post = $controller->getRequest()->getData();
+
+        if ($prefsForm->validate($post)) {
             $prefs = $this->repository()->getPreferencesFor($post['id']);
             $userVariants = $prefs->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
@@ -83,7 +83,7 @@ class PreferencesComponent extends Component
                     //if the post is default, leave variant out of the list
                     //if post is non-default, non-null
                     // or variant is non-null, variant must be included
-                    // and we prefere post if its different than variant
+                    // and we prefer post if its different than variant
                     $postValue = Hash::get($post, $path);
                     $variantValue = Hash::get($userVariants, $path);
                     if ( $postValue == $prefsDefaults[$path]) {
