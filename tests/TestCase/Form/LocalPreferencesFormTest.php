@@ -5,7 +5,15 @@ use App\Form\LocalPreferencesForm;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Form\PreferencesForm Test Case
+ * App\Form\LocalPreferencesForm Test Case
+ *
+ * The heaving lifting is in PreferencesForm. LocalPreferencesForm adds the
+ * prefs schema and validation. Neither is testable alone without work mocking
+ * the schema (which I wasn't prepared to do). So they are tested as one.
+ *
+ * This two part construction is to prepare this system to work as a PlugIn.
+ * Later, if we do that, we'll have to fix the testing.
+ * 
  */
 class LocalPreferencesFormTest extends TestCase
 {
