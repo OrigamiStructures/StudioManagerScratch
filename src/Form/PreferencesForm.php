@@ -52,7 +52,7 @@ class PreferencesForm extends Form
     public function __construct(EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
-        $schema = clone $this->schema();
+        $schema = $this->schema();
         $this->validPaths = $schema->fields();
         $prefDefaults = (collection($this->validPaths))
             ->reduce(function ($accum, $path) use ($schema) {
@@ -117,19 +117,6 @@ class PreferencesForm extends Form
     }
 
     /**
-     * @todo This may not be needed. But I feel uneasy modifying
-     *      the schema to reflect the user settings. I may be
-     *      worrying about nothing. This is a short lived object.
-     *
-     * @return $this
-     */
-    public function resetFormDefaults()
-    {
-        $this->_buildSchema();
-        return $this;
-    }
-
-    /**
      * Load the user prefs and add all defaults to it
      *
      * The current user preference record is retrieved then two
@@ -157,6 +144,9 @@ class PreferencesForm extends Form
             $schema = $this->schema();
             $defaults = [];
             $prefs = [];
+
+            //Make a list of all default values
+            //And filter any invalid prefs out of the json object
             foreach ($schema->fields() as $path) {
                 $defaultValue = $schema->field($path)['default'];
                 $defaults[$path] = $defaultValue;
@@ -164,7 +154,10 @@ class PreferencesForm extends Form
                     $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
                 }
             }
+            //set the default values into the entity
             $this->UserPrefs->setDefaults($defaults);
+
+            //if the prefs list changed during filtering, save the corrected version
             if ($this->UserPrefs->getVariants() != $prefs) {
                 $this->UserPrefs->setVariants($prefs);
                 (TableRegistry::getTableLocator()->get('Preferences'))
