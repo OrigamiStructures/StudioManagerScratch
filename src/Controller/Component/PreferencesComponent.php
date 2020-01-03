@@ -68,7 +68,7 @@ class PreferencesComponent extends Component
         $controller = $this->getController();
         /* @var AppController $controller */
 
-        $prefsForm = new LocalPreferencesForm();
+        $prefsForm = $this->getFormObjet();
 
         $post = $controller->getRequest()->getData();
 
@@ -117,7 +117,7 @@ class PreferencesComponent extends Component
     public function clearPrefs($user_id)
     {
         //read the persisted prefs
-        $prefs = $this->repository()->getPreferncesFor($user_id);
+        $prefs = $this->repository()->getPreferencesFor($user_id);
         /* @var Preference $prefs */
 
         $prefs = $this->repository()->patchEntity($prefs, ['prefs' => []]);
@@ -266,16 +266,16 @@ class PreferencesComponent extends Component
     {
         $settingSummaries = $this->summarizeSettings($post ?? []);
 
-        if (!$this->repository()->save($prefs)) {
-            $msg = $settingSummaries->count > 1
-                ? __("Your preferences $settingSummaries->summaryStatement were not saved. Please try again")
-                : __("Your preference for $settingSummaries->summaryStatement was not saved. Please try again");
-            $this->Flash->error($msg);
-        } else {
+        if ($this->repository()->save($prefs)) {
             $msg = $settingSummaries->count > 1
                 ? __("Your preferences $settingSummaries->summaryStatement were saved.")
                 : __("Your preference for $settingSummaries->summaryStatement was saved.");
             $this->Flash->success($msg);
+        } else {
+            $msg = $settingSummaries->count > 1
+                ? __("Your preferences $settingSummaries->summaryStatement were not saved. Please try again")
+                : __("Your preference for $settingSummaries->summaryStatement was not saved. Please try again");
+            $this->Flash->error($msg);
         }
     }
 
