@@ -13,7 +13,7 @@ use Cake\TestSuite\TestCase;
  *
  * This two part construction is to prepare this system to work as a PlugIn.
  * Later, if we do that, we'll have to fix the testing.
- * 
+ *
  */
 class LocalPreferencesFormTest extends TestCase
 {
@@ -42,7 +42,42 @@ class LocalPreferencesFormTest extends TestCase
     {
         parent::setUp();
         $this->PreferencesForm = new LocalPreferencesForm();
+        $this->replaceSchemaWithTestSchema();
+    }
 
+    protected function replaceSchemaWithTestSchema()
+    {
+        $originalColumns = $this->PreferencesForm->schema()->fields();
+        foreach ($originalColumns as $originalColumn) {
+            $this->PreferencesForm->schema()->removeField($originalColumn);
+        }
+        $testSchema = [
+            'paginate.limit' => [
+                'type' => 'integer',
+                'default' => (int) 10,
+                'length' => null,
+                'precision' => null
+            ],
+            'paginate.sort.people' => [
+                'type' => 'string',
+                'default' => 'last_name',
+                'length' => null,
+                'precision' => null
+            ],
+            'paginate.sort.artwork' => [
+                'type' => 'string',
+                'default' => 'title',
+                'length' => null,
+                'precision' => null
+            ],
+            'id' => [
+                'type' => 'string',
+                'length' => null,
+                'precision' => null,
+                'default' => null
+            ]
+        ];
+        $this->PreferencesForm->schema()->addFields($testSchema);
     }
 
     /**
