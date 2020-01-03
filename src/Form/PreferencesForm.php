@@ -95,15 +95,7 @@ class PreferencesForm extends Form
             $this->getUsersPrefsEntity($user_id);
         }
         $schema = $this->schema();
-        /*
-         * the values the user has set for their self in this form:
-         * [
-         *  'field.name' => 'value',
-         *  'another.field.here' => 'value'
-         * ]
-         *
-         * return $this
-         */
+
         $prefs = collection(Hash::flatten($this->UserPrefs->getVariants()));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
             $attributes = $schema->field($fieldName);
