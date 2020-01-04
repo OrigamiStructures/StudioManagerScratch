@@ -122,7 +122,7 @@ class CardFileController extends AppController {
         $InstitutionCards = TableRegistry::getTableLocator()->get('OrganizationCards');
         $ids = $InstitutionCards
             ->Identities->find('list')
-//				->where(['member_type' => 'Institution'])
+//				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
             ->toArray();
         $institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
         $this->set('institutionCards', $institutionCards);
@@ -175,7 +175,7 @@ class CardFileController extends AppController {
                 $CardTable = TableRegistry::getTableLocator()->get('CategoryCard');
                 break;
 
-            case 'Institution':
+            case MEMBER_TYPE_ORGANIZATION:
                 $CardTable = TableRegistry::getTableLocator()->get('InstitutionCard');
                 break;
 

@@ -61,7 +61,7 @@ $groupFilters = [
     'People' => $memberLayer->getArgObj()     //you can chain off the accessor if you want
         ->specifyFilter('member_type', 'Person'),
     'Institutions' => $memberLayer->getArgObj()
-        ->specifyFilter('member_type', 'Institution')
+        ->specifyFilter('member_type', MEMBER_TYPE_ORGANIZATION)
 ];
 
 $result = [];
