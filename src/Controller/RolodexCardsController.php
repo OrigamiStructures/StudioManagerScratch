@@ -35,13 +35,13 @@ class RolodexCardsController extends AppController {
 	}
 
 	public function groups() {
-		$InstitutionCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-		$ids = $InstitutionCards
+		$OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
+		$ids = $OrganizationCards
 				->Identities->find('list')
 //				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
 				->toArray();
-		$institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-		$this->set('institutionCards', $institutionCards);
+		$organizationCards = $OrganizationCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+		$this->set('organizationCards', $organizationCards);
 	}
 
     /**
