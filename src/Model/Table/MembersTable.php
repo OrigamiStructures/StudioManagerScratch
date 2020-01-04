@@ -172,7 +172,7 @@ class MembersTable extends AppTable
         switch ($data['member_type']) {
             case MEMBER_TYPE_USER:
             case MEMBER_TYPE_CATEGORY:
-            case MEMBER_TYPE_INSTITUTION:
+            case MEMBER_TYPE_ORGANIZATION:
                 $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
                 $data['group']['user_id'] = $this->contextUser()->artistId();
                 break;
@@ -190,7 +190,7 @@ class MembersTable extends AppTable
     private function bmSetupSort(ArrayObject $data) {
         switch ($data['member_type']) {
             case MEMBER_TYPE_CATEGORY:
-            case MEMBER_TYPE_INSTITUTION:
+            case MEMBER_TYPE_ORGANIZATION:
                 $data['last_name'] = $this->createSortName($data['first_name']);
                 break;
             case MEMBER_TYPE_USER:
@@ -430,7 +430,7 @@ class MembersTable extends AppTable
             ]
         ];
         if(
-            in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_INSTITUTION])
+            in_array($type, [MEMBER_TYPE_CATEGORY, MEMBER_TYPE_ORGANIZATION])
             && $this->ContextUser->actionIs('create')//this is a bullshit call and
                         //this request processing should never happen in the Model
         ){
