@@ -10,10 +10,6 @@ use Cake\Validation\Validator;
 class LocalPreferencesForm extends PreferencesForm
 {
 
-    const PAGINATION_LIMIT = 'paginate.limit';
-    const PAGINATION_SORT_PEOPLE = 'paginate.sort.people';
-    const PAGINATION_SORT_ARTWORK = 'paginate.sort.artwork';
-
     /**
      * @param Schema $schema
      * @return Schema
@@ -22,15 +18,15 @@ class LocalPreferencesForm extends PreferencesForm
     {
         return $schema
             ->addField(
-                'paginate.limit', [
+                PrefCon::PAGINATION_LIMIT, [
                 'type' => 'integer',
                 'default' => 10
             ])
-            ->addField('paginate.sort.people', [
+            ->addField(PrefCon::PAGINATION_SORT_PEOPLE, [
                 'type' => 'string',
                 'default' => 'last_name'
             ])
-            ->addField('paginate.sort.artwork', [
+            ->addField(PrefCon::PAGINATION_SORT_ARTWORK, [
                 'type' => 'string',
                 'default' => 'title'
             ])
@@ -53,5 +49,13 @@ class LocalPreferencesForm extends PreferencesForm
 //        );
         return $validator;
     }
+
+}
+
+class PrefCon {
+
+    const PAGINATION_LIMIT = 'paginate.limit';
+    const PAGINATION_SORT_PEOPLE = 'paginate.sort.people';
+    const PAGINATION_SORT_ARTWORK = 'paginate.sort.artwork';
 
 }

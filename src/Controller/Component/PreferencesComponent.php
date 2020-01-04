@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller\Component;
 
-
 use App\Controller\AppController;
 use App\Form\LocalPreferencesForm;
 use App\Form\PreferencesForm;
@@ -60,17 +59,13 @@ class PreferencesComponent extends Component
 
     /**
      *
-     * @return \Cake\Http\Response|null
+     * @return Preference
      * @throws BadMethodCallException
      */
     public function setPrefs()
     {
-        $controller = $this->getController();
-        /* @var AppController $controller */
-
         $prefsForm = $this->getFormObjet();
-
-        $post = $controller->getRequest()->getData();
+        $post = $this->getController()->getRequest()->getData();
 
         if ($prefsForm->validate($post)) {
             $prefs = $this->repository()->getPreferencesFor($post['id']);
@@ -105,8 +100,9 @@ class PreferencesComponent extends Component
                 $this->Flash->success('No new preferences were requested');
             }
         }
+        $prefs->setDefaults($prefsForm->getDefaults());
 
-        return;
+        return $prefs;
 }
 
     /**
