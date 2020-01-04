@@ -12,7 +12,7 @@ echo $this->Form->input('id', ['type' => 'hidden']);
 echo $this->Form->submit();
 echo $this->Form->end();
 
-osd($prefs);
+//osd($prefs);
 //osd($people);
 
 foreach ($people->getData() as $person) {
