@@ -1,7 +1,7 @@
 <?php
 use Cake\Utility\Text;
 
-foreach($institutionCards->getData() as $id => $card) {
+foreach($organizationCards->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\OrganizationCard $card
      */
@@ -21,13 +21,13 @@ foreach($institutionCards->getData() as $id => $card) {
             . Text::toList($card->getMembers()->toValueList('name')) . '</p>';
     }
 
-    $institutions = '';
+    $organizations = '';
     if ($card->isGroup()) {
-        $institutions = "<span>Institution: "
+        $organizations = "<span>Organization: "
         . Text::toList($card->IDs()) . '</span>';
     }
 
-    echo "<p><strong>{$card->name()}</strong> $institutions</p>";
+    echo "<p><strong>{$card->name()}</strong> $organizations</p>";
 	echo $contacts;
 	echo $addresses;
     echo $memberships;

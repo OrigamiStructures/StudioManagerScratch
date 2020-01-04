@@ -36,7 +36,7 @@ class MenusTable extends AppTable{
 	protected $member = ['Market' => [
 			'View Members' => '/members/review',
 			'View Categories' => '/groups/categories',
-            'Create Institution' => '/members/create/Institution',
+            'Create Organization' => '/members/create/Organization',
             'Create Person' => '/members/create/Person',
 		]];
 //    protected $disposition = ['Work Status' => [
