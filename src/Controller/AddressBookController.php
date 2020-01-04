@@ -39,7 +39,13 @@ class AddressBookController extends AppController
 
         $prefsForm = new LocalPrefsForm();
         $prefs = $prefsForm->getUsersPrefsEntity($this->contextUser()->getId('supervisor'));
-        $people = $this->paginate($PersonCards->pageFor('identity', $ids));
+        $people = $this->paginate(
+            $PersonCards->pageFor('identity', $ids),
+            [
+                'limit' => $prefs->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $prefs->for(PrefCon::PAGINATION_SORT_PEOPLE)
+            ]
+        );
 
         $this->set(compact('people', 'prefs', 'prefsForm'));
     }
