@@ -2,9 +2,13 @@
 namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
+use App\Form\LocalPreferencesForm as LocalPrefsForm;
+use App\Form\PrefCon;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
+use Cake\Utility\Hash;
+use http\Exception\BadMethodCallException;
 
 /**
  * Class AddressBookController
@@ -28,14 +32,41 @@ class AddressBookController extends AppController
 
     public function index()
     {
-        $this->Preferences->setPref();
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         $ids = $PersonCards->Identities->find('list')
             ->order(['last_name'])
             ->toArray();
 
-        $people = $this->paginate($PersonCards->pageFor('identity', $ids));
-        $this->set('people', $people);
+        $prefsForm = new LocalPrefsForm();
+        $prefs = $prefsForm->getUsersPrefsEntity($this->contextUser()->getId('supervisor'));
+        $people = $this->paginate(
+            $PersonCards->pageFor('identity', $ids),
+            [
+                'limit' => $prefs->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $prefs->for(PrefCon::PAGINATION_SORT_PEOPLE)
+            ]
+        );
+
+        $this->set(compact('people', 'prefs', 'prefsForm'));
+    }
+
+    /**
+     * This will not be accessible for the API
+     */
+    public function setPrefs()
+    {
+        if (!$this->getRequest()->is('post')
+            && !$this->getRequest()->is('put')
+        ) {
+            $msg = __("Preferences can only be changed through POST or PUT");
+            throw new BadMethodCallException($msg);
+        }
+
+        $prefsForm = $this->Preferences->getFormObjet();
+        if ($prefsForm->validate($this->getRequest()->getData())) {
+            $this->Preferences->setPrefs();
+        }
+        return $this->redirect($this->referer());
     }
 
     /**

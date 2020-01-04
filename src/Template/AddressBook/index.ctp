@@ -1,7 +1,19 @@
 <?php
 /* @var View $this */
+/* @var \App\Form\LocalPreferencesForm $prefsForm */
+
 echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
 echo $this->Preferences->pref();
+
+echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPrefs']);
+echo $this->Form->input('paginate.limit');
+echo $this->Form->input('paginate.sort.people');
+echo $this->Form->input('id', ['type' => 'hidden']);
+echo $this->Form->submit();
+echo $this->Form->end();
+
+//osd($prefs);
+//osd($people);
 
 foreach ($people->getData() as $person) {
     /* @var \App\Model\Entity\PersonCard $person */
