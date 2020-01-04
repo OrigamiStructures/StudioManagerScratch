@@ -92,7 +92,7 @@ class RolodexCardsController extends AppController {
                 break;
 
             case MEMBER_TYPE_ORGANIZATION:
-                $CardTable = TableRegistry::getTableLocator()->get('InstitutionCard');
+                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCard');
                 break;
 
             case 'Person':
