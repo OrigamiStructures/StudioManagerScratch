@@ -164,7 +164,7 @@ class MembersTable extends AppTable
 
 
     /**
-     * Setup the group element for User, Category and Institution
+     * Setup the group element for User, Category and Organization
      *
      * @param ArrayObject $data
      */
@@ -183,7 +183,7 @@ class MembersTable extends AppTable
 
 
     /**
-     * Setup the last_name as a sorting name for Categories and Institutions
+     * Setup the last_name as a sorting name for Categories and Organizations
      *
      * @param ArrayObject $data
      */
