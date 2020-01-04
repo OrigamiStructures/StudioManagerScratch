@@ -59,8 +59,8 @@ class PreferencesComponentTest extends TestCase
 
     public function mockPrefsTable()
     {
-        $tableMock = $this->getMockForModel('Preferences');
-//        $tableMock->expects($this->once())->method('save')->willReturn(false);
+        $tableMock = $this->getMockForModel('Preferences', ['save']);
+        $tableMock->expects($this->once())->method('save')->willReturn(false);
         TableRegistry::getTableLocator()->set('Preferences', $tableMock);
     }
 
@@ -112,6 +112,7 @@ class PreferencesComponentTest extends TestCase
             'id' => $user_id
         ];
 
+        //<editor-fold desc="setup">
         $request = new ServerRequest(['post' => $post]);
         $response = new Response();
         $this->controller = $this->getMockBuilder('Cake\Controller\Controller')
@@ -120,11 +121,11 @@ class PreferencesComponentTest extends TestCase
             ->getMock();
         $registry = new ComponentRegistry($this->controller);
         $this->Component = new PreferencesComponent($registry);
-//        $this->mockPrefsTable();
 
         //this swaps in a form with a stable schema for testing
         //defined in this file below
         $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
+        //</editor-fold>
 
         $this->Component->setPrefs();
 
@@ -162,6 +163,7 @@ class PreferencesComponentTest extends TestCase
             'id' => $user_id
         ];
 
+        //<editor-fold desc="setup">
         $request = new ServerRequest(['post' => $post]);
         $response = new Response();
         $this->controller = $this->getMockBuilder('Cake\Controller\Controller')
@@ -174,7 +176,7 @@ class PreferencesComponentTest extends TestCase
         //this swaps in a form with a stable schema for testing
         //defined in this file below
         $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
-//        $this->mockPrefsTable();
+        //</editor-fold>
 
         $this->Component->setPrefs();
 
@@ -182,6 +184,55 @@ class PreferencesComponentTest extends TestCase
 
         $this->assertEmpty($changedPrefs->getVariants(),
             'unexpected values are listed in the prefs.');
+    }
+
+    /**
+     * Test setPrefs method
+     *
+     * Insure that posted data that is not listed in the form schema
+     * does not make its way into the stored pref-variants
+     *
+     * @return void
+     */
+    public function testSetPrefsFailedSave()
+    {
+        $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
+        $post = [
+            'paginate' => [
+                'limit' => '10',
+                'sort' => [
+                    'people' => 'last_name'
+                ]
+            ],
+            'id' => $user_id
+        ];
+
+        //<editor-fold desc="setup">
+        $request = new ServerRequest(['post' => $post]);
+        $response = new Response();
+        $this->controller = $this->getMockBuilder('Cake\Controller\Controller')
+            ->setConstructorArgs([$request, $response])
+            ->setMethods(null)
+            ->getMock();
+        $registry = new ComponentRegistry($this->controller);
+        $this->Component = new PreferencesComponent($registry);
+
+        //this swaps in a form with a stable schema for testing
+        //defined in this file below
+        $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
+        //mocks table with a failed save
+        $this->mockPrefsTable();
+        //</editor-fold>
+
+        $originalVariants = $this->Component->getUserPrefsEntity($user_id)->getVariants();
+
+        $this->Component->setPrefs();
+
+        $changedPrefs = $this->Component->getUserPrefsEntity($user_id);
+
+        $this->assertEquals($originalVariants, $changedPrefs->getVariants(),
+            'No prefs change were expected on failed save, but one occured');
+
     }
 
     /**
