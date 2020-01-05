@@ -5,6 +5,7 @@ namespace App\Form;
 
 use App\Exception\BadPrefsImplementationException;
 use App\Form\PreferencesForm;
+use App\Model\Entity\Preference;
 use Cake\Controller\Component\FlashComponent;
 use Cake\Form\Schema;
 use Cake\Utility\Hash;
@@ -53,9 +54,9 @@ class LocalPreferencesForm extends PreferencesForm
         );
         $validator->inList(
             PrefCon::PAGINATION_SORT_PEOPLE,
-            PrefCon::$lists[PrefCon::PAGINATION_SORT_PEOPLE],
+            $this->values(PrefCon::PAGINATION_SORT_PEOPLE),
             'Sorting can only be done on ' . Text::toList(
-                PrefCon::$lists[PrefCon::PAGINATION_SORT_PEOPLE],
+                $this->values(PrefCon::PAGINATION_SORT_PEOPLE),
                 'or'
             )
         );
@@ -65,6 +66,16 @@ class LocalPreferencesForm extends PreferencesForm
     public function validate($data)
     {
         return parent::validate(Hash::flatten($data));
+    }
+
+    public function selectList($path)
+    {
+        return PrefCon::$lists[$path]['select'];
+    }
+
+    public function values($path)
+    {
+        return PrefCon::$lists[$path]['values'];
     }
 
     /**
@@ -94,10 +105,12 @@ class PrefCon {
 
     static public  $lists = [
         PrefCon::PAGINATION_SORT_PEOPLE => [
-            'first_name', 'last_name'
+            'values' => ['first_name', 'last_name'],
+            'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
         ],
         PrefCon::PAGINATION_SORT_ARTWORK => [
-
+            'values' => [],
+            'select' => []
         ],
     ];
 
