@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
+use App\Exception\BadPrefsImplementationException;
 use App\Form\LocalPreferencesForm as LocalPrefsForm;
 use App\Form\PrefCon;
 use Cake\Network\Exception\NotFoundException;
@@ -59,13 +60,12 @@ class AddressBookController extends AppController
             && !$this->getRequest()->is('put')
         ) {
             $msg = __("Preferences can only be changed through POST or PUT");
-            throw new BadMethodCallException($msg);
+            throw new BadPrefsImplementationException($msg);
         }
 
         $prefsForm = $this->Preferences->getFormObjet();
-        if ($prefsForm->validate($this->getRequest()->getData())) {
-            $this->Preferences->setPrefs();
-        }
+        $this->Preferences->setPrefs();
+
         return $this->redirect($this->referer());
     }
 

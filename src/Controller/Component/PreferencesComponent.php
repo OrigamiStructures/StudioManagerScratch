@@ -99,10 +99,12 @@ class PreferencesComponent extends Component
             } else {
                 $this->Flash->success('No new preferences were requested');
             }
+         } else {
+            //didn't validate
+            $prefsForm->processErrors($this->Flash);
         }
-        $prefs->setDefaults($prefsForm->getDefaults());
 
-        return $prefs;
+        return;
 }
 
     /**
@@ -274,5 +276,6 @@ class PreferencesComponent extends Component
             $this->Flash->error($msg);
         }
     }
+
 
 }
