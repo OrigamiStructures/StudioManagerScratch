@@ -3,8 +3,12 @@
 
 namespace App\Form;
 
+use App\Exception\BadPrefsImplementationException;
 use App\Form\PreferencesForm;
+use Cake\Controller\Component\FlashComponent;
 use Cake\Form\Schema;
+use Cake\Utility\Hash;
+use Cake\Utility\Text;
 use Cake\Validation\Validator;
 
 class LocalPreferencesForm extends PreferencesForm
@@ -41,21 +45,60 @@ class LocalPreferencesForm extends PreferencesForm
      */
     public function validationDefault(Validator $validator)
     {
-        $validator->requirePresence('id');
-//        $validator->integer(
-//            'paginate.limit',
-//            "Pagination limit must be the number of item you want on each page.",
-//            'update'
-//        );
+        $validator->requirePresence('id', true, 'The user id must be included in all preference forms.');
+        $validator->greaterThan(
+            PrefCon::PAGINATION_LIMIT,
+            0,
+            'You must show more than zero items per page.'
+        );
+        $validator->inList(
+            PrefCon::PAGINATION_SORT_PEOPLE,
+            PrefCon::$lists[PrefCon::PAGINATION_SORT_PEOPLE],
+            'Sorting can only be done on ' . Text::toList(
+                PrefCon::$lists[PrefCon::PAGINATION_SORT_PEOPLE],
+                'or'
+            )
+        );
         return $validator;
+    }
+
+    public function validate($data)
+    {
+        return parent::validate(Hash::flatten($data));
+    }
+
+    /**
+     * @param $Flash FlashComponent
+     */
+    public function processErrors($Flash)
+    {
+        $errors = $this->getErrors();
+        if (Hash::check($errors,'id._required')) {
+            $msg = Hash::get($errors, 'id._required');
+            throw new BadPrefsImplementationException($msg);
+        } else {
+            foreach ($errors as $field => $error) {
+                $msg = implode(' ', $error);
+                $Flash->error($msg);
+            }
+        }
     }
 
 }
 
 class PrefCon {
 
-    const PAGINATION_LIMIT = 'paginate.limit';
-    const PAGINATION_SORT_PEOPLE = 'paginate.sort.people';
-    const PAGINATION_SORT_ARTWORK = 'paginate.sort.artwork';
+    const PAGINATION_LIMIT = 'pagination.limit';
+    const PAGINATION_SORT_PEOPLE = 'pagination.sort.people';
+    const PAGINATION_SORT_ARTWORK = 'pagination.sort.artwork';
+
+    static public  $lists = [
+        PrefCon::PAGINATION_SORT_PEOPLE => [
+            'first_name', 'last_name'
+        ],
+        PrefCon::PAGINATION_SORT_ARTWORK => [
+
+        ],
+    ];
 
 }
