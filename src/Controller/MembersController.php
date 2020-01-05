@@ -21,7 +21,7 @@ use App\Model\Entity\Member;
 class MembersController extends AppController
 {
     private $_memberTypes = [
-        MEMBER_TYPE_INSTITUTION, MEMBER_TYPE_INSTITUTION,
+        MEMBER_TYPE_ORGANIZATION, MEMBER_TYPE_ORGANIZATION,
         MEMBER_TYPE_PERSON, MEMBER_TYPE_PERSON,
         MEMBER_TYPE_USER, MEMBER_TYPE_USER,
         MEMBER_TYPE_CATEGORY, MEMBER_TYPE_CATEGORY

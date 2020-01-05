@@ -83,7 +83,7 @@ class Member extends Entity
 	 * Handles messy usage of the first/last name fields for these
 	 * names that only need one field
 	 *
-	 * @todo The Member UX needs to route Institution/Group names to last_name
+	 * @todo The Member UX needs to route Organization/Group names to last_name
 	 *
 	 * @return string
 	 */

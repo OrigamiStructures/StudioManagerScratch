@@ -72,23 +72,60 @@ class CardFileController extends AppController {
      *
      */
     public function index() {
+        //Get the seed ids
         $ids = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->toArray();
-        $personCards = $this->PersonCardsTable()->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-        osd($ids);
-        osd($personCards);
+
+        //Get the stack sets from the seeds
+//        $personCards = $this->PersonCardsTable()->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+//        $personCards = $this->PersonCardsTable()->stacksFor('identity', $ids);
+        $personCards = $this->paginate($this->PersonCardsTable()->pageFor('identity', $ids));
+//        osd($ids);
+//        osd($personCards);
         $this->set('personCards', $personCards);
     }
 
+    public function institutions()
+    {
+
+    }
+
+    public function people()
+    {
+
+    }
+
+    public function categories()
+    {
+
+    }
+
+    public function insert($type = 'person')
+    {
+        $type = 'person';
+        $type = 'artist';
+        $type = 'institution';
+        $type = 'category';
+    }
+
+    public function remove($id)
+    {
+
+    }
+
+    public function change($id)
+    {
+
+    }
     public function groups() {
-        $InstitutionCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-        $ids = $InstitutionCards
+        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
+        $ids = $OrganizationCards
             ->Identities->find('list')
-//				->where(['member_type' => 'Institution'])
+//				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
             ->toArray();
-        $institutionCards = $InstitutionCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-        $this->set('institutionCards', $institutionCards);
+        $organizationCards = $OrganizationCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+        $this->set('organizationCards', $organizationCards);
     }
 
     /**
@@ -138,8 +175,8 @@ class CardFileController extends AppController {
                 $CardTable = TableRegistry::getTableLocator()->get('CategoryCard');
                 break;
 
-            case 'Institution':
-                $CardTable = TableRegistry::getTableLocator()->get('InstitutionCard');
+            case MEMBER_TYPE_ORGANIZATION:
+                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCard');
                 break;
 
             case 'Person':

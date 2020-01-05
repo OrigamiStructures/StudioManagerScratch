@@ -1,6 +1,6 @@
 <?php
 //Member Types for Member/Group
-define('MEMBER_TYPE_INSTITUTION', 'Institution');
+define('MEMBER_TYPE_ORGANIZATION', 'Organization');
 define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
