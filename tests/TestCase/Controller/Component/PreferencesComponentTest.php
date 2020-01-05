@@ -103,7 +103,7 @@ class PreferencesComponentTest extends TestCase
     {
         $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
         $post = [
-            'paginate' => [
+            'pagination' => [
                 'limit' => '15',
                 'sort' => [
                     'people' => 'last_name'
@@ -131,12 +131,12 @@ class PreferencesComponentTest extends TestCase
 
         $changedPrefs = $this->Component->getUserPrefsEntity($user_id);
 
-        $this->assertEquals(15, $changedPrefs->for('paginate.limit'),
+        $this->assertEquals(15, $changedPrefs->for('pagination.limit'),
             'A new user variant value was not set to the prefs list');
-        $this->assertEquals('last_name', $changedPrefs->for('paginate.sort.people'),
+        $this->assertEquals('last_name', $changedPrefs->for('pagination.sort.people'),
             'User variant did not become default value as requested in post');
 
-        $this->assertEquals(null, $changedPrefs->getVariant('paginate.sort.people'),
+        $this->assertEquals(null, $changedPrefs->getVariant('pagination.sort.people'),
             'although the pref is set to default it still appears in list of variants');
     }
 
@@ -152,7 +152,7 @@ class PreferencesComponentTest extends TestCase
     {
         $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
         $post = [
-            'paginate' => [
+            'pagination' => [
                 'limit' => '10',
                 'sort' => [
                     'people' => 'last_name'
@@ -198,7 +198,7 @@ class PreferencesComponentTest extends TestCase
     {
         $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
         $post = [
-            'paginate' => [
+            'pagination' => [
                 'limit' => '10',
                 'sort' => [
                     'people' => 'last_name'
@@ -306,15 +306,15 @@ class TestPrefForm extends PreferencesForm
     {
         return $schema
             ->addField(
-                'paginate.limit', [
+                'pagination.limit', [
                 'type' => 'integer',
                 'default' => 10
             ])
-            ->addField('paginate.sort.people', [
+            ->addField('pagination.sort.people', [
                 'type' => 'string',
                 'default' => 'last_name'
             ])
-            ->addField('paginate.sort.artwork', [
+            ->addField('pagination.sort.artwork', [
                 'type' => 'string',
                 'default' => 'title'
             ])

@@ -52,19 +52,19 @@ class LocalPreferencesFormTest extends TestCase
             $this->PreferencesForm->schema()->removeField($originalColumn);
         }
         $testSchema = [
-            'paginate.limit' => [
+            'pagination.limit' => [
                 'type' => 'integer',
                 'default' => (int) 10,
                 'length' => null,
                 'precision' => null
             ],
-            'paginate.sort.people' => [
+            'pagination.sort.people' => [
                 'type' => 'string',
                 'default' => 'last_name',
                 'length' => null,
                 'precision' => null
             ],
-            'paginate.sort.artwork' => [
+            'pagination.sort.artwork' => [
                 'type' => 'string',
                 'default' => 'title',
                 'length' => null,
@@ -100,15 +100,15 @@ class LocalPreferencesFormTest extends TestCase
     public function testConstruct()
     {
         $expectedDefaults = [
-            'paginate.limit' => (int) 10,
-            'paginate.sort.people' => 'last_name',
-            'paginate.sort.artwork' => 'title'
+            'pagination.limit' => (int) 10,
+            'pagination.sort.people' => 'last_name',
+            'pagination.sort.artwork' => 'title'
         ];
 
         $expectedPaths =[
-            'paginate.limit',
-            'paginate.sort.people',
-            'paginate.sort.artwork'
+            'pagination.limit',
+            'pagination.sort.people',
+            'pagination.sort.artwork'
         ];
 
         $this->assertEquals($expectedDefaults, $this->PreferencesForm->getDefaults(),
@@ -133,13 +133,13 @@ class LocalPreferencesFormTest extends TestCase
         $prefsEntity = $this->PreferencesForm->getUsersPrefsEntity('AA074ebc-758b-4729-91f3-bcd65e51ace4');
         $this->assertInstanceOf('App\Model\Entity\Preference', $prefsEntity,
             'Did not get a Preference entity');
-        $this->assertEquals('10', $prefsEntity->for('paginate.limit'),
+        $this->assertEquals('10', $prefsEntity->for('pagination.limit'),
             'an unexpected value came from the entity when a default was expected');
-        $this->assertEquals('first_name', $prefsEntity->for('paginate.sort.people'),
+        $this->assertEquals('first_name', $prefsEntity->for('pagination.sort.people'),
             'an unexpected value came from the entity when a user variant was expected');
 
         $expected = [
-            'paginate' => [
+            'pagination' => [
                 'sort' => [
                     'people' => 'first_name'
                 ]
@@ -159,7 +159,7 @@ class LocalPreferencesFormTest extends TestCase
     {
         $prefsEntity = $this->PreferencesForm->getUsersPrefsEntity('BB074ebc-758b-4729-91f3-bcd65e51ace4');
         $expected = [
-            'paginate' => [
+            'pagination' => [
                 'sort' => [
                     'people' => 'first_name'
                 ]
@@ -180,7 +180,7 @@ class LocalPreferencesFormTest extends TestCase
     public function testAsContext()
     {
         $this->PreferencesForm->asContext('AA074ebc-758b-4729-91f3-bcd65e51ace4');
-        $actual = $this->PreferencesForm->schema()->field('paginate.sort.people');
+        $actual = $this->PreferencesForm->schema()->field('pagination.sort.people');
 
         $this->assertEquals('first_name', $actual['default'],
             'The schema did not alter to reflect user pref settings');

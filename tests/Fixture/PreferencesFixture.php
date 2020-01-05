@@ -41,14 +41,14 @@ class PreferencesFixture extends TestFixture
                 'id' => 1,
                 'created' => '2019-12-24 21:11:54',
                 'modified' => '2019-12-24 21:11:54',
-                'prefs' => '{"paginate":{"sort":{"people":"first_name"}}}',
+                'prefs' => '{"pagination":{"sort":{"people":"first_name"}}}',
                 'user_id' => 'AA074ebc-758b-4729-91f3-bcd65e51ace4'
             ],
             [
                 'id' => 2,
                 'created' => '2019-12-24 21:11:54',
                 'modified' => '2019-12-24 21:11:54',
-                'prefs' => '{"paginate":{"sort":{"people":"first_name", "invalid":"pref"}}}',
+                'prefs' => '{"pagination":{"sort":{"people":"first_name", "invalid":"pref"}}}',
                 'user_id' => 'BB074ebc-758b-4729-91f3-bcd65e51ace4'
             ],
         ];
