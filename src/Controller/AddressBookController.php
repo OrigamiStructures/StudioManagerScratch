@@ -48,6 +48,12 @@ class AddressBookController extends AppController
             ]
         );
 
+//        $prefsForm->setErrors([
+//            'pagination' => ['sort' => ['people' => [
+//                'inList' => 'Sorting can only be done on first_name or last_name'
+//            ]]]
+//        ]);
+
         $this->set(compact('people', 'prefs', 'prefsForm'));
     }
 
