@@ -63,9 +63,22 @@ class LocalPreferencesForm extends PreferencesForm
         return $validator;
     }
 
+    /**
+     * Validate our flat schema
+     *
+     * Because we have structure encoded in our schema using
+     * dot notation, we have to flatten the post to match,
+     * then expand the errors. Errors go to the FormHelper
+     * wich does not understand the flat version.
+     *
+     * @param array $data
+     * @return bool
+     */
     public function validate($data)
     {
-        return parent::validate(Hash::flatten($data));
+        $result = parent::validate(Hash::flatten($data));
+        $this->setErrors(Hash::expand($this->getErrors()));
+        return $result;
     }
 
     public function selectList($path)
@@ -79,22 +92,51 @@ class LocalPreferencesForm extends PreferencesForm
     }
 
     /**
+     * Process the validiation errors into flash messages
+     *
+     * RequiredStructure = [
+     *      'pagination.limit' => [
+     *          'greaterThan' => 'You must show more than zero items per page.'
+     *      ],
+     *      'pagination.sort.people' => [
+     *          'inList' => 'Sorting can only be done on first_name or last_name',
+     *          'notBad' => 'That was a bad value'
+     *      ]
+     * ]
      * @param $Flash FlashComponent
      */
     public function processErrors($Flash)
     {
-        $errors = $this->getErrors();
+        $errors = $this->flattenErrors();
         if (Hash::check($errors,'id._required')) {
             $msg = Hash::get($errors, 'id._required');
             throw new BadPrefsImplementationException($msg);
         } else {
-            foreach ($errors as $field => $error) {
-                $msg = implode(' ', $error);
+            foreach ($errors as $field => $msg) {
+                $msg = implode(' ', $msg);
                 $Flash->error($msg);
             }
         }
     }
 
+    /**
+     * Partially flatten the errors to work for Flash reporting
+     *
+     * @return array
+     */
+    private function flattenErrors()
+    {
+        $result = [];
+        $errors = Hash::flatten($this->getErrors());
+        $fullKeys = array_keys($errors);
+        foreach ($fullKeys as $key) {
+            $steps = explode('.', $key);
+            $error = array_pop($steps);
+            $path = implode('.', $steps);
+            $result[$path][$error] = Hash::get($this->getErrors(), $key);
+        }
+        return $result;
+    }
 }
 
 class PrefCon {
