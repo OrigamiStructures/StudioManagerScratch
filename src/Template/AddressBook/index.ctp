@@ -1,24 +1,24 @@
 <?php
-/**
- *
- * @property \Cake\View\Helper\FormHelper $Form
- */
 use App\Form\PrefCon;
-/* @var View $this */
 
+/* @var \App\View\AppView $this */
 /* @var \App\Form\LocalPreferencesForm $prefsForm */
 
-echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
-echo $this->Preferences->pref();
+echo $this->Html->tag('ul',
+    $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
+    ['class' => 'menu']);
 
 echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPrefs']);
-echo $this->Form->control(PrefCon::PAGINATION_LIMIT);
-echo $this->Form->control(
-    PrefCon::PAGINATION_SORT_PEOPLE, [
-        'options' => $prefsForm->selectList(PrefCon::PAGINATION_SORT_PEOPLE),
-]);
-//echo $this->Form->input(\App\Form\PrefCon::PAGINATION_SORT_PEOPLE);
-echo $this->Form->input('id', ['type' => 'hidden']);
+
+echo $this->Html->tag(
+    'ul',
+    $this->Form->control(PrefCon::PAGINATION_LIMIT)
+    . $this->Form->control(
+        PrefCon::PAGINATION_SORT_PEOPLE, [
+        'options' => $prefsForm->selectList(PrefCon::PAGINATION_SORT_PEOPLE),]),
+    ['class' => 'menu']
+);
+echo $this->Form->control('id', ['type' => 'hidden']);
 echo $this->Form->submit();
 echo $this->Form->end();
 

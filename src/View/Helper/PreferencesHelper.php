@@ -12,8 +12,4 @@ class PreferencesHelper extends Helper
 
     protected $pageBreaks = [5, 10, 25, 50, 100];
 
-    public function pref()
-    {
-        echo $this->Html->para('something', 'Some text');
-    }
 }
