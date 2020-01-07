@@ -66,9 +66,9 @@ class PreferencesComponent extends Component
     {
         $prefsForm = $this->getFormObjet();
         $post = $this->getController()->getRequest()->getData();
+        $prefs = $this->repository()->getPreferencesFor($post['id']);
 
         if ($prefsForm->validate($post)) {
-            $prefs = $this->repository()->getPreferencesFor($post['id']);
             $userVariants = $prefs->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
 
@@ -104,7 +104,7 @@ class PreferencesComponent extends Component
             $prefsForm->processErrors($this->Flash);
         }
 
-        return;
+        return [$prefsForm, $prefs];
 }
 
     /**

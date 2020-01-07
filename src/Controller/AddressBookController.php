@@ -70,9 +70,14 @@ class AddressBookController extends AppController
         }
 
         $prefsForm = $this->Preferences->getFormObjet();
-        $this->Preferences->setPrefs();
+        list($prefsForm, $prefs) = $this->Preferences->setPrefs();
 
-        return $this->redirect($this->referer());
+        if (empty($prefsForm->getErrors())) {
+            return $this->redirect($this->referer());
+        }
+
+        $this->set(compact('prefsForm', 'prefs'));
+        $this->render('/UserPrefs/set_prefs');
     }
 
     /**
