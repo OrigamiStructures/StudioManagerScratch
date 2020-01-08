@@ -16,13 +16,13 @@ class SupervisorsController extends AppController
     {
         /* @var ManifestStacksTable $ManifestStacks */
         $contextUser = $this->contextUser();
-
+        $supervisor_id = $contextUser->getId('supervisor');
         $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 
-        $manifestsIssued = $ManifestStacks->ManifestsIssued();
+        $manifestsIssued = $ManifestStacks->ManifestsIssued($supervisor_id);
 
-        $manifestsReceived = $ManifestStacks->ManifestsRecieved();
+        $manifestsReceived = $ManifestStacks->ManifestsRecieved($supervisor_id);
 
         $myPersonCards =
                 $PersonCards
