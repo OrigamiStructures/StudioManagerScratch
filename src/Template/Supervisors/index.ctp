@@ -1,4 +1,4 @@
-<h3>Needs tools to allow SuperUsers (and Supervisors?) to change ContextUser settings</h3>
+<p>Needs tools to allow SuperUsers (and Supervisors?) to change ContextUser settings</p>
 
 <?php
 use App\Model\Lib\ManifestStacksSet;
@@ -17,17 +17,16 @@ $delegatedManagement = $manifestStack
 
     <h1>Supervisor: <?= $contextUser->getCard('supervisor')->name() ?></h1>
 
-	<h2>Add an artist</h2>
+	<p>Add an artist</p>
 <?php
 echo $this->Html->link(
     'Add Artist',
     'rolodexCards/add',
-    ['class' => 'button large']
+    ['class' => 'button medium']
 );
 ?>
     <div class="add_artist_dialog"></div>
-	<h2>Recruit a new delegate</h2>
-	<p>tools here</p>
+	<p>Recruit a new delegate tools here</p>
 
 	<h2>Change a Management Agreement</h2>
 
