@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Controller\Component;
 
 use App\Controller\Component\PreferencesComponent;
+use App\Form\PrefCon;
 use App\Form\PreferencesForm;
 use Cake\Controller\Controller;
 use Cake\Controller\ComponentRegistry;
@@ -80,10 +81,6 @@ class PreferencesComponentTest extends TestCase
         $registry = new ComponentRegistry($this->controller);
         $this->Component = new PreferencesComponent($registry);
 
-        //this swaps in a form with a stable schema for testing
-        //defined in this file below
-        $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
-
         $actual = $this->Component->getController()->ViewBuilder()->getHelpers();
         $this->assertEquals(['Preferences'], $actual,
             'The Preferences helper did not get loaded to the view during intialization');
@@ -122,9 +119,6 @@ class PreferencesComponentTest extends TestCase
         $registry = new ComponentRegistry($this->controller);
         $this->Component = new PreferencesComponent($registry);
 
-        //this swaps in a form with a stable schema for testing
-        //defined in this file below
-        $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
         //</editor-fold>
 
         $this->Component->setPrefs();
@@ -173,9 +167,6 @@ class PreferencesComponentTest extends TestCase
         $registry = new ComponentRegistry($this->controller);
         $this->Component = new PreferencesComponent($registry);
 
-        //this swaps in a form with a stable schema for testing
-        //defined in this file below
-        $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
         //</editor-fold>
 
         $this->Component->setPrefs();
@@ -217,9 +208,6 @@ class PreferencesComponentTest extends TestCase
         $registry = new ComponentRegistry($this->controller);
         $this->Component = new PreferencesComponent($registry);
 
-        //this swaps in a form with a stable schema for testing
-        //defined in this file below
-        $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
         //mocks table with a failed save
         $this->mockPrefsTable();
         //</editor-fold>
@@ -255,7 +243,6 @@ class PreferencesComponentTest extends TestCase
 
         //this swaps in a form with a stable schema for testing
         //defined in this file below
-        $this->Component->setFormClass('App\Test\TestCase\Controller\Component\TestPrefForm');
 
         $this->Component->clearPrefs($user_id);
 
@@ -290,48 +277,3 @@ class PreferencesComponentTest extends TestCase
             'changing the registred Form class did not change the class of the instantiated object');
     }
 }
-
-/**
- * Class TestPrefForm
- * @package App\Test\TestCase\Controller\Component
- */
-class TestPrefForm extends PreferencesForm
-{
-
-    /**
-     * @param Schema $schema
-     * @return Schema
-     */
-    protected function _buildSchema(Schema $schema)
-    {
-        return $schema
-            ->addField(
-                'pagination.limit', [
-                'type' => 'integer',
-                'default' => 10
-            ])
-            ->addField('pagination.sort.people', [
-                'type' => 'string',
-                'default' => 'last_name'
-            ])
-            ->addField('pagination.sort.artwork', [
-                'type' => 'string',
-                'default' => 'title'
-            ])
-            ->addField('id', [
-                'type' => 'string'
-            ]);
-    }
-
-    /**
-     * @param Validator $validator
-     * @return Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator->requirePresence('id');
-        return $validator;
-    }
-
-}
-

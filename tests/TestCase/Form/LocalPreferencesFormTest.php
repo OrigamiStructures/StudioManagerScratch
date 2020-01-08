@@ -42,7 +42,8 @@ class LocalPreferencesFormTest extends TestCase
     {
         parent::setUp();
         $this->PreferencesForm = new LocalPreferencesForm();
-        $this->replaceSchemaWithTestSchema();
+//        debug($this->PreferencesForm->prefsSchema);
+//        $this->replaceSchemaWithTestSchema();
     }
 
     protected function replaceSchemaWithTestSchema()

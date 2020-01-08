@@ -15,26 +15,29 @@ use Cake\Validation\Validator;
 class LocalPreferencesForm extends PreferencesForm
 {
 
+    public $prefsSchema = [
+        PrefCon::PAGINATION_LIMIT => [
+            'type' => 'integer',
+            'default' => 10
+        ],
+        PrefCon::PAGINATION_SORT_PEOPLE => [
+            'type' => 'string',
+            'default' => 'last_name'
+        ],
+        PrefCon::PAGINATION_SORT_ARTWORK => [
+            'type' => 'string',
+            'default' => 'title'
+        ]
+    ];
+
     /**
      * @param Schema $schema
      * @return Schema
      */
     protected function _buildSchema(Schema $schema)
     {
+        $schema->addFields($this->prefsSchema);
         return $schema
-            ->addField(
-                PrefCon::PAGINATION_LIMIT, [
-                'type' => 'integer',
-                'default' => 10
-            ])
-            ->addField(PrefCon::PAGINATION_SORT_PEOPLE, [
-                'type' => 'string',
-                'default' => 'last_name'
-            ])
-            ->addField(PrefCon::PAGINATION_SORT_ARTWORK, [
-                'type' => 'string',
-                'default' => 'title'
-            ])
             ->addField('id', [
                 'type' => 'string'
             ]);

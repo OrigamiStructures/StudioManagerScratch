@@ -53,7 +53,7 @@ class PreferencesForm extends Form
     {
         parent::__construct($eventManager);
         $schema = $this->schema();
-        $this->validPaths = array_diff($schema->fields(), ['id']);
+        $this->validPaths = array_keys($this->prefsSchema ?? []);
         $prefDefaults = (collection($this->validPaths))
             ->reduce(function ($accum, $path) use ($schema) {
                 if ($path != 'id') {
