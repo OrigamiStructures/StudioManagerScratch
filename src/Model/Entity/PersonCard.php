@@ -230,6 +230,8 @@ class PersonCard extends RolodexCard{
     }
 
     /**
+     * Convenience alternative for getLayer('images') in PersonCards
+     *
      * @return Layer
      */
     public function getImages()
@@ -237,6 +239,8 @@ class PersonCard extends RolodexCard{
         return $this->images;
     }
     /**
+     * Convenience alternative for getLayer('manifests') in PersonCards
+     *
      * @return Layer
      */
     public function getManifests()
