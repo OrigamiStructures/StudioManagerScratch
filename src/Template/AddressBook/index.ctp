@@ -8,22 +8,8 @@ echo $this->Html->tag('ul',
     $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
     ['class' => 'menu']);
 
-echo $this->Form->create($prefsForm->asContext($prefs->user_id), ['action' => 'setPrefs']);
-
-echo $this->Html->tag(
-    'ul',
-    $this->Form->control(PrefCon::PAGINATION_LIMIT)
-    . $this->Form->control(
-        PrefCon::PAGINATION_SORT_PEOPLE, [
-        'options' => $prefsForm->selectList(PrefCon::PAGINATION_SORT_PEOPLE),]),
-    ['class' => 'menu']
-);
-echo $this->Form->control('id', ['type' => 'hidden']);
-echo $this->Form->submit();
-echo $this->Form->end();
-
-//osd($prefsForm->getErrors());
-//osd($people);
+$this->Preferences->peoplePagination($prefsForm->asContext($prefs->user_id));
+echo $this->fetch('prefs_form');
 
 foreach ($people->getData() as $person) {
     /* @var \App\Model\Entity\PersonCard $person */
