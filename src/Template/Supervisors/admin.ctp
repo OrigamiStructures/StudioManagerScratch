@@ -1,0 +1,2 @@
+The admin page
+<?php

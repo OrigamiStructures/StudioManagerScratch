@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Exception\IllegalAccessException;
 use App\Model\Table\ManifestsTable;
 use App\Model\Table\ManifestStacksTable;
 use Cake\ORM\TableRegistry;
@@ -63,4 +64,15 @@ class SupervisorsController extends AppController
 
     }
 
+    public function admin()
+    {
+        if (!$this->contextUser()->isSuperuser()) {
+            $msg = 'Insufficient permissions to view this page';
+            throw new IllegalAccessException($msg);
+        }
+
+        //display subset of Supervisors, Managers, or Artists
+        //to allow the superuser to act-as for testing and customer support
+
+    }
 }
