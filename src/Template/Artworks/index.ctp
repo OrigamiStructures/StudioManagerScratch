@@ -5,6 +5,7 @@
         /* @var \App\Model\Entity\ArtStack $artwork */
 
     echo $this->Html->tag('h3', $artwork->rootDisplayValue());
+    echo $this->Html->para('', $artwork->artists());
     ?>
 
     <li>Editions
