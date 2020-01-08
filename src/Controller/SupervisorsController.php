@@ -86,7 +86,7 @@ class SupervisorsController extends AppController
         switch ($role) {
             case 'supervisor':
                 $this->contextUser()->set($role, $id);
-                return $this->redirect('/');
+                return $this->redirect('supervisors/');
                 break;
             default:
                 break;
