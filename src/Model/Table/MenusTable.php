@@ -92,7 +92,7 @@ class MenusTable extends AppTable{
 			$this->account + $this->admin;
 	}
 
-		/**
+	/**
 	 * Makes an Artwork stack menu for the current context
 	 */
 	protected function artwork() {
@@ -116,7 +116,10 @@ class MenusTable extends AppTable{
 	protected function admin() {
 		if (!$this->currentUser()->admin()) {
 			unset($this->menu['Admin']);
-		} else {
+		} elseif ($this->contextUser()->has('supervisor')) {
+		    $supervisorCard = $this->contextUser()->getCard('supervisor');
+
+		}
 			// all admins have 'artist spoofing' capabilities
 			$this->menu['Admin'] =
 				[
@@ -126,7 +129,7 @@ class MenusTable extends AppTable{
 					// Probably a User/Account call to discover the list?
 					'Act as...' => [], //$User->artists(),
 				];
-		}
+//		}
 		if ($this->currentUser()->isSuperuser()) {
 		    $this->menu['Admin']['System Supervisors'] = '/rolodexcards/supervisors';
         }
