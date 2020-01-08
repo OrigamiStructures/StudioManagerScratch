@@ -109,13 +109,33 @@ User preferences are stored as a json object in a single field in the `preferenc
 
 Define your fields in the schema and the constants using dot notation.
 
-```php
-//in LocalPreferencesForm
-$schema->addField('paginate.sort.people', [
-    'type' => 'string',
-    'default' => 'last_name'
-]);
+The schema is designed in a array property and the `_buildSchema()` method will pass this array to `Scehma::addFields($array)` to populate the schema object.
 
+This two step process allows the Form object to use the property as a source of keys (`PrefForm::getValidPaths()`) for various tasks while still allowing modifications to the schema for any purpose that might arrise.
+
+```php
+class LocalPreferencesForm extends \App\Form\PreferencesForm
+{
+    //in LocalPreferencesForm
+    public $prefsSchema = [
+      'paginate.sort.people',
+        [
+          'type' => 'string',
+          'default' => 'last_name'
+        ]
+    ];
+
+    protected function _buildSchema($schema) {
+       return $schema->addFields($this->prefsSchema);
+    }
+}
+```
+
+The schema definition will describe a json object that will be stored in the `preferences` table's `pref` column.
+
+In the entity, you'll see this structure as an array
+
+```php
 //will create the array entry in Preference entity
 [
     'paginate' =>
@@ -123,12 +143,33 @@ $schema->addField('paginate.sort.people', [
             ['people' => 'last_name']
         ]
 ];
+```
+To prevent typos, it ease future structural changes, define constants in PrefCon for the paths to individual preference values.
 
+I've also defined `value` and `key/value` arrays that can be used in validiation rules, to make select controls in forms, and for whatever else might come up.
+```php
 //in PrefCon, the constant to insure accurate
 const PAGINATE_SORT_PEOPLE = 'paginate.sort.people';
 
+/*
+ * PrefCon also gives you a place to define arrays that support
+ * validations, Form helper calls and more
+ */
+static public  $lists = [
+    PrefCon::PAGINATION_SORT_PEOPLE => [
+        'values' => ['first_name', 'last_name'],
+        'select' => [
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name'
+    ]
+];
+
 //in code you can use your constants like this
 PrefsEntity->for(PrefCon::PAGINATE_SORT_PEOPLE);
+
+//LocalPreferenceForm has methods to help retirieve the arrays
+$values = $prefForm->values(PrefCon::PAGINATION_SORT_PEOPLE);
+$options = $prefForm->selectList(PrefCon::PAGINATION_SORT_PEOPLE);
 ```
 
 You can design any schema you want and name the constants in any way that makes sense. The fact that the constants are defined with `const` inside the class, keeps them out of the global space so there will be no name conflicts with other constants. You will only be able to access the constants with the syntax **PrefCon::CONSTANT_NAME**.
