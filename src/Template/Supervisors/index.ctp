@@ -15,7 +15,9 @@ $manifestStack = new ManifestStacksSet($manifestsIssued);
 $delegatedManagement = $manifestStack
     ->delegatedManagement($contextUser->getId('supervisor'));?>
 
-	<h1>Add an artist</h1>
+    <h1>Supervisor: <?= $contextUser->getCard('supervisor')->name() ?></h1>
+
+	<h2>Add an artist</h2>
 <?php
 echo $this->Html->link(
     'Add Artist',
@@ -24,12 +26,12 @@ echo $this->Html->link(
 );
 ?>
     <div class="add_artist_dialog"></div>
-	<h1>Recruit a new delegate</h1>
+	<h2>Recruit a new delegate</h2>
 	<p>tools here</p>
 
-	<h1>Change a Management Agreement</h1>
+	<h2>Change a Management Agreement</h2>
 
-    <h2>Delegated Management</h2>
+    <h3>Delegated Management</h3>
 
 <?php
 
@@ -39,7 +41,7 @@ echo $this->Html->link(
 
 <?php endforeach; ?>
 
-    <h2>Owned Management</h2>
+    <h3>Owned Management</h3>
 
 <?php foreach ($manifestsReceived->getData() as $agrement) : ?>
 
