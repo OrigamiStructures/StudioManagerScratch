@@ -125,8 +125,11 @@ class RolodexCardsController extends AppController {
         if(!$this->currentUser()->isSuperuser()) {
             $this->redirect('/pages/no_access');
         }
-        $this->index();
-        $this->render('index');
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $supervising_member_ids = $Users->find('list', ['valueField' => 'member_id'])->toArray();
+        $personCards = $this->PersonCards->stacksFor('identity', $supervising_member_ids);
+        $this->set('personCards', $personCards);
+        $this->render('supervisors');
 	}
 
     public function add()

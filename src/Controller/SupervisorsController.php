@@ -75,4 +75,22 @@ class SupervisorsController extends AppController
         //to allow the superuser to act-as for testing and customer support
 
     }
+
+    public function actAs($role, $id)
+    {
+        if (!$this->contextUser()->isSuperuser()) {
+            $msg = 'Insufficient permissions to view this page';
+            throw new IllegalAccessException($msg);
+        }
+
+        switch ($role) {
+            case 'supervisor':
+                $this->contextUser()->set($role, $id);
+                return $this->redirect('/');
+                break;
+            default:
+                break;
+        }
+
+    }
 }
