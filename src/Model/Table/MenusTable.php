@@ -12,6 +12,7 @@ use Cake\ORM\Table;
 use App\Model\Table\AppTable;
 use Cake\Collection\Collection;
 use App\Lib\EditionTypeMap;
+use Cake\Utility\Hash;
 
 /**
  * CakePHP MenusTable
@@ -53,7 +54,7 @@ class MenusTable extends AppTable{
         'artists-index' => '/artists',
         'artists-view' => '/artists/view/1'
     ]];
-    protected $cardfile = ['Cardfile REPL' => [
+    protected $cardfile = ['Cardfile' => [
         'Index' => '/cardfile/index',
         'Institutions' => '/cardfile/institutions',
         'People' => '/cardfile/people',
@@ -113,7 +114,9 @@ class MenusTable extends AppTable{
 
     protected function cardfile()
     {
-
+        if (!$this->currentUser()->isSuperuser()) {
+            $this->menu = Hash::remove($this->menu, 'Cardfile.Supervisors');
+        }
 	}
 
 	protected function members() {
