@@ -280,66 +280,6 @@ class ContextUserTest extends TestCase
     }
     //</editor-fold>
 
-    //<editor-fold desc="actingAsSuperuser variants">
-    public function testIsActingAsSuperuserTrueCase() {
-        // make mocks
-        $this->Session->method('read')
-            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
-        // the currentUser must claim it is a superuser
-        $this->CurrentUser
-            ->method('isSuperuser')
-            ->will(
-                $this->onConsecutiveCalls(true)
-            );
-        $ContextUser = ContextUser::instance($this->options);
-
-        $ContextUser->set('supervisor', null);
-
-        $this->assertTrue($ContextUser->isActingAsSuperuser());
-
-        $ContextUser->tearDown();
-    }
-
-    public function testIsActingAsSuperuserFalseCase() {
-        // make mocks
-        $this->Session->method('read')
-            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
-        // the currentUser must claim it is a superuser
-        $this->CurrentUser
-            ->method('isSuperuser')
-            ->will(
-                $this->onConsecutiveCalls(true)
-            );
-        $ContextUser = ContextUser::instance($this->options);
-
-        $ContextUser->set('supervisor', 'sup_id');
-
-        $this->assertFalse($ContextUser->isActingAsSuperuser());
-
-        $ContextUser->tearDown();
-    }
-
-    public function testIsActingAsSuperuserNotSuperuserCase()
-    {
-        // make mocks
-        $this->Session->method('read')
-            ->will($this->onConsecutiveCalls($this->AuthUser, NULL));
-        // the currentUser must claim it is a superuser
-        $this->CurrentUser
-            ->method('isSuperuser')
-            ->will(
-                $this->onConsecutiveCalls(false)
-            );
-        $ContextUser = ContextUser::instance($this->options);
-
-        $ContextUser->set('supervisor', 'sup_id');
-
-        $this->assertFalse($ContextUser->isActingAsSuperuser());
-
-        $ContextUser->tearDown();
-    }
-    //</editor-fold>
-
         public function starter() {
 
 		/**

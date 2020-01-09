@@ -12,10 +12,6 @@ use App\Model\Lib\Layer;
  */
 class CategoryCard extends RolodexCard{
 
-	public function isGroup() {
-		return TRUE;
-	}
-
 	public function hasMembers() {
 		return count($this->getMembers()) > 0;
 	}

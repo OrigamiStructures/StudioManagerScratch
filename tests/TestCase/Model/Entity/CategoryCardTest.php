@@ -41,7 +41,7 @@ class CategoryCardTest extends TestCase
     }
 
     /**
-     * Test isGroup method
+     * Test isCategory method
      *
      * @return void
      */

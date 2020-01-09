@@ -12,6 +12,14 @@ use App\View\AppView;
  * @var PersonCard $personCard
  */
 
+if ($contextUser->isSupervisorAlias()) {
+    echo $this->Html->para(
+        'warning',
+        '!! You are operating as the supervisor '
+        . $contextUser->getCard('supervisor')->name(),
+        ['style' => 'color:#D33C44;font-weight:bold;']);
+}
+
 if ($personCard->hasManifests()) {
     $receivedManagement = $personCard->receivedManagement($contextUser->getId('supervisor'));
     $delegatedManagement = $personCard->delegatedManagement($contextUser->getId('supervisor'));
@@ -59,8 +67,14 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
      *      show artwork, show foreign manager
      */
 
+if ($contextUser->isSupervisorAlias()) {
+    echo $this->Html->para(
+        'warning',
+        '!! You are operating as the supervisor '
+        . $contextUser->getCard('supervisor')->name(),
+        ['style' => 'color:#D33C44;font-weight:bold;']);
+}
 ?>
-
 
 <?= $this->Html->link('Index page', ['action' => 'index']) ?>
 

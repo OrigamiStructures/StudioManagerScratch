@@ -11,6 +11,7 @@ use App\Model\Lib\Layer;
  * @property Layer $memberships
  * @property Layer $identity
  * @property Layer $data_owner
+ * @method Member rootElement($unwrap = LAYERACC_UNWRAP)
  */
 class RolodexCard extends StackEntity {
 
@@ -57,13 +58,6 @@ class RolodexCard extends StackEntity {
 	}
 
     /**
-     * @return mixed
-     */
-    public function isGroup() {
-	    return $this->rootElement()->isGroup();
-	}
-
-    /**
      * @return bool
      */
     public function isArtist() {
@@ -82,6 +76,18 @@ class RolodexCard extends StackEntity {
      */
     public function isSupervisor() {
         return FALSE;
+    }
+
+    public function isOrganization() {
+        return $this->rootElement()->isOrganization();
+    }
+
+    public function isCategory() {
+        return $this->rootElement()->isCategory();
+    }
+
+    public function isPerson() {
+        return $this->rootElement()->isPerson();
     }
 
     /**

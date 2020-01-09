@@ -90,7 +90,7 @@ class RolodexCardsController extends AppController {
         /* @var Member $member */
 
         switch ($member->type()) {
-            case 'Category':
+            case MEMBER_TYPE_CATEGORY:
                 $CardTable = TableRegistry::getTableLocator()->get('CategoryCard');
                 break;
 
@@ -98,7 +98,7 @@ class RolodexCardsController extends AppController {
                 $CardTable = TableRegistry::getTableLocator()->get('OrganizationCard');
                 break;
 
-            case 'Person':
+            case MEMBER_TYPE_PERSON:
                 // A person might be an artist. That has a special Stack which includes artworks
                 if (count($member->artist_manifests) > 0) {
                     $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
