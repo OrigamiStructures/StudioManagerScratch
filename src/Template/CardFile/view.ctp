@@ -90,13 +90,16 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
         if($personCard->delegatedManagement($contextUser->getId('supervisor'))) : ?>
         <p><em><strong>Delegated Management</strong></em></p>
             <?php
-            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';
+            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. %s. [Contact %s].</p>';
             foreach ($delegatedManagement as $manifest) {
                 /* @var \App\Model\Entity\Manifest $manifest */
+                $permissonLink = $this->Html->link('Set Permissions', [
+                    'controller' => 'supervisors', 'action' => 'permissions', $manifest->id
+                ]);
                 $supervisor = $manifest->getName('supervisor');
                 $manager = $manifest->getName('manager');
                 $artist = $manifest->getName('artist');
-                printf($delegatedMessage, $supervisor, $artist, $manager, $manager);
+                printf($delegatedMessage, $supervisor, $artist, $manager, $permissonLink, $manager);
             }
             ?>
         <?php endif; ?>

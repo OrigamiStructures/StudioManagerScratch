@@ -76,6 +76,16 @@ class SupervisorsController extends AppController
 
     }
 
+    public function permissions($manifest_id)
+    {
+        $ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks');
+        /* @var ManifestStacksTable $ManifestStacksTable */
+
+        $manifestStack = $ManifestStacksTable->stacksfor('manifest', [$manifest_id])->shift();
+        $referer = $this->referer();
+        $this->set(compact('manifestStack', 'referer'));
+    }
+
     public function actAs($role, $id)
     {
         if (!$this->contextUser()->isSuperuser()) {
