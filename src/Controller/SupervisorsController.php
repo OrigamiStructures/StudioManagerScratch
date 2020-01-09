@@ -86,7 +86,11 @@ class SupervisorsController extends AppController
         switch ($role) {
             case 'supervisor':
                 $this->contextUser()->set($role, $id);
-                return $this->redirect('supervisors/');
+                return $this->redirect([
+                    'controller' => 'cardfile',
+                    'action' => 'view',
+                    $this->contextUser()->getCard('supervisor')->rootID()
+                ]);
                 break;
             default:
                 break;
