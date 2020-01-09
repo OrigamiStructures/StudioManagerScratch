@@ -73,6 +73,7 @@ class AppController extends Controller
         $this->loadComponent('Security');
 		if($this->Auth->isAuthorized()){
             $this->overrideTableLocator();
+            $this->set('contextUser', $this->contextUser());
         }
 		$this->RequestHandler;
 	}
