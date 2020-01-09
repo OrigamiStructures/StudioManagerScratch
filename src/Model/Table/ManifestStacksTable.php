@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Manifest;
+use App\Model\Entity\ManifestStack;
 use App\Model\Entity\StackEntity;
 use App\Model\Lib\StackSet;
 use App\Model\Table\StacksTable;
@@ -157,18 +158,29 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackEntity
 	 */
 	protected function marshalPermissions($id, $stack) {
-		if(!$this->permissionsRequired($stack)) {
-			return $stack;
-		}
-		$permissions = $this->Permissions
-				->find('all')
-				->where(['manifest_id' => $id]);
-		$stack->set(['permissions' => $permissions->toArray()]);
+//		if(!$this->permissionsRequired($stack)) {
+//			$permissions = [];
+//		} else {
+            $permissions = $this->Permissions
+                ->find('all')
+                ->where(['manifest_id' => $id])
+                ->toArray();
+
+//        }
+		$stack->set(['permissions' => $permissions]);
 		return $stack;
 	}
 
+    /**
+     * @param $stack ManifestStack
+     * @return bool
+     */
 	private function permissionsRequired($stack) {
 		$management_token = $this->contextUser()->getId('manager');
+        osd($stack->manifest()->getOwnerId('supervisor'));
+        osd($stack->manifest()->getOwnerId('manager'));
+        osd($management_token);
+        osd($stack->manifest());
 		return $stack->manifest()->getOwnerId('supervisor') === $management_token
 				|| $stack->manifest()->getOwnerId('manager') === $management_token;
 	}

@@ -23,6 +23,9 @@ use App\Model\Lib\StackSet;
  */
 class ManifestStack extends StackEntity {
 
+    /**
+     * @return Manifest
+     */
 	public function manifest() {
 //	    return $this->manifest->element(0, LAYERACC_INDEX);
 		return $this->manifest->shift();
