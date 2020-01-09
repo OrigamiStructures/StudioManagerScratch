@@ -85,7 +85,7 @@ class CardFileController extends AppController {
         $this->set('personCards', $personCards);
     }
 
-    public function institutions()
+    public function organizations()
     {
 
     }
