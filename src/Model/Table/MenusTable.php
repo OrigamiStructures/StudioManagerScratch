@@ -53,12 +53,21 @@ class MenusTable extends AppTable{
         'artists-index' => '/artists',
         'artists-view' => '/artists/view/1'
     ]];
-	protected $account = ['Account' => [
-			'Login' => '/users/users/login',
-			'Logout' => '/users/users/logout',
-			'Edit My Profile' => '/users/users/profile',
-			'Update Payment Type' => '/users/updatePayment'
-		]];
+    protected $cardfile = ['Cardfile REPL' => [
+        'Index' => '/cardfile/index',
+        'Institutions' => '/cardfile/institutions',
+        'People' => '/cardfile/people',
+        'Categories' => '/cardfile/categories',
+        'Groups' => '/cardfile/groups',
+        'Supervisors' => '/cardfile/supervisors',
+        'Add' => '/cardfile/add'
+    ]];
+    protected $account = ['Account' => [
+        'Login' => '/users/users/login',
+        'Logout' => '/users/users/logout',
+        'Edit My Profile' => '/users/users/profile',
+        'Update Payment Type' => '/users/updatePayment'
+    ]];
 	protected $admin = ['Admin' => [
 				'Artist' => [],
 			]];
@@ -78,6 +87,7 @@ class MenusTable extends AppTable{
 		$this->artwork();
 		$this->members();
 		$this->disposition();
+		$this->cardfile();
 		$this->account();
 		$this->admin();
 		return $this->menu;
@@ -88,7 +98,7 @@ class MenusTable extends AppTable{
 	 */
 	protected function template() {
 		$this->menu = $this->clearStudio + $this->artwork +
-			$this->member + $this->disposition +
+			$this->member + $this->disposition + $this->cardfile +
 			$this->account + $this->admin;
 	}
 
@@ -99,6 +109,11 @@ class MenusTable extends AppTable{
 		$this->addArtworks();
 		$this->addEditions();
 		$this->addFormats();
+	}
+
+    protected function cardfile()
+    {
+
 	}
 
 	protected function members() {

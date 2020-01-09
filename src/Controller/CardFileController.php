@@ -74,6 +74,7 @@ class CardFileController extends AppController {
         //Get the seed ids
         $ids = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
 
         $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
