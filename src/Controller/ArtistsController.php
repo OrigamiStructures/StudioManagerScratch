@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\ArtistManifestStack;
+use App\Model\Table\ArtistCardsTable;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -44,8 +45,9 @@ class ArtistsController extends AppController
     public function view($id = null)
     {
         $ArtistCards = TableRegistry::getTableLocator()->get('ArtistCards');
-        $artists = $ArtistCards->find('stacksFor',
-            ['seed' => 'manifest', 'ids' => [$id]]);
+        /* @var ArtistCardsTable $ArtistCards */
+
+        $artists = $ArtistCards->stacksFor('manifest', [$id]);
         $contextUser = $this->contextUser();
 
         $this->set(compact('artists', 'contextUser'));

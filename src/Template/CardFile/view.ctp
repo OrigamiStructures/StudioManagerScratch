@@ -12,14 +12,6 @@ use App\View\AppView;
  * @var PersonCard $personCard
  */
 
-if ($contextUser->isSupervisorAlias()) {
-    echo $this->Html->para(
-        'warning',
-        '!! You are operating as the supervisor '
-        . $contextUser->getCard('supervisor')->name(),
-        ['style' => 'color:#D33C44;font-weight:bold;']);
-}
-
 if ($personCard->hasManifests()) {
     $receivedManagement = $personCard->receivedManagement($contextUser->getId('supervisor'));
     $delegatedManagement = $personCard->delegatedManagement($contextUser->getId('supervisor'));

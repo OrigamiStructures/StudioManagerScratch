@@ -192,8 +192,7 @@ class CardFileController extends AppController {
                 break;
         }
 
-        $rolodexCard = $CardTable->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
-        $rolodexCard = $rolodexCard->shift();
+        $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
         /* @var RolodexCard $rolodexCard */
 
 

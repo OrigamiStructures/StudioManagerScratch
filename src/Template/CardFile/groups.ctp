@@ -22,7 +22,7 @@ foreach($organizationCards->getData() as $id => $card) {
     }
 
     $organization = '';
-    if ($card->isGroup()) {
+    if ($card->isCategory()) {
         $organization = "<span>Organization: "
         . Text::toList($card->IDs()) . '</span>';
     }

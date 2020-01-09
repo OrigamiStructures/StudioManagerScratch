@@ -118,8 +118,6 @@ class ContextUser {
 	/**
 	 * Get the stored actor id or NULL if not set
      *
-     * API call point (needs param value guard)
-	 *
 	 * @param string $actor 'supervisor', 'manager', 'artist'
 	 * @return int|string|null
 	 */
