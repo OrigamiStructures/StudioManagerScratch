@@ -4,17 +4,18 @@ use App\Model\Entity\PersonCard;
 
 /**
  * @var \Cake\View\View $this
- * @var \App\Model\Lib\StackSet $personCards
+ * @var \App\Model\Lib\StackSet $fatGenericCards
  */
 
-foreach($personCards->getData() as $id => $card) {
+foreach($fatGenericCards->getData() as $id => $card) {
 
-    /* @var PersonCard $card */
+    /* @var \App\Model\Entity\FatGenericCard $card */
 
     $isSupervisor = $card->isSupervisor() ? 'Supervisor' : '';
     $isManager = $card->isManager() ? 'Manager' : '';
     $isArtitst = $card->isArtist() ? 'Artist' : '';
+    $type = $card->rootElement()->member_type;
 
-    echo "<p><strong>{$card->name()}</strong> $isSupervisor $isArtitst $isManager ";
+    echo "<p><span>{$type}</span> <strong>{$card->name()}</strong> $isSupervisor $isArtitst $isManager ";
     echo $this->Html->link('View details', ['action' => 'view', $card->rootID()]);
 }

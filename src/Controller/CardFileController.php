@@ -78,12 +78,12 @@ class CardFileController extends AppController {
             ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
 
-        $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
-        /* @var PersonCardsTable $PersonCardsTable */
+        $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
+        /* @var FatGenericCardsTable $FatGenericCardsTable */
 
-        $personCards = $this->paginate($PersonCardsTable->pageFor('identity', $ids));
+        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $ids));
 
-        $this->set('personCards', $personCards);
+        $this->set('fatGenericCards', $fatGenericCards);
     }
 
     public function organizations()
