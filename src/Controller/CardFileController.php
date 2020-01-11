@@ -174,11 +174,11 @@ class CardFileController extends AppController {
 
         switch ($member->type()) {
             case MEMBER_TYPE_CATEGORY:
-                $CardTable = TableRegistry::getTableLocator()->get('CategoryCard');
+                $CardTable = TableRegistry::getTableLocator()->get('CategoryCards');
                 break;
 
             case MEMBER_TYPE_ORGANIZATION:
-                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCard');
+                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCards');
                 break;
 
             case MEMBER_TYPE_PERSON:
@@ -186,7 +186,7 @@ class CardFileController extends AppController {
                 if (count($member->artist_manifests) > 0) {
                     $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
                 } else {
-                    $CardTable = $this->PersonCards;
+                    $CardTable = $this->PersonCardsTable();
                 }
                 break;
 
@@ -198,6 +198,7 @@ class CardFileController extends AppController {
 
         $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
         /* @var RolodexCard $rolodexCard */
+        osd(get_class($rolodexCard));
 
 
         $this->set('personCard', $rolodexCard);
@@ -211,7 +212,7 @@ class CardFileController extends AppController {
             $this->render('view');
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
-        } elseif ($rolodexCard->isGroup()) {
+        } elseif ($rolodexCard->isCategory()) {
             $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('orgainization');
