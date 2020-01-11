@@ -198,8 +198,6 @@ class CardFileController extends AppController {
 
         $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
         /* @var RolodexCard $rolodexCard */
-        osd(get_class($rolodexCard));
-
 
         $this->set('personCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
@@ -215,7 +213,7 @@ class CardFileController extends AppController {
         } elseif ($rolodexCard->isCategory()) {
             $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
-            $this->render('orgainization');
+            $this->render('organization');
         } else {
             $msg = $rolodexCard->rootElement()->member_type . ' did no map to a view in cardfile/view';
             throw new BadMemberRecordType($msg);
