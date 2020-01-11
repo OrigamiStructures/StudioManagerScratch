@@ -83,7 +83,7 @@ class CardFileController extends AppController {
 
         $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $ids));
 
-        $this->set('fatGenericCards', $fatGenericCards);
+        $this->set('cards', $fatGenericCards);
     }
 
     public function organizations()
@@ -99,7 +99,19 @@ class CardFileController extends AppController {
 
     public function people()
     {
+        //Get the seed ids
+        $ids = $this->IdentitiesTable()->find('list',
+            ['valueField' => 'id'])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
+            ->toArray();
 
+        $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
+        /* @var FatGenericCardsTable $PersonCardsTable */
+
+        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $ids));
+
+        $this->set('cards', $cards);
+        $this->render('index');
     }
 
     public function insert($type = 'person')

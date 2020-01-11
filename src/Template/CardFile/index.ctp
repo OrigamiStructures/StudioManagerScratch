@@ -4,12 +4,12 @@ use App\Model\Entity\PersonCard;
 
 /**
  * @var \Cake\View\View $this
- * @var \App\Model\Lib\StackSet $fatGenericCards
+ * @var \App\Model\Lib\StackSet $PersonCards
  */
 
-foreach($fatGenericCards->getData() as $id => $card) {
+foreach($cards->getData() as $id => $card) {
 
-    /* @var \App\Model\Entity\FatGenericCard $card */
+    /* @var \App\Model\Entity\PersonCard $card */
 
     $isSupervisor = $card->isSupervisor() ? 'Supervisor' : '';
     $isManager = $card->isManager() ? 'Manager' : '';

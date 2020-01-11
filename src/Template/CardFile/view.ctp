@@ -61,7 +61,10 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 
 ?>
 
-<?= $this->Html->link('Index page', ['action' => 'index']) ?>
+<?=
+$this->Html->link('Mixed Cards', ['action' => 'index'])
+. ' | ' . $this->Html->link('People', ['action' => 'people'])
+?>
 
 <h1><?= $personCard->rootElement()->name() ?></h1>
 
