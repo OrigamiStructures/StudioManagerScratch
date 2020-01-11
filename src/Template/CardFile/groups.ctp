@@ -17,7 +17,7 @@ foreach($categoryCards->getData() as $id => $card) {
             . Text::toList($card->getMembers()->toValueList('name')) . '</p>';
     }
 
-    echo "<p><strong>{$card->name()}</strong></p>";
+    echo "<p><strong>" . $this->Html->link($card->name(), ['action' => 'view', $card->rootID()]) . "</strong></p>";
     echo $memberships;
     echo $members;
 
