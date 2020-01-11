@@ -27,7 +27,7 @@ foreach($organizationCards->getData() as $id => $card) {
         . Text::toList($card->IDs()) . '</span>';
     }
 
-    echo "<p><strong>{$card->name()}</strong> $organization</p>";
+    echo "<p><strong>" . $this->Html->link($card->name(), ['action' => 'view', $card->rootID()]) . "</strong> $organization</p>";
 	echo $contacts;
 	echo $addresses;
     echo $memberships;

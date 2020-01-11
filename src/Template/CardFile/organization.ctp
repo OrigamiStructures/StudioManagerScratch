@@ -4,6 +4,7 @@ use App\Model\Entity\PersonCard;
 use App\Model\Lib\ContextUser;
 use App\Model\Lib\LayerAccessProcessor;
 use App\View\AppView;
+use Cake\Utility\Text;
 
 /**
  * @var AppView $this
@@ -37,9 +38,19 @@ $otherAddresses = $personCard->getLayer('addresses')
 
 $con_add_format = '</br><span id="%s%s">%s</span>';
 
+$members = '';
+if ($personCard->hasMembers()) {
+    $members =  "<p><strong>Members</strong>: "
+        . Text::toList($personCard->getMembers()->toValueList('name')) . '</p>';
+}
+
+
 ?>
 
-<?= $this->Html->link('Index page', ['action' => 'index']) ?>
+<?=
+$this->Html->link('Mixed Cards', ['action' => 'index'])
+. ' | ' . $this->Html->link('Organizations', ['action' => 'organizations'])
+?>
 
 <h1><?= $personCard->rootElement()->name() ?></h1>
 
@@ -64,12 +75,12 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
     ?>
 </p>
 
-    <h3>This is just a copy/hack from Person. It needs to be expanded to show its members.</h3>
-
 <?php
 $membershipList = count($personCard->getMemberships()) == 0
     ? 'None'
     : \Cake\Utility\Text::toList($personCard->getMemberships()->toValueList('name'));
 echo "</p>";
 echo '<p>Memberships: ' . $membershipList . '</p>';
+
+echo $members;
 
