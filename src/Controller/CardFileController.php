@@ -87,15 +87,16 @@ class CardFileController extends AppController {
 
     public function organizations()
     {
-
+        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
+        $ids = $OrganizationCards
+            ->Identities->find('list')
+//				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
+            ->toArray();
+        $organizationCards = $OrganizationCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+        $this->set('organizationCards', $organizationCards);
     }
 
     public function people()
-    {
-
-    }
-
-    public function categories()
     {
 
     }
@@ -118,13 +119,7 @@ class CardFileController extends AppController {
 
     }
     public function groups() {
-        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-        $ids = $OrganizationCards
-            ->Identities->find('list')
-//				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
-            ->toArray();
-        $organizationCards = $OrganizationCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-        $this->set('organizationCards', $organizationCards);
+
     }
 
     /**

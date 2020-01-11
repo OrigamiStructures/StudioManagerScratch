@@ -56,9 +56,8 @@ class MenusTable extends AppTable{
     ]];
     protected $cardfile = ['Cardfile' => [
         'Index' => '/cardfile/index',
-        'Institutions' => '/cardfile/institutions',
+        'Organizations' => '/cardfile/organizations',
         'People' => '/cardfile/people',
-        'Categories' => '/cardfile/categories',
         'Groups' => '/cardfile/groups',
         'Supervisors' => '/cardfile/supervisors',
         'Add' => '/cardfile/add'
