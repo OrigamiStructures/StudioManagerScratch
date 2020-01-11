@@ -42,6 +42,12 @@ If each entity subject to possible permission restriction gets a 'permit' proper
 - if the entity is present it can be shown (filtered on marshalling)
 - `cudd` checks are on hand for and logic our tool output question.
 
+###Another idea
+
+* HABTM Member(type=Category) to Manifest for cardfile permissions
+* Permissions only records ArtStack participant ids.
+   * the full id list for each layer is calculated on permission creation. So at stack-marshal time, if permission is present, the record will provide the ids directly. Not marshal-time logic needed expcept to look-and-use or proceed as normal
+
 ###Back to our regularly scheduled program
 Permissions determine the visibility of foreign data for a manager, and control the actions that manager can take on the visible data.
 
