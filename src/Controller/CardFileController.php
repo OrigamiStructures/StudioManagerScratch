@@ -73,8 +73,7 @@ class CardFileController extends AppController {
      */
     public function index() {
         //Get the seed ids
-        $ids = $this->IdentitiesTable()->find('list',
-            ['valueField' => 'id'])
+        $ids = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
 
@@ -91,7 +90,7 @@ class CardFileController extends AppController {
         $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
         $ids = $OrganizationCards
             ->Identities->find('list')
-//				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
         $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $ids));
         $this->set('organizationCards', $organizationCards);
@@ -137,6 +136,7 @@ class CardFileController extends AppController {
         $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
         $ids = $CategoryCards
             ->Identities->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
         $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $ids));
         $this->set('categoryCards', $categoryCards);
