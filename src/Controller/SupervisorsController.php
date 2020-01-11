@@ -7,9 +7,16 @@ namespace App\Controller;
 use App\Exception\IllegalAccessException;
 use App\Model\Table\ManifestsTable;
 use App\Model\Table\ManifestStacksTable;
+use App\View\Helper\CardFileHelper;
 use Cake\ORM\TableRegistry;
 use App\Model\Lib\ContextUser;
 
+/**
+ * Class SupervisorsController
+ * @package App\Controller
+ *
+ * @property CardFileHelper $CardFile
+ */
 class SupervisorsController extends AppController
 {
     public function index()

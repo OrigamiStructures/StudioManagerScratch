@@ -6,7 +6,7 @@ namespace App\View\Helper;
 
 use Cake\View\Helper;
 
-class PeopleHelper extends Helper
+class CardFileHelper extends Helper
 {
 
 	public $helpers = ['Html'];

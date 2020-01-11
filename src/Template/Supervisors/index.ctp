@@ -3,9 +3,9 @@
 <?php
 use App\Model\Lib\ManifestStacksSet;
 
-/* @var \App\View\AjaxView $this */
+/* @var \App\View\AppView $this */
 
-    $this->loadHelper('People');
+    $this->loadHelper('CardFile');
 
     /* @var \App\Model\Lib\StackSet $manifestsIssued */
     /* @var \App\Model\Lib\ContextUser $contextUser */
@@ -44,7 +44,7 @@ echo $this->Html->link(
 
 <?php foreach ($manifestsReceived->getData() as $agrement) : ?>
 
-    <p><?= "{$this->People->artistManifestSummary($agrement)}"; ?></p>
+    <p><?= "{$this->CardFile->artistManifestSummary($agrement)}"; ?></p>
 
 <?php endforeach; ?>
 
