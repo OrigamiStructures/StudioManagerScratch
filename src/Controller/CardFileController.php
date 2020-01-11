@@ -93,7 +93,7 @@ class CardFileController extends AppController {
             ->Identities->find('list')
 //				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
             ->toArray();
-        $organizationCards = $OrganizationCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $ids));
         $this->set('organizationCards', $organizationCards);
     }
 
@@ -138,7 +138,7 @@ class CardFileController extends AppController {
         $ids = $CategoryCards
             ->Identities->find('list')
             ->toArray();
-        $categoryCards = $CategoryCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $ids));
         $this->set('categoryCards', $categoryCards);
     }
 
