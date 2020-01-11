@@ -21,6 +21,7 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 
     <h1><?= $personCard->rootElement()->name() ?></h1>
 
+    <h3>This is just a copy/hack from Person. It needs to be expanded to show its members.</h3>
 
 <?php
 $membershipList = count($personCard->getMemberships()) == 0
