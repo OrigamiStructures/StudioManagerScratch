@@ -6,6 +6,7 @@ use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Lib\Layer;
+use App\Model\Table\CategoryCardsTable;
 use App\Model\Table\IdentitiesTable;
 use App\Model\Table\ManifestsTable;
 use App\Model\Table\PersonCardsTable;
@@ -119,7 +120,14 @@ class CardFileController extends AppController {
 
     }
     public function groups() {
+        /* @var CategoryCardsTable $CategoryCards */
 
+        $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
+        $ids = $CategoryCards
+            ->Identities->find('list')
+            ->toArray();
+        $categoryCards = $CategoryCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
+        $this->set('categoryCards', $categoryCards);
     }
 
     /**

@@ -1,2 +1,25 @@
-pending development
 <?php
+use Cake\Utility\Text;
+
+foreach($categoryCards->getData() as $id => $card) {
+
+    /* @var \App\Model\Entity\CategoryCard $card */
+
+    $memberships = '';
+    if ($card->isMember()) {
+        $memberships =  "<p><strong>Memberships</strong>: "
+            . Text::toList($card->getMemberships()->toValueList('name')) . '</p>';
+    }
+
+    $members = '';
+    if ($card->hasMembers()) {
+        $members =  "<p><strong>Members</strong>: "
+            . Text::toList($card->getMembers()->toValueList('name')) . '</p>';
+    }
+
+    echo "<p><strong>{$card->name()}</strong></p>";
+    echo $memberships;
+    echo $members;
+
+
+}
