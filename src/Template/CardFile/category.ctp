@@ -13,27 +13,23 @@ use Cake\Utility\Text;
  * @var PersonCard $personCard
  */
 
-$members = '';
-if ($personCard->hasMembers()) {
-    $members =  "<p><strong>Members</strong>: "
-        . Text::toList($personCard->getMembers()->toValueList('name')) . '</p>';
-}
-
-?>
-
-<?=
-    $this->Html->link('Mixed Cards', ['action' => 'index'])
+ echo $this->Html->link('Mixed Cards', ['action' => 'index'])
     . ' | ' . $this->Html->link('Categories', ['action' => 'groups'])
 ?>
 
     <h1><?= $personCard->rootElement()->name() ?></h1>
 
 <?php
-$membershipList = count($personCard->getMemberships()) == 0
-    ? 'None'
-    : \Cake\Utility\Text::toList($personCard->getMemberships()->toValueList('name'));
-echo "</p>";
-echo '<p>Memberships: ' . $membershipList . '</p>';
 
-echo $members;
+echo "<p><strong>Memberships</strong></p>";
+if (count($personCard->getMemberships()) == 0) { echo '<p>None</p>'; }
+foreach ($personCard->getMemberships()->toArray() as $membership) {
+    echo '<p>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</p>';
+}
+
+echo "<p><strong>Members</strong></p>";
+if (!$personCard->hasMembers()) { echo '<p>None</p>'; }
+foreach ($personCard->getMembers()->toArray() as $member) {
+    echo '<p>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</p>';
+}
 
