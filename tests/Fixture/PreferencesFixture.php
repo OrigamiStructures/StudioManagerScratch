@@ -41,8 +41,15 @@ class PreferencesFixture extends TestFixture
                 'id' => 1,
                 'created' => '2019-12-24 21:11:54',
                 'modified' => '2019-12-24 21:11:54',
-                'prefs' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-                'user_id' => '15074ebc-758b-4729-91f3-bcd65e51ace4'
+                'prefs' => '{"pagination":{"sort":{"people":"first_name"}}}',
+                'user_id' => 'AA074ebc-758b-4729-91f3-bcd65e51ace4'
+            ],
+            [
+                'id' => 2,
+                'created' => '2019-12-24 21:11:54',
+                'modified' => '2019-12-24 21:11:54',
+                'prefs' => '{"pagination":{"sort":{"people":"first_name", "invalid":"pref"}}}',
+                'user_id' => 'BB074ebc-758b-4729-91f3-bcd65e51ace4'
             ],
         ];
         parent::init();

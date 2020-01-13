@@ -4,14 +4,20 @@ namespace App\Model\Entity;
 use App\Exception\BadClassConfigurationException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
+use http\Exception\BadMethodCallException;
 
 /**
  * Preference Entity
  *
+ * To get a propery constructed entity you must use the getter
+ * PreferencesComponent::getUsersPrefsEntity(user_id) or
+ * (Concrete)PreferencesForm::getUsersPrefsEntity(user_id).
+ * These methods will set the $this::defaults property
+ *
  * @property int $id
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime $modified
- * @property string $prefs
+ * @property json $prefs
  * @property string $user_id
  *
  */
@@ -21,56 +27,150 @@ class Preference extends Entity
     /**
      * Default values for preferences
      *
+     * Set by the PreferenceForm class using the current schema
+     * [path.to.value => value]
+     *
      * @var array
      */
-    private $defaults = [
-        'limit' => 5,
-        'Shipping' => [
-            'address' => 39,
-            'method' => 'UPS'
-        ]
-    ];
-
-    const LIMIT = 'limit';
-    const SHIPPING = 'Shipping';
-    const SHIPPING_ADDRESS = 'Shipping.address';
-    const SHIPPING_METHOD = 'Shipping.method';
+    private $defaults = false;
 
     /**
-     * Fields that can be mass assigned using newEntity() or patchEntity().
-     *
-     * Note that when '*' is set to true, this allows all unspecified fields to
-     * be mass assigned. For security purposes, it is advised to set '*' to false
-     * (or remove it), and explicitly make individual fields accessible as needed.
+     * Fields fields used for newEntity() or patchEntity().
      *
      * @var array
      */
     protected $_accessible = [
-        'created' => true,
-        'modified' => true,
         'prefs' => true,
         'user_id' => true,
-        'user' => true,
-        'defaults' => true
     ];
 
+    /**
+     * Get the current value for a preference
+     *
+     * Will use the user's value if present, otherwise, the default value
+     *
+     * @param $path
+     * @return mixed
+     * @throws BadClassConfigurationException
+     * @throws \BadMethodCallException
+     */
     public function for($path)
     {
-        $setting = Hash::get($this->prefs, $path) ?? Hash::get($this->defaults, $path);
+        $this->validateStructure();
+        $setting = Hash::get($this->prefs ?? [], $path) ?? $this->defaults[$path];
         if (is_null($setting)) {
             $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
-            throw new BadClassConfigurationException($msg);
+            throw new BadMethodCallException($msg);
         }
         return $setting;
     }
 
+    /**
+     * Provide the array of defaults
+     *
+     * [path.to.value => value]
+     *
+     * @param $defaults
+     * @return $this
+     */
+    public function setDefaults($defaults)
+    {
+        $this->defaults = $defaults;
+        $this->clean();
+        return $this;
+    }
+
+    /**
+     * Returns all defaults
+     *
+     * [path.to.pref => value]
+     *
+     * @throws BadClassConfigurationException
+     * @return array
+     */
+    public function getDefaults()
+    {
+        $this->validateStructure();
+        return $this->defaults;
+    }
+
+    /**
+     * Get the array of user prefs that aren't defaults
+     *
+     * [path =>
+     *      [to =>
+     *          [pref => value]
+     *      ]
+     * ]
+     *
+     * @return array
+     */
+    public function getVariants()
+    {
+        return $this->prefs ?? [];
+    }
+
+    /**
+     * Swap in a new prefs array
+     *
+     * [path =>
+     *      [to =>
+     *          [pref => value]
+     *      ]
+     * ]
+     *
+     * @param $array
+     */
+    public function setVariants($array) {
+        $this->prefs = $array;
+    }
+
+    /**
+     * Insert (or overwrite) a value in the user's preferences
+     *
+     * @param $path
+     * @param $value
+     */
+    public function setVariant($path, $value)
+    {
+        $this->prefs = Hash::insert($this->prefs ?? [], $path, $value);
+    }
+
+    /**
+     * Get a single user value or null if they haven't moved from default
+     *
+     * @param $path
+     * @return mixed
+     */
+    public function getVariant($path)
+    {
+        return Hash::get($this->prefs ?? [], $path);
+    }
+
+    /**
+     * get the user id
+     *
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
     public function __debugInfo()
     {
-        return [
-            'id' => $this->id,
-            'user_id (current supervisor)' => $this->user_id,
-            'user prefs' => $this->prefs,
-            'default prefs' => $this->defaults
+        $data = [
+            'defaults' => $this->defaults
         ];
+        $original = parent::__debugInfo();
+        return array_merge($data, $original);
+    }
+
+    private function validateStructure(): void
+    {
+        if ($this->defaults === false) {
+            $msg = "Preferenes entity must have the default preference values set.";
+            throw new BadClassConfigurationException($msg);
+        }
     }
 }

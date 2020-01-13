@@ -118,8 +118,6 @@ class ContextUser {
 	/**
 	 * Get the stored actor id or NULL if not set
      *
-     * API call point (needs param value guard)
-	 *
 	 * @param string $actor 'supervisor', 'manager', 'artist'
 	 * @return int|string|null
 	 */
@@ -138,16 +136,9 @@ class ContextUser {
         return $this->currentUser->isSuperuser();
 	}
 
-    /**
-     * Is the registered user acting as a superuser
-     *
-     * They are a superuser and have not indicated a specific Supervisor to act as
-     *
-     * @return bool
-     */
-    public function isActingAsSuperuser()
+    public function isSupervisorAlias()
     {
-        return $this->isSuperuser() && !$this->has('supervisor');
+        return ($this->getId('supervisor') ?? $this->currentUser->userId()) != $this->currentUser->userId();
 	}
 
 	/**

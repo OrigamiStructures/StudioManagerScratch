@@ -12,6 +12,7 @@ use Cake\ORM\Table;
 use App\Model\Table\AppTable;
 use Cake\Collection\Collection;
 use App\Lib\EditionTypeMap;
+use Cake\Utility\Hash;
 
 /**
  * CakePHP MenusTable
@@ -53,12 +54,20 @@ class MenusTable extends AppTable{
         'artists-index' => '/artists',
         'artists-view' => '/artists/view/1'
     ]];
-	protected $account = ['Account' => [
-			'Login' => '/users/users/login',
-			'Logout' => '/users/users/logout',
-			'Edit My Profile' => '/users/users/profile',
-			'Update Payment Type' => '/users/updatePayment'
-		]];
+    protected $cardfile = ['Cardfile' => [
+        'Index' => '/cardfile/index',
+        'Organizations' => '/cardfile/organizations',
+        'People' => '/cardfile/people',
+        'Groups' => '/cardfile/groups',
+        'Supervisors' => '/cardfile/supervisors',
+        'Add' => '/cardfile/add'
+    ]];
+    protected $account = ['Account' => [
+        'Login' => '/users/users/login',
+        'Logout' => '/users/users/logout',
+        'Edit My Profile' => '/users/users/profile',
+        'Update Payment Type' => '/users/updatePayment'
+    ]];
 	protected $admin = ['Admin' => [
 				'Artist' => [],
 			]];
@@ -78,6 +87,7 @@ class MenusTable extends AppTable{
 		$this->artwork();
 		$this->members();
 		$this->disposition();
+		$this->cardfile();
 		$this->account();
 		$this->admin();
 		return $this->menu;
@@ -88,17 +98,24 @@ class MenusTable extends AppTable{
 	 */
 	protected function template() {
 		$this->menu = $this->clearStudio + $this->artwork +
-			$this->member + $this->disposition +
+			$this->member + $this->disposition + $this->cardfile +
 			$this->account + $this->admin;
 	}
 
-		/**
+	/**
 	 * Makes an Artwork stack menu for the current context
 	 */
 	protected function artwork() {
 		$this->addArtworks();
 		$this->addEditions();
 		$this->addFormats();
+	}
+
+    protected function cardfile()
+    {
+        if (!$this->currentUser()->isSuperuser()) {
+            $this->menu = Hash::remove($this->menu, 'Cardfile.Supervisors');
+        }
 	}
 
 	protected function members() {
@@ -116,7 +133,10 @@ class MenusTable extends AppTable{
 	protected function admin() {
 		if (!$this->currentUser()->admin()) {
 			unset($this->menu['Admin']);
-		} else {
+		} elseif ($this->contextUser()->has('supervisor')) {
+		    $supervisorCard = $this->contextUser()->getCard('supervisor');
+
+		}
 			// all admins have 'artist spoofing' capabilities
 			$this->menu['Admin'] =
 				[
@@ -126,7 +146,7 @@ class MenusTable extends AppTable{
 					// Probably a User/Account call to discover the list?
 					'Act as...' => [], //$User->artists(),
 				];
-		}
+//		}
 		if ($this->currentUser()->isSuperuser()) {
 		    $this->menu['Admin']['System Supervisors'] = '/rolodexcards/supervisors';
         }

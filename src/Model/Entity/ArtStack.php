@@ -128,6 +128,10 @@ class ArtStack extends StackEntity {
 		return $this->rootElement()->description;
 	}
 
+	public function artists() {
+        return 'Feature will return artist name or collaborating artists\' names';
+    }
+
 	public function isFlat() {
 		return $this->editions->count() === 1
 				&& $this->editions

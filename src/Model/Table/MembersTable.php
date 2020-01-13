@@ -48,7 +48,6 @@ class MembersTable extends AppTable
 
     protected function _intializeProperties() {
         $this->setTable('members');
-        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
     }
 

@@ -4,24 +4,32 @@
 namespace App\Controller;
 
 
+use App\Exception\IllegalAccessException;
 use App\Model\Table\ManifestsTable;
 use App\Model\Table\ManifestStacksTable;
+use App\View\Helper\CardFileHelper;
 use Cake\ORM\TableRegistry;
 use App\Model\Lib\ContextUser;
 
+/**
+ * Class SupervisorsController
+ * @package App\Controller
+ *
+ * @property CardFileHelper $CardFile
+ */
 class SupervisorsController extends AppController
 {
     public function index()
     {
         /* @var ManifestStacksTable $ManifestStacks */
         $contextUser = $this->contextUser();
-
+        $supervisor_id = $contextUser->getId('supervisor');
         $ManifestStacks = TableRegistry::getTableLocator()->get('ManifestStacks');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
 
-        $manifestsIssued = $ManifestStacks->ManifestsIssued();
+        $manifestsIssued = $ManifestStacks->ManifestsIssued($supervisor_id);
 
-        $manifestsReceived = $ManifestStacks->ManifestsRecieved();
+        $manifestsReceived = $ManifestStacks->ManifestsRecieved($supervisor_id);
 
         $myPersonCards =
                 $PersonCards
@@ -63,4 +71,47 @@ class SupervisorsController extends AppController
 
     }
 
+    public function admin()
+    {
+        if (!$this->contextUser()->isSuperuser()) {
+            $msg = 'Insufficient permissions to view this page';
+            throw new IllegalAccessException($msg);
+        }
+
+        //display subset of Supervisors, Managers, or Artists
+        //to allow the superuser to act-as for testing and customer support
+
+    }
+
+    public function permissions($manifest_id)
+    {
+        $ManifestStacksTable = TableRegistry::getTableLocator()->get('ManifestStacks');
+        /* @var ManifestStacksTable $ManifestStacksTable */
+
+        $manifestStack = $ManifestStacksTable->stacksfor('manifest', [$manifest_id])->shift();
+        $referer = $this->referer();
+        $this->set(compact('manifestStack', 'referer'));
+    }
+
+    public function actAs($role, $id)
+    {
+        if (!$this->contextUser()->isSuperuser()) {
+            $msg = 'Insufficient permissions to view this page';
+            throw new IllegalAccessException($msg);
+        }
+
+        switch ($role) {
+            case 'supervisor':
+                $this->contextUser()->set($role, $id);
+                return $this->redirect([
+                    'controller' => 'cardfile',
+                    'action' => 'view',
+                    $this->contextUser()->getCard('supervisor')->rootID()
+                ]);
+                break;
+            default:
+                break;
+        }
+
+    }
 }

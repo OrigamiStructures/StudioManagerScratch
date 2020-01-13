@@ -30,6 +30,8 @@ $cakeDescription = 'ClearStudio';
     <?= $this->Html->css('prime.css') ?>
     <?= $this->Html->css('cake.css') ?>
     <?= $this->Html->css('base.css') ?>
+    <?= $this->Html->css('dev.css') ?>
+
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('script') ?>
     <?= $this->fetch('css') ?>
@@ -55,6 +57,15 @@ $cakeDescription = 'ClearStudio';
 
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">
+        <!-- ACT AS Waring -->
+        <?php
+        if ($contextUser->isSupervisorAlias()) {
+            echo $this->Html->para('alias warning',
+                '!* You are acting as the supervisor ' . $contextUser->getCard('supervisor')->name() . ' *!'
+            );
+        }
+        ?>
+        <!-- end ACT AS Waring -->
         <?= $this->fetch('content') ?>
     </section>
     <footer>

@@ -1,7 +1,15 @@
 <?php
-/* @var View $this */
-echo $this->Paginator->prev() . ' || ' . $this->Paginator->next();
-echo $this->Preferences->pref();
+use App\Form\PrefCon;
+
+/* @var \App\View\AppView $this */
+/* @var \App\Form\LocalPreferencesForm $prefsForm */
+
+echo $this->Html->tag('ul',
+    $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
+    ['class' => 'menu']);
+
+$this->Preferences->peoplePagination($prefsForm->asContext($prefs->user_id));
+echo $this->fetch('prefs_form');
 
 foreach ($people->getData() as $person) {
     /* @var \App\Model\Entity\PersonCard $person */

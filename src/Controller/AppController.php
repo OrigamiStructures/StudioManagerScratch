@@ -28,7 +28,18 @@ use App\Model\Lib\StackPaginator;
 use App\Model\Lib\CurrentUser;
 
 /**
- * Application Controller
+ * # Application Controller
+ *
+ * ## Guaranteed Structure
+ *
+ * - contextUser available in every view (initialize())
+ * - contextUser available in every Table (overrideTableLocator(), tableFactoryOverride())
+ * - currentUser available in every Table (overrideTableLocator(), tableFactoryOverride())
+ * - stack-aware Paginator configured into PaginatorComponent (initialize())
+ * - CakeDC/Users.UsersAuthComponent available (initialize())
+ * - no-ajax RequestHandlerComponent installed (initialize())
+ * - FlashComponent installed (initialize())
+ * - refererStack() does deferred referal, skipped referer support
  *
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
@@ -37,8 +48,7 @@ use App\Model\Lib\CurrentUser;
  */
 class AppController extends Controller
 {
-
-	protected $currentUser;
+//	protected $currentUser;
 
     /**
      * @var ContextUser $contextUser
@@ -73,6 +83,7 @@ class AppController extends Controller
         $this->loadComponent('Security');
 		if($this->Auth->isAuthorized()){
             $this->overrideTableLocator();
+            $this->set('contextUser', $this->contextUser());
         }
 		$this->RequestHandler;
 	}

@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Manifest;
+use App\Model\Entity\ManifestStack;
 use App\Model\Entity\StackEntity;
 use App\Model\Lib\StackSet;
 use App\Model\Table\StacksTable;
@@ -157,18 +158,29 @@ class ManifestStacksTable extends StacksTable {
 	 * @return StackEntity
 	 */
 	protected function marshalPermissions($id, $stack) {
-		if(!$this->permissionsRequired($stack)) {
-			return $stack;
-		}
-		$permissions = $this->Permissions
-				->find('all')
-				->where(['manifest_id' => $id]);
-		$stack->set(['permissions' => $permissions->toArray()]);
+//		if(!$this->permissionsRequired($stack)) {
+//			$permissions = [];
+//		} else {
+            $permissions = $this->Permissions
+                ->find('all')
+                ->where(['manifest_id' => $id])
+                ->toArray();
+
+//        }
+		$stack->set(['permissions' => $permissions]);
 		return $stack;
 	}
 
+    /**
+     * @param $stack ManifestStack
+     * @return bool
+     */
 	private function permissionsRequired($stack) {
 		$management_token = $this->contextUser()->getId('manager');
+        osd($stack->manifest()->getOwnerId('supervisor'));
+        osd($stack->manifest()->getOwnerId('manager'));
+        osd($management_token);
+        osd($stack->manifest());
 		return $stack->manifest()->getOwnerId('supervisor') === $management_token
 				|| $stack->manifest()->getOwnerId('manager') === $management_token;
 	}
@@ -200,22 +212,25 @@ class ManifestStacksTable extends StacksTable {
     //</editor-fold>
 
 	/**
-	 * Issued Manifests (this user is Supervisor/Issuer)
-	 *
+	 * A set/subset of Manifests Issued by a supervisor
+     *
+     * All of them (any), management delegations (foreign), or self management (self)
+     *
+     * @param $supervisor_id string ID of the supervisor who issued the manifests
+     * @param $recipients string 'any', 'foreign', 'self' filter
 	 * @return StackSet
 	 * @throws \BadMethodCallException
 	 */
-	public function ManifestsIssued($receiver = self::MANIFEST_ANY) {
+	public function ManifestsIssued($supervisor_id, $recipients = self::MANIFEST_ANY) {
         /* @var Layer $foreign */
         /* @var Layer $self */
-        $userId = $this->currentUser()->userId();
-        switch ($receiver) {
+        switch ($recipients) {
             case self::MANIFEST_ANY:
-                $ids = [$userId];
+                $ids = [$supervisor_id];
                 break;
             case self::MANIFEST_FOREIGN:
                 $foreign = layer($this->Manifests->find('all', [
-                        'where' => ['supervisor_id' => $userId, 'manager_id !=' => $userId],
+                        'where' => ['supervisor_id' => $supervisor_id, 'manager_id !=' => $supervisor_id],
                         'select' => ['id', 'supervisor_id', 'manager_id']
                     ]
                 ));
@@ -223,7 +238,7 @@ class ManifestStacksTable extends StacksTable {
                 break;
             case self::MANIFEST_SELF:
                 $self = layer($this->Manifests->find('all', [
-                        'where' => ['supervisor_id' => $userId, 'manager_id' => $userId],
+                        'where' => ['supervisor_id' => $supervisor_id, 'manager_id' => $supervisor_id],
                         'select' => ['id', 'supervisor_id', 'manager_id']
                     ]
                 ));
@@ -232,25 +247,29 @@ class ManifestStacksTable extends StacksTable {
             default:
                 $ids = [];
         }
-		return $this->find('stacksFor', ['seed' => 'supervisor', 'ids' => $ids]);
+        return $this->stacksFor('supervisor', $ids);
 	}
 
     /**
-     * Recieved Manifests (this user is Manager)
+     * A set/subset of Manifests Recieved by a manager
+     *
+     * All of them (any), delegations received (foreign), or self management (self)
+     *
+     * @param $issuer_id string ID of the supervisor who issued the manifests
+     * @param $recipients string 'any', 'foreign', 'self' filter
      * @return StackSet
      * @throws \BadMethodCallException
      */
-    public function ManifestsRecieved($issuer = self::MANIFEST_ANY) {
+    public function ManifestsRecieved($manager_id, $issuer = self::MANIFEST_ANY) {
         /* @var Layer $foreign */
         /* @var Layer $self */
-        $userId = $this->currentUser()->userId();
         switch ($issuer) {
             case self::MANIFEST_ANY:
-                $ids = [$this->currentUser()->userId()];
+                $ids = [$manager_id];
                 break;
             case self::MANIFEST_FOREIGN:
                 $foreign = layer($this->Manifests->find('all', [
-                    'where' => ['supervisor_id !=' => $userId, 'manager_id' => $userId],
+                    'where' => ['supervisor_id !=' => $manager_id, 'manager_id' => $manager_id],
                     'select' => ['id', 'supervisor_id', 'manager_id']
                     ]
                 ));
@@ -258,7 +277,7 @@ class ManifestStacksTable extends StacksTable {
                 break;
             case self::MANIFEST_SELF:
                 $self = layer($this->Manifests->find('all', [
-                        'where' => ['supervisor_id' => $userId, 'manager_id' => $userId],
+                        'where' => ['supervisor_id' => $manager_id, 'manager_id' => $manager_id],
                         'select' => ['id', 'supervisor_id', 'manager_id']
                     ]
                 ));
@@ -267,7 +286,7 @@ class ManifestStacksTable extends StacksTable {
             default:
                 $ids = [];
         }
-		return $this->find('stacksFor', ['seed' => 'manager', 'ids' => $ids]);
+		return $this->stacksFor('manager', $ids);
 	}
 
     /**

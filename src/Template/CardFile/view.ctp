@@ -61,8 +61,10 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
 
 ?>
 
-
-<?= $this->Html->link('Index page', ['action' => 'index']) ?>
+<?=
+$this->Html->link('Mixed Cards', ['action' => 'index'])
+. ' | ' . $this->Html->link('People', ['action' => 'people'])
+?>
 
 <h1><?= $personCard->rootElement()->name() ?></h1>
 
@@ -91,13 +93,16 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
         if($personCard->delegatedManagement($contextUser->getId('supervisor'))) : ?>
         <p><em><strong>Delegated Management</strong></em></p>
             <?php
-            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. [Review details]. [Contact %s].</p>';
+            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. %s. [Contact %s].</p>';
             foreach ($delegatedManagement as $manifest) {
                 /* @var \App\Model\Entity\Manifest $manifest */
+                $permissonLink = $this->Html->link('Set Permissions', [
+                    'controller' => 'supervisors', 'action' => 'permissions', $manifest->id
+                ]);
                 $supervisor = $manifest->getName('supervisor');
                 $manager = $manifest->getName('manager');
                 $artist = $manifest->getName('artist');
-                printf($delegatedMessage, $supervisor, $artist, $manager, $manager);
+                printf($delegatedMessage, $supervisor, $artist, $manager, $permissonLink, $manager);
             }
             ?>
         <?php endif; ?>
@@ -122,9 +127,9 @@ $con_add_format = '</br><span id="%s%s">%s</span>';
         <?= $this->Html->nestedList($personCard->artworks->toKeyValueList('id', 'title')); ?>
     <?php endif ?>
 <?php
-$membershipList = count($personCard->getMemberships()) == 0
-    ? 'None'
-    : \Cake\Utility\Text::toList($personCard->getMemberships()->toValueList('name'));
-echo "</p>";
-echo '<p>Memberships: ' . $membershipList . '</p>';
+echo "<p><strong>Memberships</strong></p>";
+if (count($personCard->getMemberships()) == 0) { echo '<p>None</p>'; }
+foreach ($personCard->getMemberships()->toArray() as $membership) {
+    echo '<p>' . $this->Html->link($membership->name(), ['action' => 'view', $membership->id]) . '</p>';
+}
 

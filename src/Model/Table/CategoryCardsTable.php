@@ -10,14 +10,14 @@ use App\Model\Table\RolodexCardsTable;
  */
 class CategoryCardsTable extends RolodexCardsTable
 {
-	
+
 	public function initialize(array $config) {
 		parent::initialize($config);
 	    $this->addLayerTable(['Members']);
 	    $this->addStackSchema(['members']);
 		$this->addSeedPoint(['member', 'members']);
 	}
-	
+
 	protected function distillFromMember($ids) {
 		$records = $this->GroupsMembers
 			->find('all')
@@ -29,11 +29,11 @@ class CategoryCardsTable extends RolodexCardsTable
 		}, []);
 		return $this->distillFromIdentity($IDs);
 	}
-	
+
 	protected function localConditions($query, $options = []) {
-		return $query->where(['member_type' => 'Category']);
+		return $query->where(['member_type' => MEMBER_TYPE_CATEGORY]);
 	}
-	
+
 	private function groupsOnly($IDs) {
 		return $this->Identities->find('list', ['valueField' => 'id'])
 				->where(['id IN' => $IDs, 'member_type' => 'Group']);
@@ -46,14 +46,14 @@ class CategoryCardsTable extends RolodexCardsTable
 			$stack->set(['identity' => $identity->toArray()]);
 			return $stack;
 	}
-	
+
 	protected function marshalMembers($id, $stack) {
 		if ($stack->count('identity')) {
             $records = $this->GroupsMembers
                 ->find('all')
                 ->where(['group_id' => $id])
                 ->toArray();
-			
+
             $joins = collection($records);
             $IDs = $joins->reduce(function($accum, $entity, $index){
                 $accum[] = $entity->member_id;
@@ -63,7 +63,7 @@ class CategoryCardsTable extends RolodexCardsTable
 		}
 		return $stack;
 	}
-    
+
     private function addMembers($IDs, $stack) {
         if(empty($IDs)) {
             $stack->set(['members' => []]);
@@ -77,5 +77,5 @@ class CategoryCardsTable extends RolodexCardsTable
         }
         return $stack;
     }
-	
+
 }

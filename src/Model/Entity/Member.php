@@ -184,8 +184,16 @@ class Member extends Entity
 		return $this->member_type;
 	}
 
-	public function isGroup() {
-	    return $this->type() === GROUP;
+	public function isCategory() {
+	    return $this->type() === MEMBER_TYPE_CATEGORY;
+    }
+
+    public function isOrganization() {
+        return $this->type() === MEMBER_TYPE_ORGANIZATION;
+    }
+
+    public function isPerson() {
+        return $this->type() === MEMBER_TYPE_PERSON;
     }
 
     public function registeredUserId()

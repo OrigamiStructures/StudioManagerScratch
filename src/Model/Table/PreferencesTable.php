@@ -63,7 +63,7 @@ class PreferencesTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->scalar('prefs')
+//            ->scalar('prefs')
             ->requirePresence('prefs', 'create')
             ->notEmptyString('prefs');
 
@@ -105,20 +105,20 @@ class PreferencesTable extends Table
      * if the user has not set any personal prefs, the ojbect will
      * still be able to answer all prefs-related questions
      *
-     * @param $supervisor_id
+     * @param $user_id
      * @return Preference
      */
-    public function getPreferncesFor($supervisor_id)
+    public function getPreferencesFor($user_id)
     {
         $prefs = $this->find('all')
-            ->where(['user_id' => $supervisor_id])
+            ->where(['user_id' => $user_id])
             ->select(['id', 'user_id', 'prefs'])
             ->toArray();
 
         if (empty($prefs)) {
             $entity = new Preference([
                 'id' => '',
-                'user_id' => $supervisor_id
+                'user_id' => $user_id
             ]);
         } else {
             $entity = array_shift($prefs);

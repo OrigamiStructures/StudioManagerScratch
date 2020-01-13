@@ -2,9 +2,14 @@
 namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
+use App\Exception\BadPrefsImplementationException;
+use App\Form\LocalPreferencesForm as LocalPrefsForm;
+use App\Form\PrefCon;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use App\Model\Table\MembersTable;
+use Cake\Utility\Hash;
+use http\Exception\BadMethodCallException;
 
 /**
  * Class AddressBookController
@@ -28,14 +33,51 @@ class AddressBookController extends AppController
 
     public function index()
     {
-        $this->Preferences->setPref();
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         $ids = $PersonCards->Identities->find('list')
             ->order(['last_name'])
             ->toArray();
 
-        $people = $this->paginate($PersonCards->pageFor('identity', $ids));
-        $this->set('people', $people);
+        $prefsForm = new LocalPrefsForm();
+        $prefs = $prefsForm->getUsersPrefsEntity($this->contextUser()->getId('supervisor'));
+        $people = $this->paginate(
+            $PersonCards->pageFor('identity', $ids),
+            [
+                'limit' => $prefs->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $prefs->for(PrefCon::PAGINATION_SORT_PEOPLE)
+            ]
+        );
+
+//        $prefsForm->setErrors([
+//            'pagination' => ['sort' => ['people' => [
+//                'inList' => 'Sorting can only be done on first_name or last_name'
+//            ]]]
+//        ]);
+
+        $this->set(compact('people', 'prefs', 'prefsForm'));
+    }
+
+    /**
+     * This will not be accessible for the API
+     */
+    public function setPrefs()
+    {
+        if (!$this->getRequest()->is('post')
+            && !$this->getRequest()->is('put')
+        ) {
+            $msg = __("Preferences can only be changed through POST or PUT");
+            throw new BadPrefsImplementationException($msg);
+        }
+
+        $prefsForm = $this->Preferences->getFormObjet();
+        list($prefsForm, $prefs) = $this->Preferences->setPrefs();
+
+        if (empty($prefsForm->getErrors())) {
+            return $this->redirect($this->referer());
+        }
+
+        $this->set(compact('prefsForm', 'prefs'));
+        $this->render('/UserPrefs/set_prefs');
     }
 
     /**

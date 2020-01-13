@@ -10,6 +10,6 @@ echo $this->Html->link(['controller' => 'supervisors', 'action' => 'index']);
 echo $this->Element('Common/LocationBanner', ['label' => "Supervise Manager {$managerCard->name()}"]);
 echo $baseManifest->selfAssigned() ? "Self-Assigned" : "Assigned By Other";
 foreach ($managerManifests->load() as $manifest) {
-	echo $this->People->manifestSummary($manifest);
+	echo $this->CardFile->manifestSummary($manifest);
 	echo 'Revoke management, adjust CRUD settings, change permissions';
 }

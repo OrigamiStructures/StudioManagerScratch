@@ -6,10 +6,12 @@ use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Lib\Layer;
+use App\Model\Table\CategoryCardsTable;
 use App\Model\Table\IdentitiesTable;
 use App\Model\Table\ManifestsTable;
 use App\Model\Table\PersonCardsTable;
 use App\Model\Table\RolodexCardsTable;
+use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
 use App\Model\Lib\StackSet;
@@ -36,8 +38,6 @@ class CardFileController extends AppController {
 
     public function initialize() {
         parent::initialize();
-        $this->RolodexCards = TableRegistry::getTableLocator()->get('RolodexCards');
-
     }
 
     /**
@@ -73,32 +73,44 @@ class CardFileController extends AppController {
      */
     public function index() {
         //Get the seed ids
-        $ids = $this->IdentitiesTable()->find('list',
-            ['valueField' => 'id'])
+        $ids = $this->IdentitiesTable()->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
 
-        //Get the stack sets from the seeds
-//        $personCards = $this->PersonCardsTable()->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-//        $personCards = $this->PersonCardsTable()->stacksFor('identity', $ids);
-        $personCards = $this->paginate($this->PersonCardsTable()->pageFor('identity', $ids));
-//        osd($ids);
-//        osd($personCards);
-        $this->set('personCards', $personCards);
+        $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
+        /* @var FatGenericCardsTable $FatGenericCardsTable */
+
+        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $ids));
+
+        $this->set('cards', $fatGenericCards);
     }
 
-    public function institutions()
+    public function organizations()
     {
-
+        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
+        $ids = $OrganizationCards
+            ->Identities->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
+            ->toArray();
+        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $ids));
+        $this->set('organizationCards', $organizationCards);
     }
 
     public function people()
     {
+        //Get the seed ids
+        $ids = $this->IdentitiesTable()->find('list',
+            ['valueField' => 'id'])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
+            ->toArray();
 
-    }
+        $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
+        /* @var FatGenericCardsTable $PersonCardsTable */
 
-    public function categories()
-    {
+        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $ids));
 
+        $this->set('cards', $cards);
+        $this->render('index');
     }
 
     public function insert($type = 'person')
@@ -119,13 +131,15 @@ class CardFileController extends AppController {
 
     }
     public function groups() {
-        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-        $ids = $OrganizationCards
+        /* @var CategoryCardsTable $CategoryCards */
+
+        $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
+        $ids = $CategoryCards
             ->Identities->find('list')
-//				->where(['member_type' => MEMBER_TYPE_ORGANIZATION])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
-        $organizationCards = $OrganizationCards->find('stacksFor',  ['seed' => 'identity', 'ids' => $ids]);
-        $this->set('organizationCards', $organizationCards);
+        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $ids));
+        $this->set('categoryCards', $categoryCards);
     }
 
     /**
@@ -171,20 +185,20 @@ class CardFileController extends AppController {
         /* @var Member $member */
 
         switch ($member->type()) {
-            case 'Category':
-                $CardTable = TableRegistry::getTableLocator()->get('CategoryCard');
+            case MEMBER_TYPE_CATEGORY:
+                $CardTable = TableRegistry::getTableLocator()->get('CategoryCards');
                 break;
 
             case MEMBER_TYPE_ORGANIZATION:
-                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCard');
+                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCards');
                 break;
 
-            case 'Person':
+            case MEMBER_TYPE_PERSON:
                 // A person might be an artist. That has a special Stack which includes artworks
                 if (count($member->artist_manifests) > 0) {
                     $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
                 } else {
-                    $CardTable = $this->PersonCards;
+                    $CardTable = $this->PersonCardsTable();
                 }
                 break;
 
@@ -194,20 +208,51 @@ class CardFileController extends AppController {
                 break;
         }
 
-        $rolodexCard = $CardTable->find('stacksFor',  ['seed' => 'identity', 'ids' => [$id]]);
-        $rolodexCard = $rolodexCard->shift();
+        $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
+        /* @var RolodexCard $rolodexCard */
 
         $this->set('personCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
+
+        if ($rolodexCard->isSupervisor()) {
+            $this->render('view');
+        } elseif ($rolodexCard->isManager()) {
+            $this->render('view');
+        } elseif ($rolodexCard->isArtist()) {
+            $this->render('view');
+        } elseif ($rolodexCard->isPerson()) {
+            $this->render('view');
+        } elseif ($rolodexCard->isCategory()) {
+            $this->render('category');
+        } elseif ($rolodexCard->isOrganization()) {
+            $this->render('organization');
+        } else {
+            $msg = $rolodexCard->rootElement()->member_type . ' did no map to a view in cardfile/view';
+            throw new BadMemberRecordType($msg);
+        }
     }
 
+    /**
+     * Index page of supervisors for SuperUser use only
+     */
     public function supervisors()
     {
         if(!$this->currentUser()->isSuperuser()) {
             $this->redirect('/pages/no_access');
         }
-        $this->index();
-        $this->render('index');
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+        /* @var UsersTable $Users */
+        /* @var PersonCardsTable $PersonCards */
+
+        //native person cards for registered users (supervisors)
+        $supervising_member_ids = $Users->find('list', ['valueField' => 'member_id'])->toArray();
+        $personCards = $this->paginate(
+            $PersonCards->pageFor('identity', $supervising_member_ids)
+        );
+
+        $this->set('personCards', $personCards);
+        $this->render('supervisors');
     }
 
     public function add()

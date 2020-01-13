@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Lib\RequestUtility;
 use App\Model\Lib\StackSet;
+use App\Model\Table\ArtStacksTable;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Model\Lib\Layer;
@@ -147,13 +148,31 @@ class ArtworksController extends AppController
 
 // </editor-fold>
 
+    /**
+     *
+     */
     public function index()
     {
+        /* @var ArtStacksTable $ArtStacks */
+
         $ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
-        $ids = $ArtStacks->find('list')
+        /*
+         * We may want to focus on Manager or Artist works.
+         * How would that be managed here?
+         */
+        $supervisorCard = $this->contextUser()->getCard('supervisor');
+        /*
+         * Permissions would have to be considered for this next part
+         */
+        $artistIds = $supervisorCard
+            ->getLayer('manifests')
+            ->toDistinctList('member_id');
+        $works = $this->Artworks->find('list')
+            ->where(['member_id IN' => $artistIds])
             ->toArray();
-        $realIds = array_keys($ids);
-        $results = $ArtStacks->find('stacksFor',  ['seed' => 'artworks', 'ids' => $realIds]);
+//        osd($ids);die;
+//        $realIds = array_keys($ids);
+        $results = $ArtStacks->stacksFor('artworks', array_keys($works));
         $this->set('results', $results);
     }
 
