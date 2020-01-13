@@ -140,6 +140,7 @@ class CardFileController extends AppController {
             ->toArray();
         $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $ids));
         $this->set('categoryCards', $categoryCards);
+        $this->cardSearch();
     }
 
     /**
@@ -269,5 +270,18 @@ class CardFileController extends AppController {
 //        $this->set(compact('card', 'members', 'memberUsers'));
         $this->set(compact('members'));
 
+    }
+
+    public function cardSearch()
+    {
+        if ($this->request->is('post')) {
+            $post = $this->request->getData();
+        }
+        $members = TableRegistry::getTableLocator()->get('Members');
+        $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
+        $member = $members->newEntity([]);
+        $member->fnMode = $modes;
+        $member->lnMode = $modes;
+        $this->set('memberSchema', $member);
     }
 }

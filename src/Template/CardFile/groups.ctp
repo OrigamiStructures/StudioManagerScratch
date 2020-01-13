@@ -4,6 +4,7 @@ use Cake\Form\Form;
 
 /* @var \App\View\AppView $this */
 
+echo $this->element('Member/search', ['memberSchema' => $memberSchema]);
 
 foreach($categoryCards->getData() as $id => $card) {
 
