@@ -168,7 +168,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupGroup(ArrayObject $data) {
-        switch ($data['member_type']) {
+        switch ($data['member_type'] ?? 'Person') {
             case MEMBER_TYPE_USER:
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_ORGANIZATION:
@@ -187,7 +187,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupSort(ArrayObject $data) {
-        switch ($data['member_type']) {
+        switch ($data['member_type'] ?? 'Person') {
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_ORGANIZATION:
                 $data['last_name'] = $this->createSortName($data['first_name']);
