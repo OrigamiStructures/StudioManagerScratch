@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Exception\BadMemberRecordType;
+use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
@@ -335,13 +336,13 @@ class CardFileController extends AppController {
                 $condition = ["{$key}_name" => $input];
                 break;
             case 1: //starts
-                $condition = ["{$key}_name LIKE" => "$input%"];
+                $condition = ["{$key}_name LIKE" => Wildcard::after($input)];
                 break;
             case 2: //ends
-                $condition = ["{$key}_name LIKE" => "%$input"];
+                $condition = ["{$key}_name LIKE" => Wildcard::before($input)];
                 break;
             case 3: //contains
-                $condition = ["{$key}_name LIKE" => "%$input%"];
+                $condition = ["{$key}_name LIKE" => Wildcard::wrap($input)];
                 break;
             case 4: //isn't
                 $condition = ["{$key}_name !=" => "$input"];
