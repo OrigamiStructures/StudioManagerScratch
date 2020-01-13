@@ -158,7 +158,7 @@ class MembersTable extends AppTable
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
         $this->bmSetupGroup($data);
         $this->bmSetupSort($data);
-        $data['user_id'] = $this->contextUser()->artistId();
+        $data['user_id'] = $this->contextUser()->getId('supervisor');
     }
 
 
@@ -173,7 +173,7 @@ class MembersTable extends AppTable
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_ORGANIZATION:
                 $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
-                $data['group']['user_id'] = $this->contextUser()->artistId();
+                $data['group']['user_id'] = $this->contextUser()->getId('supervisor');
                 break;
             case MEMBER_TYPE_PERSON:
                 break;
