@@ -263,7 +263,12 @@ class CardFileController extends AppController {
         /* @var PersonCardsTable $PersonCards */
 
         //native person cards for registered users (supervisors)
-        $seedIdQuery = $Users->find('list', ['valueField' => 'member_id']);
+        $userIdentities = $Users->find('list', ['valueField' => 'member_id'])
+            ->where(['active' => 1]);
+
+        $seedIdQuery = $this->IdentitiesTable()->find('list',
+            ['valueField' => 'id'])
+            ->where(['id IN' => $userIdentities->toArray()]);
 
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
