@@ -12,6 +12,7 @@ use App\Model\Table\ManifestsTable;
 use App\Model\Table\PersonCardsTable;
 use App\Model\Table\RolodexCardsTable;
 use App\Model\Table\UsersTable;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
 use App\Model\Lib\StackSet;
@@ -73,14 +74,18 @@ class CardFileController extends AppController {
      */
     public function index() {
         //Get the seed ids
-        $ids = $this->IdentitiesTable()->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
-            ->toArray();
+        /* @var Query $seedIdQuery */
+
+        $seedIdQuery = $this->IdentitiesTable()->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
 
         $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
         /* @var FatGenericCardsTable $FatGenericCardsTable */
 
-        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $ids));
+        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()));
 
         $this->set('cards', $fatGenericCards);
     }
@@ -88,26 +93,31 @@ class CardFileController extends AppController {
     public function organizations()
     {
         $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-        $ids = $OrganizationCards
+        $seedIdQuery = $OrganizationCards
             ->Identities->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
-            ->toArray();
-        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $ids));
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
+        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray));
         $this->set('organizationCards', $organizationCards);
     }
 
     public function people()
     {
         //Get the seed ids
-        $ids = $this->IdentitiesTable()->find('list',
+        $seedIdQuery = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
-            ->toArray();
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
 
         $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var FatGenericCardsTable $PersonCardsTable */
 
-        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $ids));
+        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()));
 
         $this->set('cards', $cards);
         $this->render('index');
@@ -130,17 +140,23 @@ class CardFileController extends AppController {
     {
 
     }
+
+    /**
+     * a Search-aware page of group/category cards
+     */
     public function groups() {
         /* @var CategoryCardsTable $CategoryCards */
 
         $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
-        $ids = $CategoryCards
+        $seedIdQuery = $CategoryCards
             ->Identities->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
-            ->toArray();
-        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $ids));
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
+        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()));
         $this->set('categoryCards', $categoryCards);
-        $this->cardSearch();
     }
 
     /**
@@ -246,9 +262,13 @@ class CardFileController extends AppController {
         /* @var PersonCardsTable $PersonCards */
 
         //native person cards for registered users (supervisors)
-        $supervising_member_ids = $Users->find('list', ['valueField' => 'member_id'])->toArray();
+        $seedIdQuery = $Users->find('list', ['valueField' => 'member_id']);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
         $personCards = $this->paginate(
-            $PersonCards->pageFor('identity', $supervising_member_ids)
+            $PersonCards->pageFor('identity', $seedIdQuery->toArray())
         );
 
         $this->set('personCards', $personCards);
@@ -272,16 +292,64 @@ class CardFileController extends AppController {
 
     }
 
-    public function cardSearch()
+    /**
+     * Add user search to member-record finds
+     *
+     * @param $query
+     * @return Query
+     */
+    public function cardSearch($query)
     {
-        if ($this->request->is('post')) {
+        if ($this->request->is('post') || $this->request->is('put')) {
             $post = $this->request->getData();
+            $conditions = [];
+            foreach (['first', 'last'] as $key) {
+                $input = $post["{$key}_name"];
+                if (!empty($input)) {
+                    $conditions += $this->condition($key, $input, $post);
+                }
+            }
+            if (!empty($conditions)){
+                $query->where(['OR' => $conditions]);
+            }
         }
-        $members = TableRegistry::getTableLocator()->get('Members');
+        $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
-        $member = $members->newEntity([]);
-        $member->fnMode = $modes;
-        $member->lnMode = $modes;
-        $this->set('memberSchema', $member);
+        $identity = $identities->newEntity([]);
+        $identity->modes = $modes;
+        $this->set('identitySchema', $identity);
+        return $query;
+    }
+
+    /**
+     * Construct a single condition from user search
+     * @param $key
+     * @param $input
+     * @param $data
+     * @return array
+     */
+    private function condition($key, $input, $data)
+    {
+        switch ($data["{$key}_name_mode"]) {
+            case 0: //is
+                $condition = ["{$key}_name" => $input];
+                break;
+            case 1: //starts
+                $condition = ["{$key}_name LIKE" => "$input%"];
+                break;
+            case 2: //ends
+                $condition = ["{$key}_name LIKE" => "%$input"];
+                break;
+            case 3: //contains
+                $condition = ["{$key}_name LIKE" => "%$input%"];
+                break;
+            case 4: //isn't
+                $condition = ["{$key}_name !=" => "$input"];
+                break;
+            default:
+                $condition = [];
+                break;
+        }
+        return $condition;
     }
 }
