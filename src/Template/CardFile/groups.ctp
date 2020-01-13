@@ -1,5 +1,9 @@
 <?php
 use Cake\Utility\Text;
+use Cake\Form\Form;
+
+/* @var \App\View\AppView $this */
+
 
 foreach($categoryCards->getData() as $id => $card) {
 

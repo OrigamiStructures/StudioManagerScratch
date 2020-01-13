@@ -167,7 +167,6 @@ class CardFileController extends AppController {
         /* @var ManifestsTable $ManifestsTable */
         /* @var StackTable $CardTable */
 
-
         // Is this user permitted to see this RolodexCard
         if (!$this->permitted('member', $id)) {
             return $this->redirect(['action' => 'index']);
@@ -179,7 +178,7 @@ class CardFileController extends AppController {
         $MembersTable = TableRegistry::getTableLocator()->get('Members');
         $member = $MembersTable->find()
             ->where(['id' => $id])
-            ->contain('ArtistManifests')
+            ->contain('ArtistManifests') //@todo this can go away if we flag member with isArtist field
             ->toArray()[0];
 
         /* @var Member $member */
