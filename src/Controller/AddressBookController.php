@@ -72,9 +72,12 @@ class AddressBookController extends AppController
         $prefsForm = $this->Preferences->getFormObjet();
         list($prefsForm, $prefs) = $this->Preferences->setPrefs();
 
-        if (empty($prefsForm->getErrors())) {
+        /*
+         * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/172
+         */
+//        if (empty($prefsForm->getErrors())) {
             return $this->redirect($this->referer());
-        }
+//        }
 
         $this->set(compact('prefsForm', 'prefs'));
         $this->render('/UserPrefs/set_prefs');
