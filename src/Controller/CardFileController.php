@@ -326,8 +326,17 @@ class CardFileController extends AppController {
                 }
             }
             if (!empty($conditions)){
-                $query->where(['OR' => $conditions]);
+                $whereThis = ['OR' => $conditions];
+                $query->where($whereThis);
+                $path = 'filter.' . $this->request->getParam('controller') . '.' . $this->request->getParam('action');
+                $this->getRequest()->getSession()->write($path, $whereThis);
             }
+        } elseif (in_array('filter', $this->getRequest()->getQueryParams())) {
+            $params = $this->getRequest()->getQueryParams();
+            $whereThis = $this->getRequest()->getSession()
+                ->read("filter.{$params['filter']}")
+                ?? []
+            ;
         }
         $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
