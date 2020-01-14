@@ -27,6 +27,16 @@ use App\Model\Lib\StackSet;
  */
 class CardFileController extends AppController {
 
+    /**
+     * Pagination Component defaults
+     *
+     * @var array
+     */
+    public $paginate = [
+        'limit' => 100,
+        'sort' => 'last_name',
+    ];
+
     public $name = 'CardFile';
     /**
      * @var bool|IdentitiesTable
@@ -101,7 +111,7 @@ class CardFileController extends AppController {
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
 
-        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray));
+        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()));
         $this->set('organizationCards', $organizationCards);
     }
 
