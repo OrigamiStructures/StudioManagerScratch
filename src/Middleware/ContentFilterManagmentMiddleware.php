@@ -29,9 +29,9 @@ class ContentFilterManagmentMiddleware
     {
         /* @var ServerRequest $request */
 
-        osd(get_class($request));
-        osd(get_class($response));
-        osd($request->getSession()->read('filter'));
+//        osd(get_class($request));
+//        osd(get_class($response));
+//        osd($request->getSession()->read('filter'));
         return $next($request, $response);
     }
 }
