@@ -1,4 +1,6 @@
 <?php
+/* @var \App\View\AppView $this */
+
 echo $this->Html->tag('ul',
     $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
     ['class' => 'menu']);
