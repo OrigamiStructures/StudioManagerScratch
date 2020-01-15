@@ -21,7 +21,13 @@ use App\Model\Lib\StackSet;
 /**
  * CakePHP CardFileController
  *
+ * Card File is the central controller for managing and viewing
+ * the diffent kinds of Cards (Rolodex Cards).
  *
+ * The index pages respond to search, and pagination honors the
+ * search requests. Search filters effect only the index page they
+ * are created on. Search filters survive veiw/xx visits and will
+ * still apply when the user returs to the originating index page.
  *
  * @author dondrake
  * @property PersonCard $PersonCard
@@ -58,7 +64,7 @@ class CardFileController extends AppController {
         parent::initialize();
     }
 
-    //<editor-fold desc="CRUD Methods">
+    //<editor-fold desc="********** CRUD Methods">
 
     public function insert($type = 'person')
     {
@@ -176,7 +182,7 @@ class CardFileController extends AppController {
         }
     }
 
-    //<editor-fold desc="Index View Variations">
+    //<editor-fold desc="********** Index View Variations">
 
     /**
      * Index method shows mixed record types
@@ -370,7 +376,7 @@ class CardFileController extends AppController {
         return true;
     }
 
-    //<editor-fold desc="Table Access Methods">
+    //<editor-fold desc="********** Table Access Methods">
 
     /**
      * Lazy load Indentites Table
