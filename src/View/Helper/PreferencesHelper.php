@@ -18,9 +18,12 @@ class PreferencesHelper extends Helper
      */
     public function peoplePagination($formContext)
     {
+        //place the form in a view block
         $this->getView()->append('prefs_form');
-        echo $this->Form->create($formContext, ['action' => 'setPrefs']);
 
+        echo $this->Form->create($formContext, [
+            'url' => ['controller' => 'preferences', 'action' => 'setPrefs']
+        ]);
         echo $this->Html->tag(
             'ul',
             $this->Form->control(PrefCon::PAGINATION_LIMIT)
@@ -33,6 +36,8 @@ class PreferencesHelper extends Helper
         echo $this->getView()->fetch('additional_controls');
         echo $this->Form->submit();
         echo $this->Form->end();
+
+        //close the view block
         $this->getView()->end();
     }
 }
