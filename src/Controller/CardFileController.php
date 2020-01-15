@@ -302,8 +302,15 @@ class CardFileController extends AppController {
 
     //</editor-fold>
 
+    /* @todo Move this to SearchController? */
+    //<editor-fold desc="********** Index Search Filter Tools">
+
     /**
-     * Add user search to member-record finds
+     * Add user search to index pages
+     *
+     * This method both prepares the values for the form that
+     * is displayed and applies current or save filter requests
+     * to the evoloving index page query.
      *
      * @param $query
      * @return Query
@@ -311,6 +318,7 @@ class CardFileController extends AppController {
     public function cardSearch($query)
     {
         if ($this->request->is('post') || $this->request->is('put')) {
+            // handle the user request to filter the index page
             $post = $this->request->getData();
             $conditions = [];
             foreach (['first', 'last'] as $key) {
@@ -320,9 +328,24 @@ class CardFileController extends AppController {
                 }
             }
             if (!empty($conditions)){
-                $query->where(['OR' => $conditions]);
+                // @todo make this and/or responsive
+                $whereThis = ['OR' => $conditions];
+                // modify the the query
+                $query->where($whereThis);
+
+                // persist the filter for future and paginated viewing
+                $path = 'filter.' . $this->request->getParam('controller') . '.' . $this->request->getParam('action');
+                $this->getRequest()->getSession()->write($path, $whereThis);
             }
+        } elseif (in_array('filter', $this->getRequest()->getQueryParams())) {
+            // respond to stored filters incases there was no post
+            $params = $this->getRequest()->getQueryParams();
+            $whereThis = $this->getRequest()->getSession()
+                ->read("filter.{$params['filter']}")
+                ?? []
+            ;
         }
+        // set the values needed to render a search/filter for on the index page
         $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
         $identity = $identities->newEntity([]);
@@ -362,6 +385,8 @@ class CardFileController extends AppController {
         }
         return $condition;
     }
+
+    //</editor-fold>
 
     /**
      * HACK STUB METHOD
