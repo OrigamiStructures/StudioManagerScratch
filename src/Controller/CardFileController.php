@@ -302,7 +302,7 @@ class CardFileController extends AppController {
 
     //</editor-fold>
 
-    /* @todo Move this to SearchController? */
+    /* @todo Move this to SearchController or SearchComponent? */
     //<editor-fold desc="********** Index Search Filter Tools">
 
     /**
