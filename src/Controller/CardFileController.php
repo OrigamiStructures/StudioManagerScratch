@@ -17,6 +17,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
 use App\Model\Lib\StackSet;
+use Cake\View\ViewBuilder;
 
 /**
  * CakePHP CardFileController
@@ -202,6 +203,7 @@ class CardFileController extends AppController {
 
         $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()));
 
+        $this->viewBuilder()->setLayout('index');
         $this->set('cards', $fatGenericCards);
     }
 
@@ -218,6 +220,7 @@ class CardFileController extends AppController {
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
 
+        $this->viewBuilder()->setLayout('index');
         $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()));
         $this->set('organizationCards', $organizationCards);
     }
@@ -236,6 +239,7 @@ class CardFileController extends AppController {
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
 
+        $this->viewBuilder()->setLayout('index');
         $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()));
         $this->set('categoryCards', $categoryCards);
     }
@@ -258,6 +262,7 @@ class CardFileController extends AppController {
 
         $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()));
 
+        $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
         $this->render('index');
     }
@@ -290,6 +295,7 @@ class CardFileController extends AppController {
             $PersonCards->pageFor('identity', $seedIdQuery->toArray())
         );
 
+        $this->viewBuilder()->setLayout('index');
         $this->set('personCards', $personCards);
         $this->render('supervisors');
     }
