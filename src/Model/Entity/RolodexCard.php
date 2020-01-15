@@ -44,8 +44,8 @@ class RolodexCard extends StackEntity {
     /**
      * @return mixed
      */
-    public function name() {
-		return $this->rootElement()->name();
+    public function name($style = null) {
+		return $this->rootElement()->name($style);
 	}
 
 	/**
