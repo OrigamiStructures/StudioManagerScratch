@@ -20,6 +20,15 @@ use App\Model\Lib\StackSet;
 
 /**
  * CakePHP CardFileController
+ *
+ * Card File is the central controller for managing and viewing
+ * the diffent kinds of Cards (Rolodex Cards).
+ *
+ * The index pages respond to search, and pagination honors the
+ * search requests. Search filters effect only the index page they
+ * are created on. Search filters survive veiw/xx visits and will
+ * still apply when the user returs to the originating index page.
+ *
  * @author dondrake
  * @property PersonCard $PersonCard
  * @property RolodexCard $RolodexCard
@@ -33,11 +42,11 @@ class CardFileController extends AppController {
      * @var array
      */
     public $paginate = [
-        'limit' => 100,
-        'sort' => 'last_name',
+        'limit' => 20,
     ];
 
     public $name = 'CardFile';
+
     /**
      * @var bool|IdentitiesTable
      */
@@ -48,91 +57,14 @@ class CardFileController extends AppController {
      */
     protected $PersonCards = false;
 
+    /**
+     * Set up the CardFile Controller
+     */
     public function initialize() {
         parent::initialize();
     }
 
-    /**
-     * Lazy load Indentites Table
-     *
-     * @return IdentitiesTable
-     */
-    protected function IdentitiesTable()
-    {
-        if($this->Identities === false){
-            $this->Identities = TableRegistry::getTableLocator()->get('Identities');
-        }
-        return $this->Identities;
-    }
-
-    /**
-     * Lazy load PersonCards Table
-     *
-     * @return PersonCardsTable
-     */
-    protected function PersonCardsTable()
-    {
-        if($this->PersonCards === false){
-            $this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
-        }
-        return $this->PersonCards;
-    }
-
-    /**
-     * Index method
-     *
-     *
-     */
-    public function index() {
-        //Get the seed ids
-        /* @var Query $seedIdQuery */
-
-        $seedIdQuery = $this->IdentitiesTable()->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
-
-        //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
-
-        $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
-        /* @var FatGenericCardsTable $FatGenericCardsTable */
-
-        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()));
-
-        $this->set('cards', $fatGenericCards);
-    }
-
-    public function organizations()
-    {
-        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
-        $seedIdQuery = $OrganizationCards
-            ->Identities->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
-
-        //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
-
-        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()));
-        $this->set('organizationCards', $organizationCards);
-    }
-
-    public function people()
-    {
-        //Get the seed ids
-        $seedIdQuery = $this->IdentitiesTable()->find('list',
-            ['valueField' => 'id'])
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
-
-        //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
-
-        $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
-        /* @var FatGenericCardsTable $PersonCardsTable */
-
-        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()));
-
-        $this->set('cards', $cards);
-        $this->render('index');
-    }
+    //<editor-fold desc="********** CRUD Methods">
 
     public function insert($type = 'person')
     {
@@ -152,42 +84,33 @@ class CardFileController extends AppController {
 
     }
 
-    /**
-     * a Search-aware page of group/category cards
-     */
-    public function groups() {
-        /* @var CategoryCardsTable $CategoryCards */
-
-        $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
-        $seedIdQuery = $CategoryCards
-            ->Identities->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
-
-        //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
-
-        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()));
-        $this->set('categoryCards', $categoryCards);
-    }
-
-    /**
-     * HACK STUB METHOD
-     * @param $type
-     * @param $id
-     * @return bool
-     */
-    public function permitted($type, $id)
+    public function add()
     {
-        $MembersTable = TableRegistry::getTableLocator()->get('Members');
-        if (!$MembersTable->exists(['id' => $id])) {
-            $this->Flash->error('The requested record does not exist.');
-            return FALSE;
-        } elseif ('permission check' == FALSE) {
-            $this->Flash->error('You don\'t have access to this record.');
-            return FALSE;
+        if ($this->request->is('post')) {
+            $card = $this->RolodexCard->patchEntity($card, $this->request->getData());
+            if ($this->RolodexCard->save($card)) {
+                $this->Flash->success(__('The person has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The person could not be saved. Please, try again.'));
         }
-        return true;
+        $members = $this->RolodexCard->Identity->find('list', ['limit' => 200]);
+//        $memberUsers = $this->RolodexCard->MemberUsers->find('list', ['limit' => 200]);
+//        $this->set(compact('card', 'members', 'memberUsers'));
+        $this->set(compact('members'));
+
     }
+
+    //</editor-fold>
+
+    /**
+     * Card View Page : All Types
+     *
+     * Selects a template appropriate to the record type being viewed
+     *
+     * @param $id
+     * @return \Cake\Http\Response|null
+     */
     public function view($id)
     {
         /* @var StackSet $personCards */
@@ -259,8 +182,88 @@ class CardFileController extends AppController {
         }
     }
 
+    //<editor-fold desc="********** Index View Variations">
+
     /**
-     * Index page of supervisors for SuperUser use only
+     * Index method shows mixed record types
+     */
+    public function index() {
+        //Get the seed ids
+        /* @var Query $seedIdQuery */
+
+        $seedIdQuery = $this->IdentitiesTable()->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
+        $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
+        /* @var FatGenericCardsTable $FatGenericCardsTable */
+
+        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()));
+
+        $this->set('cards', $fatGenericCards);
+    }
+
+    /**
+     * Index page filtered to Organization Cards
+     */
+    public function organizations()
+    {
+        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
+        $seedIdQuery = $OrganizationCards
+            ->Identities->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
+        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()));
+        $this->set('organizationCards', $organizationCards);
+    }
+
+    /**
+     * Index page filtered to Grouping/Category Cards
+     */
+    public function groups() {
+        /* @var CategoryCardsTable $CategoryCards */
+
+        $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
+        $seedIdQuery = $CategoryCards
+            ->Identities->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
+        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()));
+        $this->set('categoryCards', $categoryCards);
+    }
+
+    /**
+     * Index page filtered to Person Cards
+     */
+    public function people()
+    {
+        //Get the seed ids
+        $seedIdQuery = $this->IdentitiesTable()->find('list',
+            ['valueField' => 'id'])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->cardSearch($seedIdQuery);
+
+        $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
+        /* @var FatGenericCardsTable $PersonCardsTable */
+
+        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()));
+
+        $this->set('cards', $cards);
+        $this->render('index');
+    }
+
+    /**
+     * SuperUser use only Index Page showing active registered users
      */
     public function supervisors()
     {
@@ -291,22 +294,7 @@ class CardFileController extends AppController {
         $this->render('supervisors');
     }
 
-    public function add()
-    {
-        if ($this->request->is('post')) {
-            $card = $this->RolodexCard->patchEntity($card, $this->request->getData());
-            if ($this->RolodexCard->save($card)) {
-                $this->Flash->success(__('The person has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The person could not be saved. Please, try again.'));
-        }
-        $members = $this->RolodexCard->Identity->find('list', ['limit' => 200]);
-//        $memberUsers = $this->RolodexCard->MemberUsers->find('list', ['limit' => 200]);
-//        $this->set(compact('card', 'members', 'memberUsers'));
-        $this->set(compact('members'));
-
-    }
+    //</editor-fold>
 
     /**
      * Add user search to member-record finds
@@ -326,17 +314,8 @@ class CardFileController extends AppController {
                 }
             }
             if (!empty($conditions)){
-                $whereThis = ['OR' => $conditions];
-                $query->where($whereThis);
-                $path = 'filter.' . $this->request->getParam('controller') . '.' . $this->request->getParam('action');
-                $this->getRequest()->getSession()->write($path, $whereThis);
+                $query->where(['OR' => $conditions]);
             }
-        } elseif (in_array('filter', $this->getRequest()->getQueryParams())) {
-            $params = $this->getRequest()->getQueryParams();
-            $whereThis = $this->getRequest()->getSession()
-                ->read("filter.{$params['filter']}")
-                ?? []
-            ;
         }
         $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
@@ -377,4 +356,54 @@ class CardFileController extends AppController {
         }
         return $condition;
     }
+
+    /**
+     * HACK STUB METHOD
+     * @param $type
+     * @param $id
+     * @return bool
+     */
+    public function permitted($type, $id)
+    {
+        $MembersTable = TableRegistry::getTableLocator()->get('Members');
+        if (!$MembersTable->exists(['id' => $id])) {
+            $this->Flash->error('The requested record does not exist.');
+            return FALSE;
+        } elseif ('permission check' == FALSE) {
+            $this->Flash->error('You don\'t have access to this record.');
+            return FALSE;
+        }
+        return true;
+    }
+
+    //<editor-fold desc="********** Table Access Methods">
+
+    /**
+     * Lazy load Indentites Table
+     *
+     * @return IdentitiesTable
+     */
+    protected function IdentitiesTable()
+    {
+        if($this->Identities === false){
+            $this->Identities = TableRegistry::getTableLocator()->get('Identities');
+        }
+        return $this->Identities;
+    }
+
+    /**
+     * Lazy load PersonCards Table
+     *
+     * @return PersonCardsTable
+     */
+    protected function PersonCardsTable()
+    {
+        if($this->PersonCards === false){
+            $this->PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
+        }
+        return $this->PersonCards;
+    }
+
+    //</editor-fold>
+
 }
