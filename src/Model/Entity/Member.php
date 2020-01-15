@@ -125,6 +125,16 @@ class Member extends Entity
 		}
 	}
 
+    /**
+     * Virtual field for name
+     * 
+     * @return string
+     */
+    protected function _getName()
+    {
+        return $this->name();
+	}
+
 	public function imageId() {
 		return $this->image_id;
 	}
