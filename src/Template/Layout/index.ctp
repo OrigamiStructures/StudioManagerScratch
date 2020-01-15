@@ -2,8 +2,8 @@
 /* @var \App\View\AppView $this */
 $this->extend('/Layout/default');
 
-//add pagination tools
-echo '<h1>Pagination Here</h1>';
+//PreferencesComponent::includePagination() supports this element
+echo $this->element('pagination');
 
 echo $this->fetch('content');
 
