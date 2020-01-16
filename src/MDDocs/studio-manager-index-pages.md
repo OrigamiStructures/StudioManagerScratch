@@ -46,7 +46,7 @@ Your action is responsible for identifying two `.ctp` files .
 
 Your action's template only needs to render the list of found records. The `index` layout will place the pagination tools and the filtering tools on the page. `index` extends `default` layout, so all the other normal page elements like menus and flash messages are handled there.
 
-The layout will place the pagination tools and preferences form on the page. It requires some setup. All that is handled by PreferencesComponent::includePagination($user_id).
+The layout will place the pagination tools and preferences form on the page. It requires some setup. All that is handled by PreferencesComponent::includePrefsViewBundle($user_id).
 
 The search/filter forms will eventually be inserted by the layout too. But for now, the template needs to include them.
 
@@ -84,7 +84,7 @@ public function index()
     $foundSet = $this->paginate($Table->pageFor('seedType', $seedIdQuery->toArray()));
 
     //prepate data for the layout and set the layout
-    $this->Preferences->includePagination($this->contextUser()->getId('supervisor'));
+    $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
     $this->viewBuilder()->setLayout('index');
 
     //set values to viewVars
