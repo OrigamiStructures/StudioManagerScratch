@@ -24,7 +24,7 @@ With these requirements, writing a simple index page for a controller means comp
 * the element `pagination.ctp`
 * a suite of planned search form elements or helper calls
 * a planned Search or Filter component and matching helper
-* ContentFilterManagentMidddleware
+* IndexFilterManagentMidddleware
 
 ##Making an index pages
 

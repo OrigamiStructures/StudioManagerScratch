@@ -14,7 +14,7 @@
  */
 namespace App;
 
-use App\Middleware\ContentFilterManagmentMiddleware;
+use App\Middleware\IndexFilterManagmentMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -83,7 +83,7 @@ class Application extends BaseApplication
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
             ->add(new RoutingMiddleware($this))
-            ->add(new ContentFilterManagmentMiddleware())
+            ->add(new IndexFilterManagmentMiddleware())
         ;
 
         return $middlewareQueue;

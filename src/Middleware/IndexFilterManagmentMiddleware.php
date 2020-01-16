@@ -7,7 +7,7 @@ use Cake\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ContentFilterManagmentMiddleware
+class IndexFilterManagmentMiddleware
 {
     /**
      * Maintain content filters within sensible page scope
