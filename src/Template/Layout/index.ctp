@@ -6,7 +6,6 @@ echo $this->Html->tag('ul',
     $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
     ['class' => 'menu']);
 
-//PreferencesComponent::includePrefsViewBundle() supports this element
 echo $this->element('pagination');
 
 echo $this->fetch('content');
