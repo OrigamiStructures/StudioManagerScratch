@@ -2,7 +2,7 @@
 /* @var \App\View\AppView $this */
 $this->extend('/Layout/default');
 
-//PreferencesComponent::includePagination() supports this element
+//PreferencesComponent::includePrefsViewBundle() supports this element
 echo $this->element('pagination');
 
 echo $this->fetch('content');
