@@ -6,9 +6,7 @@ use App\Form\PrefCon;
  * @var \App\Model\Entity\Preference $prefs
  */
 
-$formContext = $prefsForm->asContext($prefs->user_id);
-
-echo $this->Form->create($formContext, [
+echo $this->Form->create($prefsForm->asContext($prefs->user_id), [
     'url' => ['controller' => 'preferences', 'action' => 'setPrefs']
 ]);
 echo $this->Html->tag(
@@ -17,9 +15,7 @@ echo $this->Html->tag(
     $this->Form->control(PrefCon::PAGINATION_LIMIT) .
     '</li>' .
     '<li>' .
-    $this->Form->control(
-        PrefCon::PAGINATION_SORT_PEOPLE, [
-        'options' => $formContext->selectList(PrefCon::PAGINATION_SORT_PEOPLE),]) .
+    $this->fetch('pagination_sort_preference_control') .
     '</li>',
     ['class' => 'menu']
 );
