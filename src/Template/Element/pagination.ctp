@@ -1,6 +1,10 @@
 <?php
 /* @var \App\View\AppView $this */
 
+echo $this->Html->tag('ul',
+    $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
+    ['class' => 'menu']);
+
 /**
  * PreferencesHelper buids the form, displaying current user variant values
  * in a view block.
@@ -16,4 +20,4 @@
  * @var \App\Model\Entity\Preference $prefs
  */
 $this->Preferences->peoplePagination($prefsForm->asContext($prefs->user_id));
-echo $this->fetch('peoplePaginationPrefsForm');
+echo $this->fetch('prefs_form');

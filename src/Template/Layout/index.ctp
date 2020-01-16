@@ -2,11 +2,7 @@
 /* @var \App\View\AppView $this */
 $this->extend('/Layout/default');
 
-echo $this->Html->tag('ul',
-    $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
-    ['class' => 'menu']);
-
-//PreferencesComponent::includePrefsViewBundle() supports this element
+//PreferencesComponent::includePagination() supports this element
 echo $this->element('pagination');
 
 echo $this->fetch('content');

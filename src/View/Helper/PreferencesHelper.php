@@ -19,7 +19,7 @@ class PreferencesHelper extends Helper
     public function peoplePagination($formContext)
     {
         //place the form in a view block
-        $this->getView()->append('peoplePaginationPrefsForm');
+        $this->getView()->append('prefs_form');
 
         echo $this->Form->create($formContext, [
             'url' => ['controller' => 'preferences', 'action' => 'setPrefs']
@@ -33,7 +33,7 @@ class PreferencesHelper extends Helper
             ['class' => 'menu']
         );
         echo $this->Form->control('id', ['type' => 'hidden']);
-//        echo $this->getView()->fetch('additional_controls');
+        echo $this->getView()->fetch('additional_controls');
         echo $this->Form->submit();
         echo $this->Form->end();
 
