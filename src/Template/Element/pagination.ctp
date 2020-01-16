@@ -13,10 +13,14 @@ echo $this->Form->create($formContext, [
 ]);
 echo $this->Html->tag(
     'ul',
-    $this->Form->control(PrefCon::PAGINATION_LIMIT)
-    . $this->Form->control(
+    '<li>' .
+    $this->Form->control(PrefCon::PAGINATION_LIMIT) .
+    '</li>' .
+    '<li>' .
+    $this->Form->control(
         PrefCon::PAGINATION_SORT_PEOPLE, [
-        'options' => $formContext->selectList(PrefCon::PAGINATION_SORT_PEOPLE),]),
+        'options' => $formContext->selectList(PrefCon::PAGINATION_SORT_PEOPLE),]) .
+    '</li>',
     ['class' => 'menu']
 );
 echo $this->Form->control('id', ['type' => 'hidden']);
