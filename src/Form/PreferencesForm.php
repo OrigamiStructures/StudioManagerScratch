@@ -49,6 +49,8 @@ class PreferencesForm extends Form
      */
     protected $validPaths;
 
+    public $prefsSchema = [];
+
     public function __construct(EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
@@ -64,6 +66,20 @@ class PreferencesForm extends Form
 
         $this->defaults = Hash::flatten($prefDefaults);
         return $this;
+    }
+
+    /**
+     * @param Schema $schema
+     * @return Schema
+     */
+    protected function _buildSchema(Schema $schema)
+    {
+        $schema->addFields($this->prefsSchema);
+        $schema
+            ->addField('id', [
+                'type' => 'string'
+            ]);
+        return parent::_buildSchema($schema);
     }
 
     /**

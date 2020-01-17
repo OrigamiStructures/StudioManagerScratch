@@ -36,11 +36,7 @@ class LocalPreferencesForm extends PreferencesForm
      */
     protected function _buildSchema(Schema $schema)
     {
-        $schema->addFields($this->prefsSchema);
-        return $schema
-            ->addField('id', [
-                'type' => 'string'
-            ]);
+        return parent::_buildSchema($schema);
     }
 
     /**
