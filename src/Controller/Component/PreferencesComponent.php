@@ -130,19 +130,6 @@ class PreferencesComponent extends Component
     }
 
     /**
-     * Fully namespaced name of an override PreferencesForm class
-     *
-     * Normally LocalPreferencesForm extends PreferencesForm is used.
-     * But any MyPrefForm extends PreferencesForm can be substituted
-     *
-     * @param $formClass
-     */
-    public function setFormClass($formClass)
-    {
-        $this->formClass = $formClass;
-    }
-
-    /**
      * Get the ModellessForm object to use as a Form::create context
      *
      * The object will carry all user settings to the form as values
@@ -150,7 +137,7 @@ class PreferencesComponent extends Component
      * @param $user_id
      * @return LocalPreferencesForm
      */
-    protected function getFormContextObject($user_id)
+    public function getFormContextObject($user_id)
     {
         return $this->getFormObjet()->asContext($user_id);
     }
@@ -172,7 +159,7 @@ class PreferencesComponent extends Component
      * Get the [path => value] array of all prefs and their default values
      * @return array
      */
-    protected function getPrefsDefaults()
+    public function getPrefsDefaults()
     {
         return $this->getFormObjet()->getDefaults();
     }
@@ -183,9 +170,22 @@ class PreferencesComponent extends Component
      * @param $user_id
      * @return array
      */
-    protected function getUserVariants($user_id)
+    public function getUserVariants($user_id)
     {
         return $this->getFormObjet()->getUsersPrefsEntity($user_id)->getVariants();
+    }
+
+    /**
+     * Fully namespaced name of an override PreferencesForm class
+     *
+     * Normally LocalPreferencesForm extends PreferencesForm is used.
+     * But any MyPrefForm extends PreferencesForm can be substituted
+     *
+     * @param $formClass
+     */
+    public function setFormClass($formClass)
+    {
+        $this->formClass = $formClass;
     }
 
     /**
@@ -231,8 +231,6 @@ class PreferencesComponent extends Component
     }
 
     /**
-     * This object knows the schema but nothing about the users settings
-     *
      * @return PreferencesForm|LocalPreferencesForm
      */
     public function getFormObjet()
