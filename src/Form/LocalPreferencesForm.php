@@ -31,15 +31,6 @@ class LocalPreferencesForm extends PreferencesForm
     ];
 
     /**
-     * @param Schema $schema
-     * @return Schema
-     */
-    protected function _buildSchema(Schema $schema)
-    {
-        return parent::_buildSchema($schema);
-    }
-
-    /**
      * @param Validator $validator
      * @return Validator
      */
