@@ -208,6 +208,7 @@ class CardFileController extends AppController {
         $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()));
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $this->Preferences->getPrefs($this->contextUser()->getId('supervisor')));
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $fatGenericCards);
     }
@@ -226,6 +227,7 @@ class CardFileController extends AppController {
         $this->cardSearch($seedIdQuery);
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $this->Preferences->getPrefs($this->contextUser()->getId('supervisor')));
         $this->viewBuilder()->setLayout('index');
         $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()));
         $this->set('organizationCards', $organizationCards);
@@ -246,6 +248,7 @@ class CardFileController extends AppController {
         $this->cardSearch($seedIdQuery);
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $this->Preferences->getPrefs($this->contextUser()->getId('supervisor')));
         $this->viewBuilder()->setLayout('index');
         $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()));
         $this->set('categoryCards', $categoryCards);
@@ -270,6 +273,7 @@ class CardFileController extends AppController {
         $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()));
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $this->Preferences->getPrefs($this->contextUser()->getId('supervisor')));
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
         $this->render('index');
@@ -304,6 +308,7 @@ class CardFileController extends AppController {
         );
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $this->Preferences->getPrefs($this->contextUser()->getId('supervisor')));
         $this->viewBuilder()->setLayout('index');
         $this->set('personCards', $personCards);
         $this->render('supervisors');
