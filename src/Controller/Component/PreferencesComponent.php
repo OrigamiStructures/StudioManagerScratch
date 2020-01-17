@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use App\Controller\AppController;
 use App\Form\LocalPreferencesForm;
 use App\Form\PreferencesForm;
+use App\Lib\Prefs;
 use App\Model\Entity\Preference;
 use App\Model\Table\PreferencesTable;
 use Cake\Controller\Component;
@@ -291,4 +292,24 @@ class PreferencesComponent extends Component
         $this->getController()->set(compact('prefsForm', 'prefs'));
     }
 
+    /**
+     * Returns the full Prefs object for use in any situation
+     *
+     * Contains an Entity to describe user's current settings
+     *
+     * Contains a Form to describe the full preference schema
+     * and to act as a context object in FormHelper::create().
+     *
+     * Can emit either of those objects.
+     *
+     * Provides access to all prefs-related constants
+     *
+     * @todo develope class iterface
+     *
+     * @param $user_id
+     */
+    public function getPrefs($user_id)
+    {
+        return new Prefs($this->getUserPrefsEntity($user_id), $this->getFormContextObject($user_id));
+    }
 }
