@@ -101,7 +101,7 @@ class PreferencesComponent extends Component
             }
          } else {
             //didn't validate
-            $prefsForm->processErrors($this->Flash);
+            $prefsForm->errorsToFlash($this->Flash);
         }
 
         return [$prefsForm, $prefs];

@@ -95,7 +95,7 @@ class LocalPreferencesForm extends PreferencesForm
      * ]
      * @param $Flash FlashComponent
      */
-    public function processErrors($Flash)
+    public function errorsToFlash($Flash)
     {
         $errors = $this->flattenErrors();
         if (Hash::check($errors,'id._required')) {
