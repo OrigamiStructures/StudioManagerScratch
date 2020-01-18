@@ -6,7 +6,7 @@ echo $this->Html->tag('ul',
     $this->Paginator->prev() . '<li>||</li>' . $this->Paginator->next(),
     ['class' => 'menu']);
 
-echo $this->element('Preferences/person_pagination');
+echo $this->element('Preferences/Pagination/form');
 
 echo $this->fetch('content');
 
