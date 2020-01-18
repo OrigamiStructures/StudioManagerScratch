@@ -21,7 +21,7 @@ class PrefsBase
      */
     protected $form;
 
-    public  $lists = [];
+    static public  $lists = [];
 
     /**
      * Get the defined key => value list

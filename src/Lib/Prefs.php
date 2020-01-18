@@ -25,7 +25,7 @@ class Prefs extends PrefsBase
      *
      * @var array
      */
-    public  $lists = [
+    static public  $lists = [
         Prefs::PAGINATION_SORT_PEOPLE => [
             'values' => ['first_name', 'last_name'],
             'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
@@ -60,12 +60,12 @@ class Prefs extends PrefsBase
     }
     public function selectList($path)
     {
-        return $this->lists[$path]['select'];
+        return self::$lists[$path]['select'];
     }
 
     public function values($path)
     {
-        return $this->lists[$path]['values'];
+        return self::$lists[$path]['values'];
     }
 
 }

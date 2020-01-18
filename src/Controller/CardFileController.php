@@ -317,9 +317,11 @@ class CardFileController extends AppController {
         );
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $PrefsObject->setFormVariant($PrefsObject::FORM_VARIANT_PERSON);
         $this->set('PrefsObject', $PrefsObject);
+
         $this->viewBuilder()->setLayout('index');
         $this->set('personCards', $personCards);
         $this->render('supervisors');

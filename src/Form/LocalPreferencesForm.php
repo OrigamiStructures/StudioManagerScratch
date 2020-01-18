@@ -11,6 +11,7 @@ use Cake\Form\Schema;
 use Cake\Utility\Hash;
 use Cake\Utility\Text;
 use Cake\Validation\Validator;
+use App\Lib\Prefs;
 
 class LocalPreferencesForm extends PreferencesForm
 {
@@ -50,6 +51,22 @@ class LocalPreferencesForm extends PreferencesForm
                 'or'
             )
         );
+        $validator->inList(
+            Prefs::PAGINATION_SORT_CATEGORY,
+            $this->values(Prefs::PAGINATION_SORT_CATEGORY),
+            'Sorting can only be done on ' . Text::toList(
+                $this->values(Prefs::PAGINATION_SORT_CATEGORY),
+                'or'
+            )
+        );
+        $validator->inList(
+            Prefs::PAGINATION_SORT_ORGANIZATION,
+            $this->values(Prefs::PAGINATION_SORT_ORGANIZATION),
+            'Sorting can only be done on ' . Text::toList(
+                $this->values(Prefs::PAGINATION_SORT_ORGANIZATION),
+                'or'
+            )
+        );
         return $validator;
     }
 
@@ -73,12 +90,12 @@ class LocalPreferencesForm extends PreferencesForm
 
     public function selectList($path)
     {
-        return PrefCon::$lists[$path]['select'];
+        return Prefs::$lists[$path]['select'];
     }
 
     public function values($path)
     {
-        return PrefCon::$lists[$path]['values'];
+        return Prefs::$lists[$path]['values'];
     }
 
     /**
@@ -135,7 +152,7 @@ class PrefCon {
     const PAGINATION_SORT_PEOPLE = 'pagination.sort.people';
     const PAGINATION_SORT_ARTWORK = 'pagination.sort.artwork';
 
-    static public  $lists = [
+    static public  $listss = [
         PrefCon::PAGINATION_SORT_PEOPLE => [
             'values' => ['first_name', 'last_name'],
             'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
