@@ -58,14 +58,4 @@ class Prefs extends PrefsBase
         }
         return $this->formVariant;
     }
-    public function selectList($path)
-    {
-        return self::$lists[$path]['select'];
-    }
-
-    public function values($path)
-    {
-        return self::$lists[$path]['values'];
-    }
-
 }

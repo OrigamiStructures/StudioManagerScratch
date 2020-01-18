@@ -28,9 +28,9 @@ class PrefsBase
      * @param $path string
      * @return array
      */
-    public function selectList($path)
+    static public function selectList($path)
     {
-        return $this->lists[$path]['select'];
+        return self::$lists[$path]['select'];
     }
 
     /**
@@ -39,9 +39,9 @@ class PrefsBase
      * @param $path string
      * @return array
      */
-    public function values($path)
+    static public function values($path)
     {
-        return $this->lists[$path]['values'];
+        return self::$lists[$path]['values'];
     }
 
 

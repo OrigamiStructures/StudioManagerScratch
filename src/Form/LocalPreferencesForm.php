@@ -39,31 +39,31 @@ class LocalPreferencesForm extends PreferencesForm
     {
         $validator->requirePresence('id', true, 'The user id must be included in all preference forms.');
         $validator->greaterThan(
-            PrefCon::PAGINATION_LIMIT,
+            Prefs::PAGINATION_LIMIT,
             0,
             'You must show more than zero items per page.'
         );
         $validator->inList(
-            PrefCon::PAGINATION_SORT_PEOPLE,
-            $this->values(PrefCon::PAGINATION_SORT_PEOPLE),
+            Prefs::PAGINATION_SORT_PEOPLE,
+            Prefs::values(Prefs::PAGINATION_SORT_PEOPLE),
             'Sorting can only be done on ' . Text::toList(
-                $this->values(PrefCon::PAGINATION_SORT_PEOPLE),
+                Prefs::values(Prefs::PAGINATION_SORT_PEOPLE),
                 'or'
             )
         );
         $validator->inList(
             Prefs::PAGINATION_SORT_CATEGORY,
-            $this->values(Prefs::PAGINATION_SORT_CATEGORY),
+            Prefs::values(Prefs::PAGINATION_SORT_CATEGORY),
             'Sorting can only be done on ' . Text::toList(
-                $this->values(Prefs::PAGINATION_SORT_CATEGORY),
+                Prefs::values(Prefs::PAGINATION_SORT_CATEGORY),
                 'or'
             )
         );
         $validator->inList(
             Prefs::PAGINATION_SORT_ORGANIZATION,
-            $this->values(Prefs::PAGINATION_SORT_ORGANIZATION),
+            Prefs::values(Prefs::PAGINATION_SORT_ORGANIZATION),
             'Sorting can only be done on ' . Text::toList(
-                $this->values(Prefs::PAGINATION_SORT_ORGANIZATION),
+                Prefs::values(Prefs::PAGINATION_SORT_ORGANIZATION),
                 'or'
             )
         );
@@ -88,15 +88,15 @@ class LocalPreferencesForm extends PreferencesForm
         return $result;
     }
 
-    public function selectList($path)
-    {
-        return Prefs::$lists[$path]['select'];
-    }
-
-    public function values($path)
-    {
-        return Prefs::$lists[$path]['values'];
-    }
+//    public function selectList($path)
+//    {
+//        return Prefs::$lists[$path]['select'];
+//    }
+//
+//    public function values($path)
+//    {
+//        return Prefs::$lists[$path]['values'];
+//    }
 
     /**
      * Process the validiation errors into flash messages
