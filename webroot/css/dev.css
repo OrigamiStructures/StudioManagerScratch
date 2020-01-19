@@ -5,3 +5,10 @@
     color: yellow;
 }
 
+ul.member {
+    width: 20rem;
+}
+
+div.radio label {
+    display: inline-block;
+}

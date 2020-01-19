@@ -32,6 +32,6 @@ foreach($organizationCards->getData() as $id => $card) {
 	echo $addresses;
     echo $memberships;
     echo $members;
-
-
 }
+
+echo $this->element('Member/search', ['identitySchema' => $identitySchema]);

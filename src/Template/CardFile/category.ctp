@@ -22,14 +22,24 @@ use Cake\Utility\Text;
 <?php
 
 echo "<p><strong>Memberships</strong></p>";
-if (count($personCard->getMemberships()) == 0) { echo '<p>None</p>'; }
-foreach ($personCard->getMemberships()->toArray() as $membership) {
-    echo '<p>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</p>';
+if (count($personCard->getMemberships()) == 0) {
+    echo '<p>None</p>';
+} else {
+    echo '<ul class="member">';
+    foreach ($personCard->getMemberships()->toArray() as $membership) {
+        echo '<li>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</li>';
+    }
+    echo '</ul>';
 }
 
 echo "<p><strong>Members</strong></p>";
-if (!$personCard->hasMembers()) { echo '<p>None</p>'; }
-foreach ($personCard->getMembers()->toArray() as $member) {
-    echo '<p>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</p>';
+if (!$personCard->hasMembers()) {
+    echo '<p>None</p>';
+} else {
+    echo '<ul class="member">';
+    foreach ($personCard->getMembers()->toArray() as $member) {
+        echo '<li>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</li>';
+    }
+    echo '</ul>';
 }
 

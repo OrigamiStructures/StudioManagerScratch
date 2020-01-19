@@ -23,3 +23,5 @@ foreach($personCards->getData() as $id => $card) {
         'supervisor', $card->rootElement()->user_id
     ]);
 }
+
+echo $this->element('Member/search', ['identitySchema' => $identitySchema]);

@@ -1,5 +1,8 @@
 <?php
 use Cake\Utility\Text;
+use Cake\Form\Form;
+
+/* @var \App\View\AppView $this */
 
 foreach($categoryCards->getData() as $id => $card) {
 
@@ -23,3 +26,5 @@ foreach($categoryCards->getData() as $id => $card) {
 
 
 }
+
+echo $this->element('Member/search', ['identitySchema' => $identitySchema]);

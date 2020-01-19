@@ -158,7 +158,7 @@ class MembersTable extends AppTable
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
         $this->bmSetupGroup($data);
         $this->bmSetupSort($data);
-        $data['user_id'] = $this->contextUser()->artistId();
+        $data['user_id'] = $this->contextUser()->getId('supervisor');
     }
 
 
@@ -168,12 +168,12 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupGroup(ArrayObject $data) {
-        switch ($data['member_type']) {
+        switch ($data['member_type'] ?? 'Person') {
             case MEMBER_TYPE_USER:
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_ORGANIZATION:
                 $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
-                $data['group']['user_id'] = $this->contextUser()->artistId();
+                $data['group']['user_id'] = $this->contextUser()->getId('supervisor');
                 break;
             case MEMBER_TYPE_PERSON:
                 break;
@@ -187,7 +187,7 @@ class MembersTable extends AppTable
      * @param ArrayObject $data
      */
     private function bmSetupSort(ArrayObject $data) {
-        switch ($data['member_type']) {
+        switch ($data['member_type'] ?? 'Person') {
             case MEMBER_TYPE_CATEGORY:
             case MEMBER_TYPE_ORGANIZATION:
                 $data['last_name'] = $this->createSortName($data['first_name']);
