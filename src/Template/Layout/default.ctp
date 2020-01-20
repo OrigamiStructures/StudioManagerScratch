@@ -59,7 +59,7 @@ $cakeDescription = 'ClearStudio';
     <section class="container clearfix">
         <!-- ACT AS Waring -->
         <?php
-        if ($contextUser->isSupervisorAlias()) {
+        if (isset($contextUser) && $contextUser->isSupervisorAlias()) {
             echo $this->Html->para('alias warning',
                 '!* You are acting as the supervisor ' . $contextUser->getCard('supervisor')->name() . ' *!'
             );
