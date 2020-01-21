@@ -21,16 +21,16 @@ class PrefsBase
      */
     protected $form;
 
-    static public  $lists = [];
+    public  $lists = [];
 
     /**
      * Get the defined key => value list
      * @param $path string
      * @return array
      */
-    static public function selectList($path)
+    public function selectList($path)
     {
-        return self::$lists[$path]['select'];
+        return $this->lists[$path]['select'];
     }
 
     /**
@@ -39,9 +39,9 @@ class PrefsBase
      * @param $path string
      * @return array
      */
-    static public function values($path)
+    public function values($path)
     {
-        return self::$lists[$path]['values'];
+        return $this->lists[$path]['values'];
     }
 
 
@@ -49,6 +49,7 @@ class PrefsBase
     {
         $this->entity = $entity;
         $this->form = $form;
+        $this->form->Prefs = $this;
         return $this;
     }
 
@@ -67,5 +68,6 @@ class PrefsBase
     {
         return $this->form;
     }
+
 
 }

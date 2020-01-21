@@ -37,7 +37,7 @@ class Prefs extends PrefsBase
      *
      * @var array
      */
-    static public $variants = [
+    public $variants = [
         self::FORM_VARIANT_CATEGORY,
         self::FORM_VARIANT_ORGANIZATON,
         self::FORM_VARIANT_PERSON
@@ -50,7 +50,7 @@ class Prefs extends PrefsBase
      *
      * @var array
      */
-    static public  $lists = [
+    public  $lists = [
         Prefs::PAGINATION_SORT_PEOPLE => [
             'values' => ['first_name', 'last_name'],
             'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
@@ -73,7 +73,7 @@ class Prefs extends PrefsBase
 
     public function setFormVariant($variant)
     {
-        if (!in_array($variant, self::$variants)) {
+        if (!in_array($variant, $this->variants)) {
             $msg = 'Invalid preference variation requested';
             throw new BadQueryStringException($msg);
         }
