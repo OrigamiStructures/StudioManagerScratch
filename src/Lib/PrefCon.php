@@ -34,9 +34,9 @@ class PrefCon
      * @var array
      */
     public static $variants = [
-        self::FORM_VARIANT_CATEGORY,
-        self::FORM_VARIANT_ORGANIZATON,
-        self::FORM_VARIANT_PERSON
+        PrefCon::FORM_VARIANT_CATEGORY,
+        PrefCon::FORM_VARIANT_ORGANIZATON,
+        PrefCon::FORM_VARIANT_PERSON
     ];
 
     /**
