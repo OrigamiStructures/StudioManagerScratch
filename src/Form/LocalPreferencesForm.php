@@ -12,6 +12,7 @@ use Cake\Utility\Hash;
 use Cake\Utility\Text;
 use Cake\Validation\Validator;
 use App\Lib\Prefs;
+use App\Lib\PrefCon;
 
 class LocalPreferencesForm extends PreferencesForm
 {
@@ -22,15 +23,15 @@ class LocalPreferencesForm extends PreferencesForm
     public $Prefs = false;
 
     public $prefsSchema = [
-        Prefs::PAGINATION_LIMIT => [
+        PrefCon::PAGINATION_LIMIT => [
             'type' => 'integer',
             'default' => 10
         ],
-        Prefs::PAGINATION_SORT_PEOPLE => [
+        PrefCon::PAGINATION_SORT_PEOPLE => [
             'type' => 'string',
             'default' => 'last_name'
         ],
-        Prefs::PAGINATION_SORT_ARTWORK => [
+        PrefCon::PAGINATION_SORT_ARTWORK => [
             'type' => 'string',
             'default' => 'title'
         ]
@@ -50,31 +51,31 @@ class LocalPreferencesForm extends PreferencesForm
     {
         $validator->requirePresence('id', true, 'The user id must be included in all preference forms.');
         $validator->greaterThan(
-            Prefs::PAGINATION_LIMIT,
+            PrefCon::PAGINATION_LIMIT,
             0,
             'You must show more than zero items per page.'
         );
         $validator->inList(
-            Prefs::PAGINATION_SORT_PEOPLE,
-            $this->Prefs->values(Prefs::PAGINATION_SORT_PEOPLE),
+            PrefCon::PAGINATION_SORT_PEOPLE,
+            PrefCon::values(PrefCon::PAGINATION_SORT_PEOPLE),
             'Sorting can only be done on ' . Text::toList(
-                $this->Prefs->values(Prefs::PAGINATION_SORT_PEOPLE),
+                PrefCon::values(PrefCon::PAGINATION_SORT_PEOPLE),
                 'or'
             )
         );
         $validator->inList(
-            Prefs::PAGINATION_SORT_CATEGORY,
-            $this->Prefs->values(Prefs::PAGINATION_SORT_CATEGORY),
+            PrefCon::PAGINATION_SORT_CATEGORY,
+            PrefCon::values(PrefCon::PAGINATION_SORT_CATEGORY),
             'Sorting can only be done on ' . Text::toList(
-                $this->Prefs->values(Prefs::PAGINATION_SORT_CATEGORY),
+                PrefCon::values(PrefCon::PAGINATION_SORT_CATEGORY),
                 'or'
             )
         );
         $validator->inList(
-            Prefs::PAGINATION_SORT_ORGANIZATION,
-            $this->Prefs->values(Prefs::PAGINATION_SORT_ORGANIZATION),
+            PrefCon::PAGINATION_SORT_ORGANIZATION,
+            PrefCon::values(PrefCon::PAGINATION_SORT_ORGANIZATION),
             'Sorting can only be done on ' . Text::toList(
-                $this->Prefs->values(Prefs::PAGINATION_SORT_ORGANIZATION),
+                PrefCon::values(PrefCon::PAGINATION_SORT_ORGANIZATION),
                 'or'
             )
         );

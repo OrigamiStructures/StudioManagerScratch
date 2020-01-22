@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
 use App\Exception\BadMemberRecordType;
+use App\Lib\PrefCon;
 use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
@@ -209,7 +210,7 @@ class CardFileController extends AppController {
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $PrefsObject->setFormVariant($PrefsObject::FORM_VARIANT_PERSON);
+        $PrefsObject->setFormVariant(PrefCon::FORM_VARIANT_PERSON);
         $this->set('PrefsObject', $PrefsObject);
 
         $this->viewBuilder()->setLayout('index');
@@ -281,7 +282,7 @@ class CardFileController extends AppController {
 
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $PrefsObject->setFormVariant($PrefsObject::FORM_VARIANT_PERSON);
+        $PrefsObject->setFormVariant(PrefCon::FORM_VARIANT_PERSON);
         $this->set('PrefsObject', $PrefsObject);
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
@@ -319,7 +320,7 @@ class CardFileController extends AppController {
         $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
 
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $PrefsObject->setFormVariant($PrefsObject::FORM_VARIANT_PERSON);
+        $PrefsObject->setFormVariant(PrefCon::FORM_VARIANT_PERSON);
         $this->set('PrefsObject', $PrefsObject);
 
         $this->viewBuilder()->setLayout('index');

@@ -166,6 +166,39 @@ class PreferencesComponent extends Component
     public function getUserPrefsEntity($user_id)
     {
         return $this->getFormObjet()->getUsersPrefsEntity($user_id);
+
+//        /* @var  Preference $userPrefs */
+//        /* @var PreferencesForm $Form */
+//        /* @var PreferencesTable $PrefsTable */
+//
+//        $this->user_id = $user_id;
+//        $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
+//        $this->UserPrefs = $PrefsTable->getPreferencesFor($user_id);
+//        $Form = $this->getFormObjet();
+//
+//        $schema = $Form->schema();
+//        $defaults = [];
+//        $prefs = [];
+//
+//        //Make a list of all default values
+//        //And filter any invalid prefs out of the json object
+//        foreach ($schema->fields() as $path) {
+//            $defaultValue = $schema->field($path)['default'];
+//            $defaults[$path] = $defaultValue;
+//            if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
+//                $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
+//            }
+//        }
+//        //set the default values into the entity
+//        $this->UserPrefs->setDefaults($defaults);
+//
+//        //if the prefs list changed during filtering, save the corrected version
+//        if ($this->UserPrefs->getVariants() != $prefs) {
+//            $this->UserPrefs->setVariants($prefs);
+//            (TableRegistry::getTableLocator()->get('Preferences'))
+//                ->save($this->UserPrefs);
+//        }
+//        return $this->UserPrefs;
     }
 
     /**

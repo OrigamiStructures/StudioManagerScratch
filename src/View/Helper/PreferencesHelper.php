@@ -29,7 +29,7 @@ class PreferencesHelper extends Helper
             $this->Form->control(PrefCon::PAGINATION_LIMIT)
             . $this->Form->control(
                 PrefCon::PAGINATION_SORT_PEOPLE, [
-                'options' => $formContext->selectList(PrefCon::PAGINATION_SORT_PEOPLE),]),
+                'options' => PrefCon::selectList(PrefCon::PAGINATION_SORT_PEOPLE),]),
             ['class' => 'menu']
         );
         echo $this->Form->control('id', ['type' => 'hidden']);
