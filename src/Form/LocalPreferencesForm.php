@@ -36,6 +36,12 @@ class LocalPreferencesForm extends PreferencesForm
         ]
     ];
 
+    public function __construct(EventManager $eventManager = null)
+    {
+        parent::__construct($eventManager);
+        return $this;
+    }
+
     /**
      * @param Validator $validator
      * @return Validator

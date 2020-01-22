@@ -5,6 +5,8 @@ namespace App\Lib;
 
 
 use App\Exception\BadClassConfigurationException;
+use App\Form\PreferencesForm;
+use App\Model\Entity\Preference;
 use http\Exception\BadQueryStringException;
 
 class Prefs extends PrefsBase
@@ -42,6 +44,14 @@ class Prefs extends PrefsBase
         self::FORM_VARIANT_ORGANIZATON,
         self::FORM_VARIANT_PERSON
     ];
+
+    public function __construct(Preference $entity, PreferencesForm $form, string $variant = null)
+    {
+        parent::__construct($entity, $form);
+        if (!is_null($variant)) {
+            $this->setFormVariant($variant);
+        }
+    }
 
     /**
      * 'values' are used for input validation checks
