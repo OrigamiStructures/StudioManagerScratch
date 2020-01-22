@@ -251,4 +251,15 @@ class PreferencesForm extends Form
         }
         return $this->UserPrefs;
     }
+
+    public function __debugInfo()
+    {
+        $info = parent::__debugInfo();
+
+        $info['Prefs'] = is_object($info['Prefs'])
+            ?'object (' . get_class($info['Prefs']) . ')'
+            : $info['Prefs'];
+
+        return $info;
+    }
 }
