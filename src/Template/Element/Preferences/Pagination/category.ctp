@@ -7,7 +7,7 @@ use App\Lib\PrefCon;
 
 
 $control = $this->Form->control(
-    PrefCon::PAGINATION_SORT_CATEGORY, [
+    $PrefsObject::PAGINATION_SORT_CATEGORY, [
     'options' => PrefCon::selectList(PrefCon::PAGINATION_SORT_CATEGORY),]);
 
 echo $this->Html->tag('li', $control);
