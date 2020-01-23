@@ -218,39 +218,39 @@ class PreferencesForm extends Form
      * @param $user_id string
      * @return Preference
      */
-    public function getUsersPrefsEntity($user_id)
-    {
-        $this->user_id = $user_id;
-        if ($this->UserPrefs === false) {
-            $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
-                ->getPreferencesFor($user_id);
-            /* @var  Preference $userPrefs */
-
-            $schema = $this->schema();
-            $defaults = [];
-            $prefs = [];
-
-            //Make a list of all default values
-            //And filter any invalid prefs out of the json object
-            foreach ($schema->fields() as $path) {
-                $defaultValue = $schema->field($path)['default'];
-                $defaults[$path] = $defaultValue;
-                if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
-                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
-                }
-            }
-            //set the default values into the entity
-            $this->UserPrefs->setDefaults($defaults);
-
-            //if the prefs list changed during filtering, save the corrected version
-            if ($this->UserPrefs->getVariants() != $prefs) {
-                $this->UserPrefs->setVariants($prefs);
-                (TableRegistry::getTableLocator()->get('Preferences'))
-                    ->save($this->UserPrefs);
-            }
-        }
-        return $this->UserPrefs;
-    }
+//    public function getUsersPrefsEntity($user_id)
+//    {
+//        $this->user_id = $user_id;
+//        if ($this->UserPrefs === false) {
+//            $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
+//                ->getPreferencesFor($user_id);
+//            /* @var  Preference $userPrefs */
+//
+//            $schema = $this->schema();
+//            $defaults = [];
+//            $prefs = [];
+//
+//            //Make a list of all default values
+//            //And filter any invalid prefs out of the json object
+//            foreach ($schema->fields() as $path) {
+//                $defaultValue = $schema->field($path)['default'];
+//                $defaults[$path] = $defaultValue;
+//                if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
+//                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
+//                }
+//            }
+//            //set the default values into the entity
+//            $this->UserPrefs->setDefaults($defaults);
+//
+//            //if the prefs list changed during filtering, save the corrected version
+//            if ($this->UserPrefs->getVariants() != $prefs) {
+//                $this->UserPrefs->setVariants($prefs);
+//                (TableRegistry::getTableLocator()->get('Preferences'))
+//                    ->save($this->UserPrefs);
+//            }
+//        }
+//        return $this->UserPrefs;
+//    }
 
     public function __debugInfo()
     {
