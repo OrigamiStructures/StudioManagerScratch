@@ -46,6 +46,12 @@ class PreferencesComponent extends Component
      */
     private $formClass = false;
 
+    /**
+     * Prefs objects that have been created index by the id that made them
+     *
+     * @var array
+     */
+    protected $registry = [];
 
     protected $Prefs = [];
 
@@ -153,15 +159,12 @@ class PreferencesComponent extends Component
      * @param $user_id
      * @return LocalPreferencesForm
      */
-    protected function getFormContextObject($user_id)
+    protected function getFormContextObject($user_id = null, $variants = [])
     {
-//        if (isset($this->PrefsEntities[$user_id])) {
-//            $this->getUserPrefsEntity($user_id);
-//        }
-        if (!isset($this->UserPrefs)) {
-            $this->getUserPrefsEntity($user_id);
+        if (is_null($user_id)) {
+            return $this->getFormObjet();
         }
-        return $this->getFormObjet()->asContext($user_id, $this->UserPrefs->getVariants());
+        return $this->getFormObjet()->asContext($user_id, $variants);
     }
 
     /**
@@ -183,10 +186,10 @@ class PreferencesComponent extends Component
 
         $this->user_id = $user_id;
         if (is_null($user_id)) {
-            $this->UserPrefs = new Preference([]);
+            $UserPrefs = new Preference([]);
         } else {
             $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
-            $this->UserPrefs = $PrefsTable->getPreferencesFor($user_id);
+            $UserPrefs = $PrefsTable->getPreferencesFor($user_id);
         }
         $Form = $this->getFormObjet();
 
@@ -199,20 +202,20 @@ class PreferencesComponent extends Component
         foreach ($schema->fields() as $path) {
             $defaultValue = $schema->field($path)['default'];
             $defaults[$path] = $defaultValue;
-            if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
-                $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
+            if (!in_array($UserPrefs->getVariant($path), [null, $defaultValue])) {
+                $prefs = Hash::insert($prefs, $path, $UserPrefs->getVariant($path));
             }
         }
         //set the default values into the entity
-        $this->UserPrefs->setDefaults($defaults);
+        $UserPrefs->setDefaults($defaults);
 
         //if the prefs list changed during filtering, save the corrected version
-        if ($this->UserPrefs->getVariants() != $prefs) {
-            $this->UserPrefs->setVariants($prefs);
+        if ($UserPrefs->getVariants() != $prefs) {
+            $UserPrefs->setVariants($prefs);
             (TableRegistry::getTableLocator()->get('Preferences'))
-                ->save($this->UserPrefs);
+                ->save($UserPrefs);
         }
-        return $this->UserPrefs;
+        return $UserPrefs;
     }
 
     /**
@@ -345,13 +348,14 @@ class PreferencesComponent extends Component
      */
     public function getPrefs($user_id = null) : Prefs
     {
-        $entity = $this->getUserPrefsEntity($user_id);
 
-        if (is_null($user_id)) {
-            $form = $this->getFormObjet();
-        } else {
-            $form = $this->getFormContextObject($user_id);
+        if (!isset($this->registry[$user_id])) {
+            $entity = $this->getUserPrefsEntity($user_id);
+            $this->registry[$user_id] = new Prefs(
+                $entity,
+                $this->getFormContextObject($user_id, $entity->getVariants())
+            );
         }
-        return new Prefs($entity, $form);
+        return $this->registry[$user_id];
     }
 }
