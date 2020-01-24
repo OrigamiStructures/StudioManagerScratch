@@ -37,6 +37,8 @@ class PreferencesComponent extends Component
     public $components = ['Flash'];
 
     /**
+     * A user override class for the Form if provided
+     *
      * @var bool|string
      */
     private $formClass = false;
