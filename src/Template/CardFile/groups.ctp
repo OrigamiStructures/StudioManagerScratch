@@ -4,6 +4,11 @@ use Cake\Form\Form;
 
 /* @var \App\View\AppView $this */
 
+/**
+ * prepate the pagination prefs form view block
+ */
+echo $this->element('Preferences/Pagination/category');
+
 foreach($categoryCards->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\CategoryCard $card */

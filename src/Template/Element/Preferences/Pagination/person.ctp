@@ -10,4 +10,8 @@ $control = $this->Form->control(
     PrefCon::PAGINATION_SORT_PEOPLE, [
     'options' => PrefCon::selectList(PrefCon::PAGINATION_SORT_PEOPLE),]);
 
+$this->start('pagination_prefs_form');
+echo $this->element('Preferences/Pagination/form_create');
 echo $this->Html->tag('li', $control);
+echo $this->element('Preferences/Pagination/form_end');
+$this->end();

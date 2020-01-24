@@ -1,6 +1,11 @@
 <?php
 use Cake\Utility\Text;
 
+/**
+ * prepate the pagination prefs form view block
+ */
+$this->element('Preferences/Pagination/organization');
+
 foreach($organizationCards->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\OrganizationCard $card

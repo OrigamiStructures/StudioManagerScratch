@@ -15,9 +15,3 @@ echo $this->Html->tag('li', $this->Form->control(PrefCon::PAGINATION_LIMIT));
 // leaves the form open and a <UL> open
 // place additional inputs in <LI>s
 
-echo $this->element('Preferences/Pagination/' . $PrefsObject->getFormVariant());
-
-echo '</ul>';
-echo $this->Form->control('id', ['type' => 'hidden']);
-echo $this->Form->submit();
-echo $this->Form->end();
