@@ -8,7 +8,7 @@ Requirements
 * The ability for change the record count for the pages
 * The ability to control the sort order of the records
 * The ability to filter the found set.
-* The ability to page through and sort filtered sets
+* The ability to page through and sort, filtered sets
 
 Even assuming that we limit UI tools by hard-wiring record counts, sort order, and provide finite filtering options through links; we still need tools to accomplish those basic requirements in the back end.
 
@@ -32,7 +32,7 @@ It's not as grim as it might seem though. Cake's tools are flexible and, though 
 
 ###The method and .ctp files
 
-The Middleware is wired into Application.php and won't require any attention.
+The Middleware is wired into Application.php and won't require any attention. (Middleware will maintain transient record filtering while supporting pagination)
 
 AppController puts the Pagination component in every controller. That might seem like overkill because some won't require it. But I have a special module that handles stack pagination that composes in. It seemed better to do this right once rather than forget it often. That component installs its own helper.
 
@@ -44,16 +44,17 @@ Your action is responsible for identifying two `.ctp` files .
 * your actions template file
    * of course this may match your action name
 
-Your action's template only needs to render the list of found records. The `index` layout will place the pagination tools and the filtering tools on the page. `index` extends `default` layout, so all the other normal page elements like menus and flash messages are handled there.
+Your action's template needs to call the elements that create prefs-form view blocks you need, and render the list of found records. The `index` layout will fetch the prefs-form view blocks and place the pagination tools and the filtering tools on the page. `index` extends `default` layout, so all the other normal page elements like menus and flash messages are handled there.
 
-The layout will place the pagination tools and preferences form on the page. It requires some setup. All that is handled by PreferencesComponent::includePrefsViewBundle($user_id).
-
-The search/filter forms will eventually be inserted by the layout too. But for now, the template needs to include them.
+The search/filter forms will eventually be inserted by the layout. But for now, the template needs to include them.
 
 So, for now the template file is something like this:
 
 ```php
 <?php
+
+echo $this->element('pagination-prefs-form'); //prepares a view-block
+
 foreach ($foundSet as $item) {
     //output display for your item
 }
@@ -84,10 +85,13 @@ public function index()
     $foundSet = $this->paginate($Table->pageFor('seedType', $seedIdQuery->toArray()));
 
     //prepate data for the layout and set the layout
-    $this->Preferences->includePrefsViewBundle($this->contextUser()->getId('supervisor'));
+    //Prefs contains the Entity and Form to allow user interaction with their prefs
+    // and to guide rendering and logic that are subject to prefs settings
+    $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
     $this->viewBuilder()->setLayout('index');
 
     //set values to viewVars
+    $this->set('Prefs', $Prefs);
     $this->set('foundSet', $foundSet);
 
     //identify the template to render if need be
