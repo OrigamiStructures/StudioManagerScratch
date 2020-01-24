@@ -119,58 +119,6 @@ class LocalPreferencesFormTest extends TestCase
     }
 
     /**
-     * Test getUsersPrefsEntity method
-     *
-     * Tests return of an entity that has been persisted with
-     * only valid preference paths referenced.
-     *
-     * This is an integration test since the form class must modify
-     * the entity.
-     *
-     * @return void
-     */
-    public function testGetUsersPrefsEntityAllValidPrefs()
-    {
-        $prefsEntity = $this->PreferencesForm->getUsersPrefsEntity('AA074ebc-758b-4729-91f3-bcd65e51ace4');
-        $this->assertInstanceOf('App\Model\Entity\Preference', $prefsEntity,
-            'Did not get a Preference entity');
-        $this->assertEquals('10', $prefsEntity->for('pagination.limit'),
-            'an unexpected value came from the entity when a default was expected');
-        $this->assertEquals('first_name', $prefsEntity->for('pagination.sort.people'),
-            'an unexpected value came from the entity when a user variant was expected');
-
-        $expected = [
-            'pagination' => [
-                'sort' => [
-                    'people' => 'first_name'
-                ]
-            ]
-        ];
-        $this->assertEquals($expected, $prefsEntity->getVariants(),
-            'The variant list unexpectedly changed during the "get" process');
-    }
-
-    /**
-     * This tests the components ability to remove an invalid preferece path
-     * from the entity by filtering against the schema
-     *
-     * This is an integration test
-     */
-    public function testGetUsersPrefsEntityInvalidPrefs()
-    {
-        $prefsEntity = $this->PreferencesForm->getUsersPrefsEntity('BB074ebc-758b-4729-91f3-bcd65e51ace4');
-        $expected = [
-            'pagination' => [
-                'sort' => [
-                    'people' => 'first_name'
-                ]
-            ]
-        ];
-        $this->assertEquals($expected, $prefsEntity->getVariants(),
-            'The variant list did not get the invalid path removed');
-    }
-
-    /**
      * Test asContext method
      *
      * This integration test verifies that the entity loads and
@@ -180,7 +128,7 @@ class LocalPreferencesFormTest extends TestCase
      */
     public function testAsContext()
     {
-        $this->PreferencesForm->asContext('AA074ebc-758b-4729-91f3-bcd65e51ace4');
+        $this->PreferencesForm->asContext('AA074ebc-758b-4729-91f3-bcd65e51ace4' , ['pagination.sort.people' => 'first_name']);
         $actual = $this->PreferencesForm->schema()->field('pagination.sort.people');
 
         $this->assertEquals('first_name', $actual['default'],
