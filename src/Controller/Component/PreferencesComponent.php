@@ -172,7 +172,7 @@ class PreferencesComponent extends Component
      * @param $user_id
      * @return Preference
      */
-    public function getUserPrefsEntity($user_id)
+    protected function getUserPrefsEntity($user_id)
     {
 
 //        return $this->getFormObjet()->getUsersPrefsEntity($user_id);
@@ -182,8 +182,12 @@ class PreferencesComponent extends Component
         /* @var PreferencesTable $PrefsTable */
 
         $this->user_id = $user_id;
-        $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
-        $this->UserPrefs = $PrefsTable->getPreferencesFor($user_id);
+        if (is_null($user_id)) {
+            $this->UserPrefs = new Preference([]);
+        } else {
+            $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
+            $this->UserPrefs = $PrefsTable->getPreferencesFor($user_id);
+        }
         $Form = $this->getFormObjet();
 
         $schema = $Form->schema();
@@ -278,7 +282,7 @@ class PreferencesComponent extends Component
      *
      * @return PreferencesForm|LocalPreferencesForm
      */
-    public function getFormObjet()
+    protected function getFormObjet()
     {
         if ($this->PreferenceForm == false && !$this->formClass == false) {
             $class = $this->formClass;
@@ -326,7 +330,7 @@ class PreferencesComponent extends Component
     /**
      * Returns the full Prefs object for use in any situation
      *
-     * Contains an Entity to describe user's current settings
+     * Contains an Entity to describe the current settings
      *
      * Contains a Form to describe the full preference schema
      * and to act as a context object in FormHelper::create().
@@ -337,10 +341,17 @@ class PreferencesComponent extends Component
      *
      * @todo develope class iterface
      *
-     * @param $user_id
+     * @param $user_id null|string null will get full default objects
      */
-    public function getPrefs($user_id)
+    public function getPrefs($user_id = null) : Prefs
     {
-        return new Prefs($this->getUserPrefsEntity($user_id), $this->getFormContextObject($user_id));
+        $entity = $this->getUserPrefsEntity($user_id);
+
+        if (is_null($user_id)) {
+            $form = $this->getFormObjet();
+        } else {
+            $form = $this->getFormContextObject($user_id);
+        }
+        return new Prefs($entity, $form);
     }
 }

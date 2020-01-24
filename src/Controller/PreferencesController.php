@@ -23,7 +23,7 @@ class PreferencesController extends AppController
             throw new BadPrefsImplementationException($msg);
         }
 
-        $prefsForm = $this->Preferences->getFormObjet();
+        $prefsForm = $this->Preferences->getPrefs()->getForm();
         list($prefsForm, $prefs) = $this->Preferences->setPrefs();
 
         /*
