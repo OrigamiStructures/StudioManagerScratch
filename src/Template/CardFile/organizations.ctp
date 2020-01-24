@@ -2,7 +2,7 @@
 use Cake\Utility\Text;
 
 /**
- * prepate the pagination prefs form view block
+ * prepate the pagination prefs form view block for use by the layout
  */
 $this->element('Preferences/Pagination/organization');
 

@@ -8,7 +8,7 @@ use App\Model\Entity\PersonCard;
  */
 
 /**
- * prepate the pagination prefs form view block
+ * prepate the pagination prefs form view block for use by the layout
  */
 echo $this->element('Preferences/Pagination/person');
 

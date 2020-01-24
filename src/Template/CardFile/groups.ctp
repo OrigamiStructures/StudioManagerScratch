@@ -5,7 +5,7 @@ use Cake\Form\Form;
 /* @var \App\View\AppView $this */
 
 /**
- * prepate the pagination prefs form view block
+ * prepate the pagination prefs form view block for use by the layout
  */
 echo $this->element('Preferences/Pagination/category');
 
