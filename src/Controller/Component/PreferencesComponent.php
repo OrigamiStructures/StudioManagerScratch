@@ -324,18 +324,6 @@ class PreferencesComponent extends Component
     }
 
     /**
-     * Single call point to support Pagination/Preference tools on index pages
-     *
-     * @param $user_id
-     */
-    public function includePrefsViewBundle($user_id)
-    {
-        $prefsForm = $this->getFormContextObject($user_id);
-        $prefs = $this->getUserPrefsEntity($user_id);
-        $this->getController()->set(compact('prefsForm', 'prefs'));
-    }
-
-    /**
      * Returns the full Prefs object for use in any situation
      *
      * Contains an Entity to describe user's current settings
