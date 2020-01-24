@@ -169,23 +169,35 @@ class PreferencesForm extends Form
     public function validationDefault(Validator $validator)
     {
         return parent::validationDefault($validator);
-    }    /**
+    }
+
+    /**
      * Return this object with user prefs overwritting default values
      *
      * The users stored choices will overwrite the default values
      * in the schema. The form will now show the proper user values
      * when they have been set
      *
+     * $variants = [
+     *   'pagination' => [
+     *     'limit' => '3'
+     *   ]
+     * ]
+     * OR
+     * $variants = [
+     *    'pagination.limit' => '3'
+     * ]
+     *
+     * The array will be flattened before use to create the second style
+     *
      * @param $userPrefs string
+     * @param $variants array
      */
-    public function asContext($user_id)
+    public function asContext($user_id, $variants)
     {
-        if ($this->user_id === false || $this->user_id != $user_id) {
-            $this->getUsersPrefsEntity($user_id);
-        }
         $schema = $this->schema();
 
-        $prefs = collection(Hash::flatten($this->UserPrefs->getVariants()));
+        $prefs = collection(Hash::flatten($variants));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
             $attributes = $schema->field($fieldName);
             $attributes['default'] = $value;
@@ -200,57 +212,6 @@ class PreferencesForm extends Form
 
         return $this;
     }
-
-    /**
-     * Load the user prefs and add all defaults to it
-     *
-     * The current user preference record is retrieved then two
-     * modifications are made. Looping on the current schema:
-     *  1. Defaults values are written for each possible schema column
-     *  2. The user's settings are cleaned so they only contain current schema
-     *      columns and only then if there is a non-default value stored
-     * If the entity changes in this 2nd stage it will be resaved.
-     *
-     * In this way we insure that no stale or invalid data is stored
-     * in the users preference. Since this is the only way to get a
-     * user's preference entity, we guarantee validity on every use.
-     *
-     * @param $user_id string
-     * @return Preference
-     */
-//    public function getUsersPrefsEntity($user_id)
-//    {
-//        $this->user_id = $user_id;
-//        if ($this->UserPrefs === false) {
-//            $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
-//                ->getPreferencesFor($user_id);
-//            /* @var  Preference $userPrefs */
-//
-//            $schema = $this->schema();
-//            $defaults = [];
-//            $prefs = [];
-//
-//            //Make a list of all default values
-//            //And filter any invalid prefs out of the json object
-//            foreach ($schema->fields() as $path) {
-//                $defaultValue = $schema->field($path)['default'];
-//                $defaults[$path] = $defaultValue;
-//                if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
-//                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
-//                }
-//            }
-//            //set the default values into the entity
-//            $this->UserPrefs->setDefaults($defaults);
-//
-//            //if the prefs list changed during filtering, save the corrected version
-//            if ($this->UserPrefs->getVariants() != $prefs) {
-//                $this->UserPrefs->setVariants($prefs);
-//                (TableRegistry::getTableLocator()->get('Preferences'))
-//                    ->save($this->UserPrefs);
-//            }
-//        }
-//        return $this->UserPrefs;
-//    }
 
     public function __debugInfo()
     {

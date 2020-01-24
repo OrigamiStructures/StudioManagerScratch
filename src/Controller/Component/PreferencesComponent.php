@@ -46,6 +46,9 @@ class PreferencesComponent extends Component
      */
     private $formClass = false;
 
+
+    protected $Prefs = [];
+
     /**
      * Using this component will automatically make PreferencesHelper available
      *
@@ -152,7 +155,13 @@ class PreferencesComponent extends Component
      */
     protected function getFormContextObject($user_id)
     {
-        return $this->getFormObjet()->asContext($user_id);
+//        if (isset($this->PrefsEntities[$user_id])) {
+//            $this->getUserPrefsEntity($user_id);
+//        }
+        if (!isset($this->UserPrefs)) {
+            $this->getUserPrefsEntity($user_id);
+        }
+        return $this->getFormObjet()->asContext($user_id, $this->UserPrefs->getVariants());
     }
 
     /**
