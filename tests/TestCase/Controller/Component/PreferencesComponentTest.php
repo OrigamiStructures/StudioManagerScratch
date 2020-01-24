@@ -123,7 +123,7 @@ class PreferencesComponentTest extends TestCase
 
         $this->Component->setPrefs();
 
-        $changedPrefs = $this->Component->getUserPrefsEntity($user_id);
+        $changedPrefs = $this->Component->getPrefs($user_id)->getEntity();
 
         $this->assertEquals(15, $changedPrefs->for('pagination.limit'),
             'A new user variant value was not set to the prefs list');
@@ -171,7 +171,7 @@ class PreferencesComponentTest extends TestCase
 
         $this->Component->setPrefs();
 
-        $changedPrefs = $this->Component->getUserPrefsEntity($user_id);
+        $changedPrefs = $this->Component->getPrefs($user_id)->getEntity();
 
         $this->assertEmpty($changedPrefs->getVariants(),
             'unexpected values are listed in the prefs.');
@@ -212,11 +212,11 @@ class PreferencesComponentTest extends TestCase
         $this->mockPrefsTable();
         //</editor-fold>
 
-        $originalVariants = $this->Component->getUserPrefsEntity($user_id)->getVariants();
+        $originalVariants = $this->Component->getPrefs($user_id)->getEntity()->getVariants();
 
         $this->Component->setPrefs();
 
-        $changedPrefs = $this->Component->getUserPrefsEntity($user_id);
+        $changedPrefs = $this->Component->getPrefs($user_id)->getEntity();
 
         $this->assertEquals($originalVariants, $changedPrefs->getVariants(),
             'No prefs change were expected on failed save, but one occured');
@@ -246,7 +246,7 @@ class PreferencesComponentTest extends TestCase
 
         $this->Component->clearPrefs($user_id);
 
-        $changedPrefs = $this->Component->getUserPrefsEntity($user_id);
+        $changedPrefs = $this->Component->getPrefs($user_id)->getEntity();
 
         $this->assertEmpty($changedPrefs->getVariants(),
             '"clearPrefs()" did not remove the stored user variants in ->prefs');
@@ -270,7 +270,7 @@ class PreferencesComponentTest extends TestCase
         $this->Component = new PreferencesComponent($registry);
 
         $this->Component->setFormClass('App\Form\PreferencesForm');
-        $object = $this->Component->getFormObjet();
+        $object = $this->Component->getPrefs()->getForm();
         $this->assertInstanceOf('App\Form\PreferencesForm', $object,
         'changing the registred Form class did not change the class of the instantiated object');
         $this->assertNotInstanceOf('App\Form\LocalPreferencesForm', $object,
