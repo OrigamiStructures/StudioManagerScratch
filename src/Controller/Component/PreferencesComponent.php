@@ -37,11 +37,6 @@ class PreferencesComponent extends Component
     public $components = ['Flash'];
 
     /**
-     * @var bool|PreferencesForm|LocalPreferencesForm
-     */
-    private $PreferenceForm = false;
-
-    /**
      * @var bool|string
      */
     private $formClass = false;
@@ -287,13 +282,13 @@ class PreferencesComponent extends Component
      */
     protected function getFormObjet()
     {
-        if ($this->PreferenceForm == false && !$this->formClass == false) {
+        if (!$this->formClass == false) {
             $class = $this->formClass;
-            $this->PreferenceForm = new $class();
+            $PreferenceForm = new $class();
         } else {
-            $this->PreferenceForm = new LocalPreferencesForm();
+            $PreferenceForm = new LocalPreferencesForm();
         }
-        return $this->PreferenceForm;
+        return $PreferenceForm;
     }
 
     /**
