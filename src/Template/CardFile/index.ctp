@@ -10,7 +10,7 @@ use App\Model\Entity\PersonCard;
 /**
  * prepate the pagination prefs form view block
  */
-$this->element('Preferences/Pagination/person');
+echo $this->element('Preferences/Pagination/person');
 
 foreach($cards->getData() as $id => $card) {
 
