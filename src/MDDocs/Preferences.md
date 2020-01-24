@@ -14,22 +14,42 @@ class ConcreteController extends AppController {
     public function initialize()
     {
         parent::initialize();
-        $this->loadComponent('Preferences');
+        $this->loadComponent('Preferences', $config);
+        //support for config settings is pending
+        //overrides for Form and Table are being considered
     }
 
 }
 ```
 
-###Getting User Preferences
+###The Prefs Object
+
+The component will deliver a **Prefs** object which contains a Preferences entity and a Preferences form. These two objects will support any Prefs tasks you have.
+
+```php
+//from a controller
+$Prefs = $this->Preferences->getPrefs($owner_id);
+//to get the Form object with the schema
+$form = $Prefs->getForm();
+//to get the Entity object with the owner's settings
+$entity = $Prefs->getEntity();
+
+//to get unowned, default-value objects
+$Prefs = $this->Preferences->getPrefs();
+```
+
+The component stores Prefs instances in a registry indexed by the id that was used to create them. Subsiquent calls to `$this->Preferences->getPrefs($owner_id)` will return the object from the registry.
+
+###The Preferences Entity
 
 Once you've loaded the Preferences component, you gain access to an Entity that will answer all questions reguarding a users settings.
 
 ```php
 //In your controller with the component installed as Preferences
-$UserPref = $this->Preferences->getUserPrefsEntity($supervisor_id);
+$entity = $this->Preferences->getPrefs($supervisor_id)->getEntity();
 
 //to get any preference setting
-$value = $UserPref->for('name.of.pref');
+$value = $entity->for('name.of.pref');
 ```
 
 If the user has set a value it will be returned. If they have not made a choice for this pref, or have not made any prefs choice, you'll get the default value for that pref.
@@ -40,7 +60,7 @@ This is all you need to make any portion of the system respond to user preferenc
 //in any class
 
 //conditional
-if ($UserPref->for('prefs.boolean.setting')) {
+if ($entity->for('prefs.boolean.setting')) {
     //act base on setting
 } else {
     //act based on alternate setting
@@ -48,7 +68,7 @@ if ($UserPref->for('prefs.boolean.setting')) {
 
 //direct use
 $Model->find('all')
-    ->where(['column' => $UserPref->for('favorite.value')]);
+    ->where(['column' => $entity->for('favorite.value')]);
 ```
 
 ###Allowing Users to set their prefs
@@ -57,11 +77,14 @@ Make preference choices available in forms on your pages. The Component will pro
 
 ```php
 //in a controller with the component at Preferences
-$this->set($prefsContext, $this->Preferences->getFormContextObject($supervisor_id));
+$this->set(
+   $formContext,
+   $this->Preferences->getPrefs($supervisor_id)->getForm()
+);
 
 //in a .ctp
-echo $this->Form->create($prefsContext);
-    //echo inputs here
+echo $this->Form->create($formContext);
+    //echo controls here
 echo $this->Form->end();
 ```
 
