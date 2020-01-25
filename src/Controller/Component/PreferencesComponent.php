@@ -111,7 +111,7 @@ class PreferencesComponent extends Component
             $form->errorsToFlash($this->Flash);
         }
 
-        return [$form, $entity];
+        return new Prefs($entity, $form);
 }
 
     /**
