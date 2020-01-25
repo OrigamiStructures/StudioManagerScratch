@@ -71,15 +71,15 @@ class PreferencesComponent extends Component
      */
     public function setPrefs()
     {
-        $prefsForm = $this->getFormObjet();
         $post = $this->getController()->getRequest()->getData();
-        $prefs = $this->repository()->getPreferencesFor($post['id']);
+        $form = $this->getFormObjet();
+        $entity = $this->repository()->getPreferencesFor($post['id']);
 
-        if ($prefsForm->validate($post)) {
-            $userVariants = $prefs->getVariants();
+        if ($form->validate($post)) {
+            $userVariants = $entity->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
 
-            $allowedPrefs = collection($prefsForm->getValidPaths());
+            $allowedPrefs = collection($form->getValidPaths());
             $newVariants = $allowedPrefs
                 ->reduce(function($accum, $path) use ($post, $prefsDefaults, $userVariants){
                     //if the post is default, leave variant out of the list
@@ -101,17 +101,17 @@ class PreferencesComponent extends Component
                 }, []);
 
             if ($newVariants != $userVariants) {
-                $prefs->setVariants($newVariants);
-                $this->savePrefs($post, $prefs);
+                $entity->setVariants($newVariants);
+                $this->savePrefs($post, $entity);
             } else {
                 $this->Flash->success('No new preferences were requested');
             }
          } else {
             //didn't validate
-            $prefsForm->errorsToFlash($this->Flash);
+            $form->errorsToFlash($this->Flash);
         }
 
-        return [$prefsForm, $prefs];
+        return [$form, $entity];
 }
 
     /**
