@@ -31,6 +31,14 @@ class LocalPreferencesForm extends PreferencesForm
             'type' => 'string',
             'default' => 'last_name'
         ],
+        PrefCon::PAGINATION_SORT_CATEGORY => [
+            'type' => 'string',
+            'default' => 'last_name'
+        ],
+        PrefCon::PAGINATION_SORT_ORGANIZATION => [
+            'type' => 'string',
+            'default' => 'last_name'
+        ],
         PrefCon::PAGINATION_SORT_ARTWORK => [
             'type' => 'string',
             'default' => 'title'

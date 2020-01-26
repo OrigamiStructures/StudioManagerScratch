@@ -52,12 +52,12 @@ class PrefCon
             'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
         ],
         PrefCon::PAGINATION_SORT_CATEGORY => [
-            'values' => ['name'],
-            'select' => ['name' => 'Name']
+            'values' => ['last_name'],
+            'select' => ['last_name' => 'Name']
         ],
         PrefCon::PAGINATION_SORT_ORGANIZATION => [
-            'values' => ['name'],
-            'select' => ['name' => 'Name']
+            'values' => ['last_name'],
+            'select' => ['last_name' => 'Name']
         ],
         PrefCon::PAGINATION_SORT_ARTWORK => [
             'values' => [],
