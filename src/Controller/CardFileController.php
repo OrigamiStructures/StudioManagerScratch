@@ -206,10 +206,15 @@ class CardFileController extends AppController {
         $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
         /* @var FatGenericCardsTable $FatGenericCardsTable */
 
-        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()));
-
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
+
+        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
+            [
+                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE)
+            ]
+        );
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $fatGenericCards);
@@ -231,7 +236,12 @@ class CardFileController extends AppController {
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
         $this->viewBuilder()->setLayout('index');
-        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()));
+        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
+            [
+                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_ORGANIZATION)
+            ]
+        );
         $this->set('organizationCards', $organizationCards);
     }
 
@@ -252,7 +262,12 @@ class CardFileController extends AppController {
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
         $this->viewBuilder()->setLayout('index');
-        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()));
+        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
+            [
+                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_CATEGORY)
+            ]
+        );
         $this->set('categoryCards', $categoryCards);
     }
 
@@ -272,10 +287,15 @@ class CardFileController extends AppController {
         $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var FatGenericCardsTable $PersonCardsTable */
 
-        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()));
-
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
+        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
+            [
+                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE)
+            ]
+        );
+
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
         $this->render('index');
@@ -306,7 +326,11 @@ class CardFileController extends AppController {
         $this->cardSearch($seedIdQuery);
 
         $personCards = $this->paginate(
-            $PersonCards->pageFor('identity', $seedIdQuery->toArray())
+            $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
+            [
+                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE)
+            ]
         );
 
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
