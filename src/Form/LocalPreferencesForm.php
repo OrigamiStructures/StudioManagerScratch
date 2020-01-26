@@ -68,6 +68,14 @@ class LocalPreferencesForm extends PreferencesForm
             'You must show more than zero items per page.'
         );
         $validator->inList(
+            PrefCon::PAGINATION_DIR,
+            PrefCon::values(PrefCon::PAGINATION_DIR),
+            'Sort direction can only be ' . Text::toList(
+                PrefCon::values(PrefCon::PAGINATION_DIR),
+                'or'
+            )
+        );
+        $validator->inList(
             PrefCon::PAGINATION_SORT_PEOPLE,
             PrefCon::values(PrefCon::PAGINATION_SORT_PEOPLE),
             'Sorting can only be done on ' . Text::toList(
