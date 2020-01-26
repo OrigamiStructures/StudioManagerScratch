@@ -27,6 +27,10 @@ class LocalPreferencesForm extends PreferencesForm
             'type' => 'integer',
             'default' => 10
         ],
+        PrefCon::PAGINATION_DIR => [
+            'type' => 'integer',
+            'default' => 'asc'
+        ],
         PrefCon::PAGINATION_SORT_PEOPLE => [
             'type' => 'string',
             'default' => 'last_name'

@@ -212,7 +212,8 @@ class CardFileController extends AppController {
         $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
             [
                 'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE)
+                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
             ]
         );
 
@@ -239,7 +240,8 @@ class CardFileController extends AppController {
         $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
             [
                 'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_ORGANIZATION)
+                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
             ]
         );
         $this->set('organizationCards', $organizationCards);
@@ -265,7 +267,8 @@ class CardFileController extends AppController {
         $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
             [
                 'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_CATEGORY)
+                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
             ]
         );
         $this->set('categoryCards', $categoryCards);
@@ -292,7 +295,8 @@ class CardFileController extends AppController {
         $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
             [
                 'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE)
+                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
             ]
         );
 
@@ -329,7 +333,8 @@ class CardFileController extends AppController {
             $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
             [
                 'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'sort' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE)
+                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
             ]
         );
 

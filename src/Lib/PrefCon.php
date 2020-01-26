@@ -13,6 +13,7 @@ class PrefCon
      * form control creation
      */
     const PAGINATION_LIMIT = 'pagination.limit';
+    const PAGINATION_DIR = 'pagination.dir';
     const PAGINATION_SORT_PEOPLE = 'pagination.sort.people';
     const PAGINATION_SORT_CATEGORY = 'pagination.sort.category';
     const PAGINATION_SORT_ORGANIZATION = 'pagination.sort.organization';
@@ -47,6 +48,10 @@ class PrefCon
      * @var array
      */
     public static $lists = [
+        PrefCon::PAGINATION_DIR => [
+            'values' => ['asc', 'desc'],
+            'select' => ['asc' => 'Ascending', 'desc' => 'Descending']
+        ],
         PrefCon::PAGINATION_SORT_PEOPLE => [
             'values' => ['first_name', 'last_name'],
             'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
