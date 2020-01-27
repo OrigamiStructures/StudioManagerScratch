@@ -328,6 +328,7 @@ class CardFileController extends AppController {
 
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
+        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
 
         $personCards = $this->paginate(
             $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
@@ -338,7 +339,6 @@ class CardFileController extends AppController {
             ]
         );
 
-        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
 
         $this->viewBuilder()->setLayout('index');
