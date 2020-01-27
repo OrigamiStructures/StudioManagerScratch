@@ -17,7 +17,25 @@ class IndexFilterManagmentMiddleware
             'Cardfile.view',
             'Preferences.setPrefs',
             'Requests.view',
-            'Panels.view']
+            'Panels.view'],
+        'Cardfile.people' => [
+            'Cardfile.people',
+            'Cardfile.view',
+            'Preferences.setPrefs',
+            'Requests.view',
+            'Panels.view'],
+        'Cardfile.groups' => [
+            'Cardfile.groups',
+            'Cardfile.view',
+            'Preferences.setPrefs',
+            'Requests.view',
+            'Panels.view'],
+        'Cardfile.index' => [
+            'Cardfile.index',
+            'Cardfile.view',
+            'Preferences.setPrefs',
+            'Requests.view',
+            'Panels.view'],
     ];
 
     /**
