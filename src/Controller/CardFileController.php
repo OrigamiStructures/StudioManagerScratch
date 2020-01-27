@@ -219,7 +219,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->pageNotFound();
+            return $this->showLastPage();
         }
 
         $this->viewBuilder()->setLayout('index');
@@ -251,7 +251,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->pageNotFound();
+            return $this->showLastPage();
         }
         $this->set('organizationCards', $organizationCards);
     }
@@ -282,7 +282,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->pageNotFound();
+            return $this->showLastPage();
         }
         $this->set('categoryCards', $categoryCards);
     }
@@ -314,7 +314,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->pageNotFound();
+            return $this->showLastPage();
         }
 
         $this->viewBuilder()->setLayout('index');
@@ -357,7 +357,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->pageNotFound();
+            return $this->showLastPage();
         }
 
         $this->set('PrefsObject', $PrefsObject);
@@ -511,7 +511,7 @@ class CardFileController extends AppController {
      * Redirect to last page when request exceeds page limit
      * @return \Cake\Http\Response|null
      */
-    private function pageNotFound()
+    private function showLastPage()
     {
         $qParams = $this->getRequest()->getQueryParams();
         $reqPage = $qParams['page'];
