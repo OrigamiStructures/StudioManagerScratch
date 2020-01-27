@@ -20,6 +20,7 @@ use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
 use App\Model\Lib\StackSet;
 use Cake\View\ViewBuilder;
+use Cake\Http\Exception\NotFoundException;
 
 /**
  * CakePHP CardFileController
@@ -209,13 +210,17 @@ class CardFileController extends AppController {
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
 
-        $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
-            [
-                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
-            ]
-        );
+        try {
+            $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
+                [
+                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                ]
+            );
+        } catch (NotFoundException $e) {
+            return $this->pageNotFound();
+        }
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $fatGenericCards);
@@ -237,13 +242,17 @@ class CardFileController extends AppController {
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
         $this->viewBuilder()->setLayout('index');
-        $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
-            [
-                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
-            ]
-        );
+        try {
+            $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
+                [
+                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                ]
+            );
+        } catch (NotFoundException $e) {
+            return $this->pageNotFound();
+        }
         $this->set('organizationCards', $organizationCards);
     }
 
@@ -264,13 +273,17 @@ class CardFileController extends AppController {
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
         $this->viewBuilder()->setLayout('index');
-        $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
-            [
-                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
-            ]
-        );
+        try {
+            $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
+                [
+                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                ]
+            );
+        } catch (NotFoundException $e) {
+            return $this->pageNotFound();
+        }
         $this->set('categoryCards', $categoryCards);
     }
 
@@ -292,13 +305,17 @@ class CardFileController extends AppController {
 
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $PrefsObject);
-        $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
-            [
-                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
-            ]
-        );
+        try {
+            $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
+                [
+                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                ]
+            );
+        } catch (NotFoundException $e) {
+            return $this->pageNotFound();
+        }
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
@@ -330,14 +347,18 @@ class CardFileController extends AppController {
         $this->cardSearch($seedIdQuery);
         $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
 
-        $personCards = $this->paginate(
-            $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
-            [
-                'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                    $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
-            ]
-        );
+        try {
+            $personCards = $this->paginate(
+                $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
+                [
+                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                ]
+            );
+        } catch (NotFoundException $e) {
+            return $this->pageNotFound();
+        }
 
         $this->set('PrefsObject', $PrefsObject);
 
@@ -485,5 +506,28 @@ class CardFileController extends AppController {
     }
 
     //</editor-fold>
+
+    /**
+     * Redirect to last page when request exceeds page limit
+     * @return \Cake\Http\Response|null
+     */
+    private function pageNotFound()
+    {
+        $qParams = $this->getRequest()->getQueryParams();
+        $reqPage = $qParams['page'];
+        $lastPage = $this->getRequest()->getParam('paging')['Identities']['pageCount'];
+        if ($lastPage > 1) {
+            $qParams['page'] = $lastPage;
+        } else {
+            unset($qParams['page']);
+        }
+        $url = [
+            'controller' => $this->getRequest()->getParam('controller'),
+            'action' => $this->getRequest()->getParam('action'),
+            '?' => $qParams
+        ];
+        $this->Flash->error("Redirected to page $lastPage. Page $reqPage did not exist.");
+        return $this->redirect($url);
+    }
 
 }
