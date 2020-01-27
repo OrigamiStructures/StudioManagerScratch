@@ -380,16 +380,19 @@ class CardFileController extends AppController {
                 $query->where($whereThis);
 
                 // persist the filter for future and paginated viewing
-                $path = 'filter.' . $this->request->getParam('controller') . '.' . $this->request->getParam('action');
-                $this->getRequest()->getSession()->write($path, $whereThis);
+                $path = $this->request->getParam('controller') . '.' . $this->request->getParam('action');
+                $this->getRequest()->getSession()->write('filter', [
+                    'path' => $path,
+                    'conditions' => $whereThis]);
             }
-        } elseif (in_array('filter', $this->getRequest()->getQueryParams())) {
+        } elseif (!is_null($this->getRequest()->getSession()->read('filter'))) {
             // respond to stored filters incases there was no post
             $params = $this->getRequest()->getQueryParams();
             $whereThis = $this->getRequest()->getSession()
-                ->read("filter.{$params['filter']}")
+                ->read("filter.conditions")
                 ?? []
             ;
+            $query->where($whereThis);
         }
         // set the values needed to render a search/filter for on the index page
         $identities = TableRegistry::getTableLocator()->get('Identities');

@@ -4,11 +4,22 @@
 namespace App\Middleware;
 
 use Cake\Http\ServerRequest;
+use Cake\Http\Session;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class IndexFilterManagmentMiddleware
 {
+
+    protected $scopes = [
+        'Cardfile.organizations' => [
+            'Cardfile.organizations',
+            'Cardfile.view',
+            'Preferences.setPrefs',
+            'Requests.view',
+            'Panels.view']
+    ];
+
     /**
      * Maintain content filters within sensible page scope
      *
@@ -28,10 +39,19 @@ class IndexFilterManagmentMiddleware
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
         /* @var ServerRequest $request */
+        /* @var Session $session */
 
-//        osd(get_class($request));
-//        osd(get_class($response));
-//        osd($request->getSession()->read('filter'));
+        $session = $request->getSession();
+        $filter = $session->read('filter');
+
+        $requestPath = $request->getParam('controller') . '.' . $request->getParam('action');
+
+        if (is_null($filter)) {
+            return $next($request, $response);
+        }
+        if (!in_array($requestPath, $this->scopes[$filter['path']])) {
+            $session->delete('filter');
+        }
         return $next($request, $response);
     }
 }
