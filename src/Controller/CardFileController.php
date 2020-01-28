@@ -207,15 +207,15 @@ class CardFileController extends AppController {
         $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
         /* @var FatGenericCardsTable $FatGenericCardsTable */
 
-        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $PrefsObject);
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $Prefs);
 
         try {
             $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $Prefs->for(PrefCon::PAGINATION_DIR)]
                 ]
             );
         } catch (NotFoundException $e) {
@@ -239,15 +239,15 @@ class CardFileController extends AppController {
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
 
-        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $PrefsObject);
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $Prefs);
         $this->viewBuilder()->setLayout('index');
         try {
             $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $Prefs->for(PrefCon::PAGINATION_DIR)]
                 ]
             );
         } catch (NotFoundException $e) {
@@ -270,15 +270,15 @@ class CardFileController extends AppController {
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
 
-        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $PrefsObject);
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $Prefs);
         $this->viewBuilder()->setLayout('index');
         try {
             $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $Prefs->for(PrefCon::PAGINATION_DIR)]
                 ]
             );
         } catch (NotFoundException $e) {
@@ -303,14 +303,14 @@ class CardFileController extends AppController {
         $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var FatGenericCardsTable $PersonCardsTable */
 
-        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $PrefsObject);
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $Prefs);
         try {
             $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $Prefs->for(PrefCon::PAGINATION_DIR)]
                 ]
             );
         } catch (NotFoundException $e) {
@@ -345,22 +345,22 @@ class CardFileController extends AppController {
 
         //sets search form vars and adds current post (if any) to query
         $this->cardSearch($seedIdQuery);
-        $PrefsObject = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
 
         try {
             $personCards = $this->paginate(
                 $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $PrefsObject->getEntity()->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$PrefsObject->getEntity()->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $PrefsObject->getEntity()->for(PrefCon::PAGINATION_DIR)]
+                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $Prefs->for(PrefCon::PAGINATION_DIR)]
                 ]
             );
         } catch (NotFoundException $e) {
             return $this->showLastPage();
         }
 
-        $this->set('PrefsObject', $PrefsObject);
+        $this->set('PrefsObject', $Prefs);
 
         $this->viewBuilder()->setLayout('index');
         $this->set('personCards', $personCards);
