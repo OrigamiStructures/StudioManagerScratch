@@ -91,8 +91,16 @@ class CardFileController extends AppController {
 
     }
 
-    public function add()
+    public function add($type = null)
     {
+        switch ($type) {
+            case 'category':
+                return $this->redirect(['action' => 'addCategory']);
+                break;
+            default:
+                break;
+        }
+
         if ($this->request->is('post')) {
             $card = $this->RolodexCard->patchEntity($card, $this->request->getData());
             if ($this->RolodexCard->save($card)) {
@@ -106,6 +114,18 @@ class CardFileController extends AppController {
 //        $this->set(compact('card', 'members', 'memberUsers'));
         $this->set(compact('members'));
 
+    }
+
+    public function addCategory()
+    {
+        $member = new Member([]);
+
+        $managerDelegates = $this->PersonCardsTable()->find(
+            'delegatedManagers',
+            ['supervisor_id' => $this->contextUser()->getId('supervisor')]
+        );
+            //'a custom finder to return a supervisors non-self delegated manager person cards';
+        $this->set(compact('member', 'managerDelegates'));
     }
 
     //</editor-fold>
