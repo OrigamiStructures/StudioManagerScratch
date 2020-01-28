@@ -219,7 +219,8 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->showLastPage();
+            osd(get_class($this->Paginator));
+            return $this->redirect($this->Paginator->showLastPage());
         }
 
         $this->viewBuilder()->setLayout('index');
@@ -251,7 +252,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->showLastPage();
+            return $this->redirect($this->Paginator->showLastPage());
         }
         $this->set('organizationCards', $organizationCards);
     }
@@ -282,7 +283,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->showLastPage();
+            return $this->redirect($this->Paginator->showLastPage());
         }
         $this->set('categoryCards', $categoryCards);
     }
@@ -314,7 +315,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->showLastPage();
+            return $this->redirect($this->Paginator->showLastPage());
         }
 
         $this->viewBuilder()->setLayout('index');
@@ -357,7 +358,7 @@ class CardFileController extends AppController {
                 ]
             );
         } catch (NotFoundException $e) {
-            return $this->showLastPage();
+            return $this->redirect($this->Paginator->showLastPage());
         }
 
         $this->set('PrefsObject', $Prefs);
@@ -506,28 +507,5 @@ class CardFileController extends AppController {
     }
 
     //</editor-fold>
-
-    /**
-     * Redirect to last page when request exceeds page limit
-     * @return \Cake\Http\Response|null
-     */
-    private function showLastPage()
-    {
-        $qParams = $this->getRequest()->getQueryParams();
-        $reqPage = $qParams['page'];
-        $lastPage = $this->getRequest()->getParam('paging')['Identities']['pageCount'];
-        if ($lastPage > 1) {
-            $qParams['page'] = $lastPage;
-        } else {
-            unset($qParams['page']);
-        }
-        $url = [
-            'controller' => $this->getRequest()->getParam('controller'),
-            'action' => $this->getRequest()->getParam('action'),
-            '?' => $qParams
-        ];
-        $this->Flash->error("Redirected to page $lastPage. Page $reqPage did not exist.");
-        return $this->redirect($url);
-    }
 
 }
