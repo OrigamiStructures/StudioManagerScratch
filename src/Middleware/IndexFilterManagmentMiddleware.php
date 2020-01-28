@@ -49,6 +49,26 @@ class IndexFilterManagmentMiddleware
      * This middleware looks for a saved filter and base on the current request
      * decides whether to keep or delete it.
      *
+     * Filters are saved on the session on the 'filter' key.
+     *   There are two keys in the next level.
+     * 'path' names the controller/action where the filter was created. This
+     *   string will be a key that gets the list of other controller/actions
+     *   that are in-scope for keeping the filter.
+     * 'conditions' holds the array that can be given to the query->where()
+     *   method.
+     *
+     * [
+     *   'filter' => [
+     *     'path' => 'Cardfile.people',
+     *     'conditions' => [
+     *       'OR' => [
+     *         'first_name' => 'Don',
+     *         'last_name' => 'Drake'
+     *       ]
+     *     ]
+     *   ]
+     * ]
+     *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Message\ResponseInterface $response The response.
      * @param callable $next The next middleware to call.
