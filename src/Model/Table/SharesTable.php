@@ -42,14 +42,20 @@ class SharesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-//        $this->belongsTo('Supervisors', [
-//            'foreignKey' => 'supervisor_id'
-//        ]);
-//        $this->belongsTo('Managers', [
-//            'foreignKey' => 'manager_id'
-//        ]);
-        $this->belongsTo('Members', [
-            'foreignKey' => 'member_id'
+        $this->belongsTo('Supervisors', [
+            'foreignKey' => 'supervisor_id',
+            'className' => 'Members',
+            'bindingKey' => 'id',
+        ]);
+        $this->belongsTo('Managers', [
+            'foreignKey' => 'manager_id',
+            'className' => 'Members',
+            'bindingKey' => 'id',
+        ]);
+        $this->belongsTo('Category', [
+            'foreignKey' => 'category_id',
+            'className' => 'Members',
+            'bindingKey' => 'id',
         ]);
     }
 
