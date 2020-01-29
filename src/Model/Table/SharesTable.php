@@ -77,10 +77,6 @@ class SharesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-//        $rules->add($rules->existsIn(['supervisor_id'], 'Supervisors'));
-//        $rules->add($rules->existsIn(['manager_id'], 'Managers'));
-//        $rules->add($rules->existsIn(['category_id'], 'Categories'));
-
         return $rules;
     }
 }
