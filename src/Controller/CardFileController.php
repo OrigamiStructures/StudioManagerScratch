@@ -144,11 +144,12 @@ class CardFileController extends AppController {
             $possibleShares = collection($this->request->getData('permit'));
             $shared = $possibleShares->reduce(function($accum, $value, $key) use ($supervisor_id, $supervisor_member) {
                 if ($value) {
-                    $accum[] = new Share([
+                    $accum[] = [
                         'user_id' => $supervisor_id,
                         'supervisor_id' => $supervisor_member,
-                        'manager_id' => $key
-                    ]);
+                        'manager_id' => $key,
+                        'user_id' => $supervisor_id
+                    ];
                 }
                 return $accum;
             }, []);
@@ -158,13 +159,10 @@ class CardFileController extends AppController {
                 'member_type' => MemCon::CATEGORY,
                 'active' => 1,
                 'user_id' => $supervisor_id,
-                /*'shares' => $shared*/
+                'shares' => $shared
             ];
             $post = array_merge($this->request->getData(), $categoryDefaults, );
-            $category = $MembersTable->patchEntity($member, $post/*, ['associated' => ['Shares']]*/);
-
-            //associated data won't patch for some reason
-            $category->shares = $shared;
+            $category = $MembersTable->patchEntity($member, $post);
 
             if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
                 return $this->redirect(['action' => 'view', $category->id]);

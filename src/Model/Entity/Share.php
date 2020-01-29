@@ -34,6 +34,7 @@ class Share extends Entity
         'supervisor_id' => true,
         'manager_id' => true,
         'category_id' => true,
+        'user_id' => true,
         'supervisor' => true,
         'manager' => true,
         'category' => true
