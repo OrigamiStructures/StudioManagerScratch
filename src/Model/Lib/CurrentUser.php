@@ -33,7 +33,7 @@ class CurrentUser {
 	 *	'artist_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
 	 *	'member_id' => (int) 1
 	 * ]
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data;
@@ -68,31 +68,31 @@ class CurrentUser {
 
 	/**
 	 * Registered user's manager token
-	 * 
+	 *
 	 * @return string
 	 */
 	public function managerId() {
 		return $this->data['management_token'];
 	}
-	
+
 	/**
 	 * Registered user's supervisor token
-	 * 
+	 *
 	 * @return string
 	 */
 	public function supervisorId() {
 		return $this->data['management_token'];
 	}
-	
+
 	public function userId() {
 		return $this->data['id'];
 	}
 
 	/**
 	 * Get the name from the stored PersonCard
-	 * 
+	 *
 	 * This lazy loads the card
-	 * 
+	 *
 	 * @return string
 	 */
     public function getName()
@@ -108,26 +108,26 @@ class CurrentUser {
 
 	/**
 	 * member_id for the registered user
-	 * 
+	 *
 	 * @return string
 	 */
     protected function memberId()
     {
         return $this->data['member_id'];
 	}
-	
+
 	/**
 	 * Is the registered user a superuser?
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isSuperuser() {
 		return $this->data['is_superuser'] === TRUE;
 	}
-	
+
 	/**
 	 * Is the logged-in registered user's account active?
-	 * 
+	 *
 	 * @return string
 	 */
 	public function isActive() {
@@ -136,11 +136,11 @@ class CurrentUser {
 //	public function __debugInfo() {
 //		return ['data' => $this->data];
 //	}
-	
+
 //	public function setUser($data) {
 //		$this->data = $data;
 //	}
-	
+
 //	public function user() {
 //		return $this->data;
 //	}
