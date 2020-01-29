@@ -117,6 +117,20 @@ class CardFileController extends AppController {
 
     }
 
+    /**
+     * Add a new Category member and link it to manager delegates
+     *
+     * This add page handles the special Category type Member record.
+     * The page that is rendered will show any available manager delegates
+     * for this supervisor and will allow them to be linked to the new
+     * Category during the creation process. This link is the way
+     * a supervisor shares contact cards with managers
+     *
+     * @todo add share links
+     * @todo make transactional
+     * 
+     * @return \Cake\Http\Response
+     */
     public function addCategory()
     {
         $supervisor_id = $this->contextUser()->getId('supervisor');
