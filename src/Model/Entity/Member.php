@@ -127,7 +127,7 @@ class Member extends Entity
 
     /**
      * Virtual field for name
-     * 
+     *
      * @return string
      */
     protected function _getName()

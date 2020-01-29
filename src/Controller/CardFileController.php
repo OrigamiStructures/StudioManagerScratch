@@ -9,6 +9,7 @@ use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
+use App\Model\Entity\Share;
 use App\Model\Lib\Layer;
 use App\Model\Table\CategoryCardsTable;
 use App\Model\Table\IdentitiesTable;
@@ -140,13 +141,17 @@ class CardFileController extends AppController {
         if ($this->request->is(['post', 'put'])) {
 
             $possibleShares = collection($this->request->getData('permit'));
-            $shared = $possibleShares->reduce(function($accum, $value, $key) use ($manager_id, $supervisor_id, $supervisor_member) {
-                if ($vlaue) {
-                    $accum[] = [];
+            $shared = $possibleShares->reduce(function($accum, $value, $key) use ($supervisor_id, $supervisor_member) {
+                if ($value) {
+                    $accum[] = new Share([
+                        'user_id' => $supervisor_id,
+                        'supervisor_id' => $supervisor_member,
+                        'manager_id' => $key
+                    ]);
                 }
+                return $accum;
             }, []);
 
-            osd($this->request->getData());die;
             $MembersTable = TableRegistry::getTableLocator()->get('Members');
             $post = $this->request
                 ->withData('first_name', $this->request->getData('last_name'))
@@ -154,8 +159,9 @@ class CardFileController extends AppController {
                 ->withData('active', 1)
                 ->withData('user_id', $supervisor_id);
             $category = $MembersTable->patchEntity($member, $post->getData());
+            $category->shares = $shared;
 
-            if (!$category->hasErrors() && $MembersTable->save($category)) {
+            if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
                 return $this->redirect(['action' => 'view', $category->id]);
             } else {
                 $this->Flash->error('Validation or application rule errors were found. Please try again.');

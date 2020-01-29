@@ -42,14 +42,14 @@ class SharesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Supervisors', [
-            'foreignKey' => 'supervisor_id'
-        ]);
-        $this->belongsTo('Managers', [
-            'foreignKey' => 'manager_id'
-        ]);
-        $this->belongsTo('Categories', [
-            'foreignKey' => 'category_id'
+//        $this->belongsTo('Supervisors', [
+//            'foreignKey' => 'supervisor_id'
+//        ]);
+//        $this->belongsTo('Managers', [
+//            'foreignKey' => 'manager_id'
+//        ]);
+        $this->belongsTo('Members', [
+            'foreignKey' => 'member_id'
         ]);
     }
 
@@ -77,9 +77,9 @@ class SharesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['supervisor_id'], 'Supervisors'));
-        $rules->add($rules->existsIn(['manager_id'], 'Managers'));
-        $rules->add($rules->existsIn(['category_id'], 'Categories'));
+//        $rules->add($rules->existsIn(['supervisor_id'], 'Supervisors'));
+//        $rules->add($rules->existsIn(['manager_id'], 'Managers'));
+//        $rules->add($rules->existsIn(['category_id'], 'Categories'));
 
         return $rules;
     }

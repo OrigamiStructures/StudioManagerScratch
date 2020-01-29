@@ -99,6 +99,30 @@ class MembersTable extends AppTable
             'foreignKey' => 'member_id',
             'targetForeignKey' => 'group_id',
         ]);
+        $this->hasMany('SharedCategory',
+            [
+                'className' => 'Shares',
+                'foreignKey' => 'supervisor_id',
+                'bindingKey' => 'id',
+                'propertyName' => 'shared_categories',
+                'dependent' => true
+            ]);
+        $this->hasMany('PermittedCategory',
+            [
+                'className' => 'Shares',
+                'foreignKey' => 'manager_id',
+                'bindingKey' => 'id',
+                'propertyName' => 'permitted_categories',
+                'dependent' => true
+            ]);
+        $this->hasMany('Shares',
+            [
+                'className' => 'Shares',
+                'foreignKey' => 'category_id',
+                'bindingKey' => 'id',
+                'propertyName' => 'shares',
+                'dependent' => true
+            ]);
     }
 
 // </editor-fold>
