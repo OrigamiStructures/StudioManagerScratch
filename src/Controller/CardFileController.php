@@ -140,6 +140,7 @@ class CardFileController extends AppController {
 
         if ($this->request->is(['post', 'put'])) {
 
+            $MembersTable = TableRegistry::getTableLocator()->get('Members');
             $possibleShares = collection($this->request->getData('permit'));
             $shared = $possibleShares->reduce(function($accum, $value, $key) use ($supervisor_id, $supervisor_member) {
                 if ($value) {
@@ -152,19 +153,23 @@ class CardFileController extends AppController {
                 return $accum;
             }, []);
 
-            $MembersTable = TableRegistry::getTableLocator()->get('Members');
-            $post = $this->request
-                ->withData('first_name', $this->request->getData('last_name'))
-                ->withData('member_type', MemCon::CATEGORY)
-                ->withData('active', 1)
-                ->withData('user_id', $supervisor_id);
-            $category = $MembersTable->patchEntity($member, $post->getData());
+            $categoryDefaults = [
+                'first_name' => $this->request->getData('last_name'),
+                'member_type' => MemCon::CATEGORY,
+                'active' => 1,
+                'user_id' => $supervisor_id,
+                /*'shares' => $shared*/
+            ];
+            $post = array_merge($this->request->getData(), $categoryDefaults, );
+            $category = $MembersTable->patchEntity($member, $post/*, ['associated' => ['Shares']]*/);
+
+            //associated data won't patch for some reason
             $category->shares = $shared;
 
             if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
                 return $this->redirect(['action' => 'view', $category->id]);
             } else {
-                $this->Flash->error('Validation or application rule errors were found. Please try again.');
+                $this->Flash->error('Validation or application rule violations were found. Please try again.');
             }
         }
 
