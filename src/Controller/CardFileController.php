@@ -136,11 +136,13 @@ class CardFileController extends AppController {
     {
         $supervisor_id = $this->contextUser()->getId('supervisor');
         $supervisor_member = $this->currentUser()->memberId();
+        //@todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/175
         $member = new Member(['user_id' => $supervisor_id]);
 
         if ($this->request->is(['post', 'put'])) {
-
             $MembersTable = TableRegistry::getTableLocator()->get('Members');
+
+            //process and 'share with manager' checkboxes
             $possibleShares = collection($this->request->getData('permit'));
             $shared = $possibleShares->reduce(function($accum, $value, $key) use ($supervisor_id, $supervisor_member) {
                 if ($value) {
@@ -154,6 +156,7 @@ class CardFileController extends AppController {
                 return $accum;
             }, []);
 
+            //assemble the new entity and associated 'shares'
             $categoryDefaults = [
                 'first_name' => $this->request->getData('last_name'),
                 'member_type' => MemCon::CATEGORY,
@@ -164,6 +167,7 @@ class CardFileController extends AppController {
             $post = array_merge($this->request->getData(), $categoryDefaults, );
             $category = $MembersTable->patchEntity($member, $post);
 
+
             if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
                 return $this->redirect(['action' => 'view', $category->id]);
             } else {
@@ -171,6 +175,7 @@ class CardFileController extends AppController {
             }
         }
 
+        //fall through to render on new request or faild save
         $managerDelegates = $this->PersonCardsTable()->find(
             'delegatedManagers',
             ['supervisor_id' => $supervisor_id]
