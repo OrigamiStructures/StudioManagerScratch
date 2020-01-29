@@ -111,7 +111,7 @@ class CurrentUser {
 	 *
 	 * @return string
 	 */
-    protected function memberId()
+    public function memberId()
     {
         return $this->data['member_id'];
 	}

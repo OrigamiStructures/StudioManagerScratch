@@ -128,20 +128,31 @@ class CardFileController extends AppController {
      *
      * @todo add share links
      * @todo make transactional
-     * 
+     *
      * @return \Cake\Http\Response
      */
     public function addCategory()
     {
         $supervisor_id = $this->contextUser()->getId('supervisor');
+        $supervisor_member = $this->currentUser()->memberId();
         $member = new Member(['user_id' => $supervisor_id]);
 
         if ($this->request->is(['post', 'put'])) {
+
+            $possibleShares = collection($this->request->getData('permit'));
+            $shared = $possibleShares->reduce(function($accum, $value, $key) use ($manager_id, $supervisor_id, $supervisor_member) {
+                if ($vlaue) {
+                    $accum[] = [];
+                }
+            }, []);
+
+            osd($this->request->getData());die;
             $MembersTable = TableRegistry::getTableLocator()->get('Members');
             $post = $this->request
                 ->withData('first_name', $this->request->getData('last_name'))
                 ->withData('member_type', MemCon::CATEGORY)
-                ->withData('active', 1);
+                ->withData('active', 1)
+                ->withData('user_id', $supervisor_id);
             $category = $MembersTable->patchEntity($member, $post->getData());
 
             if (!$category->hasErrors() && $MembersTable->save($category)) {
