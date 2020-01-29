@@ -1,6 +1,6 @@
 <?php
 use App\Lib\Prefs;
-use App\Lib\PrefCon;
+use App\Constants\PrefCon;
 /**
  * @var \App\View\AppView $this
  * @var Prefs $PrefsObject

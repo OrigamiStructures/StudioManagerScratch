@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use App\Lib\MemCon;
+use App\Constants\MemCon;
 use App\Model\Entity\Member;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;

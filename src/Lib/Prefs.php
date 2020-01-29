@@ -7,7 +7,7 @@ namespace App\Lib;
 use App\Exception\BadClassConfigurationException;
 use App\Form\PreferencesForm;
 use App\Model\Entity\Preference;
-use App\Lib\PrefCon;
+use App\Constants\PrefCon;
 use http\Exception\BadQueryStringException;
 
 class Prefs extends PrefsBase

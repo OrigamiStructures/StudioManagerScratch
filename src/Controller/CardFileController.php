@@ -3,8 +3,8 @@ namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
 use App\Exception\BadMemberRecordType;
-use App\Lib\MemCon;
-use App\Lib\PrefCon;
+use App\Constants\MemCon;
+use App\Constants\PrefCon;
 use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;

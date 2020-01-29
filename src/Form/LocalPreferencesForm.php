@@ -12,7 +12,7 @@ use Cake\Utility\Hash;
 use Cake\Utility\Text;
 use Cake\Validation\Validator;
 use App\Lib\Prefs;
-use App\Lib\PrefCon;
+use App\Constants\PrefCon;
 
 class LocalPreferencesForm extends PreferencesForm
 {
