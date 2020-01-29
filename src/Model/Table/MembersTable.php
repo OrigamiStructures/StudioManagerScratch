@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Lib\MemCon;
 use App\Model\Entity\Member;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -56,7 +57,7 @@ class MembersTable extends AppTable
         $this->addBehavior('Timestamp');
     }
 
-        protected function _initializeAssociations() {
+    protected function _initializeAssociations() {
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -112,8 +113,19 @@ class MembersTable extends AppTable
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmptyString('id', 'create')
-            ->allowEmptyString('name');
-
+            /* @todo allow foreign chars and such. but no code */
+            ->regex('first_name',
+                '/[a-zA-Z0-9 -]*/',
+                'Only alphanumeric characters, spaces, and hypens are allowed')
+            ->regex('last_name',
+                '/[a-zA-Z0-9 -]*/',
+                'Only alphanumeric characters, spaces, and hypens are allowed')
+            ->add('member_type', 'validType', [
+                'rule' => 'isValidType',
+                'message' => __('You need to provide a valid member type'),
+                'provider' => 'table'
+            ])
+        ;
         return $validator;
     }
 
@@ -128,74 +140,54 @@ class MembersTable extends AppTable
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['image_id'], 'Images'));
         $rules->addDelete([$this, 'deleteRule']);
+        //unique for a single data owner
+        $rules->add([$this, 'uniqueMemberName'], 'UniqueCategory', [
+            'errorField' => 'last_name',
+            'message' => 'The name must be unique.'
+        ]);
         return $rules;
+    }
+
+    public function isValidType($value, array $context)
+    {
+        return in_array($value, MemCon::TYPES, true);
+    }
+
+    /**
+     * Rule to ensure unique names for the data owner
+     *
+     * dups are allowed in the table, but all members for an owner must be unique
+     *
+     * @todo do we ever want to ensure uniqueness among owned AND shared members?
+     *
+     * @param $entity
+     * @param $table
+     * @return bool
+     */
+    public function uniqueMemberName($entity, $options)
+    {
+        $user_id = $entity->user_id;
+        $members = $options['repository']->find('all')
+            ->where(['user_id' => $entity->user_id]);
+        if ($members->count() > 0) {
+            $memberCollection = collection($members->toArray());
+            $result = $memberCollection->reduce(function ($bool, $member) use ($entity) {
+                return $bool
+                    && $member->first_name != $entity->first_name
+                    &&  $member->first_name != $entity->first_name;
+            }, true);
+        } else {
+            $result = true;
+        }
+        if (!$result) {
+            $result = $entity->name() . ' already exists. Name must be unique.';
+        }
+        return $result;
     }
 
 
     public function deleteRule($entity, $options) {
         return $entity->user_id === $this->contextUser()->artistId();
-    }
-
-
-    public function implementedEvents() {
-        $events = [
-            'Model.beforeMarshal' => 'beforeMarshal',
-        ];
-        return array_merge(parent::implementedEvents(), $events);
-    }
-
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="Lifecycle">
-
-    /**
-     * Implemented beforeMarshal event
-     *
-     * @param \App\Model\Table\Event $event
-     * @param \App\Model\Table\ArrayObject $data
-     * @param \App\Model\Table\ArrayObject $options
-     */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
-        $this->bmSetupGroup($data);
-        $this->bmSetupSort($data);
-        $data['user_id'] = $this->contextUser()->getId('supervisor');
-    }
-
-
-    /**
-     * Setup the group element for User, Category and Organization
-     *
-     * @param ArrayObject $data
-     */
-    private function bmSetupGroup(ArrayObject $data) {
-        switch ($data['member_type'] ?? 'Person') {
-            case MEMBER_TYPE_USER:
-            case MEMBER_TYPE_CATEGORY:
-            case MEMBER_TYPE_ORGANIZATION:
-                $data['group'] = isset($data['group']) ? $data['group'] : ['id' => NULL];
-                $data['group']['user_id'] = $this->contextUser()->getId('supervisor');
-                break;
-            case MEMBER_TYPE_PERSON:
-                break;
-        }
-    }
-
-
-    /**
-     * Setup the last_name as a sorting name for Categories and Organizations
-     *
-     * @param ArrayObject $data
-     */
-    private function bmSetupSort(ArrayObject $data) {
-        switch ($data['member_type'] ?? 'Person') {
-            case MEMBER_TYPE_CATEGORY:
-            case MEMBER_TYPE_ORGANIZATION:
-                $data['last_name'] = $this->createSortName($data['first_name']);
-                break;
-            case MEMBER_TYPE_USER:
-            case MEMBER_TYPE_PERSON:
-                break;
-        }
     }
 
 // </editor-fold>
