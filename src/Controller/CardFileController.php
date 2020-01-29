@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
 use App\Exception\BadMemberRecordType;
+use App\Lib\MemCon;
 use App\Lib\PrefCon;
 use App\Lib\Wildcard;
 use App\Model\Entity\Member;
@@ -118,13 +119,28 @@ class CardFileController extends AppController {
 
     public function addCategory()
     {
-        $member = new Member([]);
+        $supervisor_id = $this->contextUser()->getId('supervisor');
+        $member = new Member(['user_id' => $supervisor_id]);
+
+        if ($this->request->is(['post', 'put'])) {
+            $MembersTable = TableRegistry::getTableLocator()->get('Members');
+            $post = $this->request
+                ->withData('first_name', $this->request->getData('last_name'))
+                ->withData('member_type', MemCon::CATEGORY)
+                ->withData('active', 1);
+            $category = $MembersTable->patchEntity($member, $post->getData());
+
+            if (!$category->hasErrors() && $MembersTable->save($category)) {
+                return $this->redirect(['action' => 'view', $category->id]);
+            } else {
+                $this->Flash->error('Validation or application rule errors were found. Please try again.');
+            }
+        }
 
         $managerDelegates = $this->PersonCardsTable()->find(
             'delegatedManagers',
-            ['supervisor_id' => $this->contextUser()->getId('supervisor')]
+            ['supervisor_id' => $supervisor_id]
         );
-            //'a custom finder to return a supervisors non-self delegated manager person cards';
         $this->set(compact('member', 'managerDelegates'));
     }
 
