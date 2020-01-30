@@ -43,3 +43,17 @@ if (!$personCard->hasMembers()) {
     echo '</ul>';
 }
 
+echo "<p><strong>Share with</strong></p>";
+if (!$personCard->hasPermittedManagers()) {
+    echo '<p>None</p>';
+} else {
+    echo '<ul class="member">';
+    foreach ($personCard->getPermittedManagers() as $member) {
+        echo '<li>' . $member . '</li>';
+//        echo '<li>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</li>';
+    }
+    echo '</ul>';
+}
+
+
+

@@ -12,10 +12,10 @@ use App\View\AppView;
  * @var PersonCard $personCard
  */
 
-if ($personCard->hasManifests()) {
-    $receivedManagement = $personCard->receivedManagement($contextUser->getId('supervisor'));
-    $delegatedManagement = $personCard->delegatedManagement($contextUser->getId('supervisor'));
-}
+//if ($personCard->hasManifests()) {
+//    $receivedManagement = $personCard->receivedManagement($contextUser->getId('supervisor'));
+//    $delegatedManagement = $personCard->delegatedManagement($contextUser->getId('supervisor'));
+//}
 
 /**
  * Contact and Address
@@ -41,23 +41,6 @@ $otherAddresses = $personCard->getLayer('addresses')
     ->toKeyValueList('id', 'asString');
 
 $con_add_format = '</br><span id="%s%s">%s</span>';
-
-/**
- * Manifests
- */
-    /**
-     * This card is either
-     *  This supervisor's identity      (sup_id = sup_member = Person->rootId)
-     *      show self artists           (sup_id = mgr_id = Person->ownerId && ! sup identity)
-     *      show foreign artists
-     *      show foreign supervisors
-     *  A foreign supervisor's identity
-     *      show foreign artists
-     *  An aritist this supervisor created
-     *      show foreign managers, show artwork, show permissions
-     *  An artist a foreign supervisor created
-     *      show artwork, show foreign manager
-     */
 
 ?>
 
@@ -88,39 +71,13 @@ $this->Html->link('Mixed Cards', ['action' => 'index'])
     }
     ?>
 </p>
-    <?php
-    if ($personCard->isSupervisor()) :
-        if($personCard->delegatedManagement($contextUser->getId('supervisor'))) : ?>
-        <p><em><strong>Delegated Management</strong></em></p>
-            <?php
-            $delegatedMessage = '<p>%s assigned management of the artist %s to %s. %s. [Contact %s].</p>';
-            foreach ($delegatedManagement as $manifest) {
-                /* @var \App\Model\Entity\Manifest $manifest */
-                $permissonLink = $this->Html->link('Set Permissions', [
-                    'controller' => 'supervisors', 'action' => 'permissions', $manifest->id
-                ]);
-                $supervisor = $manifest->getName('supervisor');
-                $manager = $manifest->getName('manager');
-                $artist = $manifest->getName('artist');
-                printf($delegatedMessage, $supervisor, $artist, $manager, $permissonLink, $manager);
-            }
-            ?>
-        <?php endif; ?>
-    <?php endif ?>
+    <?php if ($personCard->isSupervisor()) :
+        echo $this->element('CardFile/view_supervisor');
+    endif ?>
 
-    <?php if ($personCard->isManager()) : ?>
-        <p><em><strong>Received Management</strong></em></p>
-        <?php
-        $receivedMessage = '<p>%s assigned %s management of the artist %s. [Work on this artist now]. [Contact %s].</p>';
-        foreach ($receivedManagement as $manifest) {
-            /* @var \App\Model\Entity\Manifest $manifest */
-            $supervisor = $manifest->getName('supervisor');
-            $manager = $manifest->getName('manager');
-            $artist = $manifest->getName('artist');
-            printf($receivedMessage, $supervisor, $manager, $artist, $supervisor);
-        }
-        ?>
-    <?php endif ?>
+    <?php if ($personCard->isManager()) :
+        echo $this->element('CardFile/view_manager');
+    endif ?>
 
     <?php if ($personCard->isArtist()) : ?>
         <p><em><strong>This Artist's Works</strong></em></p>
