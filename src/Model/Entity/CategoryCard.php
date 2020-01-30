@@ -20,17 +20,4 @@ class CategoryCard extends RolodexCard{
 		return $this->members;
 	}
 
-    /**
-     * Get member_ids of managers allowed to see this category
-     *
-     * @return array
-     */
-    public function getPermittedManagers()
-    {
-        return $this->getLayer('shares')
-            ->find()
-            ->specifyFilter('category_id', $this->rootID())
-            ->toValueList('manager_id');
-    }
-
 }

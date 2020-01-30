@@ -108,6 +108,15 @@ class RolodexCard extends StackEntity {
 	    return $this->memberships;
 	}
 
+    //<editor-fold desc="SHARES LAYER METHODS">
+    /**
+     * Are any managers allowed to see this category (if it is one)
+     */
+    public function hasPermittedManagers()
+    {
+        return count($this->getPermittedManagers()) > 0;
+	}
+
     /**
      * Get member_ids of managers allowed to see this category
      *
@@ -115,17 +124,39 @@ class RolodexCard extends StackEntity {
      */
     public function getPermittedManagers()
     {
-        return [];
+        return $this->getLayer('shares')
+            ->find()
+            ->specifyFilter('category_id', $this->rootID())
+            ->toDistinctList('manager_id');
     }
 
     /**
-     * Get member_ids of categories this manager is allowedd to see
+     * Are there any visible categories for this manager (if it is one)
+     */
+    public function hasPermittedCategories()
+    {
+        return count($this->getPermittedCategories()) > 0;
+    }
+
+    /**
+     * Get member_ids of categories this manager is allowed to see
      *
      * @return array
      */
     public function getPermittedCategories()
     {
-        return [];
+        return $this->getLayer('shares')
+            ->find()
+            ->specifyFilter('manager_id', $this->rootID())
+            ->toDistinctList('category_id');
+    }
+
+    /**
+     * has this supervisor shared any categories? (if is a sup)
+     */
+    public function isSharingCategories()
+    {
+        return count($this->getPermittedCategories()) > 0;
     }
 
     /**
@@ -135,7 +166,11 @@ class RolodexCard extends StackEntity {
      */
     public function getShareCategories()
     {
-        return [];
+        return $this->getLayer('shares')
+            ->find()
+            ->specifyFilter('supervisor_id', $this->rootID())
+            ->toDistinctList('category_id');
     }
+    //</editor-fold>
 
 }
