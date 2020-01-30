@@ -129,6 +129,9 @@ class ContextUser {
     /**
      * Is the registered user a superuser?
      *
+     * Evaluates the currently logged in user, without regard
+     * to any context-aliasing that might be occuring
+     *
      * @return bool
      */
     public function isSuperuser()
@@ -136,6 +139,14 @@ class ContextUser {
         return $this->currentUser->isSuperuser();
 	}
 
+    /**
+     * Is the logged in user operating as a different user?
+     *
+     * Only superusers have this ability unless we leverage
+     * the supervisor alias to allow delegated crud actions.
+     *
+     * @return bool
+     */
     public function isSupervisorAlias()
     {
         return ($this->getId('supervisor') ?? $this->currentUser->userId()) != $this->currentUser->userId();

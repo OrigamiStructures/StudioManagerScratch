@@ -155,6 +155,7 @@ class CardFileController extends AppController {
                 }
                 return $accum;
             }, []);
+            //@todo the resulting ids should be validated as managers. write a rule?
 
             //assemble the new entity and associated 'shares'
             $categoryDefaults = [
