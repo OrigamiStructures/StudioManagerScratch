@@ -2,6 +2,7 @@
 
 namespace App\Model\Table;
 
+use App\Model\Entity\StackEntity;
 use App\Model\Table\StacksTable;
 use App\Model\Behavior\IntegerQueryBehavior;
 use Cake\ORM\Behavior\TimestampBehavior;
@@ -191,16 +192,19 @@ class RolodexCardsTable extends StacksTable {
 
     protected function marshalShares($id, $stack)
     {
+        /* @var StackEntity $stack */
+
         if ($stack->count('identity')) {
-            $shares = $this->Shares
+            $query = $this->Shares
                 ->find('all')
                 ->where(['OR' => [
-                    'supervisor_id' => $stack->rootID(),
-                    'manager_id' => $stack->rootID(),
-                    'category_id' => $stack->rootID()
+                    'Shares.supervisor_id' => $stack->rootID(),
+                    'Shares.manager_id' => $stack->rootID(),
+                    'Shares.category_id' => $stack->rootID()
                 ]]);
-            $stack->set(['shares' => $shares->toArray()]);
+            $shares = $this->Shares->configureLinkLayer($query);
         }
+        $stack->set(['shares' => $shares]);
         return $stack;
 	}
 

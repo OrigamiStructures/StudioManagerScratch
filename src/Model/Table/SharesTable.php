@@ -43,17 +43,17 @@ class SharesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Supervisors', [
+        $this->belongsTo('ShrSup', [
             'foreignKey' => 'supervisor_id',
             'className' => 'Members',
             'bindingKey' => 'id',
         ]);
-        $this->belongsTo('Managers', [
+        $this->belongsTo('ShrMngr', [
             'foreignKey' => 'manager_id',
             'className' => 'Members',
             'bindingKey' => 'id',
         ]);
-        $this->belongsTo('Category', [
+        $this->belongsTo('ShrCat', [
             'foreignKey' => 'category_id',
             'className' => 'Members',
             'bindingKey' => 'id',
@@ -86,4 +86,28 @@ class SharesTable extends AppTable
     {
         return $rules;
     }
+
+    /**
+     * Add names to manifests so that the layer can be more useful in the stacks
+     *
+     * @param $query Query
+     * @return $array The manifests ready for storage as a layer
+     */
+    public function configureLinkLayer($query) {
+        $query = $query->contain(['ShrSup', 'ShrMngr', 'ShrCat']);
+
+        $foundSet = collection($query->toArray());
+        $shares = $foundSet->map(function ($share, $index) {
+            $share->names = [
+                $share->shr_sup->id => $share->shr_sup->name(),
+                $share->shr_mngr->id => $share->shr_mngr->name(),
+                $share->shr_cat->id => $share->shr_cat->name()
+            ];
+            unset($share->shr_sup, $share->shr_mngr, $share->shr_cat);
+            return $share;
+        });
+
+        return $shares->toArray();
+    }
+
 }
