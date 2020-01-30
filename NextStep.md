@@ -64,6 +64,10 @@ All the current index and view pages in CardFile are linked together to create a
 - Middleware keeps index filters alive within a specified page scope. The specification system for the scopes is primitive. Need will force evolution.
 - Category card new/add is working. It links categories to managers as the basis for address book sharing by supervisors.
 
+1/30/2020
+- New Shares layer is working on all Rolodex cards. This is the basis for address book sharing.
+- Shares layer data outputs on all cardfile prototype pages
+
 ##In Dev
 
 ###Index page filtering
@@ -104,8 +108,6 @@ Build crud for card files
   -[ ] update
   -[ ] delete
 
-###Rolodex stack changes
 
-with the new 'CategoryCard as a shared addressbook' idea, the rolodex cards stacks need to expand to includ the new layers. These layers will again require a decision about how much additional data to put on `join` layers.
 
 
