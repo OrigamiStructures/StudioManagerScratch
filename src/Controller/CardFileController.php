@@ -135,27 +135,32 @@ class CardFileController extends AppController {
     public function addCategory()
     {
         $supervisor_id = $this->contextUser()->getId('supervisor');
-        $supervisor_member = $this->currentUser()->memberId();
-        //@todo https://github.com/OrigamiStructures/StudioManagerScratch/issues/175
+        $supervisor_member = $this->contextUser()
+            ->getCard('supervisor')
+            ->rootID();
         $member = new Member(['user_id' => $supervisor_id]);
+        $managers = $this->contextUser()->getCard('supervisor')
+            ->getLayer('manifests')
+            ->find()
+            ->specifyFilter('manager_member', $supervisor_member, '!=')
+            ->toValueList('manager_member');
 
         if ($this->request->is(['post', 'put'])) {
             $MembersTable = TableRegistry::getTableLocator()->get('Members');
 
             //process and 'share with manager' checkboxes
             $possibleShares = collection($this->request->getData('permit'));
-            $shared = $possibleShares->reduce(function($accum, $value, $key) use ($supervisor_id, $supervisor_member) {
-                if ($value) {
-                    $accum[] = [
-                        'user_id' => $supervisor_id,
-                        'supervisor_id' => $supervisor_member,
-                        'manager_id' => $key,
-                        'user_id' => $supervisor_id
-                    ];
-                }
-                return $accum;
-            }, []);
-            //@todo the resulting ids should be validated as managers. write a rule?
+            $shared = $possibleShares->reduce(
+                function($accum, $checked, $manager_id) use ($managers, $supervisor_id, $supervisor_member) {
+                    if ($checked && in_array($manager_id, $managers)) {
+                        $accum[] = [
+                            'user_id' => $supervisor_id,
+                            'supervisor_id' => $supervisor_member,
+                            'manager_id' => $manager_id,
+                        ];
+                    }
+                    return $accum;
+                }, []);
 
             //assemble the new entity and associated 'shares'
             $categoryDefaults = [
