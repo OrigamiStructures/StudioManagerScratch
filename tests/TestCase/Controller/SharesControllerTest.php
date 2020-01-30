@@ -20,10 +20,10 @@ class SharesControllerTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.Shares',
-        'app.Supervisors',
-        'app.Managers',
-        'app.Categories'
+//        'app.Shares',
+//        'app.Supervisors',
+//        'app.Managers',
+//        'app.Categories'
     ];
 
     /**
