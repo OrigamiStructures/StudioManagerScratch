@@ -127,7 +127,7 @@ class RolodexCard extends StackEntity {
         return $this->getLayer('shares')
             ->find()
             ->specifyFilter('category_id', $this->rootID())
-            ->toDistinctList('manager_id');
+            ->toArray();
     }
 
     /**
@@ -148,7 +148,7 @@ class RolodexCard extends StackEntity {
         return $this->getLayer('shares')
             ->find()
             ->specifyFilter('manager_id', $this->rootID())
-            ->toDistinctList('category_id');
+            ->toArray();
     }
 
     /**
@@ -169,7 +169,7 @@ class RolodexCard extends StackEntity {
         return $this->getLayer('shares')
             ->find()
             ->specifyFilter('supervisor_id', $this->rootID())
-            ->toDistinctList('category_id');
+            ->toArray();
     }
     //</editor-fold>
 

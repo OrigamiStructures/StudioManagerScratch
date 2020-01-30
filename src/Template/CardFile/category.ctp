@@ -48,9 +48,10 @@ if (!$personCard->hasPermittedManagers()) {
     echo '<p>None</p>';
 } else {
     echo '<ul class="member">';
-    foreach ($personCard->getPermittedManagers() as $member) {
-        echo '<li>' . $member . '</li>';
-//        echo '<li>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</li>';
+    foreach ($personCard->getPermittedManagers() as $share) {
+        /* @var \App\Model\Entity\Share $share */
+
+        echo '<li>' . $this->Html->link($share->getName('manager'), ['action' => 'view', $share->getMemberId('manager')]) . '</li>';
     }
     echo '</ul>';
 }

@@ -17,9 +17,14 @@ if (!$personCard->hasPermittedCategories()) {
     echo '<p>None</p>';
 } else {
     echo '<ul class="member">';
-    foreach ($personCard->getPermittedCategories() as $member) {
-        echo '<li>' . $member . ' owned by *calculate name* </li>';
-//        echo '<li>' . $this->Html->link($member->name(), ['action' => 'view', $member->id]) . '</li>';
+    $duplicates = [];
+    foreach ($personCard->getPermittedCategories() as $share) {
+        /* @var \App\Model\Entity\Share $share */
+        $category_id = $share->getMemberId('category');
+        echo in_array($category_id, $duplicates)
+            ? ''
+            : '<li>' . $this->Html->link($share->getName('category'), ['action' => 'view', $category_id]) . '</li>';
+        $duplicates[$category_id] = $category_id;
     }
     echo '</ul>';
 }
