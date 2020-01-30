@@ -68,10 +68,20 @@ class CardFileController extends AppController {
 
     public function insert($type = 'person')
     {
-        $type = 'person';
-        $type = 'artist';
-        $type = 'institution';
-        $type = 'category';
+//        $type = 'person';
+//        $type = 'artist';
+//        $type = 'institution';
+//        $type = 'category';
+        $cardfile = $this->PersonCardsTable()->newEntity();
+        if($this->request->is('post')){
+            $cardfile = $this->PersonCardsTable()->patchEntity($cardfile, $this->request->getData());
+            osd($cardfile);die;
+            If($this->PersonCardsTable()->save($cardfile)){
+                $this->Flash->success(__("The $type has been saved."));
+                return $this->redirect(['action' => 'index']);
+            }
+        }
+        $this->set(compact('cardfile'));
     }
 
     public function remove($id)
