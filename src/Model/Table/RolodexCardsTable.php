@@ -39,8 +39,8 @@ class RolodexCardsTable extends StacksTable {
 	public function initialize(array $config) {
         $this->setTable('members');
 		$this->_initializeAssociations();
-        $this->addLayerTable(['Identities', 'GroupsMembers', 'Users']);
-        $this->addStackSchema(['identity', 'data_owner', 'memberships']);
+        $this->addLayerTable(['Identities', 'GroupsMembers', 'Users', 'Shares']);
+        $this->addStackSchema(['identity', 'data_owner', 'memberships', 'shares']);
         $this->addSeedPoint([
             'identity',
             'identities',
@@ -51,7 +51,10 @@ class RolodexCardsTable extends StacksTable {
 			'manager',
 			'managers',
 			'supervisor',
-			'supervisors'
+			'supervisors',
+//            'shared',
+//            'share',
+            'shares'
         ]);
 		parent::initialize($config);
 	}
@@ -90,9 +93,9 @@ class RolodexCardsTable extends StacksTable {
 			}
 
 	/**
-	 * Load the artwork stacks to support these artworks
 	 *
-	 * @param array $ids Artwork ids
+	 *
+	 * @param array $ids
 	 * @return StackSet
 	     */
 	protected function distillFromIdentity($ids) {
@@ -147,6 +150,27 @@ class RolodexCardsTable extends StacksTable {
 		return $this->distillFromManager($ids);
 	}
 
+    protected function distillFromShare($ids)
+    {
+        $records = $this->Shares
+            ->find('all')
+            ->where(['OR' => [
+                'supervisor_id IN' => $ids,
+                'manager_id IN' => $ids,
+                'category_id IN' => $ids
+            ]]);
+        $IDs = collection($records)
+            ->reduce(function($accum, $entity, $index){
+                $accum = array_merge($accum, [
+                    $entity->supervisor_id,
+                    $entity->manager_id,
+                    $entity->category_id
+                ]);
+                return $accum;
+            }, []);
+        return $this->distillFromIdentity($IDs);
+    }
+
 	protected function marshalIdentity($id, $stack) {
 			$identity = $this->Identities
                 ->find('all')
@@ -163,6 +187,21 @@ class RolodexCardsTable extends StacksTable {
 			$stack->set(['data_owner' => $dataOwner->toArray()]);
 		}
 		return $stack;
+	}
+
+    protected function marshalShares($id, $stack)
+    {
+        if ($stack->count('identity')) {
+            $shares = $this->Shares
+                ->find('all')
+                ->where(['OR' => [
+                    'supervisor_id' => $stack->rootID(),
+                    'manager_id' => $stack->rootID(),
+                    'category_id' => $stack->rootID()
+                ]]);
+            $stack->set(['shares' => $shares->toArray()]);
+        }
+        return $stack;
 	}
 
 	protected function marshalMemberships($id, $stack) {

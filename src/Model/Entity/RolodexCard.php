@@ -108,4 +108,34 @@ class RolodexCard extends StackEntity {
 	    return $this->memberships;
 	}
 
+    /**
+     * Get member_ids of managers allowed to see this category
+     *
+     * @return array
+     */
+    public function getPermittedManagers()
+    {
+        return [];
+    }
+
+    /**
+     * Get member_ids of categories this manager is allowedd to see
+     *
+     * @return array
+     */
+    public function getPermittedCategories()
+    {
+        return [];
+    }
+
+    /**
+     * Get member_id of categories this supervisor is sharing with managers
+     *
+     * @return array
+     */
+    public function getShareCategories()
+    {
+        return [];
+    }
+
 }
