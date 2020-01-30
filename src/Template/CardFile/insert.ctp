@@ -1,7 +1,7 @@
 <?= $this->element('Cardfile/sidebar'); ?>
 <div class="members form large-9 medium-8 columns content">
     <?= $this->Form->create($cardfile) ?>
-    <?= osd($cardfile); ?>
+<!--    --><?//= osd($cardfile); ?>
     <fieldset>
         <legend><?= __('Add Card') ?></legend>
         <?php
