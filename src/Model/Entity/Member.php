@@ -35,8 +35,18 @@ class Member extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
+        'created' => true,
+        'modified' => true,
+        'use_id' => true,
+        'image_id' => true,
+        'first_name' => true,
+        'last_name' => true,
+        'member_type' => true,
+        'active' => true,
+        'disposition_count' => true,
+        'collector' => true,
+        'is_artist' => true,
+        'shares' => true,
     ];
 
 	/**
@@ -127,7 +137,7 @@ class Member extends Entity
 
     /**
      * Virtual field for name
-     * 
+     *
      * @return string
      */
     protected function _getName()

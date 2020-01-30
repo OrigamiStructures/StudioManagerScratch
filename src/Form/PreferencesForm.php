@@ -1,13 +1,16 @@
 <?php
 namespace App\Form;
 
+use App\Exception\BadPrefsImplementationException;
 use App\Model\Entity\Preference;
+use Cake\Controller\Component\FlashComponent;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
 use Cake\Validation\Validator;
 use Cake\Utility\Hash;
+use Cake\View\Form\ContextInterface;
 
 /**
  * PreferencesForm
@@ -49,6 +52,8 @@ class PreferencesForm extends Form
      */
     protected $validPaths;
 
+    public $prefsSchema = [];
+
     public function __construct(EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
@@ -64,6 +69,38 @@ class PreferencesForm extends Form
 
         $this->defaults = Hash::flatten($prefDefaults);
         return $this;
+    }
+
+    /**
+     * @param Schema $schema
+     * @return Schema
+     */
+    protected function _buildSchema(Schema $schema)
+    {
+        $schema->addFields($this->prefsSchema);
+        $schema
+            ->addField('id', [
+                'type' => 'string'
+            ]);
+        return parent::_buildSchema($schema);
+    }
+
+    /**
+     * Validate our flat schema
+     *
+     * Because we have structure encoded in our schema using
+     * dot notation, we have to flatten the post to match,
+     * then expand the errors. Errors go to the FormHelper
+     * wich does not understand the flat version.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function validate($data)
+    {
+        $result = parent::validate(Hash::flatten($data));
+        $this->setErrors(Hash::expand($this->getErrors()));
+        return $result;
     }
 
     /**
@@ -83,22 +120,84 @@ class PreferencesForm extends Form
     }
 
     /**
+     * Process the validiation errors into flash messages
+     *
+     * RequiredStructure = [
+     *      'pagination.limit' => [
+     *          'greaterThan' => 'You must show more than zero items per page.'
+     *      ],
+     *      'pagination.sort.people' => [
+     *          'inList' => 'Sorting can only be done on first_name or last_name',
+     *          'notBad' => 'That was a bad value'
+     *      ]
+     * ]
+     * @param $Flash FlashComponent
+     */
+    public function errorsToFlash($Flash)
+    {
+        $errors = $this->flattenErrors();
+        if (Hash::check($errors,'id._required')) {
+            $msg = Hash::get($errors, 'id._required');
+            throw new BadPrefsImplementationException($msg);
+        } else {
+            foreach ($errors as $field => $msg) {
+                $msg = implode(' ', $msg);
+                $Flash->error($msg);
+            }
+        }
+    }
+
+    /**
+     * Partially flatten the errors to work for Flash reporting
+     *
+     * @return array
+     */
+    private function flattenErrors()
+    {
+        $result = [];
+        $errors = Hash::flatten($this->getErrors());
+        $fullKeys = array_keys($errors);
+        foreach ($fullKeys as $key) {
+            $steps = explode('.', $key);
+            $error = array_pop($steps);
+            $path = implode('.', $steps);
+            $result[$path][$error] = Hash::get($this->getErrors(), $key);
+        }
+        return $result;
+    }
+
+    public function validationDefault(Validator $validator)
+    {
+        return parent::validationDefault($validator);
+    }
+
+    /**
      * Return this object with user prefs overwritting default values
      *
      * The users stored choices will overwrite the default values
      * in the schema. The form will now show the proper user values
      * when they have been set
      *
+     * $variants = [
+     *   'pagination' => [
+     *     'limit' => '3'
+     *   ]
+     * ]
+     * OR
+     * $variants = [
+     *    'pagination.limit' => '3'
+     * ]
+     *
+     * The array will be flattened before use to create the second style
+     *
      * @param $userPrefs string
+     * @param $variants array
      */
-    public function asContext($user_id)
+    public function asContext($user_id, $variants)
     {
-        if ($this->user_id === false || $this->user_id != $user_id) {
-            $this->getUsersPrefsEntity($user_id);
-        }
         $schema = $this->schema();
 
-        $prefs = collection(Hash::flatten($this->UserPrefs->getVariants()));
+        $prefs = collection(Hash::flatten($variants));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
             $attributes = $schema->field($fieldName);
             $attributes['default'] = $value;
@@ -114,54 +213,14 @@ class PreferencesForm extends Form
         return $this;
     }
 
-    /**
-     * Load the user prefs and add all defaults to it
-     *
-     * The current user preference record is retrieved then two
-     * modifications are made. Looping on the current schema:
-     *  1. Defaults values are written for each possible schema column
-     *  2. The user's settings are cleaned so they only contain current schema
-     *      columns and only then if there is a non-default value stored
-     * If the entity changes in this 2nd stage it will be resaved.
-     *
-     * In this way we insure that no stale or invalid data is stored
-     * in the users preference. Since this is the only way to get a
-     * user's preference entity, we guarantee validity on every use.
-     *
-     * @param $user_id string
-     * @return Preference
-     */
-    public function getUsersPrefsEntity($user_id)
+    public function __debugInfo()
     {
-        $this->user_id = $user_id;
-        if ($this->UserPrefs === false) {
-            $this->UserPrefs = (TableRegistry::getTableLocator()->get('Preferences'))
-                ->getPreferencesFor($user_id);
-            /* @var  Preference $userPrefs */
+        $info = parent::__debugInfo();
 
-            $schema = $this->schema();
-            $defaults = [];
-            $prefs = [];
+        $info['Prefs'] = is_object($info['Prefs'])
+            ?'object (' . get_class($info['Prefs']) . ')'
+            : $info['Prefs'];
 
-            //Make a list of all default values
-            //And filter any invalid prefs out of the json object
-            foreach ($schema->fields() as $path) {
-                $defaultValue = $schema->field($path)['default'];
-                $defaults[$path] = $defaultValue;
-                if (!in_array($this->UserPrefs->getVariant($path), [null, $defaultValue])) {
-                    $prefs = Hash::insert($prefs, $path, $this->UserPrefs->getVariant($path));
-                }
-            }
-            //set the default values into the entity
-            $this->UserPrefs->setDefaults($defaults);
-
-            //if the prefs list changed during filtering, save the corrected version
-            if ($this->UserPrefs->getVariants() != $prefs) {
-                $this->UserPrefs->setVariants($prefs);
-                (TableRegistry::getTableLocator()->get('Preferences'))
-                    ->save($this->UserPrefs);
-            }
-        }
-        return $this->UserPrefs;
+        return $info;
     }
 }

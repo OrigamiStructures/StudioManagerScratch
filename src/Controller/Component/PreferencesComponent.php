@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use App\Controller\AppController;
 use App\Form\LocalPreferencesForm;
 use App\Form\PreferencesForm;
+use App\Lib\Prefs;
 use App\Model\Entity\Preference;
 use App\Model\Table\PreferencesTable;
 use Cake\Controller\Component;
@@ -36,14 +37,20 @@ class PreferencesComponent extends Component
     public $components = ['Flash'];
 
     /**
-     * @var bool|PreferencesForm|LocalPreferencesForm
-     */
-    private $PreferenceForm = false;
-
-    /**
+     * A user override class for the Form if provided
+     *
      * @var bool|string
      */
     private $formClass = false;
+
+    /**
+     * Prefs objects that have been created index by the id that made them
+     *
+     * @var array
+     */
+    protected $registry = [];
+
+    protected $Prefs = [];
 
     /**
      * Using this component will automatically make PreferencesHelper available
@@ -64,15 +71,15 @@ class PreferencesComponent extends Component
      */
     public function setPrefs()
     {
-        $prefsForm = $this->getFormObjet();
         $post = $this->getController()->getRequest()->getData();
-        $prefs = $this->repository()->getPreferencesFor($post['id']);
+        $form = $this->getFormObjet();
+        $entity = $this->repository()->getPreferencesFor($post['id']);
 
-        if ($prefsForm->validate($post)) {
-            $userVariants = $prefs->getVariants();
+        if ($form->validate($post)) {
+            $userVariants = $entity->getVariants();
             $prefsDefaults = $this->getPrefsDefaults();
 
-            $allowedPrefs = collection($prefsForm->getValidPaths());
+            $allowedPrefs = collection($form->getValidPaths());
             $newVariants = $allowedPrefs
                 ->reduce(function($accum, $path) use ($post, $prefsDefaults, $userVariants){
                     //if the post is default, leave variant out of the list
@@ -94,17 +101,17 @@ class PreferencesComponent extends Component
                 }, []);
 
             if ($newVariants != $userVariants) {
-                $prefs->setVariants($newVariants);
-                $this->savePrefs($post, $prefs);
+                $entity->setVariants($newVariants);
+                $this->savePrefs($post, $entity);
             } else {
                 $this->Flash->success('No new preferences were requested');
             }
          } else {
             //didn't validate
-            $prefsForm->processErrors($this->Flash);
+            $form->errorsToFlash($this->Flash);
         }
 
-        return [$prefsForm, $prefs];
+        return new Prefs($entity, $form);
 }
 
     /**
@@ -129,52 +136,6 @@ class PreferencesComponent extends Component
     }
 
     /**
-     * Get the ModellessForm object to use as a Form::create context
-     *
-     * The object will carry all user settings to the form as values
-     *
-     * @param $user_id
-     * @return LocalPreferencesForm
-     */
-    public function getFormContextObject($user_id)
-    {
-        return $this->getFormObjet()->asContext($user_id);
-    }
-
-    /**
-     * Get the user's preference entity
-     *
-     * fully stocked with all the default settings and user variants
-     *
-     * @param $user_id
-     * @return Preference
-     */
-    public function getUserPrefsEntity($user_id)
-    {
-        return $this->getFormObjet()->getUsersPrefsEntity($user_id);
-    }
-
-    /**
-     * Get the [path => value] array of all prefs and their default values
-     * @return array
-     */
-    public function getPrefsDefaults()
-    {
-        return $this->getFormObjet()->getDefaults();
-    }
-
-    /**
-     * Get the array of non-default settings for the user
-     *
-     * @param $user_id
-     * @return array
-     */
-    public function getUserVariants($user_id)
-    {
-        return $this->getFormObjet()->getUsersPrefsEntity($user_id)->getVariants();
-    }
-
-    /**
      * Fully namespaced name of an override PreferencesForm class
      *
      * Normally LocalPreferencesForm extends PreferencesForm is used.
@@ -185,6 +146,93 @@ class PreferencesComponent extends Component
     public function setFormClass($formClass)
     {
         $this->formClass = $formClass;
+    }
+
+    /**
+     * Get the ModellessForm object to use as a Form::create context
+     *
+     * The object will carry all user settings to the form as values
+     *
+     * @param $user_id
+     * @return LocalPreferencesForm
+     */
+    protected function getFormContextObject($user_id = null, $variants = [])
+    {
+        if (is_null($user_id)) {
+            return $this->getFormObjet();
+        }
+        return $this->getFormObjet()->asContext($user_id, $variants);
+    }
+
+    /**
+     * Get the user's preference entity
+     *
+     * fully stocked with all the default settings and user variants
+     *
+     * @param $user_id
+     * @return Preference
+     */
+    protected function getUserPrefsEntity($user_id)
+    {
+
+//        return $this->getFormObjet()->getUsersPrefsEntity($user_id);
+
+        /* @var  Preference $userPrefs */
+        /* @var PreferencesForm $Form */
+        /* @var PreferencesTable $PrefsTable */
+
+        $this->user_id = $user_id;
+        if (is_null($user_id)) {
+            $UserPrefs = new Preference([]);
+        } else {
+            $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
+            $UserPrefs = $PrefsTable->getPreferencesFor($user_id);
+        }
+        $Form = $this->getFormObjet();
+
+        $schema = $Form->schema();
+        $defaults = [];
+        $prefs = [];
+
+        //Make a list of all default values
+        //And filter any invalid prefs out of the json object
+        foreach ($schema->fields() as $path) {
+            $defaultValue = $schema->field($path)['default'];
+            $defaults[$path] = $defaultValue;
+            if (!in_array($UserPrefs->getVariant($path), [null, $defaultValue])) {
+                $prefs = Hash::insert($prefs, $path, $UserPrefs->getVariant($path));
+            }
+        }
+        //set the default values into the entity
+        $UserPrefs->setDefaults($defaults);
+
+        //if the prefs list changed during filtering, save the corrected version
+        if ($UserPrefs->getVariants() != $prefs) {
+            $UserPrefs->setVariants($prefs);
+            (TableRegistry::getTableLocator()->get('Preferences'))
+                ->save($UserPrefs);
+        }
+        return $UserPrefs;
+    }
+
+    /**
+     * Get the [path => value] array of all prefs and their default values
+     * @return array
+     */
+    protected function getPrefsDefaults()
+    {
+        return $this->getFormObjet()->getDefaults();
+    }
+
+    /**
+     * Get the array of non-default settings for the user
+     *
+     * @param $user_id
+     * @return array
+     */
+    protected function getUserVariants($user_id)
+    {
+        return $this->getFormObjet()->getUsersPrefsEntity($user_id)->getVariants();
     }
 
     /**
@@ -230,17 +278,19 @@ class PreferencesComponent extends Component
     }
 
     /**
+     * This object knows the schema but nothing about the users settings
+     *
      * @return PreferencesForm|LocalPreferencesForm
      */
-    public function getFormObjet()
+    protected function getFormObjet()
     {
-        if ($this->PreferenceForm == false && !$this->formClass == false) {
+        if (!$this->formClass == false) {
             $class = $this->formClass;
-            $this->PreferenceForm = new $class();
+            $PreferenceForm = new $class();
         } else {
-            $this->PreferenceForm = new LocalPreferencesForm();
+            $PreferenceForm = new LocalPreferencesForm();
         }
-        return $this->PreferenceForm;
+        return $PreferenceForm;
     }
 
     /**
@@ -277,5 +327,32 @@ class PreferencesComponent extends Component
         }
     }
 
+    /**
+     * Returns the full Prefs object for use in any situation
+     *
+     * Contains an Entity to describe the current settings
+     *
+     * Contains a Form to describe the full preference schema
+     * and to act as a context object in FormHelper::create().
+     *
+     * Can emit either of those objects.
+     *
+     * Provides access to all prefs-related constants
+     *
+     * @todo develope class iterface
+     *
+     * @param $user_id null|string null will get full default objects
+     */
+    public function getPrefs($user_id = null) : Prefs
+    {
 
+        if (!isset($this->registry[$user_id])) {
+            $entity = $this->getUserPrefsEntity($user_id);
+            $this->registry[$user_id] = new Prefs(
+                $entity,
+                $this->getFormContextObject($user_id, $entity->getVariants())
+            );
+        }
+        return $this->registry[$user_id];
+    }
 }

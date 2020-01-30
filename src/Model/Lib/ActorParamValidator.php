@@ -21,6 +21,7 @@ trait ActorParamValidator
      *
      * @param string $actor
      * @return string The validated string in lower case
+     * @throws \BadMethodCallException
      */
     private function validateActor($actor) {
         $validActor = strtolower($actor);

@@ -7,6 +7,11 @@ use App\Model\Entity\PersonCard;
  * @var \App\Model\Lib\StackSet $personCards
  */
 
+/**
+ * prepate the pagination prefs form view block for use by the layout
+ */
+echo $this->element('Preferences/Pagination/person');
+
 foreach($personCards->getData() as $id => $card) {
 
     /* @var PersonCard $card */

@@ -16,7 +16,6 @@ class CategoryCard extends RolodexCard{
 		return count($this->getMembers()) > 0;
 	}
 
-
 	public function getMembers() {
 		return $this->members;
 	}

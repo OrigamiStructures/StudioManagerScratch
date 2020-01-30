@@ -62,15 +62,13 @@ class AddressBookController extends AppController
      */
     public function setPrefs()
     {
-        if (!$this->getRequest()->is('post')
-            && !$this->getRequest()->is('put')
-        ) {
+        if (!$this->getRequest()->is('post') && !$this->getRequest()->is('put'))
+        {
             $msg = __("Preferences can only be changed through POST or PUT");
             throw new BadPrefsImplementationException($msg);
         }
 
-        $prefsForm = $this->Preferences->getFormObjet();
-        list($prefsForm, $prefs) = $this->Preferences->setPrefs();
+        $this->Preferences->setPrefs();
 
         /*
          * see https://github.com/OrigamiStructures/StudioManagerScratch/issues/172
@@ -79,8 +77,8 @@ class AddressBookController extends AppController
             return $this->redirect($this->referer());
 //        }
 
-        $this->set(compact('prefsForm', 'prefs'));
-        $this->render('/UserPrefs/set_prefs');
+//        $this->set(compact('prefsForm', 'prefs'));
+//        $this->render('/UserPrefs/set_prefs');
     }
 
     /**

@@ -4,6 +4,13 @@ use Cake\Form\Form;
 
 /* @var \App\View\AppView $this */
 
+/**
+ * prepate the pagination prefs form view block for use by the layout
+ */
+echo $this->element('Preferences/Pagination/category');
+
+echo $this->Html->link('New Category', ['action' => 'add', 'category']);
+
 foreach($categoryCards->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\CategoryCard $card */
@@ -20,9 +27,23 @@ foreach($categoryCards->getData() as $id => $card) {
             . Text::toList($card->getMembers()->toValueList('name')) . '</p>';
     }
 
+    $shares = '';
+    if ($card->hasPermittedManagers()) {
+        $managers = collection($card->getLayer('shares')->toArray())
+            ->reduce(function($accum, $share) {
+                /* @var \App\Model\Entity\Share $share */
+
+                $accum[] = $share->getName('manager');
+                return $accum;
+            }, []);
+        $shares =  "<p><strong>Managers permitted to see {$card->name(LABELED)}</strong>: "
+            . Text::toList($managers) . '</p>';
+    }
+
     echo "<p><strong>" . $this->Html->link($card->name(), ['action' => 'view', $card->rootID()]) . "</strong></p>";
     echo $memberships;
     echo $members;
+    echo $shares;
 
 
 }

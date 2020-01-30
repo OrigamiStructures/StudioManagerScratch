@@ -43,3 +43,18 @@ if (!$personCard->hasMembers()) {
     echo '</ul>';
 }
 
+echo "<p><strong>Share with</strong></p>";
+if (!$personCard->hasPermittedManagers()) {
+    echo '<p>None</p>';
+} else {
+    echo '<ul class="member">';
+    foreach ($personCard->getPermittedManagers() as $share) {
+        /* @var \App\Model\Entity\Share $share */
+
+        echo '<li>' . $this->Html->link($share->getName('manager'), ['action' => 'view', $share->getMemberId('manager')]) . '</li>';
+    }
+    echo '</ul>';
+}
+
+
+

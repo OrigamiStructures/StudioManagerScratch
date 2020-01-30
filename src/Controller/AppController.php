@@ -204,6 +204,12 @@ class AppController extends Controller
         return $r;
     }
 
+    public function clearFilter()
+    {
+        $this->getRequest()->getSession()->delete('filter');
+        return $this->redirect($this->referer());
+    }
+
 	public function testMe() {
 
 		$ar = [	1 => ['new' => '', 'old' => 1],

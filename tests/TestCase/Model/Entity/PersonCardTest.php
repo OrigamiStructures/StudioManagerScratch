@@ -25,7 +25,8 @@ class PersonCardTest extends TestCase
         'app.addresses',
         'app.manifests',
         'app.images',
-        'app.dispositions'
+        'app.dispositions',
+        'app.shares'
     ];
 
     /**

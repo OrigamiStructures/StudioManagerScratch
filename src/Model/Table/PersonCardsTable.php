@@ -3,12 +3,15 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Manifest;
 use App\Model\Entity\PersonCard;
+use App\Model\Lib\StackSet;
 use App\Model\Table\RolodexCardsTable;
 
 use Cake\ORM\Table;
 use App\Model\Traits\ContactableTableTrait;
 use App\Model\Traits\ReceiverTableTrait;
 use Cake\Collection\Collection;
+use Cake\ORM\TableRegistry;
+
 //use App\Model\Lib\PersonCardRegistry;
 
 /**
@@ -140,4 +143,23 @@ class PersonCardsTable extends RolodexCardsTable {
         return $stack;
     }
 
+    /**
+     * Find non-self managers a supervisor has delegated
+     *
+     * @param $supervisor_id
+     * @return StackSet of PersonCards
+     */
+    public function findDelegatedManagers($query, $options)
+    {
+        //@todo validate supervisor id. This could be an api call
+        $supervisor_id = $options['supervisor_id'];
+        /* @var ManifestsTable $Manifests */
+        $Manifests = TableRegistry::getTableLocator()->get('Manifests');
+        $delegates = $Manifests->find('list', ['valueField' => 'manager_member'])
+            ->where([
+                'supervisor_id' => $supervisor_id,
+                'manager_id !=' => $supervisor_id
+            ]);
+        return $this->stacksFor('identity', $delegates->toArray());
+    }
 }
