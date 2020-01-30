@@ -164,7 +164,7 @@ class CardFileController extends AppController {
                 'user_id' => $supervisor_id,
                 'shares' => $shared
             ];
-            $post = array_merge($this->request->getData(), $categoryDefaults, );
+            $post = array_merge($this->request->getData(), $categoryDefaults);
             $category = $MembersTable->patchEntity($member, $post);
 
 
