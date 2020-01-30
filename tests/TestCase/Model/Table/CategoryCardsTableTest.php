@@ -31,7 +31,8 @@ class CategoryCardsTableTest extends TestCase
         'app.members',
 		'app.contacts',
 		'app.addresses',
-		'app.dispositions'
+		'app.dispositions',
+        'app.shares'
     ];
 
     /**

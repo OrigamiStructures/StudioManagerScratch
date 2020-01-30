@@ -41,7 +41,8 @@ class PersonCardsTableTest extends TestCase
 		'app.dispositions',
 		'app.users',
 		'app.groups_members',
-        'app.manifests'
+        'app.manifests',
+        'app.shares'
 
     ];
 
