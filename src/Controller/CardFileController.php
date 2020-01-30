@@ -127,8 +127,7 @@ class CardFileController extends AppController {
      * Category during the creation process. This link is the way
      * a supervisor shares contact cards with managers
      *
-     * @todo add share links
-     * @todo make transactional
+     * @todo add share link data to... what was i thinking when i wrote this?
      *
      * @return \Cake\Http\Response
      */
