@@ -46,7 +46,7 @@ class SharesFixture extends TestFixture
                 'user_id' => 'f22f9b46-345f-4c6f-9637-060ceacb21b2',
                 'supervisor_id' => 1,
                 'manager_id' => 75,
-                'category_id' => 105
+                'category_id' => 7
             ],
             [
                 'id' => 10,
@@ -55,7 +55,7 @@ class SharesFixture extends TestFixture
                 'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
                 'supervisor_id' => 75,
                 'manager_id' => 1,
-                'category_id' => 106
+                'category_id' => 76
             ],
             [
                 'id' => 11,
@@ -64,17 +64,17 @@ class SharesFixture extends TestFixture
                 'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
                 'supervisor_id' => 75,
                 'manager_id' => 1,
-                'category_id' => 107
+                'category_id' => 77
             ],
-            [
-                'id' => 12,
-                'created' => '2020-01-30 05:06:27',
-                'modified' => '2020-01-30 05:06:27',
-                'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
-                'supervisor_id' => 75,
-                'manager_id' => 9,
-                'category_id' => 107
-            ],
+//            [
+//                'id' => 12,
+//                'created' => '2020-01-30 05:06:27',
+//                'modified' => '2020-01-30 05:06:27',
+//                'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+//                'supervisor_id' => 75,
+//                'manager_id' => 9,
+//                'category_id' => 107
+//            ],
         ];
         parent::init();
     }
