@@ -1,5 +1,7 @@
 <?php
     /* @var \App\Model\Lib\StackSet $results */
+    /* @var \App\View\AppView $this */
+
 
     foreach ($results->getData() as $artwork) {
         /* @var \App\Model\Entity\ArtStack $artwork */
@@ -24,3 +26,5 @@
     </li>
 
 <?php } ?>
+<?php
+echo $this->element('Artwork/search'/*, ['identitySchema' => $identitySchema]*/);

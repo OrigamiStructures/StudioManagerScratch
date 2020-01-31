@@ -1,9 +1,11 @@
 <?php
 namespace App\Controller;
 
+use App\Form\ArtworkFilter;
 use App\Lib\RequestUtility;
 use App\Model\Lib\StackSet;
 use App\Model\Table\ArtStacksTable;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Model\Lib\Layer;
@@ -176,11 +178,18 @@ class ArtworksController extends AppController
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->viewBuilder()->setLayout('index');
+        $this->userFilter();
 
         $this->set('Prefs', $Prefs);
         $this->set('results', $results);
     }
 
+    public function userFilter()
+    {
+        $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
+        $artworkSchema = new ArtworkFilter();
+        $this->set(compact('artworkSchema', 'modes'));
+    }
     /**
      * Delete method
      *
