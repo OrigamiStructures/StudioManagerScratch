@@ -67,6 +67,8 @@ All the current index and view pages in CardFile are linked together to create a
 1/30/2020
 - New Shares layer is working on all Rolodex cards. This is the basis for address book sharing.
 - Shares layer data outputs on all cardfile prototype pages
+- update artwork index page to modern standards (only stub search and no prefs yet though)
+- move all content-warning banners to elements to clean up ctps and encapsulate logic
 
 ##In Dev
 
