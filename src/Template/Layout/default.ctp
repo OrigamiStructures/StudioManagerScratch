@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * @var \App\View\AppView $this
  */
 
 
@@ -59,11 +59,7 @@ $cakeDescription = 'ClearStudio';
     <section class="container clearfix">
         <!-- ACT AS Waring -->
         <?php
-        if (isset($contextUser) && $contextUser->isSupervisorAlias()) {
-            echo $this->Html->para('alias warning',
-                '!* You are acting as the supervisor ' . $contextUser->getCard('supervisor')->name() . ' *!'
-            );
-        }
+        echo $this->element('AlertBanners/supervisor_alias');
         ?>
         <!-- end ACT AS Waring -->
         <?= $this->fetch('content') ?>
