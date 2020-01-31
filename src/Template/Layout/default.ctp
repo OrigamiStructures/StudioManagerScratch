@@ -58,9 +58,7 @@ $cakeDescription = 'ClearStudio';
 	<?= $this->Flash->render() ?>
     <section class="container clearfix">
         <!-- ACT AS Waring -->
-        <?php
-        echo $this->element('AlertBanners/supervisor_alias');
-        ?>
+        <?php echo $this->element('AlertBanners/supervisor_alias'); ?>
         <!-- end ACT AS Waring -->
         <?= $this->fetch('content') ?>
     </section>
