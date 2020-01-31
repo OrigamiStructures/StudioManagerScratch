@@ -278,11 +278,12 @@ class CardFileController extends AppController {
         //Get the seed ids
         /* @var Query $seedIdQuery */
 
+        /* @todo make this a finder call that addresses managers, supervisors and shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
         /* @var FatGenericCardsTable $FatGenericCardsTable */
@@ -312,13 +313,15 @@ class CardFileController extends AppController {
      */
     public function organizations()
     {
+
+        /* @todo make this a finder call that is aware of shares */
         $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
         $seedIdQuery = $OrganizationCards
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $Prefs);
@@ -343,13 +346,14 @@ class CardFileController extends AppController {
     public function groups() {
         /* @var CategoryCardsTable $CategoryCards */
 
+        /* @todo make this a finder call that is aware of shares */
         $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
         $seedIdQuery = $CategoryCards
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $Prefs);
@@ -374,12 +378,13 @@ class CardFileController extends AppController {
     public function people()
     {
         //Get the seed ids
+        /* @todo make this a finder call that is aware of shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var FatGenericCardsTable $PersonCardsTable */
@@ -425,7 +430,7 @@ class CardFileController extends AppController {
             ->where(['id IN' => $userIdentities->toArray()]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
 
         try {
@@ -463,7 +468,7 @@ class CardFileController extends AppController {
      * @param $query
      * @return Query
      */
-    public function cardSearch($query)
+    public function userFilter($query)
     {
         if ($this->request->is('post') || $this->request->is('put')) {
             // handle the user request to filter the index page
@@ -499,7 +504,7 @@ class CardFileController extends AppController {
         // set the values needed to render a search/filter for on the index page
         $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
-        $identity = $identities->newEntity([]);
+        $identity = $identities->newEntity([], ['validate' => false]);
         $identity->modes = $modes;
         $this->set('identitySchema', $identity);
         return $query;
