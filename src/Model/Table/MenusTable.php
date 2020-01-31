@@ -22,7 +22,7 @@ class MenusTable extends AppTable{
 
     public $menu = ['Artwork' => []];
 
-    protected $clearStudio = ['ClearStudio' => '/artworks/review'];
+    protected $clearStudio = ['ClearStudio' => '/artworks/index'];
 
 	protected $artwork = ['Artwork' => [
 //            'Sample' => '/artworks/sample',

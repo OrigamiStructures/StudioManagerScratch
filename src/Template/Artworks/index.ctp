@@ -10,14 +10,14 @@
 
     <li>Editions
         <ul>
-            <?php foreach ($artwork->getLayer('editions') as $edition) : ?>
+            <?php foreach ($artwork->getLayer('editions')->toArray() as $edition) : ?>
                 <li><?= $edition->displayTitle; ?></li>
             <?php endforeach; ?>
         </ul>
     </li>
     <li>Pieces
         <ul>
-            <?php foreach ($artwork->getLayer('pieces') as $piece) : ?>
+            <?php foreach ($artwork->getLayer('pieces')->toArray() as $piece) : ?>
                 <li><?= $piece->displayTitle; ?></li>
             <?php endforeach; ?>
         </ul>
