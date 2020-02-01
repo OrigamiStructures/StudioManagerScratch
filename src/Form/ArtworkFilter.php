@@ -4,12 +4,18 @@
 namespace App\Form;
 
 
+use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 
 class ArtworkFilter extends Form
 {
+    public function __construct(EventManager $eventManager = null)
+    {
+        parent::__construct($eventManager);
+    }
+
     /**
      * A hook method intended to be implemented by subclasses.
      *
