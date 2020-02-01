@@ -6,6 +6,7 @@ namespace App\Form;
 
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\ORM\TableRegistry;
 
 class ArtworkFilter extends Form
 {
@@ -21,11 +22,11 @@ class ArtworkFilter extends Form
      */
     protected function _buildSchema(\Cake\Form\Schema $schema)
     {
-        return $schema->addField('title', ['type' => 'string'])
+        $MembersTable = TableRegistry::getTableLocator()->get('Artworks');
+        $schema = $MembersTable->getSchema();
+        return $schema
             ->addField('title_mode', ['type' => 'boolean'])
-            ->addField('description', ['type' => 'text'])
-            ->addField('description_mode', ['type' => 'boolean'])
-            ;
+            ->addField('description_mode', ['type' => 'boolean']);
     }
 
     protected function _execute(array $data)

@@ -5,6 +5,7 @@ use App\Controller\Component\PreferencesComponent;
 use App\Exception\BadMemberRecordType;
 use App\Constants\MemCon;
 use App\Constants\PrefCon;
+use App\Form\CardfileFilter;
 use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
@@ -455,7 +456,7 @@ class CardFileController extends AppController {
 
     //</editor-fold>
 
-    /* @todo Move this to SearchController or SearchComponent? */
+    /* @todo Partially stubbed into CardFilter */
     //<editor-fold desc="********** Index Search Filter Tools">
 
     /**
@@ -471,27 +472,16 @@ class CardFileController extends AppController {
     public function userFilter($query)
     {
         if ($this->request->is('post') || $this->request->is('put')) {
-            // handle the user request to filter the index page
-            $post = $this->request->getData();
-            $conditions = [];
-            foreach (['first', 'last'] as $key) {
-                $input = $post["{$key}_name"];
-                if (!empty($input)) {
-                    $conditions += $this->condition($key, $input, $post);
-                }
-            }
-            if (!empty($conditions)){
-                // @todo make this and/or responsive
-                $whereThis = ['OR' => $conditions];
-                // modify the the query
-                $query->where($whereThis);
 
-                // persist the filter for future and paginated viewing
-                $path = $this->request->getParam('controller') . '.' . $this->request->getParam('action');
-                $this->getRequest()->getSession()->write('filter', [
-                    'path' => $path,
-                    'conditions' => $whereThis]);
-            }
+            $filter = new CardfileFilter();
+            $whereThis = $filter->execute($this->request->getData());
+
+            $query->where($whereThis);
+            // persist the filter for future and paginated viewing
+            $path = $this->request->getParam('controller') . '.' . $this->request->getParam('action');
+            $this->getRequest()->getSession()->write('filter', [
+                'path' => $path,
+                'conditions' => $whereThis]);
         } elseif (!is_null($this->getRequest()->getSession()->read('filter'))) {
             // respond to stored filters incases there was no post
             $params = $this->getRequest()->getQueryParams();
@@ -504,42 +494,10 @@ class CardFileController extends AppController {
         // set the values needed to render a search/filter for on the index page
         $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
-        $identity = $identities->newEntity([], ['validate' => false]);
+        $identity = $identities->newEntity([]/*, ['validate' => false]*/);
         $identity->modes = $modes;
         $this->set('identitySchema', $identity);
         return $query;
-    }
-
-    /**
-     * Construct a single condition from user search
-     * @param $key
-     * @param $input
-     * @param $data
-     * @return array
-     */
-    private function condition($key, $input, $data)
-    {
-        switch ($data["{$key}_name_mode"]) {
-            case 0: //is
-                $condition = ["{$key}_name" => $input];
-                break;
-            case 1: //starts
-                $condition = ["{$key}_name LIKE" => Wildcard::after($input)];
-                break;
-            case 2: //ends
-                $condition = ["{$key}_name LIKE" => Wildcard::before($input)];
-                break;
-            case 3: //contains
-                $condition = ["{$key}_name LIKE" => Wildcard::wrap($input)];
-                break;
-            case 4: //isn't
-                $condition = ["{$key}_name !=" => "$input"];
-                break;
-            default:
-                $condition = [];
-                break;
-        }
-        return $condition;
     }
 
     //</editor-fold>
