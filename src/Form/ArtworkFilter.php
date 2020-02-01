@@ -28,11 +28,16 @@ class ArtworkFilter extends Form
      */
     protected function _buildSchema(\Cake\Form\Schema $schema)
     {
-        $MembersTable = TableRegistry::getTableLocator()->get('Artworks');
-        $schema = $MembersTable->getSchema();
-        return $schema
+        $schema
             ->addField('title_mode', ['type' => 'boolean'])
             ->addField('description_mode', ['type' => 'boolean']);
+        $Table = TableRegistry::getTableLocator()->get('Artworks');
+        $TableSchema = $Table->getSchema();
+
+        foreach ($TableSchema->columns() as $name) {
+            $schema->addField($name, $TableSchema->getColumn($name));
+        }
+        return $schema;
     }
 
     protected function _execute(array $data)
