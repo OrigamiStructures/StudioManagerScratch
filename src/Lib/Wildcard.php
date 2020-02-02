@@ -77,9 +77,22 @@ class Wildcard {
         return self::doWrap($string, $delimiter);
     }
 
+    /**
+     * Enclose the string in the provided brackets
+     *
+     * The bracket string will be split in half, half to front, half to back
+     *
+     * @param $string
+     * @param string $brackets
+     * @return string
+     */
     static public function bracket($string, $brackets = '[]') {
         list($start, $end) = explode(PHP_EOL, chunk_split($brackets, strlen($brackets) / 2));
         return trim($start) . trim($string) . trim($end);
+    }
+
+    static public function tag($string, $type) {
+        return "<$type>" . trim($string) . "</$type>";
     }
 
     /**
