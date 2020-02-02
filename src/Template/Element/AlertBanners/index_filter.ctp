@@ -1,4 +1,5 @@
 <?php
+use App\Lib\Wildcard;
 if (!is_null($this->getRequest()->getSession()->read('filter'))) {
 
     $conditions = collection($this->getRequest()->getSession()->read('filter.conditions.OR'));
@@ -7,8 +8,8 @@ if (!is_null($this->getRequest()->getSession()->read('filter'))) {
         return $accum;
     }, []);
 
-    $clearLink = $this->Html->link('[Clear] ', ['action' => 'clearFilter']);
+    $clearLink = $this->Html->link('Clear', ['action' => 'clearFilter']);
     echo $this->Html->para('alias warning',
-        $clearLink . '!* Page contents are filtered: ' . implode(' or ', $msg) . ' *!'
-    );
+        Wildcard::bracket($clearLink, '[]') . ' '
+        . Wildcard::bracket('Page contents are filtered: ' . implode(' or ', $msg), '!*  *!'));
 }
