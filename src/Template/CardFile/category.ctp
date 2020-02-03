@@ -56,5 +56,10 @@ if (!$personCard->hasPermittedManagers()) {
     echo '</ul>';
 }
 
+foreach ($candidates as $id => $candidate) {
+    echo $this->Form->control('members.' . $id , ['type' => 'checkbox', 'label' => ' ' . $candidate]);
+}
+//osd($candidates);
+
 
 

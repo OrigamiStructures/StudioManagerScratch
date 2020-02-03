@@ -261,6 +261,16 @@ class CardFileController extends AppController {
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
         } elseif ($rolodexCard->isCategory()) {
+            $candidates = layer($this->IdentitiesTable()->find('all')
+                ->where(['user_id' => $this->contextUser()->getId('supervisor')])
+                ->toArray());
+            /* @var Layer $candidates */
+
+            $candidates = $candidates->getLayer()
+                ->find()
+                ->specifyFilter('member_type', 'Person')
+                ->toKeyValueList('id', 'name');
+            $this->set(compact('candidates'));
             $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('organization');
