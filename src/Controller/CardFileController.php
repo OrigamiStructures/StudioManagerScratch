@@ -135,14 +135,10 @@ class CardFileController extends AppController {
     public function addCategory()
     {
         $supervisor_id = $this->contextUser()->getId('supervisor');
-        $supervisor_member = $this->contextUser()
-            ->getCard('supervisor')
-            ->rootID();
+        $supervisor_member = $this->contextUser()->getId('supervisor');
         $member = new Member(['user_id' => $supervisor_id]);
-        $managers = $this->contextUser()->getCard('supervisor')
-            ->getLayer('manifests')
-            ->find()
-            ->specifyFilter('manager_member', $supervisor_member, '!=')
+        $managers = $this->contextUser()
+            ->getSupervisorsManagers()
             ->toValueList('manager_member');
 
         if ($this->request->is(['post', 'put'])) {
@@ -173,7 +169,6 @@ class CardFileController extends AppController {
             $post = array_merge($this->request->getData(), $categoryDefaults);
             $category = $MembersTable->patchEntity($member, $post);
 
-
             if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
                 return $this->redirect(['action' => 'view', $category->id]);
             } else {
@@ -201,6 +196,12 @@ class CardFileController extends AppController {
      */
     public function view($id)
     {
+
+        /**
+         * verify permission
+         * select table for member_type
+         * select
+         */
         /* @var StackSet $personCards */
         /* @var PersonCard $personCard */
         /* @var ManifestsTable $ManifestsTable */
