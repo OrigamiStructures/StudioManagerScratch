@@ -135,7 +135,9 @@ class CardFileController extends AppController {
     public function addCategory()
     {
         $supervisor_id = $this->contextUser()->getId('supervisor');
-        $supervisor_member = $this->contextUser()->getId('supervisor');
+        $supervisor_member = $this->contextUser()
+            ->getCard('supervisor')
+            ->rootID();
         $member = new Member(['user_id' => $supervisor_id]);
         $managers = $this->contextUser()
             ->getSupervisorsManagers()
