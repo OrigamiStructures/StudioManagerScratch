@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Interfaces\JoinLayerTable;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -25,7 +26,7 @@ use App\Model\Table\AppTable;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class SharesTable extends AppTable
+class SharesTable extends AppTable implements JoinLayerTable
 {
     /**
      * Initialize method
@@ -93,7 +94,7 @@ class SharesTable extends AppTable
      * @param $query Query
      * @return $array The manifests ready for storage as a layer
      */
-    public function configureLinkLayer($query) {
+    public function hydrateLayer($query) {
         $query = $query->contain(['ShrSup', 'ShrMngr', 'ShrCat']);
 
         $foundSet = collection($query->toArray());

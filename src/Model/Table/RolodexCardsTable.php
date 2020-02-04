@@ -202,7 +202,7 @@ class RolodexCardsTable extends StacksTable {
                     'Shares.manager_id' => $stack->rootID(),
                     'Shares.category_id' => $stack->rootID()
                 ]]);
-            $shares = $this->Shares->configureLinkLayer($query);
+            $shares = $this->Shares->hydrateLayer($query);
         }
         $stack->set(['shares' => $shares]);
         return $stack;
