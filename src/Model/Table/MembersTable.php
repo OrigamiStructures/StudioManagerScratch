@@ -127,7 +127,7 @@ class MembersTable extends AppTable
                 'className' => 'Shares',
                 'foreignKey' => 'category_id',
                 'bindingKey' => 'id',
-                'propertyName' => 'shares',
+                'propertyName' => 'share_definitions',
                 'dependent' => true
             ]);
     }

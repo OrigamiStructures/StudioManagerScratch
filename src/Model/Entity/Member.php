@@ -46,7 +46,7 @@ class Member extends Entity
         'disposition_count' => true,
         'collector' => true,
         'is_artist' => true,
-        'shares' => true,
+        'share_definitions' => true,
     ];
 
 	/**

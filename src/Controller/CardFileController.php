@@ -166,12 +166,12 @@ class CardFileController extends AppController {
                 'member_type' => MemCon::CATEGORY,
                 'active' => 1,
                 'user_id' => $supervisor_id,
-                'shares' => $shared
+                'share_definitions' => $shared
             ];
             $post = array_merge($this->request->getData(), $categoryDefaults);
             $category = $MembersTable->patchEntity($member, $post);
 
-            if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
+            if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['ShareDefinitions']])) {
                 return $this->redirect(['action' => 'view', $category->id]);
             } else {
                 $this->Flash->error('Validation or application rule violations were found. Please try again.');
