@@ -198,17 +198,6 @@ class CardFileController extends AppController {
      */
     public function view($id)
     {
-
-        /**
-         * verify permission
-         * select table for member_type
-         * select
-         */
-        /* @var StackSet $personCards */
-        /* @var PersonCard $personCard */
-        /* @var ManifestsTable $ManifestsTable */
-        /* @var StackTable $CardTable */
-
         // Is this user permitted to see this RolodexCard
         if (!$this->permitted('member', $id)) {
             return $this->redirect(['action' => 'index']);
@@ -218,39 +207,18 @@ class CardFileController extends AppController {
         // get Member member_type and select retrieval method for that type
 
         $MembersTable = TableRegistry::getTableLocator()->get('Members');
+
+        /* @var Member $member */
         $member = $MembersTable->find()
             ->where(['id' => $id])
             ->contain('ArtistManifests') //@todo this can go away if we flag member with isArtist field
             ->toArray()[0];
 
-        /* @var Member $member */
+        /* @var StackTable $CardTable */
+        $this->chooseTableType($member, $CardTable);
 
-        switch ($member->type()) {
-            case MEMBER_TYPE_CATEGORY:
-                $CardTable = TableRegistry::getTableLocator()->get('CategoryCards');
-                break;
-
-            case MEMBER_TYPE_ORGANIZATION:
-                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCards');
-                break;
-
-            case MEMBER_TYPE_PERSON:
-                // A person might be an artist. That has a special Stack which includes artworks
-                if (count($member->artist_manifests) > 0) {
-                    $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
-                } else {
-                    $CardTable = $this->PersonCardsTable();
-                }
-                break;
-
-            default:
-                $msg = "The requested record was of unknown type: {$member->type()}";
-                throw new BadMemberRecordType($msg);
-                break;
-        }
-
-        $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
         /* @var RolodexCard $rolodexCard */
+        $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
 
         $this->set('personCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
@@ -563,5 +531,36 @@ class CardFileController extends AppController {
     }
 
     //</editor-fold>
+
+    /**
+     * @param Member $member
+     * @param $CardTable
+     */
+    private function chooseTableType(Member $member, &$CardTable): void
+    {
+        switch ($member->type()) {
+            case MEMBER_TYPE_CATEGORY:
+                $CardTable = TableRegistry::getTableLocator()->get('CategoryCards');
+                break;
+
+            case MEMBER_TYPE_ORGANIZATION:
+                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCards');
+                break;
+
+            case MEMBER_TYPE_PERSON:
+                // A person might be an artist. That has a special Stack which includes artworks
+                if (count($member->artist_manifests) > 0) {
+                    $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
+                } else {
+                    $CardTable = $this->PersonCardsTable();
+                }
+                break;
+
+            default:
+                $msg = "The requested record was of unknown type: {$member->type()}";
+                throw new BadMemberRecordType($msg);
+                break;
+        }
+    }
 
 }
