@@ -79,26 +79,31 @@ class MembersTable extends AppTable
         $this->hasOne('Users', [
             'foreignKey' => 'member_id'
         ]);
+        /* The manifests referencing this card as an Artist */
         $this->hasMany('ArtistManifests', [
             'className' => 'Manifests',
             'foreignKey' => 'member_id',
             'dependent' => TRUE,
         ]);
+        /* The manifests referencing this card as a Manager */
         $this->hasMany('ManagerManifests', [
             'className' => 'Manifests',
             'foreignKey' => 'manager_member',
             'dependent' => TRUE,
         ]);
+        /* The manifests referencign this card as a Supervisor */
         $this->hasMany('SupervisorManifests', [
             'className' => 'Manifests',
             'foreignKey' => 'supervisor_member',
             'dependent' => TRUE,
         ]);
+        /* The categories/orgainizations that list this card as a member */
         $this->belongsToMany('Memberships',
 			['joinTable' => 'groups_members',
             'foreignKey' => 'member_id',
             'targetForeignKey' => 'group_id',
         ]);
+        /* The share records referencing this card as a Supervisor */
         $this->hasMany('SharedCategory',
             [
                 'className' => 'Shares',
@@ -107,6 +112,7 @@ class MembersTable extends AppTable
                 'propertyName' => 'shared_categories',
                 'dependent' => true
             ]);
+        /* The share records referencing this card as a Manager */
         $this->hasMany('PermittedCategory',
             [
                 'className' => 'Shares',
@@ -115,7 +121,8 @@ class MembersTable extends AppTable
                 'propertyName' => 'permitted_categories',
                 'dependent' => true
             ]);
-        $this->hasMany('Shares',
+        /* The share records referencing this card as a Category */
+        $this->hasMany('ShareDefinitions',
             [
                 'className' => 'Shares',
                 'foreignKey' => 'category_id',
