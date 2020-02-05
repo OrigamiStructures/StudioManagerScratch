@@ -174,7 +174,14 @@ class ArtworksController extends AppController
             ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
 
-        $results = $this->paginate($ArtStacks->pageFor('artworks', array_keys($works)));
+        /* @var StackSet $results */
+
+        $results = $this->paginate($ArtStacks->pageFor('artworks', array_keys($works)),
+            [
+                'limit' => '5',
+                'scope' => 'artworks'
+            ]
+        );
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->viewBuilder()->setLayout('index');
@@ -182,6 +189,7 @@ class ArtworksController extends AppController
 
         $this->set('Prefs', $Prefs);
         $this->set('results', $results);
+        $this->set('indexModel', $results->getPaginatedTableName());
     }
 
     public function userFilter()

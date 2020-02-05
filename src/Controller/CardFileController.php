@@ -12,6 +12,7 @@ use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Entity\Share;
 use App\Model\Lib\Layer;
+use App\Model\Table\ArtStacksTable;
 use App\Model\Table\CategoryCardsTable;
 use App\Model\Table\IdentitiesTable;
 use App\Model\Table\ManifestsTable;
@@ -257,6 +258,9 @@ class CardFileController extends AppController {
      * Index method shows mixed record types
      */
     public function index() {
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $Prefs);
+
         //Get the seed ids
         /* @var Query $seedIdQuery */
 
@@ -270,24 +274,22 @@ class CardFileController extends AppController {
         $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
         /* @var FatGenericCardsTable $FatGenericCardsTable */
 
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $Prefs);
-
         try {
             $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
-            osd(get_class($this->Paginator));
             return $this->redirect($this->Paginator->showLastPage());
         }
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $fatGenericCards);
+        $this->set('indexModel', $fatGenericCards->getPaginatedTableName());
     }
 
     /**
@@ -313,13 +315,15 @@ class CardFileController extends AppController {
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
             return $this->redirect($this->Paginator->showLastPage());
         }
         $this->set('organizationCards', $organizationCards);
+        $this->set('indexModel', $organizationCards->getPaginatedTableName());
     }
 
     /**
@@ -352,6 +356,7 @@ class CardFileController extends AppController {
             return $this->redirect($this->Paginator->showLastPage());
         }
         $this->set('categoryCards', $categoryCards);
+        $this->set('indexModel', $categoryCards->getPaginatedTableName());
     }
 
     /**
@@ -378,7 +383,8 @@ class CardFileController extends AppController {
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
@@ -387,6 +393,7 @@ class CardFileController extends AppController {
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
+        $this->set('indexModel', $cards->getPaginatedTableName());
         $this->render('index');
     }
 
@@ -421,7 +428,8 @@ class CardFileController extends AppController {
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
@@ -432,6 +440,7 @@ class CardFileController extends AppController {
 
         $this->viewBuilder()->setLayout('index');
         $this->set('personCards', $personCards);
+        $this->set('indexModel', $personCards->getPaginatedTableName());
         $this->render('supervisors');
     }
 
