@@ -22,6 +22,13 @@ class Prefs extends PrefsBase
     public function for($path)
     {
         return $this->getEntity()->for($path);
+    public function pagingFor($type)
+    {
+            $paging = array_merge(
+                $this->for('paging.general'),
+                $this->for("pagining.$type")
+            );
+        return $paging;
     }
 
 

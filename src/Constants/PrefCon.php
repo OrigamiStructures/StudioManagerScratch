@@ -19,6 +19,35 @@ class PrefCon
     const PAGINATION_SORT_ORGANIZATION = 'pagination.sort.organization';
     const PAGINATION_SORT_ARTWORK = 'pagination.sort.artwork';
 
+    const PAGING_LIMIT = 'paging.common.limit';
+    const PAGING_DIR = 'paging.common.dir';
+    const PAGING_COMMON = 'paging.common';
+
+    const PAGING_CARD = 'paging.card';
+    const PAGING_CARD_LIMIT = 'paging.card.limit';
+    const PAGING_CARD_DIR = 'paging.card.dir';
+    const PAGING_CARD_SORT = 'paging.card.sort';
+
+    const PAGING_PEOPLE = 'paging.people';
+    const PAGING_PEOPLE_LIMIT = 'paging.people.limit';
+    const PAGING_PEOPLE_DIR = 'paging.people.dir';
+    const PAGING_PEOPLE_SORT = 'paging.people.sort';
+
+    const PAGING_CATEGORY = 'paging.category';
+    const PAGING_CATEGORY_LIMIT = 'paging.category.limit';
+    const PAGING_CATEGORY_DIR = 'paging.category.dir';
+    const PAGING_CATEGORY_SORT = 'paging.category.sort';
+
+    const PAGING_ORGANIZATION = 'paging.organization';
+    const PAGING_ORGANIZATION_LIMIT = 'paging.organization.limit';
+    const PAGING_ORGANIZATION_DIR = 'paging.organization.dir';
+    const PAGING_ORGANIZATION_SORT = 'paging.organization.sort';
+
+    const PAGING_ARTWORK = 'paging.artwork';
+    const PAGING_ARTWORK_LIMIT = 'paging.artwork.limit';
+    const PAGING_ARTWORK_DIR = 'paging.artwork.dir';
+    const PAGING_ARTWORK_SORT = 'paging.artwork.sort';
+
     /**
      * Used to cut down on typo-based errors
      *

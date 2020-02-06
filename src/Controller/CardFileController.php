@@ -258,8 +258,7 @@ class CardFileController extends AppController {
      * Index method shows mixed record types
      */
     public function index() {
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $Prefs);
+        $this->set('PrefsObject', $this->Prefs);
 
         //Get the seed ids
         /* @var Query $seedIdQuery */
@@ -277,9 +276,9 @@ class CardFileController extends AppController {
         try {
             $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'limit' => $this->Prefs->for(PrefCon::PAGINATION_LIMIT),
+                    'order' => [$this->Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
+                        $this->Prefs->for(PrefCon::PAGINATION_DIR)],
                     'scope' => 'identities'
                 ]
             );

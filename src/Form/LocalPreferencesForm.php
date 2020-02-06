@@ -103,4 +103,8 @@ class LocalPreferencesForm extends PreferencesForm
         return parent::validationDefault($validator);
     }
 
+    protected function _buildSchema(Schema $schema)
+    {
+        return parent::_buildSchema($schema);
+    }
 }
