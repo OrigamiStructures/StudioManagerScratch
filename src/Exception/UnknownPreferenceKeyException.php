@@ -3,7 +3,7 @@ namespace App\Exception;
 
 use Cake\Core\Exception\Exception;
 
-class BadMemberRecordType extends Exception
+class UnknownPreferenceKeyException extends \BadMethodCallException
 {
 
     public function __construct($message, $code = 500, $previous = null)

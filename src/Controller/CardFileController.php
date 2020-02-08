@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\Component\PreferencesComponent;
-use App\Exception\BadMemberRecordType;
+use App\Exception\UnknownMemberTypeException;
 use App\Constants\MemCon;
 use App\Constants\PrefCon;
 use App\Form\CardfileFilter;
@@ -248,7 +248,7 @@ class CardFileController extends AppController {
             $this->render('organization');
         } else {
             $msg = $rolodexCard->rootElement()->member_type . ' did no map to a view in cardfile/view';
-            throw new BadMemberRecordType($msg);
+            throw new UnknownMemberTypeException($msg);
         }
     }
 
@@ -567,7 +567,7 @@ class CardFileController extends AppController {
 
             default:
                 $msg = "The requested record was of unknown type: {$member->type()}";
-                throw new BadMemberRecordType($msg);
+                throw new UnknownMemberTypeException($msg);
                 break;
         }
     }
