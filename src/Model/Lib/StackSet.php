@@ -46,6 +46,8 @@ class StackSet implements LayerStructureInterface, \Countable {
 
 	protected $_stackName;
 
+	protected $paginatedTable;
+
 	public function __construct($stackEntityTemplate)
     {
         $this->template = $stackEntityTemplate;
@@ -93,6 +95,22 @@ class StackSet implements LayerStructureInterface, \Countable {
     public function getData()
     {
         return $this->_data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRootLayerName()
+    {
+        return $this->_stackName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaginatedTableName()
+    {
+        return $this->paginatedTable;
     }
 
     /**
@@ -181,6 +199,7 @@ class StackSet implements LayerStructureInterface, \Countable {
         $this->_data[$id] = $stack;
         if (!isset($this->_stackName)) {
             $this->_stackName = $stack->rootLayerName();
+            $this->paginatedModel = $this->_modelNameFromKey($this->_stackName);
         }
     }
 

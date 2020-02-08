@@ -114,4 +114,19 @@ class SupervisorsController extends AppController
         }
 
     }
+
+    public function clearAlias()
+    {
+        if (!$this->contextUser()->isSuperuser()) {
+            $msg = 'Insufficient permissions to view this page';
+            throw new IllegalAccessException($msg);
+        }
+        $this->contextUser()->set('supervisor', $this->currentUser()->userId());
+        return $this->redirect([
+            'controller' => 'cardfile',
+            'action' => 'view',
+            $this->contextUser()->getCard('supervisor')->rootID()
+        ]);
+
+    }
 }

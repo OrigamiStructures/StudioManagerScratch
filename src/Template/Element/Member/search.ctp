@@ -1,7 +1,7 @@
 <?php
 /* @var \App\View\AppView $this */
 
-echo $this->Form->create($identitySchema);
+echo $this->Form->create(null);
 echo $this->Form->control('first_name');
 echo $this->Form->control('first_name_mode',
     ['options' => $identitySchema->modes, 'type' => 'radio', 'default' => 3]);

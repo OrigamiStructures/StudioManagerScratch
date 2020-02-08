@@ -272,6 +272,18 @@ class ContextUser {
     }
 
     /**
+     *
+     * @return LayerAccessArgs
+     */
+    public function getSupervisorsManagers()
+    {
+        return $this->getCard('supervisor')
+            ->getLayer('manifests')
+            ->find()
+            ->specifyFilter('manager_member', $this->getId('supervisor'), '!=');
+
+    }
+    /**
      * @return array
      */
     public function __debugInfo() {

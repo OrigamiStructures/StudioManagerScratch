@@ -5,12 +5,14 @@ use App\Controller\Component\PreferencesComponent;
 use App\Exception\BadMemberRecordType;
 use App\Constants\MemCon;
 use App\Constants\PrefCon;
+use App\Form\CardfileFilter;
 use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Entity\Share;
 use App\Model\Lib\Layer;
+use App\Model\Table\ArtStacksTable;
 use App\Model\Table\CategoryCardsTable;
 use App\Model\Table\IdentitiesTable;
 use App\Model\Table\ManifestsTable;
@@ -177,10 +179,8 @@ class CardFileController extends AppController {
             ->getCard('supervisor')
             ->rootID();
         $member = new Member(['user_id' => $supervisor_id]);
-        $managers = $this->contextUser()->getCard('supervisor')
-            ->getLayer('manifests')
-            ->find()
-            ->specifyFilter('manager_member', $supervisor_member, '!=')
+        $managers = $this->contextUser()
+            ->getSupervisorsManagers()
             ->toValueList('manager_member');
 
         if ($this->request->is(['post', 'put'])) {
@@ -206,13 +206,12 @@ class CardFileController extends AppController {
                 'member_type' => MemCon::CATEGORY,
                 'active' => 1,
                 'user_id' => $supervisor_id,
-                'shares' => $shared
+                'share_definitions' => $shared
             ];
             $post = array_merge($this->request->getData(), $categoryDefaults);
             $category = $MembersTable->patchEntity($member, $post);
 
-
-            if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['Shares']])) {
+            if (!$category->hasErrors() && $MembersTable->save($category, ['associated' => ['ShareDefinitions']])) {
                 return $this->redirect(['action' => 'view', $category->id]);
             } else {
                 $this->Flash->error('Validation or application rule violations were found. Please try again.');
@@ -239,11 +238,6 @@ class CardFileController extends AppController {
      */
     public function view($id)
     {
-        /* @var StackSet $personCards */
-        /* @var PersonCard $personCard */
-        /* @var ManifestsTable $ManifestsTable */
-        /* @var StackTable $CardTable */
-
         // Is this user permitted to see this RolodexCard
         if (!$this->permitted('member', $id)) {
             return $this->redirect(['action' => 'index']);
@@ -253,39 +247,18 @@ class CardFileController extends AppController {
         // get Member member_type and select retrieval method for that type
 
         $MembersTable = TableRegistry::getTableLocator()->get('Members');
+
+        /* @var Member $member */
         $member = $MembersTable->find()
             ->where(['id' => $id])
             ->contain('ArtistManifests') //@todo this can go away if we flag member with isArtist field
             ->toArray()[0];
 
-        /* @var Member $member */
+        /* @var StackTable $CardTable */
+        $this->chooseTableType($member, $CardTable);
 
-        switch ($member->type()) {
-            case MEMBER_TYPE_CATEGORY:
-                $CardTable = TableRegistry::getTableLocator()->get('CategoryCards');
-                break;
-
-            case MEMBER_TYPE_ORGANIZATION:
-                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCards');
-                break;
-
-            case MEMBER_TYPE_PERSON:
-                // A person might be an artist. That has a special Stack which includes artworks
-                if (count($member->artist_manifests) > 0) {
-                    $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
-                } else {
-                    $CardTable = $this->PersonCardsTable();
-                }
-                break;
-
-            default:
-                $msg = "The requested record was of unknown type: {$member->type()}";
-                throw new BadMemberRecordType($msg);
-                break;
-        }
-
-        $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
         /* @var RolodexCard $rolodexCard */
+        $rolodexCard = $CardTable->stacksFor('identity', [$id])->shift();
 
         $this->set('personCard', $rolodexCard);
         $this->set('contextUser', $this->contextUser());
@@ -299,6 +272,16 @@ class CardFileController extends AppController {
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
         } elseif ($rolodexCard->isCategory()) {
+            $candidates = layer($this->IdentitiesTable()->find('all')
+                ->where(['user_id' => $this->contextUser()->getId('supervisor')])
+                ->toArray());
+            /* @var Layer $candidates */
+
+            $candidates = $candidates->getLayer()
+                ->find()
+                ->specifyFilter('member_type', 'Person')
+                ->toKeyValueList('id', 'name');
+            $this->set(compact('candidates'));
             $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('organization');
@@ -314,36 +297,38 @@ class CardFileController extends AppController {
      * Index method shows mixed record types
      */
     public function index() {
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->set('PrefsObject', $Prefs);
+
         //Get the seed ids
         /* @var Query $seedIdQuery */
 
+        /* @todo make this a finder call that addresses managers, supervisors and shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
         /* @var FatGenericCardsTable $FatGenericCardsTable */
-
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $Prefs);
 
         try {
             $fatGenericCards = $this->paginate($FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
-            osd(get_class($this->Paginator));
             return $this->redirect($this->Paginator->showLastPage());
         }
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $fatGenericCards);
+        $this->set('indexModel', $fatGenericCards->getPaginatedTableName());
     }
 
     /**
@@ -351,13 +336,15 @@ class CardFileController extends AppController {
      */
     public function organizations()
     {
+
+        /* @todo make this a finder call that is aware of shares */
         $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
         $seedIdQuery = $OrganizationCards
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $Prefs);
@@ -367,13 +354,15 @@ class CardFileController extends AppController {
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
             return $this->redirect($this->Paginator->showLastPage());
         }
         $this->set('organizationCards', $organizationCards);
+        $this->set('indexModel', $organizationCards->getPaginatedTableName());
     }
 
     /**
@@ -382,13 +371,14 @@ class CardFileController extends AppController {
     public function groups() {
         /* @var CategoryCardsTable $CategoryCards */
 
+        /* @todo make this a finder call that is aware of shares */
         $CategoryCards = TableRegistry::getTableLocator()->get('CategoryCards');
         $seedIdQuery = $CategoryCards
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->set('PrefsObject', $Prefs);
@@ -405,6 +395,7 @@ class CardFileController extends AppController {
             return $this->redirect($this->Paginator->showLastPage());
         }
         $this->set('categoryCards', $categoryCards);
+        $this->set('indexModel', $categoryCards->getPaginatedTableName());
     }
 
     /**
@@ -413,12 +404,13 @@ class CardFileController extends AppController {
     public function people()
     {
         //Get the seed ids
+        /* @todo make this a finder call that is aware of shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
 
         $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var FatGenericCardsTable $PersonCardsTable */
@@ -430,7 +422,8 @@ class CardFileController extends AppController {
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
@@ -439,6 +432,7 @@ class CardFileController extends AppController {
 
         $this->viewBuilder()->setLayout('index');
         $this->set('cards', $cards);
+        $this->set('indexModel', $cards->getPaginatedTableName());
         $this->render('index');
     }
 
@@ -464,7 +458,7 @@ class CardFileController extends AppController {
             ->where(['id IN' => $userIdentities->toArray()]);
 
         //sets search form vars and adds current post (if any) to query
-        $this->cardSearch($seedIdQuery);
+        $this->userFilter($seedIdQuery);
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
 
         try {
@@ -473,7 +467,8 @@ class CardFileController extends AppController {
                 [
                     'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
                     'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
@@ -484,12 +479,13 @@ class CardFileController extends AppController {
 
         $this->viewBuilder()->setLayout('index');
         $this->set('personCards', $personCards);
+        $this->set('indexModel', $personCards->getPaginatedTableName());
         $this->render('supervisors');
     }
 
     //</editor-fold>
 
-    /* @todo Move this to SearchController or SearchComponent? */
+    /* @todo Partially stubbed into CardFilter */
     //<editor-fold desc="********** Index Search Filter Tools">
 
     /**
@@ -502,30 +498,19 @@ class CardFileController extends AppController {
      * @param $query
      * @return Query
      */
-    public function cardSearch($query)
+    public function userFilter($query)
     {
         if ($this->request->is('post') || $this->request->is('put')) {
-            // handle the user request to filter the index page
-            $post = $this->request->getData();
-            $conditions = [];
-            foreach (['first', 'last'] as $key) {
-                $input = $post["{$key}_name"];
-                if (!empty($input)) {
-                    $conditions += $this->condition($key, $input, $post);
-                }
-            }
-            if (!empty($conditions)){
-                // @todo make this and/or responsive
-                $whereThis = ['OR' => $conditions];
-                // modify the the query
-                $query->where($whereThis);
 
-                // persist the filter for future and paginated viewing
-                $path = $this->request->getParam('controller') . '.' . $this->request->getParam('action');
-                $this->getRequest()->getSession()->write('filter', [
-                    'path' => $path,
-                    'conditions' => $whereThis]);
-            }
+            $filter = new CardfileFilter();
+            $whereThis = $filter->execute($this->request->getData());
+
+            $query->where($whereThis);
+            // persist the filter for future and paginated viewing
+            $path = $this->request->getParam('controller') . '.' . $this->request->getParam('action');
+            $this->getRequest()->getSession()->write('filter', [
+                'path' => $path,
+                'conditions' => $whereThis]);
         } elseif (!is_null($this->getRequest()->getSession()->read('filter'))) {
             // respond to stored filters incases there was no post
             $params = $this->getRequest()->getQueryParams();
@@ -538,42 +523,10 @@ class CardFileController extends AppController {
         // set the values needed to render a search/filter for on the index page
         $identities = TableRegistry::getTableLocator()->get('Identities');
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
-        $identity = $identities->newEntity([]);
+        $identity = $identities->newEntity([]/*, ['validate' => false]*/);
         $identity->modes = $modes;
         $this->set('identitySchema', $identity);
         return $query;
-    }
-
-    /**
-     * Construct a single condition from user search
-     * @param $key
-     * @param $input
-     * @param $data
-     * @return array
-     */
-    private function condition($key, $input, $data)
-    {
-        switch ($data["{$key}_name_mode"]) {
-            case 0: //is
-                $condition = ["{$key}_name" => $input];
-                break;
-            case 1: //starts
-                $condition = ["{$key}_name LIKE" => Wildcard::after($input)];
-                break;
-            case 2: //ends
-                $condition = ["{$key}_name LIKE" => Wildcard::before($input)];
-                break;
-            case 3: //contains
-                $condition = ["{$key}_name LIKE" => Wildcard::wrap($input)];
-                break;
-            case 4: //isn't
-                $condition = ["{$key}_name !=" => "$input"];
-                break;
-            default:
-                $condition = [];
-                break;
-        }
-        return $condition;
     }
 
     //</editor-fold>
@@ -626,5 +579,36 @@ class CardFileController extends AppController {
     }
 
     //</editor-fold>
+
+    /**
+     * @param Member $member
+     * @param $CardTable
+     */
+    private function chooseTableType(Member $member, &$CardTable): void
+    {
+        switch ($member->type()) {
+            case MEMBER_TYPE_CATEGORY:
+                $CardTable = TableRegistry::getTableLocator()->get('CategoryCards');
+                break;
+
+            case MEMBER_TYPE_ORGANIZATION:
+                $CardTable = TableRegistry::getTableLocator()->get('OrganizationCards');
+                break;
+
+            case MEMBER_TYPE_PERSON:
+                // A person might be an artist. That has a special Stack which includes artworks
+                if (count($member->artist_manifests) > 0) {
+                    $CardTable = TableRegistry::getTableLocator()->get('ArtistCards');
+                } else {
+                    $CardTable = $this->PersonCardsTable();
+                }
+                break;
+
+            default:
+                $msg = "The requested record was of unknown type: {$member->type()}";
+                throw new BadMemberRecordType($msg);
+                break;
+        }
+    }
 
 }

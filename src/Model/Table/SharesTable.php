@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Table;
 
+use App\Interfaces\JoinLayerTable;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -25,7 +26,7 @@ use App\Model\Table\AppTable;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class SharesTable extends AppTable
+class SharesTable extends AppTable implements JoinLayerTable
 {
     /**
      * Initialize method
@@ -43,17 +44,17 @@ class SharesTable extends AppTable
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('ShrSup', [
+        $this->belongsTo('SharedBy', [
             'foreignKey' => 'supervisor_id',
             'className' => 'Members',
             'bindingKey' => 'id',
         ]);
-        $this->belongsTo('ShrMngr', [
+        $this->belongsTo('SharedWith', [
             'foreignKey' => 'manager_id',
             'className' => 'Members',
             'bindingKey' => 'id',
         ]);
-        $this->belongsTo('ShrCat', [
+        $this->belongsTo('SharedCategory', [
             'foreignKey' => 'category_id',
             'className' => 'Members',
             'bindingKey' => 'id',
@@ -93,17 +94,17 @@ class SharesTable extends AppTable
      * @param $query Query
      * @return $array The manifests ready for storage as a layer
      */
-    public function configureLinkLayer($query) {
-        $query = $query->contain(['ShrSup', 'ShrMngr', 'ShrCat']);
+    public function hydrateLayer($query) {
+        $query = $query->contain(['SharedBy', 'SharedWith', 'SharedCategory']);
 
         $foundSet = collection($query->toArray());
         $shares = $foundSet->map(function ($share, $index) {
             $share->names = [
-                $share->shr_sup->id => $share->shr_sup->name(),
-                $share->shr_mngr->id => $share->shr_mngr->name(),
-                $share->shr_cat->id => $share->shr_cat->name()
+                $share->shared_by->id => $share->shared_by->name(),
+                $share->shared_with->id => $share->shared_with->name(),
+                $share->shared_category->id => $share->shared_category->name()
             ];
-            unset($share->shr_sup, $share->shr_mngr, $share->shr_cat);
+            unset($share->shared_by, $share->shared_with, $share->shared_category);
             return $share;
         });
 

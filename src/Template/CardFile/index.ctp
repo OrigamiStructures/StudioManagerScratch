@@ -12,6 +12,8 @@ use App\Model\Entity\PersonCard;
  */
 echo $this->element('Preferences/Pagination/person');
 
+/* @var \App\Model\Lib\StackSet $cards */
+
 foreach($cards->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\PersonCard $card */

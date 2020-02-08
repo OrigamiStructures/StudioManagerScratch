@@ -1,0 +1,8 @@
+<?php
+$this->Paginator->options(['model' => $paginated_model]);
+echo $this->Html->tag('ul',
+    $this->Paginator->prev('Previous')
+    . $this->Paginator->numbers()
+    . $this->Paginator->next('Next'),
+    ['class' => 'menu']);
+
