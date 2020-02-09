@@ -4,6 +4,10 @@ define('MEMBER_TYPE_ORGANIZATION', 'Organization');
 define('MEMBER_TYPE_PERSON', 'Person');
 define('MEMBER_TYPE_USER', 'User');
 define('MEMBER_TYPE_CATEGORY', 'Category');
+define('MEMBER_TYPE_ARRAY', [
+    MEMBER_TYPE_PERSON,
+    MEMBER_TYPE_ORGANIZATION,
+]);
 
 // <editor-fold defaultstate="collapsed" desc="EDITION TYPES">
 define('EDITION_UNIQUE', 'Unique');

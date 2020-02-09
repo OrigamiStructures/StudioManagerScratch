@@ -60,7 +60,8 @@ class MenusTable extends AppTable{
         'People' => '/cardfile/people',
         'Groups' => '/cardfile/groups',
         'Supervisors' => '/cardfile/supervisors',
-        'Add' => '/cardfile/add'
+        'Add' => '/cardfile/add',
+        'Insert' => '/cardfile/insert'
     ]];
     protected $account = ['Account' => [
         'Login' => '/users/users/login',

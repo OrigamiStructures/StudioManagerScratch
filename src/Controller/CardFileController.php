@@ -79,10 +79,49 @@ class CardFileController extends AppController {
 
     public function insert($type = 'person')
     {
-        $type = 'person';
-        $type = 'artist';
-        $type = 'institution';
-        $type = 'category';
+        switch ($type){
+            case 'person':
+                $this->insertPerson();
+                break;
+            case 'artist':
+                return $this->redirect(['action' => 'insertArtist']);
+                break;
+            case 'institution':
+                return $this->redirect(['action' => 'insertInstitution']);
+                break;
+            case 'category':
+                return $this->redirect(['action' => 'insertCategory']);
+        }
+    }
+
+    public function insertPerson()
+    {
+        $cardfile = $this->PersonCardsTable()->newEntity();
+        if($this->request->is('post')){
+            $cardfile = $this->PersonCardsTable()->patchEntity($cardfile, $this->request->getData());
+            osd($cardfile);die;
+            If($this->PersonCardsTable()->save($cardfile)){
+                $this->Flash->success(__("The $type has been saved."));
+                return $this->redirect(['action' => 'index']);
+            }
+        }
+        $this->set(compact('cardfile'));
+        $this->render('insert_person');
+    }
+
+    public function insertArtist()
+    {
+        $cardfile = $this->PersonCardsTable()->newEntity();
+        if($this->request->is('post')){
+            $cardfile = $this->PersonCardsTable()->patchEntity($cardfile, $this->request->getData());
+            osd($cardfile);die;
+            If($this->PersonCardsTable()->save($cardfile)){
+                $this->Flash->success(__("The $type has been saved."));
+                return $this->redirect(['action' => 'index']);
+            }
+        }
+        $this->set(compact('cardfile'));
+        $this->render('insert_artist');
     }
 
     public function remove($id)
