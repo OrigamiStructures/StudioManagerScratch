@@ -12,28 +12,33 @@ try {
         $this->doNormalProcedure();
     }
 } catch (UnknownPreferenceKeyException $e) {
-    $this->handleUnknowPrefsKey();
+    $this->handleUnknownPrefsKey();
 }
 ```
 
-The preference values set by an actor are stored in the `preferences` table as json data on the `prefs` columnn (text type).
+The allowed preference keys are defined by the developer as the fields of a Schema object in a [Form](https://book.cakephp.org/4/en/core-libraries/form.html).
 
-The allowed preference keys are defined by the developer as the Schema object of a [Form](https://book.cakephp.org/4/en/core-libraries/form.html).
-
->**NOTE:** This hard-wired table/column requirement should be replaced with a dependency-injection hook. The devoloper may want a different table or different field. They may also require more than one Prefs schema; for example, a user schema and an application schema.
->
->In multi-schema scenario I expect multiple PreferencesComponents would be created, each with a different alias and each would deliver its Prefs object.
-
-In addition to reporting prefs values, Prefs can also deliver an Entity and a Form. These objects will support CRUD processes or other developer needs.
+In addition to reporting preference settings or defaults, Prefs can also deliver an Entity and a Form. These objects will support CRUD processes or other developer needs.
 
 ```php
+//in a controller
+$this->loadComponent('Preferences');
+$Prefs = $this->Preferences->getPrefs();
 $userPreferences = $Prefs->getEntity();
 $formHelperContext = $Prefs->getForm();
 ```
 
+The preference values set by an actor are stored in the `preferences` table as json data on the `prefs` columnn (text type). All the fields defined in the schema will be included in this one json object.
+
+A PreferencesTable and Preference entity are provided as part of the plungin to participate in the default storage processes of the plugin.
+
+>**NOTE:** This hard-wired table/column requirement should be replaced with a dependency-injection hook. The devoloper may want a different table or different field. They may also require more than one Prefs schema; for example, a user schema and an application schema.
+>
+>In a multi-schema scenario I expect multiple PreferencesComponents would be created, each with a different alias and each would deliver its Prefs object.
+
 ##Developing the Preferences for an Application
 
-There is no pre-defined for preferences. You must decided what data points you want to offer in your application. Once you've decided on a preference inflection point you need to:
+There is no pre-defined set of preference keys. You must decided what data points you want to offer in your application. Once you've decided on a preference inflection point you need to:
 
 - Define the field in the Form's schema (including its default value)
 - Create some system the actor can use to set their prefered value for the field
@@ -41,7 +46,8 @@ There is no pre-defined for preferences. You must decided what data points you w
 
 ###An Example Implementation
 
-**System without prefs***
+**A sample layout ctp without preferences**
+
 ```html
 <!-- Templates/Layouts/default.ctp -->
 <!DOCTYPE html>
@@ -60,11 +66,13 @@ There is no pre-defined for preferences. You must decided what data points you w
 </html>
 ```
 
-If we want to allow the use to choose different css to control colors on the pages we can define a 'color-theme' preference.
+If we want to allow the user to choose different css to control colors on the pages we can define a 'color-theme' preference.
 
-First we define the schema to support this inflection point. The plugin includes the PreferencesForm object which you will extend to define your schema. You'll also want to define validation rules to insure the values that get set on your prefs values.
+First we define the schema to support this inflection point. The plugin includes the PreferencesForm object which you will extend to define your schema. You'll also want to define validation rules to control the values that get set in your table.
 
-It may be necessary to define a `user_id` field in your schema so that the posted prefernces can be linked to your user.
+It will be necessary to define a `id` field in your schema so that the posted preferences can be linked to the persisted record.
+
+>The `id` may get added to the plugin classes so it wouldn't have to be part of the implementation in each application.
 
 ```php
 <?php
@@ -114,7 +122,7 @@ class LocalPreferencesForm extends PreferencesForm
 }
 ```
 
-Next you need to give your actor a way to regester their choice. In this case the actor is an interacting user, so we can present a form.
+Next you need to give your actor a way to regester their choice. In this case the actor is an interacting user, so we can present a form. Here is the controller/method that would back-stop the page that presents the form.
 
 ```php
 namespace App\Controller;
@@ -135,7 +143,7 @@ class MyController extends AppController
 
     public function someMethod() {
         //This is some method that also presents a form
-        //that allows the user to change the theme setting
+        //that allows the user to change the color-theme setting
         $this->set(
             'theme_options',
             ['default-color-theme', 'pastel-theme', 'neon-theme', 'druid-theme']
@@ -185,6 +193,8 @@ So, all that remains is to adjust your application to make use of the new prefer
 </body>
 </html>
 ```
+
+**Old Docs Below. Not Edited**
 
 ##Classes involved in the User Preference system
 
@@ -385,3 +395,5 @@ $options = $prefForm->selectList(PrefCon::PAGINATION_SORT_PEOPLE);
 
 You can design any schema you want and name the constants in any way that makes sense. The fact that the constants are defined with `const` inside the class, keeps them out of the global space so there will be no name conflicts with other constants. You will only be able to access the constants with the syntax **PrefCon::CONSTANT_NAME**.
 
+
+Topics: Studio Manager, Preference,
