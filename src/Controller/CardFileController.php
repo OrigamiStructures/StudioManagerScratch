@@ -316,9 +316,9 @@ class CardFileController extends AppController {
             $fatGenericCards = $this->paginate(
                 $FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $this->Prefs->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$this->Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $this->Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'limit' => $this->Prefs->for(PrefCon::PAGING_PEOPLE_LIMIT),
+                    'order' => [$this->Prefs->for(PrefCon::PAGING_PEOPLE_SORT) =>
+                        $this->Prefs->for(PrefCon::PAGING_PEOPLE_DIR)],
                     'scope' => 'identities'
                 ]
             );
