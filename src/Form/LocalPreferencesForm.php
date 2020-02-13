@@ -23,30 +23,57 @@ class LocalPreferencesForm extends PreferencesForm
     public $Prefs = false;
 
     public $prefsSchema = [
-        PrefCon::PAGINATION_LIMIT => [
-            'type' => 'integer',
-            'default' => 10
+        PrefCon::PAGING_CATEGORY => [
+            'type' => 'json',
+            'default' => [
+                'limit' => 10,
+                'dir' => 'asc',
+                'sort' => 'last_name'
+            ]
         ],
-        PrefCon::PAGINATION_DIR => [
-            'type' => 'integer',
-            'default' => 'asc'
+        PrefCon::PAGING_ORGANIZATION => [
+            'type' => 'json',
+            'default' => [
+                'limit' => 10,
+                'dir' => 'asc',
+                'sort' => 'last_name'
+            ]
         ],
-        PrefCon::PAGINATION_SORT_PEOPLE => [
-            'type' => 'string',
-            'default' => 'last_name'
+        PrefCon::PAGING_PEOPLE=> [
+            'type' => 'json',
+            'default' => [
+                'limit' => 10,
+                'dir' => 'asc',
+                'sort' => 'last_name'
+            ]
         ],
-        PrefCon::PAGINATION_SORT_CATEGORY => [
-            'type' => 'string',
-            'default' => 'last_name'
+        PrefCon::PAGING_CARD => [
+            'type' => 'json',
+            'default' => [
+                'limit' => 10,
+                'dir' => 'asc',
+                'sort' => 'last_name'
+            ]
         ],
-        PrefCon::PAGINATION_SORT_ORGANIZATION => [
-            'type' => 'string',
-            'default' => 'last_name'
+        PrefCon::PAGING_ARTWORK => [
+            'type' => 'json',
+            'default' => [
+                'limit' => 10,
+                'dir' => 'asc',
+                'sort' => 'title'
+            ]
         ],
-        PrefCon::PAGINATION_SORT_ARTWORK => [
-            'type' => 'string',
-            'default' => 'title'
-        ]
+        PrefCon::PAGING_COMMON => [
+            'type' => 'json',
+            'default' => [
+                'limit' => 10,
+                'dir' => 'asc'
+            ]
+        ],
+//        'id' => [
+//            'type' => 'string',
+//            'default' => ''
+//        ]
     ];
 
     public function __construct(EventManager $eventManager = null)

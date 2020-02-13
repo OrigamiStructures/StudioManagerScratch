@@ -58,12 +58,13 @@ class PreferencesForm extends Form
     {
         parent::__construct($eventManager);
         $schema = $this->schema();
-        $this->validPaths = array_keys($this->prefsSchema ?? []);
+        $this->validPaths = $schema->fields() ?? [];
+
         $prefDefaults = (collection($this->validPaths))
             ->reduce(function ($accum, $path) use ($schema) {
-                if ($path != 'id') {
+//                if ($path != 'id') {
                     $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
-                }
+//                }
                 return $accum;
             }, []);
 
@@ -77,12 +78,31 @@ class PreferencesForm extends Form
      */
     protected function _buildSchema(Schema $schema)
     {
-        $schema->addFields($this->prefsSchema);
+        foreach ($this->prefsSchema as $field => $attributes) {
+            if ($attributes['type'] == 'json') {
+                $this->breakoutJson($schema, $field, $attributes);
+            } else {
+                $schema->addField($field, $attributes);
+            }
+        }
         $schema
             ->addField('id', [
                 'type' => 'string'
             ]);
         return parent::_buildSchema($schema);
+    }
+
+    private function breakoutJson($schema, $parent, $attributes)
+    {
+            foreach ($attributes['default'] as $field => $default) {
+                $fieldPath = "$parent.$field";
+                $type = gettype($default);
+                $schema->addField($fieldPath, [
+                    'type' => $type,
+                    'default' => $default
+                ]);
+            }
+        return;
     }
 
     /**
