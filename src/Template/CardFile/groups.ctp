@@ -11,7 +11,7 @@ echo $this->element('Preferences/Pagination/category');
 
 echo $this->Html->link('New Category', ['action' => 'add', 'category']);
 
-foreach($categoryCards->getData() as $id => $card) {
+foreach($stackSet->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\CategoryCard $card */
 

@@ -3,7 +3,6 @@ use App\Lib\Prefs;
 use App\Constants\PrefCon;
 /**
  * @var \App\View\AppView $this
- * @var Prefs $PrefsObject
  */
 
 echo '</ul>';

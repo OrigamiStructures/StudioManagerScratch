@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Controller\Component\IndexComponent;
 use App\Controller\Component\PreferencesComponent;
 use App\Exception\UnknownMemberTypeException;
 use App\Constants\MemCon;
@@ -42,6 +43,7 @@ use Cake\Http\Exception\NotFoundException;
  * @property RolodexCard $RolodexCard
  * @property RolodexCardsTable $RolodexCards
  * @property PreferencesComponent $Preferences
+ * @property IndexComponent $Index
  */
 class CardFileController extends AppController {
 
@@ -297,33 +299,21 @@ class CardFileController extends AppController {
      * Index method shows mixed record types
      */
     public function index() {
-        $this->set('PrefsObject', $this->Prefs);
+        $this->loadComponent('Index');
 
         //Get the seed ids
         /* @var Query $seedIdQuery */
 
-        /* @todo make this a finder call that addresses managers, supervisors and shares */
+        /* @todo make this a finder call that addresses managers, supervisors and shares (permissions)*/
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        //sets search form vars and adds current post (if any) to query
-        $this->userFilter($seedIdQuery);
-
-        $FatGenericCardsTable = TableRegistry::getTableLocator()->get('FatGenericCards');
-        /* @var FatGenericCardsTable $FatGenericCardsTable */
-
-        try {
-            $fatGenericCards = $this->paginate(
-                $FatGenericCardsTable->pageFor('identity', $seedIdQuery->toArray()),
-                $this->Prefs->getPagingAttrs('people')
-            );
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->Paginator->showLastPage());
-        }
-
-        $this->viewBuilder()->setLayout('index');
-        $this->set('cards', $fatGenericCards);
-        $this->set('indexModel', $fatGenericCards->getPaginatedTableName());
+        $this->Index->build(
+            $seedIdQuery,
+            'identity',
+            'FatGenericCards',
+            'people'
+        );
     }
 
     /**
@@ -331,34 +321,27 @@ class CardFileController extends AppController {
      */
     public function organizations()
     {
+        $this->loadComponent('Index');
+        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
 
         /* @todo make this a finder call that is aware of shares */
-        $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
         $seedIdQuery = $OrganizationCards
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        //sets search form vars and adds current post (if any) to query
-        $this->userFilter($seedIdQuery);
-
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $Prefs);
-        $this->viewBuilder()->setLayout('index');
-        try {
-            $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
-                $this->Prefs->getPagingAttrs('organization')
-            );
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->Paginator->showLastPage());
-        }
-        $this->set('organizationCards', $organizationCards);
-        $this->set('indexModel', $organizationCards->getPaginatedTableName());
+        $this->Index->build(
+            $seedIdQuery,
+            'identity',
+            'OrganizationCards',
+            'organization'
+        );
     }
 
     /**
      * Index page filtered to Grouping/Category Cards
      */
     public function groups() {
+        $this->loadComponent('Index');
         /* @var CategoryCardsTable $CategoryCards */
 
         /* @todo make this a finder call that is aware of shares */
@@ -367,21 +350,12 @@ class CardFileController extends AppController {
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        //sets search form vars and adds current post (if any) to query
-        $this->userFilter($seedIdQuery);
-
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $Prefs);
-        $this->viewBuilder()->setLayout('index');
-        try {
-            $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
-                $this->Prefs->getPagingAttrs('category')
-            );
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->Paginator->showLastPage());
-        }
-        $this->set('categoryCards', $categoryCards);
-        $this->set('indexModel', $categoryCards->getPaginatedTableName());
+        $this->Index->build(
+            $seedIdQuery,
+            'identity',
+            'CategoryCards',
+            'category'
+        );
     }
 
     /**
@@ -389,31 +363,19 @@ class CardFileController extends AppController {
      */
     public function people()
     {
+        $this->loadComponent('Index');
         //Get the seed ids
         /* @todo make this a finder call that is aware of shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        //sets search form vars and adds current post (if any) to query
-        $this->userFilter($seedIdQuery);
-
-        $PersonCardsTable = TableRegistry::getTableLocator()->get('PersonCards');
-        /* @var FatGenericCardsTable $PersonCardsTable */
-
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-        $this->set('PrefsObject', $Prefs);
-        try {
-            $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
-                $this->Prefs->getPagingAttrs('people')
-            );
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->Paginator->showLastPage());
-        }
-
-        $this->viewBuilder()->setLayout('index');
-        $this->set('cards', $cards);
-        $this->set('indexModel', $cards->getPaginatedTableName());
+        $this->Index->build(
+            $seedIdQuery,
+            'identity',
+            'PersonCards',
+            'people'
+        );
         $this->render('index');
     }
 
@@ -425,6 +387,7 @@ class CardFileController extends AppController {
         if(!$this->currentUser()->isSuperuser()) {
             $this->redirect('/pages/no_access');
         }
+        $this->loadComponent('Index');
         $Users = TableRegistry::getTableLocator()->get('Users');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var UsersTable $Users */
@@ -438,26 +401,12 @@ class CardFileController extends AppController {
             ['valueField' => 'id'])
             ->where(['id IN' => $userIdentities->toArray()]);
 
-        //sets search form vars and adds current post (if any) to query
-        $this->userFilter($seedIdQuery);
-        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
-
-        try {
-            $this->Prefs->getPagingAttrs('people');
-            $personCards = $this->paginate(
-                $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
-                $this->Prefs->getPagingAttrs('people')
-            );
-        } catch (NotFoundException $e) {
-            return $this->redirect($this->Paginator->showLastPage());
-        }
-
-        $this->set('PrefsObject', $Prefs);
-
-        $this->viewBuilder()->setLayout('index');
-        $this->set('personCards', $personCards);
-        $this->set('indexModel', $personCards->getPaginatedTableName());
-        $this->render('supervisors');
+        $this->Index->build(
+            $seedIdQuery,
+            'identity',
+            'PersonCards',
+            'people'
+        );
     }
 
     //</editor-fold>
