@@ -47,14 +47,6 @@ class LocalPreferencesForm extends PreferencesForm
                 'sort' => 'last_name'
             ]
         ],
-        PrefCon::PAGING_CARD => [
-            'type' => 'json',
-            'default' => [
-                'limit' => 10,
-                'dir' => 'asc',
-                'sort' => 'last_name'
-            ]
-        ],
         PrefCon::PAGING_ARTWORK => [
             'type' => 'json',
             'default' => [
@@ -63,17 +55,6 @@ class LocalPreferencesForm extends PreferencesForm
                 'sort' => 'title'
             ]
         ],
-        PrefCon::PAGING_COMMON => [
-            'type' => 'json',
-            'default' => [
-                'limit' => 10,
-                'dir' => 'asc'
-            ]
-        ],
-//        'id' => [
-//            'type' => 'string',
-//            'default' => ''
-//        ]
     ];
 
     public function __construct(EventManager $eventManager = null)

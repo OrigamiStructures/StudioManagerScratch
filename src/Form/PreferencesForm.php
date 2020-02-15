@@ -85,10 +85,10 @@ class PreferencesForm extends Form
                 $schema->addField($field, $attributes);
             }
         }
-        $schema
-            ->addField('id', [
-                'type' => 'string'
-            ]);
+//        $schema
+//            ->addField('id', [
+//                'type' => 'string'
+//            ]);
         return parent::_buildSchema($schema);
     }
 
