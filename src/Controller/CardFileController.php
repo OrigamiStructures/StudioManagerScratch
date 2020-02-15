@@ -352,9 +352,9 @@ class CardFileController extends AppController {
         try {
             $organizationCards = $this->paginate($OrganizationCards->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'limit' => $this->Prefs->for(PrefCon::PAGING_ORGANIZATION_LIMIT),
+                    'order' => [$this->Prefs->for(PrefCon::PAGING_ORGANIZATION_SORT) =>
+                        $this->Prefs->for(PrefCon::PAGING_ORGANIZATION_DIR)],
                     'scope' => 'identities'
                 ]
             );
@@ -386,9 +386,10 @@ class CardFileController extends AppController {
         try {
             $categoryCards = $this->paginate($CategoryCards->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)]
+                    'limit' => $this->Prefs->for(PrefCon::PAGING_CATEGORY_LIMIT),
+                    'order' => [$this->Prefs->for(PrefCon::PAGING_CATEGORY_SORT) =>
+                        $this->Prefs->for(PrefCon::PAGING_CATEGORY_DIR)],
+                    'scope' => 'identities'
                 ]
             );
         } catch (NotFoundException $e) {
@@ -420,9 +421,9 @@ class CardFileController extends AppController {
         try {
             $cards = $this->paginate($PersonCardsTable->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'limit' => $this->Prefs->for(PrefCon::PAGING_PEOPLE_LIMIT),
+                    'order' => [$this->Prefs->for(PrefCon::PAGING_PEOPLE_SORT) =>
+                        $this->Prefs->for(PrefCon::PAGING_PEOPLE_DIR)],
                     'scope' => 'identities'
                 ]
             );
@@ -465,9 +466,9 @@ class CardFileController extends AppController {
             $personCards = $this->paginate(
                 $PersonCards->pageFor('identity', $seedIdQuery->toArray()),
                 [
-                    'limit' => $Prefs->for(PrefCon::PAGINATION_LIMIT),
-                    'order' => [$Prefs->for(PrefCon::PAGINATION_SORT_PEOPLE) =>
-                        $Prefs->for(PrefCon::PAGINATION_DIR)],
+                    'limit' => $this->Prefs->for(PrefCon::PAGING_PEOPLE_LIMIT),
+                    'order' => [$this->Prefs->for(PrefCon::PAGING_PEOPLE_SORT) =>
+                        $this->Prefs->for(PrefCon::PAGING_PEOPLE_DIR)],
                     'scope' => 'identities'
                 ]
             );

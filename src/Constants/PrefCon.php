@@ -12,21 +12,6 @@ class PrefCon
      * PAGINATION... coordinates schema entries, validation rules, and
      * form control creation
      */
-    const PAGINATION_LIMIT = 'pagination.limit';
-    const PAGINATION_DIR = 'pagination.dir';
-    const PAGINATION_SORT_PEOPLE = 'pagination.sort.people';
-    const PAGINATION_SORT_CATEGORY = 'pagination.sort.category';
-    const PAGINATION_SORT_ORGANIZATION = 'pagination.sort.organization';
-    const PAGINATION_SORT_ARTWORK = 'pagination.sort.artwork';
-
-    const PAGING_LIMIT = 'paging.common.limit';
-    const PAGING_DIR = 'paging.common.dir';
-    const PAGING_COMMON = 'paging.common';
-
-    const PAGING_CARD = 'paging.card';
-    const PAGING_CARD_LIMIT = 'paging.card.limit';
-    const PAGING_CARD_DIR = 'paging.card.dir';
-    const PAGING_CARD_SORT = 'paging.card.sort';
 
     const PAGING_PEOPLE = 'paging.people';
     const PAGING_PEOPLE_LIMIT = 'paging.people.limit';
@@ -77,23 +62,31 @@ class PrefCon
      * @var array
      */
     public static $lists = [
-        PrefCon::PAGINATION_DIR => [
+        PrefCon::PAGING_PEOPLE_SORT => [
+            'values' => ['first_name', 'last_name', 'collector'],
+            'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'collector' => 'Collected Works']
+        ],
+        PrefCon::PAGING_CATEGORY_SORT => [
+            'values' => ['last_name'],
+            'select' => ['last_name' => 'Name']
+        ],
+        PrefCon::PAGING_ORGANIZATION_SORT => [
+            'values' => ['last_name'],
+            'select' => ['last_name' => 'Name']
+        ],
+        PrefCon::PAGING_PEOPLE_DIR => [
             'values' => ['asc', 'desc'],
             'select' => ['asc' => 'Ascending', 'desc' => 'Descending']
         ],
-        PrefCon::PAGINATION_SORT_PEOPLE => [
-            'values' => ['first_name', 'last_name'],
-            'select' => ['first_name' => 'First Name', 'last_name' => 'Last Name', 'x' => 'Bad Value']
+        PrefCon::PAGING_ORGANIZATION_DIR => [
+            'values' => ['asc', 'desc'],
+            'select' => ['asc' => 'Ascending', 'desc' => 'Descending']
         ],
-        PrefCon::PAGINATION_SORT_CATEGORY => [
-            'values' => ['last_name'],
-            'select' => ['last_name' => 'Name']
+        PrefCon::PAGING_CATEGORY_DIR => [
+            'values' => ['asc', 'desc'],
+            'select' => ['asc' => 'Ascending', 'desc' => 'Descending']
         ],
-        PrefCon::PAGINATION_SORT_ORGANIZATION => [
-            'values' => ['last_name'],
-            'select' => ['last_name' => 'Name']
-        ],
-        PrefCon::PAGINATION_SORT_ARTWORK => [
+        PrefCon::PAGING_ARTWORK_SORT => [
             'values' => [],
             'select' => []
         ],

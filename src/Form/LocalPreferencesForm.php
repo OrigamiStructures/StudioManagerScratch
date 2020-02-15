@@ -71,39 +71,39 @@ class LocalPreferencesForm extends PreferencesForm
     {
         $validator->requirePresence('id', true, 'The user id must be included in all preference forms.');
         $validator->greaterThan(
-            PrefCon::PAGINATION_LIMIT,
+            PrefCon::PAGING_PEOPLE_LIMIT,
             0,
             'You must show more than zero items per page.'
         );
         $validator->inList(
-            PrefCon::PAGINATION_DIR,
-            PrefCon::values(PrefCon::PAGINATION_DIR),
+            PrefCon::PAGING_PEOPLE_DIR,
+            PrefCon::values(PrefCon::PAGING_PEOPLE_DIR),
             'Sort direction can only be ' . Text::toList(
-                PrefCon::values(PrefCon::PAGINATION_DIR),
+                PrefCon::values(PrefCon::PAGING_PEOPLE_DIR),
                 'or'
             )
         );
         $validator->inList(
-            PrefCon::PAGINATION_SORT_PEOPLE,
-            PrefCon::values(PrefCon::PAGINATION_SORT_PEOPLE),
+            PrefCon::PAGING_PEOPLE_SORT,
+            PrefCon::values(PrefCon::PAGING_PEOPLE_SORT),
             'Sorting can only be done on ' . Text::toList(
-                PrefCon::values(PrefCon::PAGINATION_SORT_PEOPLE),
+                PrefCon::values(PrefCon::PAGING_PEOPLE_SORT),
                 'or'
             )
         );
         $validator->inList(
-            PrefCon::PAGINATION_SORT_CATEGORY,
-            PrefCon::values(PrefCon::PAGINATION_SORT_CATEGORY),
+            PrefCon::PAGING_CATEGORY_SORT,
+            PrefCon::values(PrefCon::PAGING_CATEGORY_SORT),
             'Sorting can only be done on ' . Text::toList(
-                PrefCon::values(PrefCon::PAGINATION_SORT_CATEGORY),
+                PrefCon::values(PrefCon::PAGING_CATEGORY_SORT),
                 'or'
             )
         );
         $validator->inList(
-            PrefCon::PAGINATION_SORT_ORGANIZATION,
-            PrefCon::values(PrefCon::PAGINATION_SORT_ORGANIZATION),
+            PrefCon::PAGING_ORGANIZATION_SORT,
+            PrefCon::values(PrefCon::PAGING_ORGANIZATION_SORT),
             'Sorting can only be done on ' . Text::toList(
-                PrefCon::values(PrefCon::PAGINATION_SORT_ORGANIZATION),
+                PrefCon::values(PrefCon::PAGING_ORGANIZATION_SORT),
                 'or'
             )
         );
