@@ -54,6 +54,7 @@ class PreferencesComponentTest extends TestCase
     public function tearDown()
     {
         unset($this->Component);
+        unset($this->controller);
 
         parent::tearDown();
     }
@@ -61,7 +62,7 @@ class PreferencesComponentTest extends TestCase
     public function mockPrefsTable()
     {
         $tableMock = $this->getMockForModel('Preferences', ['save']);
-        $tableMock->expects($this->once())->method('save')->willReturn(false);
+        $tableMock->expects($this->any())->method('save')->willReturn(false);
         TableRegistry::getTableLocator()->set('Preferences', $tableMock);
     }
 
