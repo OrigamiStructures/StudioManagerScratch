@@ -23,7 +23,7 @@ In addition to reporting preference settings or defaults, Prefs can also deliver
 ```php
 //in a controller
 $this->loadComponent('Preferences');
-$Prefs = $this->Preferences->getPrefs();
+$Prefs = $this->Preferences->getPrefs($user_id);
 $userPreferences = $Prefs->getEntity();
 $formHelperContext = $Prefs->getForm();
 ```
@@ -70,7 +70,7 @@ If we want to allow the user to choose different css to control colors on the pa
 
 First we define the schema to support this inflection point. The plugin includes the PreferencesForm object which you will extend to define your schema. You'll also want to define validation rules to control the values that get set in your table.
 
-It will be necessary to define a `id` field in your schema so that the posted preferences can be linked to the persisted record.
+It will be necessary to define an `id` field in your schema so that the posted preferences can be linked to the persisted record.
 
 >The `id` may get added to the plugin classes so it wouldn't have to be part of the implementation in each application.
 
@@ -92,7 +92,7 @@ class LocalPreferencesForm extends PreferencesForm
      */
     protected function _buildSchema(Schema $schema)
     {
-        $shema->addField('color-theme',  [
+        $schema->addField('color-theme',  [
             'type' => 'string',
             'default' => 'default-color-theme'
         ]);
@@ -151,7 +151,7 @@ class MyController extends AppController
         //You'll need the Form to support the FormHelper.
         //It's on the Prefs object along with the Entity.
         //The component can deliver the object
-        $this->set('Prefs', $this->Preferences->getPrefs());
+        $this->set('Prefs', $this->Preferences->getPrefs($this->Auth->user('id')));
     }
 }
 ```
