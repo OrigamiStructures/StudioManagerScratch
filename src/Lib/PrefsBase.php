@@ -9,6 +9,7 @@ use App\Form\PreferencesForm;
 use App\Model\Entity\Preference;
 use Cake\Form\Form;
 use Cake\ORM\Entity;
+use Cake\Utility\Hash;
 
 class PrefsBase
 {
@@ -62,5 +63,17 @@ class PrefsBase
         return $this->form;
     }
 
+    public function getPagingAttrs($name)
+    {
+        $path = "paging.$name";
+
+        $attrs = Hash::insert([], "limit", $this->for("$path.limit"));
+        $attrs = Hash::insert($attrs, "order", [
+            $this->for("$path.sort") => $this->for("$path.dir")
+        ]);
+        $attrs = Hash::insert($attrs, "scope", $this->for("$path.scope"));
+
+        return $attrs;
+    }
 
 }
