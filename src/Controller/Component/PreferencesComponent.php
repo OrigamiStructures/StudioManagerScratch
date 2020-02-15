@@ -43,6 +43,8 @@ class PreferencesComponent extends Component
      */
     private $formClass = false;
 
+    protected $Form = false;
+
     /**
      * Prefs objects that have been created index by the id that made them
      *
@@ -286,12 +288,16 @@ class PreferencesComponent extends Component
      */
     protected function getFormObjet()
     {
+        if ($this->Form !== false) {
+            return $this->Form;
+        }
         if (!$this->formClass == false) {
             $class = $this->formClass;
             $PreferenceForm = new $class();
         } else {
             $PreferenceForm = new LocalPreferencesForm();
         }
+        $this->Form = $PreferenceForm;
         return $PreferenceForm;
     }
 
