@@ -56,7 +56,7 @@ class LocalPreferencesForm extends PreferencesForm
                 'limit' => 10,
                 'dir' => 'asc',
                 'sort' => 'title',
-                'scope' => 'identities'
+                'scope' => 'artworks'
             ]
         ],
     ];
