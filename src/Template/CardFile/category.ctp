@@ -56,10 +56,21 @@ if (!$personCard->hasPermittedManagers()) {
     echo '</ul>';
 }
 
-foreach ($candidates as $id => $candidate) {
-    echo $this->Form->control('members.' . $id , ['type' => 'checkbox', 'label' => ' ' . $candidate]);
+echo $this->element('Common/pagination_bar', ['paginated_model' => $indexModel]);
+foreach ($stackSet->getData() as $id => $candidate) {
+//    osd($candidate);
+    $isMember = count(
+        $candidate->getLayer('memberships')
+        ->find()
+        ->specifyFilter('name', $personCard->rootElement()->name())
+        ->toArray()
+    ) > 0;
+    echo $this->Form->control(
+        'members.' . $candidate->rootId() , [
+            'type' => 'checkbox',
+            'checked' => $isMember,
+            'label' => ' ' . $candidate->rootElement()->name()
+        ]
+    );
 }
-//osd($candidates);
-
-
-
+echo $this->element('Member/search', ['identitySchema' => $identitySchema]);

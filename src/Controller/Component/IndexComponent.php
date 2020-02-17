@@ -40,7 +40,7 @@ class IndexComponent extends Component
                 $this->getController()->Prefs->getPagingAttrs($pagingAttrName)
             );
         } catch (NotFoundException $e) {
-            return $this->getController()->redirect($this->Paginator->showLastPage());
+            return $this->getController()->redirect($this->getController()->Paginator->showLastPage());
         }
 
         $this->getController()->viewBuilder()->setLayout('index');

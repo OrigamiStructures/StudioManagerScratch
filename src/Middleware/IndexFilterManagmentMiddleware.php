@@ -36,6 +36,8 @@ class IndexFilterManagmentMiddleware
             'Preferences.setPrefs',
             'Requests.view',
             'Panels.view'],
+        'Cardfile.view' => [
+            'Cardfile.view'],
     ];
 
     /**

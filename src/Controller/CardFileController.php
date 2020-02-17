@@ -274,16 +274,8 @@ class CardFileController extends AppController {
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
         } elseif ($rolodexCard->isCategory()) {
-            $candidates = layer($this->IdentitiesTable()->find('all')
-                ->where(['user_id' => $this->contextUser()->getId('supervisor')])
-                ->toArray());
-            /* @var Layer $candidates */
-
-            $candidates = $candidates->getLayer()
-                ->find()
-                ->specifyFilter('member_type', 'Person')
-                ->toKeyValueList('id', 'name');
-            $this->set(compact('candidates'));
+            $this->index();
+//            $this->viewBuilder()->setLayout('default');
             $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('organization');
@@ -299,7 +291,6 @@ class CardFileController extends AppController {
      * Index method shows mixed record types
      */
     public function index() {
-        $this->loadComponent('Index');
 
         //Get the seed ids
         /* @var Query $seedIdQuery */
@@ -308,6 +299,7 @@ class CardFileController extends AppController {
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
+        $this->loadComponent('Index');
         $this->Index->build(
             $seedIdQuery,
             'identity',
