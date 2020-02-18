@@ -8,6 +8,7 @@ use App\Model\Table\StacksTable;
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 class IndexComponent extends Component
@@ -20,33 +21,84 @@ class IndexComponent extends Component
 
     /**
      *
-     * @param $seedIdQuery The query which isolates the seed ids
-     * @param $seedName The seed names, what we will distill on
-     * @param $tableName The StackTable name to use
-     * @param $pagingAttrName The name of the paging prefs set
      * @return \Cake\Http\Response|null
      */
-    public function build($seedIdQuery, $seedName, $tableName, $pagingAttrName)
+    public function build($seedQuery, $seedTarget, $pagingScope)
     {
-        //sets search form vars and adds current post (if any) to query
-        $this->getController()->userFilter($seedIdQuery);
+        $this->block($seedQuery, $seedTarget, $pagingScope);
+        $this->getController()->viewBuilder()->setLayout('index');
+    }
 
-        $table = TableRegistry::getTableLocator()->get($tableName);
-        /* @var StacksTable $table */
+    /**
+     * Filter and Paginate a stackSet, create View variables for rendering
+     *
+     * @param $seedQuery Query The query that will produce the seed ids
+     * @param $seedTarget string The 'TableAlias.seedName' for the stack query
+     * @param $pagingScope string The 'pagingParams.scopeKey' to us for pagination
+     */
+    public function block($seedQuery, $seedTarget, $pagingScope) {
+
+        list($StackTable, $seedName) = $this->parseTarget($seedTarget);
+        $pagingParams = $this->getPagingParams($pagingScope);
+
+        //sets search form vars and adds current post (if any) to query
+        $this->getController()->userFilter($seedQuery);
 
         try {
             $stackSet = $this->getController()->paginate(
-                $table->pageFor($seedName, $seedIdQuery->toArray()),
-                $this->getController()->Prefs->getPagingAttrs($pagingAttrName)
+                $StackTable->pageFor($seedName, $seedQuery->toArray()),
+                $pagingParams
             );
         } catch (NotFoundException $e) {
-            return $this->getController()->redirect($this->getController()->Paginator->showLastPage());
+            return $this->getController()->redirect(
+                $this->getController()->Paginator->showLastPage($pagingParams['scope'])
+            );
         }
 
-        $this->getController()->viewBuilder()->setLayout('index');
         $this->getController()->set('stackSet', $stackSet);
         $this->getController()->set('indexModel', $stackSet->getPaginatedTableName());
+    }
 
+    /**
+     * Produce the StackTable instance and seed name for a filtered, paginated stack query
+     *
+     * Filtered, paginated queries are similiar, but act different stacks
+     * and the seeds for the query may be on any of the seed types supported
+     * by the stack. So the call is made with a param that names both the
+     * StackTable and seed. These values are sent as a `dot` delimited string.
+     *
+     * This method validates the values and returns an array containing
+     * the table instance and the seed name string.
+     *
+     * @param $seedTarget string A 'TableAlias.seedName'
+     * @return array [StackTableInstance, 'seedName']
+     */
+    private function parseTarget($seedTarget)
+    {
+        list($tableAlias, $seedName) = explode('.', $seedTarget);
+        $table = TableRegistry::getTableLocator()->get($tableAlias);
+        /* @var StacksTable $table */
+
+        return [$table, $seedName];
+
+    }
+
+    /**
+     * Get current prefs-settings for 'paging' and add a scope key to it
+     *
+     * This allows the choice of a 'preferences' package of pagination settings
+     * and lets the call name the scope so multiple paginated data sets can
+     * co-exist in views.
+     *
+     * @param $pagingScope string A 'pagingParams.scopeKey' to us for pagination
+     * @return array
+     */
+    private function getPagingParams($pagingScope)
+    {
+        list($pagingParams, $scopeKey) = explode('.', $pagingScope);
+        $params = $this->getController()->Prefs->getPagingAttrs($pagingParams);
+        $params['scope'] = $scopeKey;
+        return $params;
     }
 
 }
