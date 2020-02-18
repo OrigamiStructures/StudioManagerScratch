@@ -297,8 +297,7 @@ class CardFileController extends AppController {
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->loadComponent('Index');
-        $this->Index->build(
+        $this->Paginator->index(
             $seedIdQuery,
             'FatGenericCards.identity',
             'people.index'
@@ -310,7 +309,6 @@ class CardFileController extends AppController {
      */
     public function organizations()
     {
-        $this->loadComponent('Index');
         $OrganizationCards = TableRegistry::getTableLocator()->get('OrganizationCards');
 
         /* @todo make this a finder call that is aware of shares */
@@ -318,9 +316,9 @@ class CardFileController extends AppController {
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Index->build(
+        $this->Paginator->index(
             $seedIdQuery,
-            'OrganizationCardsidentity',
+            'OrganizationCards.identity',
             'organization.index'
         );
     }
@@ -329,7 +327,6 @@ class CardFileController extends AppController {
      * Index page filtered to Grouping/Category Cards
      */
     public function groups() {
-        $this->loadComponent('Index');
         /* @var CategoryCardsTable $CategoryCards */
 
         /* @todo make this a finder call that is aware of shares */
@@ -338,7 +335,7 @@ class CardFileController extends AppController {
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Index->build(
+        $this->Paginator->index(
             $seedIdQuery,
             'CategoryCards.identity',
             'category.index'
@@ -350,14 +347,13 @@ class CardFileController extends AppController {
      */
     public function people()
     {
-        $this->loadComponent('Index');
         //Get the seed ids
         /* @todo make this a finder call that is aware of shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Index->build(
+        $this->Paginator->index(
             $seedIdQuery,
             'PersonCards.identity',
             'people.index'
@@ -373,7 +369,6 @@ class CardFileController extends AppController {
         if(!$this->currentUser()->isSuperuser()) {
             $this->redirect('/pages/no_access');
         }
-        $this->loadComponent('Index');
         $Users = TableRegistry::getTableLocator()->get('Users');
         $PersonCards = TableRegistry::getTableLocator()->get('PersonCards');
         /* @var UsersTable $Users */
@@ -387,7 +382,7 @@ class CardFileController extends AppController {
             ['valueField' => 'id'])
             ->where(['id IN' => $userIdentities->toArray()]);
 
-        $this->Index->build(
+        $this->Paginator->index(
             $seedIdQuery,
             'PersonCards.identity',
             'people.index'
@@ -527,8 +522,7 @@ class CardFileController extends AppController {
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->loadComponent('Index');
-        $this->Index->block(
+        $this->Paginator->block(
             $seedIdQuery,
             'FatGenericCards.identity',
             'people.member_candidate'
