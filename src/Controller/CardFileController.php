@@ -1,30 +1,22 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\Component\IndexComponent;
 use App\Controller\Component\PreferencesComponent;
 use App\Exception\UnknownMemberTypeException;
 use App\Constants\MemCon;
-use App\Constants\PrefCon;
 use App\Form\CardfileFilter;
-use App\Lib\Wildcard;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
 use App\Model\Entity\Share;
-use App\Model\Lib\Layer;
-use App\Model\Table\ArtStacksTable;
 use App\Model\Table\CategoryCardsTable;
 use App\Model\Table\IdentitiesTable;
-use App\Model\Table\ManifestsTable;
 use App\Model\Table\PersonCardsTable;
 use App\Model\Table\RolodexCardsTable;
 use App\Model\Table\UsersTable;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use App\Model\Entity\PersonCard;
-use App\Model\Lib\StackSet;
-use Cake\View\ViewBuilder;
 use Cake\Http\Exception\NotFoundException;
 
 /**
