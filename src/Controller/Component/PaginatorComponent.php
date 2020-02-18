@@ -49,16 +49,15 @@ class PaginatorComponent extends CorePaginator
         if ($lastPage > 1) {
             $qParams[$scope]['page'] = $lastPage;
         } else {
-            unset($qParams[$scope]);
+            unset($qParams[$scope]['page']);
         }
-        $url = [
+
+        $this->Flash->error("Redirected to page $lastPage. Page $reqPage did not exist.");
+        return [
             'controller' => $this->getController()->getRequest()->getParam('controller'),
             'action' => $this->getController()->getRequest()->getParam('action'),
             '?' => $qParams
         ];
-        osd($url);
-        $this->Flash->error("Redirected to page $lastPage. Page $reqPage did not exist.");
-        return $url;
     }
 
     /**
@@ -72,6 +71,7 @@ class PaginatorComponent extends CorePaginator
             if ($block['scope'] == $scope) {
                 $result = $block;
             }
+            return $result;
         }, []);
 
         return $block;
@@ -83,8 +83,8 @@ class PaginatorComponent extends CorePaginator
      */
     public function index($seedQuery, $seedTarget, $pagingScope)
     {
-        $this->block($seedQuery, $seedTarget, $pagingScope);
         $this->getController()->viewBuilder()->setLayout('index');
+        return $this->block($seedQuery, $seedTarget, $pagingScope);
     }
 
     /**
@@ -108,13 +108,15 @@ class PaginatorComponent extends CorePaginator
                 $pagingParams
             );
         } catch (NotFoundException $e) {
-            return $this->getController()->redirect(
+            return /*$this->getController()->redirect(*/
                 $this->showLastPage($pagingParams['scope'])
-            );
+            /*)*/;
         }
 
         $this->getController()->set('stackSet', $stackSet);
         $this->getController()->set('indexModel', $stackSet->getPaginatedTableName());
+
+        return true;
     }
 
     /**

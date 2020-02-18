@@ -289,11 +289,15 @@ class CardFileController extends AppController {
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Paginator->index(
+        $result = $this->Paginator->index(
             $seedIdQuery,
             'FatGenericCards.identity',
             'people.index'
         );
+        if (is_array($result)) {
+            //page was out of scope. render last page instead
+            return $this->redirect($result);
+        }
     }
 
     /**
@@ -308,11 +312,15 @@ class CardFileController extends AppController {
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Paginator->index(
+        $result = $this->Paginator->index(
             $seedIdQuery,
             'OrganizationCards.identity',
             'organization.index'
         );
+        if (is_array($result)) {
+            //page was out of scope. render last page instead
+            return $this->redirect($result);
+        }
     }
 
     /**
@@ -327,11 +335,15 @@ class CardFileController extends AppController {
             ->Identities->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Paginator->index(
+        $result = $this->Paginator->index(
             $seedIdQuery,
             'CategoryCards.identity',
             'category.index'
         );
+        if (is_array($result)) {
+            //page was out of scope. render last page instead
+            return $this->redirect($result);
+        }
     }
 
     /**
@@ -339,17 +351,22 @@ class CardFileController extends AppController {
      */
     public function people()
     {
+//        osd($this->request->getUri(),'entering people');
         //Get the seed ids
         /* @todo make this a finder call that is aware of shares */
         $seedIdQuery = $this->IdentitiesTable()->find('list',
             ['valueField' => 'id'])
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Paginator->index(
+        $result = $this->Paginator->index(
             $seedIdQuery,
             'PersonCards.identity',
             'people.index'
         );
+        if (is_array($result)) {
+            //page was out of scope. render last page instead
+            return $this->redirect($result);
+        }
         $this->render('index');
     }
 
@@ -374,11 +391,15 @@ class CardFileController extends AppController {
             ['valueField' => 'id'])
             ->where(['id IN' => $userIdentities->toArray()]);
 
-        $this->Paginator->index(
+        $result = $this->Paginator->index(
             $seedIdQuery,
             'PersonCards.identity',
             'people.index'
         );
+        if (is_array($result)) {
+            //page was out of scope. render last page instead
+            return $this->redirect($result);
+        }
     }
 
     //</editor-fold>
