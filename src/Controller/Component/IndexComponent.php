@@ -86,9 +86,13 @@ class IndexComponent extends Component
     /**
      * Get current prefs-settings for 'paging' and add a scope key to it
      *
-     * This allows the choice of a 'preferences' package of pagination settings
-     * and lets the call name the scope so multiple paginated data sets can
-     * co-exist in views.
+     * The `pagingParms` key must name one of the Preferences schema json
+     * blocks that define a user customizable paging config block.
+     *
+     * The `scopeKey` can be any string you want to identify the role of
+     * the paginated records. It will show up in the query params of the url.
+     * If you set it to 'member_candidate' your urls would like like this:
+     * `clearstudio.com/cardfile/view/19?member_candidate[page]=4`
      *
      * @param $pagingScope string A 'pagingParams.scopeKey' to us for pagination
      * @return array
