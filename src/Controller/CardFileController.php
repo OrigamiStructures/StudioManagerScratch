@@ -274,16 +274,7 @@ class CardFileController extends AppController {
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
         } elseif ($rolodexCard->isCategory()) {
-            $seedIdQuery = $this->IdentitiesTable()->find('list')
-                ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
-
-            $this->loadComponent('Index');
-            $this->Index->block(
-                $seedIdQuery,
-                'PersonCards.identity',
-                'people.share_candidate'
-            );
-            $this->render('category');
+            $this->category();
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('organization');
         } else {
@@ -529,6 +520,20 @@ class CardFileController extends AppController {
                 throw new UnknownMemberTypeException($msg);
                 break;
         }
+    }
+
+    protected function category(): void
+    {
+        $seedIdQuery = $this->IdentitiesTable()->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        $this->loadComponent('Index');
+        $this->Index->block(
+            $seedIdQuery,
+            'FatGenericCards.identity',
+            'people.member_candidate'
+        );
+        $this->render('category');
     }
 
 }
