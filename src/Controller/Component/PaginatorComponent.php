@@ -21,15 +21,15 @@ class PaginatorComponent extends CorePaginator
      *
      * @return array $url the params to re-render the page
      */
-    public function showLastPage()
+    public function showLastPage($scope)
     {
         $qParams = $this->getController()->getRequest()->getQueryParams();
-        $reqPage = $qParams['page'];
-        $lastPage = $this->getController()->getRequest()->getParam('paging')['Identities']['pageCount'];
+        $reqPage = $qParams[$scope]['page'];
+        $lastPage = $this->getScopesBlock($scope)['pageCount'];
         if ($lastPage > 1) {
-            $qParams['page'] = $lastPage;
+            $qParams[$scope]['page'] = $lastPage;
         } else {
-            unset($qParams['page']);
+            unset($qParams[$scope]['page']);
         }
         $url = [
             'controller' => $this->getController()->getRequest()->getParam('controller'),
@@ -40,5 +40,19 @@ class PaginatorComponent extends CorePaginator
         return $url;
     }
 
+    /**
+     * @param $scope
+     * @return array
+     */
+    private function getScopesBlock($scope)
+    {
+        $blocks = collection($this->getController()->getRequest()->getParam('paging'));
+        $block = $blocks->reduce(function ($result, $block, $key) use ($scope) {
+            if ($block['scope'] == $scope) {
+                $result = $block;
+            }
+        }, []);
 
+        return $block;
+    }
 }
