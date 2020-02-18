@@ -274,8 +274,15 @@ class CardFileController extends AppController {
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
         } elseif ($rolodexCard->isCategory()) {
-            $this->index();
-//            $this->viewBuilder()->setLayout('default');
+            $seedIdQuery = $this->IdentitiesTable()->find('list')
+                ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+            $this->loadComponent('Index');
+            $this->Index->block(
+                $seedIdQuery,
+                'PersonCards.identity',
+                'people.share_candidate'
+            );
             $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('organization');
@@ -302,9 +309,8 @@ class CardFileController extends AppController {
         $this->loadComponent('Index');
         $this->Index->build(
             $seedIdQuery,
-            'identity',
-            'FatGenericCards',
-            'people'
+            'FatGenericCards.identity',
+            'people.index'
         );
     }
 
@@ -323,9 +329,8 @@ class CardFileController extends AppController {
 
         $this->Index->build(
             $seedIdQuery,
-            'identity',
-            'OrganizationCards',
-            'organization'
+            'OrganizationCardsidentity',
+            'organization.index'
         );
     }
 
@@ -344,9 +349,8 @@ class CardFileController extends AppController {
 
         $this->Index->build(
             $seedIdQuery,
-            'identity',
-            'CategoryCards',
-            'category'
+            'CategoryCards.identity',
+            'category.index'
         );
     }
 
@@ -364,9 +368,8 @@ class CardFileController extends AppController {
 
         $this->Index->build(
             $seedIdQuery,
-            'identity',
-            'PersonCards',
-            'people'
+            'PersonCards.identity',
+            'people.index'
         );
         $this->render('index');
     }
@@ -395,9 +398,8 @@ class CardFileController extends AppController {
 
         $this->Index->build(
             $seedIdQuery,
-            'identity',
-            'PersonCards',
-            'people'
+            'PersonCards.identity',
+            'people.index'
         );
     }
 
