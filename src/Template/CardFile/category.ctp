@@ -43,7 +43,7 @@ if (!$personCard->hasMembers()) {
     echo '</ul>';
 }
 
-echo $this->element('Common/pagination_bar', ['paginated_model' => $indexModel]);
+echo $this->element('Common/pagination_bar');
 foreach ($stackSet->getData() as $id => $candidate) {
 //    osd($candidate);
     $isMember = count(
@@ -74,7 +74,7 @@ if (!$personCard->hasPermittedManagers()) {
     }
     echo '</ul>';
 }
-echo $this->element('Common/pagination_bar', ['paginated_model' => $indexModel]);
+echo $this->element('Common/pagination_bar');
 foreach ($share_candidate->getData() as $id => $candidate) {
 //    osd($candidate);
     $isMember = count(

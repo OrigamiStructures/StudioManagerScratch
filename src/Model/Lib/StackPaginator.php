@@ -2,6 +2,7 @@
 namespace App\Model\Lib;
 
 use Cake\Datasource\Paginator;
+use Cake\ORM\Query;
 
 /**
  * StackPaginator
@@ -22,6 +23,10 @@ class StackPaginator extends Paginator {
 	 * created part way through stack assembly. Sending the pagination
 	 * processes in as a callable allows it to be on the scene for this
 	 * mid-stream use.
+     *
+     * Adjustments are made to the pagingParams.
+     * Repository-keyed sets are converted to scope-keyed sets so that
+     * multiple independent sets from a single Table are possible.
 	 *
 	 * @todo Does this method have to do any additional work to make
 	 *		 $params and $settings work properly?
@@ -34,21 +39,28 @@ class StackPaginator extends Paginator {
     public function paginate($findStackCallable, array $params = [], array $settings = []) {
 
 		$paginatorCallable = function($query) use ($params, $settings) {
-			return parent::paginate($query, $params, $settings);
+		    /*
+		     * $query is lost by paginate() so we need to read repository
+		     * name first for the params fix later
+		     */
+            $alias = $query->getRepository()->getAlias();
+			$result = parent::paginate($query, $params, $settings);
+			/*
+			 * Paging params are stored by Repository alias. Since our's are
+			 * locked in by the stack structure, we need a new name to keep separate
+			 * sets on their own paging scheme when they are also from the same
+			 * repository. So we migrate the data block onto a key = to the scope key.
+			 * Scope is the query key for the page so this makes sense and works.
+			 *
+			 * The block is added to the request by some other code.
+			 * debug $this->request->getParam('paging') to see the result
+			 */
+            $scope = $this->_pagingParams[$alias]['scope'];
+			$this->_pagingParams = [$scope => $this->_pagingParams[$alias]];
+			return $result;
 		};
 
 		return $findStackCallable($paginatorCallable);
-
-//		list($table, $Ids) = $object->distill($settings['seed'], $settings['ids']);
-//		$query = $table->find('all')->where(['id IN' => $Ids]);
-//
-//		$result = parent::paginate($query, $params, $settings);
-//
-//		$IDs = $result->reduce(function($accum, $entity) {
-//			$accum[] = $entity->id;
-//			return $accum;
-//		}, []);
-//		return $object->stacksFromRoot($Ds);
     }
 
 }

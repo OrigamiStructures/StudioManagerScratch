@@ -122,7 +122,7 @@ class PaginatorComponent extends CorePaginator
         }
 
         $this->getController()->set($varName, $stackSet);
-        $this->getController()->set('indexModel', $stackSet->getPaginatedTableName());
+        $this->getController()->set('pagingScope', $pagingParams['scope']);
 
         return true;
     }
