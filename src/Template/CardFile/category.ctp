@@ -43,9 +43,8 @@ if (!$personCard->hasMembers()) {
     echo '</ul>';
 }
 
-echo $this->element('Common/pagination_bar');
-foreach ($stackSet->getData() as $id => $candidate) {
-//    osd($candidate);
+echo $this->element('Common/pagination_bar', ['pagingScope' => 'member_candidate']);
+foreach ($member_candidate->getData() as $id => $candidate) {
     $isMember = count(
         $candidate->getLayer('memberships')
         ->find()
@@ -74,7 +73,7 @@ if (!$personCard->hasPermittedManagers()) {
     }
     echo '</ul>';
 }
-echo $this->element('Common/pagination_bar');
+echo $this->element('Common/pagination_bar', ['pagingScope' => 'share_candidate']);
 foreach ($share_candidate->getData() as $id => $candidate) {
 //    osd($candidate);
     $isMember = count(

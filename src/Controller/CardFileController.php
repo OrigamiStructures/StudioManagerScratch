@@ -267,7 +267,11 @@ class CardFileController extends AppController implements FilteringInterface {
         } elseif ($rolodexCard->isPerson()) {
             $this->render('view');
         } elseif ($rolodexCard->isCategory()) {
-            $this->category();
+            $result = $this->category();
+            if (is_array($result)) {
+                return $this->redirect($result);
+            }
+            $this->render('category');
         } elseif ($rolodexCard->isOrganization()) {
             $this->render('organization');
         } else {
@@ -531,26 +535,36 @@ class CardFileController extends AppController implements FilteringInterface {
         }
     }
 
-    protected function category(): void
+    protected function category()
     {
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Paginator->block(
+        $memberResults = $this->Paginator->block(
             $seedIdQuery,
             'FatGenericCards.identity',
-            'people.member_candidate'
+            'people.member_candidate',
+            'member_candidate'
         );
         $seedIdQuery = $this->IdentitiesTable()->find('list')
             ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $this->Paginator->block(
+        $shareResults = $this->Paginator->block(
             $seedIdQuery,
             'FatGenericCards.identity',
             'people.share_candidate',
             'share_candidate'
         );
-        $this->render('category');
+
+        if (is_array($memberResults) || is_array($shareResults)) {
+            $memberResults = $memberResults === true ? [] : $memberResults;
+            $shareResults = $shareResults === true ? [] : $shareResults;
+            $results = array_merge([$this->request->getParam('pass.0')], $memberResults, $shareResults);
+            return $results;
+
+        }
+        return true;
+
     }
 
 }
