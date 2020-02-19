@@ -409,16 +409,16 @@ class CardFileController extends AppController implements FilteringInterface {
     //<editor-fold desc="********** Index Search Filter Tools">
 
     /**
-     * Add user search to index pages
+     * Add user search to paginated results
      *
      * This method both prepares the values for the form that
      * is displayed and applies current or save filter requests
-     * to the evoloving index page query.
+     * to the evoloving paginated query.
      *
      * @param $query
      * @return Query
      */
-    public function userFilter($query)
+    public function userFilter($query) : Query
     {
         if ($this->request->is('post') || $this->request->is('put')) {
 

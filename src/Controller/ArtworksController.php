@@ -2,10 +2,12 @@
 namespace App\Controller;
 
 use App\Form\ArtworkFilter;
+use App\Interfaces\FilteringInterface;
 use App\Lib\RequestUtility;
 use App\Model\Lib\StackSet;
 use App\Model\Table\ArtStacksTable;
 use Cake\ORM\Entity;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Model\Lib\Layer;
@@ -17,7 +19,7 @@ use \Cake\Network\Exception\NotFoundException;
  *
  * @property ArtworksTable $Artworks
  */
-class ArtworksController extends AppController
+class ArtworksController extends AppController implements FilteringInterface
 {
 
     use ArtReviewTrait;
@@ -185,14 +187,14 @@ class ArtworksController extends AppController
 
         $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
         $this->viewBuilder()->setLayout('index');
-        $this->userFilter();
+//        $this->userFilter();
 
         $this->set('Prefs', $Prefs);
         $this->set('results', $results);
         $this->set('indexModel', $results->getPaginatedTableName());
     }
 
-    public function userFilter()
+    public function userFilter(Query $query) : Query
     {
         $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
         $artworkSchema = new ArtworkFilter();
