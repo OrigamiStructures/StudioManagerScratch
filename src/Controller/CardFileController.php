@@ -541,6 +541,15 @@ class CardFileController extends AppController implements FilteringInterface {
             'FatGenericCards.identity',
             'people.member_candidate'
         );
+        $seedIdQuery = $this->IdentitiesTable()->find('list')
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
+
+        $this->Paginator->block(
+            $seedIdQuery,
+            'FatGenericCards.identity',
+            'people.share_candidate',
+            'share_candidate'
+        );
         $this->render('category');
     }
 

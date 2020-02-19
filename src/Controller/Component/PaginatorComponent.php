@@ -89,7 +89,7 @@ class PaginatorComponent extends CorePaginator
      *
      * @return \Cake\Http\Response|null
      */
-    public function index($seedQuery, $seedTarget, $pagingScope)
+    public function index($seedQuery, $seedTarget, $pagingScope, $varName = 'stackSet')
     {
         $this->getController()->viewBuilder()->setLayout('index');
         return $this->block($seedQuery, $seedTarget, $pagingScope);
@@ -102,7 +102,7 @@ class PaginatorComponent extends CorePaginator
      * @param $seedTarget string The 'TableAlias.seedName' for the stack query
      * @param $pagingScope string The 'pagingParams.scopeKey' to us for pagination
      */
-    public function block($seedQuery, $seedTarget, $pagingScope) {
+    public function block($seedQuery, $seedTarget, $pagingScope, $varName = 'stackSet') {
 
         list($StackTable, $seedName) = $this->parseTarget($seedTarget);
         $pagingParams = $this->getPagingParams($pagingScope);
@@ -121,7 +121,7 @@ class PaginatorComponent extends CorePaginator
             /*)*/;
         }
 
-        $this->getController()->set('stackSet', $stackSet);
+        $this->getController()->set($varName, $stackSet);
         $this->getController()->set('indexModel', $stackSet->getPaginatedTableName());
 
         return true;
