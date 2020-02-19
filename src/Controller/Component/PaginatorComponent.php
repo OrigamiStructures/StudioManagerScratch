@@ -3,6 +3,8 @@
 
 namespace App\Controller\Component;
 
+use App\Exception\BadClassConfigurationException;
+use App\Interfaces\FilteringInterface;
 use App\Model\Table\StacksTable;
 use Cake\Controller\Component\PaginatorComponent as CorePaginator;
 use Cake\Controller\ComponentRegistry;
@@ -34,6 +36,12 @@ class PaginatorComponent extends CorePaginator
     public function initialize(array $config)
     {
         parent::initialize($config);
+        $interfaces = class_implements($this->getController());
+        if (!$interfaces || !in_array('App\Interfaces\FilteringInterface', $interfaces)) {
+            $message = (get_class($this->getController())) . ' must implement FilteringInterface '
+            . 'to work with the Pagination component.';
+            throw new BadClassConfigurationException($message);
+        }
     }
 
     /**

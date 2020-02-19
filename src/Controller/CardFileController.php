@@ -5,6 +5,7 @@ use App\Controller\Component\PreferencesComponent;
 use App\Exception\UnknownMemberTypeException;
 use App\Constants\MemCon;
 use App\Form\CardfileFilter;
+use App\Interfaces\FilteringInterface;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
@@ -37,7 +38,7 @@ use Cake\Http\Exception\NotFoundException;
  * @property PreferencesComponent $Preferences
  * @property IndexComponent $Index
  */
-class CardFileController extends AppController {
+class CardFileController extends AppController implements FilteringInterface {
 
     /**
      * Pagination Component defaults
