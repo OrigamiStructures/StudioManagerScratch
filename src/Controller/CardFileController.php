@@ -546,25 +546,21 @@ class CardFileController extends AppController implements FilteringInterface {
             'people.member_candidate',
             'member_candidate'
         );
-        $seedIdQuery = $this->IdentitiesTable()->find('list')
-            ->where(['user_id' => $this->contextUser()->getId('supervisor')]);
 
-        $shareResults = $this->Paginator->block(
-            $seedIdQuery,
-            'FatGenericCards.identity',
-            'people.share_candidate',
-            'share_candidate'
-        );
+        $manifests = collection($this->contextUser->getSupervisorsManagers()->toArray());
+        $managers = $manifests->reduce(function($accum, $entity, $id) {
+                $accum[$entity->getMemberId('manager')] = $entity->getName('manager');
+                return $accum;
+            }, []);
 
-        if (is_array($memberResults) || is_array($shareResults)) {
-            $memberResults = $memberResults === true ? [] : $memberResults;
-            $shareResults = $shareResults === true ? [] : $shareResults;
-            $results = array_merge([$this->request->getParam('pass.0')], $memberResults, $shareResults);
+        $this->set('managers', $managers);
+
+        if (is_array($memberResults)) {
+            $results = array_merge([$this->request->getParam('pass.0')], $memberResults);
             return $results;
 
         }
         return true;
-
     }
 
 }
