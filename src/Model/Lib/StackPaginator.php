@@ -57,10 +57,39 @@ class StackPaginator extends Paginator {
 			 */
             $scope = $this->_pagingParams[$alias]['scope'];
 			$this->_pagingParams = [$scope => $this->_pagingParams[$alias]];
-			return $result;
+            return $result;
 		};
 
-		return $findStackCallable($paginatorCallable);
+        /**
+         * @todo Exteded pagination: Explanation follows in comment
+         * Go through the stacks and paginate each of their layers as appropriate.
+         *
+         * We can add new paging blocks for each layer case. There is a question though:
+         * when a user pages through a layer, do we let that layer in each stack page
+         * in synch? or do we page each individually?
+         * If done individually, we need a new scoped paging block for each or a
+         * way to track the desired page in each layer somehow; stepping outside the
+         * established request-param method.
+         * example/index?index[page]=2&piece[page]=id55-2+id671-3
+         * example/index?index[page]=2&layer[piece]=id55-2+id671-3
+         * We'd have to modify the Pagination helper to create these new query args
+         *
+         * Looks like making a new query arg pattern would take study. But running
+         * all the layers in synch will not work because they won't all have the same
+         * number of pages. So, who would determine the correct settings for the block?
+         *
+         * It should not be hard to id the scopes and let each run independently. It just
+         * means the url query params could grow long and the paging arrays in the
+         * request would be large
+         * example/index?index[page]=2&piece55[page]=2&piece671[page]=3
+         * Additionally, if we use ajax to load page fragments, we'll have to write
+         * js page update routines to fix any pagination tool blocks so they know the
+         * new query args an don't restore some old page state when used.
+         */
+		$result = $findStackCallable($paginatorCallable);
+//		$this->_pagingParams['newScope' . $entity->rootId()] = ['block' => 'of', 'paging' => 'data'];
+//		osd($this->_pagingParams, 'paging prams after callable');
+		return $result;
     }
 
 }
