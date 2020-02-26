@@ -69,13 +69,8 @@ The code:
 ```php
 // in a controller
 
-    //$stackCall will be waiting for $paginator (callable)
-    $stackCall = function($paginator) use ($PersonCards, $ids) {
-        return $PersonCards->find(
-                'stacksFor',
-                ['seed' => 'identity', 'ids' => $ids, 'paginator' => $paginator]
-            );
-    };
+    //We have a special paginating stack call that handles everything
+    $stackSet = $PersonCards->pageFor('identity', $ids);
 
     //this reaches the Component, but that will pass things on to the datasource
     $results = $this->paginate($stackCall);
