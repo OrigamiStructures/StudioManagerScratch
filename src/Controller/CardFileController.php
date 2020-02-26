@@ -424,9 +424,10 @@ class CardFileController extends AppController implements FilteringInterface {
      */
     public function userFilter($query) : Query
     {
+        //the modelless form object
+        $filter = new CardfileFilter();
         if ($this->request->is('post') || $this->request->is('put')) {
 
-            $filter = new CardfileFilter();
             $whereThis = $filter->execute($this->request->getData());
 
             $query->where($whereThis);
