@@ -4,6 +4,7 @@
 namespace App\Lib;
 
 
+use App\Exception\UnknownPreferenceKeyException;
 use App\Form\PreferencesForm;
 use App\Model\Entity\Preference;
 use Cake\Form\Form;
@@ -29,6 +30,20 @@ class PrefsBase
         $this->form = $form;
         $this->form->Prefs = $this;
         return $this;
+    }
+
+    /**
+     * @param $path
+     * @return mixed
+     * @throws \BadMethodCallException
+     */
+    public function for($path)
+    {
+        try {
+            return $this->getEntity()->for($path);
+        } catch (UnknownPreferenceKeyException $e) {
+            throw $e;
+        }
     }
 
     /**

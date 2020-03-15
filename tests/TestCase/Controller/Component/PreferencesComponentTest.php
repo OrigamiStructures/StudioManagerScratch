@@ -54,6 +54,7 @@ class PreferencesComponentTest extends TestCase
     public function tearDown()
     {
         unset($this->Component);
+        unset($this->controller);
 
         parent::tearDown();
     }
@@ -61,7 +62,7 @@ class PreferencesComponentTest extends TestCase
     public function mockPrefsTable()
     {
         $tableMock = $this->getMockForModel('Preferences', ['save']);
-        $tableMock->expects($this->once())->method('save')->willReturn(false);
+        $tableMock->expects($this->any())->method('save')->willReturn(false);
         TableRegistry::getTableLocator()->set('Preferences', $tableMock);
     }
 
@@ -100,10 +101,10 @@ class PreferencesComponentTest extends TestCase
     {
         $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
         $post = [
-            'pagination' => [
-                'limit' => '15',
-                'sort' => [
-                    'people' => 'last_name'
+            'paging' => [
+                'people' => [
+                    'sort' => 'last_name',
+                    'limit' => '15',
                 ]
             ],
             'id' => $user_id
@@ -125,12 +126,12 @@ class PreferencesComponentTest extends TestCase
 
         $changedPrefs = $this->Component->getPrefs($user_id)->getEntity();
 
-        $this->assertEquals(15, $changedPrefs->for('pagination.limit'),
+        $this->assertEquals(15, $changedPrefs->for('paging.people.limit'),
             'A new user variant value was not set to the prefs list');
-        $this->assertEquals('last_name', $changedPrefs->for('pagination.sort.people'),
+        $this->assertEquals('last_name', $changedPrefs->for('paging.people.sort'),
             'User variant did not become default value as requested in post');
 
-        $this->assertEquals(null, $changedPrefs->getVariant('pagination.sort.people'),
+        $this->assertEquals(null, $changedPrefs->getVariant('paging.people.sort'),
             'although the pref is set to default it still appears in list of variants');
     }
 
@@ -146,10 +147,12 @@ class PreferencesComponentTest extends TestCase
     {
         $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
         $post = [
-            'pagination' => [
-                'limit' => '10',
-                'sort' => [
-                    'people' => 'last_name'
+            'paging' => [
+                'common' => [
+                    'limit' => '10',
+                ],
+                'people' => [
+                    'sort' => 'last_name'
                 ],
                 'non_schema' => 'value'
             ],
@@ -172,6 +175,7 @@ class PreferencesComponentTest extends TestCase
         $this->Component->setPrefs();
 
         $changedPrefs = $this->Component->getPrefs($user_id)->getEntity();
+//        debug($changedPrefs->getVariants());
 
         $this->assertEmpty($changedPrefs->getVariants(),
             'unexpected values are listed in the prefs.');
@@ -189,10 +193,10 @@ class PreferencesComponentTest extends TestCase
     {
         $user_id = 'AA074ebc-758b-4729-91f3-bcd65e51ace4';
         $post = [
-            'pagination' => [
-                'limit' => '10',
-                'sort' => [
-                    'people' => 'last_name'
+            'paging' => [
+                'people' => [
+                    'sort' => 'last_name',
+                    'limit' => '15',
                 ]
             ],
             'id' => $user_id

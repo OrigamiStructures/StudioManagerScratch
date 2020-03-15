@@ -16,7 +16,7 @@ class PreferencesController extends AppController
      */
     public function setPrefs()
     {
-        if (!$this->getRequest()->is('post') && !$this->getRequest()->is('put'))
+        if (!$this->getRequest()->is(['post', 'patch', 'put']))
         {
             $msg = __("Preferences can only be changed through POST or PUT");
             throw new BadPrefsImplementationException($msg);

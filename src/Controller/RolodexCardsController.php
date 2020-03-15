@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Exception\BadMemberRecordType;
+use App\Exception\UnknownMemberTypeException;
 use App\Model\Entity\Member;
 use App\Model\Entity\RolodexCard;
 use App\Model\Entity\Manifest;
@@ -109,7 +109,7 @@ class RolodexCardsController extends AppController {
 
             default:
                 $msg = "The requested record was of unknown type: {$member->type()}";
-                throw new BadMemberRecordType($msg);
+                throw new UnknownMemberTypeException($msg);
                 break;
         }
 
