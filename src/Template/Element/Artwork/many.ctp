@@ -5,10 +5,13 @@
 // //echo $this->Paginator->counter();
 //echo $this->Paginator->numbers();
 
+/* @var \App\View\AppView $this */
+
 /* @var \App\Model\Lib\StackSet $artworks */
 /* @var \App\Model\Entity\ArtStack $artwork */
 
 foreach ($artworks->getData() as $artwork_index => $artwork){
+    /* @var \App\Model\Entity\ArtStack $artwork */
 
 	echo $this->Html->tag('h1',$artwork->title());
 	echo $this->Html->para(null, $artwork->description());

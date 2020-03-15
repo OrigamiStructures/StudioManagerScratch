@@ -220,7 +220,8 @@ class ManifestsTable extends AppTable{
     /**
      * Add names to manifests so that the layer can be more useful in the stacks
      *
-     * @param $array The manifests ready for storage as a layer
+     * @param $query Query
+     * @return $array The manifests ready for storage as a layer
      */
     public function configureLinkLayer($query) {
         $query = $query->contain(['Supervisor', 'Manager', 'Artist']);

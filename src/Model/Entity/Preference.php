@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use App\Exception\BadClassConfigurationException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
-use http\Exception\BadMethodCallException;
+use App\Exception\UnknownPreferenceKeyException;
 
 /**
  * Preference Entity
@@ -52,7 +52,7 @@ class Preference extends Entity
      * @param $path
      * @return mixed
      * @throws BadClassConfigurationException
-     * @throws \BadMethodCallException
+     * @throws UnknownPreferenceKeyException
      */
     public function for($path)
     {
@@ -60,7 +60,7 @@ class Preference extends Entity
         $setting = Hash::get($this->prefs ?? [], $path) ?? $this->defaults[$path];
         if (is_null($setting)) {
             $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
-            throw new BadMethodCallException($msg);
+            throw new UnknownPreferenceKeyException($msg);
         }
         return $setting;
     }

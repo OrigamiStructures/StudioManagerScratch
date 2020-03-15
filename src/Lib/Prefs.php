@@ -7,7 +7,7 @@ namespace App\Lib;
 use App\Exception\BadClassConfigurationException;
 use App\Form\PreferencesForm;
 use App\Model\Entity\Preference;
-use App\Lib\PrefCon;
+use App\Constants\PrefCon;
 use http\Exception\BadQueryStringException;
 
 class Prefs extends PrefsBase
@@ -19,9 +19,13 @@ class Prefs extends PrefsBase
         parent::__construct($entity, $form);
     }
 
-    public function for($path)
+    public function pagingFor($type)
     {
-        return $this->getEntity()->for($path);
+            $paging = array_merge(
+                $this->for('paging.general'),
+                $this->for("pagining.$type")
+            );
+        return $paging;
     }
 
 

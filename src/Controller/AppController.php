@@ -14,12 +14,15 @@
  */
 namespace App\Controller;
 
+use App\Controller\Component\PreferencesComponent;
+use App\Lib\Prefs;
 use App\Model\Lib\ContextUser;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use App\Model\Table\CSTableLocator;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use App\Controller\Component\PieceAllocationComponent;
 use Cake\Cache\Cache;
@@ -45,6 +48,8 @@ use App\Model\Lib\CurrentUser;
  * will inherit them.
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
+ *
+ * @property PreferencesComponent $Preferences
  */
 class AppController extends Controller
 {
@@ -54,6 +59,11 @@ class AppController extends Controller
      * @var ContextUser $contextUser
      */
 	protected $contextUser;
+
+    /**
+     * @var Prefs
+     */
+	protected $Prefs;
 
 	public function __construct(
 	    ServerRequest $request = null,
@@ -79,11 +89,16 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler', ['enableBeforeRedirect' => false]);
         $this->loadComponent('Flash');
         $this->loadComponent('CakeDC/Users.UsersAuth');
-		$this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
         $this->loadComponent('Security');
 		if($this->Auth->isAuthorized()){
             $this->overrideTableLocator();
+            $this->loadComponent('Paginator', ['paginator' => new StackPaginator()]);
+            $this->loadComponent('Preferences');
+            $this->Prefs = $this->Preferences->
+                getPrefs($this->contextUser()->getId('supervisor'));
+            $this->set('Prefs', $this->Prefs);
             $this->set('contextUser', $this->contextUser());
+
         }
 		$this->RequestHandler;
 	}
@@ -160,6 +175,28 @@ class AppController extends Controller
         }
     }
 
+    /**
+     * Create the paginated-index-page ecosystem
+     *
+     * @param $seedQuery Query
+     * @param $config array
+     */
+    protected function _index($seedQuery, $config) : void
+    {
+        $this->_list($seedQuery, $config);
+    }
+
+    /**
+     * Create the paginated-data-set ecosystem
+     *
+     * @param $seedQuery Query
+     * @param $config array
+     */
+    protected function _list($seedQuery, $config) : void
+    {
+        $this->userFilter($seedQuery);
+
+    }
     /**
      * Support logic-based referer to suppliment standard request->referer
      *

@@ -210,6 +210,40 @@ class MembersFixture extends TestFixture
                 'manager_id' => '708cfc57-1162-4c5b-9092-42c25da131a9'
 
             ],
+            [
+                'id' => 76,
+                'created' => '2016-03-21 18:14:52',
+                'modified' => '2016-08-22 19:23:46',
+                'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'image_id' => null,
+                'first_name' => 'Leos Shared 1',
+                'last_name' => 'Leos Shared 1',
+                'member_type' => 'Category',
+                'active' => false,
+                'disposition_count' => 0,
+                'collector' => 0,
+                'is_artist' => true,
+                'supervisor_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'manager_id' => '708cfc57-1162-4c5b-9092-42c25da131a9'
+
+            ],
+            [
+                'id' => 77,
+                'created' => '2016-03-21 18:14:52',
+                'modified' => '2016-08-22 19:23:46',
+                'user_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'image_id' => null,
+                'first_name' => 'Leos Shared 1',
+                'last_name' => 'Leos Shared 1',
+                'member_type' => 'Category',
+                'active' => false,
+                'disposition_count' => 0,
+                'collector' => 0,
+                'is_artist' => true,
+                'supervisor_id' => '708cfc57-1162-4c5b-9092-42c25da131a9',
+                'manager_id' => '708cfc57-1162-4c5b-9092-42c25da131a9'
+
+            ],
         ];
         parent::init();
     }

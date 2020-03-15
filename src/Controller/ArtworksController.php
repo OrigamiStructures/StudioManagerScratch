@@ -1,9 +1,11 @@
 <?php
 namespace App\Controller;
 
+use App\Form\ArtworkFilter;
 use App\Lib\RequestUtility;
 use App\Model\Lib\StackSet;
 use App\Model\Table\ArtStacksTable;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use App\Lib\Traits\ArtReviewTrait;
 use App\Model\Lib\Layer;
@@ -20,7 +22,7 @@ class ArtworksController extends AppController
 
     use ArtReviewTrait;
 
-    public $components = ['Layers'];
+    public $components = ['Layers', 'Preferences'];
 
     public $ArtworkStack;
     public $Layers;
@@ -167,15 +169,35 @@ class ArtworksController extends AppController
         $artistIds = $supervisorCard
             ->getLayer('manifests')
             ->toDistinctList('member_id');
+
         $works = $this->Artworks->find('list')
-            ->where(['member_id IN' => $artistIds])
+            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
             ->toArray();
-//        osd($ids);die;
-//        $realIds = array_keys($ids);
-        $results = $ArtStacks->stacksFor('artworks', array_keys($works));
+
+        /* @var StackSet $results */
+
+        $results = $this->paginate($ArtStacks->pageFor('artworks', array_keys($works)),
+            [
+                'limit' => '5',
+                'scope' => 'artworks'
+            ]
+        );
+
+        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+        $this->viewBuilder()->setLayout('index');
+        $this->userFilter();
+
+        $this->set('Prefs', $Prefs);
         $this->set('results', $results);
+        $this->set('indexModel', $results->getPaginatedTableName());
     }
 
+    public function userFilter()
+    {
+        $modes = ['is', 'starts', 'ends', 'contains', 'isn\'t'];
+        $artworkSchema = new ArtworkFilter();
+        $this->set(compact('artworkSchema', 'modes'));
+    }
     /**
      * Delete method
      *
@@ -210,30 +232,27 @@ class ArtworksController extends AppController
      * redirected through here for rendering once the records are found
      * or it may all be handled by another method.
      */
-    public function review() {
-		$ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
-        if (RequestUtility::urlArgIsKnown('artwork', $this->request)) {
-			$ids = [RequestUtility::queryArg('artwork', $this->request)];
-			// load the one stack
-			// redirect based on the entities report of flatness
-//            $this->_try_flatness_redirect(
-//            RequestUtility::queryArg('artwork', $this->request),
-//            RequestUtility::queryArg('edition', $this->request));
-        } else {
-			$records = $this->Artworks
-					->find('all')
-					->select(['id'])
-					->toArray();
-			$ids = (new Layer($records))->IDs();
-		}
-		$result = $ArtStacks->find('stacksFor',
-			['seed' => 'artwork', 'ids' => $ids]);
-//		osd($result);die;
-
-        $this->set('artworks', $result);
-        $this->set('elements', $this->Layers->setElements());
-        $this->render('review');
-    }
+//    public function review() {
+//		$ArtStacks = TableRegistry::getTableLocator()->get('ArtStacks');
+//        $records = $this->Artworks
+//            ->find('all')
+//            ->select(['id'])
+//            ->where(['user_id' => $this->contextUser()->getId('supervisor')])
+//            ->toArray();
+//
+//        $ids = (new Layer($records))->IDs();
+//
+//		$result = $this->paginate($ArtStacks->pageFor('artwork', $ids));
+//
+//        $Prefs = $this->Preferences->getPrefs($this->contextUser()->getId('supervisor'));
+//        $this->viewBuilder()->setLayout('index');
+//
+//        $this->set('Prefs', $Prefs);
+//        $this->set('artworks', $result);
+//        $this->set('elements', $this->Layers->setElements());
+//        $this->render('review');
+//
+//    }
 
     /**
      * Edit the Artwork layer and deeper layers if the work is 'flat'

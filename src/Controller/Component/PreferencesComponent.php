@@ -43,6 +43,8 @@ class PreferencesComponent extends Component
      */
     private $formClass = false;
 
+    protected $Form = false;
+
     /**
      * Prefs objects that have been created index by the id that made them
      *
@@ -181,16 +183,18 @@ class PreferencesComponent extends Component
         /* @var PreferencesForm $Form */
         /* @var PreferencesTable $PrefsTable */
 
+        /* @todo property is never useed */
+        /* @todo $user_id is never null */
         $this->user_id = $user_id;
         if (is_null($user_id)) {
             $UserPrefs = new Preference([]);
         } else {
-            $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
-            $UserPrefs = $PrefsTable->getPreferencesFor($user_id);
+            $UserPrefs = TableRegistry::getTableLocator()->get('Preferences')
+                ->getPreferencesFor($user_id);
         }
-        $Form = $this->getFormObjet();
 
-        $schema = $Form->schema();
+        /* @todo is there a lower impact way of getting schema than loading a Form object? */
+        $schema = $this->getFormObjet()->schema();
         $defaults = [];
         $prefs = [];
 
@@ -284,12 +288,16 @@ class PreferencesComponent extends Component
      */
     protected function getFormObjet()
     {
+        if ($this->Form !== false) {
+            return $this->Form;
+        }
         if (!$this->formClass == false) {
             $class = $this->formClass;
             $PreferenceForm = new $class();
         } else {
             $PreferenceForm = new LocalPreferencesForm();
         }
+        $this->Form = $PreferenceForm;
         return $PreferenceForm;
     }
 
@@ -346,6 +354,9 @@ class PreferencesComponent extends Component
     public function getPrefs($user_id = null) : Prefs
     {
 
+        /*
+         * @todo kill registry. use property and separate, aliased components
+         */
         if (!isset($this->registry[$user_id])) {
             $entity = $this->getUserPrefsEntity($user_id);
             $this->registry[$user_id] = new Prefs(

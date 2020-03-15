@@ -3,17 +3,17 @@ namespace App\Lib;
 
 /**
  * Wildcard
- * 
- * Append, prepend, or wrap a string in sql LIKE characters '%' 
- * or other single character delimiter 
+ *
+ * Append, prepend, or wrap a string in sql LIKE characters '%'
+ * or other single character delimiter
  *
  * @author dondrake
  */
 class Wildcard {
-    
+
     /**
      * Add % wildcard character(s) to a string (or other delimiter char)
-     * 
+     *
      * @param string $string The string to modify
      * @param string $location start, before, after, end, both, or wrap
      * @param string $delimiter % or any other single character
@@ -37,12 +37,12 @@ class Wildcard {
         }
         return $string;
     }
-    
+
     /**
      * Add a delimiter to the beginning of a string
-     * 
+     *
      * But don't duplicate if it's already there
-     * 
+     *
      * @param string $string
      * @param string $delimiter
      */
@@ -50,12 +50,12 @@ class Wildcard {
         $delimiter = self::clipDelimiter($delimiter);
         return self::doBefore($string, $delimiter);
     }
-    
+
     /**
      * Add a delimiter to the end of a string
-     * 
+     *
      * But don't duplicate if it's already there
-     * 
+     *
      * @param string $string
      * @param string $delimiter
      */
@@ -63,12 +63,12 @@ class Wildcard {
         $delimiter = self::clipDelimiter($delimiter);
         return self::doAfter($string, $delimiter);
     }
-    
+
     /**
      * Add a delimiter to the both ends of a string
-     * 
+     *
      * But don't duplicate if it's already there
-     * 
+     *
      * @param string $string
      * @param string $delimiter
      */
@@ -76,37 +76,55 @@ class Wildcard {
         $delimiter = self::clipDelimiter($delimiter);
         return self::doWrap($string, $delimiter);
     }
-    
+
+    /**
+     * Enclose the string in the provided brackets
+     *
+     * The bracket string will be split in half, half to front, half to back
+     *
+     * @param $string
+     * @param string $brackets
+     * @return string
+     */
+    static public function bracket($string, $brackets = '[]') {
+        list($start, $end) = explode(PHP_EOL, chunk_split($brackets, strlen($brackets) / 2));
+        return trim($start) . trim($string) . trim($end);
+    }
+
+    static public function tag($string, $type) {
+        return "<$type>" . trim($string) . "</$type>";
+    }
+
     /**
      * Perform the pre-pending action
-     * 
+     *
      * @param string $string
      * @param string $delimiter
      */
     static private function doBefore($string, $delimiter) {
         if (strpos($string, $delimiter) !== 0) {
-          $string = "$delimiter$string";  
+          $string = "$delimiter$string";
         }
         return $string;
     }
-    
+
     /**
      * Perform the appending action
-     * 
+     *
      * @param string $string
      * @param string $delimiter
      */
     static private function doAfter($string, $delimiter) {
         // skip over any earlier $delimiter, only see the last
         if (strpos($string, $delimiter,strlen($string)-1) !== strlen($string)-1) {
-          $string = "$string$delimiter";  
+          $string = "$string$delimiter";
         }
         return $string;
     }
-    
+
     /**
      * Perform the wrapping action
-     * 
+     *
      * @param string $string
      * @param string $delimiter
      */
@@ -114,10 +132,10 @@ class Wildcard {
         $string = trim($string, $delimiter);
         return "$delimiter$string$delimiter";
     }
-    
+
     /**
      * Insure the delimiter is only one character
-     * 
+     *
      * @param string $delimiter
      * @return string
      */

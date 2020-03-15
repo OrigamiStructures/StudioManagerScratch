@@ -57,26 +57,59 @@ Individual cards of any type are displayed on cardfile/view/:id. Each card shows
 
 All the current index and view pages in CardFile are linked together to create a primitive prototype UX and to facilitate development. Menus exist to access all the index pages.
 
+1/29/2020
+- Preferences have been encapsulated and disentangled from pagination.
+- PagePrefs and Pagination both render on an `index` layout
+- The prototype index page filtering now works with Middleware so that filtered contents will work with pagination (and pref-changes to pagination).
+- Middleware keeps index filters alive within a specified page scope. The specification system for the scopes is primitive. Need will force evolution.
+- Category card new/add is working. It links categories to managers as the basis for address book sharing by supervisors.
+
+1/30/2020
+- New Shares layer is working on all Rolodex cards. This is the basis for address book sharing.
+- Shares layer data outputs on all cardfile prototype pages
+- update artwork index page to modern standards (only stub search and no prefs yet though)
+- move all content-warning banners to elements to clean up ctps and encapsulate logic
+
 ##In Dev
-###Preferences
-
-The back end is in pretty good shape but many questions remain about the UI for preferences. What are the pieces to render? How are they organized, identified, and retrieved.
-
-The stub interface is entangled with Pagination interface and this is not good
 
 ###Index page filtering
 
-There is a test interface installed on all cardfile index pages. It works fine but does not integrate with pagination yet and is written in a procedural way, just for cardfiles.
+There is a test interface installed on all cardfile index pages. It works fine but is written in a procedural way, just for cardfiles.
 
-A middleware has been written that will manage filter requests and make them persist within a certain page scope, and evaporate beyond that.
-
-##Pagination
+###Pagination
 
 There is still a question about contained data pagination. The component looks like it has a feature for that but I haven't figured out how to make it work with stacks yet.
 
-##CardFile
+###CardFile
 Create the view page tools for each kind of card.
 
 Build crud for card files
+
+- Category
+  -[x] create
+  -[ ] update
+  -[ ] delete
+- Organization
+  -[ ] create
+  -[ ] update
+  -[ ] delete
+- Person
+  -[ ] create
+  -[ ] update
+  -[ ] delete
+- Artist
+  -[ ] create
+  -[ ] update
+  -[ ] delete
+- Supervisor
+  -[ ] create
+  -[ ] update
+  -[ ] delete
+- Manager
+  -[ ] create
+  -[ ] update
+  -[ ] delete
+
+
 
 

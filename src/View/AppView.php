@@ -38,6 +38,7 @@ class AppView extends View
     {
 		$this->loadHelper('DropDown');
         $this->loadHelper('Html');
+        $this->loadHelper('Form');
         $this->loadHelper('ArtStackTools');
         $this->loadHelper('MemberView');
 //		$this->loadHelper('DispositionTools');

@@ -11,3 +11,4 @@ webroot/files
 webroot/img
 /config/cache.php
 .idea
+/composer.lock

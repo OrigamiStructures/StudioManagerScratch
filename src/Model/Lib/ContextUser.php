@@ -118,6 +118,10 @@ class ContextUser {
 	/**
 	 * Get the stored actor id or NULL if not set
      *
+     * @todo Should this return some default value if a focus is not set
+     *      or should the code do contextUser::has() then deal with
+     *      the existance or lack of a focus value?
+     *
 	 * @param string $actor 'supervisor', 'manager', 'artist'
 	 * @return int|string|null
 	 */
@@ -127,7 +131,23 @@ class ContextUser {
 	}
 
     /**
+     * get the specified value from the specified actor's person card
+     *
+     * @todo do we want this? or should the calling code get a card and
+     *      do the work itself?
+     * @param $actor
+     * @param $property
+     */
+    public function getProperty($actor, $property)
+    {
+
+	}
+
+    /**
      * Is the registered user a superuser?
+     *
+     * Evaluates the currently logged in user, without regard
+     * to any context-aliasing that might be occuring
      *
      * @return bool
      */
@@ -136,6 +156,14 @@ class ContextUser {
         return $this->currentUser->isSuperuser();
 	}
 
+    /**
+     * Is the logged in user operating as a different user?
+     *
+     * Only superusers have this ability unless we leverage
+     * the supervisor alias to allow delegated crud actions.
+     *
+     * @return bool
+     */
     public function isSupervisorAlias()
     {
         return ($this->getId('supervisor') ?? $this->currentUser->userId()) != $this->currentUser->userId();
@@ -147,6 +175,10 @@ class ContextUser {
 	 * The card is lazy loaded. Only the id is set and stored until
 	 * this request for further data is made
 	 *
+     * @todo Should this return some default value if a focus is not set
+     *      or should the code do contextUser::has() then deal with
+     *      the existance or lack of a focus value?
+     *
 	 * @param string $actor
 	 * @return PersonCard|null
 	 */
@@ -239,6 +271,18 @@ class ContextUser {
         return $personCard->registeredUserId();
     }
 
+    /**
+     *
+     * @return LayerAccessArgs
+     */
+    public function getSupervisorsManagers()
+    {
+        return $this->getCard('supervisor')
+            ->getLayer('manifests')
+            ->find()
+            ->specifyFilter('manager_member', $this->getId('supervisor'), '!=');
+
+    }
     /**
      * @return array
      */

@@ -30,6 +30,7 @@ class RolodexCardTest extends TestCase
         'app.members',
         'app.users',
         'app.groups_members',
+        'app.shares'
     ];
 
     /**

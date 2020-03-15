@@ -1,3 +1,201 @@
+##Overview of the Preferences System
+
+Preferences is a component that will construct, manage and deliver a Prefs object. The Prefs object may be transported to any layer of your application to provide values for application processes.
+
+Prefs will answer 'what is the value of' questions with the actor's chosen preference value, the default value for the preference, or a UnknownPreferenceKeyException (change to null?).
+
+```php
+try {
+    if ($Prefs->for('stored_value') > $someLimit) {
+        $this->performSomeAction();
+    } else {
+        $this->doNormalProcedure();
+    }
+} catch (UnknownPreferenceKeyException $e) {
+    $this->handleUnknownPrefsKey();
+}
+```
+
+The allowed preference keys are defined by the developer as the fields of a Schema object in a [Form](https://book.cakephp.org/4/en/core-libraries/form.html).
+
+In addition to reporting preference settings or defaults, Prefs can also deliver an Entity and a Form. These objects will support CRUD processes or other developer needs.
+
+```php
+//in a controller
+$this->loadComponent('Preferences');
+$Prefs = $this->Preferences->getPrefs($user_id);
+$userPreferences = $Prefs->getEntity();
+$formHelperContext = $Prefs->getForm();
+```
+
+The preference values set by an actor are stored in the `preferences` table as json data on the `prefs` columnn (text type). All the fields defined in the schema will be included in this one json object.
+
+A PreferencesTable and Preference entity are provided as part of the plungin to participate in the default storage processes of the plugin.
+
+>**NOTE:** This hard-wired table/column requirement should be replaced with a dependency-injection hook. The devoloper may want a different table or different field. They may also require more than one Prefs schema; for example, a user schema and an application schema.
+>
+>In a multi-schema scenario I expect multiple PreferencesComponents would be created, each with a different alias and each would deliver its Prefs object.
+
+##Developing the Preferences for an Application
+
+There is no pre-defined set of preference keys. You must decided what data points you want to offer in your application. Once you've decided on a preference inflection point you need to:
+
+- Define the field in the Form's schema (including its default value)
+- Create some system the actor can use to set their prefered value for the field
+- Make your application respond to the discovered value of the field
+
+###An Example Implementation
+
+**A sample layout ctp without preferences**
+
+```html
+<!-- Templates/Layouts/default.ctp -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        <?= $pageTitle ?>:
+    </title>
+    <?= $this->Html->css('default-color-theme'); ?>
+</head>
+<body>
+<section class="container clearfix">
+    <?= $this->fetch('content') ?>
+</section>
+</body>
+</html>
+```
+
+If we want to allow the user to choose different css to control colors on the pages we can define a 'color-theme' preference.
+
+First we define the schema to support this inflection point. The plugin includes the PreferencesForm object which you will extend to define your schema. You'll also want to define validation rules to control the values that get set in your table.
+
+It will be necessary to define an `id` field in your schema so that the posted preferences can be linked to the persisted record.
+
+>The `id` may get added to the plugin classes so it wouldn't have to be part of the implementation in each application.
+
+```php
+<?php
+namespace App\Form;
+
+use App\Form\PreferencesForm;
+use Cake\Form\Schema;
+use Cake\Validation\Validator;
+
+class LocalPreferencesForm extends PreferencesForm
+{
+    /**
+     * A standard Form hook method
+     *
+     * @param Schema $schema
+     * @return Schema
+     */
+    protected function _buildSchema(Schema $schema)
+    {
+        $schema->addField('color-theme',  [
+            'type' => 'string',
+            'default' => 'default-color-theme'
+        ]);
+        $schema->addField('id', [
+            'type' => 'string'
+        ]);
+       return parent::_buildSchema($schema);
+    }
+
+    /**
+     * Define any validators your schema needs
+     *
+     * These run during ->patchEntity()
+     *
+     * @param Validator $validator
+     * @return Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator->inList(
+            'color-theme',
+            ['default-color-theme', 'pastel-theme', 'neon-theme', 'druid-theme'],
+            'Only certain color themes are available'
+        );
+        return parent::validationDefault($validator);
+    }
+}
+```
+
+Next you need to give your actor a way to regester their choice. In this case the actor is an interacting user, so we can present a form. Here is the controller/method that would back-stop the page that presents the form.
+
+```php
+namespace App\Controller;
+
+use App\Controller\AppController;
+use App\Controller\Component\PreferencesComponent;
+use App\Model\Table\PreferencesTable;
+
+class MyController extends AppController
+{
+    /**
+     * Load the component when required
+     */
+    public function initialize(){
+        $this->loadComponent('Preferences');
+        parent::initialize();
+    }
+
+    public function someMethod() {
+        //This is some method that also presents a form
+        //that allows the user to change the color-theme setting
+        $this->set(
+            'theme_options',
+            ['default-color-theme', 'pastel-theme', 'neon-theme', 'druid-theme']
+        );
+        //You'll need the Form to support the FormHelper.
+        //It's on the Prefs object along with the Entity.
+        //The component can deliver the object
+        $this->set('Prefs', $this->Preferences->getPrefs($this->Auth->user('id')));
+    }
+}
+```
+
+The plugin provides a PreferencesController that has a `setPrefs()` method to handle post, patch, or put data from your forms.
+
+>Other methods may be added later for different scenarios.
+
+With the schema in place and with the provided controller ready to accept form data, we can make a form for the user.
+
+```php
+echo $this->Form->create($Prefs->getForm(), [
+    'url' => ['controller' => 'preferences', 'action' => 'setPrefs']
+]);
+echo $this->Form->control('theme_options', ['options' => $theme_options]);
+echo $this->Form->control('id', ['type' => 'hidden']);
+echo $this->Form->submit();
+echo $this->Form->end();
+```
+
+Posting this form to the provided controller/action will save the new settings and return to the refering page.
+
+So, all that remains is to adjust your application to make use of the new preference inflection point. In this example, this will be in our default layout.
+
+```html
+<!-- Templates/Layouts/default.ctp -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        <?= $pageTitle ?>:
+    </title>
+    <?= $this->Html->css($Prefs->for('color_theme'); ?>
+</head>
+<body>
+<section class="container clearfix">
+    <?= $this->fetch('content') ?>
+</section>
+</body>
+</html>
+```
+
+**Old Docs Below. Not Edited**
+
 ##Classes involved in the User Preference system
 
 ![A class diagram showing the classes that collaborate in the User Preference system showing their public interfaces and some major properties](/img/images/image/708e8e4b-a00e-42b0-a5a0-a74b7921b08b/classes-in-preference-sys.png "Classes in the Preferences system and their basic associations")
@@ -197,3 +395,5 @@ $options = $prefForm->selectList(PrefCon::PAGINATION_SORT_PEOPLE);
 
 You can design any schema you want and name the constants in any way that makes sense. The fact that the constants are defined with `const` inside the class, keeps them out of the global space so there will be no name conflicts with other constants. You will only be able to access the constants with the syntax **PrefCon::CONSTANT_NAME**.
 
+
+Topics: Studio Manager, Preference,
