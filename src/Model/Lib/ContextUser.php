@@ -271,6 +271,11 @@ class ContextUser {
         return $personCard->registeredUserId();
     }
 
+    public function getSupervisorMemberId()
+    {
+        return $this->getCard('supervisor')->rootID();
+    }
+
     /**
      *
      * @return LayerAccessArgs
@@ -280,8 +285,7 @@ class ContextUser {
         return $this->getCard('supervisor')
             ->getLayer('manifests')
             ->find()
-            ->specifyFilter('manager_member', $this->getId('supervisor'), '!=');
-
+            ->specifyFilter('manager_member', $this->getSupervisorMemberId(), '!=');
     }
     /**
      * @return array

@@ -28,7 +28,8 @@ class LocalPreferencesForm extends PreferencesForm
             'default' => [
                 'limit' => 10,
                 'dir' => 'asc',
-                'sort' => 'last_name'
+                'sort' => 'last_name',
+                'scope' => 'identities'
             ]
         ],
         PrefCon::PAGING_ORGANIZATION => [
@@ -36,7 +37,8 @@ class LocalPreferencesForm extends PreferencesForm
             'default' => [
                 'limit' => 10,
                 'dir' => 'asc',
-                'sort' => 'last_name'
+                'sort' => 'last_name',
+                'scope' => 'identities'
             ]
         ],
         PrefCon::PAGING_PEOPLE=> [
@@ -44,7 +46,8 @@ class LocalPreferencesForm extends PreferencesForm
             'default' => [
                 'limit' => 10,
                 'dir' => 'asc',
-                'sort' => 'last_name'
+                'sort' => 'last_name',
+                'scope' => 'identities'
             ]
         ],
         PrefCon::PAGING_ARTWORK => [
@@ -52,7 +55,8 @@ class LocalPreferencesForm extends PreferencesForm
             'default' => [
                 'limit' => 10,
                 'dir' => 'asc',
-                'sort' => 'title'
+                'sort' => 'title',
+                'scope' => 'artworks'
             ]
         ],
     ];

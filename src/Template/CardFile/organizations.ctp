@@ -6,7 +6,7 @@ use Cake\Utility\Text;
  */
 $this->element('Preferences/Pagination/organization');
 
-foreach($organizationCards->getData() as $id => $card) {
+foreach($stackSet->getData() as $id => $card) {
 
     /* @var \App\Model\Entity\OrganizationCard $card
      */

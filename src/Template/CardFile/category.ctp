@@ -21,6 +21,7 @@ use Cake\Utility\Text;
 
 <?php
 
+/* MEMBERSHIPS SECTION */
 echo "<p><strong>Memberships</strong></p>";
 if (count($personCard->getMemberships()) == 0) {
     echo '<p>None</p>';
@@ -32,6 +33,7 @@ if (count($personCard->getMemberships()) == 0) {
     echo '</ul>';
 }
 
+/* MEMBERS SECTION */
 echo "<p><strong>Members</strong></p>";
 if (!$personCard->hasMembers()) {
     echo '<p>None</p>';
@@ -43,23 +45,59 @@ if (!$personCard->hasMembers()) {
     echo '</ul>';
 }
 
+echo $this->Form->create(null);
+echo '<fieldset>';
+echo $this->Html->para(null, 'Change the members of this category' .
+    ' (checked = included).');
+echo $this->element('Common/pagination_bar', ['pagingScope' => 'member_candidate']);
+foreach ($member_candidate->getData() as $id => $candidate) {
+    $isMember = count(
+        $candidate->getLayer('memberships')
+        ->find()
+        ->specifyFilter('name', $personCard->rootElement()->name())
+        ->toArray()
+    ) > 0;
+    echo $this->Form->control(
+        'members.' . $candidate->rootId() , [
+            'type' => 'checkbox',
+            'checked' => $isMember,
+            'label' => ' ' . $candidate->rootElement()->name()
+        ]
+    );
+}
+echo $this->Form->submit();
+echo '</fieldset>';
+echo $this->Form->end();
+echo $this->element('Member/search', ['identitySchema' => $identitySchema]);
+
+/* SHARED-WITH SECTION */
 echo "<p><strong>Share with</strong></p>";
 if (!$personCard->hasPermittedManagers()) {
     echo '<p>None</p>';
 } else {
     echo '<ul class="member">';
+    $managerIds = [];
     foreach ($personCard->getPermittedManagers() as $share) {
         /* @var \App\Model\Entity\Share $share */
-
+        $managerIds[] = $share->getMemberId('manager');
         echo '<li>' . $this->Html->link($share->getName('manager'), ['action' => 'view', $share->getMemberId('manager')]) . '</li>';
     }
     echo '</ul>';
 }
 
-foreach ($candidates as $id => $candidate) {
-    echo $this->Form->control('members.' . $id , ['type' => 'checkbox', 'label' => ' ' . $candidate]);
+echo $this->Form->create(null);
+echo '<fieldset>';
+echo $this->Html->para(null, 'Change which managers have permisson to see members of this category' .
+    ' (checked = allowed).');
+foreach ($managers as $id => $manager) {
+    echo $this->Form->control(
+    'members.' . $id , [
+        'type' => 'checkbox',
+        'checked' => in_array($id, $managerIds),
+        'label' => ' ' . $manager
+        ]
+    );
 }
-//osd($candidates);
-
-
-
+echo $this->Form->submit();
+echo '</fieldset>';
+echo $this->Form->end();

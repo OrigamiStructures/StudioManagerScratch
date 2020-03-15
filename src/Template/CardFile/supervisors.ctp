@@ -12,7 +12,7 @@ use App\Model\Entity\PersonCard;
  */
 echo $this->element('Preferences/Pagination/person');
 
-foreach($personCards->getData() as $id => $card) {
+foreach($stackSet->getData() as $id => $card) {
 
     /* @var PersonCard $card */
 

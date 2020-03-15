@@ -63,7 +63,7 @@ class AppController extends Controller
     /**
      * @var Prefs
      */
-	protected $Prefs;
+	public $Prefs;
 
 	public function __construct(
 	    ServerRequest $request = null,

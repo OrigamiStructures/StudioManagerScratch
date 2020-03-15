@@ -247,10 +247,9 @@ class StacksTable extends AppTable
      * @return callable
      */
     public function pageFor($seed, $ids) {
-        $stackCall = function($paginator) use ($seed, $ids) {
+        return function($paginator) use ($seed, $ids) {
             return $this->processStackQuery($seed, $ids, $paginator);
         };
-        return $stackCall;
     }
 
     /**

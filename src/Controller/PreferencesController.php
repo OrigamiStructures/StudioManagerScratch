@@ -5,8 +5,10 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Exception\BadPrefsImplementationException;
+use App\Interfaces\FilteringInterface;
+use Cake\ORM\Query;
 
-class PreferencesController extends AppController
+class PreferencesController extends AppController implements FilteringInterface
 {
 
     public $components = ['Preferences'];
@@ -35,4 +37,19 @@ class PreferencesController extends AppController
 //        $this->render('/UserPrefs/set_prefs');
     }
 
+    /**
+     * Null Implementation
+     *
+     * Contorllers that use PaginationController need to enable filtering
+     * in combination with paging. In this case, we're doing background work
+     * to set Perference paging values rather than actually paging data.
+     * So we can ignore implementation of this Interface method
+     *
+     * @param Query $query
+     * @return Query
+     */
+    public function userFilter(Query $query): Query
+    {
+        return $query;
+    }
 }

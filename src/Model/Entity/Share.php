@@ -68,6 +68,11 @@ class Share extends Entity
         return $result;
     }
 
+    public function getNames()
+    {
+        return $this->names ?? [];
+    }
+
     /**
      * If $this::names has been set, return the name of the actor
      *

@@ -19,14 +19,5 @@ class Prefs extends PrefsBase
         parent::__construct($entity, $form);
     }
 
-    public function pagingFor($type)
-    {
-            $paging = array_merge(
-                $this->for('paging.general'),
-                $this->for("pagining.$type")
-            );
-        return $paging;
-    }
-
 
 }

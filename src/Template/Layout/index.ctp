@@ -4,7 +4,7 @@ $this->extend('/Layout/default');
 
 echo $this->element('AlertBanners/index_filter');
 
-echo $this->element('Common/pagination_bar', ['paginated_model' => $indexModel]);
+echo $this->element('Common/pagination_bar', ['pagingScope' => 'index']);
 
 echo $this->fetch('pagination_prefs_form');
 
