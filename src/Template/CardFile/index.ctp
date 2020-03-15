@@ -13,6 +13,12 @@ use App\Model\Entity\PersonCard;
 echo $this->element('Preferences/Pagination/person');
 
 /* @var \App\Model\Lib\StackSet $stackSet */
+$ident = $stackSet->getLayer('identity')
+    ->find()
+    ->specifyFilter('member_type', 'Person')
+    ->toKeyValueList('member_type', 'name');
+osd($ident);
+osd($this->getRequest()->getParam('paging'));
 
 foreach($stackSet->getData() as $id => $card) {
 
