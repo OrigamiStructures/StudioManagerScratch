@@ -1,3 +1,6 @@
 [submodule "plugins/OSDebug"]
 	path = plugins/OSDebug
 	url = https://dreamingmind@github.com/OrigamiStructures/OSDebug.git
+[submodule "plugins/Stacks"]
+	path = plugins/Stacks
+	url = https://curlyjason@github.com/OrigamiStructures/Stacks.git
